@@ -3,6 +3,9 @@
 
 #include "activitysource.h"
 
+#include <Nepomuk/Query/Query>
+#include <Nepomuk/Query/Result>
+
 namespace Nepomuk
 {
     namespace Query
@@ -20,10 +23,13 @@ public:
     ActivitySet *getActivitySet(int limit, const QDate &beginDate, const QDate &endDate);
     void startSearch(const QDate &beginDate, const QDate &endDate);
 signals:
-    
+    void newEntries(const QList<Nepomuk::Query::Result>&);
+
 public slots:
 
 private:
+    Nepomuk::Query::Query createQuery(const QDate &beginDate, const QDate &endDate);
+
     Nepomuk::Query::QueryServiceClient* m_searchClient;
 };
 

@@ -20,11 +20,7 @@ NepomukSource::NepomukSource(QObject *parent) :
 
 ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, const QDate &endDate)
 {
-    Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( beginDate );
-    Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() <= Nepomuk::Query::LiteralTerm( endDate );
-
-    Nepomuk::Query::AndTerm term(beginDateTerm, endDateTerm);
-    Nepomuk::Query::Query query( term );
+    Nepomuk::Query::Query query = createQuery(beginDate, endDate);
     query.setLimit(limit);
 
     QList<Nepomuk::Query::Result> results = Nepomuk::Query::QueryServiceClient::syncQuery(query, NULL);
@@ -41,20 +37,22 @@ ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, co
     return set;
 }
 
+
+Nepomuk::Query::Query NepomukSource::createQuery(const QDate &beginDate, const QDate &endDate)
+{
+    Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( beginDate );
+    Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() <= Nepomuk::Query::LiteralTerm( endDate );
+
+    Nepomuk::Query::AndTerm term(beginDateTerm, endDateTerm);
+    return Nepomuk::Query::Query( term );
+}
+
 void NepomukSource::startSearch(const QDate &beginDate, const QDate &endDate)
 {
-    Nepomuk::ResourceManager::instance()->init();
-    Nepomuk::Query::ComparisonTerm mtime
-            = Nepomuk::Vocabulary::NIE::lastModified() > Nepomuk::Query::LiteralTerm( QDateTime::currentDateTime().addDays(-365) );
-
-    Nepomuk::Query::Query query( mtime );
+    Nepomuk::Query::Query query = createQuery(beginDate, endDate);
 
     m_searchClient = new Nepomuk::Query::QueryServiceClient( this );
-
-    connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)),this, SLOT(slotNewEntries(const QList<Nepomuk::Query::Result>&)));
-
-    connect( m_searchClient, SIGNAL( resultCount(int) ), this, SLOT( slotTotalCount(int) ) );
+    connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SIGNAL(newEntries(QList<Nepomuk::Query::Result>)));
 
     m_searchClient->query(query);
-
 }
