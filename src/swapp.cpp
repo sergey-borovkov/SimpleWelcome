@@ -81,7 +81,6 @@ SWApp::~SWApp()
     m_viewer = NULL;
     m_appProvider = NULL;
     m_appIconProvider = NULL;
-    exit();
 }
 
 int SWApp::newInstance()

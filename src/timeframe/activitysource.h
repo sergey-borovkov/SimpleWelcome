@@ -12,7 +12,8 @@ class ActivitySource : public QObject
     Q_OBJECT
 public:
     explicit ActivitySource(QObject *parent = 0);
-    //virtual ActivitySet *getActivitySet(const QDate &beginDate, const QDate &endDate) = 0;
+
+    // this function is thread safe
     virtual ActivitySet *getActivitySet(int limit, const QDate &beginDate, const QDate &endDate) = 0;
 signals:
     void newActivitySet(ActivitySet *);
