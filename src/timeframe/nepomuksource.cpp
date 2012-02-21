@@ -52,7 +52,7 @@ void NepomukSource::startSearch(const QDate &beginDate, const QDate &endDate)
     Nepomuk::Query::Query query = createQuery(beginDate, endDate);
 
     m_searchClient = new Nepomuk::Query::QueryServiceClient( this );
-    connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SIGNAL(newEntries(QList<Nepomuk::Query::Result>)));
+    connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SIGNAL(newEntries(const QList<Nepomuk::Query::Result>)));
 
     m_searchClient->query(query);
 }
