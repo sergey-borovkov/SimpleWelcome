@@ -1,0 +1,24 @@
+#ifndef ACTIVITYSOURCE_H
+#define ACTIVITYSOURCE_H
+
+#include <QObject>
+
+
+class ActivitySet;
+class QDate;
+
+class ActivitySource : public QObject
+{
+    Q_OBJECT
+public:
+    explicit ActivitySource(QObject *parent = 0);
+    //virtual ActivitySet *getActivitySet(const QDate &beginDate, const QDate &endDate) = 0;
+    static ActivitySet *getActivitySet(int limit, const QDate &beginDate, const QDate &endDate);
+signals:
+    void newActivitySet(ActivitySet *);
+
+public slots:
+    
+};
+
+#endif // ACTIVITYSOURCE_H

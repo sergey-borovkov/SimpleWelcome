@@ -3,3 +3,11 @@ CMakeFiles
 Makefile
 cmake_install.cmake
 install_manifest.txt
+CMakeCache.txt
+CMakeLists.txt.user
+rosa-launcher-qtquick
+src/build
+CMakeTmp/
+CTestTestfile.cmake
+cmake_uninstall.cmake
+rosa-launcher-qtquick_automoc.cpp.files
