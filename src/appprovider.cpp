@@ -145,4 +145,4 @@ void AppProvider::_deepExtract(KServiceGroup *group)
 
 }
 
-#include "appprovider.moc"
+//#include "appprovider.moc"

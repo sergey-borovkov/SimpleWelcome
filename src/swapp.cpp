@@ -43,44 +43,45 @@ SWApp* SWApp::self()
 }
 
 SWApp::SWApp()
-  : KUniqueApplication(),
-    m_inited(false)
+    : KApplication(),
+      m_inited(false)
 {
 
-  m_viewer = new QmlApplicationViewer();
-  m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
-  
-  m_appProvider = new AppProvider();
-  m_appProvider->init();
+    m_viewer = new QmlApplicationViewer();
+    m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
-  qmlRegisterType<AppEntity>("AppEntity", 1, 0, "AppEntity");
-  m_viewer->rootContext()->setContextProperty("appProvider", m_appProvider);
+    m_appProvider = new AppProvider();
+    m_appProvider->init();
 
-  m_appIconProvider = new AppIconProvider();
-  m_viewer->engine()->addImageProvider(QLatin1String("appicon"), m_appIconProvider);
-  
-  m_viewer->showExpanded();
-  
-  QString appPath = applicationFilePath();
-  
-  if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
-    m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
-  else
-    m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
+    qmlRegisterType<AppEntity>("AppEntity", 1, 0, "AppEntity");
+    m_viewer->rootContext()->setContextProperty("appProvider", m_appProvider);
 
-  QTimer::singleShot(1000, this, SLOT(init()));
-  
-  setQuitOnLastWindowClosed(false);
+    m_appIconProvider = new AppIconProvider();
+    m_viewer->engine()->addImageProvider(QLatin1String("appicon"), m_appIconProvider);
+
+    m_viewer->showExpanded();
+
+    QString appPath = applicationFilePath();
+
+    if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
+        m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
+    else
+        m_viewer->setMainQmlFile(QLatin1String("/home/kami/lang/timeframe/src/qml/main.qml"));
+
+    QTimer::singleShot(1000, this, SLOT(init()));
+
+    setQuitOnLastWindowClosed(false);
 }
 
 SWApp::~SWApp()
 {
-  delete m_viewer;
-  delete m_appProvider;
-  delete m_appIconProvider;
-  m_viewer = NULL;
-  m_appProvider = NULL;
-  m_appIconProvider = NULL;
+    delete m_viewer;
+    delete m_appProvider;
+    delete m_appIconProvider;
+    m_viewer = NULL;
+    m_appProvider = NULL;
+    m_appIconProvider = NULL;
+    exit();
 }
 
 int SWApp::newInstance()
@@ -91,16 +92,16 @@ int SWApp::newInstance()
 
 bool SWApp::event(QEvent *event)
 {
-  return KUniqueApplication::event(event);
+    return KApplication::event(event);
 }
 
 void SWApp::init(void)
 {
-  if(m_inited)
-    return;
-  
-  m_inited = true;
-  
+    if(m_inited)
+        return;
+
+    m_inited = true;
+
 }
 
 #include "swapp.moc"

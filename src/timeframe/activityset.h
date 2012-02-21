@@ -12,7 +12,8 @@ class Activity : public QObject
     Q_PROPERTY(QString url READ getUrl WRITE setUrl)
     Q_PROPERTY(QString type READ getType WRITE setType)
 public:
-    explicit Activity(QObject *parent = 0) : QObject(parent) {}
+    explicit Activity(const QString &url, const QString &type, QObject *parent = 0)
+        : QObject(parent), url(url), type(type) {}
 public slots:
     QString getUrl();
     void setUrl(QString newUrl);
@@ -23,7 +24,7 @@ public slots:
 private:
     QString url;
     QString type;
-    QDateTime datetime;
+    //QDateTime datetime;
 };
 
 // set of activities for some period of time
@@ -32,11 +33,13 @@ class ActivitySet : public QObject
     Q_OBJECT
 public:
     explicit ActivitySet(QObject *parent = 0);
-    
+    ~ActivitySet();
+
+    void addActivity(const QString &url, const QString &type);
 signals:
     
 public slots:
-    virtual int count() = 0;
+    int count() ;
     Activity *activity(int index);
     QDate beginDate();
     QDate endDate();

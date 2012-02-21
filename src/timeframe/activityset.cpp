@@ -5,6 +5,21 @@ ActivitySet::ActivitySet(QObject *parent) :
 {
 }
 
+ActivitySet::~ActivitySet()
+{
+    qDeleteAll(activities);
+}
+
+void ActivitySet::addActivity(const QString &url, const QString &type)
+{
+    activities.append(new Activity(url, type));
+}
+
+int ActivitySet::count()
+{
+    return activities.count();
+}
+
 QDate ActivitySet::beginDate()
 {
     return QDate();

@@ -1,7 +1,7 @@
 #ifndef SW_APP_H
 #define SW_APP_H
 
-#include <KUniqueApplication>
+#include <KApplication>
 
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
 
@@ -10,7 +10,7 @@
 #include "appiconprovider.h"
 
 
-class SWApp : public KUniqueApplication
+class SWApp : public KApplication
 {
     Q_OBJECT
 public:
