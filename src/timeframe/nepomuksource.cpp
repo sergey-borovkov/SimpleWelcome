@@ -41,7 +41,7 @@ ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, co
     return set;
 }
 
-void NepomukSource::startSearch(int limit, const QDate &beginDate, const QDate &endDate)
+void NepomukSource::startSearch(const QDate &beginDate, const QDate &endDate)
 {
     Nepomuk::ResourceManager::instance()->init();
     Nepomuk::Query::ComparisonTerm mtime
