@@ -34,7 +34,14 @@ set(rosa-launcher-qtquick_SRCS
   src/qml/GridGroup.qml
   src/qml/TabButton.qml
   src/qml/FirstTab.qml
-  src/qml/ScrollBar.qml)
+  src/qml/ScrollBar.qml
+  src/qml/timeframe/TimeFrameTab.qml
+  src/qml/timeframe/ToolButton.qml
+  src/qml/timeframe/SceneDelegate.qml
+  src/qml/timeframe/CloudDelegate.qml
+  src/qml/timeframe/ActivityItem.qml
+  src/qml/timeframe/qmldir
+)
 
 kde4_add_executable(rosa-launcher-qtquick ${rosa-launcher-qtquick_SRCS})
 target_link_libraries(rosa-launcher-qtquick 
