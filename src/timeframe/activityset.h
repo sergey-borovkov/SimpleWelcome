@@ -24,7 +24,7 @@ public slots:
 private:
     QString url;
     QString type;
-    //QDateTime datetime;
+    QDateTime datetime;
 };
 
 // set of activities for some period of time
