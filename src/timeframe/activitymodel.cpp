@@ -36,13 +36,13 @@ void ActivityModel::addSource(ActivitySource *source)
 
 void ActivityModel::addActivitySet(ActivitySet *set)
 {    
-    qDebug() << "COUNT" << set->count();
+  /* qDebug() << "COUNT" << set->count();
 
     for(int i = 0; i < set->count(); i++)
     {
         qDebug() << set->activity(i)->getUrl() << set->activity(i)->getType();
     }
     qDebug() << "END";
-
+   */
     activities.append(set);
 }

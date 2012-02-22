@@ -72,7 +72,7 @@ void NepomukSource::startSearch(const QDate &beginDate, const QDate &endDate)
 
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
-    qDebug() << "Processing entry";
+//    qDebug() << "Processing entry";
     ActivitySet *set = createActivitySet(list);
     emit newActivitySet(set);
 }
