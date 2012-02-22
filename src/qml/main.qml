@@ -2,6 +2,8 @@ import QtQuick 1.0
 
 import Qt 4.7
 
+import "./timeframe/" 1.0
+
 Rectangle {
     id: page
     width: 1280
@@ -17,6 +19,11 @@ Rectangle {
 
         SecondTab {
             width: tabListView.width
+        }
+
+        TimeFrameTab {
+            width: tabListView.width
+            height: tabListView.height
         }
     }
 
@@ -73,6 +80,13 @@ Rectangle {
                 id: secondTabButton
                 onButtonClick: tabListView.currentIndex = 1
             }
+
+            TabButton {
+                label: "TimeFrame"
+                id: thirdTabButton
+                onButtonClick: tabListView.currentIndex = 2
+            }
+
         }
     }
 }
