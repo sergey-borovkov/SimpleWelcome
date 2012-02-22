@@ -1,13 +1,13 @@
 #ifndef ACTIVITYMODEL_H
 #define ACTIVITYMODEL_H
 
-#include <QAbstractItemModel>
+#include <QAbstractListModel>
 #include <QList>
 
 class ActivitySet;
 class ActivitySource;
 
-class ActivityModel : public QAbstractItemModel
+class ActivityModel : public QAbstractListModel
 {
     Q_OBJECT
 public:

@@ -5,6 +5,7 @@
 
 #include <Nepomuk/Query/Query>
 #include <Nepomuk/Query/Result>
+#include <Nepomuk/Query/FileQuery>
 
 namespace Nepomuk
 {
@@ -21,14 +22,16 @@ public:
     explicit NepomukSource(QObject *parent = 0);
     // this function is thread safe
     ActivitySet *getActivitySet(int limit, const QDate &beginDate, const QDate &endDate);
-    void startSearch(const QDate &beginDate, const QDate &endDate);
+    virtual void startSearch(const QDate &beginDate, const QDate &endDate);
 signals:
     void newEntries(const QList<Nepomuk::Query::Result>&);
 
 public slots:
+    void processEntry(const QList<Nepomuk::Query::Result> &list);
 
 private:
-    Nepomuk::Query::Query createQuery(const QDate &beginDate, const QDate &endDate);
+    Nepomuk::Query::FileQuery createQuery(const QDate &beginDate, const QDate &endDate);
+    ActivitySet *createActivitySet(const QList<Nepomuk::Query::Result> &result);
 
     Nepomuk::Query::QueryServiceClient* m_searchClient;
 };
