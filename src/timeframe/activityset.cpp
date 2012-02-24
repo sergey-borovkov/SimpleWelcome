@@ -3,6 +3,7 @@
 ActivitySet::ActivitySet(QObject *parent) :
     QObject(parent)
 {
+
 }
 
 ActivitySet::~ActivitySet()
@@ -10,9 +11,24 @@ ActivitySet::~ActivitySet()
     qDeleteAll(activities);
 }
 
-void ActivitySet::addActivity(const QString &url, const QString &type)
+void ActivitySet::addActivity(const QString &url, const QString &type, const QDate &date)
 {
-    activities.append(new Activity(url, type));
+    activities.append(new Activity(url, type, date));
+
+    if(m_beginDate.isValid())
+    {
+        if(m_beginDate > date)
+            m_beginDate = date;
+        else if(m_endDate < date)
+            m_endDate = date;
+    }
+    else
+    {
+        m_beginDate = date;
+        m_endDate = date;
+    }
+
+
 }
 
 int ActivitySet::count()
@@ -22,12 +38,12 @@ int ActivitySet::count()
 
 QDate ActivitySet::beginDate()
 {
-    return QDate();
+    return m_beginDate;
 }
 
 QDate ActivitySet::endDate()
 {
-    return QDate();
+    return m_endDate;
 }
 
 Activity *ActivitySet::activity(int index)
@@ -54,4 +70,15 @@ void Activity::setType(QString newType)
 {
     type = newType;
 }
+
+QDate Activity::getDate()
+{
+    return date;
+}
+
+void Activity::setDate(QDate date)
+{
+    this->date = date;
+}
+
 

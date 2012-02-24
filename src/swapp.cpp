@@ -70,7 +70,7 @@ SWApp::SWApp()
 
     QTimer::singleShot(1000, this, SLOT(init()));
 
-    setQuitOnLastWindowClosed(false);
+    //setQuitOnLastWindowClosed(false);
 }
 
 SWApp::~SWApp()
