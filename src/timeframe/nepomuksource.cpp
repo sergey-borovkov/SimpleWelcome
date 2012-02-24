@@ -13,6 +13,7 @@
 #include <Nepomuk/Vocabulary/NIE>
 
 #include <QFile>
+#include <QFileInfo>
 #include <QDateTime>
 
 NepomukSource::NepomukSource(QObject *parent) :
@@ -34,27 +35,27 @@ Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &beginDate, con
 {
     Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( beginDate );
     Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() <= Nepomuk::Query::LiteralTerm( endDate );
+    Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image"));
 
-    Nepomuk::Query::AndTerm term(beginDateTerm, endDateTerm);
+    Nepomuk::Query::AndTerm term(beginDateTerm, endDateTerm, image);
     Nepomuk::Query::FileQuery query(term);
+
 
     return query;
 }
 
 ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result> &result)
 {
-    ActivitySet *set = new ActivitySet;
-    qDebug() << "RESULT SIZE" << result.size();
+    ActivitySet *set = new ActivitySet;    
     for(int i = 0; i < result.size(); i++)
     {
         if(result.at(i).resource().isFile())
         {
-            Nepomuk::File file = result.at(i).resource().toFile();
-
             QString uri = result.at(i).resource().toFile().url().path();  //result.at(i).resource().uri();
             QString type = result.at(i).resource().type();
+            QFileInfo fi(uri);
+            set->addActivity(uri, type, fi.lastModified().date());
 
-            set->addActivity(uri, type);
         }
     }
 
@@ -72,7 +73,6 @@ void NepomukSource::startSearch(const QDate &beginDate, const QDate &endDate)
 
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
-//    qDebug() << "Processing entry";
     ActivitySet *set = createActivitySet(list);
     emit newActivitySet(set);
 }

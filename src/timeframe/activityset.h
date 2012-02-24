@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QDate>
-#include <QDateTime>
 #include <QList>
+#include <QMetaType>
 
 class Activity : public QObject
 {
@@ -12,8 +12,8 @@ class Activity : public QObject
     Q_PROPERTY(QString url READ getUrl WRITE setUrl)
     Q_PROPERTY(QString type READ getType WRITE setType)
 public:
-    explicit Activity(const QString &url, const QString &type, QObject *parent = 0)
-        : QObject(parent), url(url), type(type) {}
+    explicit Activity(const QString &url, const QString &type, const QDate &date, QObject *parent = 0)
+        : QObject(parent), url(url), type(type), date(date) {}
 public slots:
     QString getUrl();
     void setUrl(QString newUrl);
@@ -21,10 +21,13 @@ public slots:
     QString getType();
     void setType(QString newType);
 
+    QDate getDate();
+    void setDate(QDate date);
+
 private:
     QString url;
     QString type;
-    QDateTime datetime;
+    QDate date;
 };
 
 // set of activities for some period of time
@@ -35,7 +38,7 @@ public:
     explicit ActivitySet(QObject *parent = 0);
     ~ActivitySet();
 
-    void addActivity(const QString &url, const QString &type);
+    void addActivity(const QString &url, const QString &type, const QDate &date);
 signals:
     
 public slots:
@@ -46,6 +49,10 @@ public slots:
 
 private:
     QList<Activity *> activities;
+    QDate m_beginDate;
+    QDate m_endDate;
 };
+
+Q_DECLARE_METATYPE(ActivitySet *)
 
 #endif // ACTIVITYEVENT_H

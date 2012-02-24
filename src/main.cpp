@@ -61,9 +61,9 @@ int main(int argc, char *argv[])
 
     SWApp *app = SWApp::self();
     
-    ActivityModel *model = new ActivityModel;
+    ActivityModel model;
     NepomukSource *source = new NepomukSource;
-    model->addSource(source);
+    model.addSource(source);
 
 
     int rc = app->exec();
