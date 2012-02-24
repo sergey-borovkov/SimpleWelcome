@@ -64,13 +64,19 @@ void ActivityModel::addSource(ActivitySource *source)
 void ActivityModel::addActivitySet(ActivitySet *set)
 {
     // just to get it working
-    for(int i = 0; i < set->count(); i++)
+    if(!activities.size())
     {
+        activities.append(set);
+    }    
+    else
+    {
+        for(int i = 0; i < set->count(); i++)
+        {
 
             for(int j = 0; j < activities.size(); j++)
             {
                 bool isFound = false;
-                for(int k = 0; k < activities[j]->count(); k++)
+                for(int k = 0; k < activities[j]->count() && !isFound; k++)
                 {
                     if(activities[j]->activity(k)->getDate() == set->activity(i)->getDate())
                     {
@@ -87,10 +93,16 @@ void ActivityModel::addActivitySet(ActivitySet *set)
                     }
                 }
             }
-
+        }
     }
 /*
-    activities.append(set);
-*/
-
+    for(int i = 0 ; i < activities.count(); i++)
+    {
+        qDebug() << "Date" << activities[i]->getDate();
+        for(int j = 0; j < activities[i]->count(); j++)
+        {
+            qDebug() << activities[i]->activity(j)->getUrl() << activities[i]->activity(j)->getDate();
+        }
+    }
+    */
 }
