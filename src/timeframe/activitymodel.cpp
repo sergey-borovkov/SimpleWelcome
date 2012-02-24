@@ -58,15 +58,39 @@ void ActivityModel::addSource(ActivitySource *source)
 {
     this->source = source; // remember pointer to source to be able to use blocking API if necessary
     source->startSearch(QDate::currentDate().addDays(-3), QDate::currentDate());
-
     connect(source, SIGNAL(newActivitySet(ActivitySet*)), SLOT(addActivitySet(ActivitySet*)));
 }
 
 void ActivityModel::addActivitySet(ActivitySet *set)
-{    
-    activities.append(set);
-    for(int j = 0; j < set->count(); j++)
+{
+    // just to get it working
+    for(int i = 0; i < set->count(); i++)
     {
-        qDebug() << set->activity(j)->getUrl() << set->activity(j)->getDate();
+
+            for(int j = 0; j < activities.size(); j++)
+            {
+                bool isFound = false;
+                for(int k = 0; k < activities[j]->count(); k++)
+                {
+                    if(activities[j]->activity(k)->getDate() == set->activity(i)->getDate())
+                    {
+                        activities[j]->addActivity(set->activity(i));
+                        isFound = true;
+                        break;
+                    }
+
+                    if(!isFound)
+                    {
+                        ActivitySet *newSet = new ActivitySet;
+                        newSet->addActivity(set->activity(i));
+                        activities.append(newSet);
+                    }
+                }
+            }
+
     }
+/*
+    activities.append(set);
+*/
+
 }

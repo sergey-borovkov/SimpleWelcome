@@ -15,6 +15,8 @@ void ActivitySet::addActivity(const QString &url, const QString &type, const QDa
 {
     activities.append(new Activity(url, type, date));
 
+    this->date = date;
+
     if(m_beginDate.isValid())
     {
         if(m_beginDate > date)
@@ -29,8 +31,12 @@ void ActivitySet::addActivity(const QString &url, const QString &type, const QDa
         m_beginDate = date;
         m_endDate = date;
     }
+}
 
-
+void ActivitySet::addActivity(Activity *activity)
+{
+    date = activity->getDate();
+    activities.append(activity);
 }
 
 int ActivitySet::count()
@@ -46,6 +52,11 @@ QDate ActivitySet::beginDate()
 QDate ActivitySet::endDate()
 {
     return m_endDate;
+}
+
+QDate ActivitySet::getDate()
+{
+    return date;
 }
 
 Activity *ActivitySet::activity(int index)
