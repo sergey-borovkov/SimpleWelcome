@@ -19,7 +19,9 @@ void ActivitySet::addActivity(const QString &url, const QString &type, const QDa
     {
         if(m_beginDate > date)
             m_beginDate = date;
-        else if(m_endDate < date)
+        else if(m_endDate.isValid() && m_endDate < date)
+            m_endDate = date;
+        else if(m_endDate.isValid())
             m_endDate = date;
     }
     else
