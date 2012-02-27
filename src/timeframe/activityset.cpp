@@ -42,6 +42,11 @@ Activity *ActivitySet::activity(int index)
     return activities.at(index);
 }
 
+QString ActivitySet::getUrl(int i)
+{
+    return activities.at(i)->getUrl();
+}
+
 QString Activity::getUrl()
 {
     return url;

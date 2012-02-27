@@ -32,9 +32,9 @@ Item {
         console.log ("date is " + Qt.formatDateTime(currentDate, "dd-MM-yy") );
         var v = activities
         console.log ("v is " + activities );
-        console.log ("v count is " + activities.count );
-
-        return "/home/julia/work/images/image.png";
+        console.log ("v count is " + activities.length );
+        console.log("activities " + activities.last)
+        return activities.getUrl(0);
     }
 
     Item {
@@ -97,7 +97,7 @@ Item {
 
         Text {
             id: date
-            text: "<b>" + Qt.formatDateTime(activityModel.currentDate, "dd-MM-yy") + "</b> "
+            text: "<b>" + Qt.formatDateTime(currentDate, "dd-MM-yy") + "</b> "
             anchors.right: item6.right
             anchors.bottom: item6.top
         }

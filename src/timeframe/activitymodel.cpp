@@ -35,7 +35,7 @@ ActivityModel::~ActivityModel()
 int ActivityModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return activities.count();
+    return map.count();
 }
 
 QVariant ActivityModel::data(const QModelIndex &index, int role) const
@@ -49,32 +49,21 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
     {
         if ( role == CurrentDateRole )
         {
-            return QDate::currentDate().addDays(-5);
+            return QDate::currentDate().addDays(-row);
         }
         else if ( role == ActivitiesRole )
         {
-            QDate requestedDate = QDate::currentDate().addDays(-5);//.addDays(-row);
+            QDate requestedDate = QDate::currentDate().addDays(-row);
 
             qDebug( "row is %d", row);
             qDebug( "date is %s", requestedDate.toString().toLocal8Bit().data() );
 
-            for(int i = 0; i < activities.size(); i++)
-            {
-                if(requestedDate != activities[i]->getDate())
-                {
-                    QVariant var;
-                    var.setValue(activities[i]);
-                    return var;
-                }
-            }
+             QList<Activity *> values = map.values(requestedDate);
+             qDebug() << "values" << values.size();
 
-            // if we don't have the result try blocking approach
-
-       /*    ActivitySet *set = source->getActivitySet(7, requestedDate, requestedDate);
-            QVariant var;
-            var.setValue(set);
-            return var;
-            */
+             QVariant var;
+             var.setValue(values);
+             return var;
         }
     }
 
@@ -84,59 +73,33 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
 void ActivityModel::addSource(ActivitySource *source)
 {
     this->source = source; // remember pointer to source to be able to use blocking API if necessary
-    source->startSearch(QDate::currentDate().addDays(-6), QDate::currentDate());
+    source->startSearch(QDate::currentDate().addDays(-10), QDate::currentDate());
     connect(source, SIGNAL(newActivitySet(ActivitySet*)), SLOT(addActivitySet(ActivitySet*)));
+    connect(source, SIGNAL(newActivities(QList<Activity*>)), SLOT(addActivities(QList<Activity*>)));
 }
 
 void ActivityModel::addActivitySet(ActivitySet *set)
 {
+
     // just to get it working
-    if(!activities.size())
-    {
-        beginInsertRows(QModelIndex(), 0, 0);
-        activities.append(set);
 
-        endInsertRows();
-    }    
-    else
+}
+
+void ActivityModel::addActivities(QList<Activity *> list)
+{
+    for(int i = 0; i < list.size(); i++)
     {
-        for(int i = 0; i < set->count(); i++)
+        if(!map.contains(list[i]->getDate()))
         {
+            int first = list[i]->getDate().daysTo(currentDate);
+            if(first > rowCount(QModelIndex()))
+                first = rowCount(QModelIndex()) - 1;
 
-            for(int j = 0; j < activities.size(); j++)
-            {
-                bool isFound = false;
-                for(int k = 0; k < activities[j]->count() && !isFound; k++)
-                {
-                    if(activities[j]->activity(k)->getDate() == set->activity(i)->getDate())
-                    {                        
-                        activities[j]->addActivity(set->activity(i));
-                        emit dataChanged(index(j, 0), index(j, 0));
-                        isFound = true;
-                        break;
-                    }
+            beginInsertRows(QModelIndex(), first, first);
+            map.insert(list[i]->getDate(), list[i]);
+            endInsertRows();
+        }
 
-                    if(!isFound)
-                    {
-                        ActivitySet *newSet = new ActivitySet;
-                        newSet->addActivity(set->activity(i));
-                        int rows = rowCount(QModelIndex());
-                        beginInsertRows(QModelIndex(), rows - 1, rows - 1);
-                        activities.append(newSet);
-                        endInsertRows();
-                    }
-                }
-            }
-        }
+        map.insert(list[i]->getDate(), list[i]);
     }
-    /*
-    for(int i = 0 ; i < activities.count(); i++)
-    {
-        qDebug() << "Date" << activities[i]->getDate();
-        for(int j = 0; j < activities[i]->count(); j++)
-        {
-            qDebug() << activities[i]->activity(j)->getUrl() << activities[i]->activity(j)->getDate();
-        }
-    }
-    */
 }
