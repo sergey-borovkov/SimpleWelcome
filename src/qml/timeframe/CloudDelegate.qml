@@ -26,12 +26,22 @@ Item {
         border.color: "blue"
     }
 
+    function getItem( idx )
+    {
+        var d = activityModel.currentDate
+        console.log ("date is " + d);
+        console.log ("date is " + Qt.formatDateTime(d, "dd-MM-yy") );
+        console.log ("v is " + activityModel.activities);
+        return "/home/julia/work/images/image.png";
+    }
+
     Item {
         id: cloudItem
         anchors.fill: parent
 
         ActivityItem {
             id: item1
+            path: getItem(0)
             num: "1 "
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: cloudItem.bottom
@@ -85,7 +95,7 @@ Item {
 
         Text {
             id: date
-            text: "<b>12 June</b>"
+            text: "<b>" + Qt.formatDateTime(activityModel.currentDate, "dd-MM-yy") + "</b> "
             anchors.right: item6.right
             anchors.bottom: item6.top
         }

@@ -33,8 +33,6 @@
 #include <KDebug>
 
 #include "swapp.h"
-#include "timeframe/activitymodel.h"
-#include "timeframe/nepomuksource.h"
 
 static const char description[] = I18N_NOOP("ROSA Desktop Application Launcher QtQuick");
 static const char version[] = "0.1";
@@ -61,14 +59,7 @@ int main(int argc, char *argv[])
 
     SWApp *app = SWApp::self();
     
-    ActivityModel model;
-    NepomukSource *source = new NepomukSource;
-    model.addSource(source);
-
-
     int rc = app->exec();
-
-
 
     delete app;
     

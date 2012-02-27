@@ -8,6 +8,7 @@
 class ActivitySet;
 class ActivitySource;
 
+
 class ActivityModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -18,12 +19,17 @@ public:
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     void addSource(ActivitySource *source);
+
 signals:
     
 public slots:
     void addActivitySet(ActivitySet *set);
+    int count() { return rowCount( QModelIndex()); }
 
 private:
+    static const int CurrentDateRole;
+    static const int ActivitiesRole;
+
     ActivitySource *source;
 
     // temporary, will have to change it later to more efficient data structure

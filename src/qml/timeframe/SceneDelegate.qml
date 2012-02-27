@@ -19,6 +19,14 @@ Item {
         border.width: 3
     }
 
+    Text {
+        text: activityModel.count()
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+    }
+
+
     Item {
         id: sceneItem
         anchors.fill: parent
