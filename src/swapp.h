@@ -10,6 +10,10 @@
 #include "appiconprovider.h"
 
 
+class ActivityModel;
+class NepomukSource;
+
+
 class SWApp : public KApplication
 {
     Q_OBJECT
@@ -33,6 +37,9 @@ private Q_SLOTS:
 
     AppProvider *m_appProvider;
     AppIconProvider *m_appIconProvider;
+
+    ActivityModel* m_model;
+    NepomukSource* m_source;
 };
 
 #endif // SW_APP_H

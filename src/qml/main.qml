@@ -13,6 +13,7 @@ Rectangle {
     VisualItemModel {
         id: tabListModel
 
+        /*
         FirstTab {
             width: tabListView.width
         }
@@ -20,7 +21,7 @@ Rectangle {
         SecondTab {
             width: tabListView.width
         }
-
+*/
         TimeFrameTab {
             width: tabListView.width
             height: tabListView.height

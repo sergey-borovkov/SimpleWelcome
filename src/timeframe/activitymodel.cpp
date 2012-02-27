@@ -3,13 +3,29 @@
 
 #include <QDate>
 #include <QDebug>
+#include <QHash>
 
 #include "activityset.h"
+
+const int ActivityModel::CurrentDateRole = Qt::UserRole + 1;
+const int ActivityModel::ActivitiesRole = Qt::UserRole + 2;
+
 
 ActivityModel::ActivityModel(QObject *parent) :
     QAbstractListModel(parent)
 {
     currentDate = QDate::currentDate();
+
+    QHash<int, QByteArray> roles = roleNames();
+    roles.insert(CurrentDateRole, QByteArray("currentDate"));
+    roles.insert(ActivitiesRole, QByteArray("activities"));
+    setRoleNames(roles);
+
+    QHashIterator<int, QByteArray> i(roles);
+    while (i.hasNext()) {
+        i.next();
+        qDebug("role %d: %s ", i.key(), i.value().data() );
+    }
 }
 
 ActivityModel::~ActivityModel()
@@ -32,6 +48,9 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
     if(row > 0)
     {
         QDate requestedDate = currentDate.addDays(-row);
+
+        qDebug( "row is %d", row);
+        qDebug( "date is %s", requestedDate.toString().toLocal8Bit().data() );
 
         for(int i = 0; i < activities.size(); i++)
         {
@@ -57,7 +76,7 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
 void ActivityModel::addSource(ActivitySource *source)
 {
     this->source = source; // remember pointer to source to be able to use blocking API if necessary
-    source->startSearch(QDate::currentDate().addDays(-3), QDate::currentDate());
+    source->startSearch(QDate::currentDate().addDays(-40), QDate::currentDate());
 
     connect(source, SIGNAL(newActivitySet(ActivitySet*)), SLOT(addActivitySet(ActivitySet*)));
 }
