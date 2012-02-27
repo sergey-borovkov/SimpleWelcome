@@ -1,5 +1,6 @@
 import QtQuick 1.0
 
+
 Rectangle {
     id: timeFrameTab
     width: parent.width
@@ -24,36 +25,12 @@ Rectangle {
 
     Component.onCompleted: startup();
     
-
-    ListModel {
-        id: filesModel
-
-        ListElement {
-            url: "image.jpg"
-            mimeType: "image"
-        }
-        ListElement {
-            url: "video.mp4"
-            mimeType: "video"
-        }
-        ListElement {
-            url: "text.doc"
-            mimeType: "doc"
-        }
-        ListElement {
-            url: "image.png"
-            mimeType: "image"
-        }
-        ListElement {
-            url: "video.avi"
-            mimeType: "video"
-        }
-        ListElement {
-            url: "text.odt"
-            mimeType: "doc"
-        }
+    Text {
+        text: activityModel.count()
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.leftMargin: 10
     }
-
 
     ListView {
         id: scene
@@ -61,7 +38,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width
         height: parent.height
-        model: filesModel//activityModel
+        model: activityModel
         delegate: SceneDelegate {}
 //        highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
         focus: true
@@ -69,9 +46,6 @@ Rectangle {
         highlightFollowsCurrentItem: true
         highlightRangeMode: ListView.StrictlyEnforceRange
         clip: true
-//        preferredHighlightBegin: 0
-//        preferredHighlightEnd: 0
-//        flickDeceleration: 1000
         highlightMoveDuration: 1000
 
         Keys.onLeftPressed: {

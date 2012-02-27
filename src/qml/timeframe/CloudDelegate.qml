@@ -1,5 +1,6 @@
 
 import QtQuick 1.1
+//import Activity 1.0
 
 
 Item {
@@ -26,12 +27,23 @@ Item {
         border.color: "blue"
     }
 
+    function getItem( idx )
+    {
+        console.log ("date is " + Qt.formatDateTime(currentDate, "dd-MM-yy") );
+        var v = activities
+        console.log ("v is " + activities );
+        console.log ("v count is " + activities.count );
+
+        return "/home/julia/work/images/image.png";
+    }
+
     Item {
         id: cloudItem
         anchors.fill: parent
 
         ActivityItem {
             id: item1
+            path: getItem(0)
             num: "1 "
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: cloudItem.bottom
@@ -85,7 +97,7 @@ Item {
 
         Text {
             id: date
-            text: "<b>12 June</b>"
+            text: "<b>" + Qt.formatDateTime(activityModel.currentDate, "dd-MM-yy") + "</b> "
             anchors.right: item6.right
             anchors.bottom: item6.top
         }

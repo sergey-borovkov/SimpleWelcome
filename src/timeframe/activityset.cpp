@@ -17,41 +17,19 @@ void ActivitySet::addActivity(const QString &url, const QString &type, const QDa
 
     this->date = date;
 
-    if(m_beginDate.isValid())
-    {
-        if(m_beginDate > date)
-            m_beginDate = date;
-        else if(m_endDate.isValid() && m_endDate < date)
-            m_endDate = date;
-        else if(m_endDate.isValid())
-            m_endDate = date;
-    }
-    else
-    {
-        m_beginDate = date;
-        m_endDate = date;
-    }
+    emit countChanged();
 }
 
 void ActivitySet::addActivity(Activity *activity)
 {
     date = activity->getDate();
     activities.append(activity);
+    emit countChanged();
 }
 
 int ActivitySet::count()
 {
     return activities.count();
-}
-
-QDate ActivitySet::beginDate()
-{
-    return m_beginDate;
-}
-
-QDate ActivitySet::endDate()
-{
-    return m_endDate;
 }
 
 QDate ActivitySet::getDate()
@@ -72,6 +50,7 @@ QString Activity::getUrl()
 void Activity::setUrl(QString newUrl)
 {
     url = newUrl;
+    emit urlChanged();
 }
 
 QString Activity::getType()
@@ -82,6 +61,7 @@ QString Activity::getType()
 void Activity::setType(QString newType)
 {
     type = newType;
+    emit typeChanged();
 }
 
 QDate Activity::getDate()
