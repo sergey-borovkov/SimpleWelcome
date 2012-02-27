@@ -7,6 +7,7 @@ Item {
 
     property int typeItem; // 1 - x1, 2 - x2, 3 - x3 - размер прямоугольника
     property string num;
+    property string path;
 
     width: ( typeItem == 1 ) ? x1 : (( typeItem == 2 ) ? x2 : x3 )
     height: ( typeItem == 1 ) ? y1 : (( typeItem == 2 ) ? y2 : y3 )
@@ -27,17 +28,17 @@ Item {
             id: imgItem
             anchors.centerIn: parent
 
-            Rectangle {
+            Image {
                 id: img
+                source: path
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: ( typeItem == 1 ) ? x1 : (( typeItem == 2 ) ? x2 : x3)
                 height: ( typeItem == 1 ) ? y1 : (( typeItem == 2 ) ? y2 : y3)
-                color: "blue"
                 opacity: cloudDelegate.ListView.isCurrentItem ? 1 : 0.5
             }
             Text {
-                text: mimeType + " " + activityItem.num + ( ( typeItem == 1 ) ? 'x1 ' : ( typeItem == 2 ) ? 'x2 ' : 'x3 ')//  + url
+                text: activityItem.num + ( ( typeItem == 1 ) ? 'x1 ' : ( typeItem == 2 ) ? 'x2 ' : 'x3 ')//  + url
                 anchors.centerIn: img
             }
         }
@@ -107,7 +108,7 @@ Item {
     Loader {
         id: eventLoader
         anchors.fill: parent
-        sourceComponent: bestDelegate ( mimeType )
+        sourceComponent: bestDelegate ( "image" )
 
     }
 }

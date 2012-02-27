@@ -33,6 +33,11 @@
 #include <KDebug>
 #include <KIcon>
 
+#include "timeframe/activitymodel.h"
+#include "timeframe/nepomuksource.h"
+
+#include "timeframe/activityset.h"
+
 SWApp* SWApp::self()
 {
     if (!kapp) {
@@ -46,7 +51,6 @@ SWApp::SWApp()
     : KApplication(),
       m_inited(false)
 {
-
     m_viewer = new QmlApplicationViewer();
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
@@ -63,10 +67,19 @@ SWApp::SWApp()
 
     QString appPath = applicationFilePath();
 
+
+    m_model = new ActivityModel();
+    m_source = new NepomukSource;
+    m_model->addSource( m_source );
+
+    m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
+    qmlRegisterType<ActivitySet>("Acitivity", 1, 0, "ActivitySet");
+
+
     if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
     else
-        m_viewer->setMainQmlFile(QLatin1String("/home/kami/lang/timeframe/src/qml/main.qml"));
+        m_viewer->setMainQmlFile(QLatin1String("/home/julia/work/timeframe/src/qml/main.qml"));
 
     QTimer::singleShot(1000, this, SLOT(init()));
 
@@ -81,6 +94,12 @@ SWApp::~SWApp()
     m_viewer = NULL;
     m_appProvider = NULL;
     m_appIconProvider = NULL;
+
+
+    delete m_model;
+    delete m_source;
+
+
 }
 
 int SWApp::newInstance()

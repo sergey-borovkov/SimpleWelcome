@@ -9,11 +9,15 @@
 class Activity : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString url READ getUrl WRITE setUrl)
-    Q_PROPERTY(QString type READ getType WRITE setType)
+    Q_PROPERTY(QString url READ getUrl WRITE setUrl NOTIFY urlChanged)
+    Q_PROPERTY(QString type READ getType WRITE setType NOTIFY typeChanged)
 public:
     explicit Activity(const QString &url, const QString &type, const QDate &date, QObject *parent = 0)
         : QObject(parent), url(url), type(type), date(date) {}
+
+signals:
+    void urlChanged();
+    void typeChanged();
 public slots:
     QString getUrl();
     void setUrl(QString newUrl);
@@ -34,6 +38,7 @@ private:
 class ActivitySet : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
     explicit ActivitySet(QObject *parent = 0);
     ~ActivitySet();
@@ -41,18 +46,16 @@ public:
     void addActivity(const QString &url, const QString &type, const QDate &date);
     void addActivity(Activity *activity);
 signals:
-    
+    void countChanged();
+
 public slots:
-    int count() ;
+    int count();
     Activity *activity(int index);    
-    QDate beginDate();
-    QDate endDate();
+
     QDate getDate();
 
 private:
-    QList<Activity *> activities;
-    QDate m_beginDate;
-    QDate m_endDate;
+    QList<Activity *> activities;    
     QDate date;
 };
 

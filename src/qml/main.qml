@@ -1,5 +1,4 @@
 import QtQuick 1.0
-
 import Qt 4.7
 
 import "./timeframe/" 1.0
@@ -13,6 +12,7 @@ Rectangle {
     VisualItemModel {
         id: tabListModel
 
+        /*
         FirstTab {
             width: tabListView.width
         }
@@ -20,7 +20,7 @@ Rectangle {
         SecondTab {
             width: tabListView.width
         }
-
+*/
         TimeFrameTab {
             width: tabListView.width
             height: tabListView.height
