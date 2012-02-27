@@ -72,6 +72,16 @@ void NepomukSource::startSearch(const QDate &beginDate, const QDate &endDate)
 
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
-    ActivitySet *set = createActivitySet(list);
-    emit newActivitySet(set);
+    //ActivitySet *set = createActivitySet(list);
+    //emit newActivitySet(set);
+    QList<Activity *> activities;
+    for(int i = 0; i < list.size(); i++)
+    {
+        QString uri = list.at(i).resource().toFile().url().path();  //result.at(i).resource().uri();
+        QString type = list.at(i).resource().type();
+        QFileInfo fi(uri);
+        activities.append(new Activity(uri, type, fi.lastModified().date()));
+   }
+
+    emit newActivities(activities);
 }

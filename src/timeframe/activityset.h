@@ -18,6 +18,7 @@ public:
 signals:
     void urlChanged();
     void typeChanged();
+
 public slots:
     QString getUrl();
     void setUrl(QString newUrl);
@@ -51,7 +52,7 @@ signals:
 public slots:
     int count();
     Activity *activity(int index);    
-
+    QString getUrl(int i);
     QDate getDate();
 
 private:

@@ -5,6 +5,7 @@
 
 class ActivitySet;
 class QDate;
+class Activity;
 
 class ActivitySource : public QObject
 {
@@ -17,6 +18,7 @@ public:
     virtual ActivitySet *getActivitySet(int limit, const QDate &beginDate, const QDate &endDate) = 0;
 signals:
     void newActivitySet(ActivitySet *);
+    void newActivities(QList<Activity *>);
 
 public slots:
     
