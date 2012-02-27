@@ -66,7 +66,9 @@ void ActivityModel::addActivitySet(ActivitySet *set)
     // just to get it working
     if(!activities.size())
     {
+        beginInsertRows(QModelIndex(), 0, 0);
         activities.append(set);
+        endInsertRows();
     }    
     else
     {
@@ -79,8 +81,9 @@ void ActivityModel::addActivitySet(ActivitySet *set)
                 for(int k = 0; k < activities[j]->count() && !isFound; k++)
                 {
                     if(activities[j]->activity(k)->getDate() == set->activity(i)->getDate())
-                    {
+                    {                        
                         activities[j]->addActivity(set->activity(i));
+                        emit dataChanged(index(j, 0), index(j, 0));
                         isFound = true;
                         break;
                     }
@@ -89,20 +92,13 @@ void ActivityModel::addActivitySet(ActivitySet *set)
                     {
                         ActivitySet *newSet = new ActivitySet;
                         newSet->addActivity(set->activity(i));
+                        int rows = rowCount(QModelIndex());
+                        beginInsertRows(QModelIndex(), rows - 1, rows - 1);
                         activities.append(newSet);
+                        endInsertRows();
                     }
                 }
             }
         }
     }
-/*
-    for(int i = 0 ; i < activities.count(); i++)
-    {
-        qDebug() << "Date" << activities[i]->getDate();
-        for(int j = 0; j < activities[i]->count(); j++)
-        {
-            qDebug() << activities[i]->activity(j)->getUrl() << activities[i]->activity(j)->getDate();
-        }
-    }
-    */
 }
