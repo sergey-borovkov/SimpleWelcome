@@ -1,5 +1,6 @@
 
 import QtQuick 1.1
+//import Activity 1.0
 
 
 Item {
@@ -28,10 +29,11 @@ Item {
 
     function getItem( idx )
     {
-        var d = activityModel.currentDate
-        console.log ("date is " + d);
-        console.log ("date is " + Qt.formatDateTime(d, "dd-MM-yy") );
-        console.log ("v is " + activityModel.activities);
+        console.log ("date is " + Qt.formatDateTime(currentDate, "dd-MM-yy") );
+        var v = activities
+        console.log ("v is " + activities );
+        console.log ("v count is " + activities.count );
+
         return "/home/julia/work/images/image.png";
     }
 

@@ -47,27 +47,35 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
 
     if(row > 0)
     {
-        QDate requestedDate = currentDate.addDays(-row);
-
-        qDebug( "row is %d", row);
-        qDebug( "date is %s", requestedDate.toString().toLocal8Bit().data() );
-
-        for(int i = 0; i < activities.size(); i++)
+        if ( role == CurrentDateRole )
         {
-            if(requestedDate >= activities[i]->beginDate() && requestedDate <= activities[i]->endDate())
-            {
-                QVariant var;
-                var.setValue(activities[i]);
-                return var;
-            }
+            return QDate::currentDate().addDays(-row);
         }
+        else if ( role == ActivitiesRole )
+        {
+            QDate requestedDate = QDate::currentDate()
+                    ;//.addDays(-row);
 
-        // if we don't have the result try blocking approach
+            qDebug( "row is %d", row);
+            qDebug( "date is %s", requestedDate.toString().toLocal8Bit().data() );
 
-        ActivitySet *set = source->getActivitySet(7, requestedDate, requestedDate);
-        QVariant var;
-        var.setValue(set);
-        return var;
+            for(int i = 0; i < activities.size(); i++)
+            {
+                if(requestedDate >= activities[i]->beginDate() && requestedDate <= activities[i]->endDate())
+                {
+                    QVariant var;
+                    var.setValue(activities[i]);
+                    return var;
+                }
+            }
+
+            // if we don't have the result try blocking approach
+
+            ActivitySet *set = source->getActivitySet(7, requestedDate, requestedDate);
+            QVariant var;
+            var.setValue(set);
+            return var;
+        }
     }
 
     return QVariant();
@@ -77,15 +85,51 @@ void ActivityModel::addSource(ActivitySource *source)
 {
     this->source = source; // remember pointer to source to be able to use blocking API if necessary
     source->startSearch(QDate::currentDate().addDays(-40), QDate::currentDate());
-
     connect(source, SIGNAL(newActivitySet(ActivitySet*)), SLOT(addActivitySet(ActivitySet*)));
 }
 
 void ActivityModel::addActivitySet(ActivitySet *set)
-{    
-    activities.append(set);
-    for(int j = 0; j < set->count(); j++)
+{
+    // just to get it working
+    if(!activities.size())
     {
-        qDebug() << set->activity(j)->getUrl() << set->activity(j)->getDate();
+        activities.append(set);
     }
+    else
+    {
+        for(int i = 0; i < set->count(); i++)
+        {
+
+            for(int j = 0; j < activities.size(); j++)
+            {
+                bool isFound = false;
+                for(int k = 0; k < activities[j]->count() && !isFound; k++)
+                {
+                    if(activities[j]->activity(k)->getDate() == set->activity(i)->getDate())
+                    {
+                        activities[j]->addActivity(set->activity(i));
+                        isFound = true;
+                        break;
+                    }
+
+                    if(!isFound)
+                    {
+                        ActivitySet *newSet = new ActivitySet;
+                        newSet->addActivity(set->activity(i));
+                        activities.append(newSet);
+                    }
+                }
+            }
+        }
+    }
+    /*
+    for(int i = 0 ; i < activities.count(); i++)
+    {
+        qDebug() << "Date" << activities[i]->getDate();
+        for(int j = 0; j < activities[i]->count(); j++)
+        {
+            qDebug() << activities[i]->activity(j)->getUrl() << activities[i]->activity(j)->getDate();
+        }
+    }
+    */
 }

@@ -55,7 +55,6 @@ ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result
             QString type = result.at(i).resource().type();
             QFileInfo fi(uri);
             set->addActivity(uri, type, fi.lastModified().date());
-
         }
     }
 

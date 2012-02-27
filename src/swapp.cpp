@@ -36,6 +36,7 @@
 #include "timeframe/activitymodel.h"
 #include "timeframe/nepomuksource.h"
 
+#include "timeframe/activityset.h"
 
 SWApp* SWApp::self()
 {
@@ -50,7 +51,6 @@ SWApp::SWApp()
     : KApplication(),
       m_inited(false)
 {
-
     m_viewer = new QmlApplicationViewer();
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
@@ -73,6 +73,7 @@ SWApp::SWApp()
     m_model->addSource( m_source );
 
     m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
+    qmlRegisterType<ActivitySet>("Acitivity", 1, 0, "ActivitySet");
 
 
     if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
