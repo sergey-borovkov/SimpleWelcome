@@ -30,27 +30,32 @@ private:
     QDate date;
 };
 
-// set of activities for some period of time
+// set of activities for day
 class ActivitySet : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
     explicit ActivitySet(QObject *parent = 0);
     ~ActivitySet();
 
     void addActivity(const QString &url, const QString &type, const QDate &date);
+    void addActivity(Activity *activity);
 signals:
-    
+    void countChanged();
+
 public slots:
-    int count() ;
-    Activity *activity(int index);
+    int count();
+    Activity *activity(int index);    
     QDate beginDate();
     QDate endDate();
+    QDate getDate();
 
 private:
     QList<Activity *> activities;
     QDate m_beginDate;
     QDate m_endDate;
+    QDate date;
 };
 
 Q_DECLARE_METATYPE(ActivitySet *)
