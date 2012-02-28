@@ -6,12 +6,11 @@
 #include <QDate>
 #include <QMultiMap>
 #include <QMetaType>
+#include <QVariantList>
 
 class ActivitySet;
 class ActivitySource;
 class Activity;
-
-Q_DECLARE_METATYPE(QList<Activity *>)
 
 class ActivityModel : public QAbstractListModel
 {
@@ -41,6 +40,8 @@ private:
     QList<ActivitySet *> activities;
     QDate currentDate;
     QMultiMap< QDate, Activity*> map;
+
+    int days;
 };
 
 #endif // ACTIVITYMODEL_H
