@@ -39,11 +39,8 @@ private:
 
     ActivitySource *source;
 
-    // temporary, will have to change it later to more efficient data structure
-    QList<ActivitySet *> activities;
     QDate currentDate;
     QMultiMap< QDate, Activity*> map;
-
     int days;
 };
 
