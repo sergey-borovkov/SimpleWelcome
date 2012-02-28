@@ -1,20 +1,17 @@
 #include "activitymodel.h"
 #include "activitysource.h"
+#include "activityset.h"
 
 #include <QDate>
 #include <QDebug>
-#include <QHash>
-
-#include "activityset.h"
 
 const int ActivityModel::CurrentDateRole = Qt::UserRole + 1;
 const int ActivityModel::ActivitiesRole = Qt::UserRole + 2;
 
 
 ActivityModel::ActivityModel(QObject *parent) :
-    QAbstractListModel(parent)
+    QAbstractListModel(parent), days(0), currentDate(QDate::currentDate())
 {
-    currentDate = QDate::currentDate();
 
     QHash<int, QByteArray> roles = roleNames();
     roles.insert(CurrentDateRole, QByteArray("currentDate"));
@@ -35,14 +32,11 @@ ActivityModel::~ActivityModel()
 int ActivityModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return map.count();
+    return days;
 }
 
 QVariant ActivityModel::data(const QModelIndex &index, int role) const
 {
-    Q_UNUSED(index)
-    Q_UNUSED(role)
-
     int row = index.row();
 
     if(row >= 0)
@@ -59,10 +53,9 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
             qDebug( "date is %s", requestedDate.toString().toLocal8Bit().data() );
 
              QList<Activity *> values = map.values(requestedDate);
-             qDebug() << "values" << values.size();
-
+             ActivitySet *set = new ActivitySet(values, 0);
              QVariant var;
-             var.setValue(values);
+             var.setValue(set);
              return var;
         }
     }
@@ -73,15 +66,12 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
 void ActivityModel::addSource(ActivitySource *source)
 {
     this->source = source; // remember pointer to source to be able to use blocking API if necessary
-    source->startSearch(QDate::currentDate().addDays(-10), QDate::currentDate());
-    connect(source, SIGNAL(newActivitySet(ActivitySet*)), SLOT(addActivitySet(ActivitySet*)));
+    source->startSearch(QDate::currentDate().addDays(-30), QDate::currentDate());
     connect(source, SIGNAL(newActivities(QList<Activity*>)), SLOT(addActivities(QList<Activity*>)));
 }
 
 void ActivityModel::addActivitySet(ActivitySet *set)
-{
-
-    // just to get it working
+{    
 
 }
 
@@ -92,12 +82,13 @@ void ActivityModel::addActivities(QList<Activity *> list)
         if(!map.contains(list[i]->getDate()))
         {
             int first = list[i]->getDate().daysTo(currentDate);
+            days++;
             if(first > rowCount(QModelIndex()))
                 first = rowCount(QModelIndex()) - 1;
 
             beginInsertRows(QModelIndex(), first, first);
             map.insert(list[i]->getDate(), list[i]);
-            endInsertRows();
+            endInsertRows();            
         }
 
         map.insert(list[i]->getDate(), list[i]);
