@@ -26,13 +26,16 @@ signals:
 public slots:
 
     int rowCount(const QModelIndex &parent) const;
-    void addActivitySet(ActivitySet *set);
     void addActivities(QList<Activity *> list);
     int count() { return rowCount( QModelIndex()); }
 
 private:
-    static const int CurrentDateRole;
-    static const int ActivitiesRole;
+
+    enum
+    {
+        CurrentDateRole = Qt::UserRole + 1,
+        ActivitiesRole
+    };
 
     ActivitySource *source;
 
