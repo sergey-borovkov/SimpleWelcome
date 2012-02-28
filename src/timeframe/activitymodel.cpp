@@ -73,7 +73,10 @@ void ActivityModel::addActivities(QList<Activity *> list)
         if(!map.contains(list[i]->getDate()))
         {
             int first = list[i]->getDate().daysTo(currentDate);
-            days++;
+//            days++;
+            if(first > days)
+                days = first;
+
             if(first > rowCount(QModelIndex()))
                 first = rowCount(QModelIndex()) - 1;
 
