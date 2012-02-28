@@ -22,11 +22,11 @@ public:
     explicit NepomukSource(QObject *parent = 0);
     // this function is thread safe
     ActivitySet *getActivitySet(int limit, const QDate &beginDate, const QDate &endDate);
-    virtual void startSearch(const QDate &beginDate, const QDate &endDate);
 signals:
     void newEntries(const QList<Nepomuk::Query::Result>&);
 
 public slots:
+    virtual void startSearch(const QDate &beginDate, const QDate &endDate);
     void processEntry(const QList<Nepomuk::Query::Result> &list);
 
 private:
