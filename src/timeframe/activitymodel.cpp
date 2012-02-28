@@ -13,12 +13,8 @@ ActivityModel::ActivityModel(QObject *parent) :
     roles.insert(CurrentDateRole, QByteArray("currentDate"));
     roles.insert(ActivitiesRole, QByteArray("activities"));
     setRoleNames(roles);
+    qDebug() << roles;
 
-    QHashIterator<int, QByteArray> i(roles);
-    while (i.hasNext()) {
-        i.next();
-        qDebug("role %d: %s ", i.key(), i.value().data() );
-    }
 }
 
 ActivityModel::~ActivityModel()
@@ -62,8 +58,11 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
 void ActivityModel::addSource(ActivitySource *source)
 {
     this->source = source; // remember pointer to source to be able to use blocking API if necessary
-    source->startSearch(QDate::currentDate().addDays(-30), QDate::currentDate());
+
     connect(source, SIGNAL(newActivities(QList<Activity*>)), SLOT(addActivities(QList<Activity*>)));
+    connect(this, SIGNAL(newSearch(QDate, QDate)), source, SLOT(startSearch(QDate,QDate)));
+    QDate d1 = QDate::currentDate().addDays(-30);
+    emit newSearch(d1, currentDate);
 }
 
 void ActivityModel::addActivities(QList<Activity *> list)
@@ -73,12 +72,9 @@ void ActivityModel::addActivities(QList<Activity *> list)
         if(!map.contains(list[i]->getDate()))
         {
             int first = list[i]->getDate().daysTo(currentDate);
-//            days++;
-            if(first > days)
-                days = first;
 
-            if(first > rowCount(QModelIndex()))
-                first = rowCount(QModelIndex()) - 1;
+            if(first > days)
+                days = first--;
 
             beginInsertRows(QModelIndex(), first, first);
             map.insert(list[i]->getDate(), list[i]);

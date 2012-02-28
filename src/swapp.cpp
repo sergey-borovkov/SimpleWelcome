@@ -25,6 +25,7 @@
 #include "swapp.h"
 
 #include <QTimer>
+#include <QThread>
 
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
@@ -67,9 +68,14 @@ SWApp::SWApp()
     QString appPath = applicationFilePath();
 
 
-    m_model = new ActivityModel();
+    m_model = new ActivityModel;
     m_source = new NepomukSource;
     m_model->addSource( m_source );
+
+    QThread *nepomukThread = new QThread(this);
+
+    m_source->moveToThread(nepomukThread);
+    nepomukThread->start();
 
     m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
 

@@ -19,6 +19,7 @@
 NepomukSource::NepomukSource(QObject *parent) :
     ActivitySource(parent)
 {
+    qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
 
 ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, const QDate &endDate)
