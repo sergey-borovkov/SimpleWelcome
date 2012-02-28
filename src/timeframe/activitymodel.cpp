@@ -5,12 +5,8 @@
 #include <QDate>
 #include <QDebug>
 
-const int ActivityModel::CurrentDateRole = Qt::UserRole + 1;
-const int ActivityModel::ActivitiesRole = Qt::UserRole + 2;
-
-
 ActivityModel::ActivityModel(QObject *parent) :
-    QAbstractListModel(parent), days(0), currentDate(QDate::currentDate())
+    QAbstractListModel(parent), currentDate(QDate::currentDate()), days(0)
 {
 
     QHash<int, QByteArray> roles = roleNames();
@@ -68,11 +64,6 @@ void ActivityModel::addSource(ActivitySource *source)
     this->source = source; // remember pointer to source to be able to use blocking API if necessary
     source->startSearch(QDate::currentDate().addDays(-30), QDate::currentDate());
     connect(source, SIGNAL(newActivities(QList<Activity*>)), SLOT(addActivities(QList<Activity*>)));
-}
-
-void ActivityModel::addActivitySet(ActivitySet *set)
-{    
-
 }
 
 void ActivityModel::addActivities(QList<Activity *> list)
