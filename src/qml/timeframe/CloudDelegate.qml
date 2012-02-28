@@ -1,7 +1,5 @@
 
 import QtQuick 1.1
-//import Activity 1.0
-
 
 Item {
     id: cloudDelegate
@@ -32,9 +30,9 @@ Item {
         console.log ("date is " + Qt.formatDateTime(currentDate, "dd-MM-yy") );
         var v = activities
         console.log ("v is " + activities );
-        console.log ("v count is " + activities.length );
-        console.log("activities " + activities.last)
-        return activities.getUrl(0);
+        console.log ("v count is " + v.count );
+        console.log("activities " + v.getUrl(0) )
+        return v.getUrl(idx);
     }
 
     Item {
