@@ -6,6 +6,11 @@ ActivitySet::ActivitySet(QObject *parent) :
 
 }
 
+ActivitySet::ActivitySet(QList<Activity *> activities, QObject *parent) :
+    QObject(parent), activities(activities)
+{
+}
+
 ActivitySet::~ActivitySet()
 {
     qDeleteAll(activities);
@@ -13,11 +18,7 @@ ActivitySet::~ActivitySet()
 
 void ActivitySet::addActivity(const QString &url, const QString &type, const QDate &date)
 {
-    activities.append(new Activity(url, type, date));
-
-    this->date = date;
-
-    emit countChanged();
+    addActivity(new Activity(url, type, date));
 }
 
 void ActivitySet::addActivity(Activity *activity)
@@ -31,12 +32,12 @@ int ActivitySet::count()
 {
     return activities.count();
 }
-
+/*
 QDate ActivitySet::getDate()
 {
     return date;
 }
-
+*/
 Activity *ActivitySet::activity(int index)
 {
     return activities.at(index);
@@ -44,7 +45,17 @@ Activity *ActivitySet::activity(int index)
 
 QString ActivitySet::getUrl(int i)
 {
+    if(i >= activities.length())
+        return "";
     return activities.at(i)->getUrl();
+}
+
+QString ActivitySet::getType(int i)
+{
+    if(i >= activities.length())
+        return "";
+    else
+        return activities.at(i)->getType();
 }
 
 QString Activity::getUrl()

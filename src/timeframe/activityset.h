@@ -42,6 +42,7 @@ class ActivitySet : public QObject
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
     explicit ActivitySet(QObject *parent = 0);
+    ActivitySet(QList<Activity *> activities, QObject *parent = 0);
     ~ActivitySet();
 
     void addActivity(const QString &url, const QString &type, const QDate &date);
@@ -53,7 +54,7 @@ public slots:
     int count();
     Activity *activity(int index);    
     QString getUrl(int i);
-    QDate getDate();
+    QString getType(int i);
 
 private:
     QList<Activity *> activities;    
