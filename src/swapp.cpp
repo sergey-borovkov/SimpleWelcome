@@ -28,7 +28,6 @@
 
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
-
 #include <KServiceGroup>
 #include <KDebug>
 #include <KIcon>
@@ -73,13 +72,13 @@ SWApp::SWApp()
     m_model->addSource( m_source );
 
     m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
-    qmlRegisterType<ActivitySet>("Acitivity", 1, 0, "ActivitySet");
 
+    qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
 
     if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
     else
-        m_viewer->setMainQmlFile(QLatin1String("/home/julia/work/timeframe/src/qml/main.qml"));
+        m_viewer->setMainQmlFile(QLatin1String("/home/kami/lang/timeframe/src/qml/main.qml"));
 
     QTimer::singleShot(1000, this, SLOT(init()));
 
@@ -98,8 +97,6 @@ SWApp::~SWApp()
 
     delete m_model;
     delete m_source;
-
-
 }
 
 int SWApp::newInstance()
