@@ -69,28 +69,16 @@ void ActivityModel::addActivities(QList<Activity *> list)
 {
     for(int i = 0; i < list.size(); i++)
     {
-        if(!map.contains(list[i]->getDate()))
+        int row = list[i]->getDate().daysTo(currentDate);
+        if(!map.contains(list[i]->getDate()) && row > days)
         {
-            int first = list[i]->getDate().daysTo(currentDate);
-            qDebug() << "first not in map" << first;
-
-            if(first > days)
-            {
-                days = first--;
-                beginInsertRows(QModelIndex(), first, first + 1);
+                days = row--;
+                beginInsertRows(QModelIndex(), row, row + 1);
                 map.insert(list[i]->getDate(), list[i]);
                 endInsertRows();
-            }
-            else
-            {
-                map.insert(list[i]->getDate(), list[i]);
-                emit dataChanged(index(first), index(first));
-            }
         }
         else
         {
-            int row = list[i]->getDate().daysTo(currentDate);
-            qDebug() << "date" << list[i]->getDate() << "row" << row;
             map.insert(list[i]->getDate(), list[i]);
             emit dataChanged(index(row), index(row));
         }
