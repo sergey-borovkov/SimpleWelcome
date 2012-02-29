@@ -15,7 +15,8 @@ public:
     // this function is thread safe
     virtual ActivitySet *getActivitySet(int limit, const QDate &beginDate, const QDate &endDate) = 0;
 public slots:
-    virtual void startSearch(const QDate &beginDate, const QDate &endDate) = 0;
+    virtual void startSearch(const QDate &beginDate) = 0;
+
 signals:
     void newActivities(QList<Activity *>);
     void finishedListing();

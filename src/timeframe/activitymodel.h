@@ -22,7 +22,7 @@ public:
     void addSource(ActivitySource *source);
 
 signals:
-    void newSearch(QDate, QDate);
+    void newSearch(QDate);
 public slots:
 
     int rowCount(const QModelIndex &parent) const;

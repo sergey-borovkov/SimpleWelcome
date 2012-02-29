@@ -80,11 +80,12 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
 
     qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
-
+/*
     if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
     else
-        m_viewer->setMainQmlFile(QLatin1String("/home/kami/work/timeframe/src/qml/main.qml"));
+    */
+        m_viewer->setMainQmlFile(QLatin1String("/home/kami/lang/timeframe/src/qml/main.qml"));
 
     QTimer::singleShot(1000, this, SLOT(init()));
 

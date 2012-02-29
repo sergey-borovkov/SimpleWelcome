@@ -58,11 +58,11 @@ void ActivityModel::addSource(ActivitySource *source)
     this->source = source; // remember pointer to source to be able to use blocking API if necessary
 
     connect(source, SIGNAL(newActivities(QList<Activity*>)), SLOT(addActivities(QList<Activity*>)));
-    connect(this, SIGNAL(newSearch(QDate, QDate)), source, SLOT(startSearch(QDate,QDate)));
+    connect(this, SIGNAL(newSearch(QDate)), source, SLOT(startSearch(QDate)));
     connect(source, SIGNAL(finishedListing()), SLOT(listingFinished()));
 
-    QDate d1 = QDate::currentDate().addDays(-10);
-    emit newSearch(d1, d1);
+    //QDate d1 = QDate::currentDate().addDays(-10);
+    emit newSearch(currentDate);
 }
 
 void ActivityModel::addActivities(QList<Activity *> list)
@@ -89,6 +89,6 @@ void ActivityModel::listingFinished()
 {
     qDebug() << "DATE" << lastSearchedDate;
 
-    lastSearchedDate = lastSearchedDate.addDays(-1);
-    emit newSearch(lastSearchedDate, lastSearchedDate);
+    //lastSearchedDate = lastSearchedDate.addDays(-1);
+    //emit newSearch(lastSearchedDate);
 }
