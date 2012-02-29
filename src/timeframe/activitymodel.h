@@ -29,6 +29,9 @@ public slots:
     void addActivities(QList<Activity *> list);
     int count() { return rowCount( QModelIndex()); }
 
+private slots:
+    void listingFinished();
+
 private:
 
     enum
@@ -40,6 +43,8 @@ private:
     ActivitySource *source;
 
     QDate currentDate;
+    QDate lastSearchedDate;
+
     QMultiMap< QDate, Activity*> map;
     int days;
 };

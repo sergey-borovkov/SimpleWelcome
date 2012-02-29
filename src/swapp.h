@@ -12,7 +12,7 @@
 
 class ActivityModel;
 class NepomukSource;
-
+class QThread;
 
 class SWApp : public KApplication
 {
@@ -40,6 +40,8 @@ private Q_SLOTS:
 
     ActivityModel* m_model;
     NepomukSource* m_source;
+
+    QThread *m_nepomukThread;
 };
 
 #endif // SW_APP_H
