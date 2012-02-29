@@ -6,15 +6,13 @@
 #include <QDebug>
 
 ActivityModel::ActivityModel(QObject *parent) :
-    QAbstractListModel(parent), currentDate(QDate::currentDate()), days(0)
+    QAbstractListModel(parent), currentDate(QDate::currentDate()), lastSearchedDate(QDate::currentDate()),days(100)
 {
-
     QHash<int, QByteArray> roles = roleNames();
     roles.insert(CurrentDateRole, QByteArray("currentDate"));
     roles.insert(ActivitiesRole, QByteArray("activities"));
     setRoleNames(roles);
     qDebug() << roles;
-
 }
 
 ActivityModel::~ActivityModel()
@@ -61,8 +59,10 @@ void ActivityModel::addSource(ActivitySource *source)
 
     connect(source, SIGNAL(newActivities(QList<Activity*>)), SLOT(addActivities(QList<Activity*>)));
     connect(this, SIGNAL(newSearch(QDate, QDate)), source, SLOT(startSearch(QDate,QDate)));
-    QDate d1 = QDate::currentDate().addDays(-30);
-    emit newSearch(d1, currentDate);
+    connect(source, SIGNAL(finishedListing()), SLOT(listingFinished()));
+
+    QDate d1 = QDate::currentDate().addDays(-10);
+    emit newSearch(d1, d1);
 }
 
 void ActivityModel::addActivities(QList<Activity *> list)
@@ -83,4 +83,12 @@ void ActivityModel::addActivities(QList<Activity *> list)
             emit dataChanged(index(row), index(row));
         }
     }
+}
+
+void ActivityModel::listingFinished()
+{
+    qDebug() << "DATE" << lastSearchedDate;
+
+    lastSearchedDate = lastSearchedDate.addDays(-1);
+    emit newSearch(lastSearchedDate, lastSearchedDate);
 }

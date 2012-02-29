@@ -72,10 +72,10 @@ SWApp::SWApp()
     m_source = new NepomukSource;
     m_model->addSource( m_source );
 
-    QThread *nepomukThread = new QThread(this);
+    m_nepomukThread = new QThread(this);
 
-    m_source->moveToThread(nepomukThread);
-    nepomukThread->start();
+    m_source->moveToThread(m_nepomukThread);
+    m_nepomukThread->start();
 
     m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
 
@@ -84,7 +84,7 @@ SWApp::SWApp()
     if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
     else
-        m_viewer->setMainQmlFile(QLatin1String("/home/kami/lang/timeframe/src/qml/main.qml"));
+        m_viewer->setMainQmlFile(QLatin1String("/home/kami/work/timeframe/src/qml/main.qml"));
 
     QTimer::singleShot(1000, this, SLOT(init()));
 
@@ -103,6 +103,9 @@ SWApp::~SWApp()
 
     delete m_model;
     delete m_source;
+
+    m_nepomukThread->exit();
+    m_nepomukThread->wait();
 }
 
 int SWApp::newInstance()

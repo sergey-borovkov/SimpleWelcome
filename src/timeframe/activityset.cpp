@@ -32,12 +32,7 @@ int ActivitySet::count()
 {
     return activities.count();
 }
-/*
-QDate ActivitySet::getDate()
-{
-    return date;
-}
-*/
+
 Activity *ActivitySet::activity(int index)
 {
     return activities.at(index);

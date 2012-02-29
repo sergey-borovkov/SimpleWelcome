@@ -17,7 +17,7 @@
 #include <QDateTime>
 
 NepomukSource::NepomukSource(QObject *parent) :
-    ActivitySource(parent)
+    ActivitySource(parent), m_searchClient(0)
 {
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
@@ -35,19 +35,19 @@ ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, co
 Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &beginDate, const QDate &endDate)
 {
     Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( beginDate );
-    Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() <= Nepomuk::Query::LiteralTerm( endDate );
+    //Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() <= Nepomuk::Query::LiteralTerm( endDate );
+
     Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image"));
 
-    Nepomuk::Query::AndTerm term(beginDateTerm, endDateTerm, image);
+    Nepomuk::Query::AndTerm term(beginDateTerm, image);
     Nepomuk::Query::FileQuery query(term);
-
 
     return query;
 }
 
 ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result> &result)
 {
-    ActivitySet *set = new ActivitySet;    
+    ActivitySet *set = new ActivitySet;
     for(int i = 0; i < result.size(); i++)
     {
         if(result.at(i).resource().isFile())
@@ -66,19 +66,22 @@ void NepomukSource::startSearch(const QDate &beginDate, const QDate &endDate)
 {
     Nepomuk::Query::Query query = createQuery(beginDate, endDate);
 
+    query.setLimit(7);
+
     m_searchClient = new Nepomuk::Query::QueryServiceClient( this );
+
     connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processEntry(const QList<Nepomuk::Query::Result> &)));
+    connect(m_searchClient, SIGNAL(finishedListing()), SIGNAL(finishedListing()));
+
     m_searchClient->query(query);
 }
 
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
-    //ActivitySet *set = createActivitySet(list);
-    //emit newActivitySet(set);
     QList<Activity *> activities;
     for(int i = 0; i < list.size(); i++)
     {
-        QString uri = list.at(i).resource().toFile().url().path();  //result.at(i).resource().uri();
+        QString uri = list.at(i).resource().toFile().url().path();
         QString type = list.at(i).resource().type();
         QFileInfo fi(uri);
         activities.append(new Activity(uri, type, fi.lastModified().date()));

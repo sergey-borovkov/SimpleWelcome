@@ -31,7 +31,7 @@ Item {
         var v = activities
         console.log ("v is " + activities );
         console.log ("v count is " + v.count );
-        console.log("activities " + v.getUrl(0) )
+        console.log("activities " + v.getUrl(idx) )
         return v.getUrl(idx);
     }
 
@@ -50,6 +50,7 @@ Item {
         ActivityItem {
             id: item2
             num: "2 "
+            path: getItem(1)
             typeItem: 1
             anchors.right: item1.left
             anchors.bottom: cloudItem.bottom
@@ -58,6 +59,7 @@ Item {
         ActivityItem {
             id: item3
             num: "3 "
+            path: getItem(2)
             typeItem: 1
             anchors.left: item1.right
             anchors.bottom: cloudItem.bottom
@@ -66,6 +68,7 @@ Item {
         ActivityItem {
             id: item4
             num: "4 "
+            path: getItem(3)
             typeItem: 2
             anchors.right: item7.left
             anchors.bottom: item3.top
@@ -73,6 +76,7 @@ Item {
         ActivityItem {
             id: item5
             num: "5 "
+            path: getItem(4)
             typeItem: 3
             anchors.left: item6.right
             anchors.bottom: item2.top
@@ -80,6 +84,7 @@ Item {
         ActivityItem {
             id: item6
             num: "6 "
+            path: getItem(5)
             typeItem: 3
             anchors.right: item2.left
             anchors.verticalCenter: cloudItem.verticalCenter
@@ -88,6 +93,7 @@ Item {
         ActivityItem {
             id: item7
             num: "7 "
+            path: getItem(6)
             typeItem: 3
             anchors.left: item3.right
             anchors.verticalCenter: cloudItem.verticalCenter

@@ -17,8 +17,8 @@ public:
 public slots:
     virtual void startSearch(const QDate &beginDate, const QDate &endDate) = 0;
 signals:
-    void newActivitySet(ActivitySet *);
     void newActivities(QList<Activity *>);
+    void finishedListing();
 
 public slots:
     
