@@ -54,6 +54,12 @@ Rectangle {
         }
     }
 
+    TimeScale{
+        anchors.verticalCenter: parent.verticalCenter
+        height: 80
+        width: parent.width
+    }
+
     ToolButton {
         id: prevButton
         imageUrl: "images/go-previous.png"
