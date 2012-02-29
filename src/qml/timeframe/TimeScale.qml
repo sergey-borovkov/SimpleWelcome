@@ -2,6 +2,8 @@ import QtQuick 1.0
 
 Item
 {
+    property variant list: timeScaleList
+    property variant  model: monthModel
     function getMonthStr(index)
     {
 

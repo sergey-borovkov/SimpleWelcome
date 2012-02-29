@@ -53,13 +53,19 @@ Rectangle {
             prevMonth()
         }
     }
-
     TimeScale{
+        id: timeScale
         anchors.verticalCenter: parent.verticalCenter
         height: 80
         width: parent.width
     }
-
+    Connections{
+        target: timeScale.list
+        onCurrentIndexChanged: {
+            console.log(timeScale.model.get(timeScale.list.currentIndex).year)
+            console.log(timeScale.model.get(timeScale.list.currentIndex).name)
+        }
+    }
     ToolButton {
         id: prevButton
         imageUrl: "images/go-previous.png"
