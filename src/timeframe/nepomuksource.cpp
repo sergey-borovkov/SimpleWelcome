@@ -24,7 +24,7 @@ NepomukSource::NepomukSource(QObject *parent) :
 
 ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, const QDate &endDate)
 {
-    Nepomuk::Query::Query query = createQuery(beginDate, endDate);
+    Nepomuk::Query::Query query = createQuery(beginDate);
     query.setLimit(limit);
 
     QList<Nepomuk::Query::Result> results = Nepomuk::Query::QueryServiceClient::syncQuery(query, NULL);
@@ -32,13 +32,11 @@ ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, co
 }
 
 
-Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &beginDate, const QDate &endDate)
+Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &date)
 {
-    Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( beginDate );
-    //Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() <= Nepomuk::Query::LiteralTerm( endDate );
+    Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( date );
 
     Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image"));
-
     Nepomuk::Query::AndTerm term(beginDateTerm, image);
     Nepomuk::Query::FileQuery query(term);
 
@@ -48,6 +46,7 @@ Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &beginDate, con
 ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result> &result)
 {
     ActivitySet *set = new ActivitySet;
+
     for(int i = 0; i < result.size(); i++)
     {
         if(result.at(i).resource().isFile())
@@ -62,16 +61,18 @@ ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result
     return set;
 }
 
-void NepomukSource::startSearch(const QDate &beginDate, const QDate &endDate)
+void NepomukSource::startSearch(const QDate &beginDate)
 {
-    Nepomuk::Query::Query query = createQuery(beginDate, endDate);
+    queryDate =  beginDate;
+    Nepomuk::Query::Query query = createQuery(beginDate);
 
     query.setLimit(7);
 
     m_searchClient = new Nepomuk::Query::QueryServiceClient( this );
 
     connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processEntry(const QList<Nepomuk::Query::Result> &)));
-    connect(m_searchClient, SIGNAL(finishedListing()), SIGNAL(finishedListing()));
+
+    connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
 
     m_searchClient->query(query);
 }
@@ -88,4 +89,12 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
    }
 
     emit newActivities(activities);
+}
+
+void NepomukSource::listingFinished()
+{
+    if( queryDate.month() == queryDate.addDays(-1).month() )
+        return startSearch(queryDate.addDays(-1));
+
+    emit finishedListing();
 }

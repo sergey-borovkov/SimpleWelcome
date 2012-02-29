@@ -7,6 +7,8 @@
 #include <Nepomuk/Query/Result>
 #include <Nepomuk/Query/FileQuery>
 
+#include <QDate>
+
 namespace Nepomuk
 {
     namespace Query
@@ -26,14 +28,18 @@ signals:
     void newEntries(const QList<Nepomuk::Query::Result>&);
 
 public slots:
-    virtual void startSearch(const QDate &beginDate, const QDate &endDate);
+    virtual void startSearch(const QDate &beginDate);
     void processEntry(const QList<Nepomuk::Query::Result> &list);
 
+private slots:
+    void listingFinished();
+
 private:
-    Nepomuk::Query::FileQuery createQuery(const QDate &beginDate, const QDate &endDate);
+    Nepomuk::Query::FileQuery createQuery(const QDate &beginDate);
     ActivitySet *createActivitySet(const QList<Nepomuk::Query::Result> &result);
 
     Nepomuk::Query::QueryServiceClient* m_searchClient;
+    QDate queryDate;
 };
 
 #endif // NEPOMUKSOURCE_H
