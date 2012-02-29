@@ -178,7 +178,6 @@ Item
 
         ListView
         {
-
             id: timeScaleList
             model: monthModel
             delegate: monthDelegate
