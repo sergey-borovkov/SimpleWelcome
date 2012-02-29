@@ -41,6 +41,7 @@ set(rosa-launcher-qtquick_SRCS
   src/qml/timeframe/CloudDelegate.qml
   src/qml/timeframe/ActivityItem.qml
   src/qml/timeframe/qmldir
+  src/qml/timeframe/TimeScale.qml
 )
 
 kde4_add_executable(rosa-launcher-qtquick ${rosa-launcher-qtquick_SRCS})
