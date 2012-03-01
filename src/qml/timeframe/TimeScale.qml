@@ -4,6 +4,7 @@ Item
 {
     property variant list: timeScaleList
     property variant  model: monthModel
+
     function getMonthStr(index)
     {
 
@@ -51,9 +52,9 @@ Item
                     break
                 }
                 //if (j===0)
-                  //  monthModel.append( { name: getMonthStr(j) +" " +i, year: i })
+                  //  monthModel.append( { month: getMonthStr(j) +" " +i, year: i })
                 //else
-                    monthModel.append( { name: getMonthStr(j), year: i })
+                    monthModel.append( { month: getMonthStr(j), year: i, monthNumber: j })
             }
         }
     }
@@ -62,20 +63,21 @@ Item
     {
         fillModel()
         timeScaleList.currentIndex = monthModel.count -1
-        timeScaleList.positionViewAtIndex(timeScaleList.currentIndex, ListView.Contain)
+        timeScaleList.positionViewAtIndex(timeScaleList.currentIndex, ListView.Contain)        
     }
 
     ListModel
     {
-        id: monthModel
+        id: monthModel        
     }
+
     Component{
         id: monthDelegate
         Item{
             id: listItem
             width: timeScaleList.width/10
             height: 80
-            //state: (name ==="UND") ? "und" : "normal"
+            //state: (month ==="UND") ? "und" : "normal"
             Rectangle
             {
                 anchors.left: parent.left
@@ -107,7 +109,7 @@ Item
 
             Text {
                 id: monthLabel
-                text: qsTr(name)
+                text: qsTr(month)
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 10
@@ -153,13 +155,7 @@ Item
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 15
         //width: parent.width/11
-        Connections
-        {
-            target: timeScaleList
-            onCurrentIndexChanged: {
-                yearLabel.text = monthModel.get(timeScaleList.currentIndex).year
-            }
-        }
+
     }
     function getListViewItemSize()
     {

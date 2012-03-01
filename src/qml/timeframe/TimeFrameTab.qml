@@ -8,6 +8,8 @@ Rectangle {
     clip: true
     //anchors.top: parent.top
     anchors.topMargin: 16
+    property ListView lv: scene
+
 
     function startup() {
 
@@ -63,7 +65,11 @@ Rectangle {
         target: timeScale.list
         onCurrentIndexChanged: {
             console.log(timeScale.model.get(timeScale.list.currentIndex).year)
-            console.log(timeScale.model.get(timeScale.list.currentIndex).name)
+            console.log(timeScale.model.get(timeScale.list.currentIndex).month)
+            activityModel.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
+            var i = activityModel.getDateIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
+            console.log("ASDF" + i)
+            timeFrameTab.lv.currentIndex = i
         }
     }
     ToolButton {

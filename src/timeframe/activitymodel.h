@@ -28,6 +28,8 @@ public slots:
     int rowCount(const QModelIndex &parent) const;
     void addActivities(QList<Activity *> list);
     int count() { return rowCount( QModelIndex()); }
+    void setMonth(int year, int month);
+    int getDateIndex(int year, int month);
 
 private slots:
     void listingFinished();
