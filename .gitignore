@@ -11,3 +11,8 @@ CMakeTmp/
 CTestTestfile.cmake
 cmake_uninstall.cmake
 rosa-launcher-qtquick_automoc.cpp.files
+moc_*
+appentity.moc
+rosa-launcher-qtquick.shell
+rosa-launcher-qtquick_automoc.cpp
+swapp.moc
