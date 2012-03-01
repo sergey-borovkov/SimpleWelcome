@@ -62,6 +62,9 @@ void ActivityModel::addSource(ActivitySource *source)
     connect(source, SIGNAL(finishedListing()), SLOT(listingFinished()));
 
     //QDate d1 = QDate::currentDate().addDays(-10);
+
+
+    currentDate = currentDate.addMonths(-1);
     currentDate.setDate(currentDate.year(), currentDate.month(), currentDate.daysInMonth());
     emit newSearch(currentDate);
 }
