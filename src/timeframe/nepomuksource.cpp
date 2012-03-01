@@ -96,5 +96,6 @@ void NepomukSource::listingFinished()
     if( queryDate.month() == queryDate.addDays(-1).month() )
         return startSearch(queryDate.addDays(-1));
 
+    m_searchClient->close();
     emit finishedListing();
 }
