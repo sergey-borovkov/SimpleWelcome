@@ -63,7 +63,14 @@ ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result
 
 void NepomukSource::startSearch(const QDate &beginDate)
 {
+    if(m_searchClient)
+    {
+        m_searchClient->close();
+        m_searchClient = 0;
+    }
+
     queryDate =  beginDate;
+
     Nepomuk::Query::Query query = createQuery(beginDate);
 
     query.setLimit(7);
@@ -97,5 +104,6 @@ void NepomukSource::listingFinished()
         return startSearch(queryDate.addDays(-1));
 
     m_searchClient->close();
+    m_searchClient = 0;
     emit finishedListing();
 }
