@@ -3,7 +3,15 @@
 #include "activityset.h"
 
 #include <QDate>
+#include <QList>
 #include <QDebug>
+#include <QtAlgorithms>
+
+
+uint qHash(const QDate &date)
+{
+    return qHash(date.toString());
+}
 
 ActivityModel::ActivityModel(QObject *parent) :
     QAbstractListModel(parent), currentDate(QDate::currentDate()), lastSearchedDate(QDate::currentDate()), days(0)
@@ -37,12 +45,13 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
         }
         else if ( role == ActivitiesRole )
         {
-            QDate requestedDate = QDate::currentDate().addDays(-row);
+            //QDate requestedDate = QDate::currentDate().addDays(-row);
 
             qDebug( "row is %d", row);
-            qDebug( "date is %s", requestedDate.toString().toLocal8Bit().data() );
+         //   qDebug( "date is %s", requestedDate.toString().toLocal8Bit().data() );
+             QDate key = map.keys()[ index.row() ];
 
-             QList<Activity *> values = map.values(requestedDate);
+             QList<Activity *> values = map.values(key);
              ActivitySet *set = new ActivitySet(values, 0);
              QVariant var;
              var.setValue(set);
@@ -67,13 +76,26 @@ void ActivityModel::addActivities(QList<Activity *> list)
 {
     for(int i = 0; i < list.size(); i++)
     {
-        int row = list[i]->getDate().daysTo(currentDate);
+        QList<QDate> keys = map.keys();
 
-        if(!map.contains(list[i]->getDate()) && row > days)
-        {
+        QSet<QDate> set = QSet<QDate>::fromList(keys);
+        keys = set.toList();
+
+        qDebug() << "KEYS" << keys;
+        QList<QDate>::const_iterator it = qLowerBound(keys, list[i]->getDate());
+
+        qDebug() << "IT" << it.i;
+
+        int row = it - keys.constBegin();
+        qDebug() << "ROW" << row;
+
+        if(!map.contains(list[i]->getDate()))
+        {                
                 beginInsertRows(QModelIndex(), row, row + 1);
+
                 days++;
                 map.insert(list[i]->getDate(), list[i]);
+
                 endInsertRows();
         }
         else
@@ -113,9 +135,21 @@ int ActivityModel::getDateIndex(int year, int month)
     date.setDate(year, month + 1, 1);
 
     date.setDate(date.year(), date.month(), date.daysInMonth());
-    int rows = date.daysTo(QDate::currentDate());
 
-    return rows;
+    QList<QDate> keys = map.keys();
+
+    QSet<QDate> set = QSet<QDate>::fromList(keys);
+    keys = set.toList();
+    QList<QDate>::const_iterator it = qUpperBound(keys, date);
+
+
+    int row = it - keys.constBegin();
+    qDebug() << "ROW ROW" << row;
+
+    if(row >= rowCount())
+        row = rowCount();
+
+    return row;
 }
 
 void ActivityModel::listingFinished()

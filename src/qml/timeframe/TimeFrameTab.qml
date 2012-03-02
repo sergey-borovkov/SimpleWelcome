@@ -64,8 +64,8 @@ Rectangle {
     Connections{
         target: timeScale.list
         onCurrentIndexChanged: {
-            console.log(timeScale.model.get(timeScale.list.currentIndex).year)
-            console.log(timeScale.model.get(timeScale.list.currentIndex).month)
+     //       console.log(timeScale.model.get(timeScale.list.currentIndex).year)
+     //       console.log(timeScale.model.get(timeScale.list.currentIndex).month)
             activityModel.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
             var i = activityModel.getDateIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
             console.log("ASDF" + i)
