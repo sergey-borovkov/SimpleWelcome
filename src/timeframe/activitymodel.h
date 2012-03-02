@@ -12,6 +12,8 @@ class ActivitySet;
 class ActivitySource;
 class Activity;
 
+uint qHash(const QDate &date);
+
 class ActivityModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -47,7 +49,7 @@ private:
     QDate currentDate;
     QDate lastSearchedDate;
 
-    QMultiMap< QDate, Activity*> map;
+    QMultiMap< QDate, Activity* > map;
     int days;
 };
 
