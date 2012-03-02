@@ -55,6 +55,7 @@ public slots:
     Activity *activity(int index);    
     QString getUrl(int i);
     QString getType(int i);
+    QDate getDate(int i);
 
 private:
     QList<Activity *> activities;    
