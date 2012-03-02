@@ -14,7 +14,7 @@ uint qHash(const QDate &date)
 }
 
 ActivityModel::ActivityModel(QObject *parent) :
-    QAbstractListModel(parent), currentDate(QDate::currentDate()), lastSearchedDate(QDate::currentDate()), days(0)
+    QAbstractListModel(parent)
 {
     QHash<int, QByteArray> roles = roleNames();
     roles.insert(CurrentDateRole, QByteArray("currentDate"));
@@ -30,36 +30,29 @@ ActivityModel::~ActivityModel()
 int ActivityModel::rowCount(const QModelIndex &parent = QModelIndex()) const
 {
     Q_UNUSED(parent)
-    return days;
+    return activities.length();
 }
 
 QVariant ActivityModel::data(const QModelIndex &index, int role) const
 {
-    if(index.isValid())
+    if(!index.isValid())
+        return QVariant();
+
+    if(index.row() > 0 && index.row() < rowCount())
     {
         int row = index.row();
 
         if ( role == CurrentDateRole )
         {
-            return QVariant();
+            return activities[index.row()].first;
         }
         else if ( role == ActivitiesRole )
         {
-            //QDate requestedDate = QDate::currentDate().addDays(-row);
+            ActivitySet *set = new ActivitySet(activities[row].second, 0);
 
-            qDebug( "row is %d", row);
-         //   qDebug( "date is %s", requestedDate.toString().toLocal8Bit().data() );
-
-             QSet<QDate> sset = QSet<QDate>::fromList(map.keys());
-             QList<QDate> keys = sset.toList();
-             QDate key = keys[ index.row() ];
-             QList<Activity *> values = map.values(key);
-
-
-             ActivitySet *set = new ActivitySet(values, 0);
-             QVariant var;
-             var.setValue(set);
-             return var;
+            QVariant var;
+            var.setValue(set);
+            return var;
         }
     }
 
@@ -80,41 +73,31 @@ void ActivityModel::addActivities(QList<Activity *> list)
 {
     for(int i = 0; i < list.size(); i++)
     {
-        QList<QDate> keys = map.keys();
+        int idx = 0;
+        bool isFound = false;
 
-        QSet<QDate> set = QSet<QDate>::fromList(keys);
-        keys = set.toList();
+        while(idx < activities.count() && activities[idx].first <= list[i]->getDate())
+        {
+            if(activities[idx].first == list[i]->getDate())
+            {
+                isFound = true;
+                break;
+            }
 
-        qDebug() << "KEYS" << keys;
-        QList<QDate>::const_iterator it = qLowerBound(keys, list[i]->getDate());
+            idx++;
+        }
 
-        qDebug() << "IT" << it.i;
-
-        int row = it - keys.constBegin();
-        qDebug() << "ROW" << row;
-
-        if(!map.contains(list[i]->getDate()))
-        {                
-                beginInsertRows(QModelIndex(), row, row + 1);
-                days++;
-                map.insert(list[i]->getDate(), list[i]);
-                endInsertRows();
+        if(isFound)
+        {
+            qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..";
+            activities[idx].second.append(list[i]);
+            emit dataChanged(index(idx), index(idx));
         }
         else
         {
-            Activity *val = map.value(list[i]->getDate());
-
-            qDebug() << list[i]->getDate() << list[i]->getUrl();
-
-            if((val && val->getUrl() != list[i]->getUrl()) || !val)
-            {
-                map.insert(list[i]->getDate(), list[i]);
-                emit dataChanged(index(row), index(row));
-            }
-            else
-            {
-                qDebug() << "Duplicate";
-            }
+            beginInsertRows(QModelIndex(), idx, idx + 1);
+            activities.insert( idx, qMakePair(list[i]->getDate(), QList<Activity *>() << list[i]));
+            endInsertRows();
         }
     }
 }
@@ -139,20 +122,17 @@ int ActivityModel::getDateIndex(int year, int month)
 
     date.setDate(date.year(), date.month(), date.daysInMonth());
 
-    QList<QDate> keys = map.keys();
+    int idx = 0;
+    bool isFound = false;
 
-    QSet<QDate> set = QSet<QDate>::fromList(keys);
-    keys = set.toList();
-    QList<QDate>::const_iterator it = qUpperBound(keys, date);
+    while(idx < activities.count() && activities[idx].first < date)
+    {
+        idx++;
+    }
 
+    qDebug() << activities;
 
-    int row = it - keys.constBegin();
-    qDebug() << "ROW ROW" << row;
-
-    if(row >= rowCount())
-        row = rowCount();
-
-    return row;
+    return idx;
 }
 
 void ActivityModel::listingFinished()
