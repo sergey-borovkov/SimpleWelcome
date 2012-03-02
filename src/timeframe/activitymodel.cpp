@@ -6,7 +6,7 @@
 #include <QDebug>
 
 ActivityModel::ActivityModel(QObject *parent) :
-    QAbstractListModel(parent), currentDate(QDate::currentDate()), lastSearchedDate(QDate::currentDate()),days(100500)
+    QAbstractListModel(parent), currentDate(QDate::currentDate()), lastSearchedDate(QDate::currentDate()), days(0)
 {
     QHash<int, QByteArray> roles = roleNames();
     roles.insert(CurrentDateRole, QByteArray("currentDate"));
@@ -19,7 +19,7 @@ ActivityModel::~ActivityModel()
 {
 }
 
-int ActivityModel::rowCount(const QModelIndex &parent) const
+int ActivityModel::rowCount(const QModelIndex &parent = QModelIndex()) const
 {
     Q_UNUSED(parent)
     return days;
@@ -61,12 +61,6 @@ void ActivityModel::addSource(ActivitySource *source)
     connect(this, SIGNAL(newSearch(QDate)), source, SLOT(startSearch(QDate)));
     connect(source, SIGNAL(finishedListing()), SLOT(listingFinished()));
 
-    //QDate d1 = QDate::currentDate().addDays(-10);
-
-
-    currentDate = currentDate.addMonths(-1);
-    currentDate.setDate(currentDate.year(), currentDate.month(), currentDate.daysInMonth());
-    emit newSearch(currentDate);
 }
 
 void ActivityModel::addActivities(QList<Activity *> list)
@@ -74,27 +68,40 @@ void ActivityModel::addActivities(QList<Activity *> list)
     for(int i = 0; i < list.size(); i++)
     {
         int row = list[i]->getDate().daysTo(currentDate);
+
         if(!map.contains(list[i]->getDate()) && row > days)
         {
-                days = row--;
                 beginInsertRows(QModelIndex(), row, row + 1);
+                days++;
                 map.insert(list[i]->getDate(), list[i]);
                 endInsertRows();
         }
         else
         {
-            map.insert(list[i]->getDate(), list[i]);
-            emit dataChanged(index(row), index(row));
+            Activity *val = map.value(list[i]->getDate());
+            qDebug() << list[i]->getDate() << list[i]->getUrl();
+
+            if((val && val->getUrl() != list[i]->getUrl()) || !val)
+            {
+                map.insert(list[i]->getDate(), list[i]);
+                emit dataChanged(index(row), index(row));
+            }
+            else
+            {
+                qDebug() << "Duplicate";
+            }
         }
     }
 }
 
 void ActivityModel::setMonth(int year, int month)
 {
-
     QDate date;
     date.setDate(year, month + 1, 1);
     date.setDate(date.year(), date.month(), date.daysInMonth());
+
+    if(date > QDate::currentDate())
+        date = QDate::currentDate();
 
     emit newSearch(date);
 }
@@ -113,8 +120,5 @@ int ActivityModel::getDateIndex(int year, int month)
 
 void ActivityModel::listingFinished()
 {
-    //qDebug() << "DATE" << lastSearchedDate;
 
-    //lastSearchedDate = lastSearchedDate.addDays(-1);
-    //emit newSearch(lastSearchedDate);
 }
