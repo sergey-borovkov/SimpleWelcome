@@ -35,13 +35,13 @@ int ActivityModel::rowCount(const QModelIndex &parent = QModelIndex()) const
 
 QVariant ActivityModel::data(const QModelIndex &index, int role) const
 {
-    int row = index.row();
-
-    if(row >= 0)
+    if(index.isValid())
     {
+        int row = index.row();
+
         if ( role == CurrentDateRole )
         {
-            return QDate::currentDate().addDays(-row);
+            return QVariant();
         }
         else if ( role == ActivitiesRole )
         {
@@ -49,9 +49,13 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
 
             qDebug( "row is %d", row);
          //   qDebug( "date is %s", requestedDate.toString().toLocal8Bit().data() );
-             QDate key = map.keys()[ index.row() ];
 
+             QSet<QDate> sset = QSet<QDate>::fromList(map.keys());
+             QList<QDate> keys = sset.toList();
+             QDate key = keys[ index.row() ];
              QList<Activity *> values = map.values(key);
+
+
              ActivitySet *set = new ActivitySet(values, 0);
              QVariant var;
              var.setValue(set);
@@ -92,15 +96,14 @@ void ActivityModel::addActivities(QList<Activity *> list)
         if(!map.contains(list[i]->getDate()))
         {                
                 beginInsertRows(QModelIndex(), row, row + 1);
-
                 days++;
                 map.insert(list[i]->getDate(), list[i]);
-
                 endInsertRows();
         }
         else
         {
             Activity *val = map.value(list[i]->getDate());
+
             qDebug() << list[i]->getDate() << list[i]->getUrl();
 
             if((val && val->getUrl() != list[i]->getUrl()) || !val)
