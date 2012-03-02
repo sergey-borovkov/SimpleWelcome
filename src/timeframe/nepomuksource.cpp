@@ -36,7 +36,7 @@ Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &date)
 {
     Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( date );
     Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() < Nepomuk::Query::LiteralTerm( date.addDays(1) );
-    Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image"));
+    Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image/"));
     Nepomuk::Query::AndTerm term(beginDateTerm,endDateTerm, image);
 
     Nepomuk::Query::FileQuery query(term);
