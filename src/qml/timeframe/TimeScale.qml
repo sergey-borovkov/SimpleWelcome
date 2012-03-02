@@ -154,8 +154,13 @@ Item
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 15
-        //width: parent.width/11
-
+        Connections
+        {
+            target: timeScaleList
+            onCurrentIndexChanged: {
+                yearLabel.text = monthModel.get(timeScaleList.currentIndex).year
+            }
+        }
     }
     function getListViewItemSize()
     {
