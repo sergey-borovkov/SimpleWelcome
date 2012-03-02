@@ -69,6 +69,16 @@ QString Activity::getType()
     return type;
 }
 
+QDate ActivitySet::getDate(int i)
+{
+    if(i >= activities.length())
+        return QDate();
+    else
+        return activities.at(i)->getDate();
+}
+
+
+
 void Activity::setType(QString newType)
 {
     type = newType;
