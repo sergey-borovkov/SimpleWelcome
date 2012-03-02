@@ -6,7 +6,9 @@
 #include <QDate>
 #include <QMultiMap>
 #include <QMetaType>
-#include <QVariantList>
+
+#include <QPair>
+
 
 class ActivitySet;
 class ActivitySource;
@@ -49,8 +51,8 @@ private:
     QDate currentDate;
     QDate lastSearchedDate;
 
-    QMultiMap< QDate, Activity* > map;
-    int days;
+    QList < QPair <QDate, QList <Activity *> > > activities;
+
 };
 
 #endif // ACTIVITYMODEL_H
