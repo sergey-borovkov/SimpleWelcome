@@ -35,9 +35,10 @@ ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, co
 Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &date)
 {
     Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( date );
-
+    Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() < Nepomuk::Query::LiteralTerm( date.addDays(1) );
     Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image"));
-    Nepomuk::Query::AndTerm term(beginDateTerm, image);
+    Nepomuk::Query::AndTerm term(beginDateTerm,endDateTerm, image);
+
     Nepomuk::Query::FileQuery query(term);
 
     return query;
@@ -69,7 +70,7 @@ void NepomukSource::startSearch(const QDate &beginDate)
         m_searchClient = 0;
     }
 
-    queryDate =  beginDate;
+    queryDate = beginDate;
 
     Nepomuk::Query::Query query = createQuery(beginDate);
 
@@ -87,6 +88,7 @@ void NepomukSource::startSearch(const QDate &beginDate)
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
     QList<Activity *> activities;
+    qDebug() << "DATA";
     for(int i = 0; i < list.size(); i++)
     {
         QString uri = list.at(i).resource().toFile().url().path();
@@ -100,10 +102,16 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 
 void NepomukSource::listingFinished()
 {
-    if( queryDate.month() == queryDate.addDays(-1).month() )
-        return startSearch(queryDate.addDays(-1));
+    qDebug() << "NEW SEARCH";
+    qDebug() << queryDate;
 
-    m_searchClient->close();
-    m_searchClient = 0;
+    if( queryDate.month() == queryDate.addDays(-1).month() )
+    {
+        m_searchClient->close();
+        m_searchClient = 0;
+
+        return startSearch(queryDate.addDays(-1));
+    }
+
     emit finishedListing();
 }
