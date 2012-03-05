@@ -34,6 +34,8 @@ Rectangle {
         anchors.leftMargin: 10
     }
 
+
+
     ListView {
         id: scene
         anchors.horizontalCenter: parent.horizontalCenter
@@ -54,7 +56,27 @@ Rectangle {
             console.log( "left key pressed 333..." )
             prevMonth()
         }
+        visible: false
     }
+
+    Flickable
+    {
+        id: flickable
+        anchors.fill: parent
+        contentWidth: parent.width * 20
+        contentHeight: parent.height
+        Row {
+            id: row
+            Repeater
+            {
+                model:activityModel
+                delegate: SceneDelegate {}
+            }
+        }
+    }
+
+
+
     TimeScale{
         id: timeScale
         anchors.verticalCenter: parent.verticalCenter
