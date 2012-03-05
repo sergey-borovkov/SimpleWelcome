@@ -88,7 +88,7 @@ void NepomukSource::startSearch(const QDate &beginDate)
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
     QList<Activity *> activities;
-    qDebug() << "DATA";
+ //   qDebug() << "DATA";
     for(int i = 0; i < list.size(); i++)
     {
         QString uri = list.at(i).resource().toFile().url().path();
@@ -102,8 +102,8 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 
 void NepomukSource::listingFinished()
 {
-    qDebug() << "NEW SEARCH";
-    qDebug() << queryDate;
+//    qDebug() << "NEW SEARCH";
+ //   qDebug() << queryDate;
 
     if( queryDate.month() == queryDate.addDays(-1).month() )
     {

@@ -54,7 +54,7 @@ Item
                 //if (j===0)
                   //  monthModel.append( { month: getMonthStr(j) +" " +i, year: i })
                 //else
-                    monthModel.append( { month: getMonthStr(j), year: i, monthNumber: j })
+                monthModel.append( { month: getMonthStr(j), year: i, monthNumber: j })
             }
         }
     }
