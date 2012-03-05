@@ -36,7 +36,7 @@ Item {
             anchors.top: parent.top
             anchors.left: parent.left
         }
-
+/*
         CloudDelegate {
             id: cloud2
             anchors.top: parent.top
@@ -48,5 +48,6 @@ Item {
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
         }
+        */
     }
 }
