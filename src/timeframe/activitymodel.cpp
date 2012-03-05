@@ -89,7 +89,6 @@ void ActivityModel::addActivities(QList<Activity *> list)
 
         if(isFound)
         {
-            qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..";
             activities[idx].second.append(list[i]);
             emit dataChanged(index(idx), index(idx));
         }
@@ -98,6 +97,9 @@ void ActivityModel::addActivities(QList<Activity *> list)
             beginInsertRows(QModelIndex(), idx, idx + 1);
             activities.insert( idx, qMakePair(list[i]->getDate(), QList<Activity *>() << list[i]));
             endInsertRows();
+
+            ActivitySet *set = new ActivitySet(activities[idx].second, 0);
+            emit newSet(idx, set);
         }
     }
 }

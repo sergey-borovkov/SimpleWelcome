@@ -42,7 +42,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width
         height: parent.height
-        model: activityModel
+        model: desu
         delegate: SceneDelegate {}
 //        highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
         focus: true
@@ -59,6 +59,25 @@ Rectangle {
         visible: false
     }
 
+    Connections
+    {
+        target: activityModel
+
+        onNewSet:
+        {            
+            console.log("index  !!  " + index)
+            console.log(set)
+            desu.insert(index, {"activity": set})
+        }
+    }
+
+    ListModel
+    {
+        id: desu
+
+
+    }
+
     Flickable
     {
         id: flickable
@@ -67,9 +86,11 @@ Rectangle {
         contentHeight: parent.height
         Row {
             id: row
+
+
             Repeater
             {
-                model:activityModel
+                model:desu
                 delegate: SceneDelegate {}
             }
         }

@@ -3,44 +3,12 @@ import QtQuick 1.1
 
 Item {
     id: cloudDelegate
-    /*
-    width: 200
-    height: 200
-
-    Rectangle{
-        anchors.fill: parent
-        border.color: "black"
-    }
-
-
-
-    Image {
-        id: pic
-        anchors.fill: parent
-        source: getItem(0)
-        sourceSize.width: 256
-        sourceSize.height: 256
-    }
-*/
 
     function getItem( idx )
     {
-     //   if (index > (activityModel.count()-1))
-       //     return ""
-        console.log(">>>>>>>>>new item>>>>>>>>>>")
-        console.log("activityModel.count " + activityModel.count())
-        console.log("activityModel.index " + index)
-        //console.log ("date is " + Qt.formatDateTime(currentDate, "dd-MM-yy") );
-        var v = activities
-        //console.log(v.count)
-        console.log("Url is " + v.getUrl(idx))
-        console.log("Date is  " + Qt.formatDateTime(v.getDate(idx), "dd-MM-yy"))
-        console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-
-        //console.log ("v is " + activities );
-        //console.log ("v count is " + v.count );
-        //console.log("activities " + v.getUrl(idx) )
-        return v.getUrl(idx);
+        console.log(activity)
+        console.log("Url is " + activity.getUrl(idx))
+        return activity.getUrl(idx);
     }
 
     property int kx: cloudWidth / 27

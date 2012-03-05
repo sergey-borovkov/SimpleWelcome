@@ -27,6 +27,8 @@ public:
 
 signals:
     void newSearch(QDate);
+    void newSet(int index, ActivitySet *set);
+
 public slots:
 
     int rowCount(const QModelIndex &parent) const;

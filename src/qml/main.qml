@@ -1,7 +1,7 @@
 import QtQuick 1.0
 import Qt 4.7
 
-import "./timeframe/" 1.0
+import "timeframe"
 
 Rectangle {
     id: page
