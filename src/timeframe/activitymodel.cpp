@@ -1,17 +1,12 @@
 #include "activitymodel.h"
 #include "activitysource.h"
 #include "activityset.h"
+#include "activitylist.h"
 
 #include <QDate>
 #include <QList>
 #include <QDebug>
 #include <QtAlgorithms>
-
-
-uint qHash(const QDate &date)
-{
-    return qHash(date.toString());
-}
 
 ActivityModel::ActivityModel(QObject *parent) :
     QAbstractListModel(parent)
@@ -20,7 +15,6 @@ ActivityModel::ActivityModel(QObject *parent) :
     roles.insert(CurrentDateRole, QByteArray("currentDate"));
     roles.insert(ActivitiesRole, QByteArray("activities"));
     setRoleNames(roles);
-    qDebug() << roles;
 }
 
 ActivityModel::~ActivityModel()
@@ -61,11 +55,13 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
 
 void ActivityModel::addSource(ActivitySource *source)
 {
-    this->source = source; // remember pointer to source to be able to use blocking API if necessary
-
     connect(source, SIGNAL(newActivities(QList<Activity*>)), SLOT(addActivities(QList<Activity*>)));
     connect(this, SIGNAL(newSearch(QDate)), source, SLOT(startSearch(QDate)));
     connect(source, SIGNAL(finishedListing()), SLOT(listingFinished()));
+
+    QDate d = QDate::currentDate();
+
+    emit newSearch(d);
 
 }
 
@@ -73,35 +69,31 @@ void ActivityModel::addActivities(QList<Activity *> list)
 {
     for(int i = 0; i < list.size(); i++)
     {
-        int idx = 0;
-        bool isFound = false;
+        const int idx = lowerBound(list[i]->getDate());
 
-        while(idx < activities.count() && activities[idx].first <= list[i]->getDate())
-        {
-            if(activities[idx].first == list[i]->getDate())
-            {
-                isFound = true;
-                break;
-            }
-
-            idx++;
-        }
-
-        if(isFound)
+        if(idx < activities.count() && list[i]->getDate() == activities[idx].first)
         {
             activities[idx].second.append(list[i]);
+
+            ActivitySet *set = new ActivitySet(activities[idx].second);
+            emit setChanged(idx, set);
             emit dataChanged(index(idx), index(idx));
         }
         else
         {
             beginInsertRows(QModelIndex(), idx, idx + 1);
-            activities.insert( idx, qMakePair(list[i]->getDate(), QList<Activity *>() << list[i]));
+            activities.insert(idx, qMakePair(list[i]->getDate(), QList<Activity *>() << list[i]));
             endInsertRows();
 
-            ActivitySet *set = new ActivitySet(activities[idx].second, 0);
+            ActivitySet *set = new ActivitySet(activities[idx].second);
             emit newSet(idx, set);
         }
     }
+}
+
+void ActivityModel::addActivitySet(ActivitySet *set)
+{
+    for(int i = 0 ; i < activities.count(); i++);
 }
 
 void ActivityModel::setMonth(int year, int month)
@@ -121,23 +113,24 @@ int ActivityModel::getDateIndex(int year, int month)
 
     QDate date;
     date.setDate(year, month + 1, 1);
-
     date.setDate(date.year(), date.month(), date.daysInMonth());
 
-    int idx = 0;
-    bool isFound = false;
-
-    while(idx < activities.count() && activities[idx].first < date)
-    {
-        idx++;
-    }
-
-    qDebug() << activities;
-
-    return idx;
+    return lowerBound(date);
 }
 
 void ActivityModel::listingFinished()
 {
 
+}
+
+int ActivityModel::lowerBound(const QDate &date)
+{
+    int index = 0;
+    for(; index < activities.size(); index++)
+    {
+        if(activities[index].first <= date)
+            break;
+    }
+
+    return index;
 }

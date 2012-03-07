@@ -69,6 +69,12 @@ Rectangle {
             console.log(set)
             desu.insert(index, {"activity": set})
         }
+
+        onSetChanged:
+        {
+            desu.set(index, {"activity": set})
+            console.log("set changed: " + set.count)
+        }
     }
 
     ListModel

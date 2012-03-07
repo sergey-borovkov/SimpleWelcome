@@ -8,6 +8,7 @@ Item {
     {
         console.log(activity)
         console.log("Url is " + activity.getUrl(idx))
+        console.log("Date is" + activity.getDate(idx))
         return activity.getUrl(idx);
     }
 
@@ -46,7 +47,7 @@ Item {
             anchors.bottom: cloudItem.bottom
             typeItem: 1
         }
-        /*
+
         ActivityItem {
             id: item2
             num: "2 "
@@ -73,6 +74,7 @@ Item {
             anchors.right: item7.left
             anchors.bottom: item3.top
         }
+        /*
         ActivityItem {
             id: item5
             num: "5 "

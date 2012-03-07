@@ -13,8 +13,7 @@
 class ActivitySet;
 class ActivitySource;
 class Activity;
-
-uint qHash(const QDate &date);
+class ActivityList;
 
 class ActivityModel : public QAbstractListModel
 {
@@ -28,11 +27,12 @@ public:
 signals:
     void newSearch(QDate);
     void newSet(int index, ActivitySet *set);
+    void setChanged(int index, ActivitySet *set);
 
 public slots:
-
     int rowCount(const QModelIndex &parent) const;
     void addActivities(QList<Activity *> list);
+    void addActivitySet(ActivitySet *set);
     int count() { return rowCount( QModelIndex()); }
     void setMonth(int year, int month);
     int getDateIndex(int year, int month);
@@ -41,6 +41,7 @@ private slots:
     void listingFinished();
 
 private:
+    int lowerBound(const QDate &date);
 
     enum
     {
@@ -48,13 +49,8 @@ private:
         ActivitiesRole
     };
 
-    ActivitySource *source;
-
-    QDate currentDate;
-    QDate lastSearchedDate;
-
     QList < QPair <QDate, QList <Activity *> > > activities;
-
+    QList < ActivityList *> activityList;
 };
 
 #endif // ACTIVITYMODEL_H

@@ -17,7 +17,7 @@
 #include <QDateTime>
 
 NepomukSource::NepomukSource(QObject *parent) :
-    ActivitySource(parent), m_searchClient(0)
+    ActivitySource(parent), m_searchClient(0), set(0)
 {
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
@@ -72,6 +72,8 @@ void NepomukSource::startSearch(const QDate &beginDate)
 
     queryDate = beginDate;
 
+    set = new ActivitySet;
+
     Nepomuk::Query::Query query = createQuery(beginDate);
 
     query.setLimit(7);
@@ -88,29 +90,31 @@ void NepomukSource::startSearch(const QDate &beginDate)
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
     QList<Activity *> activities;
- //   qDebug() << "DATA";
+
     for(int i = 0; i < list.size(); i++)
     {
         QString uri = list.at(i).resource().toFile().url().path();
         QString type = list.at(i).resource().type();
         QFileInfo fi(uri);
         activities.append(new Activity(uri, type, fi.lastModified().date()));
+        set->addActivity(new Activity(uri, type, fi.lastModified().date()));
    }
 
+    qDebug() << "emitting activities";
     emit newActivities(activities);
 }
 
 void NepomukSource::listingFinished()
 {
-//    qDebug() << "NEW SEARCH";
- //   qDebug() << queryDate;
+
+    emit newActivitySet(set);
 
     if( queryDate.month() == queryDate.addDays(-1).month() )
     {
         m_searchClient->close();
         m_searchClient = 0;
 
-        return startSearch(queryDate.addDays(-1));
+        return startSearch(queryDate.addDays(-1));        
     }
 
     emit finishedListing();
