@@ -40,6 +40,7 @@ private:
 
     Nepomuk::Query::QueryServiceClient* m_searchClient;
     QDate queryDate;
+    ActivitySet *set;
 };
 
 #endif // NEPOMUKSOURCE_H
