@@ -10,7 +10,7 @@
 #include "appiconprovider.h"
 
 
-class ActivityModel;
+class ActivityProxy;
 class NepomukSource;
 class QThread;
 
@@ -38,7 +38,7 @@ private Q_SLOTS:
     AppProvider *m_appProvider;
     AppIconProvider *m_appIconProvider;
 
-    ActivityModel* m_model;
+    ActivityProxy* m_model;
     NepomukSource* m_source;
 
     QThread *m_nepomukThread;

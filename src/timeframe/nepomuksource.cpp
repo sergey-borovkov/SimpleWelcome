@@ -100,14 +100,17 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
         set->addActivity(new Activity(uri, type, fi.lastModified().date()));
    }
 
-    qDebug() << "emitting activities";
+//    qDebug() << "emitting activities";
     emit newActivities(activities);
 }
 
 void NepomukSource::listingFinished()
 {
-
-    emit newActivitySet(set);
+    if(set->count())
+    {
+        set->setDate(queryDate);
+        emit newActivitySet(set);
+    }
 
     if( queryDate.month() == queryDate.addDays(-1).month() )
     {
