@@ -28,7 +28,7 @@ Rectangle {
     Component.onCompleted: startup();
     
     Text {
-        text: activityModel.count()
+        text: activityListModel.count
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.leftMargin: 10
@@ -42,7 +42,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width
         height: parent.height
-        model: desu
+        model: activityListModel
         delegate: SceneDelegate {}
 //        highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
         focus: true
@@ -56,33 +56,28 @@ Rectangle {
             console.log( "left key pressed 333..." )
             prevMonth()
         }
-        visible: false
+        visible: true
+    }
+    ListModel
+    {
+        id: activityListModel
     }
 
     Connections
     {
-        target: activityModel
+        target: activityProxy
 
-        onNewSet:
-        {            
-            console.log("index  !!  " + index)
-            console.log(set)
-            desu.insert(index, {"activity": set})
+        onNewList:
+        {                        
+            activityListModel.insert(index, {"activity": list})            
         }
 
-        onSetChanged:
+        onListChanged:
         {
-            desu.set(index, {"activity": set})
-            console.log("set changed: " + set.count)
+            activityListModel.set(index, {"activity": list})            
         }
     }
 
-    ListModel
-    {
-        id: desu
-
-
-    }
 
     Flickable
     {
@@ -96,10 +91,11 @@ Rectangle {
 
             Repeater
             {
-                model:desu
+                model: activityListModel
                 delegate: SceneDelegate {}
             }
         }
+        visible: false
     }
 
 
@@ -113,12 +109,7 @@ Rectangle {
     Connections{
         target: timeScale.list
         onCurrentIndexChanged: {
-     //       console.log(timeScale.model.get(timeScale.list.currentIndex).year)
-     //       console.log(timeScale.model.get(timeScale.list.currentIndex).month)
-            activityModel.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
-            var i = activityModel.getDateIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
-            console.log("ASDF" + i)
-            timeFrameTab.lv.currentIndex = i
+            activityProxy.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
         }
     }
     ToolButton {
