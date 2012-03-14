@@ -36,9 +36,6 @@ class PreviewProvider : public QObject, public QDeclarativeImageProvider
 public:
     PreviewProvider();
     QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize);
-
-private:
-    PreviewGenerator *previewGenerator;
 };
 
 #endif // PREVIEWIMAGEPROVIDER_H

@@ -35,8 +35,8 @@ PreviewGenerator *PreviewGenerator::m_instance = 0;
 PreviewGenerator::PreviewGenerator(QObject *parent) :
     QObject(parent), m_job(0)
 {    
-    defaultPreview.load(":images/pla-empty-box.png");
-    videoPixmap.load(":images/play-empty.png");
+    qDebug() << "DEFAULT PREVIEW" << defaultPreview.load(":images/pla-empty-box.png");
+
     m_plugins = KIO::PreviewJob::availablePlugins();
 }
 
@@ -61,12 +61,14 @@ void PreviewGenerator::jobDeleted()
 void PreviewGenerator::setNullIcon(const KFileItem &item)
 {
     qDebug() << "Preview generation failed" << item.localPath() << item.mimetype();
+
 }
 
 QPixmap PreviewGenerator::getPreviewPixmap(QString filePath)
 {    
     if(previews.contains(filePath))
         return previews[filePath];
+
 
     return defaultPreview;
 }
