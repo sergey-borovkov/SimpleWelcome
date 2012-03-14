@@ -78,6 +78,7 @@ SWApp::SWApp()
     m_nepomukThread->start();
 
     m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
+    m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
 
     qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
 /*
@@ -85,7 +86,7 @@ SWApp::SWApp()
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
     else
     */
-        m_viewer->setMainQmlFile(QLatin1String("/home/kami/lang/timeframe/src/qml/main.qml"));
+        m_viewer->setMainQmlFile(QLatin1String("/home/saint/work/tf2012/timeframe/src/qml/main.qml"));
 
     QTimer::singleShot(1000, this, SLOT(init()));
 
