@@ -37,6 +37,7 @@
 #include "timeframe/nepomuksource.h"
 #include "timeframe/activitylist.h"
 #include "timeframe/activityset.h"
+#include "timeframe/previewprovider.h"
 
 SWApp* SWApp::self()
 {
@@ -79,6 +80,8 @@ SWApp::SWApp()
 
     m_viewer->rootContext()->setContextProperty( "activityProxy", m_model );
 
+    m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
+
     qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
     qmlRegisterUncreatableType<ActivityList>("ActivityList", 1, 0, "ActivityList", "ActivityList is supposed to be used from C++");
 
@@ -87,7 +90,7 @@ SWApp::SWApp()
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
     else
     */
-    m_viewer->setMainQmlFile(QLatin1String("/home/kami/lang/timeframe/src/qml/main.qml"));
+    m_viewer->setMainQmlFile(QLatin1String("/home/julia/work/timeframe/src/qml/main.qml"));
 
     QTimer::singleShot(1000, this, SLOT(init()));
 

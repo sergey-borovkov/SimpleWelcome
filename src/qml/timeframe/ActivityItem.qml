@@ -3,10 +3,6 @@ import QtQuick 1.1
 
 Item {
     id: activityItem
-//    anchors.fill: parent
-
-    property int typeItem; // 1 - x1, 2 - x2, 3 - x3 - размер прямоугольника
-    property string num;
     property string path;
 
     width: 100
@@ -34,11 +30,9 @@ Item {
 
             Image {
                 id: img
-                source: path
+                source: "image://preview/" + path
                 width: 100
                 height: 80
-                sourceSize.width: 100
-                sourceSize.height: 80
                 fillMode: Image.PreserveAspectFit
                 smooth: true
                 anchors.verticalCenter: parent.verticalCenter
@@ -46,6 +40,7 @@ Item {
             }
             Text{
                 anchors.top: img.bottom
+                anchors.bottom: parent.bottom
                 text: getFileName( path )
                 elide: Text.ElideRight
                 width: parent.width
