@@ -71,7 +71,7 @@ void ActivityProxy::addActivitySet(ActivitySet *set)
             break;
 
 
-    if(insertIntoExisting)
+    if(insertIntoExisting && !duplicate)
     {
         activityList[index]->addSet(set);
         emit listChanged(index, activityList[index]);

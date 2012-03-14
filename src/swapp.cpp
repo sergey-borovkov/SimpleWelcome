@@ -78,7 +78,9 @@ SWApp::SWApp()
     m_source->moveToThread(m_nepomukThread);
     m_nepomukThread->start();
 
+
     m_viewer->rootContext()->setContextProperty( "activityProxy", m_model );
+    m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
 
     m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
 
