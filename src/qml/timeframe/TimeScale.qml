@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 Item
 {
@@ -36,7 +36,7 @@ Item
         }
         return "UND"
     }
-
+/*
     function fillModel()
     {
         var currentDate = new Date()
@@ -58,14 +58,22 @@ Item
             }
         }
     }
-
+    */
+    Connections{
+        target: nepomukSource
+        onNewTSEntries: {
+            //console.log("New Entry")
+            monthModel.append( { month: getMonthStr(month-1), year: year, monthNumber: month })
+        }
+    }
+/*
     Component.onCompleted:
     {
         fillModel()
         timeScaleList.currentIndex = monthModel.count -1
         timeScaleList.positionViewAtIndex(timeScaleList.currentIndex, ListView.Contain)        
     }
-
+*/
     ListModel
     {
         id: monthModel        
@@ -87,6 +95,7 @@ Item
                 height: 30
                 color: "grey"
             }
+            /*
             Rectangle
             {
                 height: 6
@@ -95,7 +104,7 @@ Item
                 anchors.verticalCenter: parent.verticalCenter
                 color: "grey"
             }
-
+            */
             Rectangle
             {
 
@@ -186,7 +195,8 @@ Item
             delegate: monthDelegate
             highlight: highlight
             highlightFollowsCurrentItem: false
-
+            boundsBehavior: Flickable.StopAtBounds
+            layoutDirection: Qt.RightToLeft
             //anchors.left: yearLabel.right
             anchors.fill: parent
             anchors.rightMargin: 3
@@ -215,6 +225,13 @@ Item
                 NumberAnimation { duration: 300 }
             }
 
+        }
+        Rectangle{
+            id: scale
+            anchors.verticalCenter: parent.verticalCenter
+            width: parent.width
+            height: 6
+            color: "grey"
         }
     }
 

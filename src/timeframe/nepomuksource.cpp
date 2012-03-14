@@ -17,7 +17,7 @@
 #include <QDateTime>
 
 NepomukSource::NepomukSource(QObject *parent) :
-    ActivitySource(parent), m_searchClient(0)
+    ActivitySource(parent), m_searchClient(0) , m_tsSearch(false)
 {
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
@@ -70,6 +70,12 @@ void NepomukSource::startSearch(const QDate &beginDate)
         m_searchClient = 0;
     }
 
+    if(!m_tsSearch)
+    {
+        m_tsSearch = true;
+        fillTimeScaleModel( QDate::currentDate());
+    }
+
     queryDate = beginDate;
 
     Nepomuk::Query::Query query = createQuery(beginDate);
@@ -85,26 +91,24 @@ void NepomukSource::startSearch(const QDate &beginDate)
     m_searchClient->query(query);
 }
 
+
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
     QList<Activity *> activities;
- //   qDebug() << "DATA";
+    //   qDebug() << "DATA";
     for(int i = 0; i < list.size(); i++)
     {
         QString uri = list.at(i).resource().toFile().url().path();
         QString type = list.at(i).resource().type();
         QFileInfo fi(uri);
         activities.append(new Activity(uri, type, fi.lastModified().date()));
-   }
+    }
 
     emit newActivities(activities);
 }
 
 void NepomukSource::listingFinished()
 {
-//    qDebug() << "NEW SEARCH";
- //   qDebug() << queryDate;
-
     if( queryDate.month() == queryDate.addDays(-1).month() )
     {
         m_searchClient->close();
@@ -114,4 +118,65 @@ void NepomukSource::listingFinished()
     }
 
     emit finishedListing();
+}
+
+
+void NepomukSource::fillTimeScaleModel(const QDate &date)
+{
+
+    if(m_timeScaleClient)
+    {
+        m_timeScaleClient->close();
+        m_timeScaleClient = 0;
+    }
+
+
+    m_timeScaleDate = date;
+    //Nepomuk::Query::Query query = createQuery(beginDate);
+
+
+    Nepomuk::Query::Query query = createTimeScaleQuery(date);
+    query.setLimit(1);
+    m_timeScaleClient = new Nepomuk::Query::QueryServiceClient( this );
+
+    connect(m_timeScaleClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processTSEntry(const QList<Nepomuk::Query::Result> &)));
+
+    connect(m_timeScaleClient, SIGNAL(finishedListing()), SLOT(listingTSFinished()));
+
+    m_timeScaleClient->query(query);
+
+}
+
+Nepomuk::Query::FileQuery NepomukSource::createTimeScaleQuery(const QDate &date)
+{
+    QDate beginDate(m_timeScaleDate.year(),m_timeScaleDate.month(),1);
+    QDate endDate = beginDate.addMonths(1);
+    Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( beginDate );
+    Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() < Nepomuk::Query::LiteralTerm( endDate );
+    Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image/"));
+    Nepomuk::Query::AndTerm term(beginDateTerm,endDateTerm, image);
+    Nepomuk::Query::FileQuery query(term);
+    return query;
+}
+
+void NepomukSource::listingTSFinished()
+{
+
+    QDate date = m_timeScaleDate.addMonths(-1);
+    if (date.year() > 1970)
+    {
+        fillTimeScaleModel(date);
+    }else
+    {
+        m_timeScaleClient->close();
+        m_timeScaleClient = 0;
+    }
+}
+
+void NepomukSource::processTSEntry(const QList<Nepomuk::Query::Result> &list)
+{
+    if (list.count()> 0)
+        emit newTSEntries(m_timeScaleDate.year(),m_timeScaleDate.month());
+    //QString uri = list.at(0).resource().toFile().url().path();
+    //qDebug() << "NEW TS ENTRIES" << m_timeScaleDate.year() <<"   " << m_timeScaleDate.month() << " " << uri;
 }
