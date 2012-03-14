@@ -1,7 +1,8 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 Item
 {
+    id: timeScale
     property variant list: timeScaleList
     property variant  model: monthModel
 
@@ -36,7 +37,7 @@ Item
         }
         return "UND"
     }
-
+/*
     function fillModel()
     {
         var currentDate = new Date()
@@ -58,14 +59,22 @@ Item
             }
         }
     }
-
+    */
+    Connections{
+        target: nepomukSource
+        onNewTSEntries: {
+            //console.log("New Entry")
+            monthModel.append( { month: getMonthStr(month-1), year: year, monthNumber: month })
+        }
+    }
+/*
     Component.onCompleted:
     {
         fillModel()
         timeScaleList.currentIndex = monthModel.count -1
         timeScaleList.positionViewAtIndex(timeScaleList.currentIndex, ListView.Contain)        
     }
-
+*/
     ListModel
     {
         id: monthModel        
@@ -87,6 +96,7 @@ Item
                 height: 30
                 color: "grey"
             }
+            /*
             Rectangle
             {
                 height: 6
@@ -95,7 +105,7 @@ Item
                 anchors.verticalCenter: parent.verticalCenter
                 color: "grey"
             }
-
+            */
             Rectangle
             {
 
@@ -164,7 +174,7 @@ Item
     }
     function getListViewItemSize()
     {
-        var x = parent.width / 11//size of 1 element
+        var x = timeScale.width / 11//size of 1 element
         var y = Math.ceil(x/12)
         return y*12
     }
@@ -186,7 +196,8 @@ Item
             delegate: monthDelegate
             highlight: highlight
             highlightFollowsCurrentItem: false
-
+            boundsBehavior: Flickable.StopAtBounds
+            layoutDirection: Qt.RightToLeft
             //anchors.left: yearLabel.right
             anchors.fill: parent
             anchors.rightMargin: 3
@@ -215,6 +226,13 @@ Item
                 NumberAnimation { duration: 300 }
             }
 
+        }
+        Rectangle{
+            id: scale
+            anchors.verticalCenter: parent.verticalCenter
+            width: parent.width
+            height: 6
+            color: "grey"
         }
     }
 
