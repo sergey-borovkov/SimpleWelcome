@@ -26,8 +26,6 @@ ActivitySet *ActivityList::at(int i) const
 
 QString ActivityList::getUrl(int set, int index)
 {
-    if(set >= list.count())
-        return "";
     return list[set]->getUrl(index);
 }
 
