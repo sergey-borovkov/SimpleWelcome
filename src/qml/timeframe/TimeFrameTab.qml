@@ -105,12 +105,38 @@ Rectangle {
         height: 80
         width: parent.width - 100
     }
+
+    function getSceneIndex( year , month )
+    {
+        var i
+        for (i =0;  i < scene.count; i++)
+        {
+            var x = Qt.formatDate( activityListModel.get(i).activity.getSetDate(0) , "M-yyyy")
+            //var y = x.getSetDate(0);
+            //var z = Qt.formatDate(y, "M-yyyy")
+            //var u = (month + '-' + year)
+
+            if (x.toString() === (month.toString() + '-' + year.toString()))
+            {
+                console.log("bingo")
+                return i
+            }
+            console.log(Qt.formatDate(y, "M-yyyy"))
+            console.log(month + "-" + year)
+        }
+        return 0
+    }
+
     Connections{
         target: timeScale.list
         onCurrentIndexChanged: {
             activityProxy.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
+            scene.currentIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
         }
     }
+
+
+
     ToolButton {
         id: prevButton
          width: 60
