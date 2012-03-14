@@ -78,7 +78,7 @@ SWApp::SWApp()
     m_nepomukThread->start();
 
 
-    m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
+    m_viewer->rootContext()->setContextProperty( "activityProxy", m_model );
     m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
 
     qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");

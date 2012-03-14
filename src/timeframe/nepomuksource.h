@@ -47,12 +47,10 @@ private:
     Nepomuk::Query::QueryServiceClient* m_searchClient;
     Nepomuk::Query::QueryServiceClient* m_timeScaleClient;
     QDate queryDate;
-<<<<<<< HEAD
     QDate m_timeScaleDate;
     bool m_tsSearch;
-=======
     ActivitySet *set;
->>>>>>> f8bdfe45013a80c43e77ad1e18c94f641efed5ec
+
 };
 
 #endif // NEPOMUKSOURCE_H
