@@ -9,16 +9,18 @@ Item {
         var v = activity
 
         var y = 0
-
+        var x = 0
         for(var i = 0; i < v.count; i++)
         {
             Qt.createQmlObject("import QtQuick 1.1; Text { y: " + y + ";text:'" + Qt.formatDate(activity.getSetDate(i), "dd-MM-yyyy") + "'}", cloudDelegate, "cloudDelegate")
-            y += 10
+            y += 50
 
             for(var j = 0; j < v.getSetCount(i); j++)
             {
-                Qt.createQmlObject("import QtQuick 1.1; Text { y:" + y + ";text: '" + activity.getUrl(i, j) + "'}", cloudDelegate, "cloudDelegate")
-                y += 10
+                x += 50
+                var component = Qt.createComponent("ActivityItem.qml");
+                if (component.status === Component.Ready)
+                    component.createObject(parent, {"source": "image://preview/" + activity.getUrl(i, j), "y": y, "x": x});
             }
         }
     }
