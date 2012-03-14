@@ -78,7 +78,9 @@ SWApp::SWApp()
     m_source->moveToThread(m_nepomukThread);
     m_nepomukThread->start();
 
+
     m_viewer->rootContext()->setContextProperty( "activityProxy", m_model );
+    m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
 
     m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
 
@@ -90,7 +92,7 @@ SWApp::SWApp()
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
     else
     */
-    m_viewer->setMainQmlFile(QLatin1String("/home/kami/lang/timeframe/src/qml/main.qml"));
+    m_viewer->setMainQmlFile(QLatin1String("/home/julia/work/timeframe/src/qml/main.qml"));
 
     QTimer::singleShot(1000, this, SLOT(init()));
 
