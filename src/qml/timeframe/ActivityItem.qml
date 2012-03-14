@@ -9,18 +9,22 @@ Item {
     property string num;
     property string path;
 
-    width: ( typeItem == 1 ) ? x1 : (( typeItem == 2 ) ? x2 : x3 )
-    height: ( typeItem == 1 ) ? y1 : (( typeItem == 2 ) ? y2 : y3 )
-    anchors.topMargin: ky
-    anchors.bottomMargin: ky
-    anchors.leftMargin: kx
-    anchors.rightMargin: kx
+    width: 100
+    height: 80
 
     Rectangle {
         anchors.fill: parent
         border.color: "yellow"
     }
 
+    function getFileName( filePath )
+    {
+        var filename = ""
+        var pos = filePath.lastIndexOf("/");
+        if ( pos !== ( -1 ) )
+            filename = filePath.substring( pos + 1 );
+        return filename;
+    }
 
     Component {
         id: imgDelegate
@@ -31,15 +35,21 @@ Item {
             Image {
                 id: img
                 source: path
+                width: 100
+                height: 80
+                sourceSize.width: 100
+                sourceSize.height: 80
+                fillMode: Image.PreserveAspectFit
+                smooth: true
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: ( typeItem == 1 ) ? x1 : (( typeItem == 2 ) ? x2 : x3)
-                height: ( typeItem == 1 ) ? y1 : (( typeItem == 2 ) ? y2 : y3)
-                opacity: cloudDelegate.ListView.isCurrentItem ? 1 : 0.5
             }
-            Text {
-                text: activityItem.num + ( ( typeItem == 1 ) ? 'x1 ' : ( typeItem == 2 ) ? 'x2 ' : 'x3 ')//  + url
-                anchors.centerIn: img
+            Text{
+                anchors.top: img.bottom
+                text: getFileName( path )
+                elide: Text.ElideRight
+                width: parent.width
+                horizontalAlignment: Text.AlignHCenter
             }
         }
     }
@@ -109,6 +119,6 @@ Item {
         id: eventLoader
         anchors.fill: parent
         sourceComponent: bestDelegate ( "image" )
-
+        anchors.margins: 2
     }
 }
