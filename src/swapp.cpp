@@ -33,9 +33,9 @@
 #include <KDebug>
 #include <KIcon>
 
-#include "timeframe/activitymodel.h"
+#include "timeframe/activityproxy.h"
 #include "timeframe/nepomuksource.h"
-
+#include "timeframe/activitylist.h"
 #include "timeframe/activityset.h"
 
 SWApp* SWApp::self()
@@ -68,7 +68,7 @@ SWApp::SWApp()
     QString appPath = applicationFilePath();
 
 
-    m_model = new ActivityModel;
+    m_model = new ActivityProxy;
     m_source = new NepomukSource;
     m_model->addSource( m_source );
 
@@ -77,16 +77,20 @@ SWApp::SWApp()
     m_source->moveToThread(m_nepomukThread);
     m_nepomukThread->start();
 
+
     m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
     m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
 
     qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
+    qmlRegisterUncreatableType<ActivityList>("ActivityList", 1, 0, "ActivityList", "ActivityList is supposed to be used from C++");
+
 /*
     if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
     else
     */
-        m_viewer->setMainQmlFile(QLatin1String("/home/saint/work/tf2012/timeframe/src/qml/main.qml"));
+
+    m_viewer->setMainQmlFile(QLatin1String("/home/saint/work/tf2012/timeframe/src/qml/main.qml"));
 
     QTimer::singleShot(1000, this, SLOT(init()));
 

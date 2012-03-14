@@ -11,14 +11,16 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 include_directories(${KDE4_INCLUDES} ${QT_QDECLARATIVE_INCLUDE_DIR})
 
 set(rosa-launcher-qtquick_SRCS 
-  src/timeframe/activitymodel.h
-  src/timeframe/activitymodel.cpp
+  src/timeframe/activityproxy.h
+  src/timeframe/activityproxy.cpp
   src/timeframe/nepomuksource.h
   src/timeframe/nepomuksource.cpp
   src/timeframe/activitysource.cpp
   src/timeframe/activitysource.h
   src/timeframe/activityset.cpp
   src/timeframe/activityset.h
+  src/timeframe/activitylist.h
+  src/timeframe/activitylist.cpp
   src/main.cpp
   src/swapp.cpp
   src/appentity.cpp

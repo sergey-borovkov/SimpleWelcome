@@ -47,6 +47,8 @@ public:
 
     void addActivity(const QString &url, const QString &type, const QDate &date);
     void addActivity(Activity *activity);
+    void setDate(const QDate &d) { date = d; }
+
 signals:
     void countChanged();
 
@@ -55,7 +57,8 @@ public slots:
     Activity *activity(int index);    
     QString getUrl(int i);
     QString getType(int i);
-    QDate getDate(int i);
+    QDate getDate();
+
 
 private:
     QList<Activity *> activities;    

@@ -19,6 +19,7 @@ public slots:
 
 signals:
     void newActivities(QList<Activity *>);
+    void newActivitySet(ActivitySet *);
     void finishedListing();
 
 public slots:
