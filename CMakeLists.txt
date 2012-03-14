@@ -21,6 +21,10 @@ set(rosa-launcher-qtquick_SRCS
   src/timeframe/activityset.h
   src/timeframe/activitylist.h
   src/timeframe/activitylist.cpp
+  src/timeframe/previewgenerator.h
+  src/timeframe/previewgenerator.cpp
+  src/timeframe/previewprovider.h
+  src/timeframe/previewprovider.cpp
   src/main.cpp
   src/swapp.cpp
   src/appentity.cpp
