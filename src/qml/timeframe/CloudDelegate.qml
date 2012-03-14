@@ -4,23 +4,36 @@ import QtQuick 1.1
 Item {
     id: cloudDelegate
 
+    property int activityindex: -1
+
     function createObjects()
     {
-        var v = activity
+        if ( activityindex === ( -1 ) )
+            return;
 
+        var v = activity
+        var strDate = Qt.formatDate(activity.getSetDate( activityindex ), "dd-MM-yyyy")
+        activityDate.text = strDate
+
+        var acitivityItemComp = Qt.createComponent( "ActivityItem.qml" );
+
+        for ( var i = 0; i < v.getSetCount( activityindex ); i++)
+        {
+            var url = activity.getUrl( activityindex, i )
+            var item = acitivityItemComp.createObject( cloudContainer, { "path": url } );
+        }
+
+        /*
+        var v = activity
         var y = 0
 
-        for(var i = 0; i < v.count; i++)
-        {
-            Qt.createQmlObject("import QtQuick 1.1; Text { y: " + y + ";text:'" + Qt.formatDate(activity.getSetDate(i), "dd-MM-yyyy") + "'}", cloudDelegate, "cloudDelegate")
-            y += 10
+        Qt.createQmlObject("import QtQuick 1.1; Text { y: " + y + ";text:'" + Qt.formatDate(activity.getSetDate( activityindex ), "dd-MM-yyyy") + "'}", cloudDelegate, "cloudDelegate")
 
-            for(var j = 0; j < v.getSetCount(i); j++)
-            {
-                Qt.createQmlObject("import QtQuick 1.1; Text { y:" + y + ";text: '" + activity.getUrl(i, j) + "'}", cloudDelegate, "cloudDelegate")
-                y += 10
-            }
-        }
+        for(var j = 0; j < v.getSetCount( activityindex ); j++)
+        {
+            y += 10
+            Qt.createQmlObject("import QtQuick 1.1; Text { y:" + y + ";text: '" + activity.getUrl(activityindex, j) + "'}", cloudDelegate, "cloudDelegate")
+        }*/
     }
 
     Component.onCompleted:
@@ -28,24 +41,36 @@ Item {
         createObjects()
     }
 
-    property int kx: cloudWidth / 27
-    property int ky: cloudHeight / 9
-    property int x1: 3*kx
-    property int x2: 4*kx
-    property int x3: 6*kx
-    property int y1: 2*ky
-    property int y2: 3*ky
-    property int y3: 4*ky
-
     width: cloudWidth
     height: cloudHeight
-    anchors.topMargin: (timeFrameTab.height / 2 - height ) / 2
-    anchors.bottomMargin:(timeFrameTab.height / 2 - height ) / 2
-    anchors.leftMargin: (timeFrameTab.width / 2 - width ) / 2
-    anchors.rightMargin: (timeFrameTab.width / 2 - width ) / 2
 
     Rectangle {
+        id: cloudWrapper
         anchors.fill: parent
         border.color: "blue"
+        anchors.margins: 0
+
+        Text {
+            id: activityDate
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.topMargin: 5
+            anchors.leftMargin: 5
+            text: ""
+        }
+
+        Grid {
+            id: cloudContainer
+            spacing: ( parent.width - 100 * columns ) / ( columns + 1 )
+            columns: 4
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.top: activityDate.bottom
+            anchors.topMargin: 5
+            anchors.leftMargin: 10
+            anchors.rightMargin: 10
+            anchors.bottomMargin: 10
+        }
     }
 }
