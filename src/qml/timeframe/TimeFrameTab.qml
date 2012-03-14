@@ -98,13 +98,12 @@ Rectangle {
         visible: false
     }
 
-
-
     TimeScale{
         id: timeScale
         anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
         height: 80
-        width: parent.width
+        width: parent.width - 100
     }
     Connections{
         target: timeScale.list
@@ -114,23 +113,42 @@ Rectangle {
     }
     ToolButton {
         id: prevButton
+         width: 60
         imageUrl: "images/go-previous.png"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         onButtonClick: {
             console.log( "left button pressed..." )
-            prevMonth()
+            if (scene.currentIndex === 0)
+            {
+                //timeScale.list.decrementCurrentIndex()
+                timeScale.list.incrementCurrentIndex()
+            }
+            else
+            {
+                scene.decrementCurrentIndex()
+            }
         }
     }
 
     ToolButton {
         id: nextButton
+        width: 60
         imageUrl: "images/go-next.png"
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         onButtonClick: {
-            console.log( "right button pressed..." )
-            nextMonth()
+            console.log( scene.currentIndex + "  " + scene.count)
+            if (scene.currentIndex === (scene.count -1))
+            {
+                //timeScale.list.incrementCurrentIndex()
+                timeScale.list.decrementCurrentIndex()
+                console.log("index")
+            }
+            else
+            {
+                scene.incrementCurrentIndex()
+            }
         }
     }
 

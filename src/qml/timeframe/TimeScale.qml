@@ -2,6 +2,7 @@ import QtQuick 1.1
 
 Item
 {
+    id: timeScale
     property variant list: timeScaleList
     property variant  model: monthModel
 
@@ -173,7 +174,7 @@ Item
     }
     function getListViewItemSize()
     {
-        var x = parent.width / 11//size of 1 element
+        var x = timeScale.width / 11//size of 1 element
         var y = Math.ceil(x/12)
         return y*12
     }
