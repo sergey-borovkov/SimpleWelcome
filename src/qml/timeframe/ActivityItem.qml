@@ -7,12 +7,12 @@ Item {
 
     width: 100
     height: 80
-
+/*
     Rectangle {
         anchors.fill: parent
         border.color: "yellow"
     }
-
+*/
     function getFileName( filePath )
     {
         var filename = ""
@@ -31,6 +31,8 @@ Item {
             Image {
                 id: img
                 source: "image://preview/" + path
+                asynchronous: true
+                //sourceSize.width: 256
                 width: 100
                 height: 80
                 fillMode: Image.PreserveAspectFit

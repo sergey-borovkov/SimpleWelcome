@@ -50,11 +50,9 @@ Item {
     width: cloudWidth
     height: cloudHeight
 
-    Rectangle {
+    Item {
         id: cloudWrapper
         anchors.fill: parent
-        border.color: "blue"
-        anchors.margins: 0
 
         Text {
             id: activityDate

@@ -26,14 +26,14 @@ Rectangle {
     }
 
     Component.onCompleted: startup();
-    
+/*
     Text {
         text: activityListModel.count
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.leftMargin: 10
     }
-
+*/
 
 
     ListView {
@@ -74,6 +74,7 @@ Rectangle {
 
         onListChanged:
         {
+            console.log("list changed - " + index)
             activityListModel.set(index, {"activity": list})            
         }
     }
