@@ -1,7 +1,7 @@
 import QtQuick 1.0
 
 
-Rectangle {
+Item {
     id: timeFrameTab
     width: parent.width
     height: 800
