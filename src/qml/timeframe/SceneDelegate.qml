@@ -17,17 +17,18 @@ Item {
 //        createObjects()
     }
 
-
+/*
     Rectangle {
         anchors.fill: parent
         border.color: "green"
         border.width: 3
     }
-
+*/
     Text {
-        text: activityListModel.count
+        text: "index: " + activityListModel.count
         anchors.top: parent.top
-        anchors.left: parent.left
+        anchors.horizontalCenter: parent.horizontalCenter
+        //anchors.left: parent.left
         anchors.leftMargin: 10
     }
 
