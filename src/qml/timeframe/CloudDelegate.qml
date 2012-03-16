@@ -45,7 +45,7 @@ Item {
 
     function createTemplate1( component, date )
     {
-        console.log("******************* createTemplate 1 ******************")
+        //console.log("******************* createTemplate 1 ******************")
 
         var item = createItem( component, getPath( 0 ), 3 )
 
@@ -59,7 +59,7 @@ Item {
 
     function createTemplate2( component, date )
     {
-        console.log("******************* createTemplate 2 ******************")
+        //console.log("******************* createTemplate 2 ******************")
         var types = new Array( 3, 2 )
         var items = new Array();
 
@@ -79,7 +79,7 @@ Item {
 
     function createTemplate3( component, date )
     {
-        console.log("******************* createTemplate 3 ******************")
+        //console.log("******************* createTemplate 3 ******************")
 
         var types = new Array( 3, 2, 1 )
         var items = new Array();
@@ -101,7 +101,7 @@ Item {
 
     function createTemplate4( component, date )
     {
-        console.log("******************* createTemplate 4 ******************")
+        //console.log("******************* createTemplate 4 ******************")
 
         var types = new Array( 3, 2, 1, 1 )
         var items = new Array();
@@ -125,7 +125,7 @@ Item {
 
     function createTemplate5( component, date )
     {
-        console.log("******************* createTemplate 5 ******************")
+        //console.log("******************* createTemplate 5 ******************")
 
         var types = new Array( 3, 2, 1, 1, 1 )
         var items = new Array();
@@ -151,7 +151,7 @@ Item {
 
     function createTemplate6( component, date )
     {
-        console.log("******************* createTemplate 6 ******************")
+        //console.log("******************* createTemplate 6 ******************")
 
         var types = new Array( 3, 2, 1, 1, 1, 3 )
         var items = new Array();
@@ -179,7 +179,7 @@ Item {
 
     function createTemplate7( component, date )
     {
-        console.log("******************* createTemplate 7 ******************")
+        //console.log("******************* createTemplate 7 ******************")
 
         var types = new Array( 3, 2, 1, 1, 1, 3, 3 )
         var items = new Array();
