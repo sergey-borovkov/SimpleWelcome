@@ -118,4 +118,9 @@ Item {
         sourceComponent: bestDelegate ( "image" )
         anchors.margins: 2
     }
+    MouseArea
+    {
+        anchors.fill: parent
+        onClicked: Qt.openUrlExternally(path)
+    }
 }
