@@ -150,7 +150,7 @@ Item {
             activityListModel.insert(index+1, {"activity": list})
             if ((index === 0) && (scene.currentIndex===0))
             {
-                if (scene.moving === false)
+                //if (scene.moving === false)
                     scene.positionViewAtIndex(index+1,ListView.Contain)
                 /*else
                 {
