@@ -70,7 +70,9 @@ target_link_libraries(rosa-launcher-qtquick
 install(TARGETS rosa-launcher-qtquick ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 file(GLOB qml_files "${CMAKE_CURRENT_SOURCE_DIR}/src/qml/*.qml")
+file(GLOB qml_tf_files "${CMAKE_CURRENT_SOURCE_DIR}/src/qml/timeframe/*.qml")
 file(GLOB qml_js_files "${CMAKE_CURRENT_SOURCE_DIR}/src/qml/*.js")
 install(FILES ${qml_files} DESTINATION share/${PROJECT_NAME}/qml)
+install(FILES ${qml_tf_files} DESTINATION share/${PROJECT_NAME}/qml/timeframe/)
 install(FILES ${qml_js_files} DESTINATION share/${PROJECT_NAME}/qml)
 

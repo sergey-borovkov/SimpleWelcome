@@ -31,6 +31,8 @@ public slots:
 private slots:
     void listingFinished();
 
+    void newMonth(int year,int month);
+
 private:
 
     enum
