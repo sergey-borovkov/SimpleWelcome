@@ -49,6 +49,7 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
             }
         }
+
     }
 
     Component {
@@ -118,4 +119,18 @@ Item {
         sourceComponent: bestDelegate ( "image" )
         anchors.margins: 2
     }
+    MouseArea{
+        anchors.fill: parent
+        onClicked: Qt.openUrlExternally(path)
+        hoverEnabled: true
+        /*
+        onEntered: {
+            eventLoader.anchors.margins = 0
+        }
+        onExited: {
+            eventLoader.anchors.margins = 2
+        }
+        */
+    }
+
 }
