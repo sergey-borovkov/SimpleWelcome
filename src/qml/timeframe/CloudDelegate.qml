@@ -45,8 +45,9 @@ Item {
 
     function createTemplate1( component, date )
     {
-        var url = getPath( 0 )
-        var item = component.createObject( cloudDelegate, { "path": url, "width": x3, "height": y3 } );
+        console.log("******************* createTemplate 1 ******************")
+
+        var item = createItem( component, getPath( 0 ), 3 )
 
         item.x = ( width - item.width ) / 2
         item.y = ( height - item.height ) / 2
@@ -58,175 +59,152 @@ Item {
 
     function createTemplate2( component, date )
     {
-        var urls = new Array[2];
-        for ( i = 0; i < 2; i++)
-            urls[ i ] = getPath( i )
+        console.log("******************* createTemplate 2 ******************")
+        var types = new Array( 3, 2 )
+        var items = new Array();
 
-//        var items = new Array[2];
-//        for ( i = 0; i < 2; i++)
-//            items[ i ] = getPath( i )
+        for ( var i = 0; i < types.length; i++ )
+            items[ i ] = createItem( component, getPath( i ), types[ i ] )
 
-        var item1 = createItem( component, urls[ 0 ], 3 )
-        var item2 = createItem( component, urls[ 1 ], 2 )
+        items[ 0 ].x = ( width - ( items[ 0 ].width + items[ 1 ].width + k ) ) / 2
+        items[ 0 ].y = ( height - items[ 0 ].height ) / 2
 
-        item1.x = ( width - ( item1.width + item2.width + k) ) / 2
-        item2.x = item1.x + item1.width + k
-        item1.y = ( height - item1.height ) / 2
-        item2.y = item1.y + (item1.height - item2.height)
+        items[ 1 ].x = items[ 0 ].x + items[ 0 ].width + k
+        items[ 1 ].y = items[ 0 ].y + ( items[ 0 ].height - items[ 1 ].height )
 
         var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
-        dateItem.x = item2.x
-        dateItem.y = item2.y - k - dateItem.height
+        dateItem.x = items[ 1 ].x
+        dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
     function createTemplate3( component, date )
     {
-        var url1 = getPath( 0 )
-        var url2 = getPath( 1 )
-        var url3 = getPath( 2 )
+        console.log("******************* createTemplate 3 ******************")
 
-        var item1 = component.createObject( cloudDelegate, { "path": url1, "width": x3, "height": y3 } );
-        var item2 = component.createObject( cloudDelegate, { "path": url2, "width": x2, "height": y2 } );
-        var item3 = component.createObject( cloudDelegate, { "path": url3, "width": x1, "height": y1 } );
+        var types = new Array( 3, 2, 1 )
+        var items = new Array();
 
-        item1.x = ( width - ( item1.width + item2.width + k ) ) / 2
-        item2.x = item1.x + item1.width + k
-        item3.x = ( width - item3.width ) / 2
-        item1.y = ( height - ( item1.height + item3.height + k ) ) / 2
-        item2.y = item1.y + ( item1.height - item2.height )
-        item3.y = item1.y + item1.height + k
+        for ( var i = 0; i < types.length; i++ )
+            items[ i ] = createItem( component, getPath( i ), types[ i ] )
+
+        items[ 0 ].x = ( width - ( items[ 0 ].width + items[ 1 ].width + k ) ) / 2
+        items[ 1 ].x = items[ 0 ].x + items[ 0 ].width + k
+        items[ 2 ].x = ( width - items[ 2 ].width ) / 2
+        items[ 0 ].y = ( height - ( items[ 0 ].height + items[ 2 ].height + k ) ) / 2
+        items[ 1 ].y = items[ 0 ].y + ( items[ 0 ].height - items[ 1 ].height )
+        items[ 2 ].y = items[ 0 ].y + items[ 0 ].height + k
 
         var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
-        dateItem.x = item2.x
-        dateItem.y = item2.y - k - dateItem.height
+        dateItem.x = items[ 1 ].x
+        dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
     function createTemplate4( component, date )
     {
-        var url1 = getPath( 0 )
-        var url2 = getPath( 1 )
-        var url3 = getPath( 2 )
-        var url4 = getPath( 3 )
+        console.log("******************* createTemplate 4 ******************")
 
-        var item1 = component.createObject( cloudDelegate, { "path": url1, "width": x3, "height": y3 } );
-        var item2 = component.createObject( cloudDelegate, { "path": url2, "width": x2, "height": y2 } );
-        var item3 = component.createObject( cloudDelegate, { "path": url3, "width": x1, "height": y1 } );
-        var item4 = component.createObject( cloudDelegate, { "path": url4, "width": x1, "height": y1 } );
+        var types = new Array( 3, 2, 1, 1 )
+        var items = new Array();
 
-        item1.x = ( width - ( item1.width + item2.width + k ) ) / 2
-        item2.x = item1.x + item1.width + k
-        item3.x = ( width - item3.width ) / 2
-        item4.x = item1.x
-        item1.y = ( height - ( item1.height + item3.height + k ) ) / 2
-        item2.y = item1.y + ( item1.height - item2.height )
-        item3.y = item1.y + item1.height + k
-        item4.y = item3.y
+        for ( var i = 0; i < types.length; i++ )
+            items[ i ] = createItem( component, getPath( i ), types[ i ] )
+
+        items[ 0 ].x = ( width - ( items[ 0 ].width + items[ 1 ].width + k ) ) / 2
+        items[ 1 ].x = items[ 0 ].x + items[ 0 ].width + k
+        items[ 2 ].x = ( width - items[ 2 ].width ) / 2
+        items[ 3 ].x = items[ 0 ].x
+        items[ 0 ].y = ( height - ( items[ 0 ].height + items[ 2 ].height + k ) ) / 2
+        items[ 1 ].y = items[ 0 ].y + ( items[ 0 ].height - items[ 1 ].height )
+        items[ 2 ].y = items[ 0 ].y + items[ 0 ].height + k
+        items[ 3 ].y = items[ 2 ].y
 
         var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
-        dateItem.x = item2.x
-        dateItem.y = item2.y - k - dateItem.height
+        dateItem.x = items[ 1 ].x
+        dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
     function createTemplate5( component, date )
     {
-        var url1 = getPath( 0 )
-        var url2 = getPath( 1 )
-        var url3 = getPath( 2 )
-        var url4 = getPath( 3 )
-        var url5 = getPath( 4 )
+        console.log("******************* createTemplate 5 ******************")
 
-        var item1 = component.createObject( cloudDelegate, { "path": url1, "width": x3, "height": y3 } );
-        var item2 = component.createObject( cloudDelegate, { "path": url2, "width": x2, "height": y2 } );
-        var item3 = component.createObject( cloudDelegate, { "path": url3, "width": x1, "height": y1 } );
-        var item4 = component.createObject( cloudDelegate, { "path": url4, "width": x1, "height": y1 } );
-        var item5 = component.createObject( cloudDelegate, { "path": url5, "width": x1, "height": y1 } );
+        var types = new Array( 3, 2, 1, 1, 1 )
+        var items = new Array();
 
-        item1.x = ( width - ( item1.width + item2.width + k ) ) / 2
-        item2.x = item1.x + item1.width + k
-        item3.x = ( width - item3.width ) / 2
-        item4.x = item1.x
-        item5.x = item3.x + item3.width + k
-        item1.y = ( height - ( item1.height + item3.height + k ) ) / 2
-        item2.y = item1.y + ( item1.height - item2.height )
-        item3.y = item1.y + item1.height + k
-        item4.y = item3.y
-        item5.y = item3.y
+        for ( var i = 0; i < types.length; i++ )
+            items[ i ] = createItem( component, getPath( i ), types[ i ] )
+
+        items[ 0 ].x = ( width - ( items[ 0 ].width + items[ 1 ].width + k ) ) / 2
+        items[ 1 ].x = items[ 0 ].x + items[ 0 ].width + k
+        items[ 2 ].x = ( width - items[ 2 ].width ) / 2
+        items[ 3 ].x = items[ 0 ].x
+        items[ 4 ].x = items[ 2 ].x + items[ 2 ].width + k
+        items[ 0 ].y = ( height - ( items[ 0 ].height + items[ 2 ].height + k ) ) / 2
+        items[ 1 ].y = items[ 0 ].y + ( items[ 0 ].height - items[ 1 ].height )
+        items[ 2 ].y = items[ 0 ].y + items[ 0 ].height + k
+        items[ 3 ].y = items[ 2 ].y
+        items[ 4 ].y = items[ 2 ].y
 
         var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
-        dateItem.x = item2.x
-        dateItem.y = item2.y - k - dateItem.height
+        dateItem.x = items[ 1 ].x
+        dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
     function createTemplate6( component, date )
     {
-        var url1 = getPath( 0 )
-        var url2 = getPath( 1 )
-        var url3 = getPath( 2 )
-        var url4 = getPath( 3 )
-        var url5 = getPath( 4 )
-        var url6 = getPath( 5 )
+        console.log("******************* createTemplate 6 ******************")
 
-        var item1 = component.createObject( cloudDelegate, { "path": url1, "width": x3, "height": y3 } );
-        var item2 = component.createObject( cloudDelegate, { "path": url2, "width": x2, "height": y2 } );
-        var item3 = component.createObject( cloudDelegate, { "path": url3, "width": x1, "height": y1 } );
-        var item4 = component.createObject( cloudDelegate, { "path": url4, "width": x1, "height": y1 } );
-        var item5 = component.createObject( cloudDelegate, { "path": url5, "width": x1, "height": y1 } );
-        var item6 = component.createObject( cloudDelegate, { "path": url6, "width": x3, "height": y3 } );
+        var types = new Array( 3, 2, 1, 1, 1, 3 )
+        var items = new Array();
 
-        item6.x = ( width - ( item1.width + item2.width + item6.width + k * 2 ) ) / 2
-        item1.x = item6.x + item1.width + k
-        item2.x = item1.x + item1.width + k
-        item4.x = item1.x
-        item3.x = item4.x + item4.width + k
-        item5.x = item3.x + item3.width + k
-        item1.y = ( height - ( item1.height + item3.height + k ) ) / 2
-        item2.y = item1.y + ( item1.height - item2.height )
-        item3.y = item1.y + item1.height + k
-        item4.y = item3.y
-        item5.y = item3.y
-        item6.y = item1.y + (item1.height + item4.height + k - item6.height ) / 2
+        for ( var i = 0; i < types.length; i++ )
+            items[ i ] = createItem( component, getPath( i ), types[ i ] )
+
+        items[ 5 ].x = ( width - ( items[ 0 ].width + items[ 1 ].width + items[ 5 ].width + k * 2 ) ) / 2
+        items[ 0 ].x = items[ 5 ].x + items[ 0 ].width + k
+        items[ 1 ].x = items[ 0 ].x + items[ 0 ].width + k
+        items[ 3 ].x = items[ 0 ].x
+        items[ 2 ].x = items[ 3 ].x + items[ 3 ].width + k
+        items[ 4 ].x = items[ 2 ].x + items[ 2 ].width + k
+        items[ 0 ].y = ( height - ( items[ 0 ].height + items[ 2 ].height + k ) ) / 2
+        items[ 1 ].y = items[ 0 ].y + ( items[ 0 ].height - items[ 1 ].height )
+        items[ 2 ].y = items[ 0 ].y + items[ 0 ].height + k
+        items[ 3 ].y = items[ 2 ].y
+        items[ 4 ].y = items[ 2 ].y
+        items[ 5 ].y = items[ 0 ].y + (items[ 0 ].height + items[ 3 ].height + k - items[ 5 ].height ) / 2
 
         var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
-        dateItem.x = item2.x
-        dateItem.y = item2.y - k - dateItem.height
+        dateItem.x = items[ 1 ].x
+        dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
     function createTemplate7( component, date )
     {
-        var url1 = getPath( 0 )
-        var url2 = getPath( 1 )
-        var url3 = getPath( 2 )
-        var url4 = getPath( 3 )
-        var url5 = getPath( 4 )
-        var url6 = getPath( 5 )
-        var url7 = getPath( 6 )
+        console.log("******************* createTemplate 7 ******************")
 
-        var item1 = component.createObject( cloudDelegate, { "path": url1, "width": x3, "height": y3 } );
-        var item2 = component.createObject( cloudDelegate, { "path": url2, "width": x2, "height": y2 } );
-        var item3 = component.createObject( cloudDelegate, { "path": url3, "width": x1, "height": y1 } );
-        var item4 = component.createObject( cloudDelegate, { "path": url4, "width": x1, "height": y1 } );
-        var item5 = component.createObject( cloudDelegate, { "path": url5, "width": x1, "height": y1 } );
-        var item6 = component.createObject( cloudDelegate, { "path": url6, "width": x3, "height": y3 } );
-        var item7 = component.createObject( cloudDelegate, { "path": url7, "width": x3, "height": y3 } );
+        var types = new Array( 3, 2, 1, 1, 1, 3, 3 )
+        var items = new Array();
 
-        item6.x = ( width - ( item1.width + item2.width + item6.width + item7.width + k * 3 ) ) / 2
-        item1.x = item6.x + item1.width + k
-        item2.x = item1.x + item1.width + k
-        item4.x = item1.x
-        item3.x = item4.x + item4.width + k
-        item5.x = item3.x + item3.width + k
-        item7.x = item2.x + item2.width + k
-        item1.y = ( height - ( item1.height + item3.height + k ) ) / 2
-        item2.y = item1.y + ( item1.height - item2.height )
-        item3.y = item1.y + item1.height + k
-        item4.y = item3.y
-        item5.y = item3.y
-        item6.y = item1.y + (item1.height + item4.height + k - item6.height ) / 2
-        item7.y = item6.y
+        for ( var i = 0; i < types.length; i++ )
+            items[ i ] = createItem( component, getPath( i ), types[ i ] )
+
+        items[ 5 ].x = ( width - ( items[ 0 ].width + items[ 1 ].width + items[ 5 ].width + items[ 6 ].width + k * 3 ) ) / 2
+        items[ 0 ].x = items[ 5 ].x + items[ 0 ].width + k
+        items[ 1 ].x = items[ 0 ].x + items[ 0 ].width + k
+        items[ 3 ].x = items[ 0 ].x
+        items[ 2 ].x = items[ 3 ].x + items[ 3 ].width + k
+        items[ 4 ].x = items[ 2 ].x + items[ 2 ].width + k
+        items[ 6 ].x = items[ 1 ].x + items[ 1 ].width + k
+        items[ 0 ].y = ( height - ( items[ 0 ].height + items[ 2 ].height + k ) ) / 2
+        items[ 1 ].y = items[ 0 ].y + ( items[ 0 ].height - items[ 1 ].height )
+        items[ 2 ].y = items[ 0 ].y + items[ 0 ].height + k
+        items[ 3 ].y = items[ 2 ].y
+        items[ 4 ].y = items[ 2 ].y
+        items[ 5 ].y = items[ 0 ].y + (items[ 0 ].height + items[ 3 ].height + k - items[ 5 ].height ) / 2
+        items[ 6 ].y = items[ 5 ].y
 
         var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
-        dateItem.x = item2.x
-        dateItem.y = item2.y - k - dateItem.height
+        dateItem.x = items[ 1 ].x
+        dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
 
@@ -261,17 +239,9 @@ Item {
         createObjects()
     }
 
-/*
-    Rectangle {
-        anchors.fill: parent
-        border.color: "green"
-        border.width: 3
-    }
-*/
     Item {
         id: cloudItem
         anchors.centerIn: parent
-//        anchors.fill: parent
     }
 
 }
@@ -323,56 +293,56 @@ Item {
         anchors.centerIn: parent
 
         ActivityItem {
-            id: item1
+            id: items[ 0 ]
             anchors.horizontalCenter: parent.horizontalCenter
             //            anchors.verticalCenter: parent.verticalCenter
-            //            anchors.top: item5.bottom
+            //            anchors.top: items[ 4 ].bottom
             typeItem: 1
         }
 
         ActivityItem {
-            id: item2
+            id: items[ 1 ]
             typeItem: 1
-            anchors.right: item1.left
-            anchors.top: item1.top
+            anchors.right: items[ 0 ].left
+            anchors.top: items[ 0 ].top
         }
         ActivityItem {
-            id: item3
+            id: items[ 2 ]
             typeItem: 1
-            anchors.left: item1.right
-            anchors.top: item1.top
+            anchors.left: items[ 0 ].right
+            anchors.top: items[ 0 ].top
         }
         ActivityItem {
-            id: item4
+            id: items[ 3 ]
             typeItem: 2
-            anchors.right: item3.right
-            anchors.bottom: item3.top
+            anchors.right: items[ 2 ].right
+            anchors.bottom: items[ 2 ].top
         }
         ActivityItem {
-            id: item5
+            id: items[ 4 ]
             typeItem: 3
             y: parent.height / 2 - height
-            anchors.left: item2.left
+            anchors.left: items[ 1 ].left
         }
         ActivityItem {
-            id: item6
+            id: items[ 5 ]
             typeItem: 3
-            anchors.right: item2.left
+            anchors.right: items[ 1 ].left
             anchors.verticalCenter: parent.verticalCenter
 
         }
         ActivityItem {
-            id: item7
+            id: items[ 6 ]
             typeItem: 3
-            anchors.left: item3.right
+            anchors.left: items[ 2 ].right
             anchors.verticalCenter: parent.verticalCenter
         }
 
         Text {
             id: date
             text: ""
-            anchors.right: item6.right
-            anchors.bottom: item6.top
+            anchors.right: items[ 5 ].right
+            anchors.bottom: items[ 5 ].top
             anchors.rightMargin: k
         }
     }
