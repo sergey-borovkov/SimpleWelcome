@@ -69,13 +69,18 @@ Rectangle {
 
         onNewList:
         {                        
-            activityListModel.insert(index, {"activity": list})            
+            activityListModel.insert(index, {"activity": list})
         }
 
         onListChanged:
         {
             console.log("list changed - " + index)
-            activityListModel.set(index, {"activity": list})            
+
+            if(scene.currentIndex === index)
+            {
+                activityListModel.remove(index)
+                activityListModel.insert(index, {"activity": list})
+            }
         }
     }
 
