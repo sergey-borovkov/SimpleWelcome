@@ -27,17 +27,10 @@ Item {
     }
 
     Component.onCompleted: startup();
-    /*
-    Text {
-        text: activityListModel.count
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.leftMargin: 10
-    }
-*/
+
     function getTimeScaleIndex( index )
     {
-        var x = activityListModel.get(index).activity.date(0)
+        var x = activityListModel.get(index).activity.date
         var month = Qt.formatDateTime(x, "M")
         var year = Qt.formatDateTime(x, "yyyy")
         var i
@@ -70,21 +63,19 @@ Item {
         snapMode: ListView.SnapOneItem
         highlightFollowsCurrentItem: true
         highlightRangeMode: ListView.StrictlyEnforceRange
+        preferredHighlightBegin: 0
+        preferredHighlightEnd: 0
         clip: true
         highlightMoveDuration: 1000
-        onCurrentIndexChanged: {
+        onCurrentIndexChanged:
+        {
             /*
-            if (currentIndex === 0) // Прокрутили на затычку
-            {
-                timeScale.list.incrementCurrentIndex()
-            }else
-            {
-
                 var timeScaleIndex = getTimeScaleIndex(currentIndex)
                 console.log("Scene index changed - " + currentIndex + " : " +  timeScaleIndex  )
                 if (timeScaleIndex !== -1)
                     timeScale.list.currentIndex = timeScaleIndex
-            }*/
+                    */
+
         }
 
 
@@ -125,46 +116,17 @@ Item {
 
     ListModel
     {
-        id: activityListModel
-        //ListElement {activity: ""}
-        //{"activity:" }
+        id: activityListModel        
     }
 
     Connections
     {
         target: activityProxy
 
-        onNewList:
-
-       /* {
-            console.log("+++++++++++++++ new item +++++++++++++")
-            activityListModel.insert(index+1, {"activity": list})
-            if ((index === 0) && (scene.currentIndex===0))
-            {
-                //if (scene.moving === false)
-                    scene.positionViewAtIndex(index+1,ListView.Contain)
-                /*else
-                {
-                    activityListModel.remove(0)
-                    activityListModel.currentIndex = 0
-                }
-
-
-
-
-            if (scene.currentIndex === -1) //Был новый запрос на пустой месяц
-            {
-                var sceneIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
-                console.log("")
-                console.log("new right item " + sceneIndex)
-                console.log("")
-                scene.currentIndex = sceneIndex
-            }
-            */
-
+        onNewList:     
         {                        
             activityListModel.insert(index, {"activity": list})
-
+            scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)
         }
 
         onListChanged:
@@ -175,13 +137,10 @@ Item {
             {
                 activityListModel.remove(index)
                 activityListModel.insert(index, {"activity": list})
+                //scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)
             }
             else
-                activityListModel.set(index, {"activity": list})
-//            {
-  //              activityListModel.set(index, {"activity": list})
-    //        }
-
+                activityListModel.set(index, {"activity": list})                
         }
     }
 
@@ -219,21 +178,13 @@ Item {
         for (i =0;  i < scene.count; i++)
         {
 
-            var x = Qt.formatDate( activityListModel.get(i).activity.date() , "M-yyyy")
-            console.log("getSceneIndex(): = " + x)
-
-//            var x = Qt.formatDate( activityListModel.get(i).activity.getSetDate(0) , "M-yyyy")
-            //var y = x.getSetDate(0);
-            //var z = Qt.formatDate(y, "M-yyyy")
-            //var u = (month + '-' + year)
-
+            var x = Qt.formatDate( activityListModel.get(i).activity.date , "M-yyyy")
+//            console.log("getSceneIndex(): = " + x)
 
             if (x.toString() === (month.toString() + '-' + year.toString()))
             {                
                 return i
             }
-            //console.log(Qt.formatDate(y, "M-yyyy"))
-            //console.log(month + "-" + year)
         }
         return -1
     }
@@ -243,7 +194,7 @@ Item {
         onCurrentIndexChanged: {
             activityProxy.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1 )
             var sceneIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
-            console.log("Ts index changed - " + timeScale.list.currentIndex + " : "+ sceneIndex)
+         //   console.log("Ts index changed - " + timeScale.list.currentIndex + " : "+ sceneIndex)
 
             if (sceneIndex !== -1)
             {
