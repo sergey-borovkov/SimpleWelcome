@@ -58,7 +58,7 @@ void PreviewGenerator::jobDeleted()
 
 void PreviewGenerator::setNullIcon(const KFileItem &item)
 {
-    qDebug() << "Preview generation failed" << item.localPath() << item.mimetype();
+    //qDebug() << "Preview generation failed" << item.localPath() << item.mimetype();
 
 }
 
