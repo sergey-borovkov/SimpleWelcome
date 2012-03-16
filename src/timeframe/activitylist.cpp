@@ -15,7 +15,7 @@ int ActivityList::count()
 
 void ActivityList::addSet(ActivitySet *set)
 {
-    list.append(set);
+    list.prepend(set);
     emit countChanged();
 }
 
