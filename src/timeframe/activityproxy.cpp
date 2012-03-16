@@ -23,6 +23,7 @@ void ActivityProxy::addSource(ActivitySource *source)
     connect(source, SIGNAL(newActivitySet(ActivitySet*)), SLOT(addActivitySet(ActivitySet*)));
     connect(this, SIGNAL(newSearch(QDate)), source, SLOT(startSearch(QDate)));
     connect(source, SIGNAL(finishedListing()), SLOT(listingFinished()));
+    connect(source, SIGNAL(newTSEntries(int, int)), SLOT(newMonth(int,int)));
 
     QDate d = QDate::currentDate();
 
@@ -34,7 +35,6 @@ void ActivityProxy::addActivitySet(ActivitySet *set)
 {
     QDate d = set->getDate();
     d.setDate(d.year(), d.month(), 1); // set day to 1 because we only care about year and month
-
 
     // start generating previews for set
     QStringList files;
@@ -76,7 +76,7 @@ void ActivityProxy::addActivitySet(ActivitySet *set)
         activityList[index]->addSet(set);
         emit listChanged(index, activityList[index]);
     }
-    else if(!duplicate) // all activitylists are full or no activity list for set's year and month
+    else if(!duplicate) // all activity lists are full or no activity list for set's year and month
     {
         ActivityList *list = new ActivityList(set->getDate().year(), set->getDate().month(), this);
         list->addSet(set);
@@ -101,4 +101,29 @@ void ActivityProxy::setMonth(int year, int month)
 void ActivityProxy::listingFinished()
 {
 
+}
+
+void ActivityProxy::newMonth(int year, int month)
+{
+    ActivityList *list = new ActivityList(year, month);
+    int index = 0;
+
+    for( ; index < activityList.size(); index++)
+    {
+        QDate d = activityList[index]->date();
+        d.setDate(d.year(), d.month(), 1);
+
+        if(d == list->date())
+            return;
+        else if(d < list->date())
+            continue;
+        else
+            break;
+    }
+
+    qDebug() << "INDEX" << index;
+
+    activityList.insert(index, list);
+
+    emit newList(index, list);
 }
