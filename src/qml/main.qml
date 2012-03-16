@@ -12,15 +12,14 @@ Rectangle {
     VisualItemModel {
         id: tabListModel
 
-        /*
-        FirstTab {
+         FirstTab {
             width: tabListView.width
         }
 
         SecondTab {
             width: tabListView.width
         }
-*/
+
         TimeFrameTab {
             width: tabListView.width
             height: tabListView.height

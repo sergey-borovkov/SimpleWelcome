@@ -218,8 +218,16 @@ Item {
         var i
         for (i =0;  i < scene.count; i++)
         {
+
             var x = Qt.formatDate( activityListModel.get(i).activity.date() , "M-yyyy")
-            console.log("getSceneIndex(): = " +x)
+            console.log("getSceneIndex(): = " + x)
+
+//            var x = Qt.formatDate( activityListModel.get(i).activity.getSetDate(0) , "M-yyyy")
+            //var y = x.getSetDate(0);
+            //var z = Qt.formatDate(y, "M-yyyy")
+            //var u = (month + '-' + year)
+
+
             if (x.toString() === (month.toString() + '-' + year.toString()))
             {                
                 return i
