@@ -8,7 +8,7 @@ include(${QT_USE_FILE})
 qt4_automoc(${qtproject_SRCS})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
-include_directories(${KDE4_INCLUDES} ${QT_QDECLARATIVE_INCLUDE_DIR})
+include_directories(${KDE4_INCLUDES} ${QT_QDECLARATIVE_INCLUDE_DIR} /usr/local/Trolltech/Qt-4.8.0/include /usr/local/Trolltech/Qt-4.8.0/include/QtDeclarative)
 
 set (RESOURCES src/timeframe/resources.qrc)
 QT4_ADD_RESOURCES(QRC_SOURCES ${RESOURCES})

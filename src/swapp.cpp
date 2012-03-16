@@ -96,6 +96,7 @@ SWApp::SWApp()
     m_viewer->showMaximized();
 
 
+
     QTimer::singleShot(1000, this, SLOT(init()));
 
     //setQuitOnLastWindowClosed(false);
