@@ -10,6 +10,10 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 include_directories(${KDE4_INCLUDES} ${QT_QDECLARATIVE_INCLUDE_DIR} /usr/local/Trolltech/Qt-4.8.0/include /usr/local/Trolltech/Qt-4.8.0/include/QtDeclarative)
 
+set (RESOURCES src/timeframe/resources.qrc)
+QT4_ADD_RESOURCES(QRC_SOURCES ${RESOURCES})
+
+
 set(rosa-launcher-qtquick_SRCS 
   src/timeframe/activityproxy.h
   src/timeframe/activityproxy.cpp
@@ -50,7 +54,7 @@ set(rosa-launcher-qtquick_SRCS
   src/qml/timeframe/TimeScale.qml
 )
 
-kde4_add_executable(rosa-launcher-qtquick ${rosa-launcher-qtquick_SRCS})
+kde4_add_executable(rosa-launcher-qtquick ${rosa-launcher-qtquick_SRCS} ${QRC_SOURCES})
 target_link_libraries(rosa-launcher-qtquick 
   ${KDE4_KDEUI_LIBS}
   ${KDE4_PLASMA_LIBS}
@@ -69,3 +73,4 @@ file(GLOB qml_files "${CMAKE_CURRENT_SOURCE_DIR}/src/qml/*.qml")
 file(GLOB qml_js_files "${CMAKE_CURRENT_SOURCE_DIR}/src/qml/*.js")
 install(FILES ${qml_files} DESTINATION share/${PROJECT_NAME}/qml)
 install(FILES ${qml_js_files} DESTINATION share/${PROJECT_NAME}/qml)
+

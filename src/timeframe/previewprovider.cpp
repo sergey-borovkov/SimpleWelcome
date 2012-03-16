@@ -25,15 +25,15 @@
 #include <QtCore/QAbstractItemModel>
 
 PreviewProvider::PreviewProvider() :
-    QDeclarativeImageProvider(Pixmap), previewGenerator(PreviewGenerator::instance())
+    QDeclarativeImageProvider(Pixmap)
 {
 
 }
 
 QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
-{
+{    
     QString str = id.left(id.lastIndexOf('%'));
-    QPixmap pixmap = previewGenerator->getPreviewPixmap(str);
+    QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(str);
 
     if(requestedSize.isValid())
         pixmap = pixmap.scaled(requestedSize);
