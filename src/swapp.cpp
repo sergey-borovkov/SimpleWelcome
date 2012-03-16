@@ -92,7 +92,10 @@ SWApp::SWApp()
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
     else
     */
+
     m_viewer->setMainQmlFile(QLatin1String("/home/saint/work/tf2012/timeframe/src/qml/main.qml"));
+    m_viewer->showMaximized();
+
 
     QTimer::singleShot(1000, this, SLOT(init()));
 
