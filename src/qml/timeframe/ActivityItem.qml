@@ -33,7 +33,7 @@ Item {
 
                 Component.onCompleted:
                 {
-                    console.log("path is " + path)
+//                    console.log("path is " + path)
                 }
 
             }
