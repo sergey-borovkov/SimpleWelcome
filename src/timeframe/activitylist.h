@@ -15,7 +15,7 @@ class ActivityList : public QObject
 public:
     explicit ActivityList(int year, int month, QObject *parent = 0);
     ActivityList() {};
-    QDate date() const { return d; }
+
     void setDate(int y, int m) { d.setDate(y, m, 1); }
 
 signals:    
@@ -23,6 +23,7 @@ signals:
 
 public slots:
     int count();
+    QDate date() const { return d; }
     void addSet(ActivitySet *set);
     ActivitySet *at(int i) const;
 

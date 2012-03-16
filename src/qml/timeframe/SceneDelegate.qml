@@ -21,7 +21,7 @@ Item {
     }
 
     Text {
-        text: "index: " + index +" cur. index " + scene.currentIndex + " date: " +Qt.formatDate( activityListModel.get(index).activity.getSetDate(0) , "M-yyyy")
+        text: "index: " + index +" cur. index " + scene.currentIndex + " date: " +Qt.formatDate( activityListModel.get(index).activity.date() , "M-yyyy")
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         //anchors.left: parent.left
