@@ -93,6 +93,7 @@ SWApp::SWApp()
     else
     */
     m_viewer->setMainQmlFile(QLatin1String("/home/julia/work/timeframe/src/qml/main.qml"));
+    m_viewer->showMaximized();
 
     QTimer::singleShot(1000, this, SLOT(init()));
 
