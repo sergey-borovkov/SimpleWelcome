@@ -87,12 +87,12 @@ SWApp::SWApp()
     qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
     qmlRegisterUncreatableType<ActivityList>("ActivityList", 1, 0, "ActivityList", "ActivityList is supposed to be used from C++");
 
-/*
+
     if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
     else
-    */
-    m_viewer->setMainQmlFile(QLatin1String("/home/julia/work/timeframe/src/qml/main.qml"));
+        m_viewer->setMainQmlFile(QLatin1String("/home/julia/work/timeframe/timeframe/src/qml/main.qml"));
+
     m_viewer->showMaximized();
 
     QTimer::singleShot(1000, this, SLOT(init()));
