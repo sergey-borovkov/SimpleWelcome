@@ -117,7 +117,7 @@ Rectangle {
         var i
         for (i =0;  i < scene.count; i++)
         {
-            var x = Qt.formatDate( activityListModel.get(i).activity.getSetDate(0) , "M-yyyy")
+//            var x = Qt.formatDate( activityListModel.get(i).activity.getSetDate(0) , "M-yyyy")
             //var y = x.getSetDate(0);
             //var z = Qt.formatDate(y, "M-yyyy")
             //var u = (month + '-' + year)
