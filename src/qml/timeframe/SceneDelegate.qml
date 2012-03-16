@@ -25,7 +25,7 @@ Item {
     }
 */
     Text {
-        text: "index: " + activityListModel.count
+        text: "index: " + index +" cur. index " + scene.currentIndex
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         //anchors.left: parent.left
