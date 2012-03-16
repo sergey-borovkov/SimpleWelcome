@@ -37,7 +37,7 @@ Item {
 */
     function getTimeScaleIndex( index )
     {
-        var x = activityListModel.get(index).activity.getSetDate(0)
+        var x = activityListModel.get(index).activity.date(0)
         var month = Qt.formatDateTime(x, "M")
         var year = Qt.formatDateTime(x, "yyyy")
         var i
@@ -216,12 +216,12 @@ Item {
     function getSceneIndex( year , month ) //Need future development
     {
         var i
-        for (i =1;  i < scene.count; i++)
+        for (i =0;  i < scene.count; i++)
         {
-            var x = Qt.formatDate( activityListModel.get(i).activity.getSetDate(0) , "M-yyyy")
+            var x = Qt.formatDate( activityListModel.get(i).activity.date() , "M-yyyy")
+            console.log("getSceneIndex(): = " +x)
             if (x.toString() === (month.toString() + '-' + year.toString()))
-            {
-                //console.log("bingo")
+            {                
                 return i
             }
             //console.log(Qt.formatDate(y, "M-yyyy"))
@@ -241,7 +241,6 @@ Item {
             {
                 console.log("change index in scene on " + sceneIndex)
                 scene.currentIndex = sceneIndex
-
             }
             //scene.currentIndex = sceneIndex
         }
