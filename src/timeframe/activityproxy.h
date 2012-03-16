@@ -6,8 +6,9 @@
 #include <QDate>
 #include <QMetaType>
 
+#include "activitysource.h"
+
 class ActivitySet;
-class ActivitySource;
 class ActivityList;
 
 class ActivityProxy : public QObject
@@ -20,7 +21,7 @@ public:
     void addSource(ActivitySource *source);
 
 signals:
-    void newSearch(QDate);
+    void newSearch(QDate, ActivitySource::Direction);
     void newList(int index, ActivityList *list);
     void listChanged(int index, ActivityList *list);
 
