@@ -1,5 +1,4 @@
 #include "activityproxy.h"
-#include "activitysource.h"
 #include "activityset.h"
 #include "activitylist.h"
 #include "previewgenerator.h"
@@ -21,13 +20,13 @@ ActivityProxy::~ActivityProxy()
 void ActivityProxy::addSource(ActivitySource *source)
 {    
     connect(source, SIGNAL(newActivitySet(ActivitySet*)), SLOT(addActivitySet(ActivitySet*)));
-    connect(this, SIGNAL(newSearch(QDate)), source, SLOT(startSearch(QDate)));
+    connect(this, SIGNAL(newSearch(QDate, ActivitySource::Direction)), source, SLOT(startSearch(QDate, ActivitySource::Direction)));
     connect(source, SIGNAL(finishedListing()), SLOT(listingFinished()));
     connect(source, SIGNAL(newTSEntries(int, int)), SLOT(newMonth(int,int)));
 
     QDate d = QDate::currentDate();
 
-    emit newSearch(d);
+    emit newSearch(d, ActivitySource::Left);
 
 }
 
@@ -95,7 +94,7 @@ void ActivityProxy::setMonth(int year, int month)
     if(date > QDate::currentDate())
         date = QDate::currentDate();
 
-    emit newSearch(date);
+    emit newSearch(date, ActivitySource::Left);
 }
 
 void ActivityProxy::listingFinished()
@@ -120,8 +119,6 @@ void ActivityProxy::newMonth(int year, int month)
         else
             break;
     }
-
-    qDebug() << "INDEX" << index;
 
     activityList.insert(index, list);
 

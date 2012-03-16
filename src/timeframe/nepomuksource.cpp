@@ -62,8 +62,10 @@ ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result
     return set;
 }
 
-void NepomukSource::startSearch(const QDate &beginDate)
+void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
 {
+    this->direction = direction;
+
     if(m_searchClient)
     {
         m_searchClient->close();
@@ -115,12 +117,15 @@ void NepomukSource::listingFinished()
         set->setDate(queryDate);
         emit newActivitySet(set);
     }
-    if( queryDate.month() == queryDate.addDays(-1).month() )
+
+    int delta = direction == Right ? 1 : -1;
+
+    if( queryDate.month() == queryDate.addDays(delta).month() )
     {
         m_searchClient->close();
         m_searchClient = 0;
 
-        return startSearch(queryDate.addDays(-1));        
+        return startSearch(queryDate.addDays(-1), direction);
     }
 
     emit finishedListing();
