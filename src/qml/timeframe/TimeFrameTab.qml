@@ -73,6 +73,7 @@ Item {
         clip: true
         highlightMoveDuration: 1000
         onCurrentIndexChanged: {
+            /*
             if (currentIndex === 0) // Прокрутили на затычку
             {
                 timeScale.list.incrementCurrentIndex()
@@ -83,7 +84,7 @@ Item {
                 console.log("Scene index changed - " + currentIndex + " : " +  timeScaleIndex  )
                 if (timeScaleIndex !== -1)
                     timeScale.list.currentIndex = timeScaleIndex
-            }
+            }*/
         }
 
 
@@ -94,21 +95,10 @@ Item {
         }
         visible: true
     }
+    /*
     Connections{
         target: scene
-        onAdd:   //Добавился новый элемент
-        {
 
-            if (scene.currentIndex === -1) //Был новый запрос на пустой месяц
-            {
-                var sceneIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
-                console.log("")
-                console.log("new right item " + sceneIndex)
-                console.log("")
-                scene.currentIndex = sceneIndex
-            }
-        }
-        /*
         onFlickStarted:
         {
             console.log("flick started" + scene.horizontalVelocity)
@@ -128,15 +118,15 @@ Item {
                 }
             }
         }
-*/
-    }
 
+    }
+*/
 
 
     ListModel
     {
         id: activityListModel
-        ListElement {activity: ""}
+        //ListElement {activity: ""}
         //{"activity:" }
     }
 
@@ -145,7 +135,8 @@ Item {
         target: activityProxy
 
         onNewList:
-        {
+
+       /* {
             console.log("+++++++++++++++ new item +++++++++++++")
             activityListModel.insert(index+1, {"activity": list})
             if ((index === 0) && (scene.currentIndex===0))
@@ -157,10 +148,10 @@ Item {
                     activityListModel.remove(0)
                     activityListModel.currentIndex = 0
                 }
-                */
 
-            }
-            /*
+
+
+
             if (scene.currentIndex === -1) //Был новый запрос на пустой месяц
             {
                 var sceneIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
@@ -170,12 +161,27 @@ Item {
                 scene.currentIndex = sceneIndex
             }
             */
+
+        {                        
+            activityListModel.insert(index, {"activity": list})
+
         }
 
         onListChanged:
         {
             console.log("list changed - " + index)
-            activityListModel.set(index+1, {"activity": list})
+
+            if(scene.currentIndex === index)
+            {
+                activityListModel.remove(index)
+                activityListModel.insert(index, {"activity": list})
+            }
+            else
+                activityListModel.set(index, {"activity": list})
+//            {
+  //              activityListModel.set(index, {"activity": list})
+    //        }
+
         }
     }
 
@@ -233,8 +239,9 @@ Item {
 
             if (sceneIndex !== -1)
             {
-                //console.log("change index in scene on " + sceneIndex)
+                console.log("change index in scene on " + sceneIndex)
                 scene.currentIndex = sceneIndex
+
             }
             //scene.currentIndex = sceneIndex
         }

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource>
+        <file alias="pla-empty-box.png">images/pla-empty-box.png</file>
+    </qresource>
+</RCC>

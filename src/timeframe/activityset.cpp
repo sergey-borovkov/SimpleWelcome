@@ -47,10 +47,7 @@ QString ActivitySet::getUrl(int i)
 
 QString ActivitySet::getType(int i)
 {
-    if(i >= activities.length())
-        return "";
-    else
-        return activities.at(i)->getType();
+    return activities.at(i)->getType();
 }
 
 QString Activity::getUrl()

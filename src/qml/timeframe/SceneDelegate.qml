@@ -7,6 +7,9 @@ Item {
     property int cloudWidth: timeFrameTab.width * 2 / 5
     property int cloudHeight: timeFrameTab.height * 2 / 5
 
+//    property int cloudWidth: timeFrameTab.width / 3
+//    property int cloudHeight: timeFrameTab.height / 3
+
 
     width: timeFrameTab.width
     height: timeFrameTab.height
@@ -17,15 +20,8 @@ Item {
 //        createObjects()
     }
 
-/*
-    Rectangle {
-        anchors.fill: parent
-        border.color: "green"
-        border.width: 3
-    }
-*/
     Text {
-        text: "index: " + index +" cur. index " + scene.currentIndex
+        text: "index: " + index +" cur. index " + scene.currentIndex + " date: " +Qt.formatDate( activityListModel.get(index).activity.getSetDate(0) , "M-yyyy")
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         //anchors.left: parent.left
@@ -43,6 +39,7 @@ Item {
             y: 0
             anchors.top: parent.top
             anchors.left: parent.left
+            anchors.leftMargin: 60
             visible: ( activity.count >= 1 )
 
             activityindex: ( visible ? 0 : -1 )
@@ -61,8 +58,10 @@ Item {
             id: cloud3
             anchors.top: parent.top
             anchors.right: parent.right
+            anchors.rightMargin: 60
             visible: ( activity.count >= 3 )
             activityindex: ( visible ? 2 : -1 )
         }
+
     }
 }

@@ -29,14 +29,12 @@
 #include <QtCore/QFileInfo>
 #include <kfile.h>
 
-
 PreviewGenerator *PreviewGenerator::m_instance = 0;
 
 PreviewGenerator::PreviewGenerator(QObject *parent) :
     QObject(parent), m_job(0)
 {    
-    defaultPreview.load(":images/pla-empty-box.png");
-    videoPixmap.load(":images/play-empty.png");
+    defaultPreview.load(":/pla-empty-box.png");
     m_plugins = KIO::PreviewJob::availablePlugins();
 }
 
@@ -55,20 +53,24 @@ void PreviewGenerator::setPreview(const KFileItem &item, const QPixmap &pixmap)
 
 void PreviewGenerator::jobDeleted()
 {
-    qDebug() << "OMG" << "JOB DELETED";
+    qDebug() << "JOB DELETED";
 }
 
 void PreviewGenerator::setNullIcon(const KFileItem &item)
 {
-    qDebug() << "Preview generation failed" << item.localPath() << item.mimetype();
+    //qDebug() << "Preview generation failed" << item.localPath() << item.mimetype();
+
 }
 
 QPixmap PreviewGenerator::getPreviewPixmap(QString filePath)
 {    
     if(previews.contains(filePath))
         return previews[filePath];
+    else {
+//        qDebug() << "Default preview";
+        return defaultPreview;
+    }
 
-    return defaultPreview;
 }
 
 PreviewGenerator * PreviewGenerator::instance()
