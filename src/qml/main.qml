@@ -1,6 +1,7 @@
 import QtQuick 1.1
 
 import Qt 4.7
+import "timeframe"
 
 Rectangle {
     id: page
@@ -59,6 +60,12 @@ Rectangle {
 
         SecondTab {
             id: appsTab
+            width: tabListView.width
+            height: tabListView.height
+        }
+
+        TimeFrameTab
+        {
             width: tabListView.width
             height: tabListView.height
         }
