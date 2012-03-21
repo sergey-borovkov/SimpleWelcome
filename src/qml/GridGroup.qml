@@ -1,6 +1,6 @@
 import QtQuick 1.1
 
-Rectangle {
+Item {
     id: gridGroup
 
     width: parent.width
@@ -15,6 +15,7 @@ Rectangle {
     property alias label: groupLabel.text
     
     property variant _lastGridRow
+    property variant _GridRowComp
 
     function addEntity(entity)
     {
@@ -27,30 +28,64 @@ Rectangle {
         _lastGridRow.addEntity(entity);
     }
 
+    function addQueryMatch(queryMatchName)
+    {
+        if(rowsTotal == 0)
+          _addRow();
+
+        if(_lastGridRow.size >= iconsInRow)
+          _addRow();
+        
+        _lastGridRow.addQueryMatch(queryMatchName);
+    }
+
+    function addButton(buttonOpts)
+    {
+        if(rowsTotal == 0)
+          _addRow();
+
+        if(_lastGridRow.size >= iconsInRow)
+          _addRow();
+        
+        _lastGridRow.addButton(buttonOpts);
+    }
+    
     function _addRow()
     {
-        var GridRowComp = Qt.createComponent("GridRow.qml");
+        _GridRowComp = Qt.createComponent("GridRow.qml");
 
-        _lastGridRow = GridRowComp.createObject(gridGroupContainer, {"iconsInRow": iconsInRow});
+        if(_GridRowComp.status == Component.Error) {
+            console.log("Component loading error: " + _GridRowComp.errorString());
+        }
+
+        _lastGridRow = _GridRowComp.createObject(gridGroupContainer, {"iconsInRow": iconsInRow});
 
         rowsTotal += 1;
     }
 
     Column {
         id: gridGroupContainer
-        anchors.fill: parent
         spacing: 16
+        width: parent.width
         height: childrenRect.height
 
         Text {
             id: groupLabel
             width: parent.width
-            height: 16
+            height: 24
             maximumLineCount: 1
             clip: true
             horizontalAlignment: Text.AlignLeft
             anchors.left: parent.left
             anchors.leftMargin: 16
+
+            font.family: "Bitstream Vera Sans"
+            font.bold: true
+            font.pixelSize: 18
+            style: Text.Sunken
+            color: "#eee"
+            styleColor: "#000"
+
 
             text: "Group name 2"
         }

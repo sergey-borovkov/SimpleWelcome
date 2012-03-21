@@ -15,6 +15,9 @@ public:
 
     void init(void);
 
+    void setAppLaunchReciever(QObject* reciever) { m_appLaunchReciever = reciever; };
+
+    
 public Q_SLOTS:
     Q_INVOKABLE AppEntity *getEntity(const QString &name) { return m_appEntities[name]; };
     Q_INVOKABLE void runEntity(const QString &name);
@@ -25,6 +28,7 @@ public Q_SLOTS:
  private:
     QHash<QString, AppEntity*> m_appEntities;
     QStringList m_rootGroups;
+    QObject *m_appLaunchReciever;
 
     void _deepExtract(KServiceGroup *group);
 
