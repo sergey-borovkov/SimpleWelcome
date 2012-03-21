@@ -17,7 +17,7 @@
 #include <QDateTime>
 
 NepomukSource::NepomukSource(QObject *parent) :
-    ActivitySource(parent), m_searchClient(0) , m_tsSearch(false), set(0)
+    ActivitySource(parent), m_searchClient(0) , m_tsSearch(false), set(0), m_timeScaleClient(0)
 {
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
