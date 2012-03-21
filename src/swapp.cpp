@@ -86,27 +86,27 @@ SWApp::SWApp()
 
   m_model = new ActivityProxy;
   m_source = new NepomukSource;
+  m_nepomukThread = new QThread(this);
+  m_source->moveToThread(m_nepomukThread);
+  m_nepomukThread->start();
+
   m_model->addSource( m_source );
 
-     m_nepomukThread = new QThread(this);
 
   m_placesProvider = new PlacesProvider();
   m_placesProvider->init();
   m_viewer->rootContext()->setContextProperty("placesProvider", m_placesProvider);
 
-    m_source->moveToThread(m_nepomukThread);
-    m_nepomukThread->start();
-
   m_documentsProvider = new DocumentsProvider();
   m_documentsProvider->init();
   m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
   m_viewer->rootContext()->setContextProperty( "activityProxy", m_model );
-    m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
+  m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
 
-    m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
+  m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
 
-    qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
-    qmlRegisterUncreatableType<ActivityList>("ActivityList", 1, 0, "ActivityList", "ActivityList is supposed to be used from C++");
+  qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
+  qmlRegisterUncreatableType<ActivityList>("ActivityList", 1, 0, "ActivityList", "ActivityList is supposed to be used from C++");
 
   m_userInfoProvider = new UserInfoProvider();
   m_userInfoProvider->init();
@@ -133,7 +133,7 @@ SWApp::SWApp()
 
   QTimer::singleShot(1000, this, SLOT(init()));
   
-  setQuitOnLastWindowClosed(false);
+  setQuitOnLastWindowClosed(true);
 }
 
 SWApp::~SWApp()
