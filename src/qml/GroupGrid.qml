@@ -1,12 +1,13 @@
 import QtQuick 1.1
 
-Rectangle {
+Item {
     id: groupGrid
 
     width: parent.width
     height: childrenRect.height
 
     property int iconsInRow: 7
+    property string gridType: "apps"
 
     property variant _GridGroupComp
     
@@ -29,14 +30,33 @@ Rectangle {
 
     function load()
     {
-        var rootGroups = _getRootGroups();
-
-        for(var i = 0; i < rootGroups.length; i++)
+        if(gridType == "apps")
         {
-            fillGroup(rootGroups[i]);
+            reloadApps();
+        }
+        if(gridType == "welcome")
+        {
+            reloadWelcome();
         }
     }
 
+    function clear()
+    {
+        for(var i = 0; i < groupGridContainer.children.length; i++)
+        {
+            groupGridContainer.children[i].destroy();
+        }
+    }
+    
+    function addGroup(name)
+    {
+        var gridGroup = _GridGroupComp.createObject(groupGridContainer, {"iconsInRow": iconsInRow});
+
+        gridGroup.label = name;
+
+        return gridGroup;
+    }
+    
     function fillGroup(groupName)
     {
         var groupEntity = appProvider.getEntity(groupName);
@@ -62,8 +82,68 @@ Rectangle {
         }
 
         height += gridGroup.height + 64;
-        console.log("Group name:", groupName);
-        console.log("Group height:", gridGroup.height);
+        //console.log("Group name:", groupName);
+        //console.log("Group height:", gridGroup.height);
+    }
+
+    function reloadApps()
+    {
+        //console.log("reloadApps called");
+        
+        // Clearing
+        clear();
+
+        // Loading
+        var rootGroups = _getRootGroups();
+
+        for(var i = 0; i < rootGroups.length; i++)
+        {
+            fillGroup(rootGroups[i]);
+        }
+    }
+    
+    function reloadWelcome()
+    {
+        //console.log("reloadWelcome called");
+        
+        // Clearing
+        clear();
+        
+        // RecentApps
+
+        var gridGroup = _GridGroupComp.createObject(groupGridContainer, {"iconsInRow": iconsInRow});
+        gridGroup.label = qsTr("Recent Applications");
+
+        var recentAppNames = recentAppsProvider.getRecentAppsList();
+        //console.log(recentAppNames);
+
+        for(var i = 0; i < recentAppNames.length; i++)
+        {
+            gridGroup.addButton({"type": "recentApp", "name": recentAppNames[i]});
+        }
+
+        // Places
+        gridGroup = _GridGroupComp.createObject(groupGridContainer, {"iconsInRow": iconsInRow});
+        gridGroup.label = qsTr("Places");
+
+        var placesNames = placesProvider.getPlacesList();
+
+        for(var i = 0; i < placesNames.length; i++)
+        {
+            gridGroup.addButton({"type": "place", "name": placesNames[i]});
+        }
+        
+        // Documents
+        gridGroup = _GridGroupComp.createObject(groupGridContainer, {"iconsInRow": iconsInRow});
+        gridGroup.label = qsTr("Documents");
+
+        var documentNames = documentsProvider.getDocsList();
+
+        for(var i = 0; i < documentNames.length; i++)
+        {
+            gridGroup.addButton({"type": "document", "name": documentNames[i]});
+        }
+        
     }
     
     function _getRootGroups()

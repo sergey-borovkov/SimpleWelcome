@@ -2,22 +2,29 @@ import QtQuick 1.0
 
 //import "SecondTab.js" as Logic
 
-Rectangle {
+Item {
     id: secondTab
     width: parent.width
-    height: 800
+    //height: 800
     clip: true
     //anchors.top: parent.top
     anchors.topMargin: 16
 
-    //Component.onCompleted: Logic.prestartup();
-    Component.onCompleted: groupGrid.preload();
+    ////Component.onCompleted: Logic.prestartup();
+    //Component.onCompleted: groupGrid.preload();
 
+    function reload()
+    {
+        appGrid.reload();
+        //groupGrid.reloadApps();
+    }
+    
     Flickable {
         id: view
         anchors.fill: parent
         contentWidth: parent.width
-        contentHeight: groupGrid.height
+        //contentHeight: groupGrid.height
+        contentHeight: appGrid.height
         
         Column {
             id: rowContainer
@@ -27,8 +34,15 @@ Rectangle {
             spacing: 16
             width: parent.width
 
+            /*
             GroupGrid {
                 id: groupGrid
+            }
+            */
+
+            AppGrid {
+                id: appGrid
+                
             }
         }
         

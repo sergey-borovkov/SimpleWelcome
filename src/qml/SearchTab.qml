@@ -1,11 +1,10 @@
 import QtQuick 1.1
 
 Item {
-    id: welcomeTab
+    id: searchTab
     width: parent.width
     clip: true
     anchors.topMargin: 16
-    //color: "transparent"
 
     //signal newMatchesFound()
     
@@ -14,11 +13,40 @@ Item {
     function load()
     {
         groupGrid.preload();
+        searchRunner.newSearchMatchesFound.connect(newMatchesFound);
     }
 
-    function reload()
+    function newMatchesFound()
     {
-        groupGrid.reloadWelcome();
+        tabListView.currentIndex = 0
+        //console.log("NewMatchesFound called");
+
+        var matchesList = searchRunner.getMatchNames();
+        var groupsList = searchRunner.getGroupNames();
+        var groups = {};
+
+        groupGrid.clear();
+        
+        for(var i = 0; i < groupsList.length; i++)
+        {
+            var groupName = groupsList[i];
+            groups[groupName] = groupGrid.addGroup(groupName);
+        }
+        
+        for(var i = 0; i < matchesList.length; i++)
+        {
+            var matchName = matchesList[i];
+            var groupName = searchRunner.getMatchGroupName(matchName);
+
+            groups[groupName].addQueryMatch(matchName);
+            //console.log("Group:", searchRunner.getMatchGroupName(matchesList[i]), "Match:", matchesList[i]);
+            
+        }
+    }
+
+    function hideSearchTab()
+    {
+        tabListView.currentIndex = 1
     }
     
     Flickable {
@@ -26,7 +54,6 @@ Item {
         anchors.fill: parent
         contentWidth: parent.width
         contentHeight: groupGrid.height
-        boundsBehavior: Flickable.StopAtBounds
         
         Column {
             id: rowContainer
@@ -38,7 +65,7 @@ Item {
 
             GroupGrid {
                 id: groupGrid
-                gridType: "welcome"
+                gridType: "search"
             }
         }
         

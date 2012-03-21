@@ -31,7 +31,9 @@
 #include <KRun>
 #include <QApplication>
 
-AppProvider::AppProvider(void) : QObject()
+AppProvider::AppProvider(void)
+  : QObject(),
+    m_appLaunchReciever(NULL)
 {
 
 }
@@ -89,6 +91,9 @@ void AppProvider::runEntity(const QString &name)
 
   KRun *krunner = new KRun(KUrl(desktopFile), QApplication::activeWindow());
 
+  if(m_appLaunchReciever != NULL)
+    QMetaObject::invokeMethod(m_appLaunchReciever, "registerLaunchedApp", Qt::DirectConnection, Q_ARG(QString, desktopFile));
+  
   Q_UNUSED(krunner);
 
 }
@@ -145,4 +150,4 @@ void AppProvider::_deepExtract(KServiceGroup *group)
 
 }
 
-//#include "appprovider.moc"
+#include "appprovider.moc"

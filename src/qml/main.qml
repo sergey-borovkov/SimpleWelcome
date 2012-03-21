@@ -1,36 +1,82 @@
-import QtQuick 1.0
-import Qt 4.7
+import QtQuick 1.1
 
-import "timeframe"
+import Qt 4.7
 
 Rectangle {
     id: page
     width: 1280
     height: 800
-    color: "white"
+    //color: "white"
+    opacity: 0.0
 
+    Keys.onPressed: {
+        if(event.key == Qt.Key_Escape) {
+            event.accepted = true;
+            Qt.quit();
+        }
+    }
+
+    NumberAnimation on opacity { to: 1.0; duration: 500 }
+    
+    /*
+    Component.onCompleted: testing()
+
+    function testing()
+    {
+        console.log("RecentApps:", recentAppsProvider.getRecentAppsList());
+        console.log("Places:", placesProvider.getPlacesList());
+        console.log("RecentDocs:", documentsProvider.getDocsList());
+    }
+    */
+
+    function reloadTabs() {
+        welcomeTab.reload();
+        appsTab.reload();
+    }
+
+    Image {
+        width: 64
+        height: 64
+        anchors.fill: parent
+        fillMode: Image.Tile
+        source: "image://generalicon/asset/background2.png"        
+    }
+    
     VisualItemModel {
         id: tabListModel
 
-         FirstTab {
+        SearchTab {
+            id: searchTab
             width: tabListView.width
+            height: tabListView.height
+        }
+        
+        FirstTab {
+            id: welcomeTab
+            width: tabListView.width
+            height: tabListView.height
         }
 
         SecondTab {
-            width: tabListView.width
-        }
-
-        TimeFrameTab {
+            id: appsTab
             width: tabListView.width
             height: tabListView.height
         }
     }
 
+    TopBar {
+        id: topBar
+        width: parent.width
+        
+    }
+    
     Rectangle {
         id: listViewRect
         width: parent.width
-        height: parent.height - tabBar.height
+        y: topBar.height
+        height: parent.height - topBar.height - bottomBar.height
         clip: true
+        color: "transparent"
         
         ListView {
             id: tabListView
@@ -50,42 +96,20 @@ Rectangle {
             highlightFollowsCurrentItem: true
             highlightMoveDuration: 240
             highlightRangeMode: ListView.StrictlyEnforceRange
+
+            currentIndex: 1
         }
     }
 
-    Rectangle {
-        id: tabBar
-
-        anchors.bottom: parent.bottom
+    BottomBar {
+        id: bottomBar
         width: parent.width
-        height: 80
-        color: "grey"
 
-        Row {
-            //anchors.centerIn: parent
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 16
-            spacing: 40
+        Component.onCompleted: test();
 
-            TabButton {
-                label: "First Tab"
-                id: firstTabButton
-                onButtonClick: tabListView.currentIndex = 0
-            }
-
-            TabButton {
-                label: "Second Tab"
-                id: secondTabButton
-                onButtonClick: tabListView.currentIndex = 1
-            }
-
-            TabButton {
-                label: "TimeFrame"
-                id: thirdTabButton
-                onButtonClick: tabListView.currentIndex = 2
-            }
-
+        function test()
+        {
         }
     }
+    
 }
