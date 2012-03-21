@@ -27,5 +27,12 @@ Rectangle {
             id: secondTabButton
             onButtonClick: { tabListView.currentIndex = 2; page.reloadTabs(); }
         }
+
+        TabButton {
+            label: "Timeframe"
+            id: thirdTabButton
+            onButtonClick: { tabListView.currentIndex = 3; }
+        }
+
     }
 }
