@@ -7,24 +7,13 @@ Item {
     property int cloudWidth: timeFrameTab.width * 2 / 5
     property int cloudHeight: timeFrameTab.height * 2 / 5
 
-//    property int cloudWidth: timeFrameTab.width / 3
-//    property int cloudHeight: timeFrameTab.height / 3
-
-
     width: timeFrameTab.width
     height: timeFrameTab.height
-
-    Component.onCompleted:
-    {
-//        console.log( "sceneDelegate is loaded")
-//        createObjects()
-    }
 
     Text {
         text: "index: " + index +" cur. index " + scene.currentIndex + " date: " +Qt.formatDate( activityListModel.get(index).activity.date , "M-yyyy")
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
-        //anchors.left: parent.left
         anchors.leftMargin: 10
     }
 
@@ -47,7 +36,6 @@ Item {
 
         CloudDelegate {
             id: cloud2
-//            x: ( timeFrameTab.width - cloudWidth )
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             visible: ( activity.count >= 2 )
