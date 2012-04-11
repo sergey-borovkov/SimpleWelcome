@@ -31,8 +31,6 @@ QString ActivityList::getUrl(int set, int index)
 
 int ActivityList::getSetCount(int index)
 {    
-    if(index >= list.size())
-        return 0;
     return list[index]->count();
 }
 
