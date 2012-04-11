@@ -17,3 +17,4 @@ rosa-launcher-qtquick.shell
 rosa-launcher-qtquick_automoc.cpp
 swapp.moc
 *.orig
+build
