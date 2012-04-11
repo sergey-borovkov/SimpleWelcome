@@ -135,9 +135,10 @@ Item
             height: 80
             Repeater{
                 model: (timeScaleList.width/10+6)/12
-                Rectangle {
+                Item {
                     width: 12
                     height: 18
+
                     Rectangle{
                         //anchors.horizontalCenter: parent.horizontalCenter
                         //anchors.verticalCenter: parent.verticalCenter
