@@ -10,8 +10,6 @@ Item {
     anchors.topMargin: 16
     property ListView lv: scene
 
-
-
     function startup() {
 
     }
@@ -57,7 +55,6 @@ Item {
         height: parent.height
         model: activityListModel
         delegate: SceneDelegate {}
-        //        highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
         focus: true
         orientation: Qt.Horizontal
         snapMode: ListView.SnapOneItem
@@ -67,18 +64,6 @@ Item {
         preferredHighlightEnd: 0
         clip: true
         highlightMoveDuration: 1000
-        onCurrentIndexChanged:
-        {
-            /*
-                var timeScaleIndex = getTimeScaleIndex(currentIndex)
-                console.log("Scene index changed - " + currentIndex + " : " +  timeScaleIndex  )
-                if (timeScaleIndex !== -1)
-                    timeScale.list.currentIndex = timeScaleIndex
-                    */
-
-        }
-
-
 
         Keys.onLeftPressed: {
             console.log( "left key pressed 333..." )
@@ -86,33 +71,6 @@ Item {
         }
         visible: true
     }
-    /*
-    Connections{
-        target: scene
-
-        onFlickStarted:
-        {
-            console.log("flick started" + scene.horizontalVelocity)
-            if (scene.horizontalVelocity > 0) //Двигаем вправо
-            {
-                console.log("flick in right " + scene.currentIndex)
-                if (scene.currentIndex === (scene.count -1))
-                {
-                    timeScale.list.decrementCurrentIndex()
-                }
-            } else //Двигаем влево
-            {
-                console.log("flick in letf " + scene.currentIndex)
-                if (scene.currentIndex === 0)
-                {
-                    timeScale.list.incrementCurrentIndex()
-                }
-            }
-        }
-
-    }
-*/
-
 
     ListModel
     {
@@ -143,7 +101,6 @@ Item {
                 activityListModel.set(index, {"activity": list})                
         }
     }
-
 
     Flickable
     {
@@ -194,14 +151,12 @@ Item {
         onCurrentIndexChanged: {
             activityProxy.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1 )
             var sceneIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
-         //   console.log("Ts index changed - " + timeScale.list.currentIndex + " : "+ sceneIndex)
 
             if (sceneIndex !== -1)
             {
                 console.log("change index in scene on " + sceneIndex)
                 scene.currentIndex = sceneIndex
             }
-            //scene.currentIndex = sceneIndex
         }
     }
 

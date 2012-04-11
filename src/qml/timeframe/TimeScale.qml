@@ -37,29 +37,7 @@ Item
         }
         return "UND"
     }
-/*
-    function fillModel()
-    {
-        var currentDate = new Date()
-        var currentMonth = currentDate.getMonth()
-        var currentYear = currentDate.getFullYear()
-        var i,j
-        for (i = 1970; i <= currentYear; i++)
-        {
-            for(j = 0; j < 12; j++)
-            {
-                if ((i === currentYear) && (j > currentMonth))
-                {
-                    break
-                }
-                //if (j===0)
-                  //  monthModel.append( { month: getMonthStr(j) +" " +i, year: i })
-                //else
-                monthModel.append( { month: getMonthStr(j), year: i, monthNumber: j })
-            }
-        }
-    }
-    */
+
     Connections{
         target: nepomukSource
         onNewTSEntries: {
@@ -67,14 +45,7 @@ Item
             monthModel.append( { month: getMonthStr(month-1), year: year, monthNumber: month })
         }
     }
-/*
-    Component.onCompleted:
-    {
-        fillModel()
-        timeScaleList.currentIndex = monthModel.count -1
-        timeScaleList.positionViewAtIndex(timeScaleList.currentIndex, ListView.Contain)        
-    }
-*/
+
     ListModel
     {
         id: monthModel        
@@ -86,7 +57,7 @@ Item
             id: listItem
             width: timeScaleList.width/10
             height: 80
-            //state: (month ==="UND") ? "und" : "normal"
+
             Rectangle
             {
                 anchors.left: parent.left
@@ -96,16 +67,7 @@ Item
                 height: 30
                 color: "grey"
             }
-            /*
-            Rectangle
-            {
-                height: 6
-                width: parent.width
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                color: "grey"
-            }
-            */
+
             Rectangle
             {
 
@@ -140,18 +102,14 @@ Item
                     height: 18
 
                     Rectangle{
-                        //anchors.horizontalCenter: parent.horizontalCenter
-                        //anchors.verticalCenter: parent.verticalCenter
                         anchors.top: parent.top
                         anchors.topMargin: 5
                         anchors.left: parent.left
-                        //anchors.leftMargin: -3
                         width: 6; height: parent.height
                         color: "grey"
                     }
                 }
             }
-            //Behavior on x { SpringAnimation { spring: 1; damping: 0.2 } }
             Behavior on x { NumberAnimation{duration: 300 } }
         }
     }
@@ -183,7 +141,6 @@ Item
     Item
     {
         id: listViewAnchor
-        //anchors.left: yearLabel.right
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         height: parent.height
@@ -199,21 +156,18 @@ Item
             highlightFollowsCurrentItem: false
             boundsBehavior: Flickable.StopAtBounds
             layoutDirection: Qt.RightToLeft
-            //anchors.left: yearLabel.right
             anchors.fill: parent
             anchors.rightMargin: 3
             anchors.leftMargin: 3
             height: 80
             focus: true
             orientation: Qt.Horizontal
-            //clip: true
             snapMode: ListView.SnapToItem
             preferredHighlightBegin: 0; preferredHighlightEnd: 0
 
             MouseArea {
                 id: mouseArea
                 anchors.fill: parent
-                //hoverEnabled: true
                 onClicked:
                 {
                     var mouseIndex = timeScaleList.indexAt(mouseX + timeScaleList.contentX, mouseY + timeScaleList.contentY)
@@ -236,5 +190,4 @@ Item
             color: "grey"
         }
     }
-
 }
