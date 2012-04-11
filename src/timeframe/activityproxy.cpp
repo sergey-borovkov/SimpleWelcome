@@ -82,7 +82,6 @@ void ActivityProxy::addActivitySet(ActivitySet *set)
         activityList.insert(index, list);
         emit newList(index, list);
     }
-
 }
 
 void ActivityProxy::setMonth(int year, int month)
