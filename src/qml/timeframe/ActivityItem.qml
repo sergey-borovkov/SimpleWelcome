@@ -22,7 +22,7 @@ Item {
 
             Image {
                 id: img
-                source: /*"image://preview/" +*/ path
+                source: /*"image://preview/" + */path
                 asynchronous: true
 
                 sourceSize.width: 256
@@ -32,23 +32,7 @@ Item {
 
                 fillMode: Image.PreserveAspectFit
                 smooth: true
-
-                Component.onCompleted:
-                {
-//                    console.log("path is " + path)
-                }
-
             }
-
-/*            Text{
-                anchors.top: img.bottom
-                anchors.bottom: parent.bottom
-                text: getFileName( path )
-                elide: Text.ElideRight
-                width: parent.width
-                horizontalAlignment: Text.AlignHCenter
-            }
-*/
         }
 
     }
@@ -70,8 +54,6 @@ Item {
             Text {
                 text:  mimeType + " " + activityItem.num + ( ( typeItem == 1 ) ? 'x1 ' : ( typeItem == 2 ) ? 'x2 ' : 'x3 ')//  + url
                 anchors.centerIn: img
-        //        anchors.top: img.bottom
-        //        anchors.topMargin: 5
             }
         }
     }
@@ -92,8 +74,6 @@ Item {
             Text {
                 text:  mimeType + " " + activityItem.num + ( ( typeItem == 1 ) ? 'x1 ' : ( typeItem == 2 ) ? 'x2 ' : 'x3 ')//  + url
                 anchors.centerIn: img
-        //        anchors.top: img.bottom
-        //        anchors.topMargin: 5
             }
         }
     }

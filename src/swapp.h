@@ -16,9 +16,10 @@
 #include "sessionprovider.h"
 #include "userinfoprovider.h"
 
-class ActivityProxy;
+class ActivityModel;
 class NepomukSource;
 class QThread;
+class ActivityProxy;
 
 class SWApp : public KUniqueApplication
 {
@@ -45,8 +46,10 @@ private Q_SLOTS:
     AppProvider *m_appProvider;
     AppIconProvider *m_appIconProvider;
     
-      ActivityProxy* m_model;
+    ActivityModel* m_model;
     NepomukSource* m_source;
+
+    ActivityProxy *m_proxy;
 
     QThread *m_nepomukThread;
 

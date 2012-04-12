@@ -23,7 +23,10 @@ public:
 signals:
     void newSearch(QDate, ActivitySource::Direction);
     void newList(int index, ActivityList *list);
+    void newList(ActivityList *list);
     void listChanged(int index, ActivityList *list);
+    void listChanged(ActivityList *list);
+    void newActivitySet(ActivitySet*);
 
 public slots:
     void addActivitySet(ActivitySet *set);
@@ -36,11 +39,6 @@ private slots:
 
 private:
 
-    enum
-    {
-        CurrentDateRole = Qt::UserRole + 1,
-        ActivitiesRole
-    };
 
     QList < ActivityList *> activityList;
 };

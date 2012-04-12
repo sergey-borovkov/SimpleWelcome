@@ -52,7 +52,9 @@ set(rosa-launcher-qtquick_SRCS
                                src/timeframe/activityset.cpp
                                src/timeframe/activitylist.cpp
                                src/timeframe/previewgenerator.cpp
-                               src/timeframe/previewprovider.cpp)
+                               src/timeframe/previewprovider.cpp
+                               src/timeframe/activitymodel.cpp
+                               )
 
 kde4_add_executable(rosa-launcher-qtquick ${rosa-launcher-qtquick_SRCS} ${QRC_SOURCES})
 target_link_libraries(rosa-launcher-qtquick 

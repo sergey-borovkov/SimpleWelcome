@@ -71,8 +71,6 @@ QDate ActivitySet::getDate()
     return date;
 }
 
-
-
 void Activity::setType(QString newType)
 {
     type = newType;
