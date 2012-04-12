@@ -41,6 +41,7 @@
 #include "timeframe/activitylist.h"
 #include "timeframe/activityset.h"
 #include "timeframe/previewprovider.h"
+#include "timeframe/activitymodel.h"
 
 SWApp* SWApp::self()
 {
@@ -84,13 +85,16 @@ SWApp::SWApp()
   m_appProvider->setAppLaunchReciever(m_recentAppsProvider);
   m_viewer->rootContext()->setContextProperty("recentAppsProvider", m_recentAppsProvider);
 
-  m_model = new ActivityProxy;
+  m_model = new ActivityModel;
+  m_proxy = new ActivityProxy;
   m_source = new NepomukSource;
   m_nepomukThread = new QThread(this);
   m_source->moveToThread(m_nepomukThread);
   m_nepomukThread->start();
 
-  m_model->addSource( m_source );
+  m_proxy->addSource( m_source );
+
+  m_model->addProxy(m_proxy);
 
 
   m_placesProvider = new PlacesProvider();
@@ -100,8 +104,9 @@ SWApp::SWApp()
   m_documentsProvider = new DocumentsProvider();
   m_documentsProvider->init();
   m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
-  m_viewer->rootContext()->setContextProperty( "activityProxy", m_model );
+  m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
   m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
+  m_viewer->rootContext()->setContextProperty( "activityListModel", m_model );
 
   m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
 

@@ -15,7 +15,7 @@ class ActivityList : public QObject
     Q_PROPERTY(QDate date READ date NOTIFY dateChanged)
 public:
     explicit ActivityList(int year, int month, QObject *parent = 0);
-    ActivityList() {};
+    ActivityList() {}
 
     void setDate(int y, int m) { d.setDate(y, m, 1); emit dateChanged();}
 
