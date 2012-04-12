@@ -106,8 +106,6 @@ Item {
         {
 
             var x = Qt.formatDate( activityListModel.get(i).date , "M-yyyy")
-//            console.log("getSceneIndex(): = " + x)
-
             if (x.toString() === (month.toString() + '-' + year.toString()))
             {                
                 return i

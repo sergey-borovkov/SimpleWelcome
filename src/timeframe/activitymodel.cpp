@@ -40,14 +40,6 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-const QHash<int, QByteArray> &ActivityModel::roleNames()
-{
-    QHash<int, QByteArray> hash;
-    hash.insert(ActivitiesRole, "activity");
-    hash.insert(CurrentDateRole, "date");
-    return hash;
-}
-
 int ActivityModel::rowCount(const QModelIndex &parent) const
 {
     return m_list.size();
@@ -89,7 +81,6 @@ void ActivityModel::onNewActivitySet(ActivitySet *set)
 
     if(insertIntoExisting)
     {
-        QMessageBox::information(0, "", "INSERT");
        list->addSet(set);
        emit dataChanged( index(i), index(i + 1) );
     }

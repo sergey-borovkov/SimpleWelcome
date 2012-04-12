@@ -24,7 +24,6 @@ public:
     ~ActivityModel();
 
     QVariant data(const QModelIndex &index, int role) const;
-    const QHash<int, QByteArray> & roleNames();
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     void addProxy(ActivityProxy *proxy);
 
