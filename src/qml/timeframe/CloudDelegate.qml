@@ -25,6 +25,7 @@ Item {
 
     function getPath( idx )
     {
+        console.log(activity)
         return activity.getUrl( activityindex, idx )
     }
 

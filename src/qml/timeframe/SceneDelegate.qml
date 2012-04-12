@@ -10,13 +10,17 @@ Item {
     width: timeFrameTab.width
     height: timeFrameTab.height
 
+    function getText()
+    {
+        return "index: " + index +" cur. index " + scene.currentIndex + " date: " +Qt.formatDate( date , "M-yyyy")
+    }
+
     Text {
-        text: "index: " + index +" cur. index " + scene.currentIndex + " date: " +Qt.formatDate( activityListModel.get(index).activity.date , "M-yyyy")
+        text: getText()
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.leftMargin: 10
     }
-
 
     Item {
         id: sceneItem
@@ -29,7 +33,7 @@ Item {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.leftMargin: 60
-            visible: ( activity.count >= 1 )
+            visible: activity.count >= 1
 
             activityindex: ( visible ? 0 : -1 )
         }
@@ -38,7 +42,7 @@ Item {
             id: cloud2
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
-            visible: ( activity.count >= 2 )
+            visible: activity.count >= 2
             activityindex: ( visible ? 1 : -1 )
         }
 
@@ -47,7 +51,7 @@ Item {
             anchors.top: parent.top
             anchors.right: parent.right
             anchors.rightMargin: 60
-            visible: ( activity.count >= 3 )
+            visible: activity.count >= 3
             activityindex: ( visible ? 2 : -1 )
         }
 

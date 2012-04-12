@@ -28,7 +28,7 @@ Item {
 
     function getTimeScaleIndex( index )
     {
-        var x = activityListModel.get(index).activity.date
+        var x = activityListModel.get(index).date
         var month = Qt.formatDateTime(x, "M")
         var year = Qt.formatDateTime(x, "yyyy")
         var i
@@ -72,36 +72,6 @@ Item {
         visible: true
     }
 
-    ListModel
-    {
-        id: activityListModel        
-    }
-
-    Connections
-    {
-        target: activityProxy
-
-        onNewList:     
-        {                        
-            activityListModel.insert(index, {"activity": list})
-            scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)
-        }
-
-        onListChanged:
-        {
-            console.log("list changed - " + index)
-
-            if(scene.currentIndex === index)
-            {
-                activityListModel.remove(index)
-                activityListModel.insert(index, {"activity": list})
-                //scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)
-            }
-            else
-                activityListModel.set(index, {"activity": list})                
-        }
-    }
-
     Flickable
     {
         id: flickable
@@ -135,7 +105,7 @@ Item {
         for (i =0;  i < scene.count; i++)
         {
 
-            var x = Qt.formatDate( activityListModel.get(i).activity.date , "M-yyyy")
+            var x = Qt.formatDate( activityListModel.get(i).date , "M-yyyy")
 //            console.log("getSceneIndex(): = " + x)
 
             if (x.toString() === (month.toString() + '-' + year.toString()))
