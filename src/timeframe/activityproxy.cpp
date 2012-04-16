@@ -20,10 +20,9 @@ ActivityProxy::~ActivityProxy()
 void ActivityProxy::addSource(ActivitySource *source)
 {    
     connect(source, SIGNAL(newActivitySet(ActivitySet*)), SLOT(addActivitySet(ActivitySet*)));
-    //connect(source, SIGNAL(newActivitySet(ActivitySet*)), SIGNAL(newActivitySet(ActivitySet*));
     connect(this, SIGNAL(newSearch(QDate, ActivitySource::Direction)), source, SLOT(startSearch(QDate, ActivitySource::Direction)));
     connect(source, SIGNAL(finishedListing()), SLOT(listingFinished()));
-    connect(source, SIGNAL(newTSEntries(int, int)), SLOT(newMonth(int,int)));
+    connect(source, SIGNAL(newTSEntries(int, int)), SIGNAL(newMonth(int,int)));
 
     QDate d = QDate::currentDate();
 
@@ -60,27 +59,4 @@ void ActivityProxy::setMonth(int year, int month)
 void ActivityProxy::listingFinished()
 {
 
-}
-
-void ActivityProxy::newMonth(int year, int month)
-{
-    ActivityList *list = new ActivityList(year, month);
-    int index = 0;
-
-    for( ; index < activityList.size(); index++)
-    {
-        QDate d = activityList[index]->date();
-        d.setDate(d.year(), d.month(), 1);
-
-        if(d == list->date())
-            return;
-        else if(d < list->date())
-            continue;
-        else
-            break;
-    }
-
-    activityList.insert(index, list);
-
-    emit newList(index, list);
 }

@@ -6,6 +6,7 @@ Item {
 
     property int cloudWidth: timeFrameTab.width * 2 / 5
     property int cloudHeight: timeFrameTab.height * 2 / 5
+    property int count: ( activity == null ? 0 : activity.count )
 
     width: timeFrameTab.width
     height: timeFrameTab.height
@@ -13,6 +14,16 @@ Item {
     function getText()
     {
         return "index: " + index +" cur. index " + scene.currentIndex + " date: " +Qt.formatDate( date , "M-yyyy")
+    }
+
+
+    Timer {
+        id: timer
+        interval: 100; running: true; repeat: true; triggeredOnStart: true
+        onTriggered: {
+            console.log("date: " + activity.date)
+            console.log("count: " + activity.count)
+        }
     }
 
     Text {
@@ -33,7 +44,7 @@ Item {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.leftMargin: 60
-            visible: activity.count >= 1
+            visible: count >= 1
 
             activityindex: ( visible ? 0 : -1 )
         }
@@ -42,7 +53,7 @@ Item {
             id: cloud2
             anchors.bottom: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
-            visible: activity.count >= 2
+            visible: count >= 2
             activityindex: ( visible ? 1 : -1 )
         }
 
@@ -51,7 +62,7 @@ Item {
             anchors.top: parent.top
             anchors.right: parent.right
             anchors.rightMargin: 60
-            visible: activity.count >= 3
+            visible: count >= 3
             activityindex: ( visible ? 2 : -1 )
         }
 
