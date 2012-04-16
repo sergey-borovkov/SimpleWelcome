@@ -16,19 +16,22 @@ Item {
     property int y2: 3*k
     property int y3: 4*k
 
-
-    //    width: x3 * 3 + x2 + k * 7
-    //    height: timeFrameTab.height //y1 + y3 + k * 5
-
     width: cloudWidth
     height: cloudHeight
 
     function getPath( idx )
     {
-        console.log(activity)
         return activity.getUrl( activityindex, idx )
     }
+/*
+    Timer {
+        id: timer
+        interval: 100; running: true; repeat: true; triggeredOnStart: true
+        onTriggered: {
 
+        }
+    }
+*/
     function getDate()
     {
         if ( activityindex === ( -1 ) )
