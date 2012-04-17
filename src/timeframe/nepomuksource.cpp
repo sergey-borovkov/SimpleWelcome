@@ -24,6 +24,7 @@ NepomukSource::NepomukSource(QObject *parent) :
 
 ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, const QDate &endDate)
 {
+    Q_UNUSED(endDate)
     Nepomuk::Query::Query query = createQuery(beginDate);
     query.setLimit(limit);
 

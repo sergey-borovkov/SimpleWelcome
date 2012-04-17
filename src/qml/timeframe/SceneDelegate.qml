@@ -31,11 +31,6 @@ Item {
         anchors.leftMargin: 10
     }
 
-/*
-    Component.onDestruction: {
-        timer.stop()
-    }
-*/
     Timer {
         id: timer
         interval: 200; running: true; repeat: true;
@@ -52,15 +47,15 @@ Item {
             if(activity.count >= 2 && !cl2) {
                 cl2 = 1;
                 console.log("Creating cloud2")
-                var c = v.createObject(sceneDelegate, {"anchors.bottom": parent.bottom, "anchors.horizontalCenter": parent.horizontalCenter, "idx": 1});
-                c.idx = 1
+                var c1 = v.createObject(sceneDelegate, {"anchors.bottom": parent.bottom, "anchors.horizontalCenter": parent.horizontalCenter, "idx": 1});
+                c1.idx = 1
             }
 
             if(activity.count >= 3 && !cl3) {
                 cl3 = 1;
                 console.log("Creating cloud3")
-                var c = v.createObject(sceneDelegate, {"anchors.top": parent.top, "anchors.right": parent.left, "anchors.rightMargin": 60, "idx": 2});
-                c.idx = 2
+                var c2 = v.createObject(sceneDelegate, {"anchors.top": text.bottom, "anchors.right": parent.right, "anchors.rightMargin": 60, "idx": 2});
+                c2.idx = 2
             }
 
             if(activity.count === 3) {

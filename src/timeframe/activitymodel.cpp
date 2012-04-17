@@ -12,7 +12,7 @@ ActivityModel::ActivityModel(QObject *parent) :
     hash.insert(ActivitiesRole, "activity");
     hash.insert(CurrentDateRole, "date");
     hash.insert(CountRole, "count");
-    hash.insert(DummyRole, "dummy");
+    hash.insert(CompletedRole, "");
 
     setRoleNames(hash);
 }
@@ -23,7 +23,7 @@ ActivityModel::~ActivityModel()
 
 QVariant ActivityModel::data(const QModelIndex &index, int role) const
 {
-    int row = index.row();
+    const int row = index.row();
     if(row < 0 || row >= m_list.size())
         return QVariant();
 
@@ -37,8 +37,7 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
     }
     else if(role == CountRole)
         return m_list[row]->date();
-    else if(role == DummyRole)
-        return dummy;
+
     return QVariant();
 }
 
@@ -79,7 +78,6 @@ void ActivityModel::newActivitySet(ActivitySet *set)
     {
         m_list[ind]->addSet(set);
         emit dataChanged( index(ind, 0, QModelIndex()), index(ind, columnCount(QModelIndex()), QModelIndex()) );
-        emit rowChanged(ind);
     }
     else
     {
@@ -89,7 +87,6 @@ void ActivityModel::newActivitySet(ActivitySet *set)
         beginInsertRows(QModelIndex(), ind, ind + 1);
         m_list.insert(ind, list);
         endInsertRows();
-        emit newRow(ind);
     }
 }
 
