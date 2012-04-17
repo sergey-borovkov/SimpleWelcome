@@ -106,7 +106,7 @@ SWApp::SWApp()
   m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
   m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
   m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
-  m_viewer->rootContext()->setContextProperty( "activityListModel", m_model );
+  m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
 
   m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
 
@@ -126,8 +126,9 @@ SWApp::SWApp()
   m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
   m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
-  m_viewer->showExpanded();
-  m_viewer->showFullScreen();
+  m_viewer->show();
+  //m_viewer->showExpanded();
+  //m_viewer->showFullScreen();
 
   QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
   

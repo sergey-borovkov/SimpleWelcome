@@ -28,7 +28,7 @@ Item {
 
     function getTimeScaleIndex( index )
     {
-        var x = activityListModel.get(index).date
+        var x = activityModel.get(index).date
         var month = Qt.formatDateTime(x, "M")
         var year = Qt.formatDateTime(x, "yyyy")
         var i
@@ -36,7 +36,6 @@ Item {
         {
             var y = timeScale.model.get(i).year
             var z = timeScale.model.get(i).monthNumber
-            //console.log("getTimeScaleIndex( index ): " + y + " " + z +" : " + year + " " + month)
             if ((year.toString() === y.toString()) && (month.toString() === z.toString()))
             {
                 //  console.log("bingo")
@@ -53,7 +52,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width
         height: parent.height
-        model: activityListModel
+        model: activityModel
         delegate: SceneDelegate {}
         focus: true
         orientation: Qt.Horizontal
@@ -71,7 +70,7 @@ Item {
         }
         visible: true
     }
-
+/*
     Flickable
     {
         id: flickable
@@ -84,13 +83,13 @@ Item {
 
             Repeater
             {
-                model: activityListModel
+                model: activityModel
                 delegate: SceneDelegate {}
             }
         }
         visible: false
     }
-
+*/
     TimeScale{
         id: timeScale
         anchors.verticalCenter: parent.verticalCenter
@@ -102,10 +101,9 @@ Item {
     function getSceneIndex( year , month ) //Need future development
     {
         var i
-        for (i =0;  i < scene.count; i++)
+        for (i = 0; i < scene.count; i++)
         {
-
-            var x = Qt.formatDate( activityListModel.get(i).date , "M-yyyy")
+            var x = Qt.formatDate( activityModel.get(i).date , "M-yyyy")
             if (x.toString() === (month.toString() + '-' + year.toString()))
             {                
                 return i
@@ -127,8 +125,6 @@ Item {
             }
         }
     }
-
-
 
     ToolButton {
         id: prevButton
