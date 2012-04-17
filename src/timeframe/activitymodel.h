@@ -76,6 +76,7 @@ public:
 public slots:
     void newActivitySet(ActivitySet *set);
     void newMonth(int year, int month);
+    void isComplete();
 
 signals:
     void rowChanged(int row);
