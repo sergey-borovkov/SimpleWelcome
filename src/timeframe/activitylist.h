@@ -24,7 +24,7 @@ signals:
     void dateChanged();
 
 public slots:
-    int count();
+    int count() const;
     QDate date() const { return d; }
     void addSet(ActivitySet *set);
     ActivitySet *at(int i) const;

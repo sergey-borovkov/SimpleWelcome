@@ -27,6 +27,8 @@ signals:
     void listChanged(int index, ActivityList *list);
     void listChanged(ActivityList *list);
     void newActivitySet(ActivitySet*);
+    void newMonth(int year, int month);
+    void finished();
 
 public slots:
     void addActivitySet(ActivitySet *set);
@@ -35,7 +37,7 @@ public slots:
 private slots:
     void listingFinished();
 
-    void newMonth(int year,int month);
+//    void newMonth(int year,int month);
 
 private:
 

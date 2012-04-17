@@ -6,9 +6,9 @@ import QtQuick 1.1
 Item {
     id: cloudDelegate
 
-    property int activityindex: -1
+    property int idx: 0
 
-    property int k:  width / 27  //10*2
+    property int k:  width / 27
     property int x1: 3*k
     property int x2: 4*k
     property int x3: 6*k
@@ -16,25 +16,19 @@ Item {
     property int y2: 3*k
     property int y3: 4*k
 
-
-    //    width: x3 * 3 + x2 + k * 7
-    //    height: timeFrameTab.height //y1 + y3 + k * 5
-
     width: cloudWidth
     height: cloudHeight
 
-    function getPath( idx )
+    function getPath( ind )
     {
-        console.log(activity)
-        return activity.getUrl( activityindex, idx )
+        console.log("path" + idx + " -- " + activity.getUrl( idx, ind ))
+
+        return activity.getUrl( idx, ind )
     }
 
     function getDate()
     {
-        if ( activityindex === ( -1 ) )
-            return ""
-
-        return ( "<b>" + Qt.formatDate( activity.getSetDate( activityindex ), "dd-MM-yyyy" ) + "</b>" )
+        return ( "<b>" + Qt.formatDate( activity.getSetDate( idx ), "dd-MM-yyyy" ) + "</b>" )
     }
 
     function createItem( component, url, type )
@@ -211,13 +205,10 @@ Item {
 
     function createObjects()
     {
-        if ( activityindex === ( -1 ) )
-            return;
-
         var strDate = getDate()
         var acitivityItemComp = Qt.createComponent( "ActivityItem.qml" );
 
-        var activityCount = activity.getSetCount( activityindex )
+        var activityCount = activity.getSetCount( idx )
         if ( activityCount == 1 )
             createTemplate1( acitivityItemComp, strDate )
         else if ( activityCount == 2 )
@@ -238,11 +229,6 @@ Item {
     Component.onCompleted:
     {
         createObjects()
-    }
-
-    Item {
-        id: cloudItem
-        anchors.centerIn: parent
     }
 
 }

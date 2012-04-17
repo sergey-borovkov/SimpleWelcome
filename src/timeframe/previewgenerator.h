@@ -47,7 +47,6 @@ public slots:
 
 private slots:
     void setPreview(const KFileItem&, const QPixmap&);
-    void jobDeleted();
     void setNullIcon(const KFileItem &item);
 
 private:

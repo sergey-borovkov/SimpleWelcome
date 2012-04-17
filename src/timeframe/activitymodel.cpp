@@ -6,12 +6,13 @@
 #include <QDebug>
 
 ActivityModel::ActivityModel(QObject *parent) :
-    QAbstractListModel(parent)
+    QAbstractItemModel(parent), dummy(0)
 {
 
     hash.insert(ActivitiesRole, "activity");
     hash.insert(CurrentDateRole, "date");
     hash.insert(CountRole, "count");
+    hash.insert(CompletedRole, "");
 
     setRoleNames(hash);
 }
@@ -22,7 +23,7 @@ ActivityModel::~ActivityModel()
 
 QVariant ActivityModel::data(const QModelIndex &index, int role) const
 {
-    int row = index.row();
+    const int row = index.row();
     if(row < 0 || row >= m_list.size())
         return QVariant();
 
@@ -42,54 +43,89 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
 
 int ActivityModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return m_list.size();
 }
 
 void ActivityModel::addProxy(ActivityProxy *proxy)
 {
-    connect(proxy, SIGNAL(newActivitySet(ActivitySet*)), SLOT(onNewActivitySet(ActivitySet*)));
+    connect(proxy, SIGNAL(newActivitySet(ActivitySet*)), SLOT(newActivitySet(ActivitySet*)));
+    connect(proxy, SIGNAL(finished()), SLOT(isComplete()));
+    /*
+    connect(proxy, SIGNAL(newMonth(int,int)), SLOT(newMonth(int,int)));
+    */
 }
 
-#include <QMessageBox>
-void ActivityModel::onNewActivitySet(ActivitySet *set)
-{    
+void ActivityModel::newActivitySet(ActivitySet *set)
+{
     QDate d = set->getDate();
     d.setDate(d.year(), d.month(), 1); // set day to 1 because we only care about year and month
 
+    int ind = 0;
     bool insertIntoExisting = false;
-    ActivityList *list;
-    int i = 0;
-
-    foreach(list, m_list)
-    {
-        i++;
-        if(list->date() == d)
+    for( ; ind < m_list.size(); ind++)
+        if(m_list[ind]->date() == d && m_list[ind]->count() < 3)
         {
-            for(int i = 0; i < list->count(); i++)
-                if(list->at(i)->getDate() == set->getDate()) // duplicate
-                    return;
-
-            if(list->count() < 3)
-            {
-                insertIntoExisting = true;
-                break;
-            }
-        }
-        else if(list->date() > d)
+            insertIntoExisting = true;
             break;
-    }
+        }
+        else if(m_list[ind]->date() < d)
+            continue;
+        else
+            break;
 
     if(insertIntoExisting)
     {
-       list->addSet(set);
-       emit dataChanged( index(i), index(i + 1) );
+        m_list[ind]->addSet(set);
+        emit dataChanged( index(ind, 0, QModelIndex()), index(ind, columnCount(QModelIndex()), QModelIndex()) );
     }
-    else // all activity lists are full or no activity list for set's year and month
+    else
     {
         ActivityList *list = new ActivityList(set->getDate().year(), set->getDate().month(), this);
         list->addSet(set);
-        beginInsertRows(QModelIndex(), i, i + 1);
-        m_list.insert(i, list);
+
+        beginInsertRows(QModelIndex(), ind, ind + 1);
+        m_list.insert(ind, list);
         endInsertRows();
     }
 }
+
+void ActivityModel::newMonth(int year, int month)
+{
+    ActivityList *list = new ActivityList(year, month);
+    int index = 0;
+
+    for( ; index < m_list.size(); index++)
+    {
+        QDate d = m_list[index]->date();
+        d.setDate(d.year(), d.month(), 1);
+
+        if(d == list->date())
+            return;
+        else if(d < list->date())
+            continue;
+        else
+            break;
+    }
+
+    beginInsertRows(QModelIndex(), index, index + 1);
+    m_list.insert(index, list);
+    endInsertRows();
+}
+
+void ActivityModel::isComplete()
+{
+    for( int i = 0; i < m_list.size() ; i++ )
+    {
+        qDebug() << "list" << i;
+        for(int j = 0; j < m_list[i]->count(); j++)
+        {
+            qDebug() << "set" << j;
+            for(int k = 0; k < m_list[i]->getSetCount(j); k++)
+            {
+                qDebug() << m_list[i]->getUrl(j, k) << m_list[i]->getSetDate(j);
+            }
+        }
+    }
+}
+
