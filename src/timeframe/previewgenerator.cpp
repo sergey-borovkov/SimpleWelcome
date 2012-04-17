@@ -27,7 +27,9 @@
 #include <QtGui/QPainter>
 #include <QtCore/QtDebug>
 #include <QtCore/QFileInfo>
+
 #include <kfile.h>
+#include <kicon.h>
 
 PreviewGenerator *PreviewGenerator::m_instance = 0;
 
@@ -51,27 +53,20 @@ void PreviewGenerator::setPreview(const KFileItem &item, const QPixmap &pixmap)
     previews.insert(item.localPath(), pict);
 }
 
-void PreviewGenerator::jobDeleted()
-{
-    qDebug() << "JOB DELETED";
-}
-
 void PreviewGenerator::setNullIcon(const KFileItem &item)
 {
-    //qDebug() << "Preview generation failed" << item.localPath() << item.mimetype();
-
+    KIcon icon(item.iconName(), 0, item.overlays());
+    QPixmap pixmap = icon.pixmap(500);
+    setPreview(item, pixmap);
 }
 
 QPixmap PreviewGenerator::getPreviewPixmap(QString filePath)
 {    
     if(previews.contains(filePath))
         return previews[filePath];
-    else {
-//        qDebug() << "Default preview";
-        return defaultPreview;
-    }
-
-}
+    else
+       return defaultPreview;
+ }
 
 PreviewGenerator * PreviewGenerator::instance()
 {
@@ -93,7 +88,5 @@ void PreviewGenerator::start(const QStringList& list)
     m_job->setAutoDelete(true);
 
     connect(m_job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(setPreview(const KFileItem&, const QPixmap&)));
-    //connect(m_job, SIGNAL(result()), SLOT(deleteJob()));
     connect(m_job, SIGNAL(failed(const KFileItem&)), SLOT(setNullIcon(const KFileItem &)));
-    //connect(m_job, SIGNAL(),SLOT(jobDeleted()));
 }
