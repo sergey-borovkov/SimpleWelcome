@@ -27,6 +27,7 @@ signals:
     void newActivities(QList<Activity *>);
     void newActivitySet(ActivitySet *);
     void finishedListing();
+    void monthFinished(QDate date);
 
 public slots:
     

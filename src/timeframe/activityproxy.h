@@ -24,6 +24,7 @@ signals:
     void newSearch(QDate, ActivitySource::Direction);
     void newActivitySet(ActivitySet*);
     void newMonth(int year, int month);
+    void monthFinished(QDate date);
     void finished();
 
 public slots:
@@ -32,8 +33,6 @@ public slots:
 
 private slots:
     void listingFinished();
-
-//    void newMonth(int year,int month);
 
 private:
 
