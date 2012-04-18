@@ -46,12 +46,55 @@ Item {
     }
 
 
+    Row {
+            id: menuBar
+            //anchors.centerIn: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.bottomMargin: 16
+            spacing: 40
+            z: 100
+
+            ListModel {
+                id: menuDocItems
+                ListElement { itemText: "All" }
+                ListElement { itemText: "Photo" }
+                ListElement { itemText: "Video" }
+                ListElement { itemText: "Documents" }
+            }
+
+            ListModel {
+                id: menuSocialItems
+                ListElement { itemText: "All" }
+                ListElement { itemText: "Facebook" }
+                ListElement { itemText: "Twitter" }
+                ListElement { itemText: "V Kontakte" }
+            }
+
+            DropListBox {
+                model: menuDocItems
+                name: "My Local Documents"
+                onSelectedIndexChanged: {
+                    console.debug( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
+                }
+            }
+
+            DropListBox {
+                model: menuSocialItems
+                name: "Social networking sites"
+                onSelectedIndexChanged: {
+                    console.debug( selectedText + ", " + menuSocialItems.get( selectedIndex ).itemText )
+                }
+            }
+        }
+
     ListView {
         id: scene
+        anchors.top: menuBar.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+//        anchors.verticalCenter: parent.verticalCenter
         width: parent.width
-        height: parent.height
+        height: parent.height - menuBar.height
         model: activityModel
         delegate: SceneDelegate {}
         focus: true
