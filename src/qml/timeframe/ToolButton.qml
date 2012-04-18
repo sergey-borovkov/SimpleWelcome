@@ -71,5 +71,5 @@ Rectangle {
     //scale the button when pressed
     scale: buttonMouseArea.pressed ? 1.05 : 1.00
 
-    Behavior on scale { NumberAnimation { duration: 50} }
+    Behavior on scale { NumberAnimation { duration: 50 } }
 }
