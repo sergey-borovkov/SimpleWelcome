@@ -120,6 +120,8 @@ void NepomukSource::listingFinished()
         emit newActivitySet(set);
     }
 
+    int delta = direction == Right ? 1 : -1;
+
     // month changed on this step so we emit previous month
     if(m_monthChanged)
     {
@@ -127,11 +129,10 @@ void NepomukSource::listingFinished()
         d.setDate(d.year(), d.month(), 1);
 
         emit monthFinished(d);
+        m_monthChanged = false;
     }
 
     // continue search if any days in month left
-    int delta = direction == Right ? 1 : -1;
-
     if( queryDate.month() == queryDate.addDays(delta).month() )
     {
         m_searchClient->close();
@@ -144,7 +145,6 @@ void NepomukSource::listingFinished()
         // next time this function is entered month's gonna change
         m_monthChanged = true;
     }
-
 
     emit finishedListing();
 }

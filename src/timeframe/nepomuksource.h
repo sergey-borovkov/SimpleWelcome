@@ -35,7 +35,7 @@ public slots:
     void processTSEntry(const QList<Nepomuk::Query::Result> &list);
 
 private slots:
-    void listingFinished(QDate date);
+    void listingFinished();
     void listingTSFinished();
 
 private:
