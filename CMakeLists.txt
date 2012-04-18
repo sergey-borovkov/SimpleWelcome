@@ -39,6 +39,8 @@ set(rosa-launcher-qtquick_SRCS
                                src/qml/TabButton.qml
                                src/qml/FirstTab.qml
                                src/qml/ScrollBar.qml
+                               src/qml/TopBar.qml
+                               src/qml/BottomBar.qml
                                src/qml/timeframe/TimeFrameTab.qml
                                src/qml/timeframe/ToolButton.qml
                                src/qml/timeframe/SceneDelegate.qml
@@ -46,6 +48,9 @@ set(rosa-launcher-qtquick_SRCS
                                src/qml/timeframe/ActivityItem.qml
                                src/qml/timeframe/qmldir
                                src/qml/timeframe/TimeScale.qml
+                               src/qml/timeframe/DropListBox.qml
+                               src/qml/timeframe/Button.qml
+                               src/qml/timeframe/ButtonText.qml
                                src/timeframe/activityproxy.cpp
                                src/timeframe/nepomuksource.cpp
                                src/timeframe/activitysource.cpp
