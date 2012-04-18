@@ -17,7 +17,7 @@
 #include <QDateTime>
 
 NepomukSource::NepomukSource(QObject *parent) :
-    ActivitySource(parent), m_searchClient(0) , m_timeScaleClient(0), m_tsSearch(false), set(0)
+    ActivitySource(parent), m_searchClient(0) , m_timeScaleClient(0), m_tsSearch(false), set(0), m_monthChanged(false)
 {
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
@@ -113,12 +113,23 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 
 void NepomukSource::listingFinished()
 {
+    //if we got any data in last search - emit it
     if(set->count())
     {
         set->setDate(queryDate);
         emit newActivitySet(set);
     }
 
+    // month changed on this step so we emit previous month
+    if(m_monthChanged)
+    {
+        QDate d = queryDate.addDays(-delta);
+        d.setDate(d.year(), d.month(), 1);
+
+        emit monthFinished(d);
+    }
+
+    // continue search if any days in month left
     int delta = direction == Right ? 1 : -1;
 
     if( queryDate.month() == queryDate.addDays(delta).month() )
@@ -128,6 +139,12 @@ void NepomukSource::listingFinished()
 
         return startSearch(queryDate.addDays(-1), direction);
     }
+    else
+    {
+        // next time this function is entered month's gonna change
+        m_monthChanged = true;
+    }
+
 
     emit finishedListing();
 }
@@ -191,6 +208,4 @@ void NepomukSource::processTSEntry(const QList<Nepomuk::Query::Result> &list)
 {
     if (list.count()> 0)
         emit newTSEntries(m_timeScaleDate.year(),m_timeScaleDate.month());
-    //QString uri = list.at(0).resource().toFile().url().path();
-    //qDebug() << "NEW TS ENTRIES" << m_timeScaleDate.year() <<"   " << m_timeScaleDate.month() << " " << uri;
 }

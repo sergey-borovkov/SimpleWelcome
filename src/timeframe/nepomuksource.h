@@ -27,6 +27,7 @@ public:
 signals:
     void newEntries(const QList<Nepomuk::Query::Result>&);
     void newTSEntries(int year,int month);
+    void monthFinished(QDate date);
 
 public slots:
     virtual void startSearch(const QDate &beginDate, ActivitySource::Direction direction);
@@ -34,7 +35,7 @@ public slots:
     void processTSEntry(const QList<Nepomuk::Query::Result> &list);
 
 private slots:
-    void listingFinished();
+    void listingFinished(QDate date);
     void listingTSFinished();
 
 private:
@@ -51,6 +52,7 @@ private:
     bool m_tsSearch;
     ActivitySet *set;
     Direction direction;
+    bool m_monthChanged;
 };
 
 #endif // NEPOMUKSOURCE_H
