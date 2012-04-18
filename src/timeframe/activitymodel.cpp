@@ -92,7 +92,7 @@ void ActivityModel::newActivitySet(ActivitySet *set)
 
 void ActivityModel::newMonth(int year, int month)
 {
-    ActivityList *list = new ActivityList(year, month);
+    ActivityList *list = new ActivityList(year, month, this);
     int index = 0;
 
     for( ; index < m_list.size(); index++)
@@ -115,6 +115,7 @@ void ActivityModel::newMonth(int year, int month)
 
 void ActivityModel::isComplete()
 {
+    // dump activity lists on listing finished
     for( int i = 0; i < m_list.size() ; i++ )
     {
         qDebug() << "list" << i;
