@@ -49,6 +49,8 @@ set(rosa-launcher-qtquick_SRCS
                                src/qml/timeframe/qmldir
                                src/qml/timeframe/TimeScale.qml
                                src/qml/timeframe/DropListBox.qml
+                               src/qml/timeframe/Button.qml
+                               src/qml/timeframe/ButtonText.qml
                                src/timeframe/activityproxy.cpp
                                src/timeframe/nepomuksource.cpp
                                src/timeframe/activitysource.cpp
