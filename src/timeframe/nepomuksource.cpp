@@ -17,7 +17,7 @@
 #include <QDateTime>
 
 NepomukSource::NepomukSource(QObject *parent) :
-    ActivitySource(parent), m_searchClient(0) , m_tsSearch(false), set(0), m_timeScaleClient(0)
+    ActivitySource(parent), m_searchClient(0) , m_timeScaleClient(0), m_tsSearch(false), set(0)
 {
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
@@ -161,6 +161,8 @@ void NepomukSource::fillTimeScaleModel(const QDate &date)
 
 Nepomuk::Query::FileQuery NepomukSource::createTimeScaleQuery(const QDate &date)
 {
+    Q_UNUSED(date)
+
     QDate beginDate(m_timeScaleDate.year(),m_timeScaleDate.month(),1);
     QDate endDate = beginDate.addMonths(1);
     Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( beginDate );
