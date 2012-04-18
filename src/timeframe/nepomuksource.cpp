@@ -22,6 +22,14 @@ NepomukSource::NepomukSource(QObject *parent) :
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
 
+NepomukSource::~NepomukSource()
+{
+    if(m_searchClient)
+        m_searchClient->close();
+    if(m_timeScaleClient)
+        m_timeScaleClient->close();
+}
+
 ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, const QDate &endDate)
 {
     Q_UNUSED(endDate)
@@ -53,7 +61,7 @@ ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result
     {
         if(result.at(i).resource().isFile())
         {
-            QString uri = result.at(i).resource().toFile().url().path();  //result.at(i).resource().uri();
+            QString uri = result.at(i).resource().toFile().url().path();
             QString type = result.at(i).resource().type();
             QFileInfo fi(uri);
             set->addActivity(uri, type, fi.lastModified().date());
@@ -120,7 +128,7 @@ void NepomukSource::listingFinished()
         emit newActivitySet(set);
     }
 
-    int delta = direction == Right ? 1 : -1;
+    int delta = ( direction == Right ) ? 1 : -1;
 
     // month changed on this step so we emit previous month
     if(m_monthChanged)
@@ -140,11 +148,9 @@ void NepomukSource::listingFinished()
 
         return startSearch(queryDate.addDays(-1), direction);
     }
-    else
-    {
-        // next time this function is entered month's gonna change
-        m_monthChanged = true;
-    }
+
+    // next time this function is entered month's gonna change
+    m_monthChanged = true;
 
     emit finishedListing();
 }
