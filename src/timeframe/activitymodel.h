@@ -43,11 +43,6 @@ public:
         return 0;
     }
 
-    Qt::ItemFlags flags(const QModelIndex & index ) const
-    {
-            return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
-    }
-
     QVariant data(const QModelIndex &index, int role) const;
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     void addProxy(ActivityProxy *proxy);
@@ -55,6 +50,7 @@ public:
 public slots:
     void newActivitySet(ActivitySet *set);
     void newMonth(int year, int month);
+    void monthFinished(QDate date);
     void isComplete();
 
 private:

@@ -22,11 +22,14 @@ class NepomukSource : public ActivitySource
     Q_OBJECT
 public:
     explicit NepomukSource(QObject *parent = 0);
+    ~NepomukSource();
+
     // this function is thread safe
     ActivitySet *getActivitySet(int limit, const QDate &beginDate, const QDate &endDate);
 signals:
     void newEntries(const QList<Nepomuk::Query::Result>&);
     void newTSEntries(int year,int month);
+    void monthFinished(QDate date);
 
 public slots:
     virtual void startSearch(const QDate &beginDate, ActivitySource::Direction direction);
@@ -51,6 +54,7 @@ private:
     bool m_tsSearch;
     ActivitySet *set;
     Direction direction;
+    bool m_monthChanged;
 };
 
 #endif // NEPOMUKSOURCE_H
