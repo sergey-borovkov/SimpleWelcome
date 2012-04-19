@@ -2,12 +2,22 @@
 import QtQuick 1.1
 
 Rectangle {
+    id: button
     width: 100
     height: 38
+    state: ""
 
-    color: "#222"
-    border.color: "black"
+    color: "transparent"
+    border.color: "transparent"
     border.width: 1
     radius: 5
+    opacity: 0.8
+
+    states: State {
+        name: "selected"
+        PropertyChanges { target: button; color: "#222" }
+        PropertyChanges { target: button; border.color: "black" }
+        PropertyChanges { target: button; opacity: 1 }
+    }
 
 }
