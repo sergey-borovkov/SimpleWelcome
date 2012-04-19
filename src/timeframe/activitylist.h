@@ -15,7 +15,7 @@ class ActivityList : public QObject
     Q_PROPERTY(QDate date READ date NOTIFY dateChanged)
 public:
     explicit ActivityList(int year, int month, QObject *parent = 0);
-    ActivityList() {}
+    ActivityList() : m_complete(false) {}
 
     void setDate(int y, int m) { d.setDate(y, m, 1); emit dateChanged();}
 
@@ -33,9 +33,13 @@ public slots:
     int getSetCount(int index);
     QDate getSetDate(int index);
 
+    bool complete() const { return m_complete; }
+    void setComplete(bool b) { m_complete = b; }
+
 private:
     QList < ActivitySet* > list;
     QDate d;
+    bool m_complete;
 };
 
 Q_DECLARE_METATYPE(ActivityList *)
