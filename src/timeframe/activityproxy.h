@@ -36,7 +36,6 @@ private slots:
 
 private:
 
-
     QList < ActivityList *> activityList;
 };
 
