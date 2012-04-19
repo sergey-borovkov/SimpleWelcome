@@ -51,9 +51,7 @@ void ActivityModel::addProxy(ActivityProxy *proxy)
 {
     connect(proxy, SIGNAL(newActivitySet(ActivitySet*)), SLOT(newActivitySet(ActivitySet*)));
     connect(proxy, SIGNAL(finished()), SLOT(isComplete()));
-    /*
-    connect(proxy, SIGNAL(newMonth(int,int)), SLOT(newMonth(int,int)));
-    */
+    connect(proxy, SIGNAL(monthFinished(QDate)), SLOT(monthFinished(QDate)));
 }
 
 void ActivityModel::newActivitySet(ActivitySet *set)
@@ -66,6 +64,11 @@ void ActivityModel::newActivitySet(ActivitySet *set)
     for( ; ind < m_list.size(); ind++)
         if(m_list[ind]->date() == d && m_list[ind]->count() < 3)
         {
+
+            for(int i = 0; i < m_list[ind]->count(); i++)
+                if(m_list[ind]->at(i)->getDate() == set->getDate()) // duplicate
+                    return;
+
             insertIntoExisting = true;
             break;
         }
@@ -92,7 +95,7 @@ void ActivityModel::newActivitySet(ActivitySet *set)
 
 void ActivityModel::newMonth(int year, int month)
 {
-    ActivityList *list = new ActivityList(year, month);
+    ActivityList *list = new ActivityList(year, month, this);
     int index = 0;
 
     for( ; index < m_list.size(); index++)
@@ -113,8 +116,19 @@ void ActivityModel::newMonth(int year, int month)
     endInsertRows();
 }
 
+void ActivityModel::monthFinished(QDate date)
+{
+    qDebug() << "Month finished" << date;
+    for(int i = 0; i < m_list.size(); i++)
+    {
+        if(m_list[i]->date() == date)
+            m_list[i]->setComplete(true);
+    }
+}
+
 void ActivityModel::isComplete()
 {
+    // dump activity lists on listing finished
     for( int i = 0; i < m_list.size() ; i++ )
     {
         qDebug() << "list" << i;

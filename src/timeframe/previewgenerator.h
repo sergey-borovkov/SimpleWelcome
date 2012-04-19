@@ -58,7 +58,6 @@ private:
     static PreviewGenerator *m_instance;
     QPixmap videoPixmap;
 
-
     KIO::PreviewJob *m_job;
     QStringList m_plugins;
     KFileItemList m_fileList;
