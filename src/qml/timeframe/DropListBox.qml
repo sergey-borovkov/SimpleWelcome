@@ -10,10 +10,12 @@ Item {
 
     signal comboClicked
     signal selectedIndexChanged
+    signal clicked
 
-    width: dropboxButtonText.paintedWidth + 32 + dropboxDrop.width
+    width: dropboxButtonText.paintedWidth + 24 + dropboxDrop.width
     height: 30
     focus: true
+    state: ""
 
     Button {
         id: dropboxButtonBody
@@ -34,7 +36,10 @@ Item {
             id: dropboxButtonMouseArea
             anchors.fill: parent
 
-            onPressed: { dropboxListBody.hide() }
+            onPressed: {
+                dropboxListBody.hide()
+                dropListBox.clicked()
+            }
         }
 
         Button {
@@ -52,7 +57,10 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: { dropboxListBody.toggle() }
+                onClicked: {
+                    dropboxListBody.toggle()
+                    dropListBox.clicked()
+                }
             }
         }
     }
@@ -146,77 +154,18 @@ Item {
         hoverEnabled: true
         onExited: { dropboxListBody.hide() }
     }
+
+    states: State {
+        name: "current"
+        PropertyChanges { target: dropboxButtonBody; state: "selected" }
+        PropertyChanges { target: dropboxDrop; state: "selected" }
+        PropertyChanges { target: dropboxListBody; state: "selected" }
+    }
+
 }
 
 
-
 /*
-Item {
-    width: 400;
-    height: 400;
-
-    property string name;
-    property string selectedText: listView.model.get( 0 ).itemText
-    property alias model: listView.model
-    property alias selectedIndex: listView.currentIndex
-
-    signal comboClicked
-    signal selectedIndexChanged
-
-    Item {
-        id: comboBox
-
-        width: chosenItemText.paintedWidth + 16
-        height: 30;
-        z: 100;
-        smooth: true
-
-        Rectangle {
-            id: chosenItem
-            radius: 4;
-            width: parent.width;
-            height: comboBox.height;
-            color:  "#222"
-            border.color: "black"
-            smooth: true
-
-            Text {
-                id: chosenItemText
-                anchors.centerIn: parent
-                anchors.margins: 8;
-                text: name
-                font.family: "Arial"
-                font.pointSize: 14;
-                smooth:true
-                styleColor: "#000"
-                color: "#eee"
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-                onClicked: {
-                    comboBox.state = ( ( comboBox.state === "dropDown" ) ? "" : "dropDown" )
-                }
-                onExited: {
-                    if ( comboBox.state === "dropDown" )
-                        comboBox.state = ""
-                }
-            }
-        }
-
-        Rectangle {
-            id: dropDown
-            width: comboBox.width;
-            height: 0;
-            clip: true;
-            radius: 4;
-            anchors.top: chosenItem.bottom;
-            anchors.margins: 2;
-            color: "#222"
-            focus: true
-
-
             ListView {
                 id: listView
 //                anchors.fill: parent
@@ -266,42 +215,5 @@ Item {
                 Keys.onUpPressed: { console.debug("onUpPressed"); if ( selectedIndex < model.count - 1 ) selectedIndex++ }
                 Keys.onDownPressed: { console.debug("onDownPressed"); if ( selectedIndex > 0 ) selectedIndex-- }
 
-            }
-        }
-
-        MouseArea {
-            id: mouseArea
-            width: comboBox.width;
-            height: dropDown.height
-            anchors.top: chosenItem.bottom;
-            anchors.margins: 2;
-
-            hoverEnabled: true
-            onExited: {
-                console.debug( "dropdown mouse area on exited..." )
-                comboBox.state = ""
-            }
-        }
-
-        Component {
-            id: highlight
-            Rectangle {
-                width:comboBox.width;
-                height:comboBox.height;
-                color: "#222"
-                radius: 4
-            }
-        }
-
-        states: State {
-            name: "dropDown";
-            PropertyChanges { target: dropDown; height: ( chosenItemText.paintedHeight + 8 ) * listView.count }
-            PropertyChanges { target: listView; focus: true }
-        }
-
-        transitions: Transition {
-            NumberAnimation { target: dropDown; properties: "height"; easing.type: Easing.OutExpo; duration: 1000 }
-        }
-    }
 }
 */
