@@ -51,8 +51,8 @@ Item {
             //anchors.centerIn: parent
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
-            anchors.bottomMargin: 16
-            spacing: 40
+            anchors.margins: 16
+            spacing: 0
             z: 100
 
             ListModel {
@@ -72,29 +72,59 @@ Item {
             }
 
             DropListBox {
+                id: localDocs
                 model: menuDocItems
                 name: "My Local Documents"
+                state: "current"
                 onSelectedIndexChanged: {
                     console.debug( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
+                }
+                onClicked: {
+                   console.debug( "My Local Documents clicked" )
+                    state = "current"
+                    socialNetworks.state = ""
+
                 }
             }
 
             DropListBox {
+                id: socialNetworks
                 model: menuSocialItems
                 name: "Social networking sites"
                 onSelectedIndexChanged: {
                     console.debug( selectedText + ", " + menuSocialItems.get( selectedIndex ).itemText )
                 }
+
+                onClicked: {
+                    console.debug( "Social networking sites clicked" )
+                    state = "current"
+                    localDocs.state = ""
+                }
             }
         }
 
+    Rectangle {
+        id: separator
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: menuBar.bottom
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
+        anchors.topMargin: 2
+        anchors.bottomMargin: 10
+        height: 3
+        color: "grey"
+        radius: 1
+
+    }
+
     ListView {
         id: scene
-        anchors.top: menuBar.bottom
+        anchors.top: separator.bottom
         anchors.horizontalCenter: parent.horizontalCenter
 //        anchors.verticalCenter: parent.verticalCenter
         width: parent.width
-        height: parent.height - menuBar.height
+        height: parent.height - menuBar.height - separator.height
         model: activityModel
         delegate: SceneDelegate {}
         focus: true
