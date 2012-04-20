@@ -12,7 +12,7 @@ ActivityModel::ActivityModel(QObject *parent) :
     hash.insert(ActivitiesRole, "activity");
     hash.insert(CurrentDateRole, "date");
     hash.insert(CountRole, "count");
-    hash.insert(CompletedRole, "");
+    hash.insert(CompletedRole, "complete");
 
     setRoleNames(hash);
 }

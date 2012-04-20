@@ -58,7 +58,7 @@ Item {
                 c2.idx = 2
             }
 
-            if(activity.count === 3) {
+            if(activity.complete) {
                 timer.stop()
             }
         }
