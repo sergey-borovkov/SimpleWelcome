@@ -3,9 +3,10 @@ import QtQuick 1.1
 
 
 
-Item {
+Rectangle {
     id: cloudDelegate
 
+    color: "transparent"
     property int idx: 0
 
     property int k:  width / 27
