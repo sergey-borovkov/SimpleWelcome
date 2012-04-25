@@ -73,6 +73,10 @@ ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result
 
 void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
 {
+    /*
+    if (beginDate.isNull())
+        qDebug("----------Null Date");
+        */
     this->direction = direction;
 
     if(m_searchClient)

@@ -128,6 +128,11 @@ void ActivityModel::monthFinished(QDate date)
 
 void ActivityModel::isComplete()
 {
+
+    //!!!!!!!
+    return;
+
+
     // dump activity lists on listing finished
     for( int i = 0; i < m_list.size() ; i++ )
     {
