@@ -7,10 +7,7 @@ Item {
     property int cloudWidth: timeFrameTab.width * 2 / 5
     property int cloudHeight: timeFrameTab.height * 2 / 5
 
-    property int cl1: 0
-    property int cl2: 0
-    property int cl3: 0
-
+    property variant objects: []
     width: timeFrameTab.width
     height: timeFrameTab.height
 
@@ -33,36 +30,34 @@ Item {
     }
 
     Timer {
-        id: timer
-        interval: 200; running: true; repeat: true;
+        id: timer; running: true; repeat: true; interval: 200;
         onTriggered: {
             var v = Qt.createComponent("CloudDelegate.qml");
 
-            if(activity.count >= 1 && !cl1) {
-                cl1 = 1;
-           //     console.log("Creating cloud1")
-                var c = v.createObject(sceneDelegate, {"x": 0, "y": 0, "anchors.top": text.bottom, "anchors.left": parent.left, "anchors.leftMargin": 60})
-                c.idx = 0
+            // first we delete old items because index items could be changed when new item was added
+            // TODO: do it properly without deleting and timer usage
+
+            for( var object in objects) {
+                console.log("Destroying" + object)
+                object.opacity = 1
+                object.destroy()
             }
 
-            if(activity.count >= 2 && !cl2) {
-                cl2 = 1;
-             //   console.log("Creating cloud2")
-                var c1 = v.createObject(sceneDelegate, {"anchors.bottom": parent.bottom, "anchors.horizontalCenter": parent.horizontalCenter, "idx": 1});
-                c1.idx = 1
+            objects.length = 0
+
+            var settings = [ {"x": 0, "y": 0, "anchors.top": text.bottom, "anchors.left": parent.left, "anchors.leftMargin": 60},
+                             {"anchors.bottom": parent.bottom, "anchors.horizontalCenter": parent.horizontalCenter, "idx": 1},
+                             {"anchors.top": text.bottom, "anchors.right": parent.right, "anchors.rightMargin": 60, "idx": 2} ]
+
+            for(var i = 0; i < activity.count; i++)
+            {
+                var c = v.createObject(sceneDelegate, settings[i]);
+                objects.push(c)
             }
 
-            if(activity.count >= 3 && !cl3) {
-                cl3 = 1;
-             //   console.log("Creating cloud3")
-                var c2 = v.createObject(sceneDelegate, {"anchors.top": text.bottom, "anchors.right": parent.right, "anchors.rightMargin": 60, "idx": 2});
-                c2.idx = 2
-            }
-
-            if(activity.complete) {
+            if(activity.count === 3 || activity.complete) {
                 timer.stop()
             }
         }
     }
-
 }

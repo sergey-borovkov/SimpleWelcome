@@ -15,7 +15,13 @@ int ActivityList::count() const
 
 void ActivityList::addSet(ActivitySet *set)
 {
-    list.prepend(set);
+    int index = 0;
+
+    // find place to insert set
+    for(; index < list.count() && list[index]->getDate() < set->getDate(); index++);
+
+    list.insert(index, set);
+
     emit countChanged();
 }
 
