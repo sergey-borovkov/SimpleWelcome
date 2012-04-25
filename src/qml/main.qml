@@ -93,8 +93,8 @@ Rectangle {
             //anchors.topMargin: 16
             width: parent.width
             height: parent.height
-
-            model: tabListModel
+            interactive: false
+            model: tabListModel            
 
             snapMode: ListView.SnapOneItem
             orientation: ListView.Horizontal

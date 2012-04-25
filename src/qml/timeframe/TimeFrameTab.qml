@@ -10,6 +10,8 @@ Item {
     anchors.topMargin: 16
     property ListView lv: scene
 
+    property bool direction: true  //true is - right direction; false - is left
+
     function startup() {
 
     }
@@ -43,6 +45,16 @@ Item {
             }
         }
         return -1
+    }
+    Connections{
+        target:tabListView
+        onCurrentIndexChanged:{
+            if (tabListView.currentIndex === 3)
+            {
+                nepomukSource.startSearch(Date().getDate, 0)
+            }
+        }
+
     }
 
 
@@ -118,6 +130,28 @@ Item {
 
     }
 
+    function getCurrentDate()
+    {
+        var date = new Date()
+        date.setFullYear(timeScale.model.get(timeScale.list.currentIndex).year)
+        date.setMonth(timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1)
+        return date
+    }
+
+    function getFlickIndex()
+    {
+        console.log(getCurrentDate())
+        if (direction) //get  first day in mounth
+        {
+
+        } else //get last day in mounth
+        {
+
+        }
+        return scene.count -1
+    }
+
+
     ListView {
         id: scene
         anchors.top: separator.bottom
@@ -136,13 +170,64 @@ Item {
         preferredHighlightEnd: 0
         clip: true
         highlightMoveDuration: 1000
-
+        onCurrentIndexChanged:
+        {
+            //console.log(scene.currentIndex)
+        }
+        onCountChanged:
+        {
+            console.log("new items added " + scene.currentIndex +  " " + scene.count)
+            positionViewAtIndex(getFlickIndex(), ListView.Contain)
+            //scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)
+            //scene.incrementCurrentIndex()
+        }
+/*
+        onCurrentIndexChanged:
+        {
+            if (currentIndex===0)
+                timeScale.list.decrementCurrentIndex();
+            if (currentIndex===count)
+                timeScale.list.incrementCurrentIndex();
+        }
+*/
+        /*
         Keys.onLeftPressed: {
             console.log( "left key pressed 333..." )
             prevMonth()
         }
+        */
         visible: true
     }
+
+    Connections
+    {
+        target: scene
+        onFlickStarted:
+        {
+            //console.log("flicking started")
+            if ((scene.horizontalVelocity > 0) && (scene.currentIndex === scene.count-1) )
+            {
+                direction = true
+                timeScale.list.decrementCurrentIndex()
+                console.log("flicking right")
+            }
+            else if ((scene.horizontalVelocity < 0) && (scene.currentIndex === 0) )
+            {                
+                direction = false
+                timeScale.list.incrementCurrentIndex()
+                console.log("flicking left")
+            }
+        }
+    }
+    /*
+    Connections
+    {
+        target: scene
+
+
+    }
+    */
+
 /*
     Flickable
     {
@@ -189,6 +274,7 @@ Item {
         target: timeScale.list
         onCurrentIndexChanged: {
             activityProxy.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1 )
+            /*
             var sceneIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
 
             if (sceneIndex !== -1)
@@ -196,6 +282,7 @@ Item {
                 console.log("change index in scene on " + sceneIndex)
                 scene.currentIndex = sceneIndex
             }
+            */
         }
     }
 

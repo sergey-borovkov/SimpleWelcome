@@ -28,7 +28,7 @@ void ActivityProxy::addSource(ActivitySource *source)
 
     QDate d = QDate::currentDate();
 
-    emit newSearch(d, ActivitySource::Left);
+    //emit newSearch(d, ActivitySource::Left);
 }
 
 void ActivityProxy::addActivitySet(ActivitySet *set)
