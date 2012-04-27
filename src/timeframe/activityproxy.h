@@ -31,6 +31,7 @@ public slots:
     void addActivitySet(ActivitySet *set);
     void setMonth(int year, int month);
 
+
 private slots:
     void listingFinished();
 

@@ -9,7 +9,7 @@ ActivityList::ActivityList( int year, int month, QObject *parent) :
 }
 
 int ActivityList::count() const
-{
+{    
     return list.size();
 }
 

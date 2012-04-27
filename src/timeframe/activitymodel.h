@@ -3,6 +3,8 @@
 
 #include <QAbstractItemModel>
 #include <QHash>
+#include <QSet>
+#include <QDate>
 
 class ActivityProxy;
 class ActivityList;
@@ -43,6 +45,7 @@ public:
         return 0;
     }
 
+
     QVariant data(const QModelIndex &index, int role) const;
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     void addProxy(ActivityProxy *proxy);
@@ -52,10 +55,15 @@ public slots:
     void newMonth(int year, int month);
     void monthFinished(QDate date);
     void isComplete();
+    QDate getDateOfIndex(int listIndex);
+    bool isNullItem(int listIndex);
+    int getListIndex(int year, int month, bool direction);
+
 
 private:
     QList< ActivityList *> m_list;
     QHash<int, QByteArray> hash;
+    QSet <QString> m_dateSet;
     int dummy;
     // ugly, need to change later. stores locations of images paths in ActivityList
     QHash< QString, QPair<int, int> > imageLocation;

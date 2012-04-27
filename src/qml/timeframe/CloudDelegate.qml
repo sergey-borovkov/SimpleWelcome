@@ -48,7 +48,7 @@ Rectangle {
         item.x = ( width - item.width ) / 2
         item.y = ( height - item.height ) / 2
 
-        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
+        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { color: \"white\" ;text:'" + date + "'}", cloudDelegate, "cloudDelegate")
         dateItem.x = item.x
         dateItem.y = item.y - k - dateItem.height
     }
@@ -68,7 +68,7 @@ Rectangle {
         items[ 1 ].x = items[ 0 ].x + items[ 0 ].width + k
         items[ 1 ].y = items[ 0 ].y + ( items[ 0 ].height - items[ 1 ].height )
 
-        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
+        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { color: \"white\" ;text:'" + date + "'}", cloudDelegate, "cloudDelegate")
         dateItem.x = items[ 1 ].x
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }
@@ -90,7 +90,7 @@ Rectangle {
         items[ 1 ].y = items[ 0 ].y + ( items[ 0 ].height - items[ 1 ].height )
         items[ 2 ].y = items[ 0 ].y + items[ 0 ].height + k
 
-        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
+        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { color: \"white\" ;text:'" + date + "'}", cloudDelegate, "cloudDelegate")
         dateItem.x = items[ 1 ].x
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }
@@ -114,7 +114,7 @@ Rectangle {
         items[ 2 ].y = items[ 0 ].y + items[ 0 ].height + k
         items[ 3 ].y = items[ 2 ].y
 
-        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
+        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { color: \"white\" ;text:'" + date + "'}", cloudDelegate, "cloudDelegate")
         dateItem.x = items[ 1 ].x
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }
@@ -140,7 +140,7 @@ Rectangle {
         items[ 3 ].y = items[ 2 ].y
         items[ 4 ].y = items[ 2 ].y
 
-        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
+        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { color: \"white\" ;text:'" + date + "'}", cloudDelegate, "cloudDelegate")
         dateItem.x = items[ 1 ].x
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }
@@ -168,7 +168,7 @@ Rectangle {
         items[ 4 ].y = items[ 2 ].y
         items[ 5 ].y = items[ 0 ].y + (items[ 0 ].height + items[ 3 ].height + k - items[ 5 ].height ) / 2
 
-        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
+        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { color: \"white\" ;text:'" + date + "'}", cloudDelegate, "cloudDelegate")
         dateItem.x = items[ 1 ].x
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }
@@ -198,7 +198,7 @@ Rectangle {
         items[ 5 ].y = items[ 0 ].y + (items[ 0 ].height + items[ 3 ].height + k - items[ 5 ].height ) / 2
         items[ 6 ].y = items[ 5 ].y
 
-        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { text:'" + date + "'}", cloudDelegate, "cloudDelegate")
+        var dateItem = Qt.createQmlObject("import QtQuick 1.1; Text { color: \"white\" ;text:'" + date + "'}", cloudDelegate, "cloudDelegate")
         dateItem.x = items[ 1 ].x
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }

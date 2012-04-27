@@ -10,11 +10,15 @@ Item {
     anchors.topMargin: 16
     property ListView lv: scene
 
+    property int __year: new Date().getFullYear()   //Current year
+    property int __month: new Date().getMonth()     //Current month
+    property bool __isSearching: false              //New search in process
     property bool direction: true  //true is - right direction; false - is left
 
-    function startup() {
 
-    }
+//    function startup() {
+
+//    }
 
     function prevMonth() {
         //        if ( cloudItem.focus == true )
@@ -26,35 +30,59 @@ Item {
         scene.incrementCurrentIndex()
     }
 
-    Component.onCompleted: startup();
 
-    function getTimeScaleIndex( index )
-    {
-        var x = activityModel.get(index).date
-        var month = Qt.formatDateTime(x, "M")
-        var year = Qt.formatDateTime(x, "yyyy")
-        var i
-        for (i = 0;  i < timeScale.list.count; i++)
-        {
-            var y = timeScale.model.get(i).year
-            var z = timeScale.model.get(i).monthNumber
-            if ((year.toString() === y.toString()) && (month.toString() === z.toString()))
-            {
-                //  console.log("bingo")
-                return i
-            }
-        }
-        return -1
+    function getTimeLineProperlyItem() {
+       var index = activityModel.getListIndex(__year, __month+1, direction)
+       return index
     }
+
+    //Component.onCompleted: startup();
+
+//    function getTimeScaleIndex( index )
+//    {
+//        var x = activityModel.get(index).date
+//        var month = Qt.formatDateTime(x, "M")
+//        var year = Qt.formatDateTime(x, "yyyy")
+//        var i
+//        for (i = 0;  i < timeScale.list.count; i++)
+//        {
+//            var y = timeScale.model.get(i).year
+//            var z = timeScale.model.get(i).monthNumber
+//            if ((year.toString() === y.toString()) && (month.toString() === z.toString()))
+//            {
+//                //  console.log("bingo")
+//                return i
+//            }
+//        }
+//        return -1
+//    }
+
+
+    //Start new serch
+    function currentDateChanged()
+    {
+        var date = new Date()
+        date.setFullYear(__year)
+        date.setMonth(__month)
+        activityProxy.newSearch(date, direction)
+        __isSearching = true
+    }
+
+    //Start initial search
     Connections{
         target:tabListView
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3)
             {
-                nepomukSource.startSearch(Date().getDate, 0)
+                currentDateChanged()
             }
         }
+    }
 
+    //On search finished
+    Connections{
+        target: activityProxy
+        onFinished: __isSearching = false
     }
 
 
@@ -130,17 +158,27 @@ Item {
 
     }
 
-    function getCurrentDate()
+    function getTSCurrentDate()
     {
-        var date = new Date()
-        date.setFullYear(timeScale.model.get(timeScale.list.currentIndex).year)
-        date.setMonth(timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1)
+        var date = new Date(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1, 1)
         return date
     }
 
+    function getTSIndex(year, monthNumber) //get index of date in TimeScale
+    {        
+        var i
+        for (i = 0; i < timeScale.model.count; i++ )
+        {
+            if ((year === timeScale.model.get(i).year) && (monthNumber === timeScale.model.get(i).monthNumber - 1 ))
+                return i
+        }
+        return -1
+    }
+
+/*
     function getFlickIndex()
     {
-        console.log(getCurrentDate())
+        console.log(getTSCurrentDate())
         if (direction) //get  first day in mounth
         {
 
@@ -151,9 +189,12 @@ Item {
         return scene.count -1
     }
 
-
+*/
     ListView {
         id: scene
+
+        //property int __oldIndex: currentIndex
+
         anchors.top: separator.bottom
         anchors.horizontalCenter: parent.horizontalCenter
 //        anchors.verticalCenter: parent.verticalCenter
@@ -172,14 +213,35 @@ Item {
         highlightMoveDuration: 1000
         onCurrentIndexChanged:
         {
-            //console.log(scene.currentIndex)
+
+            var date = activityModel.getDateOfIndex(scene.currentIndex)
+            var tsDate = getTSCurrentDate()
+            if (date.getTime() === tsDate.getTime())
+            {                
+                //__oldIndex = scene.currentIndex
+                return
+            }
+
+            if (date.getTime() > tsDate.getTime())
+                direction = true
+            else
+                direction = false
+
+            //start new search
+            timeFrameTab.__year = date.getFullYear()
+            timeFrameTab.__month = date.getMonth()
+            timeFrameTab.currentDateChanged()
+
+            //check TS index
+            if (date.getTime() !== tsDate.getTime())
+                timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
+
+            //__oldIndex = scene.currentIndex
         }
         onCountChanged:
         {
-            console.log("new items added " + scene.currentIndex +  " " + scene.count)
-            positionViewAtIndex(getFlickIndex(), ListView.Contain)
-            //scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)
-            //scene.incrementCurrentIndex()
+            console.log("new items added, scene count: " +  scene.count)
+            scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)            
         }
 /*
         onCurrentIndexChanged:
@@ -198,27 +260,33 @@ Item {
         */
         visible: true
     }
-
+/*
     Connections
     {
         target: scene
         onFlickStarted:
         {
-            //console.log("flicking started")
+            console.log("flicking started")
             if ((scene.horizontalVelocity > 0) && (scene.currentIndex === scene.count-1) )
             {
+                //timeScale.list.decrementCurrentIndex()
                 direction = true
-                timeScale.list.decrementCurrentIndex()
-                console.log("flicking right")
             }
             else if ((scene.horizontalVelocity < 0) && (scene.currentIndex === 0) )
             {                
+                //timeScale.list.incrementCurrentIndex()
                 direction = false
-                timeScale.list.incrementCurrentIndex()
-                console.log("flicking left")
+            }else
+            {
+                return
             }
+
+            __year = timeScale.model.get(timeScale.list.currentIndex).year
+            __month = timeScale.model.get(timeScale.list.currentIndex).monthNumber-1
+            currentDateChanged()
         }
     }
+    */
     /*
     Connections
     {
@@ -269,12 +337,12 @@ Item {
         }
         return -1
     }
-
+/*
     Connections{
         target: timeScale.list
         onCurrentIndexChanged: {
             activityProxy.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1 )
-            /*
+
             var sceneIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
 
             if (sceneIndex !== -1)
@@ -282,10 +350,10 @@ Item {
                 console.log("change index in scene on " + sceneIndex)
                 scene.currentIndex = sceneIndex
             }
-            */
+
         }
     }
-
+*/
     ToolButton {
         id: prevButton
         width: 60

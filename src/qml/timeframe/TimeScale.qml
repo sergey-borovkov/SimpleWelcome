@@ -80,6 +80,7 @@ Item
             }
 
             Text {
+                color: "white"
                 id: monthLabel
                 text: qsTr(month)
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -117,6 +118,7 @@ Item
     Text
     {
         id: yearLabel
+        color: "white"
         anchors.left: parent.left
         anchors.right: listViewAnchor.left
         anchors.verticalCenter: parent.verticalCenter
@@ -171,9 +173,20 @@ Item
                 onClicked:
                 {
                     var mouseIndex = timeScaleList.indexAt(mouseX + timeScaleList.contentX, mouseY + timeScaleList.contentY)
-                    if (mouseIndex !== -1)
+                    var oldIndex = timeScaleList.currentIndex
+                    if ((mouseIndex !== -1) && (oldIndex !== mouseIndex))
                     {
+                        //change current index
                         timeScaleList.currentIndex = mouseIndex
+                        //start new search here
+                        if (mouseIndex > oldIndex)
+                            timeFrameTab.direction = false // moving left
+                        else
+                            timeFrameTab.direction = true  // moving right
+                        timeFrameTab.__year = monthModel.get(timeScale.list.currentIndex).year
+                        timeFrameTab.__month = monthModel.get(timeScale.list.currentIndex).monthNumber - 1
+                        timeFrameTab.currentDateChanged()
+                        scene.currentIndex = timeFrameTab.getTimeLineProperlyItem()
                     }
                 }
             }
