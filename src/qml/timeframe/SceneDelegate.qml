@@ -42,11 +42,11 @@ Item {
             // first we delete old items because index items could be changed when new item was added
             // TODO: do it properly without deleting and timer usage
 
-            console.log("object" + objects.length)
+           // console.log("object" + objects.length)
             for( var object in objects) {
-                console.log("Destroying" + object)
+                //console.log("Destroying" + object)
                 object.opacity = 1
-                object.destroy()
+                //object.destroy()
             }
 
             objects.length = 0
@@ -57,18 +57,18 @@ Item {
 
 
             for(var i = 0; i < activity.count; i++)
-            {
+            {                
                 var c = v.createObject(sceneDelegate, settings[i]);
-                console.log("Kami" + c)
+                //console.log("Kami" + c)
                 objects += c
             }
 
-            oldCount = activity.count()
-/*
+            oldCount = activity.count
+
             if(activity.count === 3 || activity.complete) {
                 timer.stop()
             }
-*/
+
         }
     }
 }
