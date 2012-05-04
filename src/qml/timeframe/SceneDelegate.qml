@@ -18,6 +18,8 @@ Item {
     }
 
     Component.onCompleted: {
+        console.log("HERE, count - " + activity.count)
+        console.log("INDEX: " + index)
         timer.start()
     }
 
