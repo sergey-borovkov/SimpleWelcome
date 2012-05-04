@@ -13,7 +13,8 @@ Item {
     property int __year: new Date().getFullYear()   //Current year
     property int __month: new Date().getMonth()     //Current month
     property bool __isSearching: false              //New search in process
-    property bool direction: true  //true is - right direction; false - is left
+    property bool direction: false  //true is - right direction; false - is left
+
 
 
 //    function startup() {
@@ -60,21 +61,21 @@ Item {
 
     //Start new serch
     function currentDateChanged()
-    {
-        var date = new Date()
-        date.setFullYear(__year)
-        date.setMonth(__month)
-        activityProxy.newSearch(date, direction)
+    {        
+        //var date = new Date(__year, __month)
+        activityProxy.startNewSearch(__year, __month, direction)
         __isSearching = true
+        searchLabel.visible = true
     }
 
     //Start initial search
     Connections{
         target:tabListView
-        onCurrentIndexChanged:{
+        onCurrentIndexChanged:{            
             if (tabListView.currentIndex === 3)
             {
                 currentDateChanged()
+                console.log("start initial search")
             }
         }
     }
@@ -82,7 +83,9 @@ Item {
     //On search finished
     Connections{
         target: activityProxy
-        onFinished: __isSearching = false
+        onFinished: {__isSearching = false ; console.log("search finished")
+        searchLabel.visible = false}
+
     }
 
 
@@ -189,6 +192,31 @@ Item {
         return scene.count -1
     }
 
+*/
+    Text
+    {
+        id: searchLabel
+        color: "white"
+        anchors.top: separator.bottom
+        anchors.left: parent.left
+        text: "searching in process "
+        visible: false
+        z: 1000
+    }
+
+    Binding
+    {
+        target: timeFrameTab
+        property: __isSearching
+        value:  searchLabel.visible
+
+    }
+
+    /*
+    Connections{
+        target: timeFrameTab
+        onPropertyChanged: searchLabel.visible = __isSearching
+    }
 */
     ListView {
         id: scene

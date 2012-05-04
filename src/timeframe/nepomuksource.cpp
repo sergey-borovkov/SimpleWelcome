@@ -77,6 +77,7 @@ void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
     if (beginDate.isNull())
         qDebug("----------Null Date");
         */
+    qDebug() <<"start new search at " << beginDate << direction;
     this->direction = direction;
 
     if(m_searchClient)

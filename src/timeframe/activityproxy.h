@@ -30,6 +30,7 @@ signals:
 public slots:
     void addActivitySet(ActivitySet *set);
     void setMonth(int year, int month);
+    void startNewSearch(int year, int month, bool direction);
 
 
 private slots:
