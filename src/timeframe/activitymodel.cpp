@@ -65,6 +65,7 @@ void ActivityModel::newActivitySet(ActivitySet *set)
     {
         return;
     }
+
     int ind = 0;
     bool insertIntoExisting = false;
     for( ; ind < m_list.size(); ind++)
@@ -78,7 +79,8 @@ void ActivityModel::newActivitySet(ActivitySet *set)
             continue;
         else
             break;
-    }    
+    }
+
     if(insertIntoExisting)
     {
         m_list[ind]->addSet(set);        
@@ -132,8 +134,7 @@ void ActivityModel::isComplete()
 {
 
     //!!!!!!!
-    return;
-
+    //return;
 
     // dump activity lists on listing finished
     for( int i = 0; i < m_list.size() ; i++ )
