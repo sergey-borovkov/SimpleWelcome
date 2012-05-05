@@ -13,6 +13,7 @@ class ActivityList : public QObject
     Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(QDate date READ date NOTIFY dateChanged)
+    Q_PROPERTY(bool complete READ complete NOTIFY completeChanged)
 public:
     explicit ActivityList(int year, int month, QObject *parent = 0);
     ActivityList() : m_complete(false) {}
@@ -22,6 +23,7 @@ public:
 signals:    
     void countChanged();
     void dateChanged();
+    void completeChanged();
 
 public slots:
     int count() const;
@@ -34,7 +36,7 @@ public slots:
     QDate getSetDate(int index);
 
     bool complete() const { return m_complete; }
-    void setComplete(bool b) { m_complete = b; }
+    void setComplete(bool b) { m_complete = b; emit completeChanged(); }
 
 private:
     QList < ActivitySet* > list;
