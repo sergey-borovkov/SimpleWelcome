@@ -22,15 +22,12 @@ Item {
 
             Image {
                 id: img
-                source: /*"image://preview/" + */path
-                asynchronous: true
-
-                sourceSize.width: 256
-                width: activityItem.width
-                height: activityItem.height
-
-
+                source: "image://preview/" + path
+                width: Math.min( sourceSize.width, parent.width )
+                height: Math.min( sourceSize.height, parent.height )
                 fillMode: Image.PreserveAspectFit
+
+                asynchronous: true
                 smooth: true
             }
         }

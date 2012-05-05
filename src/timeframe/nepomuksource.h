@@ -54,7 +54,6 @@ private:
     bool m_tsSearch;
     ActivitySet *set;
     Direction direction;
-    bool m_monthChanged;
 };
 
 #endif // NEPOMUKSOURCE_H
