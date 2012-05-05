@@ -33,39 +33,38 @@ Item {
     Timer {
         id: timer; running: true; repeat: true; interval: 200;
         onTriggered: {
-
             if(activity.count === oldCount)
                 return;
 
-            var v = Qt.createComponent("CloudDelegate.qml");
+            // first we make old items invisible. then create all items again.
+            // it's most simple solution, it would be better for this to delete objects
+            // but for some reason calling destroy() does not work...
+            // TODO: do it properly without deleting and timer
 
-            // first we delete old items because index items could be changed when new item was added
-            // TODO: do it properly without deleting and timer usage
-
-           // console.log("object" + objects.length)
-            for( var object in objects) {
-                //console.log("Destroying" + object)
-                object.opacity = 1
-                //object.destroy()
+            for(var i = 0; i < objects.length; i++) {
+                objects[i].visible = false
             }
 
-            objects.length = 0
+            objects = []
 
             var settings = [ {"x": 0, "y": 0, "anchors.top": text.bottom, "anchors.left": parent.left, "anchors.leftMargin": 60},
                              {"anchors.bottom": parent.bottom, "anchors.horizontalCenter": parent.horizontalCenter, "idx": 1},
                              {"anchors.top": text.bottom, "anchors.right": parent.right, "anchors.rightMargin": 60, "idx": 2} ]
 
+            var component = Qt.createComponent("CloudDelegate.qml");
 
             for(var i = 0; i < activity.count; i++)
             {                
-                var c = v.createObject(sceneDelegate, settings[i]);
-                //console.log("Kami" + c)
-                objects += c
+                var cloud = component.createObject(sceneDelegate, settings[i]);
+
+                var arr = objects;
+                arr.push(cloud)
+                objects = arr
             }
 
             oldCount = activity.count
 
-            if(activity.count === 3 || activity.complete) {
+            if(activity.count === 3) {
                 timer.stop()
             }
 
