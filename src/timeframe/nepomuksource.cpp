@@ -121,7 +121,8 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
         activities.append(new Activity(uri, type, fi.lastModified().date()));
         set->addActivity(new Activity(uri, type, fi.lastModified().date()));
    }
-    emit newActivities(activities);
+
+   emit newActivities(activities);
 }
 
 void NepomukSource::listingFinished()
@@ -151,7 +152,7 @@ void NepomukSource::listingFinished()
         m_searchClient->close();
         m_searchClient = 0;
 
-        return startSearch(queryDate.addDays(-1), direction);
+        return startSearch(queryDate.addDays( delta ), direction);
     }
 
     // next time this function is entered month's gonna change
@@ -170,10 +171,8 @@ void NepomukSource::fillTimeScaleModel(const QDate &date)
         m_timeScaleClient = 0;
     }
 
-
     m_timeScaleDate = date;
     //Nepomuk::Query::Query query = createQuery(beginDate);
-
 
     Nepomuk::Query::Query query = createTimeScaleQuery(date);
     query.setLimit(1);
