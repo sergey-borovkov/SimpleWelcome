@@ -80,10 +80,14 @@ void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
     qDebug() <<"start new search at " << beginDate << direction;
     this->direction = direction;
 
-    if(m_searchClient)
+    if(!m_searchClient)
     {
-        m_searchClient->close();
-        m_searchClient = 0;
+        m_searchClient = new Nepomuk::Query::QueryServiceClient( this );
+
+        connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processEntry(const QList<Nepomuk::Query::Result> &)));
+
+        connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
+
     }
 
     if(!m_tsSearch)
@@ -99,12 +103,6 @@ void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
     Nepomuk::Query::Query query = createQuery(beginDate);
 
     query.setLimit(7);
-
-    m_searchClient = new Nepomuk::Query::QueryServiceClient( this );
-
-    connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processEntry(const QList<Nepomuk::Query::Result> &)));
-
-    connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
 
     m_searchClient->query(query);
 }
@@ -149,8 +147,8 @@ void NepomukSource::listingFinished()
     // continue search if any days in month left
     if( queryDate.month() == queryDate.addDays(delta).month() )
     {
-        m_searchClient->close();
-        m_searchClient = 0;
+        //m_searchClient->close();
+        //m_searchClient = 0;
 
         return startSearch(queryDate.addDays( delta ), direction);
     }
