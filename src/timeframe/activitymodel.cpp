@@ -12,7 +12,6 @@ ActivityModel::ActivityModel(QObject *parent) :
     hash.insert(ActivitiesRole, "activity");
     hash.insert(CurrentDateRole, "date");
     hash.insert(CountRole, "count");
-    hash.insert(CompletedRole, "complete");
 
     setRoleNames(hash);
 }
@@ -122,7 +121,7 @@ void ActivityModel::newMonth(int year, int month)
 }
 
 void ActivityModel::monthFinished(QDate date)
-{    
+{
     for(int i = 0; i < m_list.size(); i++)
     {
         if(m_list[i]->date() == date)

@@ -19,8 +19,7 @@ public:
     {
         CurrentDateRole = Qt::UserRole + 1,
         ActivitiesRole,
-        CountRole,
-        CompletedRole // true if list is full or month is already scanned
+        CountRole
     };
 
     explicit ActivityModel(QObject *parent = 0);

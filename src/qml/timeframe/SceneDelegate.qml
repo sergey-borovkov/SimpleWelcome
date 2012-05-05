@@ -33,6 +33,10 @@ Item {
     Timer {
         id: timer; running: true; repeat: true; interval: 200;
         onTriggered: {
+            if(activity.complete) {
+                timer.stop()
+            }
+
             if(activity.count === oldCount)
                 return;
 
@@ -63,11 +67,6 @@ Item {
             }
 
             oldCount = activity.count
-
-            if(activity.count === 3) {
-                timer.stop()
-            }
-
         }
     }
 }
