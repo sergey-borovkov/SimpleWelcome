@@ -32,9 +32,9 @@ PreviewProvider::PreviewProvider() :
 
 QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {    
-    QString str = id.left(id.lastIndexOf('%'));
-    QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(str);
+    QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(id);
 
+    qDebug() << requestedSize;
     if(requestedSize.isValid())
         pixmap = pixmap.scaled(requestedSize);
     *size = pixmap.size();
