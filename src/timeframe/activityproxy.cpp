@@ -25,10 +25,6 @@ void ActivityProxy::addSource(ActivitySource *source)
     connect(source, SIGNAL(finishedListing()), SLOT(listingFinished()));
     connect(source, SIGNAL(newTSEntries(int, int)), SIGNAL(newMonth(int,int)));
     connect(source, SIGNAL(monthFinished(QDate)), SIGNAL(monthFinished(QDate)));
-
-    QDate d = QDate::currentDate();
-
-    //emit newSearch(d, ActivitySource::Left);
 }
 
 void ActivityProxy::addActivitySet(ActivitySet *set)
