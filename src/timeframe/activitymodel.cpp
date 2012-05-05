@@ -134,7 +134,7 @@ void ActivityModel::isComplete()
 {
 
     //!!!!!!!
-    //return;
+    return;
 
     // dump activity lists on listing finished
     for( int i = 0; i < m_list.size() ; i++ )
