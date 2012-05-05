@@ -132,7 +132,6 @@ void ActivityModel::monthFinished(QDate date)
 
 void ActivityModel::isComplete()
 {
-
     //!!!!!!!
     return;
 
