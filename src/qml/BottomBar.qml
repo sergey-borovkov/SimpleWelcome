@@ -1,13 +1,13 @@
 import QtQuick 1.1
 
-Rectangle {
+Item {
     id: tabBar
 
     anchors.bottom: parent.bottom
     width: parent.width
     height: 80
     //color: "grey"
-    color: "transparent"
+    //color: "transparent"
 
     Row {
         //anchors.centerIn: parent
@@ -17,15 +17,21 @@ Rectangle {
         spacing: 40
 
         TabButton {
-            label: "First Tab"
-            id: firstTabButton
+            label: "Welcome"
+            id: welcomeTabButton
             onButtonClick: { tabListView.currentIndex = 1; page.reloadTabs(); }
         }
 
         TabButton {
-            label: "Second Tab"
-            id: secondTabButton
+            label: "Applications"
+            id: applicationsTabButton
             onButtonClick: { tabListView.currentIndex = 2; page.reloadTabs(); }
+        }
+
+        TabButton {
+            label: "Testing"
+            id: testingTabButton
+            onButtonClick: { tabListView.currentIndex = 3; page.reloadTabs(); }
         }
     }
 }

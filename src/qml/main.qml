@@ -2,7 +2,7 @@ import QtQuick 1.1
 
 import Qt 4.7
 
-Rectangle {
+Item {
     id: page
     width: 1280
     height: 800
@@ -34,6 +34,7 @@ Rectangle {
         appsTab.reload();
     }
 
+    /*
     Image {
         width: 64
         height: 64
@@ -41,6 +42,24 @@ Rectangle {
         fillMode: Image.Tile
         source: "image://generalicon/asset/background2.png"        
     }
+    */
+
+    Image {
+        anchors.fill: parent
+        fillMode: Image.PreserveAspectCrop
+        smooth: true
+        source: "image://generalicon/asset/bubbles.jpg"
+        opacity: 0.6
+        z: -10
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        opacity: 0.8
+        z: -5
+    }
+
     
     VisualItemModel {
         id: tabListModel
@@ -57,8 +76,22 @@ Rectangle {
             height: tabListView.height
         }
 
+        /*
         SecondTab {
             id: appsTab
+            width: tabListView.width
+            height: tabListView.height
+        }
+        */
+        
+        ApplicationsTab {
+            id: appsTab
+            width: tabListView.width
+            height: tabListView.height
+        }
+
+        TestingTab {
+            id: testingTab
             width: tabListView.width
             height: tabListView.height
         }
@@ -70,13 +103,13 @@ Rectangle {
         
     }
     
-    Rectangle {
+    Item {
         id: listViewRect
         width: parent.width
         y: topBar.height
         height: parent.height - topBar.height - bottomBar.height
         clip: true
-        color: "transparent"
+        //color: "transparent"
         
         ListView {
             id: tabListView

@@ -1,13 +1,13 @@
 import QtQuick 1.1
 
-Rectangle {
+Item {
     id: topBar
 
     anchors.top: parent.top
     width: parent.width
     height: 80
     //color: "grey"
-    color: "transparent"
+    //color: "transparent"
 
     Item {
         id: userIconItem
@@ -49,9 +49,12 @@ Rectangle {
             style: Text.Raised
             styleColor: "#000"
             color: "#eee"
-            
 
-            text: userInfoProvider.userName
+            Component.onCompleted: {
+                text = userInfoProvider.userName
+            }
+
+            //text: userInfoProvider.userName
         }
 
     }
