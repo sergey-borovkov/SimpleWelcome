@@ -45,101 +45,101 @@ SWApp* SWApp::self()
 }
 
 SWApp::SWApp()
-  : KUniqueApplication(),
-    m_inited(false)
+    : KUniqueApplication(),
+      m_inited(false)
 {
 
-  m_viewer = new QmlApplicationViewer();
-  m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
+    m_viewer = new QmlApplicationViewer();
+    m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
-  // Window transparency
-  m_viewer->setAttribute(Qt::WA_TranslucentBackground);
-  m_viewer->setStyleSheet("background:transparent;");
-  
-  //kDebug() << QMovie::supportedFormats();
-  
-  //m_viewer->addImportPath("/usr/lib/kde4/imports/");
-  
-  m_appProvider = new AppProvider();
-  m_appProvider->init();
+    // Window transparency
+    m_viewer->setAttribute(Qt::WA_TranslucentBackground);
+    m_viewer->setStyleSheet("background:transparent;");
 
-  qmlRegisterType<AppEntity>("AppEntity", 1, 0, "AppEntity");
-  m_viewer->rootContext()->setContextProperty("appProvider", m_appProvider);
+    //kDebug() << QMovie::supportedFormats();
 
-  m_searchRunner = new SearchRunner();
-  m_searchRunner->init();
-  m_viewer->rootContext()->setContextProperty("searchRunner", m_searchRunner);
-  
-  m_appIconProvider = new AppIconProvider();
-  m_viewer->engine()->addImageProvider(QLatin1String("appicon"), m_appIconProvider);
+    //m_viewer->addImportPath("/usr/lib/kde4/imports/");
 
-  m_recentAppsProvider = new RecentAppsProvider();
-  m_recentAppsProvider->init();
-  m_appProvider->setAppLaunchReciever(m_recentAppsProvider);
-  m_viewer->rootContext()->setContextProperty("recentAppsProvider", m_recentAppsProvider);
+    m_appProvider = new AppProvider();
+    m_appProvider->init();
 
-  m_placesProvider = new PlacesProvider();
-  m_placesProvider->init();
-  m_viewer->rootContext()->setContextProperty("placesProvider", m_placesProvider);
+    qmlRegisterType<AppEntity>("AppEntity", 1, 0, "AppEntity");
+    m_viewer->rootContext()->setContextProperty("appProvider", m_appProvider);
 
-  m_documentsProvider = new DocumentsProvider();
-  m_documentsProvider->init();
-  m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
+    m_searchRunner = new SearchRunner();
+    m_searchRunner->init();
+    m_viewer->rootContext()->setContextProperty("searchRunner", m_searchRunner);
 
-  m_sessionProvider = new SessionProvider();
-  m_sessionProvider->init();
-  m_viewer->rootContext()->setContextProperty("sessionProvider", m_sessionProvider);
+    m_appIconProvider = new AppIconProvider();
+    m_viewer->engine()->addImageProvider(QLatin1String("appicon"), m_appIconProvider);
 
-  m_userInfoProvider = new UserInfoProvider();
-  m_userInfoProvider->init();
-  m_viewer->rootContext()->setContextProperty("userInfoProvider", m_userInfoProvider);
-  
-  m_generalIconProvider = new GeneralIconProvider();
-  m_generalIconProvider->setIsLocal(isLocal());
-  m_generalIconProvider->setSearchRunner(m_searchRunner);
-  m_generalIconProvider->setRecentAppsProvider(m_recentAppsProvider);
-  m_generalIconProvider->setPlacesProvider(m_placesProvider);
-  m_generalIconProvider->setDocumentsProvider(m_documentsProvider);
-  m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
-  m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
+    m_recentAppsProvider = new RecentAppsProvider();
+    m_recentAppsProvider->init();
+    m_appProvider->setAppLaunchReciever(m_recentAppsProvider);
+    m_viewer->rootContext()->setContextProperty("recentAppsProvider", m_recentAppsProvider);
 
-  m_viewer->showExpanded();
-  m_viewer->showFullScreen();
+    m_placesProvider = new PlacesProvider();
+    m_placesProvider->init();
+    m_viewer->rootContext()->setContextProperty("placesProvider", m_placesProvider);
 
-  QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
-  
-  if(isLocal())
-    m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
-  else
-    m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
+    m_documentsProvider = new DocumentsProvider();
+    m_documentsProvider->init();
+    m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
 
-  QTimer::singleShot(1000, this, SLOT(init()));
-  
-  setQuitOnLastWindowClosed(false);
+    m_sessionProvider = new SessionProvider();
+    m_sessionProvider->init();
+    m_viewer->rootContext()->setContextProperty("sessionProvider", m_sessionProvider);
+
+    m_userInfoProvider = new UserInfoProvider();
+    m_userInfoProvider->init();
+    m_viewer->rootContext()->setContextProperty("userInfoProvider", m_userInfoProvider);
+
+    m_generalIconProvider = new GeneralIconProvider();
+    m_generalIconProvider->setIsLocal(isLocal());
+    m_generalIconProvider->setSearchRunner(m_searchRunner);
+    m_generalIconProvider->setRecentAppsProvider(m_recentAppsProvider);
+    m_generalIconProvider->setPlacesProvider(m_placesProvider);
+    m_generalIconProvider->setDocumentsProvider(m_documentsProvider);
+    m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
+    m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
+
+    m_viewer->showExpanded();
+    m_viewer->showFullScreen();
+
+    QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
+
+    if(isLocal())
+        m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
+    else
+        m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
+
+    QTimer::singleShot(1000, this, SLOT(init()));
+
+    setQuitOnLastWindowClosed(false);
 }
 
 SWApp::~SWApp()
 {
-  delete m_viewer;
-  delete m_appProvider;
-  delete m_appIconProvider;
-  delete m_searchRunner;
-  delete m_generalIconProvider;
-  delete m_recentAppsProvider;
-  delete m_placesProvider;
-  delete m_documentsProvider;
-  delete m_sessionProvider;
-  delete m_userInfoProvider;
-  m_viewer = NULL;
-  m_appProvider = NULL;
-  m_appIconProvider = NULL;
-  m_searchRunner = NULL;
-  m_generalIconProvider = NULL;
-  m_recentAppsProvider = NULL;
-  m_placesProvider = NULL;
-  m_documentsProvider = NULL;
-  m_sessionProvider = NULL;
-  m_userInfoProvider = NULL;
+    delete m_viewer;
+    delete m_appProvider;
+    delete m_appIconProvider;
+    delete m_searchRunner;
+    delete m_generalIconProvider;
+    delete m_recentAppsProvider;
+    delete m_placesProvider;
+    delete m_documentsProvider;
+    delete m_sessionProvider;
+    delete m_userInfoProvider;
+    m_viewer = NULL;
+    m_appProvider = NULL;
+    m_appIconProvider = NULL;
+    m_searchRunner = NULL;
+    m_generalIconProvider = NULL;
+    m_recentAppsProvider = NULL;
+    m_placesProvider = NULL;
+    m_documentsProvider = NULL;
+    m_sessionProvider = NULL;
+    m_userInfoProvider = NULL;
 }
 
 int SWApp::newInstance()
@@ -150,26 +150,26 @@ int SWApp::newInstance()
 
 bool SWApp::event(QEvent *event)
 {
-  return KUniqueApplication::event(event);
+    return KUniqueApplication::event(event);
 }
 
 void SWApp::init(void)
 {
-  if(m_inited)
-    return;
-  
-  m_inited = true;
-  
+    if(m_inited)
+        return;
+
+    m_inited = true;
+
 }
 
 bool SWApp::isLocal(void)
 {
-  QString appPath = applicationFilePath();
-  
-  if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
-    return false;
-  
-  return true;
+    QString appPath = applicationFilePath();
+
+    if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
+        return false;
+
+    return true;
 }
 
 #include "swapp.moc"

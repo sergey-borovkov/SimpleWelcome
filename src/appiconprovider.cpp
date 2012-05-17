@@ -28,9 +28,9 @@
 #include <KDebug>
 
 AppIconProvider::AppIconProvider()
-  : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
+    : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
 {
-  
+
 }
 
 AppIconProvider::~AppIconProvider()
@@ -40,21 +40,21 @@ AppIconProvider::~AppIconProvider()
 
 QPixmap AppIconProvider::requestPixmap(const QString &name, QSize *size, const QSize &requestedSize)
 {
-  KIcon icon(name);
+    KIcon icon(name);
 
-  size->setWidth(128);
-  size->setHeight(128);
+    size->setWidth(128);
+    size->setHeight(128);
 
-  QPixmap iconPixmap;
-  
-  if (requestedSize.isEmpty())
-  {
-    iconPixmap = icon.pixmap(128, 128, QIcon::Normal, QIcon::On);
-  }
-  else
-  {
-    iconPixmap = icon.pixmap(requestedSize.width(), requestedSize.height(), QIcon::Normal, QIcon::On);
-  }
+    QPixmap iconPixmap;
 
-  return iconPixmap;
+    if (requestedSize.isEmpty())
+    {
+        iconPixmap = icon.pixmap(128, 128, QIcon::Normal, QIcon::On);
+    }
+    else
+    {
+        iconPixmap = icon.pixmap(requestedSize.width(), requestedSize.height(), QIcon::Normal, QIcon::On);
+    }
+
+    return iconPixmap;
 }
