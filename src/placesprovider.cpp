@@ -41,59 +41,56 @@ PlacesProvider::~PlacesProvider(void)
 
 void PlacesProvider::init(void)
 {
-  reload();
+    reload();
 }
 
 void PlacesProvider::reload(void)
 {
-  m_placesNames.clear();
-  m_placesUrls.clear();
-  m_placesIcons.clear();
-  
-  KFilePlacesModel *places = new KFilePlacesModel();
+    m_placesNames.clear();
+    m_placesUrls.clear();
+    m_placesIcons.clear();
 
-  for(int i = 0; i < places->rowCount(); i++)
+    KFilePlacesModel *places = new KFilePlacesModel();
+
+    for(int i = 0; i < places->rowCount(); i++)
     {
-      QVariant variantName = places->index(i, 0).data(Qt::DisplayRole);
-      QVariant variantUrl = places->index(i, 0).data(KFilePlacesModel::UrlRole);
-      QVariant variantIcon = places->index(i, 0).data(Qt::DecorationRole);
+        QVariant variantName = places->index(i, 0).data(Qt::DisplayRole);
+        QVariant variantUrl = places->index(i, 0).data(KFilePlacesModel::UrlRole);
+        QVariant variantIcon = places->index(i, 0).data(Qt::DecorationRole);
 
-      //m_hiddenPlaces.append(variantUrl.toString());
+        //m_hiddenPlaces.append(variantUrl.toString());
+        //button = new AppButton(variantIcon.value<QIcon>(), variantName.toString(), variantUrl.toString(), variantUrl.toString());
+        //gridWidgetGroup->append(button);
 
-      //button = new AppButton(variantIcon.value<QIcon>(), variantName.toString(), variantUrl.toString(), variantUrl.toString());
-
-      //gridWidgetGroup->append(button);
-
-      m_placesNames.append(variantName.toString());
-      m_placesUrls.append(variantUrl.toString());
-      m_placesIcons.append(variantIcon.value<QIcon>());      
+        m_placesNames.append(variantName.toString());
+        m_placesUrls.append(variantUrl.toString());
+        m_placesIcons.append(variantIcon.value<QIcon>());
     }
 
-  
-  delete places;
+    delete places;
 }
 
 QStringList PlacesProvider::getPlacesList(void)
 {
-  return m_placesNames;
+    return m_placesNames;
 }
 
 void PlacesProvider::runPlace(const QString &name)
 {
-  if(! m_placesNames.contains(name))
-    return;
+    if(! m_placesNames.contains(name))
+        return;
 
-  KRun *krunner = new KRun(KUrl(m_placesUrls[m_placesNames.indexOf(name)]), QApplication::activeWindow());
+    KRun *krunner = new KRun(KUrl(m_placesUrls[m_placesNames.indexOf(name)]), QApplication::activeWindow());
 
-  Q_UNUSED(krunner);
+    Q_UNUSED(krunner);
 }
 
 QIcon PlacesProvider::getPlaceIcon(const QString &name)
 {
-  if(m_placesNames.contains(name))
-    return m_placesIcons[m_placesNames.indexOf(name)];
+    if(m_placesNames.contains(name))
+        return m_placesIcons[m_placesNames.indexOf(name)];
 
-  return QIcon();
+    return QIcon();
 }
 
 
