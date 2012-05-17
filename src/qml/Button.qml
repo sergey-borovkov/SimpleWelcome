@@ -5,34 +5,10 @@ Item {
 
     width: 120
     height: 140
-    
-    property color buttonColor: "lightblue"
-    property color onHoverColor: "gold"
-    property color borderColor: "white"
 
-    property string entityName: ""
-    property string entryPath: ""
-    
-    property alias label: buttonLabel.text
-    property alias iconUrl: buttonIcon.source
-
-    property string queryMatchName: ""
-    property string type: "app"
-    property string name: ""
-
-    signal triggered(string name)
-    
-    /*
-    Image {
-        id: buttonIconBackground
-        source: "image://generalicon/asset/button_bg.png"
-        width: 78
-        height: 78
-        anchors.top: parent.top
-        anchors.topMargin: 0
-        anchors.horizontalCenter: parent.horizontalCenter
-    }
-    */
+    property string label: ""
+    property string iconUrl: ""
+    property variant clickCallbackData: "DATA"
 
     /*
     Image {
@@ -48,7 +24,7 @@ Item {
     
     Image {
         id: buttonIcon
-        source: "image://appicon/yellow"
+        source: parent.iconUrl
         width: 64
         height: 64
         anchors.top: parent.top
@@ -77,18 +53,6 @@ Item {
         }
     }
 
-    /*
-    Image {
-        id: buttonIconBackgroundGlare
-        source: "image://generalicon/asset/button_glare.png"
-        width: 78
-        height: 78
-        anchors.top: parent.top
-        anchors.topMargin: 0
-        anchors.horizontalCenter: parent.horizontalCenter
-    }
-    */
-    
     Text {
         id: buttonLabel
         width: parent.width
@@ -106,43 +70,12 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.Wrap
 
-        text: "button label"
+        text: parent.label
     }
     
     signal buttonClick()
-    onButtonClick: {
-        //console.log(buttonLabel.text + " - " + buttonLabel.text + " clicked")
-        /*
-        var tmpText = iconUrl
-        iconUrl = ""
-        iconUrl = tmpText
-        */
-        if(type == "recentApp")
-        {
-            recentAppsProvider.runRecentApp(name);
-        }
-        else if(type == "place")
-        {
-            placesProvider.runPlace(name);
-        }
-        else if(type == "document")
-        {
-            documentsProvider.runDoc(name);
-        }
-        else if(queryMatchName.length == 0) // If app
-        {
-            appProvider.runEntity(entityName);
-        }
-        else // If queryMatch
-        {
-            searchRunner.runMatch(queryMatchName);
-        }
-
-        page.reloadTabs();
-
-        button.triggered(button.name);
-        
-        //Qt.quit();
+    onButtonClick: function(data) {
+        console.log("BLABLA: " + data);
     }
 
     function hover(pop)
@@ -162,11 +95,9 @@ Item {
 
         anchors.fill: parent
         
-        onClicked: buttonClick()
-        hoverEnabled: true
+        onClicked: buttonClick(clickCallbackData)
         onEntered: hover(true)
         onExited: hover(false)
+        hoverEnabled: true
     }
-
-    //color: buttonMouseArea.pressed ? Qt.darker(buttonColor, 1.5) : buttonColor
 }

@@ -7,10 +7,10 @@ Item {
 
     width: 40; height: 25
 
-    Rectangle {
+    Item {
         id: rectangle
-        border.color: "white"
-        anchors.fill: parent
+        //border.color: "white"
+        //anchors.fill: parent
     }
 
     MouseArea {
