@@ -35,11 +35,13 @@ AppIconProvider::AppIconProvider()
 
 AppIconProvider::~AppIconProvider()
 {
-
+    qDebug() << "DESTROY DESTROY DESTROY !!!";
 }
 
 QPixmap AppIconProvider::requestPixmap(const QString &name, QSize *size, const QSize &requestedSize)
 {
+    qDebug() << "REQUEST REQUEST REQUEST !!!";
+
     KIcon icon(name);
 
     size->setWidth(128);

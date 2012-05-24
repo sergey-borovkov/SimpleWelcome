@@ -70,9 +70,6 @@ SWApp::SWApp()
     m_searchRunner->init();
     m_viewer->rootContext()->setContextProperty("searchRunner", m_searchRunner);
 
-    m_appIconProvider = new AppIconProvider();
-    m_viewer->engine()->addImageProvider(QLatin1String("appicon"), m_appIconProvider);
-
     m_recentAppsProvider = new RecentAppsProvider();
     m_recentAppsProvider->init();
     m_appProvider->setAppLaunchReciever(m_recentAppsProvider);
@@ -102,6 +99,7 @@ SWApp::SWApp()
     m_generalIconProvider->setDocumentsProvider(m_documentsProvider);
     m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
+    m_viewer->engine()->addImageProvider(QLatin1String("appicon"), m_appIconProvider = new AppIconProvider());//m_generalIconProvider);
 
     m_viewer->showExpanded();
     m_viewer->showFullScreen();
@@ -122,24 +120,14 @@ SWApp::~SWApp()
 {
     delete m_viewer;
     delete m_appProvider;
-    delete m_appIconProvider;
     delete m_searchRunner;
-    delete m_generalIconProvider;
+//    delete m_generalIconProvider;
     delete m_recentAppsProvider;
     delete m_placesProvider;
     delete m_documentsProvider;
     delete m_sessionProvider;
     delete m_userInfoProvider;
-    m_viewer = NULL;
-    m_appProvider = NULL;
-    m_appIconProvider = NULL;
-    m_searchRunner = NULL;
-    m_generalIconProvider = NULL;
-    m_recentAppsProvider = NULL;
-    m_placesProvider = NULL;
-    m_documentsProvider = NULL;
-    m_sessionProvider = NULL;
-    m_userInfoProvider = NULL;
+//    delete m_appIconProvider;
 }
 
 int SWApp::newInstance()
