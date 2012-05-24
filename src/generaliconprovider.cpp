@@ -59,7 +59,12 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
 
     //kDebug() << "GOT: " << name << " and TYPE: " << iconType << " and NAME: " << iconName;
 
-    if(iconType == "search" && m_searchRunner != NULL)
+    qDebug() << "WOWOWOW" << iconType;
+    if(iconType == "appicon")
+    {
+        icon = KIcon(name);
+    }
+    else if(iconType == "search" && m_searchRunner != NULL)
     {
         icon = KIcon(m_searchRunner->getMatchIcon(iconName));
     }
