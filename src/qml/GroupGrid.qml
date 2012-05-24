@@ -10,6 +10,7 @@ Item {
     property string gridType: "apps"
 
     property variant _GridGroupComp
+    property variant _buttonComp
     
     Column {
         id: groupGridContainer
@@ -20,6 +21,12 @@ Item {
 
     function preload()
     {
+        _buttonComp = Qt.createComponent("Button.qml");
+        if(_buttonComp.status == Component.Error)
+        {
+            console.log("Component loading error: " + _buttonComp.errorString());
+        }
+
         _GridGroupComp = Qt.createComponent("GridGroup.qml");
         if(_GridGroupComp.status == Component.Ready) {
             load();
@@ -119,7 +126,28 @@ Item {
 
         for(var i = 0; i < recentAppNames.length; i++)
         {
-            gridGroup.addButton({"type": "recentApp", "name": recentAppNames[i]});
+            //gridGroup.addButton({"type": "recentApp", "name": recentAppNames[i]});
+            var appName = recentAppNames[i];
+            
+            var button = gridGroup.addObject(_buttonComp,
+            {
+                "label": appName,
+                "iconUrl": "image://generalicon/recentApp/" + appName
+            });
+
+            function createRecentAppCallback(data)
+            {
+                var name = data;
+
+                function callback()
+                {
+                    recentAppsProvider.runRecentApp(name);
+                }
+
+                return callback;
+            }
+
+            button.buttonClick.connect(createRecentAppCallback(appName));
         }
 
         // Places
@@ -130,7 +158,28 @@ Item {
 
         for(var i = 0; i < placesNames.length; i++)
         {
-            gridGroup.addButton({"type": "place", "name": placesNames[i]});
+            //gridGroup.addButton({"type": "place", "name": placesNames[i]});
+            var placeName = placesNames[i];
+
+            var button = gridGroup.addObject(_buttonComp,
+            {
+                "label": placeName,
+                "iconUrl": "image://generalicon/place/" + placeName
+            });
+
+            function createPlaceCallback(data)
+            {
+                var name = data;
+
+                function callback()
+                {
+                    placesProvider.runPlace(name);
+                }
+
+                return callback;
+            }
+
+            button.buttonClick.connect(createPlaceCallback(placeName));
         }
         
         // Documents
@@ -141,7 +190,28 @@ Item {
 
         for(var i = 0; i < documentNames.length; i++)
         {
-            gridGroup.addButton({"type": "document", "name": documentNames[i]});
+            //gridGroup.addButton({"type": "document", "name": documentNames[i]});
+            var documentName = documentNames[i];
+
+            var button = gridGroup.addObject(_buttonComp,
+            {
+                "label": documentName,
+                "iconUrl": "image://generalicon/document/" + documentName
+            });
+
+            function createDocumentCallback(data)
+            {
+                var name = data;
+
+                function callback()
+                {
+                    documentsProvider.runDoc(name);
+                }
+
+                return callback;
+            }
+
+            button.buttonClick.connect(createDocumentCallback(documentName));            
         }
         
     }

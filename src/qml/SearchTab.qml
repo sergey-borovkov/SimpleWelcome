@@ -7,11 +7,19 @@ Item {
     anchors.topMargin: 16
 
     //signal newMatchesFound()
-    
+
+    property variant _buttonComp
+
     Component.onCompleted: load();
 
     function load()
     {
+        _buttonComp = Qt.createComponent("Button.qml");
+        if(_buttonComp.status == Component.Error)
+        {
+            console.log("Component loading error: " + _buttonComp.errorString());
+        }
+
         groupGrid.preload();
         searchRunner.newSearchMatchesFound.connect(newMatchesFound);
     }
@@ -38,9 +46,28 @@ Item {
             var matchName = matchesList[i];
             var groupName = searchRunner.getMatchGroupName(matchName);
 
-            groups[groupName].addQueryMatch(matchName);
+            //groups[groupName].addQueryMatch(matchName);
             //console.log("Group:", searchRunner.getMatchGroupName(matchesList[i]), "Match:", matchesList[i]);
-            
+
+            var button = groups[groupName].addObject(_buttonComp,
+            {
+                "label": matchName,
+                "iconUrl": "image://generalicon/search/" + matchName
+            });
+
+            function createMatchCallback(data)
+            {
+                var name = data;
+
+                function callback()
+                {
+                    searchRunner.runMatch(name);
+                }
+
+                return callback;
+            }
+
+            button.buttonClick.connect(createMatchCallback(matchName));
         }
     }
 
