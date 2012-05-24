@@ -99,7 +99,6 @@ SWApp::SWApp()
     m_generalIconProvider->setDocumentsProvider(m_documentsProvider);
     m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
-    m_viewer->engine()->addImageProvider(QLatin1String("appicon"), m_appIconProvider = new AppIconProvider());//m_generalIconProvider);
 
     m_viewer->showExpanded();
     m_viewer->showFullScreen();

@@ -5,14 +5,14 @@ Item {
 
     width: 120
     height: 140
-    
+
     property color buttonColor: "lightblue"
     property color onHoverColor: "gold"
     property color borderColor: "white"
 
     property string entityName: ""
     property string entryPath: ""
-    
+
     property alias label: buttonLabel.text
     property alias iconUrl: buttonIcon.source
 
@@ -21,7 +21,7 @@ Item {
     property string name: ""
 
     signal triggered(string name)
-    
+
     /*
     Image {
         id: buttonIconBackground
@@ -45,10 +45,10 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
     }
     */
-    
+
     Image {
         id: buttonIcon
-        source: "image://appicon/yellow"
+        source: "image://generalicon/appicon/yellow"
         width: 64
         height: 64
         anchors.top: parent.top
@@ -56,7 +56,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
 
         smooth: true
-        
+
         states: [
             State {
                 name: "NORMAL"
@@ -88,7 +88,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
     }
     */
-    
+
     Text {
         id: buttonLabel
         width: parent.width
@@ -108,7 +108,7 @@ Item {
 
         text: "button label"
     }
-    
+
     signal buttonClick()
     onButtonClick: {
         //console.log(buttonLabel.text + " - " + buttonLabel.text + " clicked")
@@ -141,7 +141,7 @@ Item {
         page.reloadTabs();
 
         button.triggered(button.name);
-        
+
         //Qt.quit();
     }
 
@@ -156,12 +156,12 @@ Item {
             buttonIcon.state = "NORMAL"
         }
     }
-    
+
     MouseArea {
         id: buttonMouseArea
 
         anchors.fill: parent
-        
+
         onClicked: buttonClick()
         hoverEnabled: true
         onEntered: hover(true)

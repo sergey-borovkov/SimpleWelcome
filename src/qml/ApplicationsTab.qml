@@ -10,7 +10,7 @@ Item {
     property variant _buttonComp
 
     Component.onCompleted: preload();
-    
+
     function preload()
     {
         _buttonComp = Qt.createComponent("Button.qml");
@@ -33,7 +33,7 @@ Item {
     {
         setGroup();
     }
-    
+
     function setGroup(groupName)
     {
         if(!groupName)
@@ -48,7 +48,7 @@ Item {
 
                 if(groupEntries.length <= 0)
                   continue;
-                
+
                 var button = screenView.addObject(_buttonComp,
                 {
                     "label": groups[i],
@@ -94,7 +94,7 @@ Item {
                 var button = screenView.addObject(_buttonComp,
                 {
                     "label": entity.name,
-                    "iconUrl": "image://appicon/" + entity.iconName
+                    "iconUrl": "image://generalicon/appicon/" + entity.iconName
                 });
 
                 function createEntityCallback(data)
@@ -113,7 +113,7 @@ Item {
             }
         }
     }
-    
+
     ScreenView
     {
         id: screenView
@@ -154,13 +154,13 @@ Item {
     }
 
     // -- Utilities
-    
+
     function _getRootGroups()
     {
         var rootGroups = [];
-        
+
         var fullRootGroups = appProvider.getRootGroups();
-        
+
         for(var i = 0; i < fullRootGroups.length; i++)
         {
             var groupName = fullRootGroups[i];

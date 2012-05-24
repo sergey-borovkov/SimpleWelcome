@@ -7,7 +7,6 @@
 
 #include "appprovider.h"
 #include "appentity.h"
-#include "appiconprovider.h"
 #include "searchrunner.h"
 #include "generaliconprovider.h"
 #include "recentappsprovider.h"
@@ -39,7 +38,6 @@ private:
     QmlApplicationViewer *m_viewer;
 
     AppProvider *m_appProvider;
-    AppIconProvider *m_appIconProvider;
     SearchRunner *m_searchRunner;
     GeneralIconProvider *m_generalIconProvider;
     RecentAppsProvider *m_recentAppsProvider;

@@ -18,7 +18,6 @@ set(rosa-launcher-qtquick_SRCS src/main.cpp
 							   src/swapp.cpp
 							   src/appentity.cpp
 							   src/appprovider.cpp
-							   src/appiconprovider.cpp
 							   src/searchrunner.cpp
 							   src/generaliconprovider.cpp
 							   src/recentappsprovider.cpp

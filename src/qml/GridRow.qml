@@ -19,8 +19,8 @@ Item {
         if(_AppButtonComp.status == Component.Error) {
             console.log("Component loading error: " + _AppButtonComp.errorString());
         }
-    }    
-    
+    }
+
     Row {
         id: gridRowContainer
         anchors.fill: parent
@@ -33,8 +33,8 @@ Item {
         if(entity.isApp)
         {
             //console.log(entity.name);
-            var button = _AppButtonComp.createObject(gridRowContainer, { "buttonColor": "lightgrey", "label": entity.name, "entryPath": entity.entryPath, "entityName": entity.name, "iconUrl": "image://appicon/" + entity.iconName });
-        }        
+            var button = _AppButtonComp.createObject(gridRowContainer, { "buttonColor": "lightgrey", "label": entity.name, "entryPath": entity.entryPath, "entityName": entity.name, "iconUrl": "image://generalicon/appicon/" + entity.iconName });
+        }
     }
 
     function addQueryMatch(queryMatchName)
@@ -60,7 +60,7 @@ Item {
 
         return object;
     }
-    
+
     function _size()
     {
         return gridRowContainer.children.length;
