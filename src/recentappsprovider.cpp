@@ -39,119 +39,119 @@ RecentAppsProvider::RecentAppsProvider(void) : QObject()
 
 RecentAppsProvider::~RecentAppsProvider(void)
 {
-  _writeRecentApps();
+    _writeRecentApps();
 }
 
 void RecentAppsProvider::init(void)
 {
-  _readRecentApps();
-  _fillEntries();
+    _readRecentApps();
+    _fillEntries();
 }
 
 QStringList RecentAppsProvider::getRecentAppsList(void)
 {
-  return m_recentAppsEntriesList;
+    return m_recentAppsEntriesList;
 }
 
 QString RecentAppsProvider::getRecentAppIconName(const QString &name)
 {
-  if(m_recentAppsEntries.contains(name))
-      return m_recentAppsEntries[name]->readIcon();
+    if(m_recentAppsEntries.contains(name))
+        return m_recentAppsEntries[name]->readIcon();
 
-  return QString();
+    return QString();
 }
 
 void RecentAppsProvider::runRecentApp(const QString &name)
 {
-  if(! m_recentAppsEntries.contains(name))
-    return;
+    if(! m_recentAppsEntries.contains(name))
+        return;
 
-  KRun *krunner = new KRun(KUrl(m_recentAppsEntries[name]->fileName()), QApplication::activeWindow());
+    KRun *krunner = new KRun(KUrl(m_recentAppsEntries[name]->fileName()), QApplication::activeWindow());
 
-  Q_UNUSED(krunner);
+    Q_UNUSED(krunner);
 }
 
 void RecentAppsProvider::registerLaunchedApp(const QString &name)
 {
-  m_recentAppsList.removeAll(name);
-  m_recentAppsList.prepend(name);
-  _writeRecentApps();
-  QString fullname = _fillEntry(name);
+    m_recentAppsList.removeAll(name);
+    m_recentAppsList.prepend(name);
+    _writeRecentApps();
+    QString fullname = _fillEntry(name);
 
-  if(! fullname.isNull())
-    m_recentAppsEntriesList.prepend(fullname);
+    if(! fullname.isNull())
+        m_recentAppsEntriesList.prepend(fullname);
 }
 
 
 void RecentAppsProvider::_readRecentApps(void)
 {
-  KSharedConfig::Ptr config = KGlobal::config();
-  KConfigGroup *configGroup = new KConfigGroup(config, "General");
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup *configGroup = new KConfigGroup(config, "General");
 
-  m_recentAppsList = configGroup->readEntry("Recent applications", QStringList());  
+    m_recentAppsList = configGroup->readEntry("Recent applications", QStringList());
 
-  //delete config; // Smart pointer used
-  delete configGroup;
+    //delete config; // Smart pointer used
+    delete configGroup;
 }
 
 void RecentAppsProvider::_writeRecentApps(void)
 {
-  KSharedConfig::Ptr config = KGlobal::config();
-  KConfigGroup *configGroup = new KConfigGroup(config, "General");
+    KSharedConfig::Ptr config = KGlobal::config();
+    KConfigGroup *configGroup = new KConfigGroup(config, "General");
 
-  configGroup->writeEntry("Recent applications", m_recentAppsList);
+    configGroup->writeEntry("Recent applications", m_recentAppsList);
 
-  configGroup->sync();
+    configGroup->sync();
 
-  //delete config; // Smart pointer used
-  delete configGroup;
+    //delete config; // Smart pointer used
+    delete configGroup;
 }
 
 void RecentAppsProvider::_clearEntries(void)
 {
- for(QHash<QString, KDesktopFile*>::iterator it = m_recentAppsEntries.begin(); it != m_recentAppsEntries.end(); it++)
-      delete it.value();
+    for(QHash<QString, KDesktopFile*>::iterator it = m_recentAppsEntries.begin(); it != m_recentAppsEntries.end(); it++)
+        delete it.value();
 
-  m_recentAppsEntries.clear();
-  m_recentAppsEntriesList.clear();
+    m_recentAppsEntries.clear();
+    m_recentAppsEntriesList.clear();
 }
 
 void RecentAppsProvider::_fillEntries(void)
 {
-  _clearEntries();
- 
-  for(int i = 0; i < m_recentAppsList.size(); i++)
-    {
-      QString fileName = m_recentAppsList[i];
-      //kDebug() << fileName;
-      QString name = _fillEntry(fileName);
+    _clearEntries();
 
-      if(! name.isNull())
-        m_recentAppsEntriesList.append(name);
+    for(int i = 0; i < m_recentAppsList.size(); i++)
+    {
+        QString fileName = m_recentAppsList[i];
+        //kDebug() << fileName;
+        QString name = _fillEntry(fileName);
+
+        if(! name.isNull())
+            m_recentAppsEntriesList.append(name);
     }
 }
 
 QString RecentAppsProvider::_fillEntry(const QString &fileName)
 {
-  KDesktopFile *desktopFile;
+    KDesktopFile *desktopFile;
 
-  if(! KDesktopFile::isDesktopFile(fileName))
-    return QString();
+    if(! KDesktopFile::isDesktopFile(fileName))
+        return QString();
 
-  if(! QFile::exists(fileName))
-    return QString();
-          
-  desktopFile = new KDesktopFile(fileName);
+    if(! QFile::exists(fileName))
+        return QString();
 
-  if(desktopFile->noDisplay())
+    desktopFile = new KDesktopFile(fileName);
+
+    if(desktopFile->noDisplay())
     {
-      delete desktopFile;
-      return QString();
+        delete desktopFile;
+        return QString();
     }
 
-  m_recentAppsEntries[desktopFile->readName()] = desktopFile;
+    m_recentAppsEntries[desktopFile->readName()] = desktopFile;
 
-  return desktopFile->readName();
+    return desktopFile->readName();
 }
 
 #include "recentappsprovider.moc"

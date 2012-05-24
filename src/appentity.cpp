@@ -33,48 +33,47 @@ AppEntity::AppEntity() : QDeclarativeItem(), m_valid(false)
 
 AppEntity::AppEntity(KService *service) : QDeclarativeItem(), m_valid(true)
 {
-  m_name = service->name();
-  m_isApp = true;
-  m_display = true;
-  m_iconName = service->icon();
-  m_comment = service->comment();
+    m_name = service->name();
+    m_isApp = true;
+    m_display = true;
+    m_iconName = service->icon();
+    m_comment = service->comment();
 
-  m_genericName = service->genericName();
-  m_menuId = service->menuId();
-  m_entryPath = service->entryPath();
+    m_genericName = service->genericName();
+    m_menuId = service->menuId();
+    m_entryPath = service->entryPath();
 
-  /*
-  kDebug() << "----------------";
-  kDebug() << "Actions: " << service->actions().size();
-  kDebug() << "desktopEntryName: " << service->desktopEntryName();
-  kDebug() << "desktopEntryPath: " << service->desktopEntryPath();
-  kDebug() << "entryPath: " << service->entryPath();
-  kDebug() << "exec: " << service->exec();
-  kDebug() << "path: " << service->path();
-  kDebug() << "type: " << service->type();
-  */
+    /*
+    kDebug() << "----------------";
+    kDebug() << "Actions: " << service->actions().size();
+    kDebug() << "desktopEntryName: " << service->desktopEntryName();
+    kDebug() << "desktopEntryPath: " << service->desktopEntryPath();
+    kDebug() << "entryPath: " << service->entryPath();
+    kDebug() << "exec: " << service->exec();
+    kDebug() << "path: " << service->path();
+    kDebug() << "type: " << service->type();
+    */
 }
 
 AppEntity::AppEntity(KServiceGroup *group) : QDeclarativeItem(), m_valid(true)
 {
-  m_name = group->name();
-  m_isApp = false;
-  m_display = true;
-  m_iconName = group->icon();
-  m_comment = group->comment();
+    m_name = group->name();
+    m_isApp = false;
+    m_display = true;
+    m_iconName = group->icon();
+    m_comment = group->comment();
 
-  KServiceGroup::List list = group->entries(true, // sorted
-                                            true, // exclude no display
-                                            false, // exclude separator items
-                                            false // don't sort by generic name
-                                            );
+    KServiceGroup::List list = group->entries(true, // sorted
+                                              true, // exclude no display
+                                              false, // exclude separator items
+                                              false // don't sort by generic name
+                                              );
 
-  for(KServiceGroup::List::ConstIterator it = list.begin(); it != list.end(); it++)
+    for(KServiceGroup::List::ConstIterator it = list.begin(); it != list.end(); it++)
     {
-      
-      const KSycocaEntry *sycocaEntry = ((*it).data());
+        const KSycocaEntry *sycocaEntry = ((*it).data());
 
-      m_entries.append(sycocaEntry->name());
+        m_entries.append(sycocaEntry->name());
     }
 }
 
@@ -85,12 +84,12 @@ AppEntity::~AppEntity(void)
 
 QDebug operator<<(QDebug dbg, const AppEntity *entity)
 {
-  if(entity->isApp())
-    dbg.nospace() << "AppEntity(app): " << entity->name() << ", " << entity->genericName() << ")";
-  else
-    dbg.nospace() << "AppEntity(group): " << entity->name() << ", " << entity->entries().size() << ")";
+    if(entity->isApp())
+        dbg.nospace() << "AppEntity(app): " << entity->name() << ", " << entity->genericName() << ")";
+    else
+        dbg.nospace() << "AppEntity(group): " << entity->name() << ", " << entity->entries().size() << ")";
 
-  return dbg.space();
+    return dbg.space();
 }
 
 #include "appentity.moc"

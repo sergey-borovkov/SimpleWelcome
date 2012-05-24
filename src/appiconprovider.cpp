@@ -28,33 +28,35 @@
 #include <KDebug>
 
 AppIconProvider::AppIconProvider()
-  : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
+    : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
 {
-  
+
 }
 
 AppIconProvider::~AppIconProvider()
 {
-
+    qDebug() << "DESTROY DESTROY DESTROY !!!";
 }
 
 QPixmap AppIconProvider::requestPixmap(const QString &name, QSize *size, const QSize &requestedSize)
 {
-  KIcon icon(name);
+    qDebug() << "REQUEST REQUEST REQUEST !!!";
 
-  size->setWidth(128);
-  size->setHeight(128);
+    KIcon icon(name);
 
-  QPixmap iconPixmap;
-  
-  if (requestedSize.isEmpty())
-  {
-    iconPixmap = icon.pixmap(128, 128, QIcon::Normal, QIcon::On);
-  }
-  else
-  {
-    iconPixmap = icon.pixmap(requestedSize.width(), requestedSize.height(), QIcon::Normal, QIcon::On);
-  }
+    size->setWidth(128);
+    size->setHeight(128);
 
-  return iconPixmap;
+    QPixmap iconPixmap;
+
+    if (requestedSize.isEmpty())
+    {
+        iconPixmap = icon.pixmap(128, 128, QIcon::Normal, QIcon::On);
+    }
+    else
+    {
+        iconPixmap = icon.pixmap(requestedSize.width(), requestedSize.height(), QIcon::Normal, QIcon::On);
+    }
+
+    return iconPixmap;
 }

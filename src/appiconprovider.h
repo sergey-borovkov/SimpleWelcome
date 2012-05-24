@@ -5,11 +5,11 @@
 
 class AppIconProvider : public QDeclarativeImageProvider
 {
- public:
-  AppIconProvider(void);
-  ~AppIconProvider(void);
+public:
+    AppIconProvider(void);
+    ~AppIconProvider(void);
 
-  QPixmap requestPixmap(const QString &name, QSize *size, const QSize &requestedSize);
+    QPixmap requestPixmap(const QString &name, QSize *size, const QSize &requestedSize);
 };
 
 #endif // __appiconprovider_h_

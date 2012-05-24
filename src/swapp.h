@@ -33,8 +33,8 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void init(void);
-    
- private:
+
+private:
     bool m_inited;
     QmlApplicationViewer *m_viewer;
 
