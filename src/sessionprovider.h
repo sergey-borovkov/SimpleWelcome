@@ -6,25 +6,25 @@
 
 class SessionProvider : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
     //Q_PROPERTY(QString searchQuery READ getSearchQuery WRITE setSearchQuery)
 public:
-  SessionProvider();
-  ~SessionProvider();
+    SessionProvider();
+    ~SessionProvider();
 
-  void init(void);
-  
+    void init(void);
+
 public slots:
-  void lock(void);
-  void shutdown(void);
-  //void setSearchQuery(const QString &queryText);
-  //QString getSearchQuery(void);
+    void lock(void);
+    void shutdown(void);
+    //void setSearchQuery(const QString &queryText);
+    //QString getSearchQuery(void);
 
-  //signals:
-  //void newSearchMatchesFound(void);
-  
+    //signals:
+    //void newSearchMatchesFound(void);
+
 private:
-  //QString m_searchQuery;
+    //QString m_searchQuery;
 
 };
 

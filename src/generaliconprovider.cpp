@@ -33,15 +33,15 @@
 #include <KIcon>
 
 GeneralIconProvider::GeneralIconProvider()
-  : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
-    m_isLocal(true),
-    m_searchRunner(0),
-    m_recentAppsProvider(0),
-    m_placesProvider(0),
-    m_documentsProvider(0),
-    m_userInfoProvider(0)
+    : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
+      m_isLocal(true),
+      m_searchRunner(0),
+      m_recentAppsProvider(0),
+      m_placesProvider(0),
+      m_documentsProvider(0),
+      m_userInfoProvider(0)
 {
-  
+
 }
 
 GeneralIconProvider::~GeneralIconProvider()
@@ -51,69 +51,73 @@ GeneralIconProvider::~GeneralIconProvider()
 
 QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, const QSize &requestedSize)
 {
-  KIcon icon;
-  QPixmap iconPixmap;
-  
-  
-  QString iconType = name.section('/', 0, 0, QString::SectionSkipEmpty);
-  QString iconName = name.section('/', 1, -1, QString::SectionSkipEmpty);
+    KIcon icon;
+    QPixmap iconPixmap;
 
-  //kDebug() << "GOT: " << name << " and TYPE: " << iconType << " and NAME: " << iconName;
+    QString iconType = name.section('/', 0, 0, QString::SectionSkipEmpty);
+    QString iconName = name.section('/', 1, -1, QString::SectionSkipEmpty);
 
-  if(iconType == "search" && m_searchRunner != NULL)
+    //kDebug() << "GOT: " << name << " and TYPE: " << iconType << " and NAME: " << iconName;
+
+    qDebug() << "WOWOWOW" << iconType;
+    if(iconType == "appicon")
     {
-      icon = KIcon(m_searchRunner->getMatchIcon(iconName));
+        icon = KIcon(name);
     }
-  else if(iconType == "recentApp" && m_recentAppsProvider != NULL)
+    else if(iconType == "search" && m_searchRunner != NULL)
     {
-      icon = KIcon(m_recentAppsProvider->getRecentAppIconName(iconName));
+        icon = KIcon(m_searchRunner->getMatchIcon(iconName));
     }
-  else if(iconType == "place" && m_placesProvider != NULL)
+    else if(iconType == "recentApp" && m_recentAppsProvider != NULL)
     {
-      icon = KIcon(m_placesProvider->getPlaceIcon(iconName));
+        icon = KIcon(m_recentAppsProvider->getRecentAppIconName(iconName));
     }
-  else if(iconType == "document" && m_documentsProvider != NULL)
+    else if(iconType == "place" && m_placesProvider != NULL)
     {
-      icon = KIcon(m_documentsProvider->getDocIconName(iconName));
+        icon = KIcon(m_placesProvider->getPlaceIcon(iconName));
     }
-  else if(iconType == "stock")
+    else if(iconType == "document" && m_documentsProvider != NULL)
     {
-      icon = KIcon(iconName);
+        icon = KIcon(m_documentsProvider->getDocIconName(iconName));
     }
-  else if(iconType == "asset")
+    else if(iconType == "stock")
     {
-      if(m_isLocal)
-        iconPixmap.load(QString("../assets/") + iconName);
-      else
-        iconPixmap.load(QString("/usr/share/rosa-launcher-qtquick/assets/") + iconName);
+        icon = KIcon(iconName);
+    }
+    else if(iconType == "asset")
+    {
+        if(m_isLocal)
+            iconPixmap.load(QString("../assets/") + iconName);
+        else
+            iconPixmap.load(QString("/usr/share/rosa-launcher-qtquick/assets/") + iconName);
 
       // TODO: Fill size struct
       
-      return iconPixmap;
-    }
-  else if(iconType == "general")
-    {
-      if(iconName == "usericon" && m_userInfoProvider != NULL)
-        icon = KIcon(m_userInfoProvider->getIconPath());
-      else
         return iconPixmap;
     }
-  else
+    else if(iconType == "general")
     {
-      return iconPixmap;
+        if(iconName == "usericon" && m_userInfoProvider != NULL)
+            icon = KIcon(m_userInfoProvider->getIconPath());
+        else
+            return iconPixmap;
+    }
+    else
+    {
+        return iconPixmap;
     }
 
-  size->setWidth(128);
-  size->setHeight(128);
+    size->setWidth(128);
+    size->setHeight(128);
 
-  if (requestedSize.isEmpty())
-  {
-    iconPixmap = icon.pixmap(128, 128, QIcon::Normal, QIcon::On);
-  }
-  else
-  {
-    iconPixmap = icon.pixmap(requestedSize.width(), requestedSize.height(), QIcon::Normal, QIcon::On);
-  }
+    if (requestedSize.isEmpty())
+    {
+        iconPixmap = icon.pixmap(128, 128, QIcon::Normal, QIcon::On);
+    }
+    else
+    {
+        iconPixmap = icon.pixmap(requestedSize.width(), requestedSize.height(), QIcon::Normal, QIcon::On);
+    }
 
-  return iconPixmap;
+    return iconPixmap;
 }
