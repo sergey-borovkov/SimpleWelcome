@@ -61,7 +61,7 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
   //kDebug() << "GOT: " << name << " and TYPE: " << iconType << " and NAME: " << iconName;
 
   if(iconType == "search" && m_searchRunner != NULL)
-    {  
+    {
       icon = KIcon(m_searchRunner->getMatchIcon(iconName));
     }
   else if(iconType == "recentApp" && m_recentAppsProvider != NULL)
@@ -87,6 +87,8 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
       else
         iconPixmap.load(QString("/usr/share/rosa-launcher-qtquick/assets/") + iconName);
 
+      // TODO: Fill size struct
+      
       return iconPixmap;
     }
   else if(iconType == "general")

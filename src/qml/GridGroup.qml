@@ -49,6 +49,17 @@ Item {
         
         _lastGridRow.addButton(buttonOpts);
     }
+
+    function addObject(component, opts)
+    {
+        if(rowsTotal == 0)
+          _addRow();
+
+        if(_lastGridRow.size >= iconsInRow)
+          _addRow();
+        
+        return _lastGridRow.addObject(component, opts);
+    }
     
     function _addRow()
     {

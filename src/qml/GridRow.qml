@@ -53,6 +53,13 @@ Item {
 
         return button;
     }
+
+    function addObject(component, opts)
+    {
+        var object = component.createObject(gridRowContainer, opts);
+
+        return object;
+    }
     
     function _size()
     {
