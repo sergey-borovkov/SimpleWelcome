@@ -4,16 +4,14 @@ Item {
     id: gridGroup
 
     width: parent.width
-    //height: childrenRect.height
-    //height: 140
-    height: rowsTotal * 140 + 16 + 32
+    height: childrenRect.height
 
     property int iconsInRow: 7
     property int iconsTotal: 0
     property int rowsTotal: 0
 
     property alias label: groupLabel.text
-    
+
     property variant _lastGridRow
     property variant _GridRowComp
 
@@ -24,7 +22,7 @@ Item {
 
         if(_lastGridRow.size >= iconsInRow)
           _addRow();
-        
+
         _lastGridRow.addEntity(entity);
     }
 
@@ -35,7 +33,7 @@ Item {
 
         if(_lastGridRow.size >= iconsInRow)
           _addRow();
-        
+
         _lastGridRow.addQueryMatch(queryMatchName);
     }
 
@@ -46,7 +44,7 @@ Item {
 
         if(_lastGridRow.size >= iconsInRow)
           _addRow();
-        
+
         _lastGridRow.addButton(buttonOpts);
     }
 
@@ -57,10 +55,10 @@ Item {
 
         if(_lastGridRow.size >= iconsInRow)
           _addRow();
-        
+
         return _lastGridRow.addObject(component, opts);
     }
-    
+
     function _addRow()
     {
         _GridRowComp = Qt.createComponent("GridRow.qml");

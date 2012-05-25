@@ -8,7 +8,7 @@ Item {
     //color: "transparent"
 
     //signal newMatchesFound()
-    
+
     Component.onCompleted: load();
 
     function load()
@@ -20,14 +20,15 @@ Item {
     {
         groupGrid.reloadWelcome();
     }
-    
+
     Flickable {
         id: view
         anchors.fill: parent
         contentWidth: parent.width
         contentHeight: groupGrid.height
-        boundsBehavior: Flickable.StopAtBounds
-        
+        boundsBehavior: Flickable.StopAtBounds // if flicking is not bound, scroll sometimes go crazy and flick far far away from corners when scrolling with mouse wheel
+        flickableDirection: Flickable.VerticalFlick
+
         Column {
             id: rowContainer
             //anchors.horizontalCenter: parent.horizontalCenter
@@ -41,7 +42,7 @@ Item {
                 gridType: "welcome"
             }
         }
-        
+
         states: State {
             name: "ShowBars"
             when: view.movingVertically || view.movingHorizontally
@@ -53,7 +54,7 @@ Item {
             NumberAnimation { properties: "opacity"; duration: 400 }
         }
     }
-    
+
     ScrollBar {
         id: verticalScrollBar
         width: 12;
@@ -65,17 +66,4 @@ Item {
         position: view.visibleArea.yPosition
         pageSize: view.visibleArea.heightRatio
     }
-
-    ScrollBar {
-        id: horizontalScrollBar
-        width: view.width - 12;
-        height: 12
-        
-        anchors.bottom: view.bottom
-        opacity: 0
-        orientation: Qt.Horizontal
-        position: view.visibleArea.xPosition
-        pageSize: view.visibleArea.widthRatio
-    }
-        
 }

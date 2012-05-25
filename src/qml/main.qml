@@ -17,7 +17,7 @@ Item {
     }
 
     NumberAnimation on opacity { to: 1.0; duration: 500 }
-    
+
     /*
     Component.onCompleted: testing()
 
@@ -40,7 +40,7 @@ Item {
         height: 64
         anchors.fill: parent
         fillMode: Image.Tile
-        source: "image://generalicon/asset/background2.png"        
+        source: "image://generalicon/asset/background2.png"
     }
     */
 
@@ -60,7 +60,7 @@ Item {
         z: -5
     }
 
-    
+
     VisualItemModel {
         id: tabListModel
 
@@ -69,7 +69,7 @@ Item {
             width: tabListView.width
             height: tabListView.height
         }
-        
+
         FirstTab {
             id: welcomeTab
             width: tabListView.width
@@ -83,7 +83,7 @@ Item {
             height: tabListView.height
         }
         */
-        
+
         ApplicationsTab {
             id: appsTab
             width: tabListView.width
@@ -100,9 +100,9 @@ Item {
     TopBar {
         id: topBar
         width: parent.width
-        
+
     }
-    
+
     Item {
         id: listViewRect
         width: parent.width
@@ -110,15 +110,16 @@ Item {
         height: parent.height - topBar.height - bottomBar.height
         clip: true
         //color: "transparent"
-        
+
         ListView {
             id: tabListView
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             //anchors.topMargin: 16
-            width: parent.width
-            height: parent.height
+            width: parent.width // probably not needed
+            height: parent.height // probably not needed
+            anchors.fill: parent
 
             model: tabListModel
 
@@ -144,5 +145,5 @@ Item {
         {
         }
     }
-    
+
 }
