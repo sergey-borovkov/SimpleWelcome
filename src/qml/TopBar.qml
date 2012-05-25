@@ -13,10 +13,10 @@ Item {
         id: userIconItem
         width: childrenRect.width
         height: childrenRect.height
-        
+
         anchors.verticalCenter: parent.verticalCenter
         x: 16
-        
+
         Image {
             id: userIcon
             source: "image://generalicon/general/usericon"
@@ -58,7 +58,7 @@ Item {
         }
 
     }
-    
+
     Item {
         //color: "white"
         width: 600
@@ -75,11 +75,11 @@ Item {
             anchors.fill: parent
             source: "image://generalicon/asset/textfield_border_bg.png"
         }
-        
+
         TextInput {
             //anchors.horizontalCenter: parent.horizontalCenter
             id: searchInput
-            width: parent.width - 24            
+            width: parent.width - 24
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             selectByMouse: true
@@ -88,7 +88,7 @@ Item {
             font.family: "Bitstream Vera Sans"
             font.italic: true
             font.pixelSize: 18
-            
+
             onTextChanged: {
                 searchTextChanged(text);
             }
@@ -103,19 +103,19 @@ Item {
     DropBox {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-        anchors.rightMargin: 16        
+        anchors.rightMargin: 16
 
         width: 180
         height: 38
     }
-    
+
     /*
     // Old Logout and Shutdown buttons
     Item {
         id: lockButton
         width: childrenRect.width
         height: childrenRect.height
-        
+
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: shutdownButton.left
         //anchors.rightMargin: 8
@@ -132,7 +132,7 @@ Item {
             id: lockButtonMouseArea
 
             anchors.fill: parent
-            
+
             onClicked: {
                 sessionProvider.lock();
             }
@@ -144,7 +144,7 @@ Item {
         id: shutdownButton
         width: childrenRect.width
         height: childrenRect.height
-        
+
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         anchors.rightMargin: 16
@@ -160,7 +160,7 @@ Item {
             id: shutdownButtonMouseArea
 
             anchors.fill: parent
-            
+
             onClicked: {
                 sessionProvider.shutdown();
             }

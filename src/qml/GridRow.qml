@@ -4,7 +4,7 @@ Item {
     id: gridRow
 
     width: parent.width
-    height: 140
+    height: childrenRect.height
 
     property int iconsInRow: 7
     property int size: _size()
@@ -23,7 +23,9 @@ Item {
 
     Row {
         id: gridRowContainer
-        anchors.fill: parent
+        width: childrenRect.width
+        height: childrenRect.height
+        //anchors.fill: parent
         spacing: (parent.width - 120 * iconsInRow) / (iconsInRow + 1)
         anchors.leftMargin: spacing
     }

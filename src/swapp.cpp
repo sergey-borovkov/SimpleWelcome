@@ -120,13 +120,11 @@ SWApp::~SWApp()
     delete m_viewer;
     delete m_appProvider;
     delete m_searchRunner;
-//    delete m_generalIconProvider;
     delete m_recentAppsProvider;
     delete m_placesProvider;
     delete m_documentsProvider;
     delete m_sessionProvider;
     delete m_userInfoProvider;
-//    delete m_appIconProvider;
 }
 
 int SWApp::newInstance()

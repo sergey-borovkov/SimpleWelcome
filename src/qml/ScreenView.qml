@@ -3,15 +3,16 @@ import QtQuick 1.1
 Item {
     id: screenView
 
-    width: parent.width
-    height: parent.height
+    width: parent.width // probably not needed
+    height: parent.height // probably not needed
+    anchors.fill: parent
 
     property int cols: 7
     property int rows: 4
 
     property int screensTotal: 0
     property int currentScreen: 1
-    
+
     property variant _screenGridComp
     property variant _lastScreenGrid
 
@@ -25,7 +26,7 @@ Item {
     {
         if(preloaded)
           return;
-        
+
         _screenGridComp = Qt.createComponent("ScreenGrid.qml");
         if(_screenGridComp.status == Component.Ready)
         {
@@ -47,7 +48,7 @@ Item {
     {
         if(! preloaded)
           preload();
-        
+
         if(screensTotal == 0)
           _addScreen();
 
@@ -84,11 +85,11 @@ Item {
         currentScreen = 1;
         arrowsEnabled = false;
     }
-    
+
     function _addScreen()
     {
         _lastScreenGrid = _screenGridComp.createObject(screenViewContainer, {"cols": cols, "rows": rows, "width": width, "height": height});
-        
+
         screensTotal += 1;
 
         if(screensTotal > 1)
@@ -111,7 +112,7 @@ Item {
             //to: parent.width
             duration: 300
         }
-        
+
         Row {
             id: screenViewContainer
             anchors.fill: parent
@@ -149,7 +150,7 @@ Item {
         transitions: Transition {
             NumberAnimation { properties: "opacity"; easing.type: Easing.OutQuad }
         }
-        
+
         MouseArea {
             id: leftArrowMouseArea
 
@@ -160,7 +161,7 @@ Item {
             }
         }
     }
-    
+
     Rectangle {
         id: rightArrow
 
@@ -206,7 +207,7 @@ Item {
 
     MouseArea {
         id: leftArrowHoverMouseArea
-        
+
         anchors.left: parent.left
         width: 92
         height: parent.height
@@ -219,7 +220,7 @@ Item {
 
     MouseArea {
         id: rightArrowHoverMouseArea
-        
+
         anchors.right: parent.right
         width: 92
         height: parent.height

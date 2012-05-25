@@ -12,7 +12,7 @@ Item {
     Component.onCompleted: init();
 
     function init()
-    {        
+    {
     }
 
     Row {
@@ -32,5 +32,5 @@ Item {
     function _size()
     {
         return screenGridRowContainer.children.length;
-    }    
+    }
 }

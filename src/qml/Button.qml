@@ -4,7 +4,7 @@ Item {
     id: button
 
     width: 120
-    height: 140
+    height: childrenRect.height//140
 
     property string label: ""
     property string iconUrl: ""
@@ -21,7 +21,12 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
     }
     */
-    
+
+    Rectangle {
+        anchors.fill: parent
+        color: Qt.rgba(255,0,0,0.3);
+    }
+
     Image {
         id: buttonIcon
         source: parent.iconUrl
@@ -32,7 +37,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
 
         smooth: true
-        
+
         states: [
             State {
                 name: "NORMAL"
@@ -72,7 +77,7 @@ Item {
 
         text: parent.label
     }
-    
+
     signal buttonClick()
     onButtonClick: function(data) {
         console.log("BLABLA: " + data);
@@ -89,12 +94,12 @@ Item {
             buttonIcon.state = "NORMAL"
         }
     }
-    
+
     MouseArea {
         id: buttonMouseArea
 
         anchors.fill: parent
-        
+
         onClicked: buttonClick(clickCallbackData)
         onEntered: hover(true)
         onExited: hover(false)

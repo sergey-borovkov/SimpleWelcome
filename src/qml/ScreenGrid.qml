@@ -3,24 +3,28 @@ import QtQuick 1.1
 Item {
     id: screenGrid
 
-    width: parent.width
-    height: parent.height
+    width: parent.width // probably not needed
+    height: childrenRect.height // probably not needed
 
     property int cols: 7
     property int rows: 4
 
     property int iconsTotal: 0
     property int rowsTotal: 0
-    
+
     property variant _screenGridRowComp
     property variant _lastScreenGridRow
 
     Component.onCompleted: preload();
-    
+
+    Rectangle {
+        anchors.fill: parent
+        color: Qt.rgba(128,128,128,0.3)
+    }
+
     Column {
         id: screenGridRowContainer
         anchors.fill: parent
-        height: 0
         spacing: 64
     }
 
@@ -57,9 +61,9 @@ Item {
         if(rowsTotal == 0)
           _addRow();
 
-        if(rowsTotal >= rows && _lastScreenGridRow.size >= cols)
-          return;
-        
+        /*if(rowsTotal >= rows && _lastScreenGridRow.size >= cols)
+          return;*/
+
         if(_lastScreenGridRow.size >= cols)
           _addRow();
 
@@ -71,13 +75,14 @@ Item {
         _lastScreenGridRow = _screenGridRowComp.createObject(screenGridRowContainer, {"cols": cols});
 
         rowsTotal += 1;
+        console.log("ROWS: " + rowsTotal)
     }
 
     function full()
     {
         if(rowsTotal >= rows && _lastScreenGridRow.size >= cols)
           return true;
-        
+
         return false;
     }
 }

@@ -11,11 +11,12 @@ Item {
 
     property variant _GridGroupComp
     property variant _buttonComp
-    
+
     Column {
         id: groupGridContainer
-        anchors.fill: parent
-        height: 0
+        //anchors.fill: parent
+        width: parent.width
+        height: childrenRect.height + 16
         spacing: 64
     }
 
@@ -54,7 +55,7 @@ Item {
             groupGridContainer.children[i].destroy();
         }
     }
-    
+
     function addGroup(name)
     {
         var gridGroup = _GridGroupComp.createObject(groupGridContainer, {"iconsInRow": iconsInRow});
@@ -63,24 +64,24 @@ Item {
 
         return gridGroup;
     }
-    
+
     function fillGroup(groupName)
     {
         var groupEntity = appProvider.getEntity(groupName);
 
         if(!groupEntity || groupEntity.entries.length <= 0 || groupEntity.isApp)
           return;
-        
+
         //var groupEntries = groupEntity.entries;
         var groupEntries = _deepFlaten(groupName);
 
         if(groupEntries.length <= 0)
           return;
-        
+
         var gridGroup = _GridGroupComp.createObject(groupGridContainer, {"iconsInRow": iconsInRow});
 
         gridGroup.label = groupEntity.name;
-        
+
         for(var i = 0; i < groupEntries.length; i++)
         {
             var entity = appProvider.getEntity(groupEntries[i]);
@@ -96,7 +97,7 @@ Item {
     function reloadApps()
     {
         //console.log("reloadApps called");
-        
+
         // Clearing
         clear();
 
@@ -108,14 +109,14 @@ Item {
             fillGroup(rootGroups[i]);
         }
     }
-    
+
     function reloadWelcome()
     {
         //console.log("reloadWelcome called");
-        
+
         // Clearing
         clear();
-        
+
         // RecentApps
 
         var gridGroup = _GridGroupComp.createObject(groupGridContainer, {"iconsInRow": iconsInRow});
@@ -128,7 +129,7 @@ Item {
         {
             //gridGroup.addButton({"type": "recentApp", "name": recentAppNames[i]});
             var appName = recentAppNames[i];
-            
+
             var button = gridGroup.addObject(_buttonComp,
             {
                 "label": appName,
@@ -181,7 +182,7 @@ Item {
 
             button.buttonClick.connect(createPlaceCallback(placeName));
         }
-        
+
         // Documents
         gridGroup = _GridGroupComp.createObject(groupGridContainer, {"iconsInRow": iconsInRow});
         gridGroup.label = qsTr("Documents");
@@ -211,17 +212,17 @@ Item {
                 return callback;
             }
 
-            button.buttonClick.connect(createDocumentCallback(documentName));            
+            button.buttonClick.connect(createDocumentCallback(documentName));
         }
-        
+
     }
-    
+
     function _getRootGroups()
     {
         var rootGroups = [];
-        
+
         var fullRootGroups = appProvider.getRootGroups();
-        
+
         for(var i = 0; i < fullRootGroups.length; i++)
         {
             var groupName = fullRootGroups[i];
@@ -240,7 +241,7 @@ Item {
     {
         //console.log("----");
         //console.log("groupName:", groupName);
-        
+
         var entities = [];
 
         var groupEntity = appProvider.getEntity(groupName);
@@ -258,7 +259,7 @@ Item {
             var entity = appProvider.getEntity(groupEntries[i]);
 
             //console.log("Entity:", groupEntries[i]);
-            
+
             if(entity.isApp)
             {
                 entities.push(groupEntries[i]);
@@ -278,7 +279,7 @@ Item {
         //console.log("----");
 
         //console.log("Entities contains:", entities);
-        
+
         return entities;
     }
 }
