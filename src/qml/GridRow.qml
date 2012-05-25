@@ -25,8 +25,8 @@ Item {
         id: gridRowContainer
         width: childrenRect.width
         height: childrenRect.height
-        //anchors.fill: parent
         spacing: (parent.width - 120 * iconsInRow) / (iconsInRow + 1)
+        anchors.left: parent.left
         anchors.leftMargin: spacing
     }
 
