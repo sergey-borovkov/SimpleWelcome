@@ -47,7 +47,6 @@ Item {
             name: "ShowBars"
             when: view.movingVertically || view.movingHorizontally
             PropertyChanges { target: verticalScrollBar; opacity: 1 }
-            PropertyChanges { target: horizontalScrollBar; opacity: 1 }
         }
 
         transitions: Transition {

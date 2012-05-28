@@ -17,6 +17,7 @@ Item {
 
     function addEntity(entity)
     {
+        console.log("WOWOWOWO");
         if(rowsTotal == 0)
           _addRow();
 
@@ -35,17 +36,6 @@ Item {
           _addRow();
 
         _lastGridRow.addQueryMatch(queryMatchName);
-    }
-
-    function addButton(buttonOpts)
-    {
-        if(rowsTotal == 0)
-          _addRow();
-
-        if(_lastGridRow.size >= iconsInRow)
-          _addRow();
-
-        _lastGridRow.addButton(buttonOpts);
     }
 
     function addObject(component, opts)

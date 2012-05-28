@@ -3,8 +3,8 @@ import QtQuick 1.1
 Item {
     id: screenGrid
 
-    width: parent.width // probably not needed
-    height: childrenRect.height // probably not needed
+    width: parent.width
+    height: screenGridRowContainer.height
 
     property int cols: 7
     property int rows: 4
@@ -17,14 +17,15 @@ Item {
 
     Component.onCompleted: preload();
 
-    Rectangle {
-        anchors.fill: parent
-        color: Qt.rgba(128,128,128,0.3)
-    }
+/*    Rectangle {
+        anchors.fill: screenGridRowContainer
+        color: Qt.rgba(255, 255, 0, 0.2)
+    }*/
 
     Column {
         id: screenGridRowContainer
-        anchors.fill: parent
+        width: parent.width
+        height: childrenRect.height
         spacing: 64
     }
 
@@ -75,7 +76,6 @@ Item {
         _lastScreenGridRow = _screenGridRowComp.createObject(screenGridRowContainer, {"cols": cols});
 
         rowsTotal += 1;
-        console.log("ROWS: " + rowsTotal)
     }
 
     function full()
