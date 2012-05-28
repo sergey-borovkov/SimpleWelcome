@@ -47,13 +47,13 @@ Item {
     function addObject(component, opts)
     {
         if(! preloaded)
-          preload();
+            preload();
 
         if(screensTotal == 0)
-          _addScreen();
+            _addScreen();
 
-        if(_lastScreenGrid.full())
-          _addScreen();
+        /*if(_lastScreenGrid.full())
+            _addScreen();*/
 
         return _lastScreenGrid.addObject(component, opts);
     }
@@ -88,7 +88,10 @@ Item {
 
     function _addScreen()
     {
-        _lastScreenGrid = _screenGridComp.createObject(screenViewContainer, {"cols": cols, "rows": rows, "width": width, "height": height});
+        // ZOIN REMOVE
+        //clear();
+
+        _lastScreenGrid = _screenGridComp.createObject(screenViewContainer, {"cols": cols, "rows": rows, /*"width": width, "height": height*/});
 
         screensTotal += 1;
 
@@ -96,27 +99,58 @@ Item {
           arrowsEnabled = true;
     }
 
+    Rectangle {
+        width: screenViewFlickable.width
+        height: screenViewFlickable.height
+        border.width: -10
+        border.color: white
+        color: Qt.rgba(255, 255, 0, 0.2)
+    }
+
     Flickable {
         id: screenViewFlickable
         anchors.fill: parent
-        boundsBehavior: Flickable.StopAtBounds
+        contentWidth: parent.width
+        contentHeight: _lastScreenGrid.height
+        boundsBehavior: Flickable.StopAtBounds // if flicking is not bound, scroll sometimes go crazy and flick far far away from corners when scrolling with mouse wheel
+        flickableDirection: Flickable.VerticalFlick
 
-        flickableDirection: Flickable.HorizontalFlick
-        interactive: false
-
+        // Usefulness is arguable
         SmoothedAnimation {
             id: setScreenAnimation
             properties: "contentX"
             target: screenViewFlickable
-            //from: 0
-            //to: parent.width
             duration: 300
         }
 
-        Row {
+        Item {
             id: screenViewContainer
-            anchors.fill: parent
+            width: parent.width
+            height: childrenRect.height
+            //anchors.fill: parent
         }
+
+        states: State {
+            name: "ShowBars"
+            when: screenViewFlickable.movingVertically || screenViewFlickable.movingHorizontally
+            PropertyChanges { target: verticalScrollBar; opacity: 1 }
+        }
+
+        transitions: Transition {
+            NumberAnimation { properties: "opacity"; duration: 400 }
+        }
+    }
+
+    ScrollBar {
+        id: verticalScrollBar
+        width: 12;
+        height: screenViewFlickable.height - 12
+
+        anchors.right: screenViewFlickable.right
+        opacity: 0
+        orientation: Qt.Vertical
+        position: screenViewFlickable.visibleArea.yPosition
+        pageSize: screenViewFlickable.visibleArea.heightRatio
     }
 
     Rectangle {

@@ -17,8 +17,10 @@ Item {
 
     Row {
         id: screenGridRowContainer
-        anchors.fill: parent
+        width: childrenRect.width
+        height: childrenRect.height
         spacing: (parent.width - 120 * cols) / (cols + 1)
+        anchors.left: parent.left
         anchors.leftMargin: spacing
     }
 

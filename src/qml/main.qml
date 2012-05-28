@@ -70,7 +70,7 @@ Item {
             height: tabListView.height
         }
 
-        FirstTab {
+        WelcomeTab {
             id: welcomeTab
             width: tabListView.width
             height: tabListView.height

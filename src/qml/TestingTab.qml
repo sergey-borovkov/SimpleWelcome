@@ -10,7 +10,7 @@ Item {
     property variant _buttonComp
 
     Component.onCompleted: preload();
-    
+
     function preload()
     {
         _buttonComp = Qt.createComponent("Button.qml");
@@ -33,8 +33,8 @@ Item {
     {
         for(var i = 0; i < 100; i++)
         {
-            console.log("Iterating: " + i);
-            
+            //console.log("Iterating: " + i);
+
             var button = screenView.addObject(_buttonComp,
             {
                 "label": "TESTING " + i,
@@ -45,7 +45,7 @@ Item {
             function createCallback(data)
             {
                 var storeData = data;
-                
+
                 function callback()
                 {
                     console.log("DATADATA" + storeData.bla);
@@ -57,7 +57,7 @@ Item {
             button.buttonClick.connect(createCallback(button.clickCallbackData));
         }
     }
-    
+
     ScreenView
     {
         id: screenView
