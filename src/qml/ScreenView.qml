@@ -99,14 +99,6 @@ Item {
           arrowsEnabled = true;
     }
 
-    Rectangle {
-        width: screenViewFlickable.width
-        height: screenViewFlickable.height
-        border.width: -10
-        border.color: white
-        color: Qt.rgba(255, 255, 0, 0.2)
-    }
-
     Flickable {
         id: screenViewFlickable
         anchors.fill: parent
