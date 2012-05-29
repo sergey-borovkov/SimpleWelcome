@@ -17,11 +17,6 @@ Item {
 
     Component.onCompleted: preload();
 
-/*    Rectangle {
-        anchors.fill: screenGridRowContainer
-        color: Qt.rgba(255, 255, 0, 0.2)
-    }*/
-
     Column {
         id: screenGridRowContainer
         width: parent.width

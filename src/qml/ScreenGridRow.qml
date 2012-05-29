@@ -4,7 +4,7 @@ Item {
     id: screenGridRow
 
     width: parent.width
-    height: 140
+    height: childrenRect.height
 
     property int cols: 7
     property int size: _size()

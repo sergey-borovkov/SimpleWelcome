@@ -22,11 +22,6 @@ Item {
     }
     */
 
-    Rectangle {
-        anchors.fill: parent
-        color: Qt.rgba(255,0,0,0.3);
-    }
-
     Image {
         id: buttonIcon
         source: parent.iconUrl
