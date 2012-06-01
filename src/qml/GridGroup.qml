@@ -15,29 +15,6 @@ Item {
     property variant _lastGridRow
     property variant _GridRowComp
 
-    function addEntity(entity)
-    {
-        console.log("WOWOWOWO");
-        if(rowsTotal == 0)
-          _addRow();
-
-        if(_lastGridRow.size >= iconsInRow)
-          _addRow();
-
-        _lastGridRow.addEntity(entity);
-    }
-
-    function addQueryMatch(queryMatchName)
-    {
-        if(rowsTotal == 0)
-          _addRow();
-
-        if(_lastGridRow.size >= iconsInRow)
-          _addRow();
-
-        _lastGridRow.addQueryMatch(queryMatchName);
-    }
-
     function addObject(component, opts)
     {
         if(rowsTotal == 0)
@@ -51,13 +28,13 @@ Item {
 
     function _addRow()
     {
-        _GridRowComp = Qt.createComponent("GridRow.qml");
+        _GridRowComp = Qt.createComponent("ScreenGridRow.qml");
 
         if(_GridRowComp.status == Component.Error) {
             console.log("Component loading error: " + _GridRowComp.errorString());
         }
 
-        _lastGridRow = _GridRowComp.createObject(gridGroupContainer, {"iconsInRow": iconsInRow});
+        _lastGridRow = _GridRowComp.createObject(gridGroupContainer, {"cols": iconsInRow});
 
         rowsTotal += 1;
     }

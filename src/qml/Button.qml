@@ -10,6 +10,8 @@ Item {
     property string iconUrl: ""
     property variant clickCallbackData: "DATA"
 
+    signal activated(bool isActive, variant element)
+
     /*
     Image {
         id: buttonIconBackground
@@ -41,7 +43,7 @@ Item {
                 PropertyChanges { target: buttonIcon; anchors.topMargin: 8 }
             },
             State {
-                name: "POPED"
+                name: "HOVER"
                 PropertyChanges { target: buttonIcon; width: 72 }
                 PropertyChanges { target: buttonIcon; height: 72 }
                 PropertyChanges { target: buttonIcon; anchors.topMargin: 4 }
@@ -49,7 +51,7 @@ Item {
         ]
 
         transitions: Transition {
-            NumberAnimation { properties: "width,height,anchors.topMargin"; easing.type: Easing.OutQuad }
+            NumberAnimation { properties: "width,height,anchors.topMargin,opacity"; easing.type: Easing.OutQuad }
         }
     }
 
@@ -78,18 +80,6 @@ Item {
         console.log("BLABLA: " + data);
     }
 
-    function hover(pop)
-    {
-        if(pop)
-        {
-            buttonIcon.state = "POPED"
-        }
-        else
-        {
-            buttonIcon.state = "NORMAL"
-        }
-    }
-
     MouseArea {
         id: buttonMouseArea
 
@@ -99,5 +89,18 @@ Item {
         onEntered: hover(true)
         onExited: hover(false)
         hoverEnabled: true
+    }
+
+    function hover(pop)
+    {
+        if(pop)
+        {
+            buttonIcon.state = "HOVER"
+        }
+        else
+        {
+            buttonIcon.state = "NORMAL"
+        }
+        activated(pop, button)
     }
 }

@@ -9,24 +9,16 @@ Item {
 
     property variant _buttonComp
 
-    Component.onCompleted: preload();
-
-    function preload()
-    {
+    Component.onCompleted: {
         _buttonComp = Qt.createComponent("Button.qml");
         if(_buttonComp.status == Component.Ready)
         {
-            init();
+            reload();
         }
         else if(_buttonComp.status == Component.Error)
         {
             console.log("Component loading error: " + _buttonComp.errorString());
         }
-    }
-
-    function init()
-    {
-        reload();
     }
 
     function reload()
@@ -44,7 +36,7 @@ Item {
 
             for(var i = 0; i < groups.length; i++)
             {
-                var groupEntries = _deepFlaten(groups[i]);
+                var groupEntries = _deepFlatten(groups[i]);
 
                 if(groupEntries.length <= 0)
                   continue;
@@ -79,7 +71,7 @@ Item {
             if(!groupEntity || groupEntity.entries.length <= 0 || groupEntity.isApp)
               return;
 
-            var groupEntries = _deepFlaten(groupName);
+            var groupEntries = _deepFlatten(groupName);
 
             if(groupEntries.length <= 0)
               return;
@@ -167,7 +159,7 @@ Item {
             var groupEntity = appProvider.getEntity(groupName);
 
             if(!groupEntity || groupEntity.entries.length <= 0 || groupEntity.isApp)
-            continue;
+                continue;
 
             rootGroups.push(groupName);
         }
@@ -175,14 +167,14 @@ Item {
         return rootGroups;
     }
 
-    function _deepFlaten(groupName)
+    function _deepFlatten(groupName)
     {
         var entities = [];
 
         var groupEntity = appProvider.getEntity(groupName);
 
         if(!groupEntity || groupEntity.entries.length <= 0 || groupEntity.isApp)
-        return entities;
+            return entities;
 
         var groupEntries = groupEntity.entries;
 
@@ -196,7 +188,7 @@ Item {
             }
             else
             {
-                var childrenEntities = _deepFlaten(groupEntries[i]);
+                var childrenEntities = _deepFlatten(groupEntries[i]);
 
                 for(var j = 0; j < childrenEntities.length; j++)
                 {
@@ -207,5 +199,4 @@ Item {
 
         return entities;
     }
-
 }
