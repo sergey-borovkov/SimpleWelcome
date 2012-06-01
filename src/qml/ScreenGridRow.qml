@@ -7,13 +7,7 @@ Item {
     height: childrenRect.height
 
     property int cols: 7
-    property int size: _size()
-
-    Component.onCompleted: init();
-
-    function init()
-    {
-    }
+    property int size: screenGridRowContainer.children.length
 
     Row {
         id: screenGridRowContainer
@@ -26,13 +20,6 @@ Item {
 
     function addObject(component, opts)
     {
-        var object = component.createObject(screenGridRowContainer, opts);
-
-        return object;
-    }
-
-    function _size()
-    {
-        return screenGridRowContainer.children.length;
+        return component.createObject(screenGridRowContainer, opts);
     }
 }

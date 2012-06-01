@@ -55,7 +55,9 @@ Item {
         /*if(_lastScreenGrid.full())
             _addScreen();*/
 
-        return _lastScreenGrid.addObject(component, opts);
+        var newObject = _lastScreenGrid.addObject(component, opts);
+        newObject.activated.connect(buttonFocusChanged);
+        return newObject;
     }
 
     function setScreen(screenNum)
@@ -88,9 +90,6 @@ Item {
 
     function _addScreen()
     {
-        // ZOIN REMOVE
-        //clear();
-
         _lastScreenGrid = _screenGridComp.createObject(screenViewContainer, {"cols": cols, "rows": rows, /*"width": width, "height": height*/});
 
         screensTotal += 1;
@@ -99,6 +98,14 @@ Item {
           arrowsEnabled = true;
     }
 
+    function buttonFocusChanged(isActive, element) {
+        if (isActive)
+        {
+            screenViewFlickable.currentElement = element;
+        }
+    }
+
+
     Flickable {
         id: screenViewFlickable
         anchors.fill: parent
@@ -106,6 +113,31 @@ Item {
         contentHeight: _lastScreenGrid.height
         boundsBehavior: Flickable.StopAtBounds // if flicking is not bound, scroll sometimes go crazy and flick far far away from corners when scrolling with mouse wheel
         flickableDirection: Flickable.VerticalFlick
+        property variant currentElement: Item {}
+
+        Rectangle {
+            id: selectionRect
+            x: { screenViewContainer.mapFromItem(screenViewFlickable.currentElement, 0, 0).x }
+            y: { screenViewContainer.mapFromItem(screenViewFlickable.currentElement, 0, 0).y }
+            width: screenViewFlickable.currentElement.width
+            height: screenViewFlickable.currentElement.height
+
+            //anchors.centerIn: parent
+            gradient: Gradient {
+                     GradientStop { position: 0.0; color: "black" }
+                     GradientStop { position: 0.33; color: "black" }
+                     GradientStop { position: 1.0; color: "#606060" }
+                 }
+            color: Qt.rgba(0,0,128,0.1)
+            border.width: 1
+            border.color: "#A0A0A0"
+            z: -1
+
+            Behavior on x { NumberAnimation { duration: 250 } }
+            Behavior on y { NumberAnimation { duration: 250 } }
+            Behavior on width { NumberAnimation { duration: 250 } }
+            Behavior on height { NumberAnimation { duration: 250 } }
+        }
 
         // Usefulness is arguable
         SmoothedAnimation {

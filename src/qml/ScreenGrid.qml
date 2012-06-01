@@ -4,7 +4,7 @@ Item {
     id: screenGrid
 
     width: parent.width
-    height: screenGridRowContainer.height
+    height: childrenRect.height
 
     property int cols: 7
     property int rows: 4
@@ -35,10 +35,6 @@ Item {
         {
             console.log("Component loading error: " + _screenGridRowComp.errorString());
         }
-    }
-
-    function init()
-    {
     }
 
     function clear()
