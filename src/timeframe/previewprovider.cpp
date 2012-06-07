@@ -34,7 +34,7 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
 {    
     QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(id);
 
-    qDebug() << requestedSize;
+    //qDebug() << requestedSize;
     if(requestedSize.isValid())
         pixmap = pixmap.scaled(requestedSize);
     *size = pixmap.size();

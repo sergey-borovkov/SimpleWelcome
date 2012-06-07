@@ -288,62 +288,7 @@ Item {
         */
         visible: true
     }
-/*
-    Connections
-    {
-        target: scene
-        onFlickStarted:
-        {
-            console.log("flicking started")
-            if ((scene.horizontalVelocity > 0) && (scene.currentIndex === scene.count-1) )
-            {
-                //timeScale.list.decrementCurrentIndex()
-                direction = true
-            }
-            else if ((scene.horizontalVelocity < 0) && (scene.currentIndex === 0) )
-            {                
-                //timeScale.list.incrementCurrentIndex()
-                direction = false
-            }else
-            {
-                return
-            }
 
-            __year = timeScale.model.get(timeScale.list.currentIndex).year
-            __month = timeScale.model.get(timeScale.list.currentIndex).monthNumber-1
-            currentDateChanged()
-        }
-    }
-    */
-    /*
-    Connections
-    {
-        target: scene
-
-
-    }
-    */
-
-/*
-    Flickable
-    {
-        id: flickable
-        anchors.fill: parent
-        contentWidth: parent.width * 20
-        contentHeight: parent.height
-        Row {
-            id: row
-
-
-            Repeater
-            {
-                model: activityModel
-                delegate: SceneDelegate {}
-            }
-        }
-        visible: false
-    }
-*/
     TimeScale{
         id: timeScale
         anchors.verticalCenter: parent.verticalCenter
@@ -365,23 +310,7 @@ Item {
         }
         return -1
     }
-/*
-    Connections{
-        target: timeScale.list
-        onCurrentIndexChanged: {
-            activityProxy.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1 )
 
-            var sceneIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
-
-            if (sceneIndex !== -1)
-            {
-                console.log("change index in scene on " + sceneIndex)
-                scene.currentIndex = sceneIndex
-            }
-
-        }
-    }
-*/
     ToolButton {
         id: prevButton
         width: 60
@@ -436,5 +365,148 @@ Item {
     Keys.onEscapePressed: {
         Qt.quit()
     }
+
+ /*
+    State {
+        name: "local"
+        PropertyChanges {
+            target: scene
+            delegate: SceneDelegate {}
+        }
+    }
+    State {
+        name: "social"
+        PropertyChanges {
+            target: scene
+            delegate: SceneDelegate {}
+        }
+    }
+    */
+    Button {
+        id: stateChangeButton
+        width: 50
+        height: 30
+        anchors.bottom: separator.top
+        anchors.bottomMargin: 5
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        border.color: "black"
+
+        ButtonText {
+            id: stateChangeButtonText
+            text: "<--"
+            anchors.left: parent.left
+        }
+
+        MouseArea{
+            id: stateTestButtonMouseArea
+            anchors.fill: parent
+            onClicked: {
+                console.log("State button clicked " + timeFrameTab.state)
+                if ( timeFrameTab.state === "" ) {
+                    timeFrameTab.state = "gallery"
+                } else {
+                    timeFrameTab.state = ""
+                }
+            }
+        }
+    }
+    ListModel{
+        id: galleryModel
+
+        ListElement {
+                 date: "1.05.2012"
+                 items: [
+                     ListElement { description: "picture" },
+                     ListElement { description: "text" },
+                     ListElement { description: "video" }
+                 ]
+        }
+        ListElement {
+                 date: "2.05.2012"
+                 items: [
+                     ListElement { description: "1" },
+                     ListElement { description: "2" },
+                     ListElement { description: "3" },
+                     ListElement { description: "4" },
+                     ListElement { description: "5" },
+                     ListElement { description: "6" },
+                     ListElement { description: "7" }
+                 ]
+        }
+        ListElement {
+                 date: "3.05.2012"
+                 items: [
+                     ListElement { description: "1" },
+                     ListElement { description: "2" },
+                     ListElement { description: "3" },
+                     ListElement { description: "4" },
+                     ListElement { description: "5" },
+                     ListElement { description: "6" },
+                     ListElement { description: "7" },
+                     ListElement { description: "8" },
+                     ListElement { description: "9" },
+                     ListElement { description: "10" },
+                     ListElement { description: "11" },
+                     ListElement { description: "12" },
+                     ListElement { description: "13" },
+                     ListElement { description: "14" },
+                     ListElement { description: "15" },
+                     ListElement { description: "16" },
+                     ListElement { description: "17" },
+                     ListElement { description: "18" },
+                     ListElement { description: "19" },
+                     ListElement { description: "20" },
+                     ListElement { description: "21" },
+                     ListElement { description: "22" }
+
+                 ]
+        }
+    }
+
+    ListView {
+        id: galleryView
+        anchors.top: separator.bottom
+        anchors.bottom: timeScale.top
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        anchors.rightMargin: 20
+        visible: false
+        model: galleryModel
+        delegate: GalleryDelegate { }
+        orientation: ListView.Horizontal
+    }
+
+    states: [
+
+        State {
+            name: "gallery"
+            AnchorChanges{
+                target: timeScale
+
+                anchors.verticalCenter: undefined
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom:  timeFrameTab.bottom
+                //anchors.right:   timeFrameTab.right
+
+            }
+            PropertyChanges {
+                target: scene
+                visible : false
+            }
+            PropertyChanges {
+                target: galleryView
+                visible : true
+            }            
+            PropertyChanges {
+                target: menuBar
+                visible : false
+            }
+        }
+    ]
+    transitions: Transition {
+         AnchorAnimation {duration: 500}
+     }
 
 }
