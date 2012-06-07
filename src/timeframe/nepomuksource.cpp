@@ -120,9 +120,9 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
         QFileInfo fi(uri);
         activities.append(new Activity(uri, type, fi.lastModified().date()));
         set->addActivity(new Activity(uri, type, fi.lastModified().date()));
-   }
+    }
 
-   emit newActivities(activities);
+    emit newActivities(activities);
 }
 
 void NepomukSource::listingFinished()
@@ -199,7 +199,8 @@ void NepomukSource::listingTSFinished()
     if (date.year() > 1970)
     {
         fillTimeScaleModel(date);
-    }else
+    }
+    else
     {
         m_timeScaleClient->close();
         m_timeScaleClient = 0;
