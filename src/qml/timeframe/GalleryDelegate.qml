@@ -3,7 +3,7 @@ import QtQuick 1.1
 Item {
     id: galleryItem
     height: parent.height
-    width: getDelegateWidht(items.count) * parent.height/3
+    width: getDelegateWidht(size) * parent.height/3
     clip: true
 
     Text{
@@ -12,7 +12,7 @@ Item {
         anchors.left: parent.left
         width: 100
         height: 20
-        text: date
+        text: Qt.formatDate( date , "dd-MM-yyyy")
         color: "white"
         horizontalAlignment: Text.AlignHCenter
     }
@@ -34,30 +34,31 @@ Item {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.margins: 10
-        model: items
+        model: galleryModel.itemsModel(ListView.currentIndex)
         cellWidth: parent.height /3 -20
         cellHeight: itemGrid.height /3 -20
         flow: GridView.TopToBottom
         interactive: false
         delegate: Column {
-            Rectangle{
-                id: back
-                color: "white"
-                radius: 5
+            Image{
+                id: image
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: itemGrid.cellWidth -3
                 height: itemGrid.cellHeight -20
+                source: url
+                smooth: true
+                asynchronous: true
             }
             Text {
                 id: label
-                text: description
+                text: url
                 color: "white"
+                elide: Text.ElideRight
+                width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
             }
         }
     }
-
-
 
     function getDelegateWidht( count ){
         var x = Math.ceil(count /3)
