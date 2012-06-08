@@ -34,8 +34,9 @@ QVariant ActivityModel::data(const QModelIndex &index, int role) const
         v.setValue( m_list[row] );
         return v;
     }
+
     else if(role == CountRole)
-        return m_list[row]->date();
+        return m_list.size();
 
     return QVariant();
 }

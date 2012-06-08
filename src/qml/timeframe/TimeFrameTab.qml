@@ -412,7 +412,7 @@ Item {
         }
     }
     ListModel{
-        id: galleryModel
+        id: qmlGalleryModel
 
         ListElement {
                  date: "1.05.2012"
@@ -473,8 +473,27 @@ Item {
         anchors.leftMargin: 20
         anchors.rightMargin: 20
         visible: false
+        //model: qmlGalleryModel
         model: galleryModel
         delegate: GalleryDelegate { }
+        /*
+        delegate: Item {
+            width: 200
+            height: parent.height
+            Rectangle{
+                id: back
+                anchors.fill: parent
+                color: "red"
+            }
+            Text {
+                id: label
+                anchors.fill: parent
+                text: Qt.formatDate( date , "dd-M-yyyy")
+                color: "white"
+            }
+
+        }
+        */
         orientation: ListView.Horizontal
     }
 
