@@ -7,6 +7,12 @@ Item {
     clip: true
     anchors.topMargin: 16
 
+    AppsGridView {
+        anchors.fill: parent
+    }
+/*
+
+
     property variant _buttonComp
 
     Component.onCompleted: {
@@ -177,6 +183,7 @@ Item {
             return entities;
 
         var groupEntries = groupEntity.entries;
+        console.log(groupEntries + "\n\n\n")
 
         for(var i = 0; i < groupEntries.length; i++)
         {
@@ -199,4 +206,5 @@ Item {
 
         return entities;
     }
+    */
 }

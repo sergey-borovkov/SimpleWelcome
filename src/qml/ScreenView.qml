@@ -38,6 +38,8 @@ Item {
         }
 
         preloaded = true;
+
+        //screenViewFlickable.forceActiveFocus()
     }
 
     function init()
@@ -114,6 +116,22 @@ Item {
         boundsBehavior: Flickable.StopAtBounds // if flicking is not bound, scroll sometimes go crazy and flick far far away from corners when scrolling with mouse wheel
         flickableDirection: Flickable.VerticalFlick
         property variant currentElement: Item {}
+        onFocusChanged: {
+            if(!focus) // fucking dirty hack to receive focus
+                screenViewFlickable.forceActiveFocus()
+        }
+
+        focus: true
+
+        Keys.onPressed: {
+            console.log(event.key)
+            if (event.key == Qt.Key_Right)
+            {
+                console.log('Key Right was pressed');
+                if (screenViewFlickable.currentElement)
+                event.accepted = true;
+            }
+        }
 
         Rectangle {
             id: selectionRect
