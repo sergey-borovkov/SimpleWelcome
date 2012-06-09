@@ -65,6 +65,7 @@ Item {
     {
         //console.log("reloadWelcome called");
 
+
         // Clearing
         clear();
 

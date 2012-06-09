@@ -83,7 +83,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             selectByMouse: true
-            focus: true
+            //focus: true
             color: "white"
             font.family: "Bitstream Vera Sans"
             font.italic: true

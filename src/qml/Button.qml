@@ -26,7 +26,7 @@ Item {
 
     Image {
         id: buttonIcon
-        source: parent.iconUrl
+        source: imagePath
         width: 64
         height: 64
         anchors.top: parent.top
@@ -72,7 +72,7 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.Wrap
 
-        text: parent.label
+        text: caption//parent.label
     }
 
     signal buttonClick()

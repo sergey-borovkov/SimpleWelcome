@@ -101,8 +101,8 @@ SWApp::SWApp()
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
     m_viewer->showExpanded();
-    m_viewer->showFullScreen();
-    //m_viewer->setGeometry(500, 500, 640, 480);
+    //m_viewer->showFullScreen();
+    m_viewer->setGeometry(500, 500, 640, 480);
     //m_viewer->setFixedSize( m_viewer->sizeHint() );
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
@@ -114,7 +114,7 @@ SWApp::SWApp()
 
     QTimer::singleShot(1000, this, SLOT(init()));
 
-    setQuitOnLastWindowClosed(false);
+    setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
 }
 
 SWApp::~SWApp()
