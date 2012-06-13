@@ -9,6 +9,7 @@
 class ItemModel;
 //class GalleryItem;
 class Activity;
+class GalleryLister;
 
 class GalleryModel : public QAbstractListModel
 {
@@ -25,16 +26,18 @@ public:
     explicit GalleryModel(QObject *parent = 0);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent) const;
+    void setLister(GalleryLister* lister);
 
 signals:
     
 public slots:    
-    void newActivity(Activity *item);
-    QObject* itemsModel(int index) const;
+    void newActivities(QList <Activity*> list);
+    QObject* itemsModel(QDate date) const;
 
 private:
     QList <GalleryItem *> m_items;
     QHash<int, QByteArray> hash;
+    GalleryLister* m_lister;
     //QList <Activity *> m_items;
 };
 

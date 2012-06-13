@@ -1,9 +1,13 @@
 import QtQuick 1.1
 
 Item {
+
+    property int margin: 10
+    property int labelHeight: 20
+
     id: galleryItem
     height: parent.height
-    width: getDelegateWidht(size) * parent.height/3
+    width: getDelegateWidht(size) * (parent.height - 2*margin - dateLabel.height)/3 + 2*margin
     clip: true
 
     Text{
@@ -11,7 +15,7 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         width: 100
-        height: 20
+        height: labelHeight
         text: Qt.formatDate( date , "dd-MM-yyyy")
         color: "white"
         horizontalAlignment: Text.AlignHCenter
@@ -34,26 +38,39 @@ Item {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.margins: 10
-        model: galleryModel.itemsModel(ListView.currentIndex)
-        cellWidth: parent.height /3 -20
-        cellHeight: itemGrid.height /3 -20
+        model: galleryModel.itemsModel(date)
+        cellWidth: (parent.height - 2*margin - dateLabel.height) / 3 //-20
+        cellHeight: (parent.height - 2*margin - dateLabel.height) /3 //-20
         flow: GridView.TopToBottom
         interactive: false
         delegate: Column {
-            Image{
-                id: image
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: itemGrid.cellWidth -3
+            Rectangle{
+                id: imageBackground
+                color: "white"
+                border.color: "black"
+                border.width: 2
+                radius: 5
+                width: itemGrid.cellWidth - 4
                 height: itemGrid.cellHeight -20
-                source: url
-                smooth: true
-                asynchronous: true
+                clip: true
+                Image{
+                    id: image
+                    anchors.centerIn: parent
+                    width: Math.min( sourceSize.width, parent.width -4)
+                    height: Math.min( sourceSize.height, parent.height -4 )
+                    fillMode: Image.PreserveAspectFit
+                    source: url
+                    smooth: true
+                    asynchronous: true
+                }
             }
+
+
             Text {
                 id: label
                 text: url
                 color: "white"
-                elide: Text.ElideRight
+                elide: Text.ElideLeft
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
             }

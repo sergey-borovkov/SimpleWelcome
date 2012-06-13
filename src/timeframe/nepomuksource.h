@@ -19,8 +19,13 @@ namespace Nepomuk
 
 class NepomukSource : public ActivitySource
 {
-    Q_OBJECT
+    Q_OBJECT    
 public:
+    enum Mode{
+        Normal = 0,
+        Detailed
+    };
+
     explicit NepomukSource(QObject *parent = 0);
     ~NepomukSource();
 
@@ -33,6 +38,7 @@ signals:
 
 public slots:
     virtual void startSearch(const QDate &beginDate, ActivitySource::Direction direction);
+    void startDetailedSearch(const QDate &beginDate, ActivitySource::Direction direction);
     void processEntry(const QList<Nepomuk::Query::Result> &list);
     void processTSEntry(const QList<Nepomuk::Query::Result> &list);
 
@@ -54,6 +60,7 @@ private:
     bool m_tsSearch;
     ActivitySet *set;
     Direction direction;
+    Mode m_mode;
 };
 
 #endif // NEPOMUKSOURCE_H

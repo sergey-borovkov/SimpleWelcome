@@ -1,6 +1,7 @@
 #include "itemmodel.h"
 #include "activityset.h"
-#include "QDate"
+#include <QDate>
+#include <QDebug>
 
 ItemModel::ItemModel(QObject *parent) :
     QAbstractListModel(parent)
@@ -11,19 +12,10 @@ ItemModel::ItemModel(QObject *parent) :
     m_hash.insert(UrlRole, "url");
     m_hash.insert(TypeRole, "type");
     setRoleNames(m_hash);
-    /* T0-DO: connect wint nepomuk source */
-    beginInsertRows(QModelIndex(), 0 , 4);
-    for (int i = 0; i < 5; i++)
-    {
-        Activity * item = new Activity(QString("/home/saint/images/%1.jpg").arg(i+1), "image", QDate(2012,5,1));
-        m_items.append(item);
-    }
-    endInsertRows();
-    /* */
 }
 
 QVariant ItemModel::data(const QModelIndex &index, int role) const
-{
+{    
     if (!index.isValid())
     {
         return QVariant();
@@ -59,4 +51,20 @@ int ItemModel::rowCount(const QModelIndex &parent) const
         return 0;
     else
         return m_items.size();
+}
+
+void ItemModel::newItem(Activity *item)
+{
+    if (!item)
+        return;
+    //qDebug() << "---newItem(Activity *item)---" << item->getDate() << item->getUrl();
+    /* Check dublicates*/
+    if (m_urlSet.contains(item->getUrl()))
+        return;
+    int ind = m_items.size();
+    //qDebug() << ind;
+    beginInsertRows(QModelIndex(), ind , ind);
+    m_items.append(item);
+    m_urlSet.insert(item->getUrl());
+    endInsertRows();
 }
