@@ -62,6 +62,7 @@ set(rosa-launcher-qtquick_SRCS
                                src/timeframe/gallerymodel.cpp
                                src/timeframe/itemmodel.cpp
                                src/timeframe/galleryitem.cpp
+                               src/timeframe/gallerylister.cpp
                                )
 
 kde4_add_executable(rosa-launcher-qtquick ${rosa-launcher-qtquick_SRCS} ${QRC_SOURCES})

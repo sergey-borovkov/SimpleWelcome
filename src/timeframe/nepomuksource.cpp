@@ -73,6 +73,7 @@ ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result
 
 void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
 {
+    m_mode = Normal;
     /*
     if (beginDate.isNull())
         qDebug("----------Null Date");
@@ -108,6 +109,32 @@ void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
 }
 
 
+void NepomukSource::startDetailedSearch(const QDate &beginDate, Direction direction)
+{
+    m_mode = Detailed;
+    this->direction = direction;
+
+    if(!m_searchClient)
+    {
+        m_searchClient = new Nepomuk::Query::QueryServiceClient( this );
+
+        connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processEntry(const QList<Nepomuk::Query::Result> &)));
+
+        connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
+
+    }
+
+    queryDate = beginDate;
+
+    set = new ActivitySet;
+
+    Nepomuk::Query::Query query = createQuery(beginDate);
+
+    m_searchClient->query(query);
+}
+
+
+
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
     QList<Activity *> activities;
@@ -139,8 +166,13 @@ void NepomukSource::listingFinished()
     {
         //m_searchClient->close();
         //m_searchClient = 0;
-
-        return startSearch(queryDate.addDays( delta ), direction);
+        if ( m_mode == Normal )
+        {
+            return startSearch(queryDate.addDays( delta ), direction);
+        } else
+        {
+            return startDetailedSearch(queryDate.addDays( delta ), direction);
+        }
     }
 
     // month changed on this step so we emit previous month

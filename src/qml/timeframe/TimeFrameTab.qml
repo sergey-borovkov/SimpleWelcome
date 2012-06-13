@@ -317,7 +317,11 @@ Item {
         imageUrl: "images/go-previous.png"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
+        z:100
         onButtonClick: {
+            galleryView.decrementCurrentIndex()
+
+            /*
             console.log( "left button pressed..." )
             if (scene.currentIndex === 0)
             {
@@ -328,6 +332,7 @@ Item {
             {
                 scene.decrementCurrentIndex()
             }
+            */
         }
     }
 
@@ -337,7 +342,10 @@ Item {
         imageUrl: "images/go-next.png"
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
+        z:100
         onButtonClick: {
+            galleryView.incrementCurrentIndex()
+            /*
             console.log( scene.currentIndex + "  " + scene.count)
             if (scene.currentIndex === (scene.count -1))
             {
@@ -349,6 +357,7 @@ Item {
             {
                 scene.incrementCurrentIndex()
             }
+            */
         }
     }
 
@@ -411,58 +420,6 @@ Item {
             }
         }
     }
-    ListModel{
-        id: qmlGalleryModel
-
-        ListElement {
-                 date: "1.05.2012"
-                 items: [
-                     ListElement { description: "picture" },
-                     ListElement { description: "text" },
-                     ListElement { description: "video" }
-                 ]
-        }
-        ListElement {
-                 date: "2.05.2012"
-                 items: [
-                     ListElement { description: "1" },
-                     ListElement { description: "2" },
-                     ListElement { description: "3" },
-                     ListElement { description: "4" },
-                     ListElement { description: "5" },
-                     ListElement { description: "6" },
-                     ListElement { description: "7" }
-                 ]
-        }
-        ListElement {
-                 date: "3.05.2012"
-                 items: [
-                     ListElement { description: "1" },
-                     ListElement { description: "2" },
-                     ListElement { description: "3" },
-                     ListElement { description: "4" },
-                     ListElement { description: "5" },
-                     ListElement { description: "6" },
-                     ListElement { description: "7" },
-                     ListElement { description: "8" },
-                     ListElement { description: "9" },
-                     ListElement { description: "10" },
-                     ListElement { description: "11" },
-                     ListElement { description: "12" },
-                     ListElement { description: "13" },
-                     ListElement { description: "14" },
-                     ListElement { description: "15" },
-                     ListElement { description: "16" },
-                     ListElement { description: "17" },
-                     ListElement { description: "18" },
-                     ListElement { description: "19" },
-                     ListElement { description: "20" },
-                     ListElement { description: "21" },
-                     ListElement { description: "22" }
-
-                 ]
-        }
-    }
 
     ListView {
         id: galleryView
@@ -473,7 +430,7 @@ Item {
         anchors.leftMargin: 20
         anchors.rightMargin: 20
         visible: false
-        //model: qmlGalleryModel
+        highlightFollowsCurrentItem: true
         model: galleryModel
         delegate: GalleryDelegate { }
         /*
@@ -496,6 +453,8 @@ Item {
         */
         orientation: ListView.Horizontal
     }
+
+    state: "gallery"
 
     states: [
 

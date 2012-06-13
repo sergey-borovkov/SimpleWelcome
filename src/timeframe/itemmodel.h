@@ -3,8 +3,10 @@
 
 #include <QAbstractListModel>
 #include <QMetaType>
+#include <QSet>
 
 class Activity;
+
 
 class ItemModel : public QAbstractListModel
 {
@@ -25,10 +27,12 @@ public:
 signals:
     
 public slots:
+    void newItem( Activity* item);
     
 private:
     QHash<int, QByteArray> m_hash;
     QList<Activity *> m_items;
+    QSet <QString> m_urlSet;
 };
 
 Q_DECLARE_METATYPE(ItemModel *)
