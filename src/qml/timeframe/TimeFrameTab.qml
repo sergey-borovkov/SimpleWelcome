@@ -83,7 +83,7 @@ Item {
     //On search finished
     Connections{
         target: activityProxy
-        onFinished: {__isSearching = false ; console.log("search finished")
+        onFinished: {__isSearching = false //; console.log("search finished")
         searchLabel.visible = false}
 
     }
@@ -178,28 +178,15 @@ Item {
         return -1
     }
 
-/*
-    function getFlickIndex()
-    {
-        console.log(getTSCurrentDate())
-        if (direction) //get  first day in mounth
-        {
 
-        } else //get last day in mounth
-        {
-
-        }
-        return scene.count -1
-    }
-
-*/
     Text
     {
         id: searchLabel
         color: "white"
-        anchors.top: separator.bottom
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
-        text: "searching in process "
+        anchors.leftMargin: 50
+        text: "Searching in process..."
         visible: false
         z: 1000
     }
@@ -212,12 +199,6 @@ Item {
 
     }
 
-    /*
-    Connections{
-        target: timeFrameTab
-        onPropertyChanged: searchLabel.visible = __isSearching
-    }
-*/
     ListView {
         id: scene
 
@@ -241,7 +222,6 @@ Item {
         highlightMoveDuration: 1000
         onCurrentIndexChanged:
         {
-
             var date = activityModel.getDateOfIndex(scene.currentIndex)
             var tsDate = getTSCurrentDate()
             if (date.getTime() === tsDate.getTime())
@@ -268,7 +248,7 @@ Item {
         }
         onCountChanged:
         {
-            console.log("new items added, scene count: " +  scene.count)
+            //console.log("new items added, scene count: " +  scene.count)
             scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)            
         }
 /*
@@ -410,8 +390,7 @@ Item {
         MouseArea{
             id: stateTestButtonMouseArea
             anchors.fill: parent
-            onClicked: {
-                console.log("State button clicked " + timeFrameTab.state)
+            onClicked: {                
                 if ( timeFrameTab.state === "" ) {
                     timeFrameTab.state = "gallery"
                 } else {

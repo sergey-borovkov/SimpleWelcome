@@ -1,17 +1,17 @@
 #include "galleryitem.h"
 #include "itemmodel.h"
 #include <QVariant>
-
+#include <QDebug>
 
 GalleryItem::GalleryItem(const QDate &date, QObject *parent) :
     QObject(parent)
 {
-    m_model = new ItemModel();
-    m_date = date;
+    m_model = new ItemModel(this);
+    m_date = date;    
 }
 
 GalleryItem::~GalleryItem()
-{
+{    
     delete m_model;
 }
 
