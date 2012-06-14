@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/ServiceHeader.qml</file>
+        <file>qml/FacebookStatusUpdatesView.qml</file>
+        <file>qml/FacebookAuthWeb.qml</file>
+    </qresource>
+</RCC>

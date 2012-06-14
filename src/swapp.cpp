@@ -42,6 +42,7 @@
 #include "timeframe/activityset.h"
 #include "timeframe/previewprovider.h"
 #include "timeframe/activitymodel.h"
+#include "timeframe/social/pluginloader.h"
 
 SWApp* SWApp::self()
 {
@@ -129,6 +130,8 @@ SWApp::SWApp()
   m_viewer->show();
   //m_viewer->showExpanded();
   //m_viewer->showFullScreen();
+  PluginLoader loader;
+  loader.loadPlugins();
 
   QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
   

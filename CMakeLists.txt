@@ -59,7 +59,10 @@ set(rosa-launcher-qtquick_SRCS
                                src/timeframe/previewgenerator.cpp
                                src/timeframe/previewprovider.cpp
                                src/timeframe/activitymodel.cpp
+                               src/timeframe/social/socialplugin.cpp
+                               src/timeframe/social/pluginloader.cpp
                                )
+
 
 kde4_add_executable(rosa-launcher-qtquick ${rosa-launcher-qtquick_SRCS} ${QRC_SOURCES})
 target_link_libraries(rosa-launcher-qtquick 
@@ -84,3 +87,5 @@ install(FILES ${qml_files} DESTINATION share/${PROJECT_NAME}/qml)
 install(FILES ${qml_tf_files} DESTINATION share/${PROJECT_NAME}/qml/timeframe/)
 install(FILES ${qml_js_files} DESTINATION share/${PROJECT_NAME}/qml)
 install(FILES ${asset_files} DESTINATION share/${PROJECT_NAME}/assets)
+
+#add_subdirectory(facebook-timeframe-plugin)
