@@ -3,7 +3,7 @@ import QtQuick 1.1
 import Qt 4.7
 import "timeframe"
 
-Rectangle {
+Item {
     id: page
     width: 1280
     height: 800
@@ -18,7 +18,7 @@ Rectangle {
     }
 
     NumberAnimation on opacity { to: 1.0; duration: 500 }
-    
+
     /*
     Component.onCompleted: testing()
 
@@ -35,14 +35,33 @@ Rectangle {
         appsTab.reload();
     }
 
+    /*
     Image {
         width: 64
         height: 64
         anchors.fill: parent
         fillMode: Image.Tile
-        source: "image://generalicon/asset/background2.png"        
+        source: "image://generalicon/asset/background2.png"
     }
-    
+    */
+
+    Image {
+        anchors.fill: parent
+        fillMode: Image.PreserveAspectCrop
+        smooth: true
+        source: "image://generalicon/asset/bubbles.jpg"
+        opacity: 0.6
+        z: -10
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        color: "black"
+        opacity: 0.8
+        z: -5
+    }
+
+
     VisualItemModel {
         id: tabListModel
 
@@ -51,14 +70,15 @@ Rectangle {
             width: tabListView.width
             height: tabListView.height
         }
-        
-        FirstTab {
+
+        WelcomeTab {
             id: welcomeTab
             width: tabListView.width
             height: tabListView.height
         }
 
-        SecondTab {
+
+        ApplicationsTab {
             id: appsTab
             width: tabListView.width
             height: tabListView.height
@@ -74,27 +94,29 @@ Rectangle {
     TopBar {
         id: topBar
         width: parent.width
-        
+
     }
-    
-    Rectangle {
+
+    Item {
         id: listViewRect
         width: parent.width
         y: topBar.height
         height: parent.height - topBar.height - bottomBar.height
         clip: true
-        color: "transparent"
-        
+        //color: "transparent"
+
         ListView {
             id: tabListView
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             //anchors.topMargin: 16
+
             width: parent.width
             height: parent.height
-            interactive: false
+
             model: tabListModel            
+            anchors.fill: parent
 
             snapMode: ListView.SnapOneItem
             orientation: ListView.Horizontal
@@ -118,5 +140,5 @@ Rectangle {
         {
         }
     }
-    
+
 }

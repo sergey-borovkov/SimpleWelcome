@@ -56,8 +56,7 @@ int ItemModel::rowCount(const QModelIndex &parent) const
 void ItemModel::newItem(Activity *item)
 {
     if (!item)
-        return;
-    //qDebug() << "---newItem(Activity *item)---" << item->getDate() << item->getUrl();
+        return;    
     /* Check dublicates*/
     if (m_urlSet.contains(item->getUrl()))
         return;
