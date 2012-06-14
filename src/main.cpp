@@ -58,10 +58,7 @@ int main(int argc, char *argv[])
     */
 
     SWApp *app = SWApp::self();
-    
     int rc = app->exec();
-
     delete app;
-    
     return rc;
 }
