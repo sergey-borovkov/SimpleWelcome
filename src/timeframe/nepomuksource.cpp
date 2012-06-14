@@ -16,6 +16,9 @@
 #include <QFileInfo>
 #include <QDateTime>
 
+#include <unistd.h>
+ #include <QTest>
+
 NepomukSource::NepomukSource(QObject *parent) :
     ActivitySource(parent), m_searchClient(0) , m_timeScaleClient(0), m_tsSearch(false), set(0)
 {
@@ -89,6 +92,9 @@ void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
 
         connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
 
+    } else
+    {
+        m_searchClient->close();
     }
 
     if(!m_tsSearch)
@@ -106,6 +112,7 @@ void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
     query.setLimit(7);
 
     m_searchClient->query(query);
+
 }
 
 
@@ -122,6 +129,9 @@ void NepomukSource::startDetailedSearch(const QDate &beginDate, Direction direct
 
         connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
 
+    } else
+    {
+        m_searchClient->close();
     }
 
     queryDate = beginDate;
@@ -139,11 +149,22 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
     QList<Activity *> activities;
     for(int i = 0; i < list.size(); i++)
-    {
-        QString uri = list.at(i).resource().toFile().url().path();
+    {        
+        //qDebug() << "------before resource" << i;
+        Nepomuk::Query::Result result = list.at(i);
+        //qDebug() << "after result" << i;
+        Nepomuk::Resource res = result.resource();
+        if (!res.isFile())
+            continue;
+        //qDebug() << "after result" << i;
+        QString uri = res.toFile().url().path();
+
+        //qDebug() << "after path";
         QString type = list.at(i).resource().type();
+        //qDebug() << "after type";
         QFileInfo fi(uri);
         activities.append(new Activity(uri, type, fi.lastModified().date()));
+        //qDebug() << "-----after resorce";
         set->addActivity(new Activity(uri, type, fi.lastModified().date()));
    }
 
@@ -163,9 +184,9 @@ void NepomukSource::listingFinished()
 
     // continue search if any days in month left
     if( queryDate.month() == queryDate.addDays(delta).month() )
-    {
-        //m_searchClient->close();
+    {        
         //m_searchClient = 0;
+
         if ( m_mode == Normal )
         {
             return startSearch(queryDate.addDays( delta ), direction);

@@ -18,6 +18,7 @@ ActivityModel::ActivityModel(QObject *parent) :
 
 ActivityModel::~ActivityModel()
 {
+
 }
 
 QVariant ActivityModel::data(const QModelIndex &index, int role) const

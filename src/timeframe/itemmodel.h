@@ -20,7 +20,8 @@ public:
         UrlRole,
         TypeRole
     };
-    explicit ItemModel(QObject *parent = 0);    
+    explicit ItemModel(QObject *parent = 0);
+    ~ItemModel();
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent) const;
     

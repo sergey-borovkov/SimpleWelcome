@@ -32,7 +32,7 @@ Item {
 
     function reloadTabs() {
         welcomeTab.reload();
-        appsTab.reload();
+        //appsTab.reload();
     }
 
     /*
