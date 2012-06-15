@@ -100,6 +100,8 @@ SWApp::SWApp()
     m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
+    m_viewer->rootContext()->setContextProperty("appsGridModel", new AppsGridModel(m_appProvider, this) );
+
     m_viewer->showExpanded();
     //m_viewer->showFullScreen();
     m_viewer->setGeometry(500, 500, 640, 480);

@@ -8,7 +8,7 @@ GridView {
     focus: true
     clip: true
 
-    model: AppsGridModel {}
+    model: appsGridModel
 
     onFocusChanged: {
         if(!focus) // fucking dirty hack to receive focus
@@ -23,29 +23,7 @@ GridView {
     }
     keyNavigationWraps: true
 
-    delegate: Button {} /*Item {
-        width: 100
-        height: 100
-
-        Column {
-            id: element
-            anchors.horizontalCenter: parent.horizontalCenter
-            Rectangle
-            {
-                width: 48;
-                height: 48;
-                anchors.horizontalCenter: parent.horizontalCenter;
-                color: 'green'
-            }
-            Text {
-                width: 100
-                text: name;
-                anchors.horizontalCenter: parent.horizontalCenter
-                horizontalAlignment: Text.AlignHCenter
-                wrapMode: Text.WrapAnywhere
-            }
-        }
-    }*/
+    delegate: Button {}
 
     states: State {
         name: "ShowBars"
@@ -72,28 +50,49 @@ GridView {
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
+
+        function getItemUnderCursor(isForceRecheck)
+        {
+            var wasCurrentIndex = grid.currentIndex
+            var mouseXReal = mouseX + grid.contentX, mouseYReal = mouseY + grid.contentY
+            var wasContentX = grid.contentX, wasContentY = grid.contentY
+            var indexUnderMouse = grid.indexAt(mouseXReal, mouseYReal)
+            var result = -1
+
+            if (indexUnderMouse != -1 && (grid.currentIndex != indexUnderMouse || isForceRecheck))
+            {
+                // Dirty hack to check if there is a need to change the current item after mouse position have changed
+                grid.currentIndex = indexUnderMouse
+                if (grid.currentItem && grid.currentItem.x < mouseXReal && grid.currentItem.y < mouseYReal &&
+                      grid.currentItem.x + grid.currentItem.width > mouseXReal && grid.currentItem.y + grid.currentItem.height > mouseYReal)
+                {
+                    result = indexUnderMouse
+                }
+                grid.currentIndex = wasCurrentIndex
+                grid.contentX = wasContentX
+                grid.contentY = wasContentY
+            }
+            return result
+        }
+
+
         onMousePositionChanged: {
             if (!grid.moving)
             {
-                var wasCurrentIndex = grid.currentIndex
-                var mouseXReal = mouseX + grid.contentX, mouseYReal = mouseY + grid.contentY
-                var wasContentX = grid.contentX, wasContentY = grid.contentY
-                var indexUnderMouse = grid.indexAt(mouseXReal, mouseYReal)
-
-                if (indexUnderMouse != -1 && grid.currentIndex != indexUnderMouse)
-                {
-                    // Dirty hack to check if there is a need to change the current item after mouse position have changed
-                    grid.currentIndex = indexUnderMouse
-                    if (!(grid.currentItem && grid.currentItem.x < mouseXReal && grid.currentItem.y < mouseYReal &&
-                          grid.currentItem.x + grid.currentItem.width > mouseXReal && grid.currentItem.y + grid.currentItem.height > mouseYReal))
-                    {
-                        grid.currentIndex = wasCurrentIndex
-                    }
-                    grid.contentX = wasContentX
-                    grid.contentY = wasContentY
-                }
+                var newCurrentIndex = getItemUnderCursor()
+                if (newCurrentIndex != -1)
+                    grid.currentIndex = newCurrentIndex
             }
         }
+
+        onClicked: {
+            if (!grid.moving)
+            {
+                var indexClicked = getItemUnderCursor(true)
+                appsGridModel.changeFolder(indexClicked)
+            }
+        }
+
         property int index: grid.indexAt(mouseX, mouseY)
     }
 }
