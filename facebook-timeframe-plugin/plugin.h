@@ -2,8 +2,6 @@
 #define PLUGIN1_H
 
 #include "../src/timeframe/social/socialplugin.h"
-#include "oauth2authorizer.h"
-#include "facebookmanager.h"
 
 #include <QtPlugin>
 #include <QtDeclarative/QDeclarativeView>
@@ -16,27 +14,18 @@ class FacebookModule : public QObject, public ISocialModule
     Q_INTERFACES(ISocialModule)
 public:
     FacebookModule()
-    {}
+    {
+        authorizationView = new QDeclarativeView(QUrl("qrc:/qml/main.qml"));
+    }
+
     ~FacebookModule() {}
     QWidget *authenticationWidget()
-    {
-        QDeclarativeView *authorizationView = new QDeclarativeView(QUrl("qrc:/qml/main.qml"));
-        OAuth2Authorizer authorizer;
-        //authorizationView.rootContext()->setContextProperty("authorizer", &authorizer);
-
-/*        QObject *rootItem = authorizationView->rootObject();
-        QObject::connect(rootItem, SIGNAL(loadStarted(QUrl)),
-                         &authorizer, SLOT(onWebLoadStarted(QUrl)));
-    //    QObject::connect(rootItem, SIGNAL(loadFinished(QUrl)),
-    //                     &authorizer, SLOT(onWebLoadFinished(QUrl)));
-
-        FacebookManager fManager;
-        fManager.setRootContext(authorizationView.rootContext());
-        QObject::connect(&authorizer, SIGNAL(accessTokenChanged(QString)),
-                         &fManager, SLOT(onAccessTokenChanged(QString)));
-*/
+    {        
         return authorizationView;
     }
+
+private:
+    QDeclarativeView *authorizationView;
 };
 
 QT_BEGIN_NAMESPACE

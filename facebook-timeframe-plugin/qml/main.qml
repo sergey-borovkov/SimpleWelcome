@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 1.1
 import QtWebKit 1.0
 
 
@@ -10,6 +10,7 @@ WebView {
 
     onLoadFinished: main.loadFinished(url)
     onUrlChanged:  {
+        console.log(url)
         loadStarted(url)
         if (url.toString().indexOf("http://www.facebook.com/connect/login_success.html") == 0) {
             url = ""

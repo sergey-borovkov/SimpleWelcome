@@ -4,27 +4,41 @@
 #include <QtCore/QObject>
 #include <QtCore/QSharedPointer>
 #include <QtCore/QDate>
+#include <QtCore/QUrl>
 #include <QtPlugin>
-
-class IWallPost;
-
-class ISocialRequestManager : public QObject
-{
-    Q_OBJECT
-public slots:
-    virtual bool getWall(const QDate &beginDate, const QDate &endDate) = 0;
-signals:
-    virtual void newWallElement(QSharedPointer<IWallPost> post) = 0;
-};
 
 class ISocialActivity
 {
 
 };
 
-class IWallPost : public ISocialActivity
+class WallPost
 {
 
+};
+
+class ISocialRequestManager : public QObject
+{
+    Q_OBJECT
+public slots:
+    virtual void queryWall(const QDate &beginDate, const QDate &endDate) = 0;
+signals:
+    virtual void newWallElement(IWallPost post);
+};
+
+class User
+{
+public:    
+    QString firstName() const { return m_firstName; }
+    void setFirstName(const QString &name) { m_firstName = name; }
+    QString lastName() const { return m_lastName; }
+    void setLastName(const QString &name) { m_lastName = name; }
+    QUrl url() const { return m_url; }
+    void setUrl(const QUrl &url) { m_url = url; }
+private:
+    QString m_firstName;
+    QString m_lastName;
+    QUrl m_url;
 };
 
 class ISocialModule //: public QObject
@@ -37,7 +51,6 @@ public:
 };
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(ISocialModule, "Timeframe_Library/1.0")
+Q_DECLARE_INTERFACE(ISocialModule, "Timeframe_Library.SocialModule/1.0")
 QT_END_NAMESPACE
-
 #endif // SOCIALPLUGIN_H
