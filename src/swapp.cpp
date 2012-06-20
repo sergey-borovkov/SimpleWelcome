@@ -31,9 +31,10 @@
 
 #include <QMovie>
 
-#include <KServiceGroup>
-#include <KDebug>
-#include <KIcon>
+#include "appsgridmodel.h"
+#include "recentappsgridmodel.h"
+#include "favoritesgridmodel.h"
+#include "documentsgridmodel.h"
 
 SWApp* SWApp::self()
 {
@@ -100,7 +101,10 @@ SWApp::SWApp()
     m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
-    m_viewer->rootContext()->setContextProperty("appsGridModel", new AppsGridModel(m_appProvider, this) );
+    m_viewer->rootContext()->setContextProperty("appsGridModel", new AppsGridModel(this) );
+    m_viewer->rootContext()->setContextProperty("recentAppsGridModel", new RecentAppsGridModel(this) );
+    m_viewer->rootContext()->setContextProperty("favoritesGridModel", new FavoritesGridModel(this) );
+    m_viewer->rootContext()->setContextProperty("documentsGridModel", new DocumentsGridModel(this) );
 
     m_viewer->showExpanded();
     //m_viewer->showFullScreen();

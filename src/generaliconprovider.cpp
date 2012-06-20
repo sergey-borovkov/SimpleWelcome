@@ -108,13 +108,9 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     size->setHeight(128);
 
     if (requestedSize.isEmpty())
-    {
         iconPixmap = icon.pixmap(128, 128, QIcon::Normal, QIcon::On);
-    }
     else
-    {
         iconPixmap = icon.pixmap(requestedSize.width(), requestedSize.height(), QIcon::Normal, QIcon::On);
-    }
 
     return iconPixmap;
 }

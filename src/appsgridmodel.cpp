@@ -1,20 +1,14 @@
 #include "appsgridmodel.h"
-#include "appprovider.h"
 #include <kservicegroup.h>
+#include <kdebug.h>
 
-AppsGridModel::AppsGridModel(AppProvider *appProvider, QObject *parent)
+AppsGridModel::AppsGridModel(QObject *parent)
     : QAbstractListModel(parent)
 {
     QHash<int, QByteArray> names;
     names[ CaptionRole ] = "caption";
     names[ ImagePathRole ] = "imagePath";
     setRoleNames(names);
-
-    this->appProvider = appProvider;
-}
-
-AppsGridModel::~AppsGridModel()
-{
 }
 
 class AppItem
@@ -28,14 +22,17 @@ public:
 
 QList<AppItem> GetList(QString currentGroup)
 {
-    QList<AppItem> out;
+    static QList<AppItem> out;
+    static QString prevCurrentGroup = "-1";
+    if (prevCurrentGroup == currentGroup && !out.isEmpty())
+        return out;
+    prevCurrentGroup = currentGroup;
+    out.clear();
 
-    QString _relPath;
     KServiceGroup::Ptr root = KServiceGroup::group(currentGroup);
 
-    if (!root || !root->isValid()) {
+    if (!root || !root->isValid())
         return out;
-    }
 
     const KServiceGroup::List list = root->entries(true /* sorted */,
                                                    true /* exclude no display entries */,
@@ -67,18 +64,12 @@ QList<AppItem> GetList(QString currentGroup)
             }
 
             newItem.icon = serviceGroup->icon();
-            newItem.relPath = serviceGroup->relPath();
-            //if (iconNameMap().contains(icon))
-            //{
-            //    newItem.icon = iconNameMap().value(icon);
-            //}
-
-            //desktopEntry = serviceGroup->entryPath();
             newItem.caption = serviceGroup->caption();
-            //relPath = serviceGroup->relPath();
-            // newItem.caption = serviceGroup->comment();
-        } else {
-            kWarning(250) << "KServiceGroup: Unexpected object in list!";
+            newItem.relPath = serviceGroup->relPath();
+        }
+        else
+        {
+            kDebug(250) << "KServiceGroup: Unexpected object in list!";
             continue;
         }
         out.append(newItem);
@@ -86,19 +77,9 @@ QList<AppItem> GetList(QString currentGroup)
     return out;
 }
 
-int AppsGridModel::rowCount( const QModelIndex &parent ) const
+int AppsGridModel::rowCount( const QModelIndex & /*parent*/ ) const
 {
-    Q_UNUSED( parent )
-
-    KServiceGroup::Ptr group = KServiceGroup::root();
-    if (!group || !group->isValid())
-        return 0;
-
-    KServiceGroup::List list = group->entries();
-
-    QList<AppItem> lst = GetList(currentGroup);
-
-    return lst.size(); //appProvider->getRootGroups().size();
+    return GetList(currentGroup).size();
 }
 
 QVariant AppsGridModel::data( const QModelIndex &index, int role ) const
@@ -116,20 +97,12 @@ QVariant AppsGridModel::data( const QModelIndex &index, int role ) const
         return QString("image://generalicon/appicon/%1").arg(list[index.row()].icon);
     }
 
-    return 5;
-}
-
-bool AppsGridModel::setData( const QModelIndex &index, const QVariant &value, int role )
-{
-    if ( !index.isValid() )
-        return false;
-
-    return true;
+    return QVariant();
 }
 
 #include <QMessageBox>
 
-void AppsGridModel::changeFolder(int newIndex)
+void AppsGridModel::itemClicked(int newIndex)
 {
     if (newIndex != -1)
     {

@@ -5,47 +5,117 @@ Item {
     width: parent.width
     clip: true
     anchors.topMargin: 16
-    //color: "transparent"
-
-    //signal newMatchesFound()
-
-    Component.onCompleted: load();
-
-    function load()
-    {
-        groupGrid.preload();
-    }
-
-    function reload()
-    {
-        groupGrid.reloadWelcome();
-    }
 
     Flickable {
-        id: view
+        id: flick
         anchors.fill: parent
         contentWidth: parent.width
-        contentHeight: groupGrid.height
+        contentHeight: rowContainer2.height + 32
         boundsBehavior: Flickable.StopAtBounds // if flicking is not bound, scroll sometimes go crazy and flick far far away from corners when scrolling with mouse wheel
         flickableDirection: Flickable.VerticalFlick
 
         Column {
-            id: rowContainer
+            id: rowContainer2
             //anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            spacing: 16
             width: parent.width
+            height: childrenRect.height
+            anchors.bottom: parent.bottom
+            spacing: 32
 
-            GroupGrid {
-                id: groupGrid
-                gridType: "welcome"
+            Column {
+                spacing: 16
+                width: parent.width
+                height: childrenRect.height
+
+                Text {
+                    width: parent.width
+                    height: 24
+                    maximumLineCount: 1
+                    anchors.left: parent.left
+                    anchors.leftMargin: 16
+
+                    font.family: "Bitstream Vera Sans"
+                    font.bold: true
+                    font.pixelSize: 18
+                    style: Text.Sunken
+                    color: "#eee"
+                    styleColor: "#000"
+
+                    text: "Recent Applications"
+                }
+
+                AppsGridView {
+                    model: recentAppsGridModel
+                    width: parent.width
+                    height: childrenRect.height
+                    interactive: false
+                }
+            }
+
+            Column {
+                spacing: 16
+                width: parent.width
+                height: childrenRect.height
+
+                Text {
+                    width: parent.width
+                    height: 24
+                    maximumLineCount: 1
+                    anchors.left: parent.left
+                    anchors.leftMargin: 16
+
+                    font.family: "Bitstream Vera Sans"
+                    font.bold: true
+                    font.pixelSize: 18
+                    style: Text.Sunken
+                    color: "#eee"
+                    styleColor: "#000"
+
+                    text: "Favorites"
+                }
+
+                AppsGridView {
+                    model: favoritesGridModel
+                    width: parent.width
+                    height: childrenRect.height
+                    interactive: false
+                }
+            }
+
+            Column {
+                spacing: 16
+                width: parent.width
+                height: childrenRect.height
+
+                Text {
+                    width: parent.width
+                    height: 24
+                    maximumLineCount: 1
+                    anchors.left: parent.left
+                    anchors.leftMargin: 16
+
+                    font.family: "Bitstream Vera Sans"
+                    font.bold: true
+                    font.pixelSize: 18
+                    style: Text.Sunken
+                    color: "#eee"
+                    styleColor: "#000"
+
+                    text: "Recent documents"
+                }
+
+                AppsGridView {
+                    model: documentsGridModel
+                    width: parent.width
+                    height: childrenRect.height
+                    interactive: false
+                }
             }
         }
 
         states: State {
             name: "ShowBars"
-            when: view.movingVertically || view.movingHorizontally
+            when: flick.movingVertically
             PropertyChanges { target: verticalScrollBar; opacity: 1 }
         }
 
@@ -57,12 +127,12 @@ Item {
     ScrollBar {
         id: verticalScrollBar
         width: 12;
-        height: view.height - 12
+        height: flick.height - 12
 
-        anchors.right: view.right
+        anchors.right: flick.right
         opacity: 0
         orientation: Qt.Vertical
-        position: view.visibleArea.yPosition
-        pageSize: view.visibleArea.heightRatio
+        position: flick.visibleArea.yPosition
+        pageSize: flick.visibleArea.heightRatio
     }
 }

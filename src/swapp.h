@@ -15,8 +15,6 @@
 #include "sessionprovider.h"
 #include "userinfoprovider.h"
 
-#include "appsgridmodel.h"
-
 class SWApp : public KUniqueApplication
 {
     Q_OBJECT
@@ -47,10 +45,6 @@ private:
     DocumentsProvider *m_documentsProvider;
     SessionProvider *m_sessionProvider;
     UserInfoProvider *m_userInfoProvider;
-
-    AppsGridModel *m_appsGridModel;
-    AppsGridModel *m_welcomeGridModel;
-    AppsGridModel *m_searchGridModel;
 };
 
 #endif // SW_APP_H
