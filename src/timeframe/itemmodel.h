@@ -28,7 +28,7 @@ public:
 signals:
     
 public slots:
-    void newItem( Activity* item);
+    void addActivityItem( Activity* item);
     
 private:
     QHash<int, QByteArray> m_hash;

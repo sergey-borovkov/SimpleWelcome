@@ -12,6 +12,7 @@ GalleryItem::GalleryItem(const QDate &date, QObject *parent) :
 
 GalleryItem::~GalleryItem()
 {    
+    qDebug() << "delete item";
     delete m_model;
 }
 
@@ -19,14 +20,15 @@ GalleryItem::~GalleryItem()
 void GalleryItem::setDate(const QDate &d)
 {
     m_date = d;
+    emit dataChanged();
 }
-  /* TO-DO: add activity in model*/
-/*
-void GalleryItem::addActivity(Activity)
-{
 
+void GalleryItem::addActivity(Activity* item)
+{
+    m_model->addActivityItem(item);
+    emit dataChanged();
 }
-*/
+
 QDate GalleryItem::getDate()
 {
     return m_date;

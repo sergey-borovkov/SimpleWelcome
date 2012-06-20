@@ -17,6 +17,7 @@ public:
     void addNepomukSource(NepomukSource* source);
 signals:
     void newActivities (QList<Activity*>);
+    void newMonth(int, int);
 public slots:
     void startSearch(QDate date, int direction);
 
