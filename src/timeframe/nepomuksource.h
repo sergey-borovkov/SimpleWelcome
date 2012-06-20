@@ -38,13 +38,15 @@ signals:
 
 public slots:
     virtual void startSearch(const QDate &beginDate, ActivitySource::Direction direction);
-    void startDetailedSearch(const QDate &beginDate, ActivitySource::Direction direction);
+    virtual void setLimit(int limit);
     void processEntry(const QList<Nepomuk::Query::Result> &list);
     void processTSEntry(const QList<Nepomuk::Query::Result> &list);
 
 private slots:
     void listingFinished();
     void listingTSFinished();
+    void error(QString str);
+    void startSearchFromQueue();
 
 private:
     Nepomuk::Query::FileQuery createQuery(const QDate &beginDate);
@@ -61,6 +63,8 @@ private:
     ActivitySet *set;
     Direction direction;
     Mode m_mode;
+    int m_limit;
+    QList<QDate> m_searchQueue;
 };
 
 #endif // NEPOMUKSOURCE_H

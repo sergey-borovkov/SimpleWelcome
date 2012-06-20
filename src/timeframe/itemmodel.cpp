@@ -15,9 +15,11 @@ ItemModel::ItemModel(QObject *parent) :
 }
 
 ItemModel::~ItemModel()
-{    
-    while (!m_items.isEmpty())
-        delete m_items.takeFirst();    
+{
+    qDebug() << "delete items model";
+    qDeleteAll(m_items);
+    m_items.clear();
+    qDebug() << "after delete items model";
 }
 
 
@@ -60,7 +62,7 @@ int ItemModel::rowCount(const QModelIndex &parent) const
         return m_items.size();
 }
 
-void ItemModel::newItem(Activity *item)
+void ItemModel::addActivityItem(Activity *item)
 {
     if (!item)
         return;    

@@ -22,10 +22,11 @@ public:
     ItemModel * model();
 
 signals:
+    void dataChanged();
     
 public slots:
     void setDate(const QDate&);
-    //void addActivity(Activity);
+    void addActivity(Activity* item);
 
 private:
 

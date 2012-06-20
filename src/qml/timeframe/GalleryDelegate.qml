@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 1.0
 
 Item {
 
@@ -16,9 +16,10 @@ Item {
         anchors.left: parent.left
         width: 100
         height: labelHeight
-        text: Qt.formatDate( date , "dd-MM-yyyy")
+        text: (size === 0) ? Qt.formatDate( date , "MM-yyyy") : Qt.formatDate( date , "dd-MM-yyyy")
         color: "white"
         horizontalAlignment: Text.AlignHCenter
+        //visible: (size === 0) ? false : true
     }
     Rectangle{
         id: gridBorder
@@ -29,6 +30,28 @@ Item {
         anchors.left: dateLabel.left
         width: parent.width + 10
         height: parent.height + 10
+        //visible: (size === 0) ? false : true
+    }
+    Button{
+        id: showContentButton
+        visible: (size === 0) ? true : false
+        anchors.centerIn: parent
+        width: 100
+        height: 60
+        color: "white"
+        ButtonText {
+            id: buttonText
+            text: "show"
+            anchors.left: parent.left
+        }
+
+        MouseArea{
+            id: buttonMouseArea
+            anchors.fill: parent
+            onClicked: {
+                galleryLister.startSearch(date,1)
+            }
+        }
     }
 
     GridView{
@@ -78,7 +101,31 @@ Item {
     }
 
     function getDelegateWidht( count ){
+        if (count === 0)
+        {
+            //galleryLister.startSearch(date,1)
+            count++
+        }
         var x = Math.ceil(count /3)
         return x
     }
+
+    ListView.onAdd: SequentialAnimation {
+        PropertyAction { target: galleryItem; property: "height"; value: 0 }
+        NumberAnimation { target: galleryItem; property: "height"; to: parent.height; duration: 250; easing.type: Easing.InOutQuad}
+    }
+   /*
+    ListView.onAdd:
+    {
+        //galleryView.positionViewAtIndex(index,ListView.Beginning)
+    }
+    */
+        //    {
+
+        //galleryView.incrementCurrentIndex()
+    //    console.log("+++" + galleryView.currentIndex)
+        //galleryView.positionViewAtEnd();
+        //galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Contain)
+  //  }
+
 }

@@ -11,7 +11,8 @@ Item {
     property ListView lv: scene
 
     property int __year: new Date().getFullYear()   //Current year
-    property int __month: new Date().getMonth()     //Current month
+    property int __month: new Date().getMonth()
+    property int day: new Date().getDate()
     property bool __isSearching: false              //New search in process
     property bool direction: false  //true is - right direction; false - is left
 
@@ -62,8 +63,18 @@ Item {
     //Start new serch
     function currentDateChanged()
     {        
-        //var date = new Date(__year, __month)
-        activityProxy.startNewSearch(__year, __month, direction)
+        var date = new Date(__year, __month)
+        if (timeFrameTab.state === "")
+        {
+           //activityProxy.startNewSearch(__year, __month, direction)
+            activityProxy.startNewSearch(__year, __month, true)
+        }
+        else
+        {
+            var d = new Date(__year, __month, day )
+            //galleryLister.startSearch(d, direction)
+            galleryLister.startSearch(d, true)
+        }
         __isSearching = true
         searchLabel.visible = true
     }
@@ -410,28 +421,30 @@ Item {
         anchors.rightMargin: 20
         visible: false
         highlightFollowsCurrentItem: true
+        highlightRangeMode: ListView.ApplyRange
         model: galleryModel
         delegate: GalleryDelegate { }
-        /*
-        delegate: Item {
-            width: 200
-            height: parent.height
-            Rectangle{
-                id: back
-                anchors.fill: parent
-                color: "red"
+        onCurrentIndexChanged: {
+            console.log("Gallery index " + galleryView.currentIndex + "  " + galleryView.count)
+            if (galleryView.count > 0)
+            {
+                console.log("position view ")
+                //galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center)
             }
-            Text {
-                id: label
-                anchors.fill: parent
-                text: Qt.formatDate( date , "dd-M-yyyy")
-                color: "white"
-            }
-
         }
-        */
-        orientation: ListView.Horizontal
+
+        orientation: ListView.Horizontal        
     }
+    /*
+    MouseArea{
+        id: galleryMouseArea
+        anchors.fill: galleryView
+        anchors.topMargin: 200
+        onClicked: {
+            console.log(galleryView.indexAt(mouseX + galleryView.contentX, mouseY + galleryView.contentY) + " " + galleryView.count)
+        }
+    }
+*/
 
     state: "gallery"
 

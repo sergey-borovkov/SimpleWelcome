@@ -15,12 +15,15 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDateTime>
+#include <QTimer>
+
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
 
 #include <unistd.h>
- #include <QTest>
 
 NepomukSource::NepomukSource(QObject *parent) :
-    ActivitySource(parent), m_searchClient(0) , m_timeScaleClient(0), m_tsSearch(false), set(0)
+    ActivitySource(parent), m_searchClient(0) , m_timeScaleClient(0), m_tsSearch(false), set(0), m_limit(0)
 {
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
@@ -31,6 +34,7 @@ NepomukSource::~NepomukSource()
         m_searchClient->close();
     if(m_timeScaleClient)
         m_timeScaleClient->close();
+    m_searchClient = 0;
 }
 
 ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, const QDate &endDate)
@@ -47,7 +51,7 @@ ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, co
 Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &date)
 {
     Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( date );
-    Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() < Nepomuk::Query::LiteralTerm( date.addDays(1) );
+    Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() < Nepomuk::Query::LiteralTerm( date.addDays(date.daysInMonth()) );
     Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image/"));
     Nepomuk::Query::AndTerm term(beginDateTerm,endDateTerm, image);
 
@@ -76,74 +80,18 @@ ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result
 
 void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
 {
-    m_mode = Normal;
-    /*
-    if (beginDate.isNull())
-        qDebug("----------Null Date");
-        */
-    //qDebug() <<"start new search at " << beginDate << direction;
-    this->direction = direction;
-
-    if(!m_searchClient)
+    if (m_searchQueue.size()==0)
     {
-        m_searchClient = new Nepomuk::Query::QueryServiceClient( this );
-
-        connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processEntry(const QList<Nepomuk::Query::Result> &)));
-
-        connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
-
-    } else
-    {
-        m_searchClient->close();
-    }
-
-    if(!m_tsSearch)
-    {
-        m_tsSearch = true;
-        fillTimeScaleModel( QDate::currentDate());
-    }
-
-    queryDate = beginDate;
-
-    set = new ActivitySet;
-
-    Nepomuk::Query::Query query = createQuery(beginDate);
-
-    query.setLimit(7);
-
-    m_searchClient->query(query);
-
+        m_searchQueue.append(beginDate);
+        startSearchFromQueue();
+    }else
+        m_searchQueue.append(beginDate);
 }
 
-
-void NepomukSource::startDetailedSearch(const QDate &beginDate, Direction direction)
+void NepomukSource::setLimit(int limit)
 {
-    m_mode = Detailed;
-    this->direction = direction;
-
-    if(!m_searchClient)
-    {
-        m_searchClient = new Nepomuk::Query::QueryServiceClient( this );
-
-        connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processEntry(const QList<Nepomuk::Query::Result> &)));
-
-        connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
-
-    } else
-    {
-        m_searchClient->close();
-    }
-
-    queryDate = beginDate;
-
-    set = new ActivitySet;
-
-    Nepomuk::Query::Query query = createQuery(beginDate);
-
-    m_searchClient->query(query);
+    m_limit = limit;
 }
-
-
 
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
@@ -171,8 +119,13 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
    emit newActivities(activities);
 }
 
-void NepomukSource::listingFinished()
+void NepomukSource::error(QString str)
 {
+    qDebug() << "lister error:" << str;
+}
+
+void NepomukSource::listingFinished()
+{    
     //if we got any data in last search - emit it
     if(set->count())
     {
@@ -180,28 +133,30 @@ void NepomukSource::listingFinished()
         emit newActivitySet(set);
     }
 
-    int delta = ( direction == Right ) ? 1 : -1;
+    //int delta = ( direction == Right ) ? 1 : -1;
 
     // continue search if any days in month left
+    /*
     if( queryDate.month() == queryDate.addDays(delta).month() )
     {        
-        //m_searchClient = 0;
-
-        if ( m_mode == Normal )
-        {
-            return startSearch(queryDate.addDays( delta ), direction);
-        } else
-        {
-            return startDetailedSearch(queryDate.addDays( delta ), direction);
-        }
+        return startSearch(queryDate.addDays( delta ), direction);
     }
+    */
+
+
 
     // month changed on this step so we emit previous month
     QDate d = queryDate;
     d.setDate(d.year(), d.month(), 1);
     emit monthFinished(d);
+    emit finishedListing();     
 
-    emit finishedListing();
+    m_searchQueue.removeFirst();
+    if( m_searchQueue.size()>0 )
+    {
+        QTimer::singleShot(1, this, SLOT(startSearchFromQueue()));
+        return;
+    }
 }
 
 
@@ -261,4 +216,49 @@ void NepomukSource::processTSEntry(const QList<Nepomuk::Query::Result> &list)
 {
     if (list.count() > 0)
         emit newTSEntries(m_timeScaleDate.year(),m_timeScaleDate.month());
+/*
+    Nepomuk::Query::Result result = list.at(0);
+    QFileInfo fi(result.resource().toFile().url().path());
+    QDate date = fi.lastModified().date();
+*/
 }
+
+void NepomukSource::startSearchFromQueue()
+{
+    m_mode = Normal;
+    this->direction = NepomukSource::Right;
+
+
+    if(m_searchClient)
+    {
+       m_searchClient->close();
+       m_searchClient->deleteLater();
+    }
+
+    m_searchClient = new Nepomuk::Query::QueryServiceClient();
+
+    connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processEntry(const QList<Nepomuk::Query::Result> &)));
+
+    connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
+
+    connect(m_searchClient, SIGNAL(error(QString)), this, SLOT(error(QString)));
+
+    if(!m_tsSearch)
+    {
+        m_tsSearch = true;
+        fillTimeScaleModel( QDate::currentDate());
+    }
+
+    //queryDate = beginDate;
+
+    set = new ActivitySet;
+
+    //Nepomuk::Query::Query query = createQuery(beginDate);
+    Nepomuk::Query::Query query = createQuery(m_searchQueue.first());
+
+    query.setLimit(m_limit);
+
+    m_searchClient->query(query);
+}
+
+
