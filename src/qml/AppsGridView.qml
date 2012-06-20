@@ -2,13 +2,10 @@ import QtQuick 1.0
 
 GridView {
     id: grid
-    anchors.fill: parent
     cellWidth: width / 7 - 1;
     cellHeight: 200
     focus: true
     clip: true
-
-    model: appsGridModel
 
     onFocusChanged: {
         if(!focus) // fucking dirty hack to receive focus
@@ -27,7 +24,7 @@ GridView {
 
     states: State {
         name: "ShowBars"
-        when: grid.movingVertically || grid.movingHorizontally
+        when: grid.movingVertically
         PropertyChanges { target: verticalScrollBar; opacity: 1 }
     }
 
@@ -89,7 +86,7 @@ GridView {
             if (!grid.moving)
             {
                 var indexClicked = getItemUnderCursor(true)
-                appsGridModel.changeFolder(indexClicked)
+                model.itemClicked(indexClicked)
             }
         }
 
