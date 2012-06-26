@@ -17,6 +17,7 @@ void PluginLoader::loadPlugins()
 
     foreach (QString fileName, modulesDir.entryList(QStringList() << "*.so", QDir::Files))
     {
+        qDebug() << fileName;
         QPluginLoader loader("lib/" + fileName);
         QObject *libObject = loader.instance();
         qDebug() << loader.errorString();

@@ -3,33 +3,24 @@
 
 #include "../src/timeframe/social/socialplugin.h"
 
-#include <QtPlugin>
-#include <QtDeclarative/QDeclarativeView>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QGraphicsObject>
+class QDeclarativeView;
+class RequestManager;
+class OAuth2Authorizer;
 
 class FacebookModule : public QObject, public ISocialModule
 {
     Q_OBJECT
     Q_INTERFACES(ISocialModule)
 public:
-    FacebookModule()
-    {
-        authorizationView = new QDeclarativeView(QUrl("qrc:/qml/main.qml"));
-    }
+    FacebookModule();
 
-    ~FacebookModule() {}
-    QWidget *authenticationWidget()
-    {        
-        return authorizationView;
-    }
+    virtual ISocialRequestManager* requestManager();
+    QWidget *authenticationWidget();
 
 private:
-    QDeclarativeView *authorizationView;
+    QDeclarativeView *m_authorizationView;
+    RequestManager *m_requestManager;
+    OAuth2Authorizer *m_authorizer;
 };
-
-QT_BEGIN_NAMESPACE
-Q_EXPORT_PLUGIN2(facebook-timeframe-plugin, FacebookModule)
-QT_END_NAMESPACE
 
 #endif
