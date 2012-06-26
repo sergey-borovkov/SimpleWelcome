@@ -7,23 +7,14 @@
 #include <QtCore/QUrl>
 #include <QtPlugin>
 
-class ISocialActivity
-{
-
-};
-
-class WallPost
-{
-
-};
-
 class ISocialRequestManager : public QObject
 {
     Q_OBJECT
+public:
+    virtual ~ISocialRequestManager() = 0;
+
 public slots:
     virtual void queryWall(const QDate &beginDate, const QDate &endDate) = 0;
-signals:
-    virtual void newWallElement(IWallPost post);
 };
 
 class User
@@ -41,16 +32,14 @@ private:
     QUrl m_url;
 };
 
-class ISocialModule //: public QObject
+class ISocialModule
 {
 public:
-    ISocialModule()
-    {}
     virtual ~ISocialModule() = 0;
     virtual QWidget *authenticationWidget() = 0;
+    ISocialRequestManager *requestManager();
 };
 
-QT_BEGIN_NAMESPACE
 Q_DECLARE_INTERFACE(ISocialModule, "Timeframe_Library.SocialModule/1.0")
-QT_END_NAMESPACE
+
 #endif // SOCIALPLUGIN_H
