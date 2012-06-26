@@ -83,7 +83,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             selectByMouse: true
-            //focus: true
+            focus: true
             color: "white"
             font.family: "Bitstream Vera Sans"
             font.italic: true
@@ -94,13 +94,13 @@ Item {
             }
         }
         Binding {
-            target: searchRunner
+            target: searchGridModel
             property: "searchQuery"
             value: searchInput.text
         }
     }
 
-    DropBox {
+    SessionComboBox {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         anchors.rightMargin: 16

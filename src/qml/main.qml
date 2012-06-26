@@ -18,31 +18,10 @@ Item {
 
     NumberAnimation on opacity { to: 1.0; duration: 500 }
 
-    /*
-    Component.onCompleted: testing()
-
-    function testing()
-    {
-        console.log("RecentApps:", recentAppsProvider.getRecentAppsList());
-        console.log("Places:", placesProvider.getPlacesList());
-        console.log("RecentDocs:", documentsProvider.getDocsList());
-    }
-    */
-
     function reloadTabs() {
         welcomeTab.reload();
         appsTab.reload();
     }
-
-    /*
-    Image {
-        width: 64
-        height: 64
-        anchors.fill: parent
-        fillMode: Image.Tile
-        source: "image://generalicon/asset/background2.png"
-    }
-    */
 
     Image {
         anchors.fill: parent
@@ -75,14 +54,6 @@ Item {
             width: tabListView.width
             height: tabListView.height
         }
-
-        /*
-        SecondTab {
-            id: appsTab
-            width: tabListView.width
-            height: tabListView.height
-        }
-        */
 
         ApplicationsTab {
             id: appsTab
@@ -132,6 +103,16 @@ Item {
             highlightRangeMode: ListView.StrictlyEnforceRange
 
             currentIndex: 1
+
+            function currentTabIndexChanged(newCurrentIndex) {
+                tabListView.currentIndex = newCurrentIndex
+            }
+
+            Component.onCompleted: {
+                searchGridModel.currentTabIndexChanged.connect(currentTabIndexChanged);
+            }
+
+            //currentIndex: searchGridModel.
         }
     }
 

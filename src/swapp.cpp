@@ -35,6 +35,7 @@
 #include "recentappsgridmodel.h"
 #include "favoritesgridmodel.h"
 #include "documentsgridmodel.h"
+#include "searchgridmodel.h"
 
 SWApp* SWApp::self()
 {
@@ -67,10 +68,6 @@ SWApp::SWApp()
     qmlRegisterType<AppEntity>("AppEntity", 1, 0, "AppEntity");
     m_viewer->rootContext()->setContextProperty("appProvider", m_appProvider);
 
-    m_searchRunner = new SearchRunner();
-    m_searchRunner->init();
-    m_viewer->rootContext()->setContextProperty("searchRunner", m_searchRunner);
-
     m_recentAppsProvider = new RecentAppsProvider();
     m_recentAppsProvider->init();
     m_appProvider->setAppLaunchReciever(m_recentAppsProvider);
@@ -94,7 +91,6 @@ SWApp::SWApp()
 
     m_generalIconProvider = new GeneralIconProvider();
     m_generalIconProvider->setIsLocal(isLocal());
-    m_generalIconProvider->setSearchRunner(m_searchRunner);
     m_generalIconProvider->setRecentAppsProvider(m_recentAppsProvider);
     m_generalIconProvider->setPlacesProvider(m_placesProvider);
     m_generalIconProvider->setDocumentsProvider(m_documentsProvider);
@@ -102,13 +98,15 @@ SWApp::SWApp()
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
     m_viewer->rootContext()->setContextProperty("appsGridModel", new AppsGridModel(this) );
-    m_viewer->rootContext()->setContextProperty("recentAppsGridModel", new RecentAppsGridModel(this) );
-    m_viewer->rootContext()->setContextProperty("favoritesGridModel", new FavoritesGridModel(this) );
-    m_viewer->rootContext()->setContextProperty("documentsGridModel", new DocumentsGridModel(this) );
+    m_viewer->rootContext()->setContextProperty("recentAppsGridModel", new RecentAppsGridModel(this));
+    m_viewer->rootContext()->setContextProperty("favoritesGridModel", new FavoritesGridModel(this));
+    m_viewer->rootContext()->setContextProperty("documentsGridModel", new DocumentsGridModel(this));
+    m_viewer->rootContext()->setContextProperty("searchGridModel", new SearchGridModel(this));
+    m_viewer->rootContext()->setContextProperty("currentTabIndex", 0);
 
     m_viewer->showExpanded();
-    //m_viewer->showFullScreen();
-    m_viewer->setGeometry(500, 500, 640, 480);
+    m_viewer->showFullScreen();
+    //m_viewer->setGeometry(500, 500, 640, 480);
     //m_viewer->setFixedSize( m_viewer->sizeHint() );
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
@@ -127,7 +125,6 @@ SWApp::~SWApp()
 {
     delete m_viewer;
     delete m_appProvider;
-    delete m_searchRunner;
     delete m_recentAppsProvider;
     delete m_placesProvider;
     delete m_documentsProvider;
