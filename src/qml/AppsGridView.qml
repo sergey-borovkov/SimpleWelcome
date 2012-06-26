@@ -7,10 +7,10 @@ GridView {
     focus: true
     clip: true
 
-    onFocusChanged: {
+    /*onFocusChanged: {
         if(!focus) // fucking dirty hack to receive focus
             grid.forceActiveFocus()
-    }
+    }*/
 
     highlight: Rectangle {
         width: 120

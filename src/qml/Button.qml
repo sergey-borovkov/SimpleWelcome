@@ -6,23 +6,7 @@ Item {
     width: 120
     height: childrenRect.height//140
 
-    property string label: ""
-    property string iconUrl: ""
-    property variant clickCallbackData: "DATA"
-
     signal activated(bool isActive, variant element)
-
-    /*
-    Image {
-        id: buttonIconBackground
-        source: "image://generalicon/asset/button.png"
-        width: 78
-        height: 78
-        anchors.top: parent.top
-        anchors.topMargin: 0
-        anchors.horizontalCenter: parent.horizontalCenter
-    }
-    */
 
     Image {
         id: buttonIcon

@@ -4,7 +4,7 @@
 
 class AppsGridModel : public QAbstractListModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
     enum

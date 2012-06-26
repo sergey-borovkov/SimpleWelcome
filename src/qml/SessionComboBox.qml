@@ -1,8 +1,6 @@
 import QtQuick 1.1
 
 Item {
-    id: dropbox
-
     width: 100
     height: 38
 
@@ -17,12 +15,12 @@ Item {
         hoverEnabled: true
 
         onExited: {
-            dropboxListBody.hide();
+            comboBoxListBody.hide();
         }
     }
 
     Rectangle {
-        id: dropboxButtonBody
+        id: comboBoxButtonBody
         anchors.fill: parent
 
         color: "#222"
@@ -33,7 +31,7 @@ Item {
         z: 10
 
         Text {
-            id: dropboxButtonText
+            id: comboBoxButtonText
 
             x: 16
             anchors.verticalCenter: parent.verticalCenter
@@ -52,18 +50,18 @@ Item {
         }
 
         MouseArea {
-            id: dropboxButtonMouseArea
+            id: comboBoxButtonMouseArea
 
             anchors.fill: parent
 
             onPressed: {
-                dropboxListBody.hide();
+                comboBoxListBody.hide();
                 sessionProvider.lock();
             }
         }
 
         Rectangle {
-            id: dropboxDrop
+            id: comboBoxDrop
 
             height: parent.height // probably not needed
             width: parent.height // probably not needed
@@ -80,19 +78,19 @@ Item {
                 anchors.fill: parent
 
                 onClicked: {
-                    dropboxListBody.toggle();
+                    comboBoxListBody.toggle();
                 }
             }
         }
     }
 
     Rectangle {
-        id: dropboxListBody
+        id: comboBoxListBody
 
-        width: dropboxButtonBody.width
+        width: comboBoxButtonBody.width
         height: 0
 
-        property int unfoldedHeight: dropboxButtonBody.height * 2
+        property int unfoldedHeight: comboBoxButtonBody.height * 2
 
         anchors.top: parent.top
         anchors.left: parent.left
@@ -123,14 +121,14 @@ Item {
         }
 
         Item {
-            id: dropboxListSelection
+            id: comboBoxListSelection
 
             width: parent.width
-            height: dropboxButtonBody.height
-            y: dropboxButtonBody.height
+            height: comboBoxButtonBody.height
+            y: comboBoxButtonBody.height
 
             Text {
-                id: dropBoxListSelectionText
+                id: comboBoxListSelectionText
 
                 x: 16
                 anchors.verticalCenter: parent.verticalCenter
@@ -154,7 +152,7 @@ Item {
                 anchors.fill: parent
 
                 onPressed: {
-                    dropboxListBody.hide();
+                    comboBoxListBody.hide();
                     sessionProvider.shutdown();
                 }
             }

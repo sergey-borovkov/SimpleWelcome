@@ -3,7 +3,6 @@
 
 #include <QDeclarativeImageProvider>
 
-class SearchRunner;
 class RecentAppsProvider;
 class PlacesProvider;
 class DocumentsProvider;
@@ -16,7 +15,6 @@ public:
     ~GeneralIconProvider(void);
 
     void setIsLocal(bool isLocal) { m_isLocal = isLocal; }
-    void setSearchRunner(SearchRunner *searchRunner) { m_searchRunner = searchRunner; }
     void setRecentAppsProvider(RecentAppsProvider *recentAppsProvider) { m_recentAppsProvider = recentAppsProvider; }
     void setPlacesProvider(PlacesProvider *placesProvider) { m_placesProvider = placesProvider; }
     void setDocumentsProvider(DocumentsProvider *documentsProvider) { m_documentsProvider = documentsProvider; }
@@ -26,7 +24,6 @@ public:
 
 private:
     bool m_isLocal;
-    SearchRunner *m_searchRunner;
     RecentAppsProvider *m_recentAppsProvider;
     PlacesProvider *m_placesProvider;
     DocumentsProvider *m_documentsProvider;

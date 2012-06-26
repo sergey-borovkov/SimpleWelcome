@@ -23,7 +23,6 @@
  */
 
 #include "generaliconprovider.h"
-#include "searchrunner.h"
 #include "recentappsprovider.h"
 #include "placesprovider.h"
 #include "documentsprovider.h"
@@ -35,7 +34,6 @@
 GeneralIconProvider::GeneralIconProvider()
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
       m_isLocal(true),
-      m_searchRunner(0),
       m_recentAppsProvider(0),
       m_placesProvider(0),
       m_documentsProvider(0),
@@ -60,10 +58,6 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     if(iconType == "appicon")
     {
         icon = KIcon(iconName);
-    }
-    else if(iconType == "search" && m_searchRunner != NULL)
-    {
-        icon = KIcon(m_searchRunner->getMatchIcon(iconName));
     }
     else if(iconType == "recentApp" && m_recentAppsProvider != NULL)
     {

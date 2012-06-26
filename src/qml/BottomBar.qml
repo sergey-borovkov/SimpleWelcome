@@ -6,11 +6,8 @@ Item {
     anchors.bottom: parent.bottom
     width: parent.width
     height: 80
-    //color: "grey"
-    //color: "transparent"
 
     Row {
-        //anchors.centerIn: parent
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 16

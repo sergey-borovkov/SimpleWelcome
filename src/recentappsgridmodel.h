@@ -6,7 +6,7 @@ class AppItem;
 
 class RecentAppsGridModel : public QAbstractListModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
     enum

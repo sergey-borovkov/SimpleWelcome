@@ -6,13 +6,12 @@ Item {
     clip: true
     anchors.topMargin: 16
 
-    //signal newMatchesFound()
+    AppsGridView {
+        anchors.fill: parent
+        model: searchGridModel
+    }
 
-    property variant _buttonComp
-
-    Component.onCompleted: load();
-
-    function load()
+/*    function load()
     {
         _buttonComp = Qt.createComponent("Button.qml");
         if(_buttonComp.status == Component.Error)
@@ -69,7 +68,7 @@ Item {
 
             button.buttonClick.connect(createMatchCallback(matchName));
         }
-    }
+    }*/
 
     function hideSearchTab()
     {
