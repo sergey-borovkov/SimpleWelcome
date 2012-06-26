@@ -17,15 +17,32 @@ void PluginLoader::loadPlugins()
 
     foreach (QString fileName, modulesDir.entryList(QStringList() << "*.so", QDir::Files))
     {
-        qDebug() << fileName;
         QPluginLoader loader("lib/" + fileName);
         QObject *libObject = loader.instance();
-        qDebug() << loader.errorString();
         if (ISocialModule *lib = qobject_cast<ISocialModule*>(libObject))
         {
-            QWidget *w = lib->authenticationWidget();
-            if(w)
-                w->show();
+            plugins << lib;
+            bool b = connect(lib, SIGNAL(authorizationStatusChanged(int)), SLOT(authorizationChanged(int)));
+            qDebug() << b << "connect" ;
+            QWidget *wind = lib->authenticationWidget();
+            if(wind)
+            {
+                connect(wind, SIGNAL(destroyed()), SLOT(authorizationChanged()));
+                wind->show();
+            }
         }
     }
+}
+
+void PluginLoader::authorizationChanged(int status)
+{
+    qDebug() << "WE ARE FUCKING HERE";
+    if(status == ISocialModule::Success)
+        plugins[0]->requestManager()->queryWall(QDate(), QDate());
+}
+
+void PluginLoader::authorizationChanged()
+{
+    qDebug() << "WE ARE FUCKING HERE";
+    plugins[0]->requestManager()->queryWall(QDate(), QDate());
 }
