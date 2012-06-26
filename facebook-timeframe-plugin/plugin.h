@@ -7,7 +7,7 @@ class QDeclarativeView;
 class RequestManager;
 class OAuth2Authorizer;
 
-class FacebookModule : public QObject, public ISocialModule
+class FacebookModule : public ISocialModule
 {
     Q_OBJECT
     Q_INTERFACES(ISocialModule)
@@ -17,6 +17,8 @@ public:
     virtual ISocialRequestManager* requestManager();
     QWidget *authenticationWidget();
 
+private slots:
+    void onAcessTokenChanged();
 private:
     QDeclarativeView *m_authorizationView;
     RequestManager *m_requestManager;

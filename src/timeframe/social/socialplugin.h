@@ -19,7 +19,7 @@ public slots:
 
 class User
 {
-public:    
+public:
     QString firstName() const { return m_firstName; }
     void setFirstName(const QString &name) { m_firstName = name; }
     QString lastName() const { return m_lastName; }
@@ -32,12 +32,23 @@ private:
     QUrl m_url;
 };
 
-class ISocialModule
+class ISocialModule : public QObject
 {
+    Q_OBJECT
 public:
+    enum AuthorizationStatus
+    {
+        Success,
+        Expired,
+        Failure
+    };
+
     virtual ~ISocialModule() = 0;
     virtual QWidget *authenticationWidget() = 0;
-    ISocialRequestManager *requestManager();
+    virtual ISocialRequestManager *requestManager() = 0;
+
+signals:
+    void authorizationStatusChanged(int status);
 };
 
 Q_DECLARE_INTERFACE(ISocialModule, "Timeframe_Library.SocialModule/1.0")
