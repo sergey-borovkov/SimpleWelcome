@@ -29,8 +29,6 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 
-#include <QMovie>
-
 #include "appsgridmodel.h"
 #include "recentappsgridmodel.h"
 #include "favoritesgridmodel.h"
@@ -50,51 +48,20 @@ SWApp::SWApp()
     : KUniqueApplication(),
       m_inited(false)
 {
-
     m_viewer = new QmlApplicationViewer();
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
-
     // Window transparency
     m_viewer->setAttribute(Qt::WA_TranslucentBackground);
     m_viewer->setStyleSheet("background:transparent;");
 
-    //kDebug() << QMovie::supportedFormats();
+    m_viewer->rootContext()->setContextProperty("sessionProvider", new SessionProvider(this));
 
-    //m_viewer->addImportPath("/usr/lib/kde4/imports/");
-
-    m_appProvider = new AppProvider();
-    m_appProvider->init();
-
-    qmlRegisterType<AppEntity>("AppEntity", 1, 0, "AppEntity");
-    m_viewer->rootContext()->setContextProperty("appProvider", m_appProvider);
-
-    m_recentAppsProvider = new RecentAppsProvider();
-    m_recentAppsProvider->init();
-    m_appProvider->setAppLaunchReciever(m_recentAppsProvider);
-    m_viewer->rootContext()->setContextProperty("recentAppsProvider", m_recentAppsProvider);
-
-    m_placesProvider = new PlacesProvider();
-    m_placesProvider->init();
-    m_viewer->rootContext()->setContextProperty("placesProvider", m_placesProvider);
-
-    m_documentsProvider = new DocumentsProvider();
-    m_documentsProvider->init();
-    m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
-
-    m_sessionProvider = new SessionProvider();
-    m_sessionProvider->init();
-    m_viewer->rootContext()->setContextProperty("sessionProvider", m_sessionProvider);
-
-    m_userInfoProvider = new UserInfoProvider();
-    m_userInfoProvider->init();
-    m_viewer->rootContext()->setContextProperty("userInfoProvider", m_userInfoProvider);
+    UserInfoProvider *userInfoProvider = new UserInfoProvider(this);
+    m_viewer->rootContext()->setContextProperty("userInfoProvider", userInfoProvider);
 
     m_generalIconProvider = new GeneralIconProvider();
     m_generalIconProvider->setIsLocal(isLocal());
-    m_generalIconProvider->setRecentAppsProvider(m_recentAppsProvider);
-    m_generalIconProvider->setPlacesProvider(m_placesProvider);
-    m_generalIconProvider->setDocumentsProvider(m_documentsProvider);
-    m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
+    m_generalIconProvider->setUserInfoProvider(userInfoProvider);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
     m_viewer->rootContext()->setContextProperty("appsGridModel", new AppsGridModel(this) );
@@ -102,7 +69,6 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("favoritesGridModel", new FavoritesGridModel(this));
     m_viewer->rootContext()->setContextProperty("documentsGridModel", new DocumentsGridModel(this));
     m_viewer->rootContext()->setContextProperty("searchGridModel", new SearchGridModel(this));
-    m_viewer->rootContext()->setContextProperty("currentTabIndex", 0);
 
     m_viewer->showExpanded();
     m_viewer->showFullScreen();
@@ -124,12 +90,6 @@ SWApp::SWApp()
 SWApp::~SWApp()
 {
     delete m_viewer;
-    delete m_appProvider;
-    delete m_recentAppsProvider;
-    delete m_placesProvider;
-    delete m_documentsProvider;
-    delete m_sessionProvider;
-    delete m_userInfoProvider;
 }
 
 int SWApp::newInstance()

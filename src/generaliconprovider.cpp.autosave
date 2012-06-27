@@ -36,11 +36,6 @@ GeneralIconProvider::GeneralIconProvider()
 
 }
 
-GeneralIconProvider::~GeneralIconProvider()
-{
-
-}
-
 QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, const QSize &requestedSize)
 {
     KIcon icon;

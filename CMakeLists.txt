@@ -16,13 +16,8 @@ file(GLOB qml_files "${CMAKE_CURRENT_SOURCE_DIR}/src/qml/*.qml")
 
 set(rosa-launcher-qtquick_SRCS src/main.cpp
 							   src/swapp.cpp
-							   src/appentity.cpp
-							   src/appprovider.cpp
 							   src/searchgridmodel.cpp
 							   src/generaliconprovider.cpp
-							   src/recentappsprovider.cpp
-							   src/placesprovider.cpp
-							   src/documentsprovider.cpp
 							   src/sessionprovider.cpp
 							   src/userinfoprovider.cpp
 							   src/qmlapplicationviewer/qmlapplicationviewer.cpp

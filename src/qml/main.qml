@@ -19,8 +19,9 @@ Item {
     NumberAnimation on opacity { to: 1.0; duration: 500 }
 
     function reloadTabs() {
-        welcomeTab.reload();
-        appsTab.reload();
+        console.log("reload here")
+        /*welcomeTab.reload();
+        appsTab.reload();*/
     }
 
     Image {
@@ -61,11 +62,11 @@ Item {
             height: tabListView.height
         }
 
-        TestingTab {
+/*        TestingTab {
             id: testingTab
             width: tabListView.width
             height: tabListView.height
-        }
+        }*/
     }
 
     TopBar {

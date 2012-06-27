@@ -5,7 +5,7 @@ Item {
 
     width: 200
     height: 36
-    
+
     property color buttonColor: "lightblue"
     property color onHoverColor: "gold"
     property color borderColor: "white"
@@ -31,17 +31,17 @@ Item {
         font.bold: true
         font.family: "Bitstream Vera Sans"
     }
-    
+
     signal buttonClick()
     onButtonClick: {
-        console.log(buttonLabel.text + " clicked")
+        //console.log(buttonLabel.text + " clicked")
     }
 
     MouseArea {
         id: buttonMouseArea
 
         anchors.fill: parent
-        
+
         onClicked: buttonClick()
         hoverEnabled: true
         //onEntered: parent.border.color = onHoverColor

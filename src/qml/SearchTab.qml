@@ -70,7 +70,7 @@ Item {
         }
     }*/
 
-    function hideSearchTab()
+    /*function hideSearchTab()
     {
         tabListView.currentIndex = 1
     }
@@ -117,5 +117,5 @@ Item {
         orientation: Qt.Vertical
         position: view.visibleArea.yPosition
         pageSize: view.visibleArea.heightRatio
-    }
+    }*/
 }

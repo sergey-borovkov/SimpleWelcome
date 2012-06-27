@@ -88,10 +88,6 @@ Item {
             font.family: "Bitstream Vera Sans"
             font.italic: true
             font.pixelSize: 18
-
-            onTextChanged: {
-                searchTextChanged(text);
-            }
         }
         Binding {
             target: searchGridModel
@@ -100,16 +96,16 @@ Item {
         }
     }
 
-    SessionComboBox {
+    /*SessionComboBox {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         anchors.rightMargin: 16
 
         width: 180
         height: 38
-    }
+    }*/
 
-    /*
+
     // Old Logout and Shutdown buttons
     Item {
         id: lockButton
@@ -166,12 +162,5 @@ Item {
             }
 
         }
-    }
-    */
-
-    function searchTextChanged(text)
-    {
-        if(text.length <= 0)
-          searchTab.hideSearchTab();
     }
 }
