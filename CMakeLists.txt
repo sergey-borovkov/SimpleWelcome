@@ -23,6 +23,7 @@ kde4_add_executable(rosa-launcher-qtquick ${HEADERS} ${SOURCES} ${QML} ${QRC_SOU
 
 target_link_libraries(rosa-launcher-qtquick ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KFILE_LIBS} ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES} ${NEPOMUK_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES})
 
+#add_subdirectory(facebook-timeframe-plugin)
 
 # INSTALL
 install(TARGETS rosa-launcher-qtquick ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -36,4 +37,4 @@ install(FILES ${qml_tf_files} DESTINATION share/${PROJECT_NAME}/qml/timeframe/)
 install(FILES ${qml_js_files} DESTINATION share/${PROJECT_NAME}/qml)
 install(FILES ${asset_files} DESTINATION share/${PROJECT_NAME}/assets)
 
-#add_subdirectory(facebook-timeframe-plugin)
+
