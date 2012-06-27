@@ -5,12 +5,7 @@
 
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
 
-#include "appprovider.h"
-#include "appentity.h"
 #include "generaliconprovider.h"
-#include "recentappsprovider.h"
-#include "placesprovider.h"
-#include "documentsprovider.h"
 #include "sessionprovider.h"
 #include "userinfoprovider.h"
 
@@ -36,13 +31,7 @@ private:
     bool m_inited;
     QmlApplicationViewer *m_viewer;
 
-    AppProvider *m_appProvider;
     GeneralIconProvider *m_generalIconProvider;
-    RecentAppsProvider *m_recentAppsProvider;
-    PlacesProvider *m_placesProvider;
-    DocumentsProvider *m_documentsProvider;
-    SessionProvider *m_sessionProvider;
-    UserInfoProvider *m_userInfoProvider;
 };
 
 #endif // SW_APP_H

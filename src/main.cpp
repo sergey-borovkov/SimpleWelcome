@@ -48,6 +48,10 @@ int main(int argc, char *argv[])
                         ki18n("Author"),
                         "alexey.yermakov@rosalab.ru");
 
+    aboutData.addAuthor(ki18n("Alexander Skakov"),
+                        ki18n("Author"),
+                        "alexander.skakov@osinit.ru");
+
     KCmdLineArgs::init(argc, argv, &aboutData);
 
     /*

@@ -7,8 +7,7 @@ class UserInfoProvider;
 class GeneralIconProvider : public QDeclarativeImageProvider
 {
 public:
-    GeneralIconProvider(void);
-    ~GeneralIconProvider(void);
+    GeneralIconProvider();
 
     void setIsLocal(bool isLocal) { m_isLocal = isLocal; }
     void setUserInfoProvider(UserInfoProvider *userInfoProvider) { m_userInfoProvider = userInfoProvider; }
