@@ -25,57 +25,57 @@
 #include "userinfoprovider.h"
 
 UserInfoProvider::UserInfoProvider(void)
-  : QObject(),
-    m_userInfo(0)
+    : QObject(),
+      m_userInfo(0)
 {
 }
 
 UserInfoProvider::~UserInfoProvider(void)
 {
-  delete m_userInfo;
-  m_userInfo = NULL;
+    delete m_userInfo;
+    m_userInfo = NULL;
 }
 
 void UserInfoProvider::init(void)
 {
-  m_userInfo = new KUser();
+    m_userInfo = new KUser();
 }
 
 QString UserInfoProvider::getFullName(void)
 {
-  if(m_userInfo == NULL)
-    return QString();
-  
-  return m_userInfo->fullName();
+    if(m_userInfo == NULL)
+        return QString();
+
+    return m_userInfo->fullName();
 }
 
 QString UserInfoProvider::getLoginName(void)
 {
-  if(m_userInfo == NULL)
-    return QString();
-  
-  return m_userInfo->loginName();
+    if(m_userInfo == NULL)
+        return QString();
+
+    return m_userInfo->loginName();
 }
 
 QString UserInfoProvider::getUserName(void)
 {
-  if(m_userInfo == NULL)
-    return QString();
-  
-  QString username = m_userInfo->fullName();
+    if(m_userInfo == NULL)
+        return QString();
 
-  if(username.isEmpty())
-    username = m_userInfo->loginName();
+    QString username = m_userInfo->fullName();
 
-  return username;
+    if(username.isEmpty())
+        username = m_userInfo->loginName();
+
+    return username;
 }
 
 QString UserInfoProvider::getIconPath(void)
 {
-  if(m_userInfo == NULL)
-    return QString();
+    if(m_userInfo == NULL)
+        return QString();
 
-  return m_userInfo->faceIconPath();
+    return m_userInfo->faceIconPath();
 }
 
 

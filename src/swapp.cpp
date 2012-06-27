@@ -44,6 +44,8 @@
 #include "timeframe/activitymodel.h"
 #include "timeframe/social/pluginloader.h"
 #include "timeframe/social/socialpluginmanager.h"
+#include "timeframe/itemmodel.h"
+#include "timeframe/galleryitem.h"
 
 SWApp* SWApp::self()
 {
@@ -55,82 +57,103 @@ SWApp* SWApp::self()
 }
 
 SWApp::SWApp()
-  : KUniqueApplication(),
-    m_inited(false)
+    : KUniqueApplication(),
+      m_inited(false)
 {
-  m_viewer = new QmlApplicationViewer();
-  m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
+    m_viewer = new QmlApplicationViewer();
+    m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
-  // Window transparency
-  m_viewer->setAttribute(Qt::WA_TranslucentBackground);
-  m_viewer->setStyleSheet("background:transparent;");
+    // Window transparency
+    m_viewer->setAttribute(Qt::WA_TranslucentBackground);
+    m_viewer->setStyleSheet("background:transparent;");
 
-  //kDebug() << QMovie::supportedFormats();
+    //kDebug() << QMovie::supportedFormats();
 
-  //m_viewer->addImportPath("/usr/lib/kde4/imports/");
+    //m_viewer->addImportPath("/usr/lib/kde4/imports/");
 
-  m_appProvider = new AppProvider();
-  m_appProvider->init();
+    m_appProvider = new AppProvider();
+    m_appProvider->init();
 
-  qmlRegisterType<AppEntity>("AppEntity", 1, 0, "AppEntity");
-  m_viewer->rootContext()->setContextProperty("appProvider", m_appProvider);
+    qmlRegisterType<AppEntity>("AppEntity", 1, 0, "AppEntity");
+    m_viewer->rootContext()->setContextProperty("appProvider", m_appProvider);
 
-  m_searchRunner = new SearchRunner();
-  m_searchRunner->init();
-  m_viewer->rootContext()->setContextProperty("searchRunner", m_searchRunner);
+    m_searchRunner = new SearchRunner();
+    m_searchRunner->init();
+    m_viewer->rootContext()->setContextProperty("searchRunner", m_searchRunner);
 
-  m_appIconProvider = new AppIconProvider();
-  m_viewer->engine()->addImageProvider(QLatin1String("appicon"), m_appIconProvider);
+    m_recentAppsProvider = new RecentAppsProvider();
+    m_recentAppsProvider->init();
+    m_appProvider->setAppLaunchReciever(m_recentAppsProvider);
+    m_viewer->rootContext()->setContextProperty("recentAppsProvider", m_recentAppsProvider);
 
-  m_recentAppsProvider = new RecentAppsProvider();
-  m_recentAppsProvider->init();
-  m_appProvider->setAppLaunchReciever(m_recentAppsProvider);
-  m_viewer->rootContext()->setContextProperty("recentAppsProvider", m_recentAppsProvider);
+    m_placesProvider = new PlacesProvider();
+    m_placesProvider->init();
+    m_viewer->rootContext()->setContextProperty("placesProvider", m_placesProvider);
 
-  m_model = new ActivityModel;
-  m_proxy = new ActivityProxy;
-  m_source = new NepomukSource;
-  m_nepomukThread = new QThread(this);
-  m_source->moveToThread(m_nepomukThread);
-  m_nepomukThread->start();
+    m_documentsProvider = new DocumentsProvider();
+    m_documentsProvider->init();
+    m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
 
-  m_proxy->addSource( m_source );
+    m_sessionProvider = new SessionProvider();
+    m_sessionProvider->init();
+    m_viewer->rootContext()->setContextProperty("sessionProvider", m_sessionProvider);
 
-  m_model->addProxy(m_proxy);
+    m_userInfoProvider = new UserInfoProvider();
+    m_userInfoProvider->init();
+    m_viewer->rootContext()->setContextProperty("userInfoProvider", m_userInfoProvider);
+
+    m_generalIconProvider = new GeneralIconProvider();
+    m_generalIconProvider->setIsLocal(isLocal());
+    m_generalIconProvider->setSearchRunner(m_searchRunner);
+    m_generalIconProvider->setRecentAppsProvider(m_recentAppsProvider);
+    m_generalIconProvider->setPlacesProvider(m_placesProvider);
+    m_generalIconProvider->setDocumentsProvider(m_documentsProvider);
+    m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
+    m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
+
+    /*TF*/
+    m_model = new ActivityModel;
+    m_proxy = new ActivityProxy;
+    m_source = new NepomukSource;
+    m_nepomukThread = new QThread(this);
+    m_source->moveToThread(m_nepomukThread);
+    m_nepomukThread->start();
+
+    /* TF Gallery mode */
+
+    GalleryModel* model = new GalleryModel;
+    m_viewer->rootContext()->setContextProperty( "galleryModel", model );
+    GalleryLister* lister = new GalleryLister;
+    lister->addNepomukSource(m_source);
+    model->setLister(lister);
+    m_viewer->rootContext()->setContextProperty( "galleryLister", lister );
+    qmlRegisterUncreatableType<Activity>("Acitivity", 1, 0, "Activity", "Activity is supposed to be used from C++");
+    qmlRegisterUncreatableType<GalleryItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
+    qmlRegisterUncreatableType<GalleryItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
+
+    /* ------------------*/
+
+    m_proxy->addSource( m_source );
+    m_model->addProxy(m_proxy);
+
+    /*----------------------------*/
 
 
-  m_placesProvider = new PlacesProvider();
-  m_placesProvider->init();
-  m_viewer->rootContext()->setContextProperty("placesProvider", m_placesProvider);
+    m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
+    m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
+    m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
+    m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
 
-  m_documentsProvider = new DocumentsProvider();
-  m_documentsProvider->init();
-  m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
-  m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
-  m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
-  m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
+    m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
 
-  m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
+    qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
+    qmlRegisterUncreatableType<ActivityList>("ActivityList", 1, 0, "ActivityList", "ActivityList is supposed to be used from C++");
 
-  qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
-  qmlRegisterUncreatableType<ActivityList>("ActivityList", 1, 0, "ActivityList", "ActivityList is supposed to be used from C++");
 
-  m_userInfoProvider = new UserInfoProvider();
-  m_userInfoProvider->init();
-  m_viewer->rootContext()->setContextProperty("userInfoProvider", m_userInfoProvider);
-
-  m_generalIconProvider = new GeneralIconProvider();
-  m_generalIconProvider->setIsLocal(isLocal());
-  m_generalIconProvider->setSearchRunner(m_searchRunner);
-  m_generalIconProvider->setRecentAppsProvider(m_recentAppsProvider);
-  m_generalIconProvider->setPlacesProvider(m_placesProvider);
-  m_generalIconProvider->setDocumentsProvider(m_documentsProvider);
-  m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
-  m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
-
-  m_viewer->show();
-  //m_viewer->showExpanded();
-  //m_viewer->showFullScreen();
+    m_viewer->show();
+    //m_viewer->showExpanded();
+    m_viewer->setGeometry(100, 000, 640, 480);
+    //m_viewer->showFullScreen();
 
   PluginLoader loader;
   QList<ISocialModule *> plugins = loader.loadPlugins();
@@ -138,40 +161,33 @@ SWApp::SWApp()
 
 
 
-  QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
+    QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 
-  if(isLocal())
-    m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
-  else
-    m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
+    if(isLocal())
+        m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
+    else
+        m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
 
-  QTimer::singleShot(1000, this, SLOT(init()));
+    QTimer::singleShot(1000, this, SLOT(init()));
 
-  setQuitOnLastWindowClosed(true);
+    setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
+
 }
 
 SWApp::~SWApp()
 {
-  delete m_viewer;
-  delete m_appProvider;
-  delete m_appIconProvider;
-  delete m_searchRunner;
-  delete m_generalIconProvider;
-  delete m_recentAppsProvider;
-  delete m_placesProvider;
-  delete m_documentsProvider;
-  delete m_sessionProvider;
-  delete m_userInfoProvider;
-  m_viewer = NULL;
-  m_appProvider = NULL;
-  m_appIconProvider = NULL;
-  m_searchRunner = NULL;
-  m_generalIconProvider = NULL;
-  m_recentAppsProvider = NULL;
-  m_placesProvider = NULL;
-  m_documentsProvider = NULL;
-  m_sessionProvider = NULL;
-  m_userInfoProvider = NULL;
+    delete m_viewer;
+    delete m_appProvider;
+    delete m_searchRunner;
+    delete m_recentAppsProvider;
+    delete m_placesProvider;
+    delete m_documentsProvider;
+    delete m_sessionProvider;
+    delete m_userInfoProvider;
+    delete m_model;
+    delete m_proxy;
+    delete m_source;
+
 }
 
 int SWApp::newInstance()
@@ -182,26 +198,26 @@ int SWApp::newInstance()
 
 bool SWApp::event(QEvent *event)
 {
-  return KUniqueApplication::event(event);
+    return KUniqueApplication::event(event);
 }
 
 void SWApp::init(void)
 {
-  if(m_inited)
-    return;
+    if(m_inited)
+        return;
 
-  m_inited = true;
+    m_inited = true;
 
 }
 
 bool SWApp::isLocal(void)
 {
-  QString appPath = applicationFilePath();
+    QString appPath = applicationFilePath();
 
-  if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
-    return false;
+    if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
+        return false;
 
-  return true;
+    return true;
 }
 
 #include "swapp.moc"

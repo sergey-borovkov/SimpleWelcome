@@ -7,7 +7,6 @@
 
 #include "appprovider.h"
 #include "appentity.h"
-#include "appiconprovider.h"
 #include "searchrunner.h"
 #include "generaliconprovider.h"
 #include "recentappsprovider.h"
@@ -38,19 +37,15 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void init(void);
-    
- private:
+
+private:
     bool m_inited;
     QmlApplicationViewer *m_viewer;
-
     AppProvider *m_appProvider;
-    AppIconProvider *m_appIconProvider;
     
     ActivityModel* m_model;
     NepomukSource* m_source;
-
     ActivityProxy *m_proxy;
-
     QThread *m_nepomukThread;
 
     SearchRunner *m_searchRunner;

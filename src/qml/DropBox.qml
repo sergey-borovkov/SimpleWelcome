@@ -5,7 +5,7 @@ Item {
 
     width: 100
     height: 38
-    
+
     MouseArea {
         id: componentMouseArea
         anchors.left: parent.left
@@ -15,12 +15,12 @@ Item {
         height: parent.height * 2
 
         hoverEnabled: true
-        
+
         onExited: {
             dropboxListBody.hide();
         }
     }
-    
+
     Rectangle {
         id: dropboxButtonBody
         anchors.fill: parent
@@ -31,13 +31,13 @@ Item {
         radius: 5
 
         z: 10
-        
+
         Text {
             id: dropboxButtonText
 
             x: 16
             anchors.verticalCenter: parent.verticalCenter
-            
+
             maximumLineCount: 1
             elide: Text.ElideRight
             clip: true
@@ -61,15 +61,16 @@ Item {
                 sessionProvider.lock();
             }
         }
-        
+
         Rectangle {
             id: dropboxDrop
 
-            height: parent.height
-            width: parent.height
+            height: parent.height // probably not needed
+            width: parent.height // probably not needed
+            anchors.fill: parent
 
             anchors.right: parent.right
-            
+
             color: "#222"
             border.color: "black"
             border.width: 1
@@ -92,10 +93,10 @@ Item {
         height: 0
 
         property int unfoldedHeight: dropboxButtonBody.height * 2
-        
+
         anchors.top: parent.top
         anchors.left: parent.left
-        
+
         color: "#222"
         border.color: "black"
         border.width: 1
@@ -133,7 +134,7 @@ Item {
 
                 x: 16
                 anchors.verticalCenter: parent.verticalCenter
-                
+
                 maximumLineCount: 1
                 elide: Text.ElideRight
                 clip: true
@@ -157,7 +158,7 @@ Item {
                     sessionProvider.shutdown();
                 }
             }
-            
+
         }
     }
 }
