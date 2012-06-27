@@ -11,7 +11,8 @@ Item {
     property ListView lv: scene
 
     property int __year: new Date().getFullYear()   //Current year
-    property int __month: new Date().getMonth()     //Current month
+    property int __month: new Date().getMonth()
+    property int day: new Date().getDate()
     property bool __isSearching: false              //New search in process
     property bool direction: false  //true is - right direction; false - is left
 
@@ -62,8 +63,18 @@ Item {
     //Start new serch
     function currentDateChanged()
     {        
-        //var date = new Date(__year, __month)
-        activityProxy.startNewSearch(__year, __month, direction)
+        var date = new Date(__year, __month)
+        if (timeFrameTab.state === "")
+        {
+           //activityProxy.startNewSearch(__year, __month, direction)
+            activityProxy.startNewSearch(__year, __month, true)
+        }
+        else
+        {
+            var d = new Date(__year, __month, day )
+            //galleryLister.startSearch(d, direction)
+            galleryLister.startSearch(d, true)
+        }
         __isSearching = true
         searchLabel.visible = true
     }
@@ -83,7 +94,7 @@ Item {
     //On search finished
     Connections{
         target: activityProxy
-        onFinished: {__isSearching = false ; console.log("search finished")
+        onFinished: {__isSearching = false //; console.log("search finished")
         searchLabel.visible = false}
 
     }
@@ -178,28 +189,15 @@ Item {
         return -1
     }
 
-/*
-    function getFlickIndex()
-    {
-        console.log(getTSCurrentDate())
-        if (direction) //get  first day in mounth
-        {
 
-        } else //get last day in mounth
-        {
-
-        }
-        return scene.count -1
-    }
-
-*/
     Text
     {
         id: searchLabel
         color: "white"
-        anchors.top: separator.bottom
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
-        text: "searching in process "
+        anchors.leftMargin: 50
+        text: "Searching in process..."
         visible: false
         z: 1000
     }
@@ -212,12 +210,6 @@ Item {
 
     }
 
-    /*
-    Connections{
-        target: timeFrameTab
-        onPropertyChanged: searchLabel.visible = __isSearching
-    }
-*/
     ListView {
         id: scene
 
@@ -241,7 +233,6 @@ Item {
         highlightMoveDuration: 1000
         onCurrentIndexChanged:
         {
-
             var date = activityModel.getDateOfIndex(scene.currentIndex)
             var tsDate = getTSCurrentDate()
             if (date.getTime() === tsDate.getTime())
@@ -268,7 +259,7 @@ Item {
         }
         onCountChanged:
         {
-            console.log("new items added, scene count: " +  scene.count)
+            //console.log("new items added, scene count: " +  scene.count)
             scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)            
         }
 /*
@@ -288,62 +279,7 @@ Item {
         */
         visible: true
     }
-/*
-    Connections
-    {
-        target: scene
-        onFlickStarted:
-        {
-            console.log("flicking started")
-            if ((scene.horizontalVelocity > 0) && (scene.currentIndex === scene.count-1) )
-            {
-                //timeScale.list.decrementCurrentIndex()
-                direction = true
-            }
-            else if ((scene.horizontalVelocity < 0) && (scene.currentIndex === 0) )
-            {                
-                //timeScale.list.incrementCurrentIndex()
-                direction = false
-            }else
-            {
-                return
-            }
 
-            __year = timeScale.model.get(timeScale.list.currentIndex).year
-            __month = timeScale.model.get(timeScale.list.currentIndex).monthNumber-1
-            currentDateChanged()
-        }
-    }
-    */
-    /*
-    Connections
-    {
-        target: scene
-
-
-    }
-    */
-
-/*
-    Flickable
-    {
-        id: flickable
-        anchors.fill: parent
-        contentWidth: parent.width * 20
-        contentHeight: parent.height
-        Row {
-            id: row
-
-
-            Repeater
-            {
-                model: activityModel
-                delegate: SceneDelegate {}
-            }
-        }
-        visible: false
-    }
-*/
     TimeScale{
         id: timeScale
         anchors.verticalCenter: parent.verticalCenter
@@ -365,30 +301,18 @@ Item {
         }
         return -1
     }
-/*
-    Connections{
-        target: timeScale.list
-        onCurrentIndexChanged: {
-            activityProxy.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1 )
 
-            var sceneIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
-
-            if (sceneIndex !== -1)
-            {
-                console.log("change index in scene on " + sceneIndex)
-                scene.currentIndex = sceneIndex
-            }
-
-        }
-    }
-*/
     ToolButton {
         id: prevButton
         width: 60
         imageUrl: "images/go-previous.png"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
+        z:100
         onButtonClick: {
+            galleryView.decrementCurrentIndex()
+
+            /*
             console.log( "left button pressed..." )
             if (scene.currentIndex === 0)
             {
@@ -399,6 +323,7 @@ Item {
             {
                 scene.decrementCurrentIndex()
             }
+            */
         }
     }
 
@@ -408,7 +333,10 @@ Item {
         imageUrl: "images/go-next.png"
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
+        z:100
         onButtonClick: {
+            galleryView.incrementCurrentIndex()
+            /*
             console.log( scene.currentIndex + "  " + scene.count)
             if (scene.currentIndex === (scene.count -1))
             {
@@ -420,6 +348,7 @@ Item {
             {
                 scene.incrementCurrentIndex()
             }
+            */
         }
     }
 
@@ -436,5 +365,118 @@ Item {
     Keys.onEscapePressed: {
         Qt.quit()
     }
+
+ /*
+    State {
+        name: "local"
+        PropertyChanges {
+            target: scene
+            delegate: SceneDelegate {}
+        }
+    }
+    State {
+        name: "social"
+        PropertyChanges {
+            target: scene
+            delegate: SceneDelegate {}
+        }
+    }
+    */
+    Button {
+        id: stateChangeButton
+        width: 50
+        height: 30
+        anchors.bottom: separator.top
+        anchors.bottomMargin: 5
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        border.color: "black"
+
+        ButtonText {
+            id: stateChangeButtonText
+            text: "<--"
+            anchors.left: parent.left
+        }
+
+        MouseArea{
+            id: stateTestButtonMouseArea
+            anchors.fill: parent
+            onClicked: {                
+                if ( timeFrameTab.state === "" ) {
+                    timeFrameTab.state = "gallery"
+                } else {
+                    timeFrameTab.state = ""
+                }
+            }
+        }
+    }
+
+    ListView {
+        id: galleryView
+        anchors.top: separator.bottom
+        anchors.bottom: timeScale.top
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        anchors.rightMargin: 20
+        visible: false
+        highlightFollowsCurrentItem: true
+        highlightRangeMode: ListView.ApplyRange
+        model: galleryModel
+        delegate: GalleryDelegate { }
+        onCurrentIndexChanged: {
+            console.log("Gallery index " + galleryView.currentIndex + "  " + galleryView.count)
+            if (galleryView.count > 0)
+            {
+                console.log("position view ")
+                //galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center)
+            }
+        }
+
+        orientation: ListView.Horizontal        
+    }
+    /*
+    MouseArea{
+        id: galleryMouseArea
+        anchors.fill: galleryView
+        anchors.topMargin: 200
+        onClicked: {
+            console.log(galleryView.indexAt(mouseX + galleryView.contentX, mouseY + galleryView.contentY) + " " + galleryView.count)
+        }
+    }
+*/
+
+    state: "gallery"
+
+    states: [
+
+        State {
+            name: "gallery"
+            AnchorChanges{
+                target: timeScale
+
+                anchors.verticalCenter: undefined
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom:  timeFrameTab.bottom
+                //anchors.right:   timeFrameTab.right
+
+            }
+            PropertyChanges {
+                target: scene
+                visible : false
+            }
+            PropertyChanges {
+                target: galleryView
+                visible : true
+            }            
+            PropertyChanges {
+                target: menuBar
+                visible : false
+            }
+        }
+    ]
+    transitions: Transition {
+         AnchorAnimation {duration: 500}
+     }
 
 }

@@ -38,92 +38,92 @@ SearchRunner::~SearchRunner(void)
 
 void SearchRunner::init(void)
 {
-  m_runnerManager = new Plasma::RunnerManager();
+    m_runnerManager = new Plasma::RunnerManager();
 
-  QStringList activeRunners;
-  activeRunners << "recentdocuments"
-                << "shell"
-                << "rosa-services2";
+    QStringList activeRunners;
+    activeRunners << "recentdocuments"
+                  << "shell"
+                  << "rosa-services2";
 
-  m_runnerManager->setAllowedRunners(activeRunners);
+    m_runnerManager->setAllowedRunners(activeRunners);
 
-  connect(m_runnerManager, SIGNAL(matchesChanged(const QList<Plasma::QueryMatch> &)), this, SLOT(newSearchMatches(const QList<Plasma::QueryMatch> &)));
+    connect(m_runnerManager, SIGNAL(matchesChanged(const QList<Plasma::QueryMatch> &)), this, SLOT(newSearchMatches(const QList<Plasma::QueryMatch> &)));
 }
 
 void SearchRunner::setSearchQuery(const QString &queryText)
 {
-  m_searchQuery = queryText;
+    m_searchQuery = queryText;
 
-  launchSearch(queryText);
+    launchSearch(queryText);
 }
 
 QString SearchRunner::getSearchQuery(void)
 {
-  return m_searchQuery;
+    return m_searchQuery;
 }
 
 QStringList SearchRunner::getMatchNames(void)
 {
-  return m_matches.keys();
+    return m_matches.keys();
 }
 
 QStringList SearchRunner::getGroupNames(void)
 {
-  return m_groups.toList();
+    return m_groups.toList();
 }
 
 QString SearchRunner::getMatchGroupName(const QString &name)
 {
-  if(m_matches.contains(name))
-    return m_matches[name]->runner()->name();
-  
-  return "";
+    if(m_matches.contains(name))
+        return m_matches[name]->runner()->name();
+
+    return "";
 }
 
 QIcon SearchRunner::getMatchIcon(const QString &name)
 {
-  if(m_matches.contains(name))
-    return m_matches[name]->icon();
+    if(m_matches.contains(name))
+        return m_matches[name]->icon();
 
-  return QIcon();
+    return QIcon();
 }
 
 void SearchRunner::runMatch(const QString &name)
 {
-  if(m_matches.contains(name))
-    m_runnerManager->run(*(m_matches[name]));
-}  
+    if(m_matches.contains(name))
+        m_runnerManager->run(*(m_matches[name]));
+}
 
 
 void SearchRunner::newSearchMatches(const QList<Plasma::QueryMatch> &matches)
 {
-  _clearMatches();
-  
-  for(QList<Plasma::QueryMatch>::const_iterator it = matches.begin(); it != matches.end(); it++)
+    _clearMatches();
+
+    for(QList<Plasma::QueryMatch>::const_iterator it = matches.begin(); it != matches.end(); it++)
     {
-      m_matches.insert(it->text(), new Plasma::QueryMatch((*it)));
-      m_groups.insert(it->runner()->name());
+        m_matches.insert(it->text(), new Plasma::QueryMatch((*it)));
+        m_groups.insert(it->runner()->name());
     }
 
-  emit newSearchMatchesFound();
+    emit newSearchMatchesFound();
 }
 
 void SearchRunner::_clearMatches(void)
 {
-  for(QHash<QString, Plasma::QueryMatch*>::iterator it = m_matches.begin(); it != m_matches.end(); it++)
-    delete it.value();
-    
-  m_matches.clear();
-  m_groups.clear();
+    for(QHash<QString, Plasma::QueryMatch*>::iterator it = m_matches.begin(); it != m_matches.end(); it++)
+        delete it.value();
+
+    m_matches.clear();
+    m_groups.clear();
 }
 
 void SearchRunner::launchSearch(const QString &text)
 {
-  //kDebug() << "launchSearch called with: " << text;
-  if(text.size() > 0)
-    m_runnerManager->launchQuery(text);
-  else
-    m_runnerManager->reset();
+    //kDebug() << "launchSearch called with: " << text;
+    if(text.size() > 0)
+        m_runnerManager->launchQuery(text);
+    else
+        m_runnerManager->reset();
 }
 
 #include "searchrunner.moc"

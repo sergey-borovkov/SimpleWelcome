@@ -32,122 +32,114 @@
 #include <QApplication>
 
 AppProvider::AppProvider(void)
-  : QObject(),
-    m_appLaunchReciever(NULL)
+    : QObject(),
+      m_appLaunchReciever(NULL)
 {
 
 }
 
 AppProvider::~AppProvider(void)
 {
-  // Clearing AppEntities
-  for(QHash<QString, AppEntity*>::iterator it = m_appEntities.begin(); it != m_appEntities.end(); it++)
+    // Clearing AppEntities
+    for(QHash<QString, AppEntity*>::iterator it = m_appEntities.begin(); it != m_appEntities.end(); it++)
     {
-      delete it.value();
+        delete it.value();
     }
 }
 
 void AppProvider::init(void)
 {
-  KServiceGroup::Ptr group = KServiceGroup::group("");
+    KServiceGroup::Ptr group = KServiceGroup::group("");
 
-  // Getting root groups
-  
-  QList<KServiceGroup::Ptr> rootGroups = group->groupEntries();
+    // Getting root groups
 
-  for(QList<KServiceGroup::Ptr>::iterator it = rootGroups.begin(); it != rootGroups.end(); it++)
+    QList<KServiceGroup::Ptr> rootGroups = group->groupEntries();
+    for(QList<KServiceGroup::Ptr>::iterator it = rootGroups.begin(); it != rootGroups.end(); it++)
     {
-      m_rootGroups.append((*it)->name());
+        m_rootGroups.append((*it)->name());
     }
-  
-  _deepExtract(const_cast<KServiceGroup*>(group.data()));
+    _deepExtract(const_cast<KServiceGroup*>(group.data()));
 
-  //_printDebug();
+    //_printDebug();
 }
 
 QStringList AppProvider::getEntityNames(void)
 {
-  QStringList names;
+    QStringList names;
 
-  for(QHash<QString, AppEntity*>::iterator it = m_appEntities.begin(); it != m_appEntities.end(); it++)
+    for(QHash<QString, AppEntity*>::iterator it = m_appEntities.begin(); it != m_appEntities.end(); it++)
     {
-      names.append(it.key());
+        names.append(it.key());
     }
 
-  return names;
+    return names;
 }
 
 QStringList AppProvider::getRootGroups(void)
 {
-  return m_rootGroups;
+    return m_rootGroups;
 }
 
 void AppProvider::runEntity(const QString &name)
 {
-  if(! m_appEntities.contains(name))
-    return;
+    if(! m_appEntities.contains(name))
+        return;
 
-  QString desktopFile = m_appEntities[name]->entryPath();
+    QString desktopFile = m_appEntities[name]->entryPath();
+    KRun *krunner = new KRun(KUrl(desktopFile), QApplication::activeWindow());
 
-  KRun *krunner = new KRun(KUrl(desktopFile), QApplication::activeWindow());
+    if(m_appLaunchReciever != NULL)
+        QMetaObject::invokeMethod(m_appLaunchReciever, "registerLaunchedApp", Qt::DirectConnection, Q_ARG(QString, desktopFile));
 
-  if(m_appLaunchReciever != NULL)
-    QMetaObject::invokeMethod(m_appLaunchReciever, "registerLaunchedApp", Qt::DirectConnection, Q_ARG(QString, desktopFile));
-  
-  Q_UNUSED(krunner);
+    Q_UNUSED(krunner);
 
 }
 
 
 void AppProvider::_printDebug(void)
 {
-  for(QHash<QString, AppEntity*>::iterator it = m_appEntities.begin(); it != m_appEntities.end(); it++)
+    for(QHash<QString, AppEntity*>::iterator it = m_appEntities.begin(); it != m_appEntities.end(); it++)
     {
-      //kDebug() << it.key();
-      kDebug() << it.value();
+        //kDebug() << it.key();
+        kDebug() << it.value();
     }
 }
 
 void AppProvider::_deepExtract(KServiceGroup *group)
 {
-  if(! group || ! group->isValid())
+    if(! group || ! group->isValid())
     {
-      //kDebug() << "Group is not valid!!!";
-      return;
+        //kDebug() << "Group is not valid!!!";
+        return;
     };
-  
-  KServiceGroup::List list = group->entries(true, // sorted
-                                            true, // exclude no display
-                                            false, // exclude separator items
-                                            false // don't sort by generic name
-                                            );
 
-  for(KServiceGroup::List::ConstIterator it = list.begin(); it != list.end(); it++)
+    KServiceGroup::List list = group->entries(true, // sorted
+                                              true, // exclude no display
+                                              false, // exclude separator items
+                                              false // don't sort by generic name
+                                              );
+
+    for(KServiceGroup::List::ConstIterator it = list.begin(); it != list.end(); it++)
     {
 
-      KSycocaEntry *sycocaEntry = const_cast<KSycocaEntry*>((*it).data());
-      
-      if(sycocaEntry->isType(KST_KService))
+        KSycocaEntry *sycocaEntry = const_cast<KSycocaEntry*>((*it).data());
+
+        if(sycocaEntry->isType(KST_KService))
         {
-          KService *service = static_cast<KService *>(sycocaEntry);
-
-          AppEntity *entity = new AppEntity(service);
-
-          m_appEntities.insert(service->name(), entity);
+            KService *service = static_cast<KService *>(sycocaEntry);
+            AppEntity *entity = new AppEntity(service);
+            m_appEntities.insert(service->name(), entity);
         }
-      else if(sycocaEntry->isType(KST_KServiceGroup))
+        else if(sycocaEntry->isType(KST_KServiceGroup))
         {
-          KServiceGroup *group = static_cast<KServiceGroup *>(sycocaEntry);
+            KServiceGroup *group = static_cast<KServiceGroup *>(sycocaEntry);
+            AppEntity *entity = new AppEntity(group);
+            m_appEntities.insert(group->relPath(), entity);
 
-          AppEntity *entity = new AppEntity(group);
-
-          m_appEntities.insert(group->relPath(), entity);
-
-          // Recursivly 
-          _deepExtract(group);
+            // Recursivly
+            _deepExtract(group);
         }
     }
-
 }
 
 #include "appprovider.moc"

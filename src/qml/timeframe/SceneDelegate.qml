@@ -32,7 +32,7 @@ Item {
 
     Timer {
         id: timer; running: true; repeat: true; interval: 200;
-        onTriggered: {
+        onTriggered: {            
             if(activity.complete) {
                 timer.stop()
             }

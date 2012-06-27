@@ -1,22 +1,22 @@
 import QtQuick 1.1
 
-Rectangle {
+Item {
     id: topBar
 
     anchors.top: parent.top
     width: parent.width
     height: 80
     //color: "grey"
-    color: "transparent"
+    //color: "transparent"
 
     Item {
         id: userIconItem
         width: childrenRect.width
         height: childrenRect.height
-        
+
         anchors.verticalCenter: parent.verticalCenter
         x: 16
-        
+
         Image {
             id: userIcon
             source: "image://generalicon/general/usericon"
@@ -49,13 +49,16 @@ Rectangle {
             style: Text.Raised
             styleColor: "#000"
             color: "#eee"
-            
 
-            text: userInfoProvider.userName
+            Component.onCompleted: {
+                text = userInfoProvider.userName
+            }
+
+            //text: userInfoProvider.userName
         }
 
     }
-    
+
     Item {
         //color: "white"
         width: 600
@@ -72,20 +75,20 @@ Rectangle {
             anchors.fill: parent
             source: "image://generalicon/asset/textfield_border_bg.png"
         }
-        
+
         TextInput {
             //anchors.horizontalCenter: parent.horizontalCenter
             id: searchInput
-            width: parent.width - 24            
+            width: parent.width - 24
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             selectByMouse: true
-            focus: true
+            //focus: true
             color: "white"
             font.family: "Bitstream Vera Sans"
             font.italic: true
             font.pixelSize: 18
-            
+
             onTextChanged: {
                 searchTextChanged(text);
             }
@@ -100,19 +103,19 @@ Rectangle {
     DropBox {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-        anchors.rightMargin: 16        
+        anchors.rightMargin: 16
 
         width: 180
         height: 38
     }
-    
+
     /*
     // Old Logout and Shutdown buttons
     Item {
         id: lockButton
         width: childrenRect.width
         height: childrenRect.height
-        
+
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: shutdownButton.left
         //anchors.rightMargin: 8
@@ -129,7 +132,7 @@ Rectangle {
             id: lockButtonMouseArea
 
             anchors.fill: parent
-            
+
             onClicked: {
                 sessionProvider.lock();
             }
@@ -141,7 +144,7 @@ Rectangle {
         id: shutdownButton
         width: childrenRect.width
         height: childrenRect.height
-        
+
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         anchors.rightMargin: 16
@@ -157,7 +160,7 @@ Rectangle {
             id: shutdownButtonMouseArea
 
             anchors.fill: parent
-            
+
             onClicked: {
                 sessionProvider.shutdown();
             }

@@ -66,5 +66,6 @@ private:
 };
 
 Q_DECLARE_METATYPE(ActivitySet *)
+Q_DECLARE_METATYPE(Activity *)
 
 #endif // ACTIVITYEVENT_H
