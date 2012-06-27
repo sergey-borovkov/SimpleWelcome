@@ -1,4 +1,4 @@
-#include "plugin.h"
+#include "facebookmodule.h"
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
 
@@ -33,7 +33,6 @@ QWidget *FacebookModule::authenticationWidget()
 
 void FacebookModule::onAcessTokenChanged()
 {
-    qDebug() << "Here";
     emit authorizationStatusChanged(ISocialModule::Success);
 }
 

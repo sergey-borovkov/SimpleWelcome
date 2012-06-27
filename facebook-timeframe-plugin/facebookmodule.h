@@ -1,5 +1,5 @@
-#ifndef PLUGIN1_H
-#define PLUGIN1_H
+#ifndef FACEBOOK_MODULE_H
+#define FACEBOOK_MODULE_H
 
 #include "../src/timeframe/social/socialplugin.h"
 

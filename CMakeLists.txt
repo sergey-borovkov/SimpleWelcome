@@ -15,7 +15,7 @@ ADD_SUBDIRECTORY(rosa-service-runner)
 
 include_directories(${KDE4_INCLUDES} ${QT_QDECLARATIVE_INCLUDE_DIR})
 
-set(rosa-launcher-qtquick_SRCS 
+set(rosa-launcher-qtquick_SRCS
                                src/main.cpp
                                src/swapp.cpp
                                src/appentity.cpp
@@ -33,9 +33,9 @@ set(rosa-launcher-qtquick_SRCS
                                src/qml/GroupGrid.qml
                                src/qml/SecondTab.qml
                                src/qml/main.qml
-                               src/qml/Cell.qml 
+                               src/qml/Cell.qml
                                src/qml/AppButton.qml
-                               src/qml/GridGroup.qml 
+                               src/qml/GridGroup.qml
                                src/qml/TabButton.qml
                                src/qml/FirstTab.qml
                                src/qml/ScrollBar.qml
@@ -61,16 +61,17 @@ set(rosa-launcher-qtquick_SRCS
                                src/timeframe/activitymodel.cpp
                                src/timeframe/social/socialplugin.cpp
                                src/timeframe/social/pluginloader.cpp
+                               src/timeframe/social/socialpluginmanager.cpp
                                )
 
 
 kde4_add_executable(rosa-launcher-qtquick ${rosa-launcher-qtquick_SRCS} ${QRC_SOURCES})
-target_link_libraries(rosa-launcher-qtquick 
+target_link_libraries(rosa-launcher-qtquick
   ${KDE4_KDEUI_LIBS}
   ${KDE4_PLASMA_LIBS}
   kworkspace
-  ${KDE4_KIO_LIBS} 
-  ${X11_LIBRARIES} 
+  ${KDE4_KIO_LIBS}
+  ${X11_LIBRARIES}
   ${KDE4_KFILE_LIBS}
   ${QT_LIBRARIES}
   ${QT_QDECLARATIVE_LIBRARIES}

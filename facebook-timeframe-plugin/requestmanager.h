@@ -15,8 +15,8 @@ public:
 
 private slots:
     void reply(QByteArray reply);
-private:
 
+private:
     OAuth2Authorizer *m_authorizer;
 };
 
