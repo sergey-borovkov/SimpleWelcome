@@ -46,6 +46,8 @@
 #include "timeframe/social/socialpluginmanager.h"
 #include "timeframe/itemmodel.h"
 #include "timeframe/galleryitem.h"
+#include "timeframe/gallerymodel.h"
+#include "timeframe/gallerylister.h"
 
 SWApp* SWApp::self()
 {
