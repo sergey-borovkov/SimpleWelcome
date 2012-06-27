@@ -4,7 +4,6 @@ import QtWebKit 1.0
 WebView {
     focus: true
     onUrlChanged:  {
-        console.log(url)
         authorizer.urlChanged(url)
         if (url.toString().indexOf("http://www.facebook.com/connect/login_success.html") == 0) {
             url = ""

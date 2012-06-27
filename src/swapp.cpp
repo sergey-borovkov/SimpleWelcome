@@ -43,6 +43,7 @@
 #include "timeframe/previewprovider.h"
 #include "timeframe/activitymodel.h"
 #include "timeframe/social/pluginloader.h"
+#include "timeframe/social/socialpluginmanager.h"
 
 SWApp* SWApp::self()
 {
@@ -63,11 +64,11 @@ SWApp::SWApp()
   // Window transparency
   m_viewer->setAttribute(Qt::WA_TranslucentBackground);
   m_viewer->setStyleSheet("background:transparent;");
-  
+
   //kDebug() << QMovie::supportedFormats();
-  
+
   //m_viewer->addImportPath("/usr/lib/kde4/imports/");
-  
+
   m_appProvider = new AppProvider();
   m_appProvider->init();
 
@@ -77,7 +78,7 @@ SWApp::SWApp()
   m_searchRunner = new SearchRunner();
   m_searchRunner->init();
   m_viewer->rootContext()->setContextProperty("searchRunner", m_searchRunner);
-  
+
   m_appIconProvider = new AppIconProvider();
   m_viewer->engine()->addImageProvider(QLatin1String("appicon"), m_appIconProvider);
 
@@ -117,7 +118,7 @@ SWApp::SWApp()
   m_userInfoProvider = new UserInfoProvider();
   m_userInfoProvider->init();
   m_viewer->rootContext()->setContextProperty("userInfoProvider", m_userInfoProvider);
-  
+
   m_generalIconProvider = new GeneralIconProvider();
   m_generalIconProvider->setIsLocal(isLocal());
   m_generalIconProvider->setSearchRunner(m_searchRunner);
@@ -130,18 +131,22 @@ SWApp::SWApp()
   m_viewer->show();
   //m_viewer->showExpanded();
   //m_viewer->showFullScreen();
+
   PluginLoader loader;
-  loader.loadPlugins();
+  QList<ISocialModule *> plugins = loader.loadPlugins();
+  SocialPluginManager *manager = new SocialPluginManager(plugins, this);
+
+
 
   QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
-  
+
   if(isLocal())
     m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
   else
     m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
 
   QTimer::singleShot(1000, this, SLOT(init()));
-  
+
   setQuitOnLastWindowClosed(true);
 }
 
@@ -184,18 +189,18 @@ void SWApp::init(void)
 {
   if(m_inited)
     return;
-  
+
   m_inited = true;
-  
+
 }
 
 bool SWApp::isLocal(void)
 {
   QString appPath = applicationFilePath();
-  
+
   if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
     return false;
-  
+
   return true;
 }
 

@@ -15,6 +15,8 @@ public:
 
 public slots:
     virtual void queryWall(const QDate &beginDate, const QDate &endDate) = 0;
+signals:
+    void authorizationComplete();
 };
 
 class User

@@ -1,12 +1,14 @@
 TEMPLATE = lib
 QT += declarative network
 TARGET = facebook-timeframe-plugin
-HEADERS += plugin.h oauth2authorizer.h facebookmanager.h \
+HEADERS += oauth2authorizer.h facebookmanager.h \
     requestmanager.h ../src/timeframe/social/socialplugin.h \
-    request.h
-SOURCES += plugin.cpp oauth2authorizer.cpp facebookmanager.cpp \
+    request.h \
+    facebookmodule.h
+SOURCES += oauth2authorizer.cpp facebookmanager.cpp \
     requestmanager.cpp \
-    request.cpp
+    request.cpp \
+    facebookmodule.cpp
 LIBS += -Lqjson/lib -lqjson
 OTHER_FILES += \
     qml/main.qml
