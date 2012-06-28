@@ -157,9 +157,9 @@ SWApp::SWApp()
     m_viewer->setGeometry(100, 000, 640, 480);
     //m_viewer->showFullScreen();
 
-  PluginLoader loader;
-  QList<ISocialModule *> plugins = loader.loadPlugins();
-  SocialPluginManager *manager = new SocialPluginManager(plugins, this);
+    PluginLoader loader;
+    QList<ISocialModule *> plugins = loader.loadPlugins();
+    SocialPluginManager *manager = new SocialPluginManager(plugins, this);
 
 
 
