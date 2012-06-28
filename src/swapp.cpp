@@ -43,7 +43,7 @@
 #include "timeframe/previewprovider.h"
 #include "timeframe/activitymodel.h"
 #include "timeframe/social/pluginloader.h"
-#include "timeframe/social/socialpluginmanager.h"
+#include "timeframe/social/socialproxy.h"
 #include "timeframe/itemmodel.h"
 #include "timeframe/galleryitem.h"
 #include "timeframe/gallerymodel.h"
@@ -159,7 +159,7 @@ SWApp::SWApp()
 
     PluginLoader loader;
     QList<ISocialModule *> plugins = loader.loadPlugins();
-    SocialPluginManager *manager = new SocialPluginManager(plugins, this);
+    SocialProxy *manager = new SocialProxy(plugins, this);
 
 
 
