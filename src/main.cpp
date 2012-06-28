@@ -49,7 +49,6 @@ int main(int argc, char *argv[])
                         "alexey.yermakov@rosalab.ru");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
-
     /*
     KCmdLineOptions options;
     options.add("s");
