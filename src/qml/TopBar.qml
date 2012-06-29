@@ -1,11 +1,12 @@
 import QtQuick 1.1
 
-Item {
+FocusScope {
     id: topBar
 
     anchors.top: parent.top
     width: parent.width
     height: 80
+    focus: true
     //color: "grey"
     //color: "transparent"
 
