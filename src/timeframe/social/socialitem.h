@@ -2,10 +2,18 @@
 #define SOCIALITEM_H
 
 #include <QtCore/QHash>
+#include <QtCore/QVariant>
 
 class SocialItem
 {
 public:
+    enum Role
+    {
+        TextRole,
+        ImageRole,
+        LikeUrlRole
+    };
+
     virtual ~SocialItem() = 0;
     virtual QString pluginName() const = 0;
     virtual QString type() const = 0;

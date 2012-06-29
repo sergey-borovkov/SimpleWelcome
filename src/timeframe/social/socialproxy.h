@@ -6,6 +6,7 @@
 
 class ISocialModule;
 class SocialModel;
+class SocialItem;
 
 class SocialProxy : public QObject
 {
@@ -19,6 +20,7 @@ signals:
 
 public slots:
     void authenticated();
+    void newItem(SocialItem *item);
 private:
     QList<ISocialModule *> m_plugins;
     SocialModel *m_model;
