@@ -13,6 +13,7 @@ Request::Request(const QString &accessToken, RequestType type, QObject *parent) 
 
 void Request::startQuery()
 {
+    qDebug() << "startQuery";
     QUrl requestUrl;
 
     if(m_type == WallPosts)
@@ -30,6 +31,7 @@ void Request::startQuery()
 void Request::replyFinished(QNetworkReply *reply)
 {
     QByteArray a = reply->readAll();
+    qDebug() << a;
     emit replyReady(a);
     reply->deleteLater();
 }

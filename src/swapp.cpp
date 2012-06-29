@@ -44,6 +44,7 @@
 #include "timeframe/activitymodel.h"
 #include "timeframe/social/pluginloader.h"
 #include "timeframe/social/socialproxy.h"
+#include "timeframe/social/socialmodel.h"
 #include "timeframe/itemmodel.h"
 #include "timeframe/galleryitem.h"
 #include "timeframe/gallerymodel.h"
@@ -161,7 +162,8 @@ SWApp::SWApp()
     QList<ISocialModule *> plugins = loader.loadPlugins();
     SocialProxy *manager = new SocialProxy(plugins, this);
 
-
+    SocialModel *socialModel = new SocialModel(this);
+    manager->setModel(socialModel);
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 

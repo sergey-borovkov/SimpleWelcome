@@ -12,10 +12,13 @@ RequestManager::RequestManager(QObject *parent)
 
 void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
 {
+    qDebug() << "queryWall()";
+
     if(!m_authorizer)
         return;
 
     Request *request = new Request(m_authorizer->accessToken(), Request::WallPosts, this);
+
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(reply(QByteArray)));
     request->startQuery();
 }

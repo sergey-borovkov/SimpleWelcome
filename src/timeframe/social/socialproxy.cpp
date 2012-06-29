@@ -1,4 +1,5 @@
 #include "socialproxy.h"
+#include "socialitem.h"
 #include "socialplugin.h"
 #include "socialmodel.h"
 
@@ -10,8 +11,8 @@ SocialProxy::SocialProxy(QList<ISocialModule *> plugins, QObject *parent) :
 {
     ISocialModule *plugin = m_plugins[0];
     connect(plugin, SIGNAL(authorizationStatusChanged(int)), SLOT(authenticated()));
-    QWidget *w = plugin->authenticationWidget();
-    w->show();
+//    QWidget *w = plugin->authenticationWidget();
+//    w->show();
 }
 
 SocialProxy::~SocialProxy()
@@ -22,6 +23,7 @@ SocialProxy::~SocialProxy()
 void SocialProxy::setModel(SocialModel *model)
 {
     m_model = model;
+    m_plugins[0]->requestManager()->queryWall(QDate(), QDate());
 }
 
 SocialModel *SocialProxy::model() const
@@ -33,4 +35,10 @@ void SocialProxy::authenticated()
 {
     qDebug() << "desu desu";
     m_plugins[0]->requestManager()->queryWall(QDate(), QDate());
+}
+
+void SocialProxy::newItem(SocialItem *item)
+{
+    qDebug() << "New item added";
+    m_model->appendRow(item);
 }
