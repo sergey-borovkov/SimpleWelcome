@@ -1,5 +1,6 @@
 #include "request.h"
 
+#include <qjson/parser.h>
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
 #include <QtNetwork/QNetworkAccessManager>
@@ -31,7 +32,16 @@ void Request::startQuery()
 void Request::replyFinished(QNetworkReply *reply)
 {
     QByteArray a = reply->readAll();
-    qDebug() << a;
+    QJson::Parser parser;
+    QVariantMap result = parser.parse(a).toMap();
+
+    for(int i = 0; i < result.keys().size(); i++)
+    {
+        qDebug() << result.keys()[i];
+    }
+
+    qDebug() << result.value("data");
+
     emit replyReady(a);
     reply->deleteLater();
 }
