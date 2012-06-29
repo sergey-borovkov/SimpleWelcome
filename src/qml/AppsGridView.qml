@@ -2,9 +2,11 @@ import QtQuick 1.0
 
 GridView {
     id: grid
-    cellWidth: width / 7 - 1;
+    property int columns: 7
+
+    cellWidth: width / columns - 1;
     cellHeight: 200
-    focus: true
+    //focus: true
     clip: true
 
     /*onFocusChanged: {
@@ -13,12 +15,23 @@ GridView {
     }*/
 
     highlight: Rectangle {
+        id: gridSelection
         width: 120
         height: 140
         color: "#c8b0c4de"
         radius: 5
+        visible: false
     }
-    keyNavigationWraps: true
+
+    onActiveFocusChanged: {
+        if (highlightItem)
+        {
+            if (!activeFocus)
+                highlightItem.visible = false
+            else
+                highlightItem.visible = true
+        }
+    }
 
     delegate: Button {}
 

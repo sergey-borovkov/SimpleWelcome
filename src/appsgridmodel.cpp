@@ -104,6 +104,9 @@ QVariant AppsGridModel::data( const QModelIndex &index, int role ) const
 
 void AppsGridModel::itemClicked(int newIndex)
 {
+    if (currentGroup == "" && newIndex == -1)
+        return;
+
     if (newIndex != -1)
     {
         AppItem clickedItem = GetList(currentGroup)[newIndex];

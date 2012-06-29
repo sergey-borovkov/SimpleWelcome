@@ -64,6 +64,15 @@ Item {
         console.log("BLABLA: " + data);
     }
 
+    states: State {
+        name: "active"; when: button.activeFocus
+        PropertyChanges { target: buttonIcon; scale: 1.3 }
+    }
+
+    transitions: Transition {
+        NumberAnimation { properties: "scale"; duration: 200 }
+    }
+
     MouseArea {
         id: buttonMouseArea
 

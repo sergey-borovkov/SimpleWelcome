@@ -73,6 +73,8 @@ Item {
         id: topBar
         width: parent.width
 
+        KeyNavigation.tab: tabListView
+        KeyNavigation.backtab: tabListView
     }
 
     Item {
@@ -86,11 +88,15 @@ Item {
         ListView {
             id: tabListView
 
+            KeyNavigation.tab: topBar
+            KeyNavigation.backtab: topBar
+            interactive: false
+
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: parent.top
             //anchors.topMargin: 16
-            width: parent.width // probably not needed
-            height: parent.height // probably not needed
+            width: parent.width
+            height: parent.height
             anchors.fill: parent
 
             model: tabListModel
