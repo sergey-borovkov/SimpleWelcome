@@ -2,7 +2,14 @@
 
 #include <QAbstractListModel>
 
-class AppItem;
+class AppItem
+{
+public:
+    QString caption;
+    QString icon;
+    QString desktopEntry;
+    QString relPath;
+};
 
 class RecentAppsGridModel : public QAbstractListModel
 {
@@ -16,6 +23,7 @@ public:
     };
 
     explicit RecentAppsGridModel(QObject* parent = 0);
+    ~RecentAppsGridModel();
     int rowCount( const QModelIndex &parent = QModelIndex() ) const;
     QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
 
@@ -25,4 +33,6 @@ public slots:
 private:
     QList<AppItem> GetList(QString currentGroup) const;
     QString currentGroup;
+
+    QList<AppItem> m_RecentAppsList;
 };

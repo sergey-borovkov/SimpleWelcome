@@ -11,22 +11,7 @@ RecentAppsGridModel::RecentAppsGridModel(QObject *parent)
     names[ CaptionRole ] = "caption";
     names[ ImagePathRole ] = "imagePath";
     setRoleNames(names);
-}
 
-class AppItem
-{
-public:
-    QString caption;
-    QString icon;
-    QString desktopEntry;
-    QString relPath;
-};
-
-QList<AppItem> RecentAppsGridModel::GetList(QString currentGroup) const
-{
-    static QList<AppItem> out;
-    if (!out.isEmpty())
-        return out;
 
     KConfigGroup configGroup(KGlobal::config(), "General");
     QStringList recentAppsList = configGroup.readEntry("Recent applications", QStringList());
@@ -43,10 +28,25 @@ QList<AppItem> RecentAppsGridModel::GetList(QString currentGroup) const
         newItem.icon = desktopFile.readIcon();
         newItem.desktopEntry = recentApp;
         if (!newItem.caption.isEmpty())
-            out.append(newItem);
+            m_RecentAppsList.append(newItem);
     }
+}
 
-    return out;
+RecentAppsGridModel::~RecentAppsGridModel()
+{
+    QStringList desktopFiles;
+    for (int i = 0; i < m_RecentAppsList.size(); i++)
+        desktopFiles.append(m_RecentAppsList[i].desktopEntry);
+
+    KConfigGroup configGroup(KGlobal::config(), "General");
+    configGroup.writeEntry("Recent applications", desktopFiles);
+    configGroup.sync();
+}
+
+QList<AppItem> RecentAppsGridModel::GetList(QString currentGroup) const
+{
+
+    return m_RecentAppsList;
 }
 
 int RecentAppsGridModel::rowCount( const QModelIndex & /*parent*/ ) const
