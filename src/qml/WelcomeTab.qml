@@ -49,37 +49,11 @@ FocusScope {
                     model: recentAppsGridModel
                     width: parent.width
                     height: childrenRect.height
+                    prevGrid: documentsGridView
+                    nextGrid: favoritesGridView
 
                     interactive: false
                     focus: true
-
-                    Keys.onPressed: {
-                        switch (event.key)
-                        {
-                        case Qt.Key_Left:
-                            moveCurrentIndexLeft()
-                            event.accepted = true
-                            break
-                        case Qt.Key_Right:
-                            if (currentIndex == count - 1)
-                                favoritesGridView.focus = true
-
-                            moveCurrentIndexRight()
-                            event.accepted = true
-                            break
-                        case Qt.Key_Up:
-                            moveCurrentIndexUp()
-                            event.accepted = true
-                            break
-                        case Qt.Key_Down:
-                            if (currentIndex >= count - columns)
-                                favoritesGridView.focus = true
-
-                            moveCurrentIndexDown()
-                            event.accepted = true
-                            break
-                        }
-                    }
                 }
             }
 
@@ -110,30 +84,11 @@ FocusScope {
                     model: favoritesGridModel
                     width: parent.width
                     height: childrenRect.height
+                    prevGrid: recentAppsGridView
+                    nextGrid: documentsGridView
+
                     interactive: false
-
-                    Keys.onPressed: {
-                        switch (event.key)
-                        {
-                        case Qt.Key_Left:
-                            moveCurrentIndexLeft()
-                            event.accepted = true
-                            break
-                        case Qt.Key_Right:
-                            moveCurrentIndexRight()
-                            event.accepted = true
-                            break
-                        case Qt.Key_Up:
-                            moveCurrentIndexUp()
-                            event.accepted = true
-                            break
-                        case Qt.Key_Down:
-                            moveCurrentIndexDown()
-                            event.accepted = true
-                            break
-                        }
-                    }
-
+                    focus: true
                 }
             }
 
@@ -160,10 +115,15 @@ FocusScope {
                 }
 
                 AppsGridView {
+                    id: documentsGridView
+
                     model: documentsGridModel
                     width: parent.width
                     height: childrenRect.height
                     interactive: false
+
+                    prevGrid: favoritesGridView
+                    nextGrid: recentAppsGridView
                 }
             }
         }

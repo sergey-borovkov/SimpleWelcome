@@ -3,6 +3,8 @@ import QtQuick 1.0
 GridView {
     id: grid
     property int columns: 7
+    property variant prevGrid
+    property variant nextGrid
 
     cellWidth: width / columns - 1;
     cellHeight: 200
@@ -24,16 +26,63 @@ GridView {
     }
 
     onActiveFocusChanged: {
-        if (highlightItem)
+        if (highlightItem) // we are not empty and we have selection rectangle
         {
             if (!activeFocus)
                 highlightItem.visible = false
             else
                 highlightItem.visible = true
+            console.log("FOCUS AND ACTIVE ITEM here ci: " + currentIndex + "; vis: " + highlightItem.visible)
+        }
+        else // we are probably empty
+        {
+            if (activeFocus && nextGrid)
+            {
+                nextGrid.forceActiveFocus()
+                nextGrid.focus = true
+                console.log("FORCING FOCUS TO NEXT WITH")
+            }
+            else
+                console.log("nothing here")
         }
     }
 
     delegate: Button {}
+
+    Keys.onPressed: {
+        switch (event.key)
+        {
+        case Qt.Key_Left:
+            if (currentIndex == 0 && prevGrid)
+                prevGrid.focus = true
+
+            moveCurrentIndexLeft()
+            event.accepted = true
+            break
+        case Qt.Key_Right:
+            if (currentIndex == count - 1 && nextGrid)
+                nextGrid.focus = true
+
+            moveCurrentIndexRight()
+            event.accepted = true
+            break
+        case Qt.Key_Up:
+            if (currentIndex < columns && prevGrid)
+                prevGrid.focus = true
+
+            moveCurrentIndexUp()
+            event.accepted = true
+            break
+        case Qt.Key_Down:
+            if (currentIndex >= count - columns && nextGrid)
+                nextGrid.focus = true
+
+            moveCurrentIndexDown()
+            event.accepted = true
+            break
+        }
+    }
+
 
     states: State {
         name: "ShowBars"
