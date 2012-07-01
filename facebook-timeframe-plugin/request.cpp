@@ -3,6 +3,7 @@
 #include <qjson/parser.h>
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
+#include <QtCore/QStringList>
 #include <QtNetwork/QNetworkAccessManager>
 
 const QString Request::wallUrl = "https://graph.facebook.com/me/feed";
@@ -35,12 +36,19 @@ void Request::replyFinished(QNetworkReply *reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(a).toMap();
 
-    for(int i = 0; i < result.keys().size(); i++)
-    {
-        qDebug() << result.keys()[i];
-    }
+    QVariantList list = result.value("data").toList();
 
-    qDebug() << result.value("data");
+    foreach(QVariant item, list)
+    {
+        QVariantMap map = item.toMap();
+        QStringList keys = map.keys();
+
+        qDebug() << "NEW ITEM";
+        for(int i = 0; i < keys.size(); i++)
+        {
+            qDebug() << keys[i] << map.value(keys[i]);
+        }
+    }
 
     emit replyReady(a);
     reply->deleteLater();
