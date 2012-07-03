@@ -8,13 +8,7 @@ GridView {
 
     cellWidth: width / columns - 1;
     cellHeight: 200
-    //focus: true
     clip: true
-
-    /*onFocusChanged: {
-        if(!focus) // fucking dirty hack to receive focus
-            grid.forceActiveFocus()
-    }*/
 
     highlight: Rectangle {
         id: gridSelection
@@ -22,16 +16,26 @@ GridView {
         height: 140
         color: "#c8b0c4de"
         radius: 5
-        visible: false
+        opacity: 0
+
+        Behavior on opacity {
+                 NumberAnimation { duration: 150 }
+             }
     }
+
+    highlightMoveDuration: 150
 
     onActiveFocusChanged: {
         if (highlightItem) // we are not empty and we have selection rectangle
         {
             if (!activeFocus)
-                highlightItem.visible = false
+                highlightItem.opacity = 0
             else
-                highlightItem.visible = true
+            {
+                highlightItem.opacity = 1
+                parent.contentY = highlightItem.y
+
+            }
             console.log("FOCUS AND ACTIVE ITEM here ci: " + currentIndex + "; vis: " + highlightItem.visible)
         }
         else // we are probably empty
@@ -54,28 +58,52 @@ GridView {
         {
         case Qt.Key_Left:
             if (currentIndex == 0 && prevGrid)
+            {
+                prevGrid.highlightMoveDuration = 1
+                prevGrid.currentIndex = prevGrid.count - 1
                 prevGrid.focus = true
+                prevGrid.highlightMoveDuration = 150
+            }
 
             moveCurrentIndexLeft()
             event.accepted = true
             break
         case Qt.Key_Right:
             if (currentIndex == count - 1 && nextGrid)
+            {
+                nextGrid.highlightMoveDuration = 1
+                nextGrid.currentIndex = 0
                 nextGrid.focus = true
+                nextGrid.highlightMoveDuration = 150
+            }
 
             moveCurrentIndexRight()
             event.accepted = true
             break
         case Qt.Key_Up:
             if (currentIndex < columns && prevGrid)
+            {
+                var roundCount = Math.floor((prevGrid.count) / columns) * columns
+                var newCur = (currentIndex % columns) + roundCount - columns * Math.floor((currentIndex % columns) / (prevGrid.count - roundCount))
+                console.log(newCur)
+
+                prevGrid.highlightMoveDuration = 1
+                prevGrid.currentIndex = newCur
                 prevGrid.focus = true
+                prevGrid.highlightMoveDuration = 150
+            }
 
             moveCurrentIndexUp()
             event.accepted = true
             break
         case Qt.Key_Down:
             if (currentIndex >= count - columns && nextGrid)
+            {
+                nextGrid.highlightMoveDuration = 1
+                nextGrid.currentIndex = currentIndex % columns
                 nextGrid.focus = true
+                nextGrid.highlightMoveDuration = 150
+            }
 
             moveCurrentIndexDown()
             event.accepted = true
