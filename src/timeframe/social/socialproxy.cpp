@@ -47,4 +47,6 @@ void SocialProxy::newItem(SocialItem *item)
 void SocialProxy::newItems(QList<SocialItem *> items)
 {
     qDebug() << "NewItems" << items.size();
+    if(m_model)
+        m_model->appendRows(items);
 }

@@ -179,7 +179,7 @@ Item {
                         timeFrameTab.__year = monthModel.get(timeScale.list.currentIndex).year
                         timeFrameTab.__month = monthModel.get(timeScale.list.currentIndex).monthNumber - 1
                         timeFrameTab.currentDateChanged()
-                        scene.currentIndex = timeFrameTab.getTimeLineProperlyItem()
+                        timeLine.currentIndex = timeFrameTab.getTimeLineProperlyItem()
                     }
                 }
             }
