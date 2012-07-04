@@ -22,4 +22,7 @@ public slots:
 
 private:
     QString currentGroup;
+
+signals:
+    void contentChanged();
 };

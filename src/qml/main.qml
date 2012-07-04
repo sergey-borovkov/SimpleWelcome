@@ -19,7 +19,7 @@ Item {
     NumberAnimation on opacity { to: 1.0; duration: 500 }
 
     function reloadTabs() {
-        console.log("reload here")
+        //console.log("reload here")
         /*welcomeTab.reload();
         appsTab.reload();*/
     }
@@ -110,13 +110,17 @@ Item {
             highlightRangeMode: ListView.StrictlyEnforceRange
 
             currentIndex: 1
+            onCurrentIndexChanged: {
+                if (currentItem && currentItem.grid)
+                    currentItem.grid.forceActiveFocus()
+            }
 
             function currentTabIndexChanged(newCurrentIndex) {
                 tabListView.currentIndex = newCurrentIndex
             }
 
             Component.onCompleted: {
-                searchGridModel.currentTabIndexChanged.connect(currentTabIndexChanged);
+                searchGridModel.currentTabIndexChanged.connect(currentTabIndexChanged)
             }
 
             //currentIndex: searchGridModel.

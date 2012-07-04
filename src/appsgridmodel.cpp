@@ -132,4 +132,6 @@ void AppsGridModel::itemClicked(int newIndex)
     int rowCountNew = rowCount();
     beginInsertRows(QModelIndex(), 0, rowCountNew);
     endInsertRows();
+
+    emit contentChanged();
 }

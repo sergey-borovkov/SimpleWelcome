@@ -5,7 +5,7 @@ FocusScope {
     width: parent.width
     clip: true
     anchors.topMargin: 16
-    //focus: true
+    property variant grid: appsGrid
 
     AppsGridView {
         id: appsGrid
@@ -25,5 +25,14 @@ FocusScope {
             NumberAnimation { properties: "scale"; duration: 100 }
         }*/
 
+        function appsContentChanged() {
+            appsGrid.highlightItem.opacity = 0
+            if (appsGrid.highlightItem)
+                console.log("NON ACTIVE FOCUS: " + appsGrid.highlightItem + " " + appsGrid.highlightItem.opacity)
+        }
+
+        Component.onCompleted: {
+            appsGridModel.contentChanged.connect(appsContentChanged)
+        }
     }
 }

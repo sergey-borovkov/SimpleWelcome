@@ -5,6 +5,7 @@ FocusScope {
     width: parent.width
     clip: true
     anchors.topMargin: 16
+    property variant grid: recentAppsGridView
 
     Flickable {
         id: flick
@@ -88,7 +89,6 @@ FocusScope {
                     nextGrid: documentsGridView
 
                     interactive: false
-                    focus: true
                 }
             }
 
