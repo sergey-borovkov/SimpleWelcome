@@ -37,9 +37,7 @@ public:
     GalleryItem * find(const QDate &date) const;
     void clear();
 
-signals:
-    
-public slots:    
+public slots:
     void newActivities(QList <Activity*> list);
     QObject* itemsModel(QDate date) const;
 
@@ -54,7 +52,6 @@ private:
     QList <GalleryItem *> m_items;
     QHash<int, QByteArray> hash;
     GalleryLister* m_lister;
-    //QList <Activity *> m_items;
 };
 
 #endif // GALLERYMODEL_H

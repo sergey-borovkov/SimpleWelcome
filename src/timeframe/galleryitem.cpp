@@ -4,14 +4,12 @@
 #include <QDebug>
 
 GalleryItem::GalleryItem(const QDate &date, QObject *parent) :
-    QObject(parent)
+    QObject(parent), m_model(new ItemModel(this)), m_date(date)
 {
-    m_model = new ItemModel(this);
-    m_date = date;    
 }
 
 GalleryItem::~GalleryItem()
-{    
+{
     qDebug() << "delete item";
     delete m_model;
 }

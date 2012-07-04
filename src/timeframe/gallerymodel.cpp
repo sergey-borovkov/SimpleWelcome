@@ -253,15 +253,6 @@ bool GalleryModel::removeRows(int row, int count, const QModelIndex &parent)
   endRemoveRows();
   return true;
 }
-/*
-ListItem * ListModel::takeRow(int row)
-{
-  beginRemoveRows(QModelIndex(), row, row);
-  ListItem* item = m_list.takeAt(row);
-  endRemoveRows();
-  return item;
-}
-*/
 
 
 

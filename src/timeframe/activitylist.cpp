@@ -5,11 +5,11 @@
 
 ActivityList::ActivityList( int year, int month, QObject *parent) :
     QObject(parent), d(QDate(year, month, 1)), m_complete(false)
-{    
+{
 }
 
 int ActivityList::count() const
-{    
+{
     return list.size();
 }
 

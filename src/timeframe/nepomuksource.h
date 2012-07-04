@@ -19,7 +19,7 @@ namespace Nepomuk
 
 class NepomukSource : public ActivitySource
 {
-    Q_OBJECT    
+    Q_OBJECT
 public:
     enum Mode{
         Normal = 0,

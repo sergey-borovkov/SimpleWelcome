@@ -11,7 +11,7 @@ ItemModel::ItemModel(QObject *parent) :
     m_hash.insert(CountRole, "count");
     m_hash.insert(UrlRole, "url");
     m_hash.insert(TypeRole, "type");
-    setRoleNames(m_hash);    
+    setRoleNames(m_hash);
 }
 
 ItemModel::~ItemModel()

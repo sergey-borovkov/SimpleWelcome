@@ -31,7 +31,7 @@ PreviewProvider::PreviewProvider() :
 }
 
 QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
-{    
+{
     QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(id);
 
     //qDebug() << requestedSize;
