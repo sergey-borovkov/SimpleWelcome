@@ -66,7 +66,7 @@ void ItemModel::addActivityItem(Activity *item)
 {
     if (!item)
         return;    
-    /* Check dublicates*/
+    /* Check duplicates*/
     if (m_urlSet.contains(item->getUrl()))
         return;
     int ind = m_items.size();
