@@ -114,18 +114,18 @@ Item {
         PropertyAction { target: galleryItem; property: "height"; value: 0 }
         NumberAnimation { target: galleryItem; property: "height"; to: parent.height; duration: 250; easing.type: Easing.InOutQuad}
     }
-   /*
+    /*
     ListView.onAdd:
     {
         //galleryView.positionViewAtIndex(index,ListView.Beginning)
     }
     */
-        //    {
+    //    {
 
-        //galleryView.incrementCurrentIndex()
+    //galleryView.incrementCurrentIndex()
     //    console.log("+++" + galleryView.currentIndex)
-        //galleryView.positionViewAtEnd();
-        //galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Contain)
-  //  }
+    //galleryView.positionViewAtEnd();
+    //galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Contain)
+    //  }
 
 }
