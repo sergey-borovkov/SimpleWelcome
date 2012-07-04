@@ -6,7 +6,7 @@ Item {
     height: 800
     clip: true
     anchors.topMargin: 16
-    property ListView lv: scene
+    property ListView lv: timeLine
 
     property int __year: new Date().getFullYear()   //Current year
     property int __month: new Date().getMonth()
@@ -15,11 +15,11 @@ Item {
     property bool direction: false  //true is - right direction; false - is left
 
     function prevMonth() {
-        scene.decrementCurrentIndex()
+        timeLine.decrementCurrentIndex()
     }
 
     function nextMonth() {
-        scene.incrementCurrentIndex()
+        timeLine.incrementCurrentIndex()
     }
 
 
@@ -176,7 +176,7 @@ Item {
     }
 
     ListView {
-        id: scene
+        id: timeLine
 
         anchors.top: separator.bottom
         anchors.horizontalCenter: parent.horizontalCenter
@@ -195,7 +195,7 @@ Item {
         highlightMoveDuration: 1000
         onCurrentIndexChanged:
         {
-            var date = activityModel.getDateOfIndex(scene.currentIndex)
+            var date = activityModel.getDateOfIndex(timeLine.currentIndex)
             var tsDate = getTSCurrentDate()
             if (date.getTime() === tsDate.getTime())
             {
@@ -218,7 +218,7 @@ Item {
         }
         onCountChanged:
         {
-            scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)
+            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Contain)
         }
         visible: true
     }
@@ -234,7 +234,7 @@ Item {
     function getSceneIndex( year , month ) //Need future development
     {
         var i
-        for (i = 0; i < scene.count; i++) {
+        for (i = 0; i < timeLine.count; i++) {
             var x = Qt.formatDate( activityModel.get(i).date , "M-yyyy")
             if (x.toString() === (month.toString() + '-' + year.toString()))
             {
@@ -326,6 +326,7 @@ Item {
         delegate: GalleryDelegate { }
         orientation: ListView.Horizontal
     }
+
     ListModel {
         id: myModel1
         ListElement { type: "Dog"; age: 8 }
@@ -338,28 +339,24 @@ Item {
         ListElement { type: "Dog"; age: 8 }
         ListElement { type: "Dog"; age: 8 }
 
-
     }
 
 
     ListView {
         id: socialView
-        anchors.top: separator
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.left: parent.left
+        anchors.fill: parent
+        orientation: ListView.Horizontal
 
-        model: myModel1
-        delegate: Text {
+        model: socialModel
+        delegate: Rectangle {
+            color: "white"
             width: 300
             height: 300
-            Text { text: type + ", " + age }
+            Text { text: "ololololo" }
         }
-
-        orientation: ListView.Horizontal
     }
 
-    state: "gallery"
+    state: "socialgallery"
 
     states: [
 
@@ -374,7 +371,7 @@ Item {
             }
 
             PropertyChanges {
-                target: scene
+                target: timeLine
                 visible : false
             }
             PropertyChanges {
@@ -389,7 +386,7 @@ Item {
                 target: socialView
                 visible: false
             }
-        }/*,
+        },
         State {
             name: "socialgallery"
 
@@ -398,7 +395,7 @@ Item {
                 visible: false
             }
             PropertyChanges {
-                target: scene
+                target: timeLine
                 visible: false
             }
             PropertyChanges {
@@ -410,7 +407,7 @@ Item {
                 target: timeScale
                 visible: false
             }
-        }*/
+        }
 
     ]
     transitions: Transition {
