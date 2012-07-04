@@ -103,6 +103,7 @@ Item {
             onClicked: {
                 console.debug( "My Local Documents clicked" )
                 state = "gallery"
+                timeFrameTab.state = ""
                 socialNetworks.state = ""
 
             }
@@ -329,30 +330,36 @@ Item {
         id: myModel1
         ListElement { type: "Dog"; age: 8 }
         ListElement { type: "Cat"; age: 5 }
+        ListElement { type: "Dog"; age: 8 }
+        ListElement { type: "Dog"; age: 8 }
+        ListElement { type: "Dog"; age: 8 }
+        ListElement { type: "Dog"; age: 8 }
+        ListElement { type: "Dog"; age: 8 }
+        ListElement { type: "Dog"; age: 8 }
+        ListElement { type: "Dog"; age: 8 }
+
+
     }
 
-    Component {
-        id: myDelegate
-        Rectangle {
-            Text { text: type + ", " + age }
-        }
-    }
 
     ListView {
         id: socialView
-        anchors.fill: parent
+        anchors.top: separator
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.left: parent.left
+
         model: myModel1
-        delegate: Rectangle {
-            width: 100
-            height: 100
-            color: "white"
-            Text { text: "10000000000000000000000000000000000" }
+        delegate: Text {
+            width: 300
+            height: 300
+            Text { text: type + ", " + age }
         }
 
         orientation: ListView.Horizontal
     }
 
-    state: "socialgallery"
+    state: "gallery"
 
     states: [
 
@@ -382,7 +389,7 @@ Item {
                 target: socialView
                 visible: false
             }
-        },
+        }/*,
         State {
             name: "socialgallery"
 
@@ -403,7 +410,7 @@ Item {
                 target: timeScale
                 visible: false
             }
-        }
+        }*/
 
     ]
     transitions: Transition {
