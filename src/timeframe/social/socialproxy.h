@@ -21,6 +21,7 @@ signals:
 public slots:
     void authenticated();
     void newItem(SocialItem *item);
+    void newItems(QList<SocialItem *> items);
 private:
     QList<ISocialModule *> m_plugins;
     SocialModel *m_model;
