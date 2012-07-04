@@ -5,6 +5,7 @@ GridView {
     property int columns: 7
     property variant prevGrid
     property variant nextGrid
+    property int highlightMoveDurationConst: 150
 
     cellWidth: width / columns - 1;
     cellHeight: 200
@@ -19,31 +20,31 @@ GridView {
         opacity: 0
 
         Behavior on opacity {
-                 NumberAnimation { duration: 150 }
-             }
+            NumberAnimation { duration: 150 }
+        }
     }
 
-    highlightMoveDuration: 150
+    highlightMoveDuration: highlightMoveDurationConst
 
     onActiveFocusChanged: {
         if (highlightItem) // we are not empty and we have selection rectangle
         {
             if (!activeFocus)
+            {
                 highlightItem.opacity = 0
+            }
             else
             {
                 highlightItem.opacity = 1
-                parent.contentY = highlightItem.y
-
+                //parent.contentY = highlightItem.y
             }
-            console.log("FOCUS AND ACTIVE ITEM here ci: " + currentIndex + "; vis: " + highlightItem.visible)
+            //console.log("FOCUS AND ACTIVE ITEM here ci: " + currentIndex + "; vis: " + highlightItem.visible)
         }
         else // we are probably empty
         {
             if (activeFocus && nextGrid)
             {
                 nextGrid.forceActiveFocus()
-                nextGrid.focus = true
                 console.log("FORCING FOCUS TO NEXT WITH")
             }
             else
@@ -61,52 +62,76 @@ GridView {
             {
                 prevGrid.highlightMoveDuration = 1
                 prevGrid.currentIndex = prevGrid.count - 1
-                prevGrid.focus = true
-                prevGrid.highlightMoveDuration = 150
+                prevGrid.forceActiveFocus()
+                prevGrid.highlightMoveDuration = highlightMoveDurationConst
             }
 
-            moveCurrentIndexLeft()
-            event.accepted = true
+            if (!interactive)
+            {
+                moveCurrentIndexLeft()
+                event.accepted = true
+            }
             break
         case Qt.Key_Right:
             if (currentIndex == count - 1 && nextGrid)
             {
                 nextGrid.highlightMoveDuration = 1
                 nextGrid.currentIndex = 0
-                nextGrid.focus = true
-                nextGrid.highlightMoveDuration = 150
+                nextGrid.forceActiveFocus()
+                nextGrid.highlightMoveDuration = highlightMoveDurationConst
             }
 
-            moveCurrentIndexRight()
-            event.accepted = true
+            if (!interactive)
+            {
+                moveCurrentIndexRight()
+                event.accepted = true
+            }
             break
         case Qt.Key_Up:
             if (currentIndex < columns && prevGrid)
             {
                 var roundCount = Math.floor((prevGrid.count) / columns) * columns
-                var newCur = (currentIndex % columns) + roundCount - columns * Math.floor((currentIndex % columns) / (prevGrid.count - roundCount))
-                console.log(newCur)
+                var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGrid.count - roundCount)))
 
                 prevGrid.highlightMoveDuration = 1
                 prevGrid.currentIndex = newCur
-                prevGrid.focus = true
-                prevGrid.highlightMoveDuration = 150
+                prevGrid.forceActiveFocus()
+                prevGrid.highlightMoveDuration = highlightMoveDurationConst
             }
 
-            moveCurrentIndexUp()
-            event.accepted = true
+            if (!interactive)
+            {
+                moveCurrentIndexUp()
+                event.accepted = true
+            }
             break
         case Qt.Key_Down:
             if (currentIndex >= count - columns && nextGrid)
             {
                 nextGrid.highlightMoveDuration = 1
                 nextGrid.currentIndex = currentIndex % columns
-                nextGrid.focus = true
-                nextGrid.highlightMoveDuration = 150
+                nextGrid.forceActiveFocus()
+                nextGrid.highlightMoveDuration = highlightMoveDurationConst
             }
 
-            moveCurrentIndexDown()
-            event.accepted = true
+            if (!interactive)
+            {
+                moveCurrentIndexDown()
+                event.accepted = true
+            }
+            break
+
+        case Qt.Key_Return:
+            model.itemClicked(currentIndex)
+
+            break
+        case Qt.Key_Enter:
+            model.itemClicked(currentIndex)
+            break
+
+        case Qt.Key_Back:
+            model.itemClicked(-1)
+            console.log("backspace")
             break
         }
     }
@@ -166,9 +191,25 @@ GridView {
         onMousePositionChanged: {
             if (!grid.moving)
             {
-                var newCurrentIndex = getItemUnderCursor()
-                if (newCurrentIndex != -1)
-                    grid.currentIndex = newCurrentIndex
+                // Optimize later to lesser use of getItemUnderCursor(true)
+                var newCurrentIndex = getItemUnderCursor(!grid.activeFocus)
+                if (newCurrentIndex != -1 && (newCurrentIndex != currentIndex || !grid.activeFocus))
+                {
+                    if (!grid.activeFocus)
+                    {
+                        grid.highlightMoveDuration = 1
+                        grid.currentIndex = newCurrentIndex
+                        grid.forceActiveFocus()
+                        grid.highlightMoveDuration = highlightMoveDurationConst
+                    }
+                    else
+                    {
+                        //if (grid.highlightItem && grid.highlightItem.opacity == 0)
+                        //    grid.highlightItem.opacity = 1
+                        //console.log("NONACTIVEFOCUS")
+                        grid.currentIndex = newCurrentIndex
+                    }
+                }
             }
         }
 

@@ -5,8 +5,10 @@ Item {
     width: parent.width
     clip: true
     anchors.topMargin: 16
+    property variant grid: searchGridView
 
     AppsGridView {
+        id: searchGridView
         anchors.fill: parent
         model: searchGridModel
     }

@@ -7,8 +7,6 @@ FocusScope {
     width: parent.width
     height: 80
     focus: true
-    //color: "grey"
-    //color: "transparent"
 
     Item {
         id: userIconItem
