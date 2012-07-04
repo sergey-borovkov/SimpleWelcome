@@ -1,8 +1,10 @@
 #include "request.h"
+#include "feeditem.h"
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QStringList>
 #include <qjson/parser.h>
 
 RequestManager::RequestManager(QObject *parent)
@@ -33,7 +35,26 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
         connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SIGNAL(authorizationComplete()));
 }
 
+FeedItem *RequestManager::parseReply(const QByteArray &reply)
+{
+    return NULL;
+}
+
 void RequestManager::reply(QByteArray reply)
 {
-    qDebug() << "reply has come";
+    QJson::Parser parser;
+    QVariantMap result = parser.parse(reply).toMap();
+    QVariantList list = result.value("data").toList();
+
+    QList<SocialItem *> feedItems;
+
+    foreach(QVariant item, list)
+    {
+        QVariantMap map = item.toMap();
+        FeedItem *feedItem = new FeedItem();
+        feedItem->fillFromMap(map);
+        feedItems.append(feedItem);
+    }
+
+    emit newSocialItems(feedItems);
 }

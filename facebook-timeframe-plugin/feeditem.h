@@ -11,6 +11,8 @@ public:
     virtual QString type() const;
     virtual QString id() const;
     virtual QVariant data(int role) const;
+
+    void fillFromMap(QVariantMap map);
 private:
     QString m_id;
     QMap<int, QString> m_data;

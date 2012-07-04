@@ -11,6 +11,7 @@ SocialProxy::SocialProxy(QList<ISocialModule *> plugins, QObject *parent) :
 {
     ISocialModule *plugin = m_plugins[0];
     connect(plugin, SIGNAL(authorizationStatusChanged(int)), SLOT(authenticated()));
+    connect(plugin->requestManager(), SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
 //    QWidget *w = plugin->authenticationWidget();
 //    w->show();
 }
@@ -41,4 +42,9 @@ void SocialProxy::newItem(SocialItem *item)
 {
     qDebug() << "New item added";
     m_model->appendRow(item);
+}
+
+void SocialProxy::newItems(QList<SocialItem *> items)
+{
+    qDebug() << "NewItems" << items.size();
 }
