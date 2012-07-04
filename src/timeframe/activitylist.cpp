@@ -36,7 +36,7 @@ QString ActivityList::getUrl(int set, int index)
 }
 
 int ActivityList::getSetCount(int index)
-{    
+{
     return list[index]->count();
 }
 

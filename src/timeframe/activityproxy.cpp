@@ -58,8 +58,8 @@ void ActivityProxy::listingFinished()
 
 void ActivityProxy::startNewSearch(int year, int month, bool direction)
 {
-    QDate date(year, month+1, 1);
-    date.setDate(year, month+1, direction ? 1 : date.daysInMonth());
+    QDate date(year, month + 1, 1);
+    date.setDate(year, month + 1, direction ? 1 : date.daysInMonth());
     //qDebug() << "+++" << date;
     emit newSearch(date, direction ? ActivitySource::Right : ActivitySource::Left);
 }
