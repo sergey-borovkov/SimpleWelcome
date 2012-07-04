@@ -17,7 +17,7 @@ include_directories(${KDE4_INCLUDES} ${QT_QDECLARATIVE_INCLUDE_DIR})
 
 file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h ${CMAKE_CURRENT_SOURCE_DIR}/src/qmlapplicationviewer/*.h ${CMAKE_CURRENT_SOURCE_DIR}/src/timeframe/*.h ${CMAKE_CURRENT_SOURCE_DIR}/src/timeframe/social/*.h)
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/qmlapplicationviewer/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/timeframe/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/timeframe/social/*.cpp)
-file(GLOB QML ${CMAKE_CURRENT_SOURCE_DIR}/src/qml/*.qml ${CMAKE_CURRENT_SOURCE_DIR}/src/timeframe/*.qml)
+file(GLOB QML ${CMAKE_CURRENT_SOURCE_DIR}/src/qml/*.qml ${CMAKE_CURRENT_SOURCE_DIR}/src/qml/timeframe/*.qml)
 
 kde4_add_executable(rosa-launcher-qtquick ${HEADERS} ${SOURCES} ${QML} ${QRC_SOURCES})
 
