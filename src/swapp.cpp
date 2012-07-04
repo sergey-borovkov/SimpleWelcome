@@ -165,6 +165,8 @@ SWApp::SWApp()
     SocialModel *socialModel = new SocialModel(this);
     manager->setModel(socialModel);
 
+    m_viewer->rootContext()->setContextProperty("socialModel", socialModel);
+
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 
     if(isLocal())
