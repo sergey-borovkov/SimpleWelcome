@@ -13,7 +13,7 @@ class Activity;
 class GalleryItem : public QObject
 {
     Q_OBJECT
-public:    
+public:
     explicit GalleryItem(const QDate &date, QObject *parent = 0);
     ~GalleryItem();
 
@@ -23,7 +23,7 @@ public:
 
 signals:
     void dataChanged();
-    
+
 public slots:
     void setDate(const QDate&);
     void addActivity(Activity* item);

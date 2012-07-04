@@ -24,12 +24,10 @@ public:
     ~ItemModel();
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent) const;
-    
-signals:
-    
+
 public slots:
     void addActivityItem( Activity* item);
-    
+
 private:
     QHash<int, QByteArray> m_hash;
     QList<Activity *> m_items;
