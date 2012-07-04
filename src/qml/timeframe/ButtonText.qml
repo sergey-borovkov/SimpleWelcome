@@ -2,7 +2,6 @@
 import QtQuick 1.1
 
 Text {
-
     anchors.verticalCenter: parent.verticalCenter
     anchors.leftMargin: 16
     anchors.rightMargin: 16
@@ -19,5 +18,4 @@ Text {
     style: Text.Raised
     styleColor: "#000"
     color: "#eee"
-
 }

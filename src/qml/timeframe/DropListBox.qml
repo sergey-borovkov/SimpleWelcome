@@ -123,7 +123,6 @@ Item {
                         var prevSelection = selectedText
                         if ( dropboxListSelection.model.get( index ).itemText != prevSelection ) {
                             selectedIndexChanged()
-                            console.log( "index is " + index.toString() )
                             dropboxListSelection.currentIndex = index;
                             selectedText = dropboxListSelection.model.get( index ).itemText
                             dropboxListSelection.focus = true
