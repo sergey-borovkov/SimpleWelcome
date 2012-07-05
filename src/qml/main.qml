@@ -57,7 +57,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         color: "black"
-        opacity: 0.8
+        opacity: 0.6
         z: -5
     }
 

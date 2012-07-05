@@ -1,4 +1,4 @@
-/* KLook
+/* Timeframe
  * Copyright (c) 2011-2012 ROSA  <support@rosalab.ru>
  * Authors: Julia Mineeva, Evgeniy Auzhin, Sergey Borovkov.
  * License: GPLv3
@@ -33,6 +33,8 @@
 
 class Image;
 class FileModel;
+class GalleryModel;
+
 
 class PreviewGenerator : public QObject
 {
@@ -41,18 +43,23 @@ class PreviewGenerator : public QObject
 public:
     static PreviewGenerator *instance();
     QPixmap getPreviewPixmap(QString filePath);
+    void setModel(GalleryModel* model);
 
 public slots:
     void start(const QStringList& list);
 
+
 private slots:
     void setPreview(const KFileItem&, const QPixmap&);
     void setNullIcon(const KFileItem &item);
+    void notifyModel( const QString& filePath );
 
 private:
     explicit PreviewGenerator(QObject *parent = 0);
+    GalleryModel * m_model;
 
-    QHash<QString, QPixmap> previews;    
+    QHash<QString, QPixmap> previews;
+    QHash<QString, QString> m_files;
     QPixmap defaultPreview;
 
     static PreviewGenerator *m_instance;

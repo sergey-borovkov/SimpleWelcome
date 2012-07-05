@@ -35,6 +35,7 @@ signals:
     void newEntries(const QList<Nepomuk::Query::Result>&);
     void newTSEntries(int year,int month);
     void monthFinished(QDate date);
+    void resultCount(int);
 
 public slots:
     virtual void startSearch(const QDate &beginDate, ActivitySource::Direction direction);

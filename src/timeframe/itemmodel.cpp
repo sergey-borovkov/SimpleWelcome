@@ -76,3 +76,15 @@ void ItemModel::addActivityItem(Activity *item)
     m_urlSet.insert(item->getUrl());
     endInsertRows();
 }
+
+void ItemModel::thumbnailReady(QString url)
+{
+    int row;
+    for(row = 0; row<m_items.size(); ++row)
+    {
+      if(m_items.at(row)->getUrl() == url)
+          break;
+    }
+    dataChanged(index(row),index(row));
+}
+
