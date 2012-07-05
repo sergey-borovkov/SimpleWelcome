@@ -31,6 +31,7 @@ private slots:
 
 private:
     QList<SocialItem*> m_list;
+    QHash<int, QByteArray> m_roles;
 };
 
 
