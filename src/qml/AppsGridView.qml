@@ -30,15 +30,9 @@ GridView {
         if (highlightItem) // we are not empty and we have selection rectangle
         {
             if (!activeFocus)
-            {
                 highlightItem.opacity = 0
-            }
             else
-            {
                 highlightItem.opacity = 1
-                //parent.contentY = highlightItem.y
-            }
-            //console.log("FOCUS AND ACTIVE ITEM here ci: " + currentIndex + "; vis: " + highlightItem.visible)
         }
         else // we are probably empty
         {
@@ -129,9 +123,8 @@ GridView {
             model.itemClicked(currentIndex)
             break
 
-        case Qt.Key_Back:
+        case Qt.Key_Backspace:
             model.itemClicked(-1)
-            console.log("backspace")
             break
         }
     }
