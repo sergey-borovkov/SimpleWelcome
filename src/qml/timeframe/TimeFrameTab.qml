@@ -35,7 +35,7 @@ Item {
         if (timeFrameTab.state === "")
         {
             //activityProxy.startNewSearch(__year, __month, direction)
-            activityProxy.startNewSearch(__year, __month, true)
+            //activityProxy.startNewSearch(__year, __month, true)
         }
         else
         {
@@ -327,33 +327,34 @@ Item {
         orientation: ListView.Horizontal
     }
 
-    ListModel {
-        id: myModel1
-        ListElement { type: "Dog"; age: 8 }
-        ListElement { type: "Cat"; age: 5 }
-        ListElement { type: "Dog"; age: 8 }
-        ListElement { type: "Dog"; age: 8 }
-        ListElement { type: "Dog"; age: 8 }
-        ListElement { type: "Dog"; age: 8 }
-        ListElement { type: "Dog"; age: 8 }
-        ListElement { type: "Dog"; age: 8 }
-        ListElement { type: "Dog"; age: 8 }
-
-    }
-
-
     ListView {
         id: socialView
-        anchors.fill: parent
+        anchors.top: separator.bottom
+        anchors.bottom: timeScale.top
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        anchors.rightMargin: 20
+        anchors.topMargin: 30
         orientation: ListView.Horizontal
-
+        visible: false
+        spacing: 10
         model: socialModel
-        delegate: Rectangle {
-            color: "white"
-            width: 300
-            height: 300
-            Text { text: "ololololo" }
+
+        delegate: ShadowRectangle {
+            width: 230
+            height: 220
+
+            Text {
+                anchors.fill: parent
+                wrapMode: Text.Wrap
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                width: 100
+                text: message
+            }
         }
+
     }
 
     state: "socialgallery"
@@ -384,7 +385,11 @@ Item {
             }
             PropertyChanges {
                 target: socialView
-                visible: false
+                opacity: 1
+            }
+            PropertyChanges {
+                target: timeScale
+                opacity: 1
             }
         },
         State {
@@ -405,7 +410,7 @@ Item {
 
             PropertyChanges {
                 target: timeScale
-                visible: false
+                opacity: 0
             }
         }
 
@@ -413,5 +418,4 @@ Item {
     transitions: Transition {
         AnchorAnimation {duration: 500}
     }
-
 }
