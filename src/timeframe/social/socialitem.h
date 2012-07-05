@@ -9,14 +9,20 @@ class SocialItem
 public:
     enum Role
     {
-        TextRole,
-        ImageRole,
-        LikeUrlRole
+        Text,
+        ImageUrl,
+        LikeUrl
+    };
+
+    enum Type
+    {
+        Post,
+        Image
     };
 
     virtual ~SocialItem() = 0;
     virtual QString pluginName() const = 0;
-    virtual QString type() const = 0;
+    virtual Type type() const = 0;
     virtual QString id() const = 0;
     virtual QVariant data(int role) const = 0;
 };
