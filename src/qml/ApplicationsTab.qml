@@ -15,20 +15,9 @@ FocusScope {
         focus: true
         keyNavigationWraps: true
 
-
-/*        states: State {
-            name: "active"; when: appsGrid.activeFocus
-            PropertyChanges { target: gridSelection; color: "#FCFFF5"; }
-        }
-
-        transitions: Transition {
-            NumberAnimation { properties: "scale"; duration: 100 }
-        }*/
-
         function appsContentChanged() {
-            appsGrid.highlightItem.opacity = 0
-            if (appsGrid.highlightItem)
-                console.log("NON ACTIVE FOCUS: " + appsGrid.highlightItem + " " + appsGrid.highlightItem.opacity)
+            appsGrid.currentIndex = 0
+            appsGrid.highlightItem.opacity = 1
         }
 
         Component.onCompleted: {
