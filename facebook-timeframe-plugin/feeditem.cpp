@@ -1,14 +1,24 @@
 #include "feeditem.h"
+
+#include <QtCore/QDebug>
 #include <qjson/parser.h>
+
+FeedItem::~FeedItem()
+{
+    qDebug() << "~FeedItem";
+}
 
 QString FeedItem::pluginName() const
 {
     return QLatin1String("facebook");
 }
 
-QString FeedItem::type() const
+FeedItem::Type FeedItem::type() const
 {
-    return QLatin1String("post");
+    if(data(ImageUrl).isNull())
+        return Post;
+    else
+        return Image;
 }
 
 QString FeedItem::id() const
@@ -18,7 +28,8 @@ QString FeedItem::id() const
 
 QVariant FeedItem::data(int role) const
 {
-    return QVariant();
+    qDebug() << "FeedItem::data()";
+    return m_data.value(role);
 }
 
 void FeedItem::fillFromMap(QVariantMap map)
@@ -37,6 +48,9 @@ void FeedItem::fillFromMap(QVariantMap map)
 
     if(map.contains("id"))
         m_id = map.value("id").toString();
+    if(map.contains("message"))
+        m_data.insert(Text, map.value("message").toString());
+    else
+        m_data.insert(Text, "100600");
 
-//    if(map.contains(""))
 }
