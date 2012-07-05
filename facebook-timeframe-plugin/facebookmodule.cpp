@@ -9,19 +9,19 @@
 
 FacebookModule::FacebookModule()
 {
-    m_authorizationView = new QDeclarativeView(QUrl("qrc:/qml/main.qml"));
-
+    m_authorizationView = new QDeclarativeView;
+    m_authorizer = new OAuth2Authorizer;
+/*
+    m_authorizationView->engine()->rootContext()->setContextProperty("authorizer", m_authorizer);
+    m_authorizationView->setSource(QUrl("qrc:/qml/main.qml"));
+*/
     connect(m_authorizationView->engine(), SIGNAL(quit()), m_authorizationView, SLOT(close()));
 
-    m_authorizer = new OAuth2Authorizer;
 
     m_requestManager = new RequestManager;
     m_requestManager->setAuthorizer(m_authorizer);
 
     connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SLOT(onAcessTokenChanged()));
-
-    m_authorizationView->engine()->rootContext()->setContextProperty("authorizer", m_authorizer);
-
 }
 
 ISocialRequestManager *FacebookModule::requestManager()
