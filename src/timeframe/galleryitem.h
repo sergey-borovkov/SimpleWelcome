@@ -27,6 +27,7 @@ signals:
 public slots:
     void setDate(const QDate&);
     void addActivity(Activity* item);
+    void thumbnailReady(QString);
 
 private:
 

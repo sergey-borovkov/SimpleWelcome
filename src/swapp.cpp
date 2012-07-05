@@ -46,6 +46,7 @@
 #include "timeframe/gallerylister.h"
 #include "timeframe/itemmodel.h"
 #include "timeframe/galleryitem.h"
+#include "timeframe/previewgenerator.h"
 
 SWApp* SWApp::self()
 {
@@ -115,9 +116,9 @@ SWApp::SWApp()
     m_model = new ActivityModel;
     m_proxy = new ActivityProxy;
     m_source = new NepomukSource;
-    m_nepomukThread = new QThread(this);
-    m_source->moveToThread(m_nepomukThread);
-    m_nepomukThread->start();
+    //m_nepomukThread = new QThread(this);
+    //m_source->moveToThread(m_nepomukThread);
+    //m_nepomukThread->start();
 
     /* TF Gallery mode */
 
@@ -130,7 +131,7 @@ SWApp::SWApp()
     qmlRegisterUncreatableType<Activity>("Acitivity", 1, 0, "Activity", "Activity is supposed to be used from C++");
     qmlRegisterUncreatableType<GalleryItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
     qmlRegisterUncreatableType<GalleryItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
-
+    PreviewGenerator::instance()->setModel(model);
     /* ------------------*/
 
     m_proxy->addSource( m_source );

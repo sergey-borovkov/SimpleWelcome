@@ -91,8 +91,28 @@ void GalleryModel::newActivities(QList<Activity*> list)
    // qDebug() << "------new Activities--------";
     for (int i = 0; i < list.size() ; i++)
     {
+
         Activity* item = list.at(i);
+        m_urlHash.insert(item->getUrl(),item->getDate());
         //qDebug() << item->getDate();
+
+        //first check of null item, if we find one, edit him with new data
+        foreach (GalleryItem* it, m_items)
+        {
+            if ( (it->getDate().year() == item->getDate().year())
+                 && (it->getDate().month() == item->getDate().month())
+                 && (it->getCount() == 0)
+                 )
+            {
+                it->setDate(item->getDate());
+                it->addActivity(item);
+                QModelIndex index = indexFromItem(it);
+                if (index.isValid())
+                    dataChanged(index, index);
+                continue;
+            }
+        }
+
         int j = 0;
         bool flag = false;
         if (m_items.size() > 0)
@@ -129,8 +149,13 @@ void GalleryModel::newActivities(QList<Activity*> list)
 void GalleryModel::newMonth(int year, int month)
 {    
     QDate date(year, month, 1);
-    if (find(date))
-        return;
+    foreach(GalleryItem* item, m_items)
+    {
+        if((item->getDate().year() == year) && (item->getDate().month() == month))
+        {
+            return;
+        }
+    }
     int j = 0;
     GalleryItem * gallItem = new GalleryItem(date);
     if (m_items.size() > 0)
@@ -144,14 +169,14 @@ void GalleryModel::newMonth(int year, int month)
             }
         }
     }
-    //qDebug() << "new null item" << date;
+    qDebug() << "new null item" << date;
     insertRow(j,gallItem);
 }
 
 //Remove null gallery item from model
 bool GalleryModel::removeNullItem(int year, int month)
 {
-
+    qDebug() << "call Remove null" << year << month;
     QDate date(year, month, 1);
     int j = 0;
     if (m_items.size() > 0)
@@ -162,7 +187,7 @@ bool GalleryModel::removeNullItem(int year, int month)
             {
                 if ( m_items.at(j)->model()->rowCount( QModelIndex( ) ) == 0 )
                 {
-                    //qDebug() << "Remove null";
+                    qDebug() << "Remove null" << year << month;
                     removeRow(j, QModelIndex());
                     return true;
                 }
@@ -263,5 +288,64 @@ ListItem * ListModel::takeRow(int row)
 }
 */
 
+int GalleryModel::getIndexByDate(int year, int month, bool direction)
+{
+    //QDate date(year, month,1);
+    //return indexFromItem(find(date)).row();
+    GalleryItem* ptr=0;
+    foreach(GalleryItem* item, m_items)
+    {
+        if((item->getDate().year() == year) && (item->getDate().month() == month))
+        {
+            ptr = item;
+            break;
+        }
+    }
+    if (ptr)
+        return indexFromItem(ptr).row();
+    return -1;
+
+//    if (direction) // forward
+//    {
+//        ind =0;
+//        for( ; ind < m_list.size(); ind++)
+//        {
+//            if(m_list[ind]->date() == date)
+//            {
+//                break;
+//            }
+//        }
+//    }
+//    else //backward
+//    {
+//        ind = m_list.size()-1;
+//        for( ; ind >= 0; ind--)
+//        {
+//            if(m_list[ind]->date() == date)
+//            {
+//                break;
+//            }
+//        }
+//    }
+//    return ind;
+}
 
 
+QDate GalleryModel::getDateOfIndex(int listIndex)
+{
+    if (listIndex >= m_items.size() || listIndex < 0)
+        return QDate();
+    GalleryItem* item = m_items.at(listIndex);
+    QDate date = item->getDate();
+    return date;
+}
+
+void GalleryModel::imageReady(QString url)
+{
+    if (m_urlHash.contains(url))
+    {
+        QDate date = m_urlHash[url];
+        GalleryItem* item = find(date);
+        item->thumbnailReady(url);
+    }
+}
