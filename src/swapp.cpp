@@ -160,10 +160,10 @@ SWApp::SWApp()
 
     PluginLoader loader;
     QList<ISocialModule *> plugins = loader.loadPlugins();
-    SocialProxy *manager = new SocialProxy(plugins, this);
+    m_manager = new SocialProxy(plugins, this);
 
     SocialModel *socialModel = new SocialModel;
-    manager->setModel(socialModel);
+    m_manager->setModel(socialModel);
 
     m_viewer->rootContext()->setContextProperty("socialModel", socialModel);
 

@@ -17,7 +17,10 @@ SocialProxy::SocialProxy(QList<ISocialModule *> plugins, QObject *parent) :
 
 SocialProxy::~SocialProxy()
 {
-
+    foreach(ISocialModule *module, m_plugins)
+    {
+        delete module->requestManager();
+    }
 }
 
 void SocialProxy::setModel(SocialModel *model)

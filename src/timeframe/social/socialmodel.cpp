@@ -7,6 +7,7 @@ SocialModel::SocialModel(QObject *parent) :
     QAbstractListModel(parent)
 {
     m_roles.insert(SocialItem::Text, "message");
+    m_roles.insert(SocialItem::Image, "picture");
     setRoleNames(m_roles);
 }
 
@@ -18,7 +19,6 @@ int SocialModel::rowCount(const QModelIndex &parent) const
 
 QVariant SocialModel::data(const QModelIndex &index, int role) const
 {
-    qDebug() << "SocialModel::data()";
     if(index.row() < 0 || index.row() >= m_list.size())
         return QVariant();
     return m_list.at(index.row())->data(role);
@@ -36,7 +36,6 @@ void SocialModel::appendRow(SocialItem *item)
 
 void SocialModel::appendRows(const QList<SocialItem *> &items)
 {
-    qDebug() << "SocialModel::appendRows()";
     beginInsertRows(QModelIndex(), rowCount(), rowCount() + items.size() - 1);
     foreach(SocialItem *item, items)
         m_list.append(item);
