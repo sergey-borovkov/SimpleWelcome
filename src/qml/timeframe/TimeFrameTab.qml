@@ -51,8 +51,7 @@ Item {
     Connections {
         target:tabListView
         onCurrentIndexChanged:{
-            if (tabListView.currentIndex === 3)
-            {
+            if (tabListView.currentIndex === 3) {
                 currentDateChanged()
                 console.log("start initial search")
             }
@@ -60,11 +59,12 @@ Item {
     }
 
     //On search finished
-    Connections{
+    Connections {
         target: activityProxy
-        onFinished: {__isSearching = false //; console.log("search finished")
-            searchLabel.visible = false}
-
+        onFinished: {
+            __isSearching = false
+            searchLabel.visible = false
+        }
     }
 
 
@@ -342,19 +342,31 @@ Item {
         model: socialModel
 
         delegate: ShadowRectangle {
-            width: 230
-            height: 220
+            width: 300
+            height: 300
 
             Text {
-                anchors.fill: parent
+                id: msg
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
                 wrapMode: Text.Wrap
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                width: 100
+                width: 200
                 text: message
             }
-        }
 
+            Image {
+                anchors.top: msg.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                fillMode: Image.PreserveAspectFit
+                smooth: true
+                source: picture
+            }
+        }
     }
 
     state: "socialgallery"

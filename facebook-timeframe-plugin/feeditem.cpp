@@ -5,7 +5,6 @@
 
 FeedItem::~FeedItem()
 {
-    qDebug() << "~FeedItem";
 }
 
 QString FeedItem::pluginName() const
@@ -15,10 +14,7 @@ QString FeedItem::pluginName() const
 
 FeedItem::Type FeedItem::type() const
 {
-    if(data(ImageUrl).isNull())
         return Post;
-    else
-        return Image;
 }
 
 QString FeedItem::id() const
@@ -28,7 +24,6 @@ QString FeedItem::id() const
 
 QVariant FeedItem::data(int role) const
 {
-    qDebug() << "FeedItem::data()";
     return m_data.value(role);
 }
 
@@ -50,7 +45,9 @@ void FeedItem::fillFromMap(QVariantMap map)
         m_id = map.value("id").toString();
     if(map.contains("message"))
         m_data.insert(Text, map.value("message").toString());
-    else
-        m_data.insert(Text, "100600");
-
+    if(map.contains("picture"))
+    {
+        m_data.insert(Image, map.value("picture").toString());
+        qDebug() << map.value("picture").toString();
+    }
 }

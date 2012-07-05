@@ -11,6 +11,7 @@ class RequestManager : public ISocialRequestManager
     Q_OBJECT
 public:
     explicit RequestManager(QObject *parent = 0);
+    ~RequestManager();
     virtual void queryWall(const QDate &beginDate, const QDate &endDate);
     void setAuthorizer(OAuth2Authorizer *authorizer);
 
