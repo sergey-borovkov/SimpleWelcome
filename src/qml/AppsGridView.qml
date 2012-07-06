@@ -17,7 +17,7 @@ GridView {
         height: 140
         color: "#c8b0c4de"
         radius: 5
-        opacity: 0
+        opacity: 1
 
         Behavior on opacity {
             NumberAnimation { duration: 150 }
@@ -48,6 +48,7 @@ GridView {
 
     delegate: Button {}
 
+    //Keys.forwardTo: topBar
     Keys.onPressed: {
         switch (event.key)
         {

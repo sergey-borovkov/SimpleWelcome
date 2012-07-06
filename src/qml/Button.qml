@@ -66,7 +66,7 @@ Item {
 
     states: State {
         name: "active"; when: button.activeFocus
-        PropertyChanges { target: buttonIcon; scale: 1.3 }
+        PropertyChanges { target: buttonIcon; scale: 1.2 }
     }
 
     transitions: Transition {

@@ -89,6 +89,11 @@ FocusScope {
                     nextGrid: documentsGridView
 
                     interactive: false
+
+                    Component.onCompleted: {
+                        highlightItem.opacity = 0
+                    }
+
                 }
             }
 
@@ -124,6 +129,10 @@ FocusScope {
 
                     prevGrid: favoritesGridView
                     nextGrid: recentAppsGridView
+
+                    Component.onCompleted: {
+                        highlightItem.opacity = 0
+                    }
                 }
             }
         }

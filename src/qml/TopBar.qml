@@ -7,6 +7,7 @@ FocusScope {
     width: parent.width
     height: 80
     focus: true
+    Keys.forwardTo: searchInput
 
     Item {
         id: userIconItem
@@ -87,6 +88,21 @@ FocusScope {
             font.family: "Bitstream Vera Sans"
             font.italic: true
             font.pixelSize: 18
+
+            /*Keys.onPressed: {
+                event.accepted = false
+                if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Up || event.key == Qt.Key_Down)
+                {
+                    console.log("REJECTED")
+                    // This is available in all editors.
+                    event.accepted = false
+                }
+                else
+                {
+                    console.log("ACCEPTED")
+                    event.accepted = true
+                }
+            }*/
         }
         Binding {
             target: searchGridModel
