@@ -40,7 +40,7 @@ Item {
 
     function getTimeLineGalleryIndex() {
        var index = galleryModel.getIndexByDate(__year, __month+1, direction)
-        console.log("getIndexByDate: " + index)
+        //console.log("getIndexByDate: " + index)
        return index
     }
 
@@ -104,7 +104,7 @@ Item {
         target: activityProxy
         onFinished: {
             __isSearching = false
-            console.log("search finished")
+            //console.log("search finished")
             searchLabel.visible = false
             if (timeFrameTab.state === "gallerySearch")
                 timeFrameTab.state = "gallery"
@@ -405,9 +405,14 @@ Item {
         border.color: "black"
 
         ButtonText {
-            id: stateChangeButtonText
-            text: "<--"
+            id: stateChangeButtonText            
             anchors.left: parent.left
+        }
+
+        Image {
+            id: buttonImage
+            anchors.centerIn: parent
+            source: "images/gallery_normal.png"
         }
 
         MouseArea{
@@ -416,8 +421,17 @@ Item {
             onClicked: {
                 if ( timeFrameTab.state === "" ) {
                     timeFrameTab.state = "gallery"
+                    var index = timeFrameTab.getTimeLineGalleryIndex()
+                    //console.log("gallery" + index +" "+ __year +" "+ (__month))
+                    galleryView.currentIndex = timeFrameTab.getTimeLineGalleryIndex()
+                    galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center )
                 } else {
                     timeFrameTab.state = ""
+                    var index1 = timeFrameTab.getTimeLineProperlyItem()
+                    //console.log("scene " + index1 +" "+ __year +" "+ (__month))
+                    scene.currentIndex = timeFrameTab.getTimeLineProperlyItem()
+                    scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)
+
                 }
             }
 //            onClicked: {
@@ -465,6 +479,7 @@ Item {
         delegate: GalleryDelegate { }
         onCurrentIndexChanged: {
             //console.log("Gallery index " + galleryView.currentIndex + "  " + galleryView.count)
+            //positionViewAtIndex(galleryView.currentIndex, ListView.Visible)
             if (galleryView.count > 0)
             {
                 //console.log("position view ")
@@ -480,8 +495,13 @@ Item {
             onTriggered: {
                 var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
                                                 galleryView.y + galleryView.height/2 + galleryView.contentY)
+                //console.log(index)
+                //if ((index !== -1) && (index < galleryView.count))
+                  //  galleryView.currentIndex = index
                 var date = galleryModel.getDateOfIndex(index)
                 timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
+                __year = date.getFullYear()
+                __month = date.getMonth()
             }
         }
 
@@ -518,7 +538,7 @@ Item {
     }
 */
 
-    state: "gallery"
+    state: ""
 
     states: [
 
@@ -544,7 +564,18 @@ Item {
             PropertyChanges {
                 target: menuBar
                 visible : false
+            }         
+
+            PropertyChanges {
+                target: stateChangeButtonText
+                text : "<--"
             }
+            PropertyChanges {
+                target: buttonImage
+                visible : false
+            }
+
+
         },
         State {
             name: "gallerySearch"; extend: "gallery"
@@ -558,8 +589,9 @@ Item {
             }
         }
     ]
+/*
     transitions: Transition {
          AnchorAnimation {duration: 500}
      }
-
+*/
 }

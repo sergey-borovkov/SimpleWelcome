@@ -46,7 +46,7 @@ void GalleryLister::startSearch(QDate date, int direction)
 
 void GalleryLister::resultCount(int count)
 {
-    qDebug() << "Result count: " << count;
+    //qDebug() << "Result count: " << count;
 }
 
 void GalleryLister::newData(QList<Activity *> list)
