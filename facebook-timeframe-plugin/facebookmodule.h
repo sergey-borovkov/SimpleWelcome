@@ -7,7 +7,7 @@ class QDeclarativeView;
 class RequestManager;
 class OAuth2Authorizer;
 
-class FacebookModule : public ISocialModule
+class FacebookModule : public QObject, public ISocialModule
 {
     Q_OBJECT
     Q_INTERFACES(ISocialModule)

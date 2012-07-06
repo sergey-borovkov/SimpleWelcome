@@ -9,8 +9,8 @@
 SocialProxy::SocialProxy(QList<ISocialModule *> plugins, QObject *parent) :
     QObject(parent), m_plugins(plugins), m_model(0)
 {
-    connect(plugins[0], SIGNAL(authorizationStatusChanged(int)), SLOT(authenticated()));
-    connect(plugins[0]->requestManager(), SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
+    //connect(plugins[0], SIGNAL(authorizationStatusChanged(int)), SLOT(authenticated()));
+    connect(dynamic_cast<QObject *>(plugins[0]->requestManager()), SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
 //    QWidget *w = plugin->authenticationWidget();
 //    w->show();
 }

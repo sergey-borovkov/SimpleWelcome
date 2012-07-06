@@ -59,6 +59,6 @@ void RequestManager::reply(QByteArray reply)
         feedItem->fillFromMap(map);
         feedItems.append(feedItem);
     }
-
+    qDebug() << "here";
     emit newSocialItems(feedItems);
 }

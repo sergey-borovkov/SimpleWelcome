@@ -11,10 +11,10 @@ FacebookModule::FacebookModule()
 {
     m_authorizationView = new QDeclarativeView;
     m_authorizer = new OAuth2Authorizer;
-/*
-    m_authorizationView->engine()->rootContext()->setContextProperty("authorizer", m_authorizer);
-    m_authorizationView->setSource(QUrl("qrc:/qml/main.qml"));
-*/
+
+//    m_authorizationView->engine()->rootContext()->setContextProperty("authorizer", m_authorizer);
+//    m_authorizationView->setSource(QUrl("qrc:/qml/main.qml"));
+
     connect(m_authorizationView->engine(), SIGNAL(quit()), m_authorizationView, SLOT(close()));
 
 
@@ -36,7 +36,7 @@ QWidget *FacebookModule::authenticationWidget()
 
 void FacebookModule::onAcessTokenChanged()
 {
-    emit authorizationStatusChanged(ISocialModule::Success);
+    //emit authorizationStatusChanged(ISocialModule::Success);
 }
 
 Q_EXPORT_PLUGIN2(facebook-timeframe-plugin, FacebookModule)
