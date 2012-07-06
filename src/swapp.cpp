@@ -64,6 +64,7 @@ SWApp::SWApp()
     : KUniqueApplication(),
       m_inited(false)
 {
+    qDebug() << "here";
     m_viewer = new QmlApplicationViewer();
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
@@ -169,7 +170,7 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("socialModel", socialModel);
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
-
+    qDebug() << "THERE";
     if(isLocal())
         m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
     else

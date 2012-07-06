@@ -13,15 +13,16 @@ PluginLoader::PluginLoader()
 
 QList<ISocialModule*> PluginLoader::loadPlugins()
 {
-    QDir modulesDir(QCoreApplication::applicationDirPath() + "/lib");
+    QDir modulesDir("/usr/share/timeframe");
     QList<ISocialModule*> plugins;
-
+    qDebug() << "Loading plugins";
     foreach (QString fileName, modulesDir.entryList(QStringList() << "*.so", QDir::Files))
     {
-        QPluginLoader loader("lib/" + fileName);
+        QPluginLoader loader("/usr/share/timeframe/" + fileName);
         QObject *libObject = loader.instance();
         if (ISocialModule *lib = qobject_cast<ISocialModule*>(libObject))
             plugins << lib;
+    qDebug() << loader.errorString();
     }
 
     return plugins;

@@ -397,11 +397,10 @@ Item {
             }
 
             Image {
-                anchors.top: msg.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
+                anchors.centerIn: parent
                 fillMode: Image.PreserveAspectFit
+                width: Math.min( sourceSize.width, parent.width)
+                height: Math.min( sourceSize.height, parent.height)
                 smooth: true
                 source: picture
             }

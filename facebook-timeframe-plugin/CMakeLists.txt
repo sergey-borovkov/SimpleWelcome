@@ -22,3 +22,5 @@ file(GLOB QML ${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml)
 
 ADD_LIBRARY(facebook-timeframe-plugin SHARED ${HEADERS} ${SOURCES} ${QML})
 target_link_libraries(facebook-timeframe-plugin ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES} ${QJSON_LIBRARIES})
+
+install(TARGETS facebook-timeframe-plugin DESTINATION share/timeframe)

@@ -30,6 +30,7 @@ public:
     virtual ~ISocialModule() = 0;
     virtual QWidget *authenticationWidget() = 0;
     virtual ISocialRequestManager *requestManager() = 0;
+    virtual bool isAuthorized() const = 0;
 };
 
 Q_DECLARE_INTERFACE(ISocialModule, "Timeframe_Library.SocialModule/1.0")
