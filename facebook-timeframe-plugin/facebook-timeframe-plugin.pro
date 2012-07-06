@@ -18,3 +18,5 @@ OTHER_FILES += \
 RESOURCES += \
     resources.qrc
 DESTDIR = $$PWD/../build/lib/
+target.path = $$PREFIX/share/timeframe/
+INSTALLS = target

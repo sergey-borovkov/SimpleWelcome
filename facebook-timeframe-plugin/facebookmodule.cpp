@@ -3,20 +3,31 @@
 #include "oauth2authorizer.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QSettings>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
 
 FacebookModule::FacebookModule()
 {
-    m_authorizationView = new QDeclarativeView;
     m_authorizer = new OAuth2Authorizer;
 
-//    m_authorizationView->engine()->rootContext()->setContextProperty("authorizer", m_authorizer);
-//    m_authorizationView->setSource(QUrl("qrc:/qml/main.qml"));
+    QSettings settings("ROSA", "facebook-timeframe-plugin");
+    QString accessToken = settings.value("accessToken").toString();
 
-    connect(m_authorizationView->engine(), SIGNAL(quit()), m_authorizationView, SLOT(close()));
 
+    if(!accessToken.isEmpty())
+    {
+        m_authorizer->setAccessToken(accessToken);
+        m_authorizationView = 0;
+        emit authorized();
+    }
+    else
+    {
+        m_authorizationView = new QDeclarativeView();
+        m_authorizationView->engine()->rootContext()->setContextProperty("authorizer", m_authorizer);
+        m_authorizationView->setSource(QUrl("qrc:/qml/main.qml"));
+    }
 
     m_requestManager = new RequestManager;
     m_requestManager->setAuthorizer(m_authorizer);
@@ -37,6 +48,7 @@ QWidget *FacebookModule::authenticationWidget()
 void FacebookModule::onAcessTokenChanged()
 {
     //emit authorizationStatusChanged(ISocialModule::Success);
+    emit authorized();
 }
 
 Q_EXPORT_PLUGIN2(facebook-timeframe-plugin, FacebookModule)

@@ -10,9 +10,21 @@ SocialProxy::SocialProxy(QList<ISocialModule *> plugins, QObject *parent) :
     QObject(parent), m_plugins(plugins), m_model(0)
 {
     //connect(plugins[0], SIGNAL(authorizationStatusChanged(int)), SLOT(authenticated()));
-    connect(dynamic_cast<QObject *>(plugins[0]->requestManager()), SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
-//    QWidget *w = plugin->authenticationWidget();
-//    w->show();
+    QObject *ob = dynamic_cast<QObject *>(plugins[0]->requestManager());
+    if(ob)
+    {
+        connect(ob, SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
+    }
+
+    if(plugins.size())
+    {
+        QObject *p = dynamic_cast<QObject *>(plugins[0]);
+        connect(p, SIGNAL(authorized()), SLOT(authenticated()));
+        if(!m_plugins[0]->isAuthorized()) {
+            QWidget *w = plugins[0]->authenticationWidget();
+    	    w->show();
+        }
+    }
 }
 
 SocialProxy::~SocialProxy()
@@ -27,7 +39,8 @@ void SocialProxy::setModel(SocialModel *model)
 {
     m_model = model;
     m_model->setParent(this);
-    m_plugins[0]->requestManager()->queryWall(QDate(), QDate());
+    if(m_plugins.size())
+        m_plugins[0]->requestManager()->queryWall(QDate(), QDate());
 }
 
 SocialModel *SocialProxy::model() const
@@ -38,6 +51,8 @@ SocialModel *SocialProxy::model() const
 void SocialProxy::authenticated()
 {
     m_plugins[0]->requestManager()->queryWall(QDate(), QDate());
+    if(m_plugins[0]->authenticationWidget())
+	m_plugins[0]->authenticationWidget()->hide();
 }
 
 void SocialProxy::newItem(SocialItem *item)
