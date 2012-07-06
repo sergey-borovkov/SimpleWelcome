@@ -29,9 +29,9 @@ Item {
     }
 
     function getTimeLineGalleryIndex() {
-       var index = galleryModel.getIndexByDate(__year, __month+1, direction)
+        var index = galleryModel.getIndexByDate(__year, __month+1, direction)
         console.log("getIndexByDate: " + index)
-       return index
+        return index
     }
 
     //Start new serch
@@ -182,7 +182,7 @@ Item {
     Binding {
         target: timeFrameTab
         property: __isSearching
-        value:  searchLabel.visible        
+        value:  searchLabel.visible
     }
 
     ListView {
@@ -318,13 +318,13 @@ Item {
                     timeFrameTab.state = ""
                 }
             }
-//            onClicked: {
-//                if ( timeFrameTab.state === "gallery" ) {
-//                    timeFrameTab.state = "gallerySearch"
-//                } else {
-//                    timeFrameTab.state = "gallery"
-//                }
-//            }
+            //            onClicked: {
+            //                if ( timeFrameTab.state === "gallery" ) {
+            //                    timeFrameTab.state = "gallerySearch"
+            //                } else {
+            //                    timeFrameTab.state = "gallery"
+            //                }
+            //            }
         }
     }
 
@@ -362,8 +362,8 @@ Item {
         model: galleryModel
         delegate: GalleryDelegate { }
         orientation: ListView.Horizontal
-            //console.log("Gallery index " + galleryView.currentIndex + "  " + galleryView.count)
-                //console.log("position view ")
+        //console.log("Gallery index " + galleryView.currentIndex + "  " + galleryView.count)
+        //console.log("position view ")
     }
 
     ListView {
@@ -404,33 +404,31 @@ Item {
                 fillMode: Image.PreserveAspectFit
                 smooth: true
                 source: picture
-           }
-            } }
-        
-        
-Timer {
-            id: galleryTimer
-            interval: 100; running: false; repeat: true
-            onTriggered: {
-                var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
-                                                galleryView.y + galleryView.height/2 + galleryView.contentY)
-                var date = galleryModel.getDateOfIndex(index)
-                timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
             }
         }
+    }
 
-        Connections {
-            target: galleryView
-            onFlickStarted : galleryTimer.start()
+
+    Timer {
+        id: galleryTimer
+        interval: 100; running: false; repeat: true
+        onTriggered: {
+            var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
+                                            galleryView.y + galleryView.height/2 + galleryView.contentY)
+            var date = galleryModel.getDateOfIndex(index)
+            timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
         }
+    }
 
-        Connections {
-            target: galleryView
-            onFlickEnded: galleryTimer.stop()
-        }
+    Connections {
+        target: galleryView
+        onFlickStarted : galleryTimer.start()
+    }
 
-    }    
-
+    Connections {
+        target: galleryView
+        onFlickEnded: galleryTimer.stop()
+    }
 
 
 
@@ -439,10 +437,6 @@ Timer {
         source: "images/ajax-loader.gif"
         anchors.centerIn: parent
         visible: false
-    }
-
-
-        }
     }
 
     state: "socialgallery"
