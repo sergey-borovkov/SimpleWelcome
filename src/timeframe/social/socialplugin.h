@@ -10,23 +10,15 @@
 
 class SocialItem;
 
-class ISocialRequestManager : public QObject
+class ISocialRequestManager
 {
-    Q_OBJECT
 public:
     virtual ~ISocialRequestManager() = 0;
-
-public slots:
     virtual void queryWall(const QDate &beginDate, const QDate &endDate) = 0;
-
-signals:
-    void authorizationComplete();
-    void newSocialItems(QList<SocialItem *> items);
 };
 
-class ISocialModule : public QObject
+class ISocialModule
 {
-    Q_OBJECT
 public:
     enum AuthorizationStatus
     {
@@ -38,9 +30,6 @@ public:
     virtual ~ISocialModule() = 0;
     virtual QWidget *authenticationWidget() = 0;
     virtual ISocialRequestManager *requestManager() = 0;
-
-signals:
-    void authorizationStatusChanged(int status);
 };
 
 Q_DECLARE_INTERFACE(ISocialModule, "Timeframe_Library.SocialModule/1.0")
