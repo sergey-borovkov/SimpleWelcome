@@ -40,6 +40,9 @@ public:
 public slots:
     void newActivities(QList <Activity*> list);
     QObject* itemsModel(QDate date) const;
+    int getIndexByDate(int year, int month, bool direction);
+    QDate getDateOfIndex(int listIndex);
+    void imageReady(QString url);
 
 protected:
     bool removeNullItem(int, int);
@@ -51,6 +54,7 @@ private slots:
 private:
     QList <GalleryItem *> m_items;
     QHash<int, QByteArray> hash;
+    QHash<QString, QDate> m_urlHash;
     GalleryLister* m_lister;
 };
 

@@ -1,6 +1,6 @@
 Name:		rosa-launcher-qtquick
 Version:	0.2.2
-Release:	2
+Release:	4
 Epoch:		1
 Summary:	ROSA Desktop Application Launcher QtQuick
 Group:		Graphical desktop/KDE
@@ -10,7 +10,6 @@ Source0:	rosa-launcher-qtquick-%{version}.tar.gz
 
 Requires:       kdebase4-workspace
 BuildRequires:  kdebase4-workspace-devel
-BuildRequires:  kdebase4-devel
 
 %description
 ROSA Desktop Application Launcher QtQuick

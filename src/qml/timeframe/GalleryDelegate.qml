@@ -31,7 +31,7 @@ Item {
         width: parent.width + 10
         height: parent.height + 10
         //visible: (size === 0) ? false : true
-    }
+    }    
     Button{
         id: showContentButton
         visible: (size === 0) ? true : false
@@ -50,6 +50,7 @@ Item {
             anchors.fill: parent
             onClicked: {
                 galleryLister.startSearch(date,1)
+                galleryView.currentIndex = index
             }
         }
     }
@@ -69,12 +70,12 @@ Item {
         delegate: Column {
             Rectangle{
                 id: imageBackground
-                color: "white"
+                color: "black"
                 border.color: "black"
                 border.width: 2
                 radius: 5
-                width: itemGrid.cellWidth - 4
-                height: itemGrid.cellHeight -20
+                width: itemGrid.cellWidth - 20
+                height: itemGrid.cellHeight -40
                 clip: true
                 Image{
                     id: image
@@ -82,12 +83,25 @@ Item {
                     width: Math.min( sourceSize.width, parent.width -4)
                     height: Math.min( sourceSize.height, parent.height -4 )
                     fillMode: Image.PreserveAspectFit
-                    source: url
+                    source: "image://preview/" + url + "%" + Math.random( 10 )
                     smooth: true
                     asynchronous: true
+/*
+                    Connections
+                    {
+                        target: itemGrid.model
+                        onDataChanged:
+                        {
+                            image.source = "image://preview/" + url + "%" + Math.random( 10 )
+                        }
+                    }
+                    */
+                }
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: Qt.openUrlExternally(url)
                 }
             }
-
 
             Text {
                 id: label
@@ -97,23 +111,25 @@ Item {
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
             }
+
         }
     }
 
     function getDelegateWidht( count ){
         if (count === 0)
         {
-            //galleryLister.startSearch(date,1)
+            galleryLister.startSearch(date,1)   //Start new search if null item becomes visible
             count++
         }
         var x = Math.ceil(count /3)
         return x
     }
-
+/*
     ListView.onAdd: SequentialAnimation {
         PropertyAction { target: galleryItem; property: "height"; value: 0 }
         NumberAnimation { target: galleryItem; property: "height"; to: parent.height; duration: 250; easing.type: Easing.InOutQuad}
     }
+    */
     /*
     ListView.onAdd:
     {

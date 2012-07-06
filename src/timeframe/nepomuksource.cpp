@@ -5,6 +5,7 @@
 #include <Nepomuk/Resource>
 #include <Nepomuk/File>
 #include <Nepomuk/Query/AndTerm>
+#include <Nepomuk/Query/OrTerm>
 #include <Nepomuk/Query/ComparisonTerm>
 #include <Nepomuk/Query/LiteralTerm>
 #include <Nepomuk/Query/QueryServiceClient>
@@ -53,10 +54,14 @@ Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &date)
     Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( date );
     Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() < Nepomuk::Query::LiteralTerm( date.addDays(date.daysInMonth()) );
     Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image/"));
-    Nepomuk::Query::AndTerm term(beginDateTerm,endDateTerm, image);
+    Nepomuk::Query::ComparisonTerm video(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("video/"));
 
-    Nepomuk::Query::FileQuery query(term);
+    Nepomuk::Query::AndTerm term1(beginDateTerm,endDateTerm, image);
+    Nepomuk::Query::AndTerm term2(beginDateTerm,endDateTerm, video);
 
+    Nepomuk::Query::OrTerm orTerm(term1,term2);
+
+    Nepomuk::Query::FileQuery query(orTerm);
     return query;
 }
 
@@ -192,9 +197,15 @@ Nepomuk::Query::FileQuery NepomukSource::createTimeScaleQuery(const QDate &date)
     QDate endDate = beginDate.addMonths(1);
     Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( beginDate );
     Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() < Nepomuk::Query::LiteralTerm( endDate );
-    Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image/"));
-    Nepomuk::Query::AndTerm term(beginDateTerm,endDateTerm, image);
-    Nepomuk::Query::FileQuery query(term);
+    Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image/"));    
+    Nepomuk::Query::ComparisonTerm video(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("video/"));
+
+    Nepomuk::Query::AndTerm term1(beginDateTerm,endDateTerm, image);
+    Nepomuk::Query::AndTerm term2(beginDateTerm,endDateTerm, video);
+
+    Nepomuk::Query::OrTerm orTerm(term1,term2);
+
+    Nepomuk::Query::FileQuery query(orTerm);
     return query;
 }
 
@@ -229,7 +240,6 @@ void NepomukSource::startSearchFromQueue()
     m_mode = Normal;
     this->direction = NepomukSource::Right;
 
-
     if(m_searchClient)
     {
        m_searchClient->close();
@@ -243,6 +253,8 @@ void NepomukSource::startSearchFromQueue()
     connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
 
     connect(m_searchClient, SIGNAL(error(QString)), this, SLOT(error(QString)));
+
+    connect(m_searchClient, SIGNAL(resultCount(int)), this, SIGNAL(resultCount(int)));
 
     if(!m_tsSearch)
     {
