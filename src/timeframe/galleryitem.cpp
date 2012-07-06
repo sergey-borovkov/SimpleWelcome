@@ -41,3 +41,8 @@ ItemModel * GalleryItem::model()
 {
     return m_model;
 }
+
+void GalleryItem::thumbnailReady(QString url)
+{
+    m_model->thumbnailReady(url);
+}

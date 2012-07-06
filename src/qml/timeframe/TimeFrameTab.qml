@@ -28,6 +28,12 @@ Item {
         return index
     }
 
+    function getTimeLineGalleryIndex() {
+       var index = galleryModel.getIndexByDate(__year, __month+1, direction)
+        console.log("getIndexByDate: " + index)
+       return index
+    }
+
     //Start new serch
     function currentDateChanged()
     {
@@ -45,6 +51,8 @@ Item {
         }
         __isSearching = true
         searchLabel.visible = true
+        if (timeFrameTab.state ==="gallery" )
+            timeFrameTab.state = "gallerySearch"
     }
 
     //Start initial search
@@ -63,7 +71,10 @@ Item {
         target: activityProxy
         onFinished: {
             __isSearching = false
+            console.log("search finished")
             searchLabel.visible = false
+            if (timeFrameTab.state === "gallerySearch")
+                timeFrameTab.state = "gallery"
         }
     }
 
@@ -171,8 +182,7 @@ Item {
     Binding {
         target: timeFrameTab
         property: __isSearching
-        value:  searchLabel.visible
-
+        value:  searchLabel.visible        
     }
 
     ListView {
@@ -308,6 +318,27 @@ Item {
                     timeFrameTab.state = ""
                 }
             }
+//            onClicked: {
+//                if ( timeFrameTab.state === "gallery" ) {
+//                    timeFrameTab.state = "gallerySearch"
+//                } else {
+//                    timeFrameTab.state = "gallery"
+//                }
+//            }
+        }
+    }
+
+    Component {
+        id: highlight
+        Rectangle {
+            width: galleryView.currentItem.width;
+            height: galleryView.currentItem.height
+            color: "#c8b0c4de"; radius: 5
+            x: (photosGridView.currentIndex !== -1) ? photosGridView.currentItem.x : 0
+            y: (photosGridView.currentIndex !== -1) ? photosGridView.currentItem.y : 0
+            z: 0
+            Behavior on x { SpringAnimation { spring: 1; damping: 0.2 } }
+            Behavior on y { SpringAnimation { spring: 1; damping: 0.2 } }
         }
     }
 
@@ -320,11 +351,19 @@ Item {
         anchors.leftMargin: 20
         anchors.rightMargin: 20
         visible: false
+        //highlight: Rectangle { color:  "#c8b0c4de" }
         highlightFollowsCurrentItem: true
+
+        highlightMoveDuration : 200
         highlightRangeMode: ListView.ApplyRange
+        preferredHighlightBegin : galleryView.width /2 - 100
+        preferredHighlightEnd : galleryView.width /2 + 100
+
         model: galleryModel
         delegate: GalleryDelegate { }
         orientation: ListView.Horizontal
+            //console.log("Gallery index " + galleryView.currentIndex + "  " + galleryView.count)
+                //console.log("position view ")
     }
 
     ListView {
@@ -365,7 +404,44 @@ Item {
                 fillMode: Image.PreserveAspectFit
                 smooth: true
                 source: picture
+           }
+            } }
+        
+        
+Timer {
+            id: galleryTimer
+            interval: 100; running: false; repeat: true
+            onTriggered: {
+                var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
+                                                galleryView.y + galleryView.height/2 + galleryView.contentY)
+                var date = galleryModel.getDateOfIndex(index)
+                timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
             }
+        }
+
+        Connections {
+            target: galleryView
+            onFlickStarted : galleryTimer.start()
+        }
+
+        Connections {
+            target: galleryView
+            onFlickEnded: galleryTimer.stop()
+        }
+
+    }    
+
+
+
+
+    AnimatedImage {
+        id: waitIndicator
+        source: "images/ajax-loader.gif"
+        anchors.centerIn: parent
+        visible: false
+    }
+
+
         }
     }
 
@@ -394,6 +470,17 @@ Item {
             PropertyChanges {
                 target: menuBar
                 visible : false
+            }
+        },
+        State {
+            name: "gallerySearch"; extend: "gallery"
+            PropertyChanges {
+                target: waitIndicator
+                visible: true
+            }
+            PropertyChanges {
+                target: galleryView
+                opacity: 0
             }
             PropertyChanges {
                 target: socialView

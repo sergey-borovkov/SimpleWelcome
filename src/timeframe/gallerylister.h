@@ -20,6 +20,9 @@ signals:
     void newMonth(int, int);
 public slots:
     void startSearch(QDate date, int direction);
+    void resultCount(int);
+private slots:
+    void newData(QList<Activity*>);
 
 private:
 
