@@ -13,7 +13,7 @@ class SocialItem;
 class ISocialRequestManager
 {
 public:
-    virtual ~ISocialRequestManager() = 0;
+    virtual ~ISocialRequestManager() {}
     virtual void queryWall(const QDate &beginDate, const QDate &endDate) = 0;
 };
 
@@ -27,7 +27,7 @@ public:
         Failure
     };
 
-    virtual ~ISocialModule() = 0;
+    virtual ~ISocialModule() {}
     virtual QWidget *authenticationWidget() = 0;
     virtual ISocialRequestManager *requestManager() = 0;
     virtual bool isAuthorized() const = 0;

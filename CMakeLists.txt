@@ -6,12 +6,12 @@ include (KDE4Defaults)
 find_package (Qt4 REQUIRED QtCore QtGui QtDeclarative)
 include(${QT_USE_FILE})
 qt4_automoc(${qtproject_SRCS})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+add_definitions(${QT_DEFINITIONS})
 
 set (RESOURCES src/timeframe/resources.qrc)
-QT4_ADD_RESOURCES(QRC_SOURCES ${RESOURCES})
+qt4_add_resources(QRC_SOURCES ${RESOURCES})
 
-ADD_SUBDIRECTORY(rosa-service-runner)
+add_subdirectory(rosa-service-runner)
 
 include_directories(${KDE4_INCLUDES} ${QT_QDECLARATIVE_INCLUDE_DIR})
 
@@ -23,7 +23,7 @@ kde4_add_executable(rosa-launcher-qtquick ${HEADERS} ${SOURCES} ${QML} ${QRC_SOU
 
 target_link_libraries(rosa-launcher-qtquick ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KFILE_LIBS} ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES} ${NEPOMUK_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES})
 
-#add_subdirectory(facebook-timeframe-plugin)
+add_subdirectory(facebook-timeframe-plugin)
 
 # INSTALL
 install(TARGETS rosa-launcher-qtquick ${INSTALL_TARGETS_DEFAULT_ARGS})
