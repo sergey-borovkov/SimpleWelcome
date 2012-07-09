@@ -14,6 +14,7 @@ class FacebookModule : public QObject, public ISocialModule
     Q_INTERFACES(ISocialModule)
 public:
     FacebookModule();
+
     virtual ISocialRequestManager* requestManager();
     QWidget *authenticationWidget();
     bool isAuthorized() const { return !m_authorizer->accessToken().isEmpty(); }

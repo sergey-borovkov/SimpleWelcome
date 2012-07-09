@@ -3,10 +3,6 @@
 #include <QtCore/QDebug>
 #include <qjson/parser.h>
 
-FeedItem::~FeedItem()
-{
-}
-
 QString FeedItem::pluginName() const
 {
     return QLatin1String("facebook");

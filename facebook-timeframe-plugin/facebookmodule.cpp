@@ -15,7 +15,6 @@ FacebookModule::FacebookModule()
     QSettings settings("ROSA", "facebook-timeframe-plugin");
     QString accessToken = settings.value("accessToken").toString();
 
-
     if(!accessToken.isEmpty())
     {
         m_authorizer->setAccessToken(accessToken);

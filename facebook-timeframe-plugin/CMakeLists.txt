@@ -1,5 +1,7 @@
 project (facebook-timeframe-plugin)
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
+
 find_package (Qt4 REQUIRED QtCore QtGui QtDeclarative QtNetwork)
 include(${QT_USE_FILE})
 
