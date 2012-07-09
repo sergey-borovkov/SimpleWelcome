@@ -1,7 +1,7 @@
 #ifndef FEEDITEM_H
 #define FEEDITEM_H
 
-#include "../src/timeframe/social/socialitem.h"
+#include <socialitem.h>
 #include <QtCore/QMap>
 
 class FeedItem : public SocialItem

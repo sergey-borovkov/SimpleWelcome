@@ -20,7 +20,7 @@ public:
         Image
     };
 
-    virtual ~SocialItem() = 0;
+    virtual ~SocialItem() {};
     virtual QString pluginName() const = 0;
     virtual Type type() const = 0;
     virtual QString id() const = 0;

@@ -1,7 +1,7 @@
 #ifndef FACEBOOK_MODULE_H
 #define FACEBOOK_MODULE_H
 
-#include "../src/timeframe/social/socialplugin.h"
+#include <socialplugin.h>
 #include "oauth2authorizer.h"
 
 class QDeclarativeView;
