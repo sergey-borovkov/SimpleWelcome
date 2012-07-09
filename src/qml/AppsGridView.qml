@@ -6,8 +6,12 @@ GridView {
     property variant prevGrid
     property variant nextGrid
     property int highlightMoveDurationConst: 150
+    property int spacing: Math.max(0, (parent.width - 120 * columns) / (columns + 1))
 
-    cellWidth: width / columns - 1;
+    anchors.leftMargin: spacing
+    anchors.left: parent.left
+
+    cellWidth: (width - spacing) / columns - 1
     cellHeight: 200
     clip: true
 
