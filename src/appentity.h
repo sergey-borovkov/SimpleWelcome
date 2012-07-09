@@ -36,7 +36,7 @@
 
 class AppEntity : public QDeclarativeItem
 {
-  Q_OBJECT
+    Q_OBJECT
 
     Q_PROPERTY(QString name READ name)
     Q_PROPERTY(bool isApp READ isApp)
@@ -49,53 +49,53 @@ class AppEntity : public QDeclarativeItem
     Q_PROPERTY(QString entryPath READ entryPath)
 
     Q_PROPERTY(QStringList entries READ entries)
-    
- public:
-  AppEntity();
-  AppEntity(KService *service);
-  AppEntity(KServiceGroup *group);
-  ~AppEntity();
 
-  QString sourceName() const { return m_sourceName; };
-  void setSourceName(QString value) { m_sourceName = value; };
-  QString name() const { return m_name; };
-  void setName(const QString &value) { m_name = value; };
-  bool isApp() const { return m_isApp; };
-  void setIsApp(const bool &value) { m_isApp = value; };
-  bool display() const { return m_display; };
-  void setDisplay(const bool &value) { m_display = value; };
-  QString iconName() const { return m_iconName; };
-  void setIconName(const QString &value) { m_iconName = value; };
-  QString comment() const { return m_comment; };
-  void setComment(const QString &value) { m_comment = value; };
-  bool valid() const { return m_valid; };
+public:
+    AppEntity();
+    AppEntity(KService *service);
+    AppEntity(KServiceGroup *group);
+    ~AppEntity();
 
-  QString genericName() const { return m_genericName; };
-  void setGenericName(const QString &value) { m_genericName = value; };
-  QString menuId() const { return m_menuId; };
-  void setMenuId(const QString &value) { m_menuId = value; };
-  QString entryPath() const { return m_entryPath; };
-  void setEntryPath(const QString &value) { m_entryPath = value; };
+    QString sourceName() const { return m_sourceName; }
+    void setSourceName(QString value) { m_sourceName = value; }
+    QString name() const { return m_name; }
+    void setName(const QString &value) { m_name = value; }
+    bool isApp() const { return m_isApp; }
+    void setIsApp(const bool &value) { m_isApp = value; }
+    bool display() const { return m_display; }
+    void setDisplay(const bool &value) { m_display = value; }
+    QString iconName() const { return m_iconName; }
+    void setIconName(const QString &value) { m_iconName = value; }
+    QString comment() const { return m_comment; }
+    void setComment(const QString &value) { m_comment = value; }
+    bool valid() const { return m_valid; }
 
-  QStringList entries() const { return m_entries; };
-  
- private:
-  // Group and App members
-  QString m_sourceName;
-  QString m_name;
-  bool m_isApp;
-  bool m_display;
-  QString m_iconName;
-  QString m_comment;
-  bool m_valid;
+    QString genericName() const { return m_genericName; }
+    void setGenericName(const QString &value) { m_genericName = value; }
+    QString menuId() const { return m_menuId; }
+    void setMenuId(const QString &value) { m_menuId = value; }
+    QString entryPath() const { return m_entryPath; }
+    void setEntryPath(const QString &value) { m_entryPath = value; }
 
-  // App only members
-  QString m_genericName;
-  QString m_menuId;
-  QString m_entryPath;
+    QStringList entries() const { return m_entries; }
 
-  // Group only members
-  QStringList m_entries;
+private:
+    // Group and App members
+    QString m_sourceName;
+    QString m_name;
+    bool m_isApp;
+    bool m_display;
+    QString m_iconName;
+    QString m_comment;
+    bool m_valid;
+
+    // App only members
+    QString m_genericName;
+    QString m_menuId;
+    QString m_entryPath;
+
+    // Group only members
+    QStringList m_entries;
 };
 
 QDebug operator<<(QDebug dbg, const AppEntity *entity);

@@ -1,79 +1,65 @@
-import QtQuick 1.0
-
+import QtQuick 1.1
 
 Item {
     id: timeFrameTab
     width: parent.width
     height: 800
     clip: true
-    //anchors.top: parent.top
     anchors.topMargin: 16
-    property ListView lv: scene
+    property ListView lv: timeLine
 
     property int __year: new Date().getFullYear()   //Current year
-    property int __month: new Date().getMonth()     //Current month
+    property int __month: new Date().getMonth()
+    property int day: new Date().getDate()
     property bool __isSearching: false              //New search in process
     property bool direction: false  //true is - right direction; false - is left
 
-
-
-//    function startup() {
-
-//    }
-
     function prevMonth() {
-        //        if ( cloudItem.focus == true )
-        scene.decrementCurrentIndex()
+        timeLine.decrementCurrentIndex()
     }
 
     function nextMonth() {
-        //        if ( cloudItem.focus == true )
-        scene.incrementCurrentIndex()
+        timeLine.incrementCurrentIndex()
     }
 
 
     function getTimeLineProperlyItem() {
-       var index = activityModel.getListIndex(__year, __month+1, direction)
-       return index
+        var index = activityModel.getListIndex(__year, __month+1, direction)
+        return index
     }
 
-    //Component.onCompleted: startup();
-
-//    function getTimeScaleIndex( index )
-//    {
-//        var x = activityModel.get(index).date
-//        var month = Qt.formatDateTime(x, "M")
-//        var year = Qt.formatDateTime(x, "yyyy")
-//        var i
-//        for (i = 0;  i < timeScale.list.count; i++)
-//        {
-//            var y = timeScale.model.get(i).year
-//            var z = timeScale.model.get(i).monthNumber
-//            if ((year.toString() === y.toString()) && (month.toString() === z.toString()))
-//            {
-//                //  console.log("bingo")
-//                return i
-//            }
-//        }
-//        return -1
-//    }
-
+    function getTimeLineGalleryIndex() {
+        var index = galleryModel.getIndexByDate(__year, __month+1, direction)
+        console.log("getIndexByDate: " + index)
+        return index
+    }
 
     //Start new serch
     function currentDateChanged()
-    {        
-        //var date = new Date(__year, __month)
-        activityProxy.startNewSearch(__year, __month, direction)
+    {
+        var date = new Date(__year, __month)
+        if (timeFrameTab.state === "")
+        {
+            //activityProxy.startNewSearch(__year, __month, direction)
+            //activityProxy.startNewSearch(__year, __month, true)
+        }
+        else
+        {
+            var d = new Date(__year, __month, day )
+            //galleryLister.startSearch(d, direction)
+            galleryLister.startSearch(d, true)
+        }
         __isSearching = true
         searchLabel.visible = true
+        if (timeFrameTab.state ==="gallery" )
+            timeFrameTab.state = "gallerySearch"
     }
 
     //Start initial search
-    Connections{
+    Connections {
         target:tabListView
-        onCurrentIndexChanged:{            
-            if (tabListView.currentIndex === 3)
-            {
+        onCurrentIndexChanged:{
+            if (tabListView.currentIndex === 3) {
                 currentDateChanged()
                 console.log("start initial search")
             }
@@ -81,70 +67,75 @@ Item {
     }
 
     //On search finished
-    Connections{
+    Connections {
         target: activityProxy
-        onFinished: {__isSearching = false ; console.log("search finished")
-        searchLabel.visible = false}
-
+        onFinished: {
+            __isSearching = false
+            console.log("search finished")
+            searchLabel.visible = false
+            if (timeFrameTab.state === "gallerySearch")
+                timeFrameTab.state = "gallery"
+        }
     }
 
 
     Row {
-            id: menuBar
-            //anchors.centerIn: parent
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.margins: 16
-            spacing: 0
-            z: 100
+        id: menuBar
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.margins: 16
+        spacing: 0
+        z: 100
 
-            ListModel {
-                id: menuDocItems
-                ListElement { itemText: "All" }
-                ListElement { itemText: "Photo" }
-                ListElement { itemText: "Video" }
-                ListElement { itemText: "Documents" }
+        ListModel {
+            id: menuDocItems
+            ListElement { itemText: "All" }
+            ListElement { itemText: "Photo" }
+            ListElement { itemText: "Video" }
+            ListElement { itemText: "Documents" }
+        }
+
+        ListModel {
+            id: menuSocialItems
+            ListElement { itemText: "All" }
+            ListElement { itemText: "Facebook" }
+            ListElement { itemText: "Twitter" }
+            ListElement { itemText: "V Kontakte" }
+        }
+
+        DropListBox {
+            id: localDocs
+            model: menuDocItems
+            name: "My Local Documents"
+            state: "current"
+            onSelectedIndexChanged: {
+                console.debug( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
             }
+            onClicked: {
+                console.debug( "My Local Documents clicked" )
+                state = "gallery"
+                timeFrameTab.state = ""
+                socialNetworks.state = ""
 
-            ListModel {
-                id: menuSocialItems
-                ListElement { itemText: "All" }
-                ListElement { itemText: "Facebook" }
-                ListElement { itemText: "Twitter" }
-                ListElement { itemText: "V Kontakte" }
-            }
-
-            DropListBox {
-                id: localDocs
-                model: menuDocItems
-                name: "My Local Documents"
-                state: "current"
-                onSelectedIndexChanged: {
-                    console.debug( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
-                }
-                onClicked: {
-                   console.debug( "My Local Documents clicked" )
-                    state = "current"
-                    socialNetworks.state = ""
-
-                }
-            }
-
-            DropListBox {
-                id: socialNetworks
-                model: menuSocialItems
-                name: "Social networking sites"
-                onSelectedIndexChanged: {
-                    console.debug( selectedText + ", " + menuSocialItems.get( selectedIndex ).itemText )
-                }
-
-                onClicked: {
-                    console.debug( "Social networking sites clicked" )
-                    state = "current"
-                    localDocs.state = ""
-                }
             }
         }
+
+        DropListBox {
+            id: socialNetworks
+            model: menuSocialItems
+            name: "Social networking sites"
+            onSelectedIndexChanged: {
+                console.debug( selectedText + ", " + menuSocialItems.get( selectedIndex ).itemText )
+            }
+
+            onClicked: {
+                console.debug( "Social networking sites clicked" )
+                //state = "current"
+                timeFrameTab.state = "socialgallery"
+                localDocs.state = ""
+            }
+        }
+    }
 
     Rectangle {
         id: separator
@@ -161,71 +152,44 @@ Item {
 
     }
 
-    function getTSCurrentDate()
-    {
+    function getTSCurrentDate() {
         var date = new Date(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1, 1)
         return date
     }
 
-    function getTSIndex(year, monthNumber) //get index of date in TimeScale
-    {        
+    //get index of date in TimeScale
+    function getTSIndex(year, monthNumber) {
         var i
-        for (i = 0; i < timeScale.model.count; i++ )
-        {
+        for (i = 0; i < timeScale.model.count; i++ ) {
             if ((year === timeScale.model.get(i).year) && (monthNumber === timeScale.model.get(i).monthNumber - 1 ))
                 return i
         }
         return -1
     }
 
-/*
-    function getFlickIndex()
-    {
-        console.log(getTSCurrentDate())
-        if (direction) //get  first day in mounth
-        {
 
-        } else //get last day in mounth
-        {
-
-        }
-        return scene.count -1
-    }
-
-*/
-    Text
-    {
+    Text {
         id: searchLabel
         color: "white"
-        anchors.top: separator.bottom
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
-        text: "searching in process "
+        anchors.leftMargin: 50
+        text: "Searching in process..."
         visible: false
         z: 1000
     }
 
-    Binding
-    {
+    Binding {
         target: timeFrameTab
         property: __isSearching
         value:  searchLabel.visible
-
     }
 
-    /*
-    Connections{
-        target: timeFrameTab
-        onPropertyChanged: searchLabel.visible = __isSearching
-    }
-*/
     ListView {
-        id: scene
-
-        //property int __oldIndex: currentIndex
+        id: timeLine
 
         anchors.top: separator.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-//        anchors.verticalCenter: parent.verticalCenter
         width: parent.width
         height: parent.height - menuBar.height - separator.height
         model: activityModel
@@ -241,12 +205,10 @@ Item {
         highlightMoveDuration: 1000
         onCurrentIndexChanged:
         {
-
-            var date = activityModel.getDateOfIndex(scene.currentIndex)
+            var date = activityModel.getDateOfIndex(timeLine.currentIndex)
             var tsDate = getTSCurrentDate()
             if (date.getTime() === tsDate.getTime())
-            {                
-                //__oldIndex = scene.currentIndex
+            {
                 return
             }
 
@@ -263,87 +225,14 @@ Item {
             //check TS index
             if (date.getTime() !== tsDate.getTime())
                 timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
-
-            //__oldIndex = scene.currentIndex
         }
         onCountChanged:
         {
-            console.log("new items added, scene count: " +  scene.count)
-            scene.positionViewAtIndex(scene.currentIndex, ListView.Contain)            
+            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Contain)
         }
-/*
-        onCurrentIndexChanged:
-        {
-            if (currentIndex===0)
-                timeScale.list.decrementCurrentIndex();
-            if (currentIndex===count)
-                timeScale.list.incrementCurrentIndex();
-        }
-*/
-        /*
-        Keys.onLeftPressed: {
-            console.log( "left key pressed 333..." )
-            prevMonth()
-        }
-        */
         visible: true
     }
-/*
-    Connections
-    {
-        target: scene
-        onFlickStarted:
-        {
-            console.log("flicking started")
-            if ((scene.horizontalVelocity > 0) && (scene.currentIndex === scene.count-1) )
-            {
-                //timeScale.list.decrementCurrentIndex()
-                direction = true
-            }
-            else if ((scene.horizontalVelocity < 0) && (scene.currentIndex === 0) )
-            {                
-                //timeScale.list.incrementCurrentIndex()
-                direction = false
-            }else
-            {
-                return
-            }
 
-            __year = timeScale.model.get(timeScale.list.currentIndex).year
-            __month = timeScale.model.get(timeScale.list.currentIndex).monthNumber-1
-            currentDateChanged()
-        }
-    }
-    */
-    /*
-    Connections
-    {
-        target: scene
-
-
-    }
-    */
-
-/*
-    Flickable
-    {
-        id: flickable
-        anchors.fill: parent
-        contentWidth: parent.width * 20
-        contentHeight: parent.height
-        Row {
-            id: row
-
-
-            Repeater
-            {
-                model: activityModel
-                delegate: SceneDelegate {}
-            }
-        }
-        visible: false
-    }
-*/
     TimeScale{
         id: timeScale
         anchors.verticalCenter: parent.verticalCenter
@@ -355,50 +244,25 @@ Item {
     function getSceneIndex( year , month ) //Need future development
     {
         var i
-        for (i = 0; i < scene.count; i++)
-        {
+        for (i = 0; i < timeLine.count; i++) {
             var x = Qt.formatDate( activityModel.get(i).date , "M-yyyy")
             if (x.toString() === (month.toString() + '-' + year.toString()))
-            {                
+            {
                 return i
             }
         }
         return -1
     }
-/*
-    Connections{
-        target: timeScale.list
-        onCurrentIndexChanged: {
-            activityProxy.setMonth(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1 )
 
-            var sceneIndex = getSceneIndex(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber)
-
-            if (sceneIndex !== -1)
-            {
-                console.log("change index in scene on " + sceneIndex)
-                scene.currentIndex = sceneIndex
-            }
-
-        }
-    }
-*/
     ToolButton {
         id: prevButton
         width: 60
         imageUrl: "images/go-previous.png"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
+        z:100
         onButtonClick: {
-            console.log( "left button pressed..." )
-            if (scene.currentIndex === 0)
-            {
-                //timeScale.list.decrementCurrentIndex()
-                timeScale.list.incrementCurrentIndex()
-            }
-            else
-            {
-                scene.decrementCurrentIndex()
-            }
+            galleryView.decrementCurrentIndex()
         }
     }
 
@@ -408,18 +272,9 @@ Item {
         imageUrl: "images/go-next.png"
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
+        z:100
         onButtonClick: {
-            console.log( scene.currentIndex + "  " + scene.count)
-            if (scene.currentIndex === (scene.count -1))
-            {
-                //timeScale.list.incrementCurrentIndex()
-                timeScale.list.decrementCurrentIndex()
-                console.log("index")
-            }
-            else
-            {
-                scene.incrementCurrentIndex()
-            }
+            galleryView.incrementCurrentIndex()
         }
     }
 
@@ -437,4 +292,222 @@ Item {
         Qt.quit()
     }
 
+    Button {
+        id: stateChangeButton
+        width: 50
+        height: 30
+        anchors.bottom: separator.top
+        anchors.bottomMargin: 5
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        border.color: "black"
+
+        ButtonText {
+            id: stateChangeButtonText
+            text: "<--"
+            anchors.left: parent.left
+        }
+
+        MouseArea{
+            id: stateTestButtonMouseArea
+            anchors.fill: parent
+            onClicked: {
+                if ( timeFrameTab.state === "" ) {
+                    timeFrameTab.state = "gallery"
+                } else {
+                    timeFrameTab.state = ""
+                }
+            }
+            //            onClicked: {
+            //                if ( timeFrameTab.state === "gallery" ) {
+            //                    timeFrameTab.state = "gallerySearch"
+            //                } else {
+            //                    timeFrameTab.state = "gallery"
+            //                }
+            //            }
+        }
+    }
+
+    Component {
+        id: highlight
+        Rectangle {
+            width: galleryView.currentItem.width;
+            height: galleryView.currentItem.height
+            color: "#c8b0c4de"; radius: 5
+            x: (photosGridView.currentIndex !== -1) ? photosGridView.currentItem.x : 0
+            y: (photosGridView.currentIndex !== -1) ? photosGridView.currentItem.y : 0
+            z: 0
+            Behavior on x { SpringAnimation { spring: 1; damping: 0.2 } }
+            Behavior on y { SpringAnimation { spring: 1; damping: 0.2 } }
+        }
+    }
+
+    ListView {
+        id: galleryView
+        anchors.top: separator.bottom
+        anchors.bottom: timeScale.top
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        anchors.rightMargin: 20
+        visible: false
+        //highlight: Rectangle { color:  "#c8b0c4de" }
+        highlightFollowsCurrentItem: true
+
+        highlightMoveDuration : 200
+        highlightRangeMode: ListView.ApplyRange
+        preferredHighlightBegin : galleryView.width /2 - 100
+        preferredHighlightEnd : galleryView.width /2 + 100
+
+        model: galleryModel
+        delegate: GalleryDelegate { }
+        orientation: ListView.Horizontal
+        //console.log("Gallery index " + galleryView.currentIndex + "  " + galleryView.count)
+        //console.log("position view ")
+    }
+
+    ListView {
+        id: socialView
+        anchors.top: separator.bottom
+        anchors.bottom: timeScale.top
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        anchors.rightMargin: 20
+        anchors.topMargin: 30
+        orientation: ListView.Horizontal
+        visible: false
+        spacing: 10
+        model: socialModel
+
+        delegate: ShadowRectangle {
+            width: 300
+            height: 300
+
+            Text {
+                id: msg
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                wrapMode: Text.Wrap
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                width: 200
+                text: message
+            }
+
+            Image {
+                anchors.centerIn: parent
+                fillMode: Image.PreserveAspectFit
+                width: Math.min( sourceSize.width, parent.width)
+                height: Math.min( sourceSize.height, parent.height)
+                smooth: true
+                source: picture
+            }
+        }
+    }
+
+
+    Timer {
+        id: galleryTimer
+        interval: 100; running: false; repeat: true
+        onTriggered: {
+            var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
+                                            galleryView.y + galleryView.height/2 + galleryView.contentY)
+            var date = galleryModel.getDateOfIndex(index)
+            timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
+        }
+    }
+
+    Connections {
+        target: galleryView
+        onFlickStarted : galleryTimer.start()
+    }
+
+    Connections {
+        target: galleryView
+        onFlickEnded: galleryTimer.stop()
+    }
+
+
+
+    AnimatedImage {
+        id: waitIndicator
+        source: "images/ajax-loader.gif"
+        anchors.centerIn: parent
+        visible: false
+    }
+
+    state: "socialgallery"
+
+    states: [
+
+        State {
+            name: "gallery"
+
+            AnchorChanges {
+                target: timeScale
+                anchors.verticalCenter: undefined
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom:  timeFrameTab.bottom
+            }
+
+            PropertyChanges {
+                target: timeLine
+                visible : false
+            }
+            PropertyChanges {
+                target: galleryView
+                visible : true
+            }
+            PropertyChanges {
+                target: menuBar
+                visible : false
+            }
+        },
+        State {
+            name: "gallerySearch"; extend: "gallery"
+            PropertyChanges {
+                target: waitIndicator
+                visible: true
+            }
+            PropertyChanges {
+                target: galleryView
+                opacity: 0
+            }
+            PropertyChanges {
+                target: socialView
+                opacity: 1
+            }
+            PropertyChanges {
+                target: timeScale
+                opacity: 1
+            }
+        },
+        State {
+            name: "socialgallery"
+
+            PropertyChanges {
+                target: galleryView
+                visible: false
+            }
+            PropertyChanges {
+                target: timeLine
+                visible: false
+            }
+            PropertyChanges {
+                target: socialView
+                visible: true
+            }
+
+            PropertyChanges {
+                target: timeScale
+                opacity: 0
+            }
+        }
+
+    ]
+    transitions: Transition {
+        AnchorAnimation {duration: 500}
+    }
 }

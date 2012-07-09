@@ -41,70 +41,68 @@ DocumentsProvider::~DocumentsProvider(void)
 
 void DocumentsProvider::init(void)
 {
-  reload();
+    reload();
 }
 
 void DocumentsProvider::reload(void)
 {
-  KDesktopFile *desktopFile;
-  
-  _clearEntries();
+    KDesktopFile *desktopFile;
+    _clearEntries();
+    m_recentDocsList = KRecentDocument::recentDocuments();
 
-  m_recentDocsList = KRecentDocument::recentDocuments();
-
-  for(int i = 0; i < m_recentDocsList.size(); i++)
+    for(int i = 0; i < m_recentDocsList.size(); i++)
     {
-      QString fileName = m_recentDocsList[i];
-      //kDebug() << fileName;
+        QString fileName = m_recentDocsList[i];
+        //kDebug() << fileName;
 
-      if(! KDesktopFile::isDesktopFile(fileName))
-        continue;
+        if(! KDesktopFile::isDesktopFile(fileName))
+            continue;
 
-      if(! QFile::exists(fileName))
-        continue;
-          
-      desktopFile = new KDesktopFile(fileName);
+        if(! QFile::exists(fileName))
+            continue;
 
-      if(desktopFile->noDisplay())
+        desktopFile = new KDesktopFile(fileName);
+
+        if(desktopFile->noDisplay())
         {
-          delete desktopFile;
-          continue;
+            delete desktopFile;
+            continue;
         }
 
-      m_recentDocsEntries[desktopFile->readName()] = desktopFile;
+        m_recentDocsEntries[desktopFile->readName()] = desktopFile;
     }
-  
+
 }
 
 void DocumentsProvider::_clearEntries(void)
 {
- for(QHash<QString, KDesktopFile*>::iterator it = m_recentDocsEntries.begin(); it != m_recentDocsEntries.end(); it++)
-      delete it.value();
+    for(QHash<QString, KDesktopFile*>::iterator it = m_recentDocsEntries.begin(); it != m_recentDocsEntries.end(); it++)
+        delete it.value();
 
-  m_recentDocsEntries.clear();
+    m_recentDocsEntries.clear();
 }
 
 QStringList DocumentsProvider::getDocsList(void)
 {
-  return m_recentDocsEntries.keys();
+    return m_recentDocsEntries.keys();
 }
 
 void DocumentsProvider::runDoc(const QString &name)
 {
-  if(! m_recentDocsEntries.contains(name))
-    return;
+    if(! m_recentDocsEntries.contains(name))
+        return;
 
-  KRun *krunner = new KRun(KUrl(m_recentDocsEntries[name]->fileName()), QApplication::activeWindow());
+    KRun *krunner = new KRun(KUrl(m_recentDocsEntries[name]->fileName()), QApplication::activeWindow());
 
-  Q_UNUSED(krunner);
+    Q_UNUSED(krunner);
 }
-  
+
 QString DocumentsProvider::getDocIconName(const QString &name)
 {
-  if(m_recentDocsEntries.contains(name))
-      return m_recentDocsEntries[name]->readIcon();
+    if(m_recentDocsEntries.contains(name))
+        return m_recentDocsEntries[name]->readIcon();
 
-  return QString();
+    return QString();
 }
 
 

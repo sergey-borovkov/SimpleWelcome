@@ -23,6 +23,7 @@
 #include "previewgenerator.h"
 
 #include <QtCore/QAbstractItemModel>
+#include <QDebug>
 
 PreviewProvider::PreviewProvider() :
     QDeclarativeImageProvider(Pixmap)
@@ -31,13 +32,16 @@ PreviewProvider::PreviewProvider() :
 }
 
 QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
-{    
-    QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(id);
+{
+    QString str = id.left( id.lastIndexOf( '%' ) );
+    //qDebug() <<"get image for" << str;
+    QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(str);
 
-    qDebug() << requestedSize;
+    //qDebug() << requestedSize;
     if(requestedSize.isValid())
         pixmap = pixmap.scaled(requestedSize);
     *size = pixmap.size();
 
     return pixmap;
 }
+

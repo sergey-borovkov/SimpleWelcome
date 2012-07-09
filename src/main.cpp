@@ -49,7 +49,6 @@ int main(int argc, char *argv[])
                         "alexey.yermakov@rosalab.ru");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
-
     /*
     KCmdLineOptions options;
     options.add("s");
@@ -58,10 +57,8 @@ int main(int argc, char *argv[])
     */
 
     SWApp *app = SWApp::self();
-    
     int rc = app->exec();
-
     delete app;
-    
+
     return rc;
 }

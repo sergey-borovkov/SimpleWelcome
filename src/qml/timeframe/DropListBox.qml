@@ -120,11 +120,9 @@ Item {
                     anchors.fill: parent
 
                     onClicked: {
-                        //                            comboBox.state = ""
                         var prevSelection = selectedText
                         if ( dropboxListSelection.model.get( index ).itemText != prevSelection ) {
                             selectedIndexChanged()
-                            console.log( "index is " + index.toString() )
                             dropboxListSelection.currentIndex = index;
                             selectedText = dropboxListSelection.model.get( index ).itemText
                             dropboxListSelection.focus = true
@@ -147,10 +145,6 @@ Item {
         anchors.top: parent.top
         height: parent.height * ( dropboxListSelection.count + 1 )
 
-        onClicked: {
-            console.debug( "componentMouseArea onClicked!!! " )
-        }
-
         hoverEnabled: true
         onExited: { dropboxListBody.hide() }
     }
@@ -161,59 +155,4 @@ Item {
         PropertyChanges { target: dropboxDrop; state: "selected" }
         PropertyChanges { target: dropboxListBody; state: "selected" }
     }
-
 }
-
-
-/*
-            ListView {
-                id: listView
-//                anchors.fill: parent
-                height:  500//menuItemText.paintedHeight * count
-                currentIndex: 0
-//                highlight: highlight
-                focus: true
-                delegate: Item {
-                    width: comboBox.width;
-                    height: comboBox.height;
-
-                    Text {
-                        text: itemText
-                        anchors.verticalCenter: parent.verticalCenter;
-                        anchors.left: parent.left;
-                        anchors.margins: 5;
-                        font.bold: ( itemText == selectedText )
-                        font.pointSize: 12
-                        styleColor: "#000"
-                        color: "#eee"
-                        height: chosenItemText.paintedHeight + 8
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            comboBox.state = ""
-                            var prevSelection = selectedText
-                            if ( listView.model.get( index ).itemText != prevSelection ) {
-                                selectedIndexChanged()
-                                console.log("index is " + index.toString() )
-                                listView.currentIndex = index;
-                                selectedText = listView.model.get( index ).itemText
-                                listView.focus = true
-                            }
-
-                            comboClicked()
-                        }
-                    }
-                }
-
-                onCurrentIndexChanged: {
-                    console.debug( "onCurrentIndexChanged: " + currentIndex.toString() )
-                    selectedText = listView.model.get( currentIndex ).itemText
-                }
-
-                Keys.onUpPressed: { console.debug("onUpPressed"); if ( selectedIndex < model.count - 1 ) selectedIndex++ }
-                Keys.onDownPressed: { console.debug("onDownPressed"); if ( selectedIndex > 0 ) selectedIndex-- }
-
-}
-*/
