@@ -1,5 +1,5 @@
 Name:		rosa-launcher-qtquick
-Version:	0.3.1
+Version:	0.3.2
 Release:	1
 Epoch:		1
 Summary:	ROSA Desktop Application Launcher QtQuick

@@ -4,7 +4,6 @@ FocusScope {
     id: applicationsTab
     width: parent.width
     clip: true
-    anchors.topMargin: 16
     property variant grid: appsGrid
 
     AppsGridView {
@@ -23,5 +22,8 @@ FocusScope {
         Component.onCompleted: {
             appsGridModel.contentChanged.connect(appsContentChanged)
         }
+
+        anchors.top: parent.top
+        anchors.topMargin: 32
     }
 }
