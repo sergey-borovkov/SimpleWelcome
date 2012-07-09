@@ -4,9 +4,9 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
-#include <QtDeclarative/QDeclarativeView>
-#include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeView>
 
 FacebookModule::FacebookModule()
 {
@@ -34,6 +34,13 @@ FacebookModule::FacebookModule()
     connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SLOT(onAcessTokenChanged()));
 }
 
+FacebookModule::~FacebookModule()
+{
+    delete m_requestManager;
+    delete m_authorizer;
+    delete m_authorizationView;
+}
+
 ISocialRequestManager *FacebookModule::requestManager()
 {
     return m_requestManager;
@@ -46,7 +53,6 @@ QWidget *FacebookModule::authenticationWidget()
 
 void FacebookModule::onAcessTokenChanged()
 {
-    //emit authorizationStatusChanged(ISocialModule::Success);
     emit authorized();
 }
 
