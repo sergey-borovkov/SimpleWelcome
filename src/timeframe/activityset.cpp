@@ -40,8 +40,6 @@ Activity *ActivitySet::activity(int index)
 
 QString ActivitySet::getUrl(int i)
 {
-    if(i >= activities.length())
-        return "";
     return activities.at(i)->getUrl();
 }
 

@@ -20,7 +20,7 @@ public:
 
     void setDate(int y, int m) { d.setDate(y, m, 1); emit dateChanged();}
 
-signals:    
+signals:
     void countChanged();
     void dateChanged();
     void completeChanged();

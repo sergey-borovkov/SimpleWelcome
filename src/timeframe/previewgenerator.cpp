@@ -20,6 +20,7 @@
  */
 
 #include "previewgenerator.h"
+#include "gallerymodel.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QRect>
@@ -34,23 +35,26 @@
 PreviewGenerator *PreviewGenerator::m_instance = 0;
 
 PreviewGenerator::PreviewGenerator(QObject *parent) :
-    QObject(parent), m_job(0)
-{    
+    QObject(parent), m_job(0), m_model(0)
+{
     defaultPreview.load(":/pla-empty-box.png");
+    videoPixmap.load(":/play-empty.png");
     m_plugins = KIO::PreviewJob::availablePlugins();
 }
 
 void PreviewGenerator::setPreview(const KFileItem &item, const QPixmap &pixmap)
-{    
+{
     QPixmap pict = pixmap;
-    m_fileList.removeAll(item);
+
     if(item.mimetype().startsWith("video/"))
     {
-        QPainter p(&pict);        
+        QPainter p(&pict);
         QPixmap scaledPixmap = videoPixmap.scaled(pict.width()/2, pict.height()/2,  Qt::KeepAspectRatio, Qt::SmoothTransformation);
         p.drawPixmap(pict.width()/2 - scaledPixmap.width()/2, pict.height()/2 - scaledPixmap.height()/2 ,  scaledPixmap );
     }
     previews.insert(item.localPath(), pict);
+    //m_fileList.removeAll(item);
+    notifyModel( item.localPath() );
 }
 
 void PreviewGenerator::setNullIcon(const KFileItem &item)
@@ -61,7 +65,7 @@ void PreviewGenerator::setNullIcon(const KFileItem &item)
 }
 
 QPixmap PreviewGenerator::getPreviewPixmap(QString filePath)
-{    
+{        
     if(previews.contains(filePath))
         return previews[filePath];
     else
@@ -77,10 +81,17 @@ PreviewGenerator * PreviewGenerator::instance()
 
 void PreviewGenerator::start(const QStringList& list)
 {
+    m_fileList.clear();
     for(int i = 0; i < list.size(); i++)
     {
         KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, list[i], false);
+        if (m_files.contains(list[i]))
+        {
+            //qDebug() << "already in list" ;
+            continue;
+        }
         m_fileList.append(fileItem);
+        m_files.insert(list[i],list[i]);
     }
 
     m_job = KIO::filePreview(m_fileList, 1000, 0 , 0, 0, true, true, &m_plugins);
@@ -89,4 +100,18 @@ void PreviewGenerator::start(const QStringList& list)
 
     connect(m_job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(setPreview(const KFileItem&, const QPixmap&)));
     connect(m_job, SIGNAL(failed(const KFileItem&)), SLOT(setNullIcon(const KFileItem &)));
+}
+
+void PreviewGenerator::setModel(GalleryModel* model)
+{
+    m_model = model;
+}
+
+
+void PreviewGenerator::notifyModel( const QString& filePath )
+{
+    if ( m_model )
+    {
+        m_model->imageReady(filePath);
+    }
 }
