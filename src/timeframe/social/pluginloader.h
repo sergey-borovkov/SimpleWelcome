@@ -8,7 +8,7 @@ class ISocialModule;
 class PluginLoader
 {
 public:
-    QList<ISocialModule*> loadPlugins();
+    QList<ISocialModule *> loadPlugins();
 };
 
 #endif // PLUGINLOADER_H

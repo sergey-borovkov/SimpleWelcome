@@ -1,8 +1,8 @@
 #include "request.h"
 
 #include <qjson/parser.h>
-#include <QtCore/QUrl>
 #include <QtCore/QDebug>
+#include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 
 const QString Request::wallUrl = "https://graph.facebook.com/me/feed";
@@ -14,7 +14,6 @@ Request::Request(const QString &accessToken, RequestType type, QObject *parent) 
 
 void Request::startQuery()
 {
-    qDebug() << "startQuery";
     QUrl requestUrl;
 
     if(m_type == WallPosts)

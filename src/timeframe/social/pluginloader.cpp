@@ -4,8 +4,6 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
-#include <QtCore/QtDebug>
-#include <QMessageBox>
 
 QList<ISocialModule*> PluginLoader::loadPlugins()
 {
@@ -14,7 +12,7 @@ QList<ISocialModule*> PluginLoader::loadPlugins()
 
     foreach (QString fileName, modulesDir.entryList(QDir::AllEntries))
     {
-        QPluginLoader loader(modulesDir.absolutePath() + '/' + fileName);
+        QPluginLoader loader(modulesDir.absoluteFilePath(fileName));
         QObject *libObject = loader.instance();
         if (ISocialModule *lib = qobject_cast<ISocialModule*>(libObject))
             plugins << lib;

@@ -3,9 +3,9 @@
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
 
+#include <qjson/parser.h>
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
-#include <qjson/parser.h>
 
 RequestManager::RequestManager(QObject *parent)
     : m_authorizer(0)
@@ -14,8 +14,6 @@ RequestManager::RequestManager(QObject *parent)
 
 void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
 {
-    qDebug() << "queryWall()";
-
     if(!m_authorizer)
         return;
 
@@ -55,6 +53,5 @@ void RequestManager::reply(QByteArray reply)
         feedItem->fillFromMap(map);
         feedItems.append(feedItem);
     }
-    qDebug() << "here";
     emit newSocialItems(feedItems);
 }
