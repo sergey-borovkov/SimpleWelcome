@@ -24,32 +24,30 @@
 
 #include "swapp.h"
 
-#include <QTimer>
-#include <QThread>
-
-#include <QDeclarativeEngine>
 #include <QDeclarativeContext>
-
+#include <QDeclarativeEngine>
 #include <QMovie>
+#include <QThread>
+#include <QTimer>
 
-#include <KServiceGroup>
 #include <KDebug>
 #include <KIcon>
+#include <KServiceGroup>
 
-#include "timeframe/activityproxy.h"
-#include "timeframe/nepomuksource.h"
 #include "timeframe/activitylist.h"
-#include "timeframe/activityset.h"
-#include "timeframe/previewprovider.h"
 #include "timeframe/activitymodel.h"
-#include "timeframe/social/pluginloader.h"
-#include "timeframe/social/socialproxy.h"
-#include "timeframe/social/socialmodel.h"
-#include "timeframe/itemmodel.h"
+#include "timeframe/activityproxy.h"
+#include "timeframe/activityset.h"
 #include "timeframe/galleryitem.h"
-#include "timeframe/gallerymodel.h"
-#include "timeframe/previewgenerator.h"
 #include "timeframe/gallerylister.h"
+#include "timeframe/gallerymodel.h"
+#include "timeframe/itemmodel.h"
+#include "timeframe/nepomuksource.h"
+#include "timeframe/previewgenerator.h"
+#include "timeframe/previewprovider.h"
+#include "timeframe/social/pluginloader.h"
+#include "timeframe/social/socialmodel.h"
+#include "timeframe/social/socialproxy.h"
 
 SWApp* SWApp::self()
 {
@@ -195,7 +193,7 @@ SWApp::~SWApp()
     delete m_model;
     delete m_proxy;
     delete m_source;
-
+    delete m_manager;
 }
 
 int SWApp::newInstance()

@@ -31,8 +31,5 @@ void FeedItem::fillFromMap(QVariantMap map)
     if(map.contains("message"))
         m_data.insert(Text, map.value("message").toString());
     if(map.contains("picture"))
-    {
         m_data.insert(Image, map.value("picture").toString());
-        qDebug() << map.value("picture").toString();
-    }
 }

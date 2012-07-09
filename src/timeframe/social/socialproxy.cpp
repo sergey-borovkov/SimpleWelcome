@@ -9,7 +9,6 @@
 SocialProxy::SocialProxy(QList<ISocialModule *> plugins, QObject *parent) :
     QObject(parent), m_plugins(plugins), m_model(0)
 {
-    //connect(plugins[0], SIGNAL(authorizationStatusChanged(int)), SLOT(authenticated()));
     if(plugins.size())
     {
         QObject *ob = dynamic_cast<QObject *>(plugins[0]->requestManager());
@@ -27,10 +26,7 @@ SocialProxy::SocialProxy(QList<ISocialModule *> plugins, QObject *parent) :
 
 SocialProxy::~SocialProxy()
 {
-    foreach(ISocialModule *module, m_plugins)
-    {
-        delete module->requestManager();
-    }
+    qDeleteAll(m_plugins);
 }
 
 void SocialProxy::setModel(SocialModel *model)
@@ -50,18 +46,16 @@ void SocialProxy::authenticated()
 {
     m_plugins[0]->requestManager()->queryWall(QDate(), QDate());
     if(m_plugins[0]->authenticationWidget())
-    m_plugins[0]->authenticationWidget()->hide();
+        m_plugins[0]->authenticationWidget()->hide();
 }
 
 void SocialProxy::newItem(SocialItem *item)
 {
-    qDebug() << "New item added";
-    m_model->appendRow(item);
+    newItems(QList<SocialItem *>() << item);
 }
 
 void SocialProxy::newItems(QList<SocialItem *> items)
 {
-    qDebug() << "NewItems" << items.size();
     if(m_model)
         m_model->appendRows(items);
 }

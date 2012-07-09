@@ -2,6 +2,7 @@
 #define FACEBOOK_MODULE_H
 
 #include <socialplugin.h>
+
 #include "oauth2authorizer.h"
 
 class QDeclarativeView;
@@ -14,6 +15,7 @@ class FacebookModule : public QObject, public ISocialModule
     Q_INTERFACES(ISocialModule)
 public:
     FacebookModule();
+    ~FacebookModule();
 
     virtual ISocialRequestManager* requestManager();
     QWidget *authenticationWidget();
