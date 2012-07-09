@@ -1,7 +1,7 @@
 #ifndef REQUESTMANAGER_H
 #define REQUESTMANAGER_H
 
-#include "../src/timeframe/social/socialplugin.h"
+#include <socialplugin.h>
 
 class OAuth2Authorizer;
 class FeedItem;
