@@ -7,7 +7,6 @@
 class FeedItem : public SocialItem
 {
 public:
-    ~FeedItem();
     virtual QString pluginName() const;
     virtual Type type() const;
     virtual QString id() const;

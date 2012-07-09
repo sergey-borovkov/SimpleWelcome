@@ -7,22 +7,17 @@
 #include <QtCore/QtDebug>
 #include <QMessageBox>
 
-PluginLoader::PluginLoader()
-{
-}
-
 QList<ISocialModule*> PluginLoader::loadPlugins()
 {
-    QDir modulesDir("/usr/share/timeframe");
+    QDir modulesDir(QCoreApplication::applicationDirPath() + "/plugins");
     QList<ISocialModule*> plugins;
-    qDebug() << "Loading plugins";
-    foreach (QString fileName, modulesDir.entryList(QStringList() << "*.so", QDir::Files))
+
+    foreach (QString fileName, modulesDir.entryList(QDir::AllEntries))
     {
-        QPluginLoader loader("/usr/share/timeframe/" + fileName);
+        QPluginLoader loader(modulesDir.absolutePath() + '/' + fileName);
         QObject *libObject = loader.instance();
         if (ISocialModule *lib = qobject_cast<ISocialModule*>(libObject))
             plugins << lib;
-    qDebug() << loader.errorString();
     }
 
     return plugins;

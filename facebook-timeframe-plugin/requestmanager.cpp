@@ -12,10 +12,6 @@ RequestManager::RequestManager(QObject *parent)
 {
 }
 
-RequestManager::~RequestManager()
-{
-}
-
 void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
 {
     qDebug() << "queryWall()";

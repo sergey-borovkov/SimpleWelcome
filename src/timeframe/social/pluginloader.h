@@ -8,7 +8,6 @@ class ISocialModule;
 class PluginLoader
 {
 public:
-    PluginLoader();
     QList<ISocialModule*> loadPlugins();
 };
 
