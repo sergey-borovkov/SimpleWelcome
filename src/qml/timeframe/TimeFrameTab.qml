@@ -4,7 +4,7 @@ import QtQuick 1.0
 Item {
     id: timeFrameTab
     width: parent.width
-    height: 800
+    //height: 800
     clip: true
     //anchors.top: parent.top
     anchors.topMargin: 16
@@ -182,7 +182,6 @@ Item {
         height: 3
         color: "grey"
         radius: 1
-
     }
 
     function getTSCurrentDate()
@@ -223,8 +222,21 @@ Item {
     }
 
     ListView {
-        id: scene
+        id: timeLine
+        anchors.top: separator.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
 
+        width: parent.width - 100
+        height: parent.height - menuBar.height - separator.height
+        delegate: TimeLineDelegate {}
+        model: galleryModel
+        orientation: Qt.Horizontal
+    }
+
+    ListView {
+        id: scene
+        visible: false
         //property int __oldIndex: currentIndex
 
         anchors.top: separator.bottom
@@ -289,12 +301,12 @@ Item {
             prevMonth()
         }
         */
-        visible: true
+
     }
 
     TimeScale{
         id: timeScale
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenter: timeLine.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
         height: 80
         width: parent.width - 100

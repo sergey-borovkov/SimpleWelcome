@@ -86,5 +86,12 @@ void ItemModel::thumbnailReady(QString url)
           break;
     }
     dataChanged(index(row),index(row));
+    emit gotThumbnail();
 }
 
+QString ItemModel::url(int row)
+{
+    if (row > m_items.size()-1)
+        return QString();
+    return m_items.at(row)->getUrl();
+}
