@@ -26,10 +26,12 @@ public:
     int rowCount(const QModelIndex &parent) const;
     
 signals:
-    
+    void gotThumbnail();
+
 public slots:
     void addActivityItem( Activity* item);
     void thumbnailReady(QString);
+    QString url(int row);
     
 private:
     QHash<int, QByteArray> m_hash;
