@@ -26,6 +26,7 @@ private slots:
 
 signals:
     void authorized();
+    void deauthorized();
 
 private:
     QDeclarativeView *m_authorizationView;

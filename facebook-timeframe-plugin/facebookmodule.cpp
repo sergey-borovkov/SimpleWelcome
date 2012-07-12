@@ -32,6 +32,7 @@ FacebookModule::FacebookModule()
     m_requestManager->setAuthorizer(m_authorizer);
 
     connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SLOT(onAcessTokenChanged()));
+    connect(m_authorizer, SIGNAL(deauthorized()), SIGNAL(deauthorized()));
 }
 
 FacebookModule::~FacebookModule()
@@ -53,7 +54,8 @@ QWidget *FacebookModule::authenticationWidget()
 
 void FacebookModule::onAcessTokenChanged()
 {
-    emit authorized();
+    if(m_authorizer->isAuthorized())
+        emit authorized();
 }
 
 Q_EXPORT_PLUGIN2(facebook-timeframe-plugin, FacebookModule)

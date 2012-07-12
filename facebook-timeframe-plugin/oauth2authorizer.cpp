@@ -21,7 +21,13 @@ void OAuth2Authorizer::setAccessToken(const QString &accessToken)
     }
 }
 
-bool OAuth2Authorizer::isAuthenticated() const
+void OAuth2Authorizer::deauthorize()
+{
+    setAccessToken("");
+    emit deauthorized();
+}
+
+bool OAuth2Authorizer::isAuthorized() const
 {
     return !accessToken().isEmpty();
 }
