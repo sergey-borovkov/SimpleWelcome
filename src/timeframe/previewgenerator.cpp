@@ -35,7 +35,7 @@
 PreviewGenerator *PreviewGenerator::m_instance = 0;
 
 PreviewGenerator::PreviewGenerator(QObject *parent) :
-    QObject(parent), m_job(0), m_model(0)
+    QObject(parent), m_model(0), m_job(0)
 {
     defaultPreview.load(":/pla-empty-box.png");
     videoPixmap.load(":/play-empty.png");
