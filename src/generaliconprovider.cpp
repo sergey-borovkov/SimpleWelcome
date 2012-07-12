@@ -24,6 +24,7 @@
 
 #include "generaliconprovider.h"
 #include "userinfoprovider.h"
+#include "searchgridmodel.h"
 
 #include <KDebug>
 #include <KIcon>
@@ -31,7 +32,8 @@
 GeneralIconProvider::GeneralIconProvider()
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
       m_isLocal(true),
-      m_userInfoProvider(0)
+      m_userInfoProvider(NULL),
+      m_searchGridModel(NULL)
 {
 
 }
@@ -46,6 +48,11 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
 
     if(iconType == "appicon")
         icon = KIcon(iconName);
+    else if (iconType == "search")
+    {
+        if (m_searchGridModel)
+            icon = KIcon(m_searchGridModel->getMatchIcon(iconName));
+    }
     else if(iconType == "asset")
     {
         if(m_isLocal)

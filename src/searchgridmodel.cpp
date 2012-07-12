@@ -38,6 +38,7 @@ SearchGridModel::SearchGridModel(QObject *parent)
     QHash<int, QByteArray> names;
     names[ CaptionRole ] = "caption";
     names[ ImagePathRole ] = "imagePath";
+    names[ GroupRole ] = "group";
     setRoleNames(names);
 
     m_runnerManager = new Plasma::RunnerManager();
@@ -51,43 +52,6 @@ SearchGridModel::SearchGridModel(QObject *parent)
     connect(m_runnerManager, SIGNAL(matchesChanged(const QList<Plasma::QueryMatch> &)), this, SLOT(newSearchMatches(const QList<Plasma::QueryMatch> &)));
 }
 
-class AppItem
-{
-public:
-    QString caption;
-    QString icon;
-    QString desktopEntry;
-    QString relPath;
-};
-
-QList<AppItem> SearchGridModel::GetList(QString currentGroup) const
-{
-    static QList<AppItem> out;
-    if (!out.isEmpty())
-        return out;
-
-    QStringList recentDocsList = KRecentDocument::recentDocuments();
-    foreach (QString fileName, recentDocsList)
-    {
-        if(! KDesktopFile::isDesktopFile(fileName))
-            continue;
-        if(! QFile::exists(fileName))
-            continue;
-
-        KDesktopFile desktopFile(fileName);
-        if(desktopFile.noDisplay())
-            continue;
-
-        AppItem newItem;
-        newItem.caption = desktopFile.readName();
-        newItem.icon = desktopFile.readIcon();
-        newItem.desktopEntry = desktopFile.fileName();
-        if (!newItem.caption.isEmpty())
-            out.append(newItem);
-    }
-    return out;
-}
-
 int SearchGridModel::rowCount( const QModelIndex & /*parent*/ ) const
 {
     return m_matches.size();
@@ -95,53 +59,23 @@ int SearchGridModel::rowCount( const QModelIndex & /*parent*/ ) const
 
 QVariant SearchGridModel::data( const QModelIndex &index, int role ) const
 {
-    QList<AppItem> list = GetList(currentGroup);
-
     if ( index.row() < 0 || index.row() >= m_matches.size() )
         return QVariant();
+
+    QString match = m_matches.keys()[index.row()];
 
     switch (role)
     {
     case CaptionRole:
-        return m_matches.keys()[index.row()];
+        return match;
     case ImagePathRole:
-        return QString("image://generalicon/appicon/%1").arg(m_matches.keys()[index.row()]);
+        return QString("image://generalicon/search/%1").arg(match);
+    case GroupRole:
+        return getMatchGroupName(match);
     }
 
     return QVariant();
 }
-
-#include <QMessageBox>
-
-void SearchGridModel::itemClicked(int newIndex)
-{
-    if (newIndex != -1)
-    {
-        AppItem clickedItem = GetList(currentGroup)[newIndex];
-        if (clickedItem.relPath.isEmpty())
-        {
-            QMessageBox::information(0, clickedItem.desktopEntry, clickedItem.caption);
-            return;
-        }
-    }
-
-    int rowCountWas = rowCount();
-    beginRemoveRows(QModelIndex(), 0, rowCountWas);
-    endRemoveRows();
-
-    if (newIndex == -1)
-        currentGroup = "";
-    else
-    {
-        AppItem clickedItem = GetList(currentGroup)[newIndex];
-        currentGroup = clickedItem.relPath;
-    }
-
-    int rowCountNew = rowCount();
-    beginInsertRows(QModelIndex(), 0, rowCountNew);
-    endInsertRows();
-}
-
 
 
 
@@ -170,7 +104,7 @@ QStringList SearchGridModel::getGroupNames()
     return m_groups.toList();
 }
 
-QString SearchGridModel::getMatchGroupName(const QString &name)
+QString SearchGridModel::getMatchGroupName(const QString &name) const
 {
     if(m_matches.contains(name))
         return m_matches[name]->runner()->name();
@@ -203,7 +137,6 @@ void SearchGridModel::newSearchMatches(const QList<Plasma::QueryMatch> &matches)
     {
         m_matches.insert(it->text(), new Plasma::QueryMatch((*it)));
         m_groups.insert(it->runner()->name());
-        qDebug() << it->runner()->name();
     }
 
     beginInsertRows(QModelIndex(), 0, rowCount());
@@ -230,4 +163,23 @@ void SearchGridModel::launchSearch(const QString &text)
     {
         m_runnerManager->reset();
     }
+}
+
+SearchFilterGridModel::SearchFilterGridModel(QObject *parent, QAbstractListModel *sourceModel)
+    : QSortFilterProxyModel(parent)
+{
+    setFilterRole(SearchGridModel::GroupRole);
+    setSourceModel(sourceModel);
+}
+
+bool SearchFilterGridModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+{
+    return sourceModel()->index(sourceRow, 0, sourceParent).data(SearchGridModel::GroupRole).toString() == group;
+}
+
+
+void SearchFilterGridModel::itemClicked(int newIndex)
+{
+    QString match = mapToSource(index(newIndex, 0)).data(SearchGridModel::CaptionRole).toString();
+    static_cast<SearchGridModel *>(sourceModel())->runMatch(match);
 }

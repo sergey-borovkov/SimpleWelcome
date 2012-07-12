@@ -25,7 +25,8 @@ FocusScope {
             Column {
                 spacing: 16
                 width: parent.width
-                height: Math.ceil(count / columns) * 200
+                height: childrenRect.height
+                visible: recentAppsGridView.count != 0
 
                 GroupText {
                     text: "Recent Applications"
@@ -35,7 +36,7 @@ FocusScope {
                     id: recentAppsGridView
                     model: recentAppsGridModel
                     width: parent.width
-                    height: childrenRect.height
+                    height: Math.ceil(count / columns) * 200
                     prevGrid: documentsGridView
                     nextGrid: favoritesGridView
 
@@ -47,7 +48,8 @@ FocusScope {
             Column {
                 spacing: 16
                 width: parent.width
-                height: Math.ceil(count / columns) * 200
+                height: childrenRect.height
+                visible: favoritesGridView.count != 0
 
                 GroupText {
                     text: "Favorites"
@@ -57,7 +59,7 @@ FocusScope {
                     id: favoritesGridView
                     model: favoritesGridModel
                     width: parent.width
-                    height: childrenRect.height
+                    height: Math.ceil(count / columns) * 200
                     prevGrid: recentAppsGridView
                     nextGrid: documentsGridView
 
@@ -73,7 +75,8 @@ FocusScope {
             Column {
                 spacing: 16
                 width: parent.width
-                height: Math.ceil(count / columns) * 200
+                height: childrenRect.height
+                visible: documentsGridView.count != 0
 
                 GroupText {
                     text: "Recent documents"
@@ -84,7 +87,7 @@ FocusScope {
 
                     model: documentsGridModel
                     width: parent.width
-                    height: childrenRect.height
+                    height: Math.ceil(count / columns) * 200
                     interactive: false
 
                     prevGrid: favoritesGridView

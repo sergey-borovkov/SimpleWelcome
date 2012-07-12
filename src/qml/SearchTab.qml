@@ -5,7 +5,7 @@ FocusScope {
     width: parent.width
     clip: true
     anchors.topMargin: 16
-    property variant grid: searchGridView
+    property variant grid: searchCmdGridView
 
     Flickable {
         id: flick
@@ -26,30 +26,27 @@ FocusScope {
                 spacing: 16
                 width: parent.width
                 height: childrenRect.height
+                visible: searchCmdGridView.count != 0
 
                 GroupText {
                     text: "Command Line"
-                    visible: searchGridView.count != 0
                 }
 
                 AppsGridView {
-                    id: searchGridView
-                    model: searchGridModel
+                    id: searchCmdGridView
+                    model: searchCmdGridModel
+
                     width: parent.width
                     height: Math.ceil(count / columns) * 200
-                    property string groupName: "Command Line"
 
-                    prevGrid: documentsGridView
-                    nextGrid: favoritesGridView
+                    prevGrid: searchAppsGridView
+                    nextGrid: searchRecentDocsGridView
 
                     interactive: false
                     focus: true
 
-                    Connections {
-                        target: searchGridView
-                        onAdd: {
-                            console.log("ADDED!!!!!")
-                        }
+                    Component.onCompleted: {
+                        model.group = "Command Line"
                     }
 
                     Behavior on height {
@@ -62,26 +59,31 @@ FocusScope {
                 spacing: 16
                 width: parent.width
                 height: childrenRect.height
+                visible: searchRecentDocsGridView.count != 0
 
                 GroupText {
                     text: "Recent Documents"
-                    visible: favoritesGridView.count != 0
                 }
 
                 AppsGridView {
-                    id: favoritesGridView
-                    model: favoritesGridModel
+                    id: searchRecentDocsGridView
+                    model: searchRecentDocsGridModel
+
                     width: parent.width
                     height: Math.ceil(count / columns) * 200
-                    property string groupName: "Recent Documents"
 
-                    prevGrid: searchGridView
-                    nextGrid: documentsGridView
+                    prevGrid: searchCmdGridView
+                    nextGrid: searchAppsGridView
 
                     interactive: false
 
-                    Component.onCompleted: {
+                    GridView.onRemove: {
+                        console.log("ON ADD")
                         highlightItem.opacity = 0
+                    }
+
+                    Component.onCompleted: {
+                        model.group = "Recent Documents"
                     }
 
                 }
@@ -91,26 +93,26 @@ FocusScope {
                 spacing: 16
                 width: parent.width
                 height: childrenRect.height
+                visible: searchAppsGridView.count != 0
 
                 GroupText {
                     text: "Applications"
-                    visible: documentsGridView.count != 0
                 }
 
                 AppsGridView {
-                    id: documentsGridView
+                    id: searchAppsGridView
+                    model: searchAppsGridModel
 
-                    model: documentsGridModel
                     width: parent.width
                     height: Math.ceil(count / columns) * 200
-                    property string groupName: "Applications"
+
+                    prevGrid: searchRecentDocsGridView
+                    nextGrid: searchCmdGridView
+
                     interactive: false
 
-                    prevGrid: favoritesGridView
-                    nextGrid: recentAppsGridView
-
                     Component.onCompleted: {
-                        highlightItem.opacity = 0
+                        model.group = "Applications"
                     }
                 }
             }
