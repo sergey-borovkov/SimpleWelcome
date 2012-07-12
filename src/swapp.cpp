@@ -59,16 +59,23 @@ SWApp::SWApp()
     UserInfoProvider *userInfoProvider = new UserInfoProvider(this);
     m_viewer->rootContext()->setContextProperty("userInfoProvider", userInfoProvider);
 
+    SearchGridModel *searchGridModel = new SearchGridModel(this);
+    m_viewer->rootContext()->setContextProperty("searchGridModel", searchGridModel);
+
     m_generalIconProvider = new GeneralIconProvider();
     m_generalIconProvider->setIsLocal(isLocal());
     m_generalIconProvider->setUserInfoProvider(userInfoProvider);
+    m_generalIconProvider->setSearchGridModel(searchGridModel);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
     m_viewer->rootContext()->setContextProperty("appsGridModel", new AppsGridModel(this) );
     m_viewer->rootContext()->setContextProperty("recentAppsGridModel", new RecentAppsGridModel(this));
     m_viewer->rootContext()->setContextProperty("favoritesGridModel", new FavoritesGridModel(this));
     m_viewer->rootContext()->setContextProperty("documentsGridModel", new DocumentsGridModel(this));
-    m_viewer->rootContext()->setContextProperty("searchGridModel", new SearchGridModel(this));
+
+    m_viewer->rootContext()->setContextProperty("searchCmdGridModel", new SearchFilterGridModel(this, searchGridModel));
+    m_viewer->rootContext()->setContextProperty("searchAppsGridModel", new SearchFilterGridModel(this, searchGridModel));
+    m_viewer->rootContext()->setContextProperty("searchRecentDocsGridModel", new SearchFilterGridModel(this, searchGridModel));
 
 
     m_viewer->showExpanded();
