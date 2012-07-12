@@ -19,7 +19,8 @@ public:
 signals:
 
 public slots:
-    void authenticated();
+    void authorized();
+    void deauthorized();
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
 private:

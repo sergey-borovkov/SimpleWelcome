@@ -27,7 +27,7 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 {
     m_authorizer = authorizer;
 
-    if(m_authorizer->isAuthenticated())
+    if(m_authorizer->isAuthorized())
         emit authorizationComplete();
     else
         connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SIGNAL(authorizationComplete()));
@@ -42,6 +42,13 @@ void RequestManager::reply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
+
+    if(result.contains("error"))
+    {
+        m_authorizer->deauthorize();
+        return;
+    }
+
     QVariantList list = result.value("data").toList();
 
     QList<SocialItem *> feedItems;

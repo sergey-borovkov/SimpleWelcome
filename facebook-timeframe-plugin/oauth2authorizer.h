@@ -15,11 +15,12 @@ public:
     explicit OAuth2Authorizer(QObject *parent = 0);
     QString accessToken() const;
     void setAccessToken(const QString &accessToken);
-
-    bool isAuthenticated() const;
+    void deauthorize();
+    bool isAuthorized() const;
 
 signals:
     void accessTokenChanged(QString accessToken);
+    void deauthorized();
 
 public slots:
     void urlChanged(const QUrl &url);
