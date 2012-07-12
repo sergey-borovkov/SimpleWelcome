@@ -6,6 +6,7 @@
 #include <QtCore/QSharedPointer>
 #include <QtCore/QDate>
 #include <QtCore/QUrl>
+#include <QtGui/QPixmap>
 #include <QtPlugin>
 
 class SocialItem;
@@ -28,6 +29,8 @@ public:
     };
 
     virtual ~ISocialModule() {}
+    virtual QString name() const = 0;
+    virtual QPixmap icon() const = 0;
     virtual QWidget *authenticationWidget() = 0;
     virtual ISocialRequestManager *requestManager() = 0;
     virtual bool isAuthorized() const = 0;
