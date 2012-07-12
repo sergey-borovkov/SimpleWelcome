@@ -1,7 +1,6 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 Item {
-
     property int margin: 10
     property int labelHeight: 20
 
@@ -10,7 +9,7 @@ Item {
     width: getDelegateWidht(size) * (parent.height - 2*margin - dateLabel.height)/3 + 2*margin
     clip: true
 
-    Text{
+    Text {
         id: dateLabel
         anchors.top: parent.top
         anchors.left: parent.left
@@ -21,7 +20,7 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         //visible: (size === 0) ? false : true
     }
-    Rectangle{
+    Rectangle {
         id: gridBorder
         border.color: "black"
         color: "transparent"
@@ -30,9 +29,8 @@ Item {
         anchors.left: dateLabel.left
         width: parent.width + 10
         height: parent.height + 10
-        //visible: (size === 0) ? false : true
-    }    
-    Button{
+    }
+    Button {
         id: showContentButton
         visible: (size === 0) ? true : false
         anchors.centerIn: parent
@@ -45,7 +43,7 @@ Item {
             anchors.left: parent.left
         }
 
-        MouseArea{
+        MouseArea {
             id: buttonMouseArea
             anchors.fill: parent
             onClicked: {
@@ -54,7 +52,6 @@ Item {
             }
         }
     }
-
     GridView{
         id: itemGrid
         anchors.top: dateLabel.bottom
@@ -68,7 +65,7 @@ Item {
         flow: GridView.TopToBottom
         interactive: false
         delegate: Column {
-            Rectangle{
+            Rectangle {
                 id: imageBackground
                 color: "black"
                 border.color: "black"
@@ -77,7 +74,7 @@ Item {
                 width: itemGrid.cellWidth - 20
                 height: itemGrid.cellHeight -40
                 clip: true
-                Image{
+                Image {
                     id: image
                     anchors.centerIn: parent
                     width: Math.min( sourceSize.width, parent.width -4)
@@ -86,23 +83,12 @@ Item {
                     source: "image://preview/" + url + "%" + Math.random( 10 )
                     smooth: true
                     asynchronous: true
-/*
-                    Connections
-                    {
-                        target: itemGrid.model
-                        onDataChanged:
-                        {
-                            image.source = "image://preview/" + url + "%" + Math.random( 10 )
-                        }
-                    }
-                    */
                 }
-                MouseArea{
+                MouseArea {
                     anchors.fill: parent
                     onClicked: Qt.openUrlExternally(url)
                 }
             }
-
             Text {
                 id: label
                 text: url
@@ -124,24 +110,4 @@ Item {
         var x = Math.ceil(count /3)
         return x
     }
-/*
-    ListView.onAdd: SequentialAnimation {
-        PropertyAction { target: galleryItem; property: "height"; value: 0 }
-        NumberAnimation { target: galleryItem; property: "height"; to: parent.height; duration: 250; easing.type: Easing.InOutQuad}
-    }
-    */
-    /*
-    ListView.onAdd:
-    {
-        //galleryView.positionViewAtIndex(index,ListView.Beginning)
-    }
-    */
-    //    {
-
-    //galleryView.incrementCurrentIndex()
-    //    console.log("+++" + galleryView.currentIndex)
-    //galleryView.positionViewAtEnd();
-    //galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Contain)
-    //  }
-
 }
