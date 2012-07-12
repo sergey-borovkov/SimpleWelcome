@@ -186,8 +186,12 @@ Item
                         timeFrameTab.__year = monthModel.get(timeScale.list.currentIndex).year
                         timeFrameTab.__month = monthModel.get(timeScale.list.currentIndex).monthNumber - 1
                         timeFrameTab.currentDateChanged()
+                        //scene.currentIndex = timeFrameTab.getTimeLineProperlyItem()
+
                         //set index on timeLine
-                        scene.currentIndex = timeFrameTab.getTimeLineProperlyItem()
+                        timeLine.currentIndex = timeFrameTab.getTimeLineGalleryIndex()
+                        timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
+
                         //set index on gallery
                         galleryView.currentIndex = timeFrameTab.getTimeLineGalleryIndex()
                         galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center )

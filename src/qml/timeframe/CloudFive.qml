@@ -1,7 +1,7 @@
 import QtQuick 1.0
 
 Item{
-    id: cloudThree
+    id: cloudFive
     property date cloudDate
     property variant model
     property int margin: 10
@@ -77,7 +77,7 @@ Item{
              cloudRect3.image.source = "image://preview/" + model.url(2) + "%" + Math.random( 10 ); \
              cloudRect4.image.source = "image://preview/" + model.url(3) + "%" + Math.random( 10 ); \
              cloudRect5.image.source = "image://preview/" + model.url(4) + "%" + Math.random( 10 ); \
-             }}', cloudThree);
+             }}', cloudFive);
         cloudRect1.image.source = "image://preview/" + model.url(0) + "%" + Math.random( 10 )
         cloudRect1.url = model.url(0)
         cloudRect2.image.source = "image://preview/" + model.url(1) + "%" + Math.random( 10 )

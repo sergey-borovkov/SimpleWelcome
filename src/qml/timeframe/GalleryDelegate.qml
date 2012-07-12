@@ -7,7 +7,7 @@ Item {
 
     id: galleryItem
     height: parent.height
-    width: getDelegateWidht(size) * (parent.height - 2*margin - dateLabel.height)/3 + 2*margin
+    width: getDelegateWidth(size) * (parent.height - 2*margin - dateLabel.height)/3 + 2*margin
     clip: true
 
     Text{
@@ -123,7 +123,7 @@ Item {
         }
     }
 
-    function getDelegateWidht( count ){
+    function getDelegateWidth( count ){
         if (count === 0)
         {
             galleryLister.startSearch(date,1)   //Start new search if null item becomes visible

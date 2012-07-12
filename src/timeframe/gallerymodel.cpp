@@ -93,6 +93,8 @@ void GalleryModel::newActivities(QList<Activity*> list)
     {
 
         Activity* item = list.at(i);
+        if (m_urlHash.contains(item->getUrl()))
+                continue;
         m_urlHash.insert(item->getUrl(),item->getDate());
         //qDebug() << item->getDate();
 
@@ -106,6 +108,7 @@ void GalleryModel::newActivities(QList<Activity*> list)
             {
                 it->setDate(item->getDate());
                 it->addActivity(item);
+                //qDebug() << "add activity into null object" << item->getDate();
                 QModelIndex index = indexFromItem(it);
                 if (index.isValid())
                     dataChanged(index, index);
@@ -116,13 +119,13 @@ void GalleryModel::newActivities(QList<Activity*> list)
         int j = 0;
         bool flag = false;
         if (m_items.size() > 0)
-        {            
+        {
             while (m_items.at(j)->getDate() <= item->getDate())
             {
                 if ( m_items.at(j)->getDate() == item->getDate())
                 {
                     m_items.at(j)->addActivity(item);
-                    flag = true;                    
+                    flag = true;
                     break;
                 }
                 j++;
@@ -132,16 +135,39 @@ void GalleryModel::newActivities(QList<Activity*> list)
                 }
             }
         }
+//        int j = m_items.size()-1;
+//        bool flag = false;
+//        if (m_items.size() > 0)
+//        {
+//            while (m_items.at(j)->getDate() <= item->getDate())
+//            {
+//                if ( m_items.at(j)->getDate() == item->getDate())
+//                {
+//                    m_items.at(j)->addActivity(item);
+//                    //qDebug("add activity into existing");
+//                    flag = true;
+//                    break;
+//                }
+//                j--;
+//                if ( j == 0 )
+//                {
+//                    break;
+//                }
+//            }
+//        }
+
         if (flag)
         {
             continue;
         }
-       // qDebug() << "new gallery item" << item->getDate();
-        if (removeNullItem(item->getDate().year(), item->getDate().month()))
-            j--;
+        //qDebug() << "new gallery item" << item->getDate();
+        //if (removeNullItem(item->getDate().year(), item->getDate().month()))
+          //  j--;
         GalleryItem * gallItem = new GalleryItem(item->getDate());
-        gallItem->model()->addActivityItem(item);
+        gallItem->model()->addActivityItem(item);        
         insertRow(j,gallItem);
+        //insertRow(j+1,gallItem);
+        //qDebug() <<" add new activity" << item->getDate();
     }    
 }
 
@@ -169,8 +195,24 @@ void GalleryModel::newMonth(int year, int month)
             }
         }
     }
+//    int j = m_items.size()-1;
+//    GalleryItem * gallItem = new GalleryItem(date);
+//    if (m_items.size() > 0)
+//    {
+//        qDebug() << m_items.at(j)->getDate() << gallItem->getDate();
+//        while (m_items.at(j)->getDate() <= gallItem->getDate())
+//        {
+//            qDebug() << "j--";
+//            j--;
+//            if ( j == 0 )
+//            {
+//                break;
+//            }
+//        }
+//    }
     //qDebug() << "new null item" << date;
     insertRow(j,gallItem);
+    //insertRow(j+1,gallItem);
 }
 
 //Remove null gallery item from model
@@ -288,11 +330,22 @@ ListItem * ListModel::takeRow(int row)
 }
 */
 
-int GalleryModel::getIndexByDate(int year, int month, bool direction)
+int GalleryModel::getIndexByDate(int year, int month,  bool direction)
 {
-    //QDate date(year, month,1);
-    //return indexFromItem(find(date)).row();
+    //QDate date(year, month, day);
+    //return indexFromItem(find(date)).row();    
+
     GalleryItem* ptr=0;
+
+//    for (int i = m_items.size() -1; i >= 0; i--)
+//    {
+//        if((m_items.at(i)->getDate().year() == year) && (m_items.at(i)->getDate().month() == month))
+//        {
+//            ptr = m_items.at(i);
+//            break;
+//        }
+//    }
+
     foreach(GalleryItem* item, m_items)
     {
         if((item->getDate().year() == year) && (item->getDate().month() == month))
@@ -304,30 +357,6 @@ int GalleryModel::getIndexByDate(int year, int month, bool direction)
     if (ptr)
         return indexFromItem(ptr).row();
     return -1;
-
-//    if (direction) // forward
-//    {
-//        ind =0;
-//        for( ; ind < m_list.size(); ind++)
-//        {
-//            if(m_list[ind]->date() == date)
-//            {
-//                break;
-//            }
-//        }
-//    }
-//    else //backward
-//    {
-//        ind = m_list.size()-1;
-//        for( ; ind >= 0; ind--)
-//        {
-//            if(m_list[ind]->date() == date)
-//            {
-//                break;
-//            }
-//        }
-//    }
-//    return ind;
 }
 
 
