@@ -168,7 +168,7 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("socialModel", socialModel);
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
-    qDebug() << "THERE";
+
     if(isLocal())
         m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
     else
@@ -182,6 +182,7 @@ SWApp::SWApp()
 
 SWApp::~SWApp()
 {
+    /*
     delete m_viewer;
     delete m_appProvider;
     delete m_searchRunner;
@@ -194,6 +195,7 @@ SWApp::~SWApp()
     delete m_proxy;
     delete m_source;
     delete m_manager;
+    */
 }
 
 int SWApp::newInstance()
