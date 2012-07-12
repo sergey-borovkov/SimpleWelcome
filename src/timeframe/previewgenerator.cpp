@@ -94,7 +94,7 @@ void PreviewGenerator::start(const QStringList& list)
         m_files.insert(list[i],list[i]);
     }
 
-    m_job = KIO::filePreview(m_fileList, 1000, 0 , 0, 0, true, true, &m_plugins);
+    m_job = KIO::filePreview(m_fileList, 512, 0 , 0, 0, false, true, &m_plugins);
     m_job->setIgnoreMaximumSize();
     m_job->setAutoDelete(true);
 

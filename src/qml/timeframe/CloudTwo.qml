@@ -4,22 +4,7 @@ Item{
     id: cloudTwo
     property date cloudDate
     property variant model
-    Item {
-        anchors.top : parent.top
-        anchors.left: parent.left
-        width: parent.width*1/3
-        height: parent.height/2
 
-        Text {
-            id: dateLabel
-            anchors.centerIn: parent
-            width: 100
-            height: labelHeight
-            text: Qt.formatDate( cloudDate , "dd MMM yyyy")
-            color: "white"
-            horizontalAlignment: Text.AlignHCenter            
-        }
-    }
     CloudRect {
         id: cloudRect1
         anchors.bottom: parent.bottom
@@ -34,7 +19,24 @@ Item{
         width: parent.width*2/3 -20
         height: parent.height*4/5
     }
+    Item {
+        anchors.top : parent.top
+        anchors.left: parent.left
+        anchors.right: cloudRect2.left
+        anchors.rightMargin: 10
+        anchors.bottom: cloudRect1.top
 
+        Text {
+            id: dateLabel
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 10
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: labelHeight
+            text: Qt.formatDate( cloudDate , "dd MMM yyyy")
+            color: "white"
+            horizontalAlignment: Text.AlignHCenter
+        }
+    }
     function createConnection()
     {
         var newObject = Qt.createQmlObject('import QtQuick 1.0;  Connections {target: model; onGotThumbnail: \
