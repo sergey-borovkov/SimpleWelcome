@@ -70,6 +70,7 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("documentsGridModel", new DocumentsGridModel(this));
     m_viewer->rootContext()->setContextProperty("searchGridModel", new SearchGridModel(this));
 
+
     m_viewer->showExpanded();
     m_viewer->showFullScreen();
     //m_viewer->setGeometry(896, 0, 1024, 1000); //768);

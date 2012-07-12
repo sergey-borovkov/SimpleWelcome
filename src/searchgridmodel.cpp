@@ -45,7 +45,7 @@ SearchGridModel::SearchGridModel(QObject *parent)
     QStringList activeRunners;
     activeRunners << "recentdocuments"
                   << "shell"
-                  << "rosa-services2";
+                  << "services";
     m_runnerManager->setAllowedRunners(activeRunners);
 
     connect(m_runnerManager, SIGNAL(matchesChanged(const QList<Plasma::QueryMatch> &)), this, SLOT(newSearchMatches(const QList<Plasma::QueryMatch> &)));
@@ -90,22 +90,22 @@ QList<AppItem> SearchGridModel::GetList(QString currentGroup) const
 
 int SearchGridModel::rowCount( const QModelIndex & /*parent*/ ) const
 {
-    return GetList(currentGroup).size();
+    return m_matches.size();
 }
 
 QVariant SearchGridModel::data( const QModelIndex &index, int role ) const
 {
     QList<AppItem> list = GetList(currentGroup);
 
-    if ( index.row() < 0 || index.row() >= list.size() )
+    if ( index.row() < 0 || index.row() >= m_matches.size() )
         return QVariant();
 
     switch (role)
     {
     case CaptionRole:
-        return list[index.row()].caption;
+        return m_matches.keys()[index.row()];
     case ImagePathRole:
-        return QString("image://generalicon/appicon/%1").arg(list[index.row()].icon);
+        return QString("image://generalicon/appicon/%1").arg(m_matches.keys()[index.row()]);
     }
 
     return QVariant();
@@ -195,13 +195,19 @@ void SearchGridModel::runMatch(const QString &name)
 
 void SearchGridModel::newSearchMatches(const QList<Plasma::QueryMatch> &matches)
 {
+    beginRemoveRows(QModelIndex(), 0, rowCount());
+    endRemoveRows();
     _clearMatches();
 
     for(QList<Plasma::QueryMatch>::const_iterator it = matches.begin(); it != matches.end(); it++)
     {
         m_matches.insert(it->text(), new Plasma::QueryMatch((*it)));
         m_groups.insert(it->runner()->name());
+        qDebug() << it->runner()->name();
     }
+
+    beginInsertRows(QModelIndex(), 0, rowCount());
+    endInsertRows();
 
     emit newSearchMatchesFound();
 }
@@ -222,7 +228,6 @@ void SearchGridModel::launchSearch(const QString &text)
         m_runnerManager->launchQuery(text);
     else
     {
-
         m_runnerManager->reset();
     }
 }
