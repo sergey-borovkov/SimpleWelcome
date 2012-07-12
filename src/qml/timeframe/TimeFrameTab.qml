@@ -407,7 +407,6 @@ Item {
         }
     }
 
-
     Timer {
         id: galleryTimer
         interval: 100; running: false; repeat: true

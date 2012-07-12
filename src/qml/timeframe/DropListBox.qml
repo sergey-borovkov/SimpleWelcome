@@ -83,19 +83,17 @@ Item {
         function toggle()
         {
             if ( height == 0 )
-                height = unfoldedHeight;
-            else
-                height = 0;
+                height = unfoldedHeight
         }
 
         function hide()
         {
-            height = 0;
+            height = 0
         }
 
         function show()
         {
-            height = unfoldedHeight;
+            height = unfoldedHeight
         }
 
         ListView {
@@ -128,7 +126,6 @@ Item {
                             dropboxListSelection.focus = true
                             dropboxListBody.hide()
                         }
-
                         comboClicked()
                     }
                 }
