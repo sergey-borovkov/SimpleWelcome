@@ -33,6 +33,8 @@ FacebookModule::FacebookModule()
 
     connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SLOT(onAcessTokenChanged()));
     connect(m_authorizer, SIGNAL(deauthorized()), SIGNAL(deauthorized()));
+
+    m_pixmap.load(":/images/facebook.png");
 }
 
 FacebookModule::~FacebookModule()
@@ -45,6 +47,16 @@ FacebookModule::~FacebookModule()
 ISocialRequestManager *FacebookModule::requestManager()
 {
     return m_requestManager;
+}
+
+QString FacebookModule::name() const
+{
+    return QLatin1String("Facebook");
+}
+
+QPixmap FacebookModule::icon() const
+{
+    return m_pixmap;
 }
 
 QWidget *FacebookModule::authenticationWidget()

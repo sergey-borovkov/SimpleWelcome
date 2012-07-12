@@ -1,8 +1,8 @@
 #ifndef FACEBOOK_MODULE_H
 #define FACEBOOK_MODULE_H
 
+#include <QtGui/QPixmap>
 #include <socialplugin.h>
-
 #include "oauth2authorizer.h"
 
 class QDeclarativeView;
@@ -18,6 +18,9 @@ public:
     ~FacebookModule();
 
     virtual ISocialRequestManager* requestManager();
+    QString name() const;
+    QPixmap icon() const;
+
     QWidget *authenticationWidget();
     bool isAuthorized() const { return !m_authorizer->accessToken().isEmpty(); }
 
@@ -32,6 +35,7 @@ private:
     QDeclarativeView *m_authorizationView;
     RequestManager *m_requestManager;
     OAuth2Authorizer *m_authorizer;
+    QPixmap m_pixmap;
 };
 
 #endif
