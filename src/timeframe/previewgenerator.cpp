@@ -65,7 +65,7 @@ void PreviewGenerator::setNullIcon(const KFileItem &item)
 }
 
 QPixmap PreviewGenerator::getPreviewPixmap(QString filePath)
-{        
+{
     if(previews.contains(filePath))
         return previews[filePath];
     else
@@ -86,12 +86,10 @@ void PreviewGenerator::start(const QStringList& list)
     {
         KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, list[i], false);
         if (m_files.contains(list[i]))
-        {
-            //qDebug() << "already in list" ;
             continue;
-        }
+
         m_fileList.append(fileItem);
-        m_files.insert(list[i],list[i]);
+        m_files.insert(list[i]);
     }
 
     m_job = KIO::filePreview(m_fileList, 1000, 0 , 0, 0, true, true, &m_plugins);

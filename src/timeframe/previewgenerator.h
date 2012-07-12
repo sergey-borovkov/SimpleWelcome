@@ -24,17 +24,17 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>
+#include <QtCore/QPair>
+#include <QtCore/QSet>
+#include <QDeclarativeEngine>
 
 
 #include <kio/previewjob.h>
 #include <kfileitem.h>
-#include <QDeclarativeEngine>
-#include <QtCore/QPair>
 
 class Image;
 class FileModel;
 class GalleryModel;
-
 
 class PreviewGenerator : public QObject
 {
@@ -59,7 +59,7 @@ private:
     GalleryModel * m_model;
 
     QHash<QString, QPixmap> previews;
-    QHash<QString, QString> m_files;
+    QSet<QString> m_files;
     QPixmap defaultPreview;
 
     static PreviewGenerator *m_instance;
