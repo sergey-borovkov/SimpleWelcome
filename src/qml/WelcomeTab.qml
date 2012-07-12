@@ -11,13 +11,12 @@ FocusScope {
         id: flick
         anchors.fill: parent
         contentWidth: parent.width
-        contentHeight: rowContainer2.height + 32
+        contentHeight: gridsContainer.height + 32
         boundsBehavior: Flickable.StopAtBounds // if flicking is not bound, scroll sometimes go crazy and flick far far away from corners when scrolling with mouse wheel
         flickableDirection: Flickable.VerticalFlick
 
         Column {
-            id: rowContainer2
-            //anchors.horizontalCenter: parent.horizontalCenter
+            id: gridsContainer
             width: parent.width
             height: childrenRect.height
             anchors.bottom: parent.bottom
@@ -26,22 +25,9 @@ FocusScope {
             Column {
                 spacing: 16
                 width: parent.width
-                height: childrenRect.height
+                height: Math.ceil(count / columns) * 200
 
-                Text {
-                    width: parent.width
-                    height: 24
-                    maximumLineCount: 1
-                    anchors.left: parent.left
-                    anchors.leftMargin: 16
-
-                    font.family: "Bitstream Vera Sans"
-                    font.bold: true
-                    font.pixelSize: 18
-                    style: Text.Sunken
-                    color: "#eee"
-                    styleColor: "#000"
-
+                GroupText {
                     text: "Recent Applications"
                 }
 
@@ -61,22 +47,9 @@ FocusScope {
             Column {
                 spacing: 16
                 width: parent.width
-                height: childrenRect.height
+                height: Math.ceil(count / columns) * 200
 
-                Text {
-                    width: parent.width
-                    height: 24
-                    maximumLineCount: 1
-                    anchors.left: parent.left
-                    anchors.leftMargin: 16
-
-                    font.family: "Bitstream Vera Sans"
-                    font.bold: true
-                    font.pixelSize: 18
-                    style: Text.Sunken
-                    color: "#eee"
-                    styleColor: "#000"
-
+                GroupText {
                     text: "Favorites"
                 }
 
@@ -100,22 +73,9 @@ FocusScope {
             Column {
                 spacing: 16
                 width: parent.width
-                height: childrenRect.height
+                height: Math.ceil(count / columns) * 200
 
-                Text {
-                    width: parent.width
-                    height: 24
-                    maximumLineCount: 1
-                    anchors.left: parent.left
-                    anchors.leftMargin: 16
-
-                    font.family: "Bitstream Vera Sans"
-                    font.bold: true
-                    font.pixelSize: 18
-                    style: Text.Sunken
-                    color: "#eee"
-                    styleColor: "#000"
-
+                GroupText {
                     text: "Recent documents"
                 }
 

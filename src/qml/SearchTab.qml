@@ -1,107 +1,125 @@
 import QtQuick 1.1
 
-Item {
+FocusScope {
     id: searchTab
     width: parent.width
     clip: true
     anchors.topMargin: 16
     property variant grid: searchGridView
 
-    AppsGridView {
-        id: searchGridView
-        anchors.fill: parent
-        model: searchGridModel
-    }
-
-/*    function load()
-    {
-        _buttonComp = Qt.createComponent("Button.qml");
-        if(_buttonComp.status == Component.Error)
-        {
-            console.log("Component loading error: " + _buttonComp.errorString());
-        }
-
-        groupGrid.preload();
-        searchRunner.newSearchMatchesFound.connect(newMatchesFound);
-    }
-
-    function newMatchesFound()
-    {
-        tabListView.currentIndex = 0
-        //console.log("NewMatchesFound called");
-
-        var matchesList = searchRunner.getMatchNames();
-        var groupsList = searchRunner.getGroupNames();
-        var groups = {};
-
-        groupGrid.clear();
-
-        for(var i = 0; i < groupsList.length; i++)
-        {
-            var groupName = groupsList[i];
-            groups[groupName] = groupGrid.addGroup(groupName);
-        }
-
-        for(var i = 0; i < matchesList.length; i++)
-        {
-            var matchName = matchesList[i];
-            var groupName = searchRunner.getMatchGroupName(matchName);
-
-            //groups[groupName].addQueryMatch(matchName);
-            //console.log("Group:", searchRunner.getMatchGroupName(matchesList[i]), "Match:", matchesList[i]);
-
-            var button = groups[groupName].addObject(_buttonComp,
-            {
-                "label": matchName,
-                "iconUrl": "image://generalicon/search/" + matchName
-            });
-
-            function createMatchCallback(data)
-            {
-                var name = data;
-
-                function callback()
-                {
-                    searchRunner.runMatch(name);
-                }
-
-                return callback;
-            }
-
-            button.buttonClick.connect(createMatchCallback(matchName));
-        }
-    }*/
-
-    /*function hideSearchTab()
-    {
-        tabListView.currentIndex = 1
-    }
-
     Flickable {
-        id: view
+        id: flick
         anchors.fill: parent
         contentWidth: parent.width
-        contentHeight: groupGrid.height
+        contentHeight: gridsContainer.height + 32
+        boundsBehavior: Flickable.StopAtBounds // if flicking is not bound, scroll sometimes go crazy and flick far far away from corners when scrolling with mouse wheel
+        flickableDirection: Flickable.VerticalFlick
 
         Column {
-            id: rowContainer
-            //anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: 16
-            spacing: 16
+            id: gridsContainer
             width: parent.width
+            height: childrenRect.height
+            anchors.bottom: parent.bottom
+            spacing: 32
 
-            GroupGrid {
-                id: groupGrid
-                gridType: "search"
+            Column {
+                spacing: 16
+                width: parent.width
+                height: childrenRect.height
+
+                GroupText {
+                    text: "Command Line"
+                    visible: searchGridView.count != 0
+                }
+
+                AppsGridView {
+                    id: searchGridView
+                    model: searchGridModel
+                    width: parent.width
+                    height: Math.ceil(count / columns) * 200
+                    property string groupName: "Command Line"
+
+                    prevGrid: documentsGridView
+                    nextGrid: favoritesGridView
+
+                    interactive: false
+                    focus: true
+
+                    Connections {
+                        target: searchGridView
+                        onAdd: {
+                            console.log("ADDED!!!!!")
+                        }
+                    }
+
+                    Behavior on height {
+                        NumberAnimation { duration: 150 }
+                    }
+                }
+            }
+
+            Column {
+                spacing: 16
+                width: parent.width
+                height: childrenRect.height
+
+                GroupText {
+                    text: "Recent Documents"
+                    visible: favoritesGridView.count != 0
+                }
+
+                AppsGridView {
+                    id: favoritesGridView
+                    model: favoritesGridModel
+                    width: parent.width
+                    height: Math.ceil(count / columns) * 200
+                    property string groupName: "Recent Documents"
+
+                    prevGrid: searchGridView
+                    nextGrid: documentsGridView
+
+                    interactive: false
+
+                    Component.onCompleted: {
+                        highlightItem.opacity = 0
+                    }
+
+                }
+            }
+
+            Column {
+                spacing: 16
+                width: parent.width
+                height: childrenRect.height
+
+                GroupText {
+                    text: "Applications"
+                    visible: documentsGridView.count != 0
+                }
+
+                AppsGridView {
+                    id: documentsGridView
+
+                    model: documentsGridModel
+                    width: parent.width
+                    height: Math.ceil(count / columns) * 200
+                    property string groupName: "Applications"
+                    interactive: false
+
+                    prevGrid: favoritesGridView
+                    nextGrid: recentAppsGridView
+
+                    Component.onCompleted: {
+                        highlightItem.opacity = 0
+                    }
+                }
             }
         }
 
         states: State {
             name: "ShowBars"
-            when: view.movingVertically || view.movingHorizontally
+            when: flick.movingVertically
             PropertyChanges { target: verticalScrollBar; opacity: 1 }
-            PropertyChanges { target: horizontalScrollBar; opacity: 1 }
         }
 
         transitions: Transition {
@@ -112,12 +130,12 @@ Item {
     ScrollBar {
         id: verticalScrollBar
         width: 12;
-        height: view.height - 12
+        height: flick.height - 12
 
-        anchors.right: view.right
+        anchors.right: flick.right
         opacity: 0
         orientation: Qt.Vertical
-        position: view.visibleArea.yPosition
-        pageSize: view.visibleArea.heightRatio
-    }*/
+        position: flick.visibleArea.yPosition
+        pageSize: flick.visibleArea.heightRatio
+    }
 }
