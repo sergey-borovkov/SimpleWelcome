@@ -186,6 +186,7 @@ Item {
         preferredHighlightBegin : timeLine.width /3
         preferredHighlightEnd : timeLine.width*2/3
         boundsBehavior : Flickable.StopAtBounds
+        cacheBuffer: desktopWidth
         //snapMode: ListView.SnapToItem
         onCurrentIndexChanged: {
             var date = galleryModel.getDateOfIndex(timeLine.currentIndex)
@@ -201,7 +202,7 @@ Item {
             //console.log("new items added, scene count: " +  scene.count)
             timeFrameTab.state = "timeLineSearch"
             searchTimer.restart()
-            //scene.positionViewAtIndex(scene.currentIndex, ListView.Center)
+            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center)
         }
 
     }
