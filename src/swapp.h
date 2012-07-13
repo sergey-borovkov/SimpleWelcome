@@ -17,6 +17,7 @@
 
 class ActivityModel;
 class NepomukSource;
+class SocialProxy;
 class QThread;
 class ActivityProxy;
 
@@ -42,11 +43,12 @@ private:
     bool m_inited;
     QmlApplicationViewer *m_viewer;
     AppProvider *m_appProvider;
-    
+
     ActivityModel* m_model;
     NepomukSource* m_source;
     ActivityProxy *m_proxy;
     QThread *m_nepomukThread;
+    SocialProxy *m_manager;
 
     SearchRunner *m_searchRunner;
     GeneralIconProvider *m_generalIconProvider;

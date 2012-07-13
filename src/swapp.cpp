@@ -24,29 +24,30 @@
 
 #include "swapp.h"
 
-#include <QTimer>
-#include <QThread>
-
-#include <QDeclarativeEngine>
 #include <QDeclarativeContext>
-
+#include <QDeclarativeEngine>
 #include <QMovie>
+#include <QThread>
+#include <QTimer>
 
-#include <KServiceGroup>
 #include <KDebug>
 #include <KIcon>
+#include <KServiceGroup>
 
-#include "timeframe/activityproxy.h"
-#include "timeframe/nepomuksource.h"
 #include "timeframe/activitylist.h"
-#include "timeframe/activityset.h"
-#include "timeframe/previewprovider.h"
 #include "timeframe/activitymodel.h"
-#include "timeframe/gallerymodel.h"
-#include "timeframe/gallerylister.h"
-#include "timeframe/itemmodel.h"
+#include "timeframe/activityproxy.h"
+#include "timeframe/activityset.h"
 #include "timeframe/galleryitem.h"
+#include "timeframe/gallerylister.h"
+#include "timeframe/gallerymodel.h"
+#include "timeframe/itemmodel.h"
+#include "timeframe/nepomuksource.h"
 #include "timeframe/previewgenerator.h"
+#include "timeframe/previewprovider.h"
+#include "timeframe/social/pluginloader.h"
+#include "timeframe/social/socialmodel.h"
+#include "timeframe/social/socialproxy.h"
 
 SWApp* SWApp::self()
 {
@@ -61,6 +62,7 @@ SWApp::SWApp()
     : KUniqueApplication(),
       m_inited(false)
 {
+    qDebug() << "here";
     m_viewer = new QmlApplicationViewer();
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
@@ -116,11 +118,13 @@ SWApp::SWApp()
     m_model = new ActivityModel;
     m_proxy = new ActivityProxy;
     m_source = new NepomukSource;
+
     //m_nepomukThread = new QThread(this);
     //m_source->moveToThread(m_nepomukThread);
     //m_nepomukThread->start();
     QRect r = QDesktopWidget().screenGeometry(m_viewer);
     m_viewer->rootContext()->setContextProperty( "desktopWidth", r.width() );
+
     /* TF Gallery mode */
 
     GalleryModel* model = new GalleryModel;
@@ -157,8 +161,17 @@ SWApp::SWApp()
     m_viewer->setGeometry(100, 000, 640, 480);
     //m_viewer->showFullScreen();
 
-    QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
+    PluginLoader loader;
+    QList<ISocialModule *> plugins = loader.loadPlugins();
+    m_manager = new SocialProxy(plugins, this);
 
+    SocialModel *socialModel = new SocialModel;
+    m_manager->setModel(socialModel);
+
+    m_viewer->rootContext()->setContextProperty("socialModel", socialModel);
+
+    QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
+    qDebug() << "THERE";
     if(isLocal())
         m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
     else
@@ -183,7 +196,7 @@ SWApp::~SWApp()
     delete m_model;
     delete m_proxy;
     delete m_source;
-
+    delete m_manager;
 }
 
 int SWApp::newInstance()

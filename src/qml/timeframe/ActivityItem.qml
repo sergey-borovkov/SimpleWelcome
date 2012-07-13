@@ -5,8 +5,7 @@ Item {
 
     property string path;
 
-    function getFileName( filePath )
-    {
+    function getFileName( filePath ) {
         var filename = ""
         var pos = filePath.lastIndexOf("/");
         if ( pos !== ( -1 ) )
@@ -75,8 +74,7 @@ Item {
         }
     }
 
-    function bestDelegate( mt )
-    {
+    function bestDelegate( mt ) {
         if ( mt === "image" )
         {
             return imgDelegate;
@@ -98,8 +96,7 @@ Item {
         anchors.margins: 2
     }
 
-    MouseArea
-    {
+    MouseArea {
         anchors.fill: parent
         onClicked: Qt.openUrlExternally(path)
     }

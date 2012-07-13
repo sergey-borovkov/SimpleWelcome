@@ -36,19 +36,19 @@ PreviewGenerator *PreviewGenerator::m_instance = 0;
 
 PreviewGenerator::PreviewGenerator(QObject *parent) :
     QObject(parent), m_job(0), m_model(0)
-{    
+{
     defaultPreview.load(":/pla-empty-box.png");
     videoPixmap.load(":/play-empty.png");
     m_plugins = KIO::PreviewJob::availablePlugins();
 }
 
 void PreviewGenerator::setPreview(const KFileItem &item, const QPixmap &pixmap)
-{    
+{
     QPixmap pict = pixmap;
 
     if(item.mimetype().startsWith("video/"))
     {
-        QPainter p(&pict);        
+        QPainter p(&pict);
         QPixmap scaledPixmap = videoPixmap.scaled(pict.width()/2, pict.height()/2,  Qt::KeepAspectRatio, Qt::SmoothTransformation);
         p.drawPixmap(pict.width()/2 - scaledPixmap.width()/2, pict.height()/2 - scaledPixmap.height()/2 ,  scaledPixmap );
     }

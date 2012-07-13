@@ -25,7 +25,6 @@ Rectangle {
     id: button
 
     property string  imageUrl;
-
     property color onHoverColor: Qt.darker( borderColor, 1.3 )
     property color borderColor: "#7A8182"
     property color buttonColor: "#61BDCACD"
@@ -37,7 +36,7 @@ Rectangle {
     clip: true
     color: "#00000000"
 
-    Image{
+    Image {
         id: buttonImage
         source: imageUrl
         anchors.centerIn: parent
@@ -52,24 +51,23 @@ Rectangle {
     signal buttonClick()
 
     //define the clickable area to be the whole rectangle
-    MouseArea{
+    MouseArea {
         id: buttonMouseArea
         smooth: true
         anchors.fill: parent    //stretch the area to the parent's dimension
         onClicked: buttonClick()
         hoverEnabled: true
-        onEntered:
-        {
+
+        onEntered: {
             buttonImage.opacity = 1
         }
-        onExited:
-        {
+
+        onExited: {
             buttonImage.opacity = 0
         }
     }
 
     //scale the button when pressed
     scale: buttonMouseArea.pressed ? 1.05 : 1.00
-
     Behavior on scale { NumberAnimation { duration: 50 } }
 }

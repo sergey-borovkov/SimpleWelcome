@@ -119,9 +119,9 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
         activities.append(new Activity(uri, type, fi.lastModified().date()));
         //qDebug() << "-----after resorce";
         set->addActivity(new Activity(uri, type, fi.lastModified().date()));
-   }
+    }
 
-   emit newActivities(activities);
+    emit newActivities(activities);
 }
 
 void NepomukSource::error(QString str)
@@ -216,7 +216,8 @@ void NepomukSource::listingTSFinished()
     if (date.year() > 1970)
     {
         fillTimeScaleModel(date);
-    }else
+    }
+    else
     {
         m_timeScaleClient->close();
         m_timeScaleClient = 0;

@@ -1,13 +1,11 @@
 import QtQuick 1.1
 
-Item
-{
+Item {
     id: timeScale
     property variant list: timeScaleList
     property variant  model: monthModel
 
-    function getMonthStr(index)
-    {
+    function getMonthStr(index) {
 
         switch (index) {
         case 0:
@@ -38,22 +36,20 @@ Item
         return "UND"
     }
 
-    Connections{
+    Connections {
         target: nepomukSource
         onNewTSEntries: {
-            //console.log("New Entry")
             monthModel.append( { month: getMonthStr(month-1), year: year, monthNumber: month })
         }
     }
 
-    ListModel
-    {
-        id: monthModel        
+    ListModel {
+        id: monthModel
     }
 
-    Component{
+    Component {
         id: monthDelegate
-        Item{
+        Item {
             id: listItem
             width: timeScaleList.width/10
             height: 80
@@ -68,8 +64,7 @@ Item
                 color: "grey"
             }
 
-            Rectangle
-            {
+            Rectangle {
 
                 anchors.right: parent.right
                 anchors.rightMargin: -3
@@ -89,20 +84,22 @@ Item
             }
         }
     }
-    Component{
+    Component {
         id: highlight
-        Row{
+
+        Row {
             x: timeScaleList.currentItem.x-3
             y: timeScaleList.currentItem.y
             width: timeScaleList.width/10 + 6  //siz
             height: 80
-            Repeater{
+            Repeater {
                 model: (timeScaleList.width/10+6)/12
+
                 Item {
                     width: 12
                     height: 18
 
-                    Rectangle{
+                    Rectangle {
                         anchors.top: parent.top
                         anchors.topMargin: 5
                         anchors.left: parent.left
@@ -115,8 +112,7 @@ Item
         }
     }
 
-    Text
-    {
+    Text {
         id: yearLabel
         color: "white"
         anchors.left: parent.left
@@ -125,23 +121,22 @@ Item
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 15
-        Connections
-        {
+
+        Connections {
             target: timeScaleList
             onCurrentIndexChanged: {
                 yearLabel.text = monthModel.get(timeScaleList.currentIndex).year
             }
         }
     }
-    function getListViewItemSize()
-    {
+
+    function getListViewItemSize() {
         var x = timeScale.width / 11//size of 1 element
-        var y = Math.ceil(x/12)
-        return y*12
+        var y = Math.ceil(x / 12)
+        return y * 12
     }
 
-    Item
-    {
+    Item {
         id: listViewAnchor
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
@@ -149,8 +144,7 @@ Item
         clip: true
         width: getListViewItemSize()*10+6
 
-        ListView
-        {
+        ListView {
             id: timeScaleList
             model: monthModel
             delegate: monthDelegate
@@ -170,8 +164,7 @@ Item
             MouseArea {
                 id: mouseArea
                 anchors.fill: parent
-                onClicked:
-                {
+                onClicked: {
                     var mouseIndex = timeScaleList.indexAt(mouseX + timeScaleList.contentX, mouseY + timeScaleList.contentY)
                     var oldIndex = timeScaleList.currentIndex
                     if ((mouseIndex !== -1) && (oldIndex !== mouseIndex))
@@ -189,6 +182,7 @@ Item
                         //scene.currentIndex = timeFrameTab.getTimeLineProperlyItem()
 
                         //set index on timeLine
+
                         timeLine.currentIndex = timeFrameTab.getTimeLineGalleryIndex()
                         timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
 
@@ -201,9 +195,9 @@ Item
             Behavior on contentX {
                 NumberAnimation { duration: 300 }
             }
-
         }
-        Rectangle{
+
+        Rectangle {
             id: scale
             anchors.verticalCenter: parent.verticalCenter
             width: parent.width
