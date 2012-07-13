@@ -5,7 +5,7 @@ FocusScope {
     width: parent.width
     clip: true
     anchors.topMargin: 16
-    property variant grid: searchCmdGridView
+    property variant grid: gridsContainer.activeGridView
 
     Flickable {
         id: flick
@@ -15,106 +15,23 @@ FocusScope {
         boundsBehavior: Flickable.StopAtBounds // if flicking is not bound, scroll sometimes go crazy and flick far far away from corners when scrolling with mouse wheel
         flickableDirection: Flickable.VerticalFlick
 
-        Column {
+        GridWithGroupContainer {
             id: gridsContainer
-            width: parent.width
-            height: childrenRect.height
-            anchors.bottom: parent.bottom
-            spacing: 32
 
-            Column {
-                spacing: 16
-                width: parent.width
-                height: childrenRect.height
-                visible: searchCmdGridView.count != 0
-
-                GroupText {
-                    text: "Command Line"
-                }
-
-                AppsGridView {
-                    id: searchCmdGridView
-                    model: searchCmdGridModel
-
-                    width: parent.width
-                    height: Math.ceil(count / columns) * 200
-
-                    prevGrid: searchAppsGridView
-                    nextGrid: searchRecentDocsGridView
-
-                    interactive: false
-                    focus: true
-
-                    Component.onCompleted: {
-                        model.group = "Command Line"
-                    }
-
-                    Behavior on height {
-                        NumberAnimation { duration: 150 }
-                    }
-                }
+            GridWithGroup {
+                groupName: "Command Line"
+                gridModel: searchCmdGridModel
+                defaultFocus: true
             }
 
-            Column {
-                spacing: 16
-                width: parent.width
-                height: childrenRect.height
-                visible: searchRecentDocsGridView.count != 0
-
-                GroupText {
-                    text: "Recent Documents"
-                }
-
-                AppsGridView {
-                    id: searchRecentDocsGridView
-                    model: searchRecentDocsGridModel
-
-                    width: parent.width
-                    height: Math.ceil(count / columns) * 200
-
-                    prevGrid: searchCmdGridView
-                    nextGrid: searchAppsGridView
-
-                    interactive: false
-
-                    GridView.onRemove: {
-                        console.log("ON ADD")
-                        highlightItem.opacity = 0
-                    }
-
-                    Component.onCompleted: {
-                        model.group = "Recent Documents"
-                    }
-
-                }
+            GridWithGroup {
+                groupName: "Recent Documents"
+                gridModel: searchRecentDocsGridModel
             }
 
-            Column {
-                spacing: 16
-                width: parent.width
-                height: childrenRect.height
-                visible: searchAppsGridView.count != 0
-
-                GroupText {
-                    text: "Applications"
-                }
-
-                AppsGridView {
-                    id: searchAppsGridView
-                    model: searchAppsGridModel
-
-                    width: parent.width
-                    height: Math.ceil(count / columns) * 200
-
-                    prevGrid: searchRecentDocsGridView
-                    nextGrid: searchCmdGridView
-
-                    interactive: false
-
-                    Component.onCompleted: {
-                        model.group = "Applications"
-                    }
-                }
+            GridWithGroup {
+                groupName: "Applications"
+                gridModel: searchAppsGridModel
             }
         }
 

@@ -4,6 +4,7 @@ FocusScope {
     id: applicationsTab
     width: parent.width
     clip: true
+
     property variant grid: appsGrid
 
     AppsGridView {
