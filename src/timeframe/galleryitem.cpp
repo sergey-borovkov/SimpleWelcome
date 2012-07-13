@@ -4,7 +4,7 @@
 #include <QDebug>
 
 GalleryItem::GalleryItem(const QDate &date, QObject *parent) :
-    QObject(parent), m_model(new ItemModel(this)), m_date(date)
+    QObject(parent), m_date(date), m_model(new ItemModel(this))
 {
 }
 

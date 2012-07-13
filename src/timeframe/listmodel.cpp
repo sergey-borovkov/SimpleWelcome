@@ -1,67 +1,64 @@
-#include "socialmodel.h"
-#include "socialitem.h"
-
+#include "listmodel.h"
+#include "listitem.h"
 #include <QtCore/QDebug>
 
-SocialModel::SocialModel(QObject *parent) :
-    QAbstractListModel(parent)
+ListModel::ListModel(QHash<int, QByteArray> roles, QObject *parent) :
+    QAbstractListModel(parent), m_roles(roles)
 {
-    m_roles.insert(SocialItem::Text, "message");
-    m_roles.insert(SocialItem::Image, "picture");
     setRoleNames(m_roles);
 }
 
-int SocialModel::rowCount(const QModelIndex &parent) const
+int ListModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return m_list.size();
 }
 
-QVariant SocialModel::data(const QModelIndex &index, int role) const
+QVariant ListModel::data(const QModelIndex &index, int role) const
 {
     if(index.row() < 0 || index.row() >= m_list.size())
         return QVariant();
     return m_list.at(index.row())->data(role);
 }
 
-SocialModel::~SocialModel()
+ListModel::~ListModel()
 {
     clear();
 }
 
-void SocialModel::appendRow(SocialItem *item)
+void ListModel::appendRow(ListItem *item)
 {
-    appendRows(QList<SocialItem*>() << item);
+    appendRows(QList<ListItem*>() << item);
 }
 
-void SocialModel::appendRows(const QList<SocialItem *> &items)
+void ListModel::appendRows(const QList<ListItem *> &items)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount() + items.size() - 1);
-    foreach(SocialItem *item, items)
+    foreach(ListItem *item, items)
         m_list.append(item);
     endInsertRows();
 }
 
-void SocialModel::insertRow(int row, SocialItem *item)
+void ListModel::insertRow(int row, ListItem *item)
 {
     beginInsertRows(QModelIndex(), row, row);
     m_list.insert(row, item);
     endInsertRows();
 }
 
-void SocialModel::handleItemChange()
+void ListModel::handleItemChange()
 {
 }
 
-SocialItem * SocialModel::find(const QString &id) const
+ListItem * ListModel::find(const QString &id) const
 {
-    foreach(SocialItem* item, m_list)
+    foreach(ListItem* item, m_list)
         if(item->id() == id)
             return item;
     return 0;
 }
 
-QModelIndex SocialModel::indexFromItem(const SocialItem *item) const
+QModelIndex ListModel::indexFromItem(const ListItem *item) const
 {
     Q_ASSERT(item);
     for(int row = 0; row < m_list.size(); ++row)
@@ -71,13 +68,13 @@ QModelIndex SocialModel::indexFromItem(const SocialItem *item) const
     return QModelIndex();
 }
 
-void SocialModel::clear()
+void ListModel::clear()
 {
     qDeleteAll(m_list);
     m_list.clear();
 }
 
-bool SocialModel::removeRow(int row, const QModelIndex &parent)
+bool ListModel::removeRow(int row, const QModelIndex &parent)
 {
     Q_UNUSED(parent);
     if(row < 0 || row >= m_list.size())
@@ -88,7 +85,7 @@ bool SocialModel::removeRow(int row, const QModelIndex &parent)
     return true;
 }
 
-bool SocialModel::removeRows(int row, int count, const QModelIndex &parent)
+bool ListModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     Q_UNUSED(parent);
     if(row < 0 || ( row + count) >= m_list.size())
@@ -100,10 +97,11 @@ bool SocialModel::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
-SocialItem * SocialModel::takeRow(int row)
+ListItem * ListModel::takeRow(int row)
 {
     beginRemoveRows(QModelIndex(), row, row);
-    SocialItem* item = m_list.takeAt(row);
+    ListItem* item = m_list.takeAt(row);
     endRemoveRows();
     return item;
 }
+

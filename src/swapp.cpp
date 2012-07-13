@@ -42,11 +42,12 @@
 #include "timeframe/gallerylister.h"
 #include "timeframe/gallerymodel.h"
 #include "timeframe/itemmodel.h"
+#include "timeframe/listmodel.h"
 #include "timeframe/nepomuksource.h"
 #include "timeframe/previewgenerator.h"
 #include "timeframe/previewprovider.h"
 #include "timeframe/social/pluginloader.h"
-#include "timeframe/social/socialmodel.h"
+#include "timeframe/social/socialitem.h"
 #include "timeframe/social/socialproxy.h"
 
 SWApp* SWApp::self()
@@ -62,17 +63,12 @@ SWApp::SWApp()
     : KUniqueApplication(),
       m_inited(false)
 {
-    qDebug() << "here";
     m_viewer = new QmlApplicationViewer();
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
     // Window transparency
     m_viewer->setAttribute(Qt::WA_TranslucentBackground);
     m_viewer->setStyleSheet("background:transparent;");
-
-    //kDebug() << QMovie::supportedFormats();
-
-    //m_viewer->addImportPath("/usr/lib/kde4/imports/");
 
     m_appProvider = new AppProvider();
     m_appProvider->init();
@@ -159,13 +155,10 @@ SWApp::SWApp()
     //m_viewer->showFullScreen();
 
     PluginLoader loader;
-    QList<ISocialModule *> plugins = loader.loadPlugins();
-    m_manager = new SocialProxy(plugins, this);
+    m_manager = new SocialProxy(loader.loadPlugins(), this);
 
-    SocialModel *socialModel = new SocialModel;
-    m_manager->setModel(socialModel);
-
-    m_viewer->rootContext()->setContextProperty("socialModel", socialModel);
+    m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
+    m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 

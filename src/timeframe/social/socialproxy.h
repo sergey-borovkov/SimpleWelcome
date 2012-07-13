@@ -5,7 +5,7 @@
 #include <QtCore/QList>
 
 class ISocialModule;
-class SocialModel;
+class ListModel;
 class SocialItem;
 
 class SocialProxy : public QObject
@@ -14,9 +14,9 @@ class SocialProxy : public QObject
 public:
     explicit SocialProxy(QList<ISocialModule *> plugins, QObject *parent = 0);
     ~SocialProxy();
-    void setModel(SocialModel *model);
-    SocialModel *model() const;
-signals:
+    void setModel(ListModel *model);
+    ListModel *socialModel();
+    ListModel *pluginModel();
 
 public slots:
     void authorized();
@@ -25,7 +25,8 @@ public slots:
     void newItems(QList<SocialItem *> items);
 private:
     QList<ISocialModule *> m_plugins;
-    SocialModel *m_model;
+    ListModel *m_pluginModel;
+    ListModel *m_socialModel;
 };
 
 #endif // SOCIALPROXY_H
