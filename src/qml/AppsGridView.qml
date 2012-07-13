@@ -13,10 +13,12 @@ GridView {
 
     cellWidth: (width - spacing) / columns - 1
     cellHeight: 200
-    clip: true
+
+    delegate: Button {}
 
     highlight: Rectangle {
         id: gridSelection
+        property int animationDuration: 150
         width: 120
         height: 140
         color: "#c8b0c4de"
@@ -24,7 +26,7 @@ GridView {
         opacity: 1
 
         Behavior on opacity {
-            NumberAnimation { duration: 150 }
+            NumberAnimation { duration: animationDuration }
         }
     }
 
@@ -38,19 +40,7 @@ GridView {
             else
                 highlightItem.opacity = 1
         }
-        else // we are probably empty
-        {
-            if (activeFocus && nextGrid)
-            {
-                nextGrid.forceActiveFocus()
-                console.log("FORCING FOCUS TO NEXT WITH")
-            }
-            else
-                console.log("nothing here")
-        }
     }
-
-    delegate: Button {}
 
     //Keys.forwardTo: topBar
     Keys.onPressed: {
