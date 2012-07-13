@@ -4,7 +4,9 @@
 #include <QtCore/QHash>
 #include <QtCore/QVariant>
 
-class SocialItem
+#include "../listitem.h"
+
+class SocialItem : public ListItem
 {
 public:
     enum Role
@@ -25,6 +27,14 @@ public:
     virtual Type type() const = 0;
     virtual QString id() const = 0;
     virtual QVariant data(int role) const = 0;
+
+    static const QHash<int,QByteArray> roleNames()
+    {
+        QHash<int,QByteArray> roles;
+        roles.insert(Text, "message");
+        roles.insert(Image, "picture");
+        return roles;
+    }
 };
 
 #endif // SOCIALITEM_H

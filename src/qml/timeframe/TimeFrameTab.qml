@@ -366,8 +366,39 @@ Item {
         //console.log("position view ")
     }
 
+    Timer {
+        id: galleryTimer
+        interval: 100; running: false; repeat: true
+        onTriggered: {
+            var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
+                                            galleryView.y + galleryView.height/2 + galleryView.contentY)
+            var date = galleryModel.getDateOfIndex(index)
+            timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
+        }
+    }
+
+    AnimatedImage {
+        id: waitIndicator
+        source: "images/ajax-loader.gif"
+        anchors.centerIn: parent
+        visible: false
+    }
+
+
+    Connections {
+        target: galleryView
+        onFlickStarted : galleryTimer.start()
+    }
+
+    Connections {
+        target: galleryView
+        onFlickEnded: galleryTimer.stop()
+    }
+
+
     ListView {
         id: socialView
+        model: socialModel
         anchors.top: separator.bottom
         anchors.bottom: timeScale.top
         anchors.right: parent.right
@@ -375,10 +406,9 @@ Item {
         anchors.leftMargin: 20
         anchors.rightMargin: 20
         anchors.topMargin: 30
-        orientation: ListView.Horizontal
         visible: false
         spacing: 10
-        model: socialModel
+        orientation: ListView.Horizontal
 
         delegate: ShadowRectangle {
             width: 300
@@ -407,34 +437,8 @@ Item {
         }
     }
 
-    Timer {
-        id: galleryTimer
-        interval: 100; running: false; repeat: true
-        onTriggered: {
-            var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
-                                            galleryView.y + galleryView.height/2 + galleryView.contentY)
-            var date = galleryModel.getDateOfIndex(index)
-            timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
-        }
-    }
-
-    Connections {
-        target: galleryView
-        onFlickStarted : galleryTimer.start()
-    }
-
-    Connections {
-        target: galleryView
-        onFlickEnded: galleryTimer.stop()
-    }
-
-
-
-    AnimatedImage {
-        id: waitIndicator
-        source: "images/ajax-loader.gif"
-        anchors.centerIn: parent
-        visible: false
+    SocialAuthorization {
+        id: authorizationView
     }
 
     state: "socialgallery"
