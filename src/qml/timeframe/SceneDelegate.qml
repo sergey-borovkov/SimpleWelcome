@@ -14,7 +14,7 @@ Item {
 
     function getText()
     {
-        return "index: " + index +" cur. index " + scene.currentIndex + " date: " +Qt.formatDate( date , "M-yyyy")
+        return "index: " + index +" cur. index " + timeLine.currentIndex + " date: " +Qt.formatDate( date , "M-yyyy")
     }
 
     Component.onCompleted: {

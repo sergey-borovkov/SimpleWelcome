@@ -33,7 +33,7 @@ GalleryModel::~GalleryModel()
 }
 
 QVariant GalleryModel::data(const QModelIndex &index, int role) const
-{    
+{
     if (!index.isValid())
     {
         return QVariant();
@@ -68,7 +68,7 @@ int GalleryModel::rowCount(const QModelIndex &parent) const
 }
 
 QObject* GalleryModel::itemsModel(QDate date) const
-{    
+{
     for (int i = 0; i < m_items.size(); i++)
     {
         if (date == m_items.value(i)->getDate())
@@ -88,7 +88,7 @@ void GalleryModel::setLister(GalleryLister *lister)
 
 void GalleryModel::newActivities(QList<Activity*> list)
 {
-   // qDebug() << "------new Activities--------";
+    // qDebug() << "------new Activities--------";
     for (int i = 0; i < list.size() ; i++)
     {
 
@@ -160,12 +160,15 @@ void GalleryModel::newActivities(QList<Activity*> list)
         {
             continue;
         }
+
         //qDebug() << "new gallery item" << item->getDate();
         //if (removeNullItem(item->getDate().year(), item->getDate().month()))
           //  j--;
+
         GalleryItem * gallItem = new GalleryItem(item->getDate());
         gallItem->model()->addActivityItem(item);        
         insertRow(j,gallItem);
+
         //insertRow(j+1,gallItem);
         //qDebug() <<" add new activity" << item->getDate();
     }    
@@ -173,7 +176,7 @@ void GalleryModel::newActivities(QList<Activity*> list)
 
 //Add null gallery item to model
 void GalleryModel::newMonth(int year, int month)
-{    
+{
     QDate date(year, month, 1);
     foreach(GalleryItem* item, m_items)
     {
@@ -247,88 +250,79 @@ bool GalleryModel::removeNullItem(int year, int month)
 
 void GalleryModel::appendRow(GalleryItem *item)
 {
-  appendRows(QList<GalleryItem*>() << item);
+    appendRows(QList<GalleryItem*>() << item);
 }
 
 void GalleryModel::appendRows(const QList<GalleryItem *> &items)
 {
-  beginInsertRows(QModelIndex(), rowCount(), rowCount()+items.size()-1);
-  foreach(GalleryItem *item, items) {
-    connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
-    m_items.append(item);
-  }
-  endInsertRows();
+    beginInsertRows(QModelIndex(), rowCount(), rowCount()+items.size()-1);
+    foreach(GalleryItem *item, items) {
+        connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
+        m_items.append(item);
+    }
+    endInsertRows();
 }
 
 void GalleryModel::insertRow(int row, GalleryItem *item)
 {
-  beginInsertRows(QModelIndex(), row, row);
-  connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
-  m_items.insert(row, item);
-  endInsertRows();
+    beginInsertRows(QModelIndex(), row, row);
+    connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
+    m_items.insert(row, item);
+    endInsertRows();
 }
 
 void GalleryModel::handleItemChange()
 {
-  GalleryItem* item = static_cast<GalleryItem*>(sender());
-  QModelIndex index = indexFromItem(item);
-  if(index.isValid())
-    emit dataChanged(index, index);
+    GalleryItem* item = static_cast<GalleryItem*>(sender());
+    QModelIndex index = indexFromItem(item);
+    if(index.isValid())
+        emit dataChanged(index, index);
 }
 
 GalleryItem * GalleryModel::find(const QDate &date) const
 {
-  foreach(GalleryItem* item, m_items) {
-    if(item->getDate() == date) return item;
-  }
-  return 0;
+    foreach(GalleryItem* item, m_items) {
+        if(item->getDate() == date) return item;
+    }
+    return 0;
 }
 
 QModelIndex GalleryModel::indexFromItem(const GalleryItem *item) const
 {
-  Q_ASSERT(item);
-  for(int row=0; row<m_items.size(); ++row) {
-    if(m_items.at(row) == item) return index(row);
-  }
-  return QModelIndex();
+    Q_ASSERT(item);
+    for(int row=0; row<m_items.size(); ++row) {
+        if(m_items.at(row) == item) return index(row);
+    }
+    return QModelIndex();
 }
 
 void GalleryModel::clear()
 {
-  qDeleteAll(m_items);
-  m_items.clear();
+    qDeleteAll(m_items);
+    m_items.clear();
 }
 
 bool GalleryModel::removeRow(int row, const QModelIndex &parent)
 {
-  Q_UNUSED(parent);
-  if(row < 0 || row >= m_items.size()) return false;
-  beginRemoveRows(QModelIndex(), row, row);
+    Q_UNUSED(parent);
+    if(row < 0 || row >= m_items.size()) return false;
+    beginRemoveRows(QModelIndex(), row, row);
     /*delete*/ m_items.takeAt(row);
-  endRemoveRows();
-  return true;
+    endRemoveRows();
+    return true;
 }
 
 bool GalleryModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-  Q_UNUSED(parent);
-  if(row < 0 || (row+count) >= m_items.size()) return false;
-  beginRemoveRows(QModelIndex(), row, row+count-1);
-  for(int i=0; i<count; ++i) {
-    m_items.takeAt(row)->deleteLater();
-  }
-  endRemoveRows();
-  return true;
+    Q_UNUSED(parent);
+    if(row < 0 || (row+count) >= m_items.size()) return false;
+    beginRemoveRows(QModelIndex(), row, row+count-1);
+    for(int i=0; i<count; ++i) {
+        m_items.takeAt(row)->deleteLater();
+    }
+    endRemoveRows();
+    return true;
 }
-/*
-ListItem * ListModel::takeRow(int row)
-{
-  beginRemoveRows(QModelIndex(), row, row);
-  ListItem* item = m_list.takeAt(row);
-  endRemoveRows();
-  return item;
-}
-*/
 
 int GalleryModel::getIndexByDate(int year, int month,  bool direction)
 {

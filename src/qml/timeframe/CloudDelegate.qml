@@ -1,7 +1,4 @@
-
 import QtQuick 1.1
-
-
 
 Rectangle {
     id: cloudDelegate
@@ -20,27 +17,21 @@ Rectangle {
     width: cloudWidth
     height: cloudHeight
 
-    function getPath( ind )
-    {
-        //console.log("path" + idx + " -- " + activity.getUrl( idx, ind ))
-
+    function getPath( ind ) {
         return activity.getUrl( idx, ind )
     }
 
-    function getDate()
-    {
+    function getDate() {
         return ( "<b>" + Qt.formatDate( activity.getSetDate( idx ), "dd-MM-yyyy" ) + "</b>" )
     }
 
-    function createItem( component, url, type )
-    {
+    function createItem( component, url, type ) {
         return component.createObject( cloudDelegate, { "path": url,
                                                         "width": ( ( type == 1 ) ? x1 : ( ( type == 2 ) ? x2 : x3 ) ),
                                                         "height": ( ( type == 1 ) ? y1 : ( ( type == 2 ) ? y2 : y3 ) ) } );
     }
 
-    function createTemplate1( component, date )
-    {
+    function createTemplate1( component, date ) {
         //console.log("******************* createTemplate 1 ******************")
 
         var item = createItem( component, getPath( 0 ), 3 )
@@ -53,8 +44,7 @@ Rectangle {
         dateItem.y = item.y - k - dateItem.height
     }
 
-    function createTemplate2( component, date )
-    {
+    function createTemplate2( component, date ) {
         //console.log("******************* createTemplate 2 ******************")
         var types = new Array( 3, 2 )
         var items = new Array();
@@ -73,8 +63,7 @@ Rectangle {
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
-    function createTemplate3( component, date )
-    {
+    function createTemplate3( component, date ) {
         //console.log("******************* createTemplate 3 ******************")
 
         var types = new Array( 3, 2, 1 )
@@ -95,8 +84,7 @@ Rectangle {
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
-    function createTemplate4( component, date )
-    {
+    function createTemplate4( component, date ) {
         //console.log("******************* createTemplate 4 ******************")
 
         var types = new Array( 3, 2, 1, 1 )
@@ -119,8 +107,7 @@ Rectangle {
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
-    function createTemplate5( component, date )
-    {
+    function createTemplate5( component, date ) {
         //console.log("******************* createTemplate 5 ******************")
 
         var types = new Array( 3, 2, 1, 1, 1 )
@@ -145,8 +132,7 @@ Rectangle {
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
-    function createTemplate6( component, date )
-    {
+    function createTemplate6( component, date ) {
         //console.log("******************* createTemplate 6 ******************")
 
         var types = new Array( 3, 2, 1, 1, 1, 3 )
@@ -173,8 +159,7 @@ Rectangle {
         dateItem.y = items[ 1 ].y - k - dateItem.height
     }
 
-    function createTemplate7( component, date )
-    {
+    function createTemplate7( component, date ) {
         //console.log("******************* createTemplate 7 ******************")
 
         var types = new Array( 3, 2, 1, 1, 1, 3, 3 )
@@ -204,8 +189,7 @@ Rectangle {
     }
 
 
-    function createObjects()
-    {
+    function createObjects() {
         var strDate = getDate()
         var acitivityItemComp = Qt.createComponent( "ActivityItem.qml" );
 
@@ -227,8 +211,7 @@ Rectangle {
 
     }
 
-    Component.onCompleted:
-    {
+    Component.onCompleted: {
         createObjects()
     }
 

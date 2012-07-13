@@ -37,9 +37,7 @@ public:
     GalleryItem * find(const QDate &date) const;
     void clear();
 
-signals:
-    
-public slots:    
+public slots:
     void newActivities(QList <Activity*> list);
     QObject* itemsModel(QDate date) const;
     int getIndexByDate(int year, int month, bool direction);
@@ -58,7 +56,6 @@ private:
     QHash<int, QByteArray> hash;
     QHash<QString, QDate> m_urlHash;
     GalleryLister* m_lister;
-    //QList <Activity *> m_items;
 };
 
 #endif // GALLERYMODEL_H
