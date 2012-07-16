@@ -439,9 +439,14 @@ Item {
 
     SocialAuthorization {
         id: authorizationView
+        model: pluginModel
+        anchors.top: separator.bottom
+        anchors.bottom: timeScale.top
+        anchors.right: parent.right
+        anchors.left: parent.left
     }
 
-    state: "socialgallery"
+    state: "socialauthorization"
 
     states: [
 
@@ -507,8 +512,20 @@ Item {
                 target: timeScale
                 opacity: 0
             }
-        }
+        },
+        State {
+            name: "socialauthorization"; extend: "socialgallery"
 
+            PropertyChanges {
+                target: socialView
+                visible: false
+            }
+            PropertyChanges {
+                target: authorizationView
+                visible: true
+            }
+
+        }
     ]
     transitions: Transition {
         AnchorAnimation {duration: 500}

@@ -28,8 +28,6 @@ public:
     SWApp();
     ~SWApp();
 
-    int newInstance();
-
     static SWApp* self();
 
 public Q_SLOTS:

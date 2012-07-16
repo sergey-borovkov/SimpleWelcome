@@ -3,7 +3,6 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QList>
-#include <QtCore/QSharedPointer>
 #include <QtCore/QDate>
 #include <QtCore/QUrl>
 #include <QtGui/QPixmap>

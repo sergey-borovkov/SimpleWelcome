@@ -23,6 +23,7 @@ public slots:
     void deauthorized();
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
+
 private:
     QList<ISocialModule *> m_plugins;
     ListModel *m_pluginModel;

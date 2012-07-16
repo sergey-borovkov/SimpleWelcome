@@ -46,6 +46,7 @@
 #include "timeframe/nepomuksource.h"
 #include "timeframe/previewgenerator.h"
 #include "timeframe/previewprovider.h"
+#include "timeframe/social/pluginimageprovider.h"
 #include "timeframe/social/pluginloader.h"
 #include "timeframe/social/socialitem.h"
 #include "timeframe/social/socialproxy.h"
@@ -155,10 +156,12 @@ SWApp::SWApp()
     //m_viewer->showFullScreen();
 
     PluginLoader loader;
-    m_manager = new SocialProxy(loader.loadPlugins(), this);
+    QList<ISocialModule *> plugins = loader.loadPlugins();
+    m_manager = new SocialProxy(plugins, this);
 
     m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
     m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
+    m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 
@@ -190,12 +193,6 @@ SWApp::~SWApp()
     delete m_manager;
     */
 }
-
-int SWApp::newInstance()
-{
-    return 0;
-}
-
 
 bool SWApp::event(QEvent *event)
 {
