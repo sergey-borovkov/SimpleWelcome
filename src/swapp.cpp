@@ -23,11 +23,13 @@
  */
 
 #include "swapp.h"
-
-#include <QTimer>
-
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
+#include "qmlapplicationviewer/qmlapplicationviewer.h"
+
+#include "generaliconprovider.h"
+#include "sessionprovider.h"
+#include "userinfoprovider.h"
 
 #include "appsgridmodel.h"
 #include "recentappsgridmodel.h"
@@ -45,8 +47,7 @@ SWApp* SWApp::self()
 }
 
 SWApp::SWApp()
-    : KUniqueApplication(),
-      m_inited(false)
+    : KUniqueApplication()
 {
     m_viewer = new QmlApplicationViewer();
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
@@ -80,7 +81,7 @@ SWApp::SWApp()
 
     m_viewer->showExpanded();
     m_viewer->showFullScreen();
-    //m_viewer->setGeometry(896, 0, 1024, 1000); //768);
+    //m_viewer->setGeometry(896, 0, 1024, 768); // 1000); //
     //m_viewer->setFixedSize( m_viewer->sizeHint() );
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
@@ -90,8 +91,6 @@ SWApp::SWApp()
     else
         m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
 
-    QTimer::singleShot(1000, this, SLOT(init()));
-
     setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
 }
 
@@ -100,27 +99,12 @@ SWApp::~SWApp()
     delete m_viewer;
 }
 
-int SWApp::newInstance()
-{
-    return 0;
-}
-
-
 bool SWApp::event(QEvent *event)
 {
     return KUniqueApplication::event(event);
 }
 
-void SWApp::init(void)
-{
-    if(m_inited)
-        return;
-
-    m_inited = true;
-
-}
-
-bool SWApp::isLocal(void)
+bool SWApp::isLocal()
 {
     QString appPath = applicationFilePath();
 
@@ -129,5 +113,3 @@ bool SWApp::isLocal(void)
 
     return true;
 }
-
-#include "swapp.moc"
