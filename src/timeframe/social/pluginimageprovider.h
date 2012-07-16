@@ -20,7 +20,12 @@ public:
         foreach(ISocialModule *plugin, m_plugins)
         {
             if(plugin->name() == id)
-                return plugin->icon();
+            {
+                QPixmap p = plugin->icon();
+                if(size && size->isValid())
+                    p = p.scaled(*size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                return p;
+            }
         }
 
         return QPixmap();
