@@ -20,16 +20,11 @@ public:
     QString relPath;
 };
 
-QList<AppItem> GetList(QString currentGroup)
+QList<AppItem> GetFlatList(QString group)
 {
-    static QList<AppItem> out;
-    static QString prevCurrentGroup = "-1";
-    if (prevCurrentGroup == currentGroup && !out.isEmpty())
-        return out;
-    prevCurrentGroup = currentGroup;
-    out.clear();
+    QList<AppItem> out;
 
-    KServiceGroup::Ptr root = KServiceGroup::group(currentGroup);
+    KServiceGroup::Ptr root = KServiceGroup::group(group);
 
     if (!root || !root->isValid())
         return out;
@@ -42,7 +37,6 @@ QList<AppItem> GetList(QString currentGroup)
     for (KServiceGroup::List::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it)
     {
         const KSycocaEntry::Ptr p = (*it);
-        AppItem newItem;
 
         if (p->isType(KST_KService))
         {
@@ -51,29 +45,49 @@ QList<AppItem> GetList(QString currentGroup)
             if (service->noDisplay())
                 continue;
 
+            AppItem newItem;
             newItem.icon = service->icon();
             newItem.caption = service->name();
             newItem.desktopEntry = service->entryPath();
+            out.append(newItem);
         }
         else if (p->isType(KST_KServiceGroup))
         {
             const KServiceGroup::Ptr serviceGroup = KServiceGroup::Ptr::staticCast(p);
 
-            if (serviceGroup->noDisplay() || serviceGroup->childCount() == 0) {
+            if (serviceGroup->noDisplay() || serviceGroup->childCount() == 0)
                 continue;
-            }
 
-            newItem.icon = serviceGroup->icon();
-            newItem.caption = serviceGroup->caption();
-            newItem.relPath = serviceGroup->relPath();
+            if (serviceGroup->relPath().indexOf("/") != serviceGroup->relPath().size() - 1)
+                out.append(GetFlatList(serviceGroup->relPath()));
+            else
+            {
+                AppItem newItem;
+                newItem.icon = serviceGroup->icon();
+                newItem.caption = serviceGroup->caption();
+                newItem.relPath = serviceGroup->relPath();
+                out.append(newItem);
+            }
         }
         else
         {
             kDebug(250) << "KServiceGroup: Unexpected object in list!";
             continue;
         }
-        out.append(newItem);
     }
+    return out;
+}
+
+QList<AppItem> GetList(QString currentGroup)
+{
+    static QList<AppItem> out;
+    static QString prevCurrentGroup = "-1";
+    if (prevCurrentGroup == currentGroup && !out.isEmpty())
+        return out;
+
+    prevCurrentGroup = currentGroup;
+    out = GetFlatList(currentGroup);
+
     return out;
 }
 
