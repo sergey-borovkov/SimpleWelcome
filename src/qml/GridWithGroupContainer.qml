@@ -7,6 +7,8 @@ Column {
     anchors.bottom: parent.bottom
     spacing: 32
 
+    signal gridCurrentItemChanged(variant newCurrentItem)
+
     property variant activeGridView
 
     function gridsConnectionChanged()
@@ -46,8 +48,13 @@ Column {
 
     Component.onCompleted: {
         for (var i = 0; i < children.length; i++)
+        {
             if ('gridItemCountChanged' in children[i])
                 children[i].gridItemCountChanged.connect(gridsConnectionChanged)
+
+            if ('gridCurrentItemChanged' in children[i])
+                children[i].gridCurrentItemChanged.connect(gridCurrentItemChanged)
+        }
 
         gridsConnectionChanged()
     }

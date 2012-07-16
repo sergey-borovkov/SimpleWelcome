@@ -6,16 +6,20 @@ Column {
     property variant prevGridGroup
     property variant nextGridGroup
 
-    property bool defaultFocus: false
-    property variant gridView: appsGridView
-    property int count: appsGridView.count
+    property variant gridView: iconGridView
+    property int count: iconGridView.count
     signal gridItemCountChanged
+    signal gridCurrentItemChanged(variant newCurrentItem)
 
 
     spacing: 16
     width: parent.width
     height: childrenRect.height
-    visible: appsGridView.count != 0
+    visible: iconGridView.count != 0
+
+    Component.onCompleted: {
+        iconGridView.selectionChangedByKeyboard.connect(gridCurrentItemChanged)
+    }
 
     Text {
         text: groupName
@@ -33,8 +37,8 @@ Column {
         styleColor: "#000"
     }
 
-    AppsGridView {
-        id: appsGridView
+    IconGridView {
+        id: iconGridView
         model: gridModel
 
         width: parent.width
@@ -44,7 +48,6 @@ Column {
         nextGrid: nextGridGroup.gridView
 
         interactive: false
-        focus: defaultFocus
 
         function updateSelection()
         {

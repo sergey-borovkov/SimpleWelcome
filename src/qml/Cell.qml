@@ -1,7 +1,7 @@
 import QtQuick 1.1
 
 Item {
-    id: button
+    id: cell
 
     width: 120
     height: childrenRect.height//140
@@ -9,7 +9,7 @@ Item {
     signal activated(bool isActive, variant element)
 
     Image {
-        id: buttonIcon
+        id: cellIcon
         source: imagePath
         width: 64
         height: 64
@@ -22,15 +22,15 @@ Item {
         states: [
             State {
                 name: "NORMAL"
-                PropertyChanges { target: buttonIcon; width: 64 }
-                PropertyChanges { target: buttonIcon; height: 64 }
-                PropertyChanges { target: buttonIcon; anchors.topMargin: 8 }
+                PropertyChanges { target: cellIcon; width: 64 }
+                PropertyChanges { target: cellIcon; height: 64 }
+                PropertyChanges { target: cellIcon; anchors.topMargin: 8 }
             },
             State {
                 name: "HOVER"
-                PropertyChanges { target: buttonIcon; width: 72 }
-                PropertyChanges { target: buttonIcon; height: 72 }
-                PropertyChanges { target: buttonIcon; anchors.topMargin: 4 }
+                PropertyChanges { target: cellIcon; width: 72 }
+                PropertyChanges { target: cellIcon; height: 72 }
+                PropertyChanges { target: cellIcon; anchors.topMargin: 4 }
             }
         ]
 
@@ -40,7 +40,7 @@ Item {
     }
 
     Text {
-        id: buttonLabel
+        id: cellLabel
         width: parent.width
         anchors.top: parent.top
         anchors.topMargin: 16 + 64 + 16
@@ -59,14 +59,9 @@ Item {
         text: caption//parent.label
     }
 
-    signal buttonClick()
-    onButtonClick: function(data) {
-        console.log("BLABLA: " + data);
-    }
-
     states: State {
-        name: "active"; when: button.activeFocus
-        PropertyChanges { target: buttonIcon; scale: 1.2 }
+        name: "active"; when: cell.activeFocus
+        PropertyChanges { target: cellIcon; scale: 1.2 }
     }
 
     transitions: Transition {
@@ -74,7 +69,7 @@ Item {
     }
 
     MouseArea {
-        id: buttonMouseArea
+        id: cellMouseArea
 
         anchors.fill: parent
 
@@ -88,12 +83,12 @@ Item {
     {
         if(pop)
         {
-            buttonIcon.state = "HOVER"
+            cellIcon.state = "HOVER"
         }
         else
         {
-            buttonIcon.state = "NORMAL"
+            cellIcon.state = "NORMAL"
         }
-        activated(pop, button)
+        activated(pop, cell)
     }
 }

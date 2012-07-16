@@ -7,13 +7,8 @@ FocusScope {
     anchors.topMargin: 16
     property variant grid: gridsContainer.activeGridView
 
-    Flickable {
+    GridWithGroupTab {
         id: flick
-        anchors.fill: parent
-        contentWidth: parent.width
-        contentHeight: gridsContainer.height + 32
-        boundsBehavior: Flickable.StopAtBounds // if flicking is not bound, scroll sometimes go crazy and flick far far away from corners when scrolling with mouse wheel
-        flickableDirection: Flickable.VerticalFlick
 
         GridWithGroupContainer {
             id: gridsContainer
@@ -21,7 +16,6 @@ FocusScope {
             GridWithGroup {
                 groupName: "Recent Applications"
                 gridModel: recentAppsGridModel
-                defaultFocus: true
             }
 
             GridWithGroup {
@@ -39,10 +33,6 @@ FocusScope {
             name: "ShowBars"
             when: flick.movingVertically
             PropertyChanges { target: verticalScrollBar; opacity: 1 }
-        }
-
-        transitions: Transition {
-            NumberAnimation { properties: "opacity"; duration: 400 }
         }
     }
 

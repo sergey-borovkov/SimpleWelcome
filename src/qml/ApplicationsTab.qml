@@ -7,7 +7,7 @@ FocusScope {
 
     property variant grid: appsGrid
 
-    AppsGridView {
+    IconGridView {
         id: appsGrid
         anchors.fill: parent
         model: appsGridModel

@@ -7,6 +7,7 @@ GridView {
     property variant nextGrid
     property int highlightMoveDurationConst: 150
     property int spacing: Math.max(0, (parent.width - 120 * columns) / (columns + 1))
+    signal selectionChangedByKeyboard(variant newCurrentItem)
 
     anchors.leftMargin: spacing
     anchors.left: parent.left
@@ -14,7 +15,7 @@ GridView {
     cellWidth: (width - spacing) / columns - 1
     cellHeight: 200
 
-    delegate: Button {}
+    delegate: Cell {}
 
     highlight: Rectangle {
         id: gridSelection
@@ -44,6 +45,7 @@ GridView {
 
     //Keys.forwardTo: topBar
     Keys.onPressed: {
+        var newCurrentItem
         switch (event.key)
         {
         case Qt.Key_Left:
@@ -53,6 +55,7 @@ GridView {
                 prevGrid.currentIndex = prevGrid.count - 1
                 prevGrid.forceActiveFocus()
                 prevGrid.highlightMoveDuration = highlightMoveDurationConst
+                newCurrentItem = prevGrid.currentItem
             }
 
             if (!interactive)
@@ -68,6 +71,7 @@ GridView {
                 nextGrid.currentIndex = 0
                 nextGrid.forceActiveFocus()
                 nextGrid.highlightMoveDuration = highlightMoveDurationConst
+                newCurrentItem = nextGrid.currentItem
             }
 
             if (!interactive)
@@ -86,6 +90,7 @@ GridView {
                 prevGrid.currentIndex = newCur
                 prevGrid.forceActiveFocus()
                 prevGrid.highlightMoveDuration = highlightMoveDurationConst
+                newCurrentItem = prevGrid.currentItem
             }
 
             if (!interactive)
@@ -101,6 +106,7 @@ GridView {
                 nextGrid.currentIndex = currentIndex % columns
                 nextGrid.forceActiveFocus()
                 nextGrid.highlightMoveDuration = highlightMoveDurationConst
+                newCurrentItem = nextGrid.currentItem
             }
 
             if (!interactive)
@@ -122,6 +128,10 @@ GridView {
             model.itemClicked(-1)
             break
         }
+
+        if (event.key == Qt.Key_Left || event.key == Qt.Key_Right ||
+            event.key == Qt.Key_Up || event.key == Qt.Key_Down)
+            selectionChangedByKeyboard(newCurrentItem == null ? currentItem : newCurrentItem)
     }
 
 
