@@ -26,6 +26,7 @@ FocusScope {
     }
 
     Item {
+        id: userNameItem
         width: childrenRect.width
         height: childrenRect.height
 
@@ -60,12 +61,14 @@ FocusScope {
     }
 
     Item {
+        id: searchField
         //color: "white"
-        width: 600
+        x: Math.max(parent.width/2 - width/2, userNameItem.x + userNameItem.width + 30)
+        width: Math.max(40, Math.min(600, lockButton.x - (userNameItem.x + userNameItem.width) - 30*2))
         height: 30
 
         anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
+        //anchors.horizontalCenter: parent.horizontalCenter
 
         BorderImage {
             border.left: 10
