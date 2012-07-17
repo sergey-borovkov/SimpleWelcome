@@ -8,24 +8,22 @@ include(${QT_USE_FILE})
 qt4_automoc(${qtproject_SRCS})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
-ADD_SUBDIRECTORY(rosa-service-runner)
-
 include_directories(${KDE4_INCLUDES} ${QT_QDECLARATIVE_INCLUDE_DIR})
 
 file(GLOB qml_files "${CMAKE_CURRENT_SOURCE_DIR}/src/qml/*.qml")
 
 set(rosa-launcher-qtquick_SRCS src/main.cpp
-							   src/swapp.cpp
-							   src/searchgridmodel.cpp
-							   src/generaliconprovider.cpp
-							   src/sessionprovider.cpp
-							   src/userinfoprovider.cpp
-							   src/qmlapplicationviewer/qmlapplicationviewer.cpp
-							   src/appsgridmodel.cpp
-							   src/recentappsgridmodel.cpp
-							   src/favoritesgridmodel.cpp
-							   src/documentsgridmodel.cpp
-							   ${qml_files})
+                               src/swapp.cpp
+                               src/searchgridmodel.cpp
+                               src/generaliconprovider.cpp
+                               src/sessionprovider.cpp
+                               src/userinfoprovider.cpp
+                               src/qmlapplicationviewer/qmlapplicationviewer.cpp
+                               src/appsgridmodel.cpp
+                               src/recentappsgridmodel.cpp
+                               src/favoritesgridmodel.cpp
+                               src/documentsgridmodel.cpp
+                               ${qml_files})
 
 kde4_add_executable(rosa-launcher-qtquick ${rosa-launcher-qtquick_SRCS})
 target_link_libraries(rosa-launcher-qtquick ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} kworkspace ${KDE4_KIO_LIBS} ${X11_LIBRARIES} ${KDE4_KFILE_LIBS} ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES})
