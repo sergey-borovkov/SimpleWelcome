@@ -16,6 +16,7 @@ public:
     explicit SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent = 0);
     ~SocialProxy();
     void setModel(ListModel *model);
+
     ListModel *socialModel();
     PluginModel *pluginModel();
 
@@ -24,6 +25,7 @@ public slots:
     void deauthorized();
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
+    void startSearch();
 
 private:
     QList<ISocialPlugin *> m_plugins;

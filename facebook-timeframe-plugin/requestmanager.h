@@ -15,9 +15,6 @@ public:
     void setAuthorizer(OAuth2Authorizer *authorizer);
     void logout();
 
-private:
-    FeedItem *parseReply(const QByteArray &reply);
-
 private slots:
     void reply(QByteArray reply);
 

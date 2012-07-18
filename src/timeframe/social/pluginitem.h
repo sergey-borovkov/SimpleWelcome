@@ -32,9 +32,6 @@ public:
         return roles;
     }
 
-public slots:
-    void show(); // show authentication widget
-
 private:
     ISocialPlugin *m_module;
 };

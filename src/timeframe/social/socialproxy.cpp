@@ -7,6 +7,7 @@
 
 #include <QtGui/QWidget>
 #include <QtCore/QDebug>
+#include <QtCore/QSettings>
 
 SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent) :
     QObject(parent), m_plugins(plugins),
@@ -42,6 +43,18 @@ ListModel *SocialProxy::socialModel()
 PluginModel *SocialProxy::pluginModel()
 {
     return m_pluginModel;
+}
+
+void SocialProxy::startSearch()
+{
+    // not sure if I need to use this but for now whether plugins
+    // are authorized will be kept here
+
+    QSettings settings("ROSA", "Timeframe");
+    foreach(ISocialPlugin *plugin, m_plugins)
+    {
+        //if(settings.)
+    }
 }
 
 void SocialProxy::authorized()

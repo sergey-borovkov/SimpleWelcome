@@ -3,6 +3,7 @@
 #include "socialplugin.h"
 
 #include <QtCore/QDebug>
+#include <QtGui/QWidget>
 
 PluginModel::PluginModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)
@@ -18,9 +19,12 @@ void PluginModel::show(int r)
     {
         ISocialPlugin *plugin = item->plugin();
         if(plugin->authorized())
+            plugin->requestManager()->logout();
+        else
         {
-            // need to deauthorize
-            item->show();
+            QWidget *w = plugin->authenticationWidget();
+            if(w)
+                w->show();
         }
     }
 }

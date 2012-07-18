@@ -35,16 +35,13 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 
 void RequestManager::logout()
 {
+    qDebug() << "Logging out...";
     Request *request = new Request(m_authorizer->accessToken(), Request::Logout);
+    connect(request, SIGNAL(success()), m_authorizer, SLOT(logout()));
     request->startQuery();
 
     // actually first need to do some error checking
-    m_authorizer->deauthorize();
-}
-
-FeedItem *RequestManager::parseReply(const QByteArray &reply)
-{
-    return NULL;
+    m_authorizer->logout();
 }
 
 void RequestManager::reply(QByteArray reply)
@@ -54,7 +51,7 @@ void RequestManager::reply(QByteArray reply)
 
     if(result.contains("error"))
     {
-        m_authorizer->deauthorize();
+        m_authorizer->logout();
         return;
     }
 

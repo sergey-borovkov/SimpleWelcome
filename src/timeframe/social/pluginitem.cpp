@@ -30,10 +30,3 @@ ISocialPlugin *PluginItem::plugin()
 {
     return m_module;
 }
-
-void PluginItem::show()
-{
-    QWidget *w = const_cast<ISocialPlugin *>(m_module)->authenticationWidget();
-    if(w)
-        w->show();
-}
