@@ -161,6 +161,7 @@ SWApp::SWApp()
 
     m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
     m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
+    m_viewer->rootContext()->setContextProperty("socialProxy", m_manager);
     m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
 
 

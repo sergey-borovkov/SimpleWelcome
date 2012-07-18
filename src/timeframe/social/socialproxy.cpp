@@ -26,7 +26,7 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent) :
         PluginItem *item = new PluginItem(plugin);
         m_pluginModel->appendRow(item);
 
-        plugin->requestManager()->queryWall(QDate(), QDate());
+        //plugin->requestManager()->queryWall(QDate(), QDate());
     }
 }
 
@@ -53,7 +53,10 @@ void SocialProxy::startSearch()
     QSettings settings("ROSA", "Timeframe");
     foreach(ISocialPlugin *plugin, m_plugins)
     {
-        //if(settings.)
+        if(settings.value(plugin->name()).toInt() == 1)
+        {
+            plugin->requestManager()->queryWall(QDate(), QDate());
+        }
     }
 }
 
