@@ -3,12 +3,12 @@
 
 #include <QtCore/QList>
 
-class ISocialModule;
+class ISocialPlugin;
 
 class PluginLoader
 {
 public:
-    QList<ISocialModule *> loadPlugins();
+    QList<ISocialPlugin *> loadPlugins();
 };
 
 #endif // PLUGINLOADER_H

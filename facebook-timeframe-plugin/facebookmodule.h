@@ -9,10 +9,10 @@ class QDeclarativeView;
 class RequestManager;
 class OAuth2Authorizer;
 
-class FacebookModule : public QObject, public ISocialModule
+class FacebookModule : public QObject, public ISocialPlugin
 {
     Q_OBJECT
-    Q_INTERFACES(ISocialModule)
+    Q_INTERFACES(ISocialPlugin)
 public:
     FacebookModule();
     ~FacebookModule();
@@ -22,7 +22,7 @@ public:
     QPixmap icon() const;
 
     QWidget *authenticationWidget();
-    bool isAuthorized() const { return !m_authorizer->accessToken().isEmpty(); }
+    bool authorized() const { return !m_authorizer->accessToken().isEmpty(); }
 
 private slots:
     void onAcessTokenChanged();

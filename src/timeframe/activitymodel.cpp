@@ -186,7 +186,7 @@ int ActivityModel::getListIndex(int year, int month, bool direction)
         }
     }
     else //backward
-    {        
+    {
         ind = m_list.size()-1;
         for( ; ind >= 0; ind--)
         {
@@ -194,7 +194,7 @@ int ActivityModel::getListIndex(int year, int month, bool direction)
             {
                 break;
             }
-        }        
+        }
     }
     return ind;
 }

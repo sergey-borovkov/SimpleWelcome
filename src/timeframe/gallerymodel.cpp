@@ -169,14 +169,14 @@ void GalleryModel::newMonth(int year, int month)
             }
         }
     }
-    qDebug() << "new null item" << date;
+//    qDebug() << "new null item" << date;
     insertRow(j,gallItem);
 }
 
 //Remove null gallery item from model
 bool GalleryModel::removeNullItem(int year, int month)
 {
-    qDebug() << "call Remove null" << year << month;
+//    qDebug() << "call Remove null" << year << month;
     QDate date(year, month, 1);
     int j = 0;
     if (m_items.size() > 0)
@@ -187,7 +187,7 @@ bool GalleryModel::removeNullItem(int year, int month)
             {
                 if ( m_items.at(j)->model()->rowCount( QModelIndex( ) ) == 0 )
                 {
-                    qDebug() << "Remove null" << year << month;
+//                    qDebug() << "Remove null" << year << month;
                     removeRow(j, QModelIndex());
                     return true;
                 }

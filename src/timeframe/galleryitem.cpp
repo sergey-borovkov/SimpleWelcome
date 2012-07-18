@@ -10,7 +10,6 @@ GalleryItem::GalleryItem(const QDate &date, QObject *parent) :
 
 GalleryItem::~GalleryItem()
 {
-    qDebug() << "delete item";
     delete m_model;
 }
 

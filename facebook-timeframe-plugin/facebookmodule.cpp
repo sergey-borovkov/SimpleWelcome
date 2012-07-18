@@ -18,15 +18,13 @@ FacebookModule::FacebookModule()
     if(!accessToken.isEmpty())
     {
         m_authorizer->setAccessToken(accessToken);
-        m_authorizationView = 0;
         emit authorized();
     }
-    else
-    {
-        m_authorizationView = new QDeclarativeView();
-        m_authorizationView->engine()->rootContext()->setContextProperty("authorizer", m_authorizer);
-        m_authorizationView->setSource(QUrl("qrc:/qml/main.qml"));
-    }
+
+    // even if plugin is authorized it may be necessary to relogin
+    m_authorizationView = new QDeclarativeView();
+    m_authorizationView->engine()->rootContext()->setContextProperty("authorizer", m_authorizer);
+    m_authorizationView->setSource(QUrl("qrc:/qml/main.qml"));
 
     m_requestManager = new RequestManager;
     m_requestManager->setAuthorizer(m_authorizer);
@@ -42,7 +40,7 @@ FacebookModule::~FacebookModule()
 {
     delete m_requestManager;
     delete m_authorizer;
-    delete m_authorizationView;
+    m_authorizationView->deleteLater();
 }
 
 ISocialRequestManager *FacebookModule::requestManager()

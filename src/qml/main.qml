@@ -50,7 +50,7 @@ Item {
         fillMode: Image.PreserveAspectCrop
         smooth: true
         source: "image://generalicon/asset/bubbles.jpg"
-        opacity: 0.6
+//        opacity: 0.6
         z: -10
     }
 
@@ -115,7 +115,7 @@ Item {
             width: parent.width
             height: parent.height
 
-            model: tabListModel            
+            model: tabListModel
             anchors.fill: parent
 
             snapMode: ListView.SnapOneItem

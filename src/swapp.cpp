@@ -50,6 +50,7 @@
 #include "timeframe/social/pluginloader.h"
 #include "timeframe/social/socialitem.h"
 #include "timeframe/social/socialproxy.h"
+#include "timeframe/social/pluginmodel.h"
 
 SWApp* SWApp::self()
 {
@@ -68,8 +69,8 @@ SWApp::SWApp()
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
     // Window transparency
-    m_viewer->setAttribute(Qt::WA_TranslucentBackground);
-    m_viewer->setStyleSheet("background:transparent;");
+    //m_viewer->setAttribute(Qt::WA_TranslucentBackground);
+    //m_viewer->setStyleSheet("background:transparent;");
 
     m_appProvider = new AppProvider();
     m_appProvider->init();
@@ -129,7 +130,6 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty( "galleryLister", lister );
     qmlRegisterUncreatableType<Activity>("Acitivity", 1, 0, "Activity", "Activity is supposed to be used from C++");
     qmlRegisterUncreatableType<GalleryItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
-    qmlRegisterUncreatableType<GalleryItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
     PreviewGenerator::instance()->setModel(model);
     /* ------------------*/
 
@@ -156,12 +156,13 @@ SWApp::SWApp()
     //m_viewer->showFullScreen();
 
     PluginLoader loader;
-    QList<ISocialModule *> plugins = loader.loadPlugins();
+    QList<ISocialPlugin *> plugins = loader.loadPlugins();
     m_manager = new SocialProxy(plugins, this);
 
     m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
     m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
     m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
+
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 

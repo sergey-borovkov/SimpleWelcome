@@ -9,7 +9,7 @@
 class PluginImageProvider : public QDeclarativeImageProvider
 {
 public:
-    PluginImageProvider(const QList<ISocialModule *> &plugins)
+    PluginImageProvider(const QList<ISocialPlugin *> &plugins)
         : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
           m_plugins(plugins)
     {
@@ -17,13 +17,17 @@ public:
 
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
     {
-        foreach(ISocialModule *plugin, m_plugins)
+        foreach(ISocialPlugin *plugin, m_plugins)
         {
             if(plugin->name() == id)
             {
                 QPixmap p = plugin->icon();
-                if(size && size->isValid())
+                if(requestedSize.isValid())
+                {
                     p = p.scaled(*size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                    if(size)
+                        *size = p.size();
+                }
                 return p;
             }
         }
@@ -31,7 +35,7 @@ public:
         return QPixmap();
     }
 private:
-    const QList<ISocialModule *> m_plugins;
+    const QList<ISocialPlugin *> m_plugins;
 };
 
 #endif // PLUGINIMAGEPROVIDER_H

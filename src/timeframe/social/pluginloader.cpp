@@ -5,16 +5,16 @@
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
 
-QList<ISocialModule*> PluginLoader::loadPlugins()
+QList<ISocialPlugin*> PluginLoader::loadPlugins()
 {
     QDir modulesDir(QCoreApplication::applicationDirPath() + "/plugins");
-    QList<ISocialModule*> plugins;
+    QList<ISocialPlugin*> plugins;
 
     foreach (QString fileName, modulesDir.entryList(QDir::AllEntries))
     {
         QPluginLoader loader(modulesDir.absoluteFilePath(fileName));
         QObject *libObject = loader.instance();
-        if (ISocialModule *lib = qobject_cast<ISocialModule*>(libObject))
+        if (ISocialPlugin *lib = qobject_cast<ISocialPlugin*>(libObject))
             plugins << lib;
     }
 
