@@ -2,7 +2,7 @@ project (facebook-timeframe-plugin)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/plugins)
 
-find_package (Qt4 REQUIRED QtCore QtGui QtDeclarative QtNetwork)
+find_package (Qt4 REQUIRED QtCore QtGui QtNetwork QtWebkit)
 include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
@@ -23,6 +23,6 @@ file(GLOB QML ${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml)
 qt4_wrap_cpp(MOC_OUT ${HEADERS})
 
 add_library(facebook-timeframe-plugin SHARED ${HEADERS} ${SOURCES} ${QML} ${MOC_OUT} ${QRC_SOURCES})
-target_link_libraries(facebook-timeframe-plugin ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES} ${QJSON_LIBRARIES})
+target_link_libraries(facebook-timeframe-plugin ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES} ${QT_WEBKIT_LIBRARIES} ${QJSON_LIBRARIES})
 
 install(TARGETS facebook-timeframe-plugin DESTINATION share/timeframe)

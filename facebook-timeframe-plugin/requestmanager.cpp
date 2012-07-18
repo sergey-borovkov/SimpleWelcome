@@ -33,6 +33,15 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
         connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SIGNAL(authorizationComplete()));
 }
 
+void RequestManager::logout()
+{
+    Request *request = new Request(m_authorizer->accessToken(), Request::Logout);
+    request->startQuery();
+
+    // actually first need to do some error checking
+    m_authorizer->deauthorize();
+}
+
 FeedItem *RequestManager::parseReply(const QByteArray &reply)
 {
     return NULL;

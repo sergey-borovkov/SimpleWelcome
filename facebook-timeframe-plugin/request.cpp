@@ -5,7 +5,8 @@
 #include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 
-const QString Request::wallUrl = "https://graph.facebook.com/me/feed";
+const QString Request::wallUrl = QLatin1String("https://graph.facebook.com/me/feed");
+const QString Request::logoutUrl = QLatin1String("https://www.facebook.com/logout.php");
 
 Request::Request(const QString &accessToken, RequestType type, QObject *parent) :
     QObject(parent), m_accessToken(accessToken), m_type(type)
@@ -24,7 +25,6 @@ void Request::startQuery()
 
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(replyFinished(QNetworkReply*)));
-    connect(manager, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(networkError(QNetworkReply::NetworkError)));
     manager->get(QNetworkRequest(requestUrl));
 }
 

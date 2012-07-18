@@ -1,8 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/main.qml</file>
-    </qresource>
-    <qresource prefix="/images">
         <file>images/facebook.png</file>
     </qresource>
 </RCC>
