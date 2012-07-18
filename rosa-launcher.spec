@@ -29,16 +29,6 @@ ROSA Desktop Application Launcher QtQuick
 
 %build
 %cmake_kde4
-cd ../facebook-timeframe-plugin
-#cmake . -DCMAKE_INSTALL_PREFIX=/usr
-qmake PREFIX=%{buildroot}/%{_prefix}/
-
 
 %install
 %makeinstall_std -C build
-#cd ..
-ls -l
-cd facebook-timeframe-plugin
-#mkdir %_prefix/timeframe
-%__mkdir -p %{buildroot}/%{_prefix}/share/timeframe
-make install

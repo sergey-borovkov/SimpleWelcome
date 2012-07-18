@@ -20,6 +20,7 @@ public:
 
 signals:
     void replyReady(QByteArray);
+    void success();
 
 private slots:
     void replyFinished(QNetworkReply *reply);

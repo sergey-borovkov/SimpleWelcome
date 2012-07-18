@@ -15,6 +15,7 @@ class ISocialRequestManager
 public:
     virtual ~ISocialRequestManager() {}
     virtual void queryWall(const QDate &beginDate, const QDate &endDate) = 0;
+    virtual void logout() = 0;
 };
 
 class ISocialPlugin

@@ -15,7 +15,6 @@ public:
     explicit OAuth2Authorizer(QObject *parent = 0);
     QString accessToken() const;
     void setAccessToken(const QString &accessToken);
-    void deauthorize();
     bool isAuthorized() const;
 
 signals:
@@ -24,6 +23,7 @@ signals:
 
 public slots:
     void urlChanged(const QUrl &url);
+    void logout();
 
 private:
     QString m_accessToken;

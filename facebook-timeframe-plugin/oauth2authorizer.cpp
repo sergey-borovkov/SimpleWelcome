@@ -21,8 +21,9 @@ void OAuth2Authorizer::setAccessToken(const QString &accessToken)
     }
 }
 
-void OAuth2Authorizer::deauthorize()
+void OAuth2Authorizer::logout()
 {
+    qDebug() << "logout...";
     setAccessToken("");
     emit deauthorized();
 }

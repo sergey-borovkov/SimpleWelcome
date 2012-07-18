@@ -65,11 +65,6 @@ QWidget *FacebookModule::authenticationWidget()
     return m_authorizationView;
 }
 
-bool FacebookModule::deauthorize()
-{
-    m_requestManager->logout();
-}
-
 void FacebookModule::onAcessTokenChanged()
 {
     if(m_authorizer->isAuthorized())

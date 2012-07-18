@@ -439,6 +439,7 @@ Item {
 
     SocialAuthorization {
         id: authorizationView
+        visible: false
         orientation: ListView.Horizontal
         model: pluginModel
         anchors.top: separator.bottom
