@@ -17,6 +17,9 @@ void OAuth2Authorizer::setAccessToken(const QString &accessToken)
     if (accessToken != m_accessToken)
     {
         m_accessToken = accessToken;
+
+        QSettings settings("ROSA", "facebook-timeframe-plugin");
+        settings.setValue("accessToken", accessToken);
         emit accessTokenChanged(m_accessToken);
     }
 }
@@ -45,8 +48,6 @@ void OAuth2Authorizer::urlChanged(const QUrl &url)
         QString accessToken = url.encodedFragment();        // Get the URL fragment part
         accessToken = accessToken.split("&").first();       // Remove the "expires_in" part.
         accessToken = accessToken.split("=").at(1);         // Split by "access_token=..." and take latter part
-        QSettings settings("ROSA", "facebook-timeframe-plugin");
-        settings.setValue("accessToken", accessToken);
         setAccessToken(accessToken);
     }
 }

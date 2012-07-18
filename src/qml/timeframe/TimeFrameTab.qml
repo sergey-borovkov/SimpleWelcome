@@ -132,6 +132,7 @@ Item {
                 console.debug( "Social networking sites clicked" )
                 //state = "current"
                 timeFrameTab.state = "socialgallery"
+                socialProxy.startSearch()
                 localDocs.state = ""
             }
         }
