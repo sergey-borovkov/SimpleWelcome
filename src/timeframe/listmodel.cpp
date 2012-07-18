@@ -74,6 +74,11 @@ void ListModel::clear()
     m_list.clear();
 }
 
+void ListModel::show(int r)
+{
+    qDebug() << "show 100600";
+}
+
 bool ListModel::removeRow(int row, const QModelIndex &parent)
 {
     Q_UNUSED(parent);

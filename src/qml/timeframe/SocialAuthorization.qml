@@ -1,7 +1,6 @@
 import QtQuick 1.1
 
 ListView {
-    id: socialAuthorization
     delegate: Item {
         anchors.fill: parent
         Image {
@@ -20,7 +19,9 @@ ListView {
         }
         MouseArea {
             anchors.fill: parent
-            onClicked: { parent.color = "white"}
+            onClicked: {
+                pluginModel.show(index)
+            }
         }
     }
 }

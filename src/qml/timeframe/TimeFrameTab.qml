@@ -71,7 +71,6 @@ Item {
         target: activityProxy
         onFinished: {
             __isSearching = false
-            console.log("search finished")
             searchLabel.visible = false
             if (timeFrameTab.state === "gallerySearch")
                 timeFrameTab.state = "gallery"
@@ -100,7 +99,8 @@ Item {
             ListElement { itemText: "All" }
             ListElement { itemText: "Facebook" }
             ListElement { itemText: "Twitter" }
-            ListElement { itemText: "V Kontakte" }
+            ListElement { itemText: "VK" }
+            ListElement { itemText: "Manage networks" }
         }
 
         DropListBox {
@@ -439,11 +439,15 @@ Item {
 
     SocialAuthorization {
         id: authorizationView
+        orientation: ListView.Horizontal
         model: pluginModel
         anchors.top: separator.bottom
         anchors.bottom: timeScale.top
         anchors.right: parent.right
         anchors.left: parent.left
+        anchors.leftMargin: 80
+        anchors.rightMargin: 20
+        anchors.topMargin: width / 8
     }
 
     state: "socialauthorization"

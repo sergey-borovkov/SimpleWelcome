@@ -17,7 +17,7 @@ public:
     virtual void queryWall(const QDate &beginDate, const QDate &endDate) = 0;
 };
 
-class ISocialModule
+class ISocialPlugin
 {
 public:
     enum AuthorizationStatus
@@ -27,14 +27,14 @@ public:
         Failure
     };
 
-    virtual ~ISocialModule() {}
+    virtual ~ISocialPlugin() {}
     virtual QString name() const = 0;
     virtual QPixmap icon() const = 0;
     virtual QWidget *authenticationWidget() = 0;
     virtual ISocialRequestManager *requestManager() = 0;
-    virtual bool isAuthorized() const = 0;
+    virtual bool authorized() const = 0;
 };
 
-Q_DECLARE_INTERFACE(ISocialModule, "Timeframe_Library.SocialModule/1.0")
+Q_DECLARE_INTERFACE(ISocialPlugin, "Timeframe_Library.SocialModule/1.0")
 
 #endif // SOCIALPLUGIN_H

@@ -54,14 +54,14 @@ signals:
 
 public slots:
     int count();
-    Activity *activity(int index);    
+    Activity *activity(int index);
     QString getUrl(int i);
     QString getType(int i);
     QDate getDate();
 
 
 private:
-    QList<Activity *> activities;    
+    QList<Activity *> activities;
     QDate date;
 };
 

@@ -24,6 +24,8 @@ public:
     QModelIndex indexFromItem( const ListItem* item) const;
     void clear();
 
+public slots:
+    virtual void show(int r);
 private slots:
     void handleItemChange();
 

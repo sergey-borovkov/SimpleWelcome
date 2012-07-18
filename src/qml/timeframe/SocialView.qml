@@ -20,7 +20,6 @@ ListView {
             width: 200
             text: message
         }
-
         Image {
             anchors.centerIn: parent
             fillMode: Image.PreserveAspectFit

@@ -2,17 +2,18 @@
 #include "socialitem.h"
 #include "socialplugin.h"
 #include "pluginitem.h"
+#include "pluginmodel.h"
 #include "../listmodel.h"
 
 #include <QtGui/QWidget>
 #include <QtCore/QDebug>
 
-SocialProxy::SocialProxy(QList<ISocialModule *> plugins, QObject *parent) :
+SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent) :
     QObject(parent), m_plugins(plugins),
     m_socialModel(new ListModel(SocialItem::roleNames(), this)),
-    m_pluginModel(new ListModel(PluginItem::roleNames(), this))
+    m_pluginModel(new PluginModel(PluginItem::roleNames(), this))
 {
-    foreach(ISocialModule *plugin, plugins)
+    foreach(ISocialPlugin *plugin, plugins)
     {
         QObject *object;
         if((object = dynamic_cast<QObject *>(plugin->requestManager())) != 0)
@@ -38,14 +39,14 @@ ListModel *SocialProxy::socialModel()
     return m_socialModel;
 }
 
-ListModel *SocialProxy::pluginModel()
+PluginModel *SocialProxy::pluginModel()
 {
     return m_pluginModel;
 }
 
 void SocialProxy::authorized()
 {
-    ISocialModule *plugin = dynamic_cast<ISocialModule *>(sender());
+    ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
     plugin->requestManager()->queryWall(QDate(), QDate());
     if(plugin->authenticationWidget())
         plugin->authenticationWidget()->hide();

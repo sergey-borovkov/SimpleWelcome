@@ -16,15 +16,13 @@ ItemModel::ItemModel(QObject *parent) :
 
 ItemModel::~ItemModel()
 {
-    qDebug() << "delete items model";
     qDeleteAll(m_items);
     m_items.clear();
-    qDebug() << "after delete items model";
 }
 
 
 QVariant ItemModel::data(const QModelIndex &index, int role) const
-{    
+{
     if (!index.isValid())
     {
         return QVariant();

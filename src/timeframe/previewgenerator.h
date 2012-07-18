@@ -32,7 +32,6 @@
 #include <kio/previewjob.h>
 #include <kfileitem.h>
 
-class Image;
 class FileModel;
 class GalleryModel;
 
