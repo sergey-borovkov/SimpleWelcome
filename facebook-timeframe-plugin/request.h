@@ -11,7 +11,8 @@ public:
     enum RequestType
     {
         WallPosts,
-        User
+        User,
+        Logout
     };
 
     explicit Request(const QString &accessToken, RequestType type, QObject *parent = 0);
@@ -26,6 +27,7 @@ private slots:
 
 private:
     static const QString wallUrl;
+    static const QString logoutUrl;
     RequestType m_type;
     QString m_accessToken;
 };

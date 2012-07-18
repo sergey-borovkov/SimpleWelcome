@@ -102,7 +102,7 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
     QList<Activity *> activities;
     for(int i = 0; i < list.size(); i++)
-    {        
+    {
         //qDebug() << "------before resource" << i;
         Nepomuk::Query::Result result = list.at(i);
         //qDebug() << "after result" << i;
@@ -130,7 +130,7 @@ void NepomukSource::error(QString str)
 }
 
 void NepomukSource::listingFinished()
-{    
+{
     //if we got any data in last search - emit it
     if(set->count())
     {
@@ -143,7 +143,7 @@ void NepomukSource::listingFinished()
     // continue search if any days in month left
     /*
     if( queryDate.month() == queryDate.addDays(delta).month() )
-    {        
+    {
         return startSearch(queryDate.addDays( delta ), direction);
     }
     */
@@ -154,7 +154,7 @@ void NepomukSource::listingFinished()
     QDate d = queryDate;
     d.setDate(d.year(), d.month(), 1);
     emit monthFinished(d);
-    emit finishedListing();     
+    emit finishedListing();
 
     m_searchQueue.removeFirst();
     if( m_searchQueue.size()>0 )
@@ -197,7 +197,7 @@ Nepomuk::Query::FileQuery NepomukSource::createTimeScaleQuery(const QDate &date)
     QDate endDate = beginDate.addMonths(1);
     Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( beginDate );
     Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() < Nepomuk::Query::LiteralTerm( endDate );
-    Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image/"));    
+    Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image/"));
     Nepomuk::Query::ComparisonTerm video(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("video/"));
 
     Nepomuk::Query::AndTerm term1(beginDateTerm,endDateTerm, image);
@@ -228,11 +228,6 @@ void NepomukSource::processTSEntry(const QList<Nepomuk::Query::Result> &list)
 {
     if (list.count() > 0)
         emit newTSEntries(m_timeScaleDate.year(),m_timeScaleDate.month());
-/*
-    Nepomuk::Query::Result result = list.at(0);
-    QFileInfo fi(result.resource().toFile().url().path());
-    QDate date = fi.lastModified().date();
-*/
 }
 
 void NepomukSource::startSearchFromQueue()
@@ -262,11 +257,8 @@ void NepomukSource::startSearchFromQueue()
         fillTimeScaleModel( QDate::currentDate());
     }
 
-    //queryDate = beginDate;
-
     set = new ActivitySet;
 
-    //Nepomuk::Query::Query query = createQuery(beginDate);
     Nepomuk::Query::Query query = createQuery(m_searchQueue.first());
 
     query.setLimit(m_limit);

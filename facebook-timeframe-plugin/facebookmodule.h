@@ -5,7 +5,7 @@
 #include <socialplugin.h>
 #include "oauth2authorizer.h"
 
-class QDeclarativeView;
+class QWebView;
 class RequestManager;
 class OAuth2Authorizer;
 
@@ -22,6 +22,7 @@ public:
     QPixmap icon() const;
 
     QWidget *authenticationWidget();
+    bool deauthorize();
     bool authorized() const { return !m_authorizer->accessToken().isEmpty(); }
 
 private slots:
@@ -32,7 +33,7 @@ signals:
     void deauthorized();
 
 private:
-    QDeclarativeView *m_authorizationView;
+    QWebView *m_authorizationView;
     RequestManager *m_requestManager;
     OAuth2Authorizer *m_authorizer;
     QPixmap m_pixmap;

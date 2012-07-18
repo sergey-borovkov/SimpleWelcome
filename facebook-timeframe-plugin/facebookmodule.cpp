@@ -1,12 +1,13 @@
 #include "facebookmodule.h"
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
-#include <QLabel>
+
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeView>
+#include <QWebView>
+
 
 FacebookModule::FacebookModule()
 {
@@ -21,10 +22,8 @@ FacebookModule::FacebookModule()
         emit authorized();
     }
 
-    // even if plugin is authorized it may be necessary to relogin
-    m_authorizationView = new QDeclarativeView();
-    m_authorizationView->engine()->rootContext()->setContextProperty("authorizer", m_authorizer);
-    m_authorizationView->setSource(QUrl("qrc:/qml/main.qml"));
+    m_authorizationView = new QWebView;
+    m_authorizationView->resize(800, 700);
 
     m_requestManager = new RequestManager;
     m_requestManager->setAuthorizer(m_authorizer);
@@ -32,8 +31,7 @@ FacebookModule::FacebookModule()
     connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SLOT(onAcessTokenChanged()));
     connect(m_authorizer, SIGNAL(deauthorized()), SIGNAL(deauthorized()));
 
-    m_pixmap.load("/home/user/lang/SimpleWelcome/facebook-timeframe-plugin/images/facebook.png");
-    //m_pixmap.load(":/images/facebook.png");
+    m_pixmap.load(":/images/facebook.png");
 }
 
 FacebookModule::~FacebookModule()
@@ -60,13 +58,25 @@ QPixmap FacebookModule::icon() const
 
 QWidget *FacebookModule::authenticationWidget()
 {
+    m_authorizationView->setUrl(QUrl("https://www.facebook.com/dialog/oauth?client_id=148453655273563&redirect_uri=http://www.facebook.com/connect/login_success.html&response_type=token&scope=publish_stream,read_stream"));
+    connect(m_authorizationView, SIGNAL(urlChanged(QUrl)),
+            m_authorizer, SLOT(urlChanged(QUrl)));
+
     return m_authorizationView;
+}
+
+bool FacebookModule::deauthorize()
+{
+    m_requestManager->logout();
 }
 
 void FacebookModule::onAcessTokenChanged()
 {
     if(m_authorizer->isAuthorized())
+    {
+        m_authorizationView->hide();
         emit authorized();
+    }
 }
 
 Q_EXPORT_PLUGIN2(facebook-timeframe-plugin, FacebookModule)

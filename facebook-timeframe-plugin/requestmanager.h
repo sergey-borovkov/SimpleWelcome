@@ -13,6 +13,7 @@ public:
     explicit RequestManager(QObject *parent = 0);
     virtual void queryWall(const QDate &beginDate, const QDate &endDate);
     void setAuthorizer(OAuth2Authorizer *authorizer);
+    void logout();
 
 private:
     FeedItem *parseReply(const QByteArray &reply);
