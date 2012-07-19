@@ -73,7 +73,6 @@ Item {
         }
     }
 
-
     Row {
         id: menuBar
         anchors.horizontalCenter: parent.horizontalCenter
@@ -399,7 +398,6 @@ Item {
         onFlickEnded: flickableTimer.stop()
     }
 
-
     ListView {
         id: socialView
         model: socialModel
@@ -429,14 +427,23 @@ Item {
                 width: 200
                 text: message
             }
-
             Image {
+                id: img
                 anchors.centerIn: parent
                 fillMode: Image.PreserveAspectFit
                 width: Math.min( sourceSize.width, parent.width)
                 height: Math.min( sourceSize.height, parent.height)
                 smooth: true
                 source: picture
+            }
+            Image {
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                width: 32
+                height: 32
+                fillMode: Image.PreserveAspectFit
+                smooth: true
+                source: "image://plugin/" + pluginName
             }
         }
     }

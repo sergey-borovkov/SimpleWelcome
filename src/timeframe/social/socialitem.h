@@ -13,7 +13,8 @@ public:
     {
         Text,
         ImageUrl,
-        LikeUrl
+        LikeUrl,
+        PluginName
     };
 
     enum Type
@@ -33,6 +34,8 @@ public:
         QHash<int,QByteArray> roles;
         roles.insert(Text, "message");
         roles.insert(Image, "picture");
+        roles.insert(PluginName, "pluginName");
+
         return roles;
     }
 };
