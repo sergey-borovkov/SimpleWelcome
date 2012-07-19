@@ -37,7 +37,7 @@ Item {
 
     //Start new serch
     function currentDateChanged()
-    {                
+    {
         var d = new Date(__year, __month, day )
         //galleryLister.startSearch(d, direction)
         galleryLister.startSearch(d, true)
@@ -53,7 +53,6 @@ Item {
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3) {
                 currentDateChanged()
-                console.log("start initial search")
                 tabListView.interactive = false
             }
         }
@@ -212,9 +211,11 @@ Item {
         onCountChanged:
         {
             //console.log("new items added, scene count: " +  scene.count)
-            timeFrameTab.state = "timeLineSearch"
-            searchTimer.restart()
-            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center)
+            if(timeFrameTab.state == "") {
+                timeFrameTab.state = "timeLineSearch"
+                searchTimer.restart()
+                timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center)
+            }
         }
 
     }
@@ -223,9 +224,11 @@ Item {
         interval: 1000;
         onTriggered: {
             console.log("state changed")
-            timeLine.currentIndex = timeFrameTab.getTimeLineGalleryIndex()
-            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
-            timeFrameTab.state = ""
+            if(timeFrameTab.state == "timeLineSearch") {
+                timeLine.currentIndex = timeFrameTab.getTimeLineGalleryIndex()
+                timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
+                timeFrameTab.state = ""
+            }
         }
     }
 
@@ -455,7 +458,7 @@ Item {
 
     state: "socialauthorization"
 
-        states: [
+    states: [
 
         State {
             name: "gallery"
@@ -488,8 +491,6 @@ Item {
                 target: buttonImage
                 visible : false
             }
-
-
         },
         State {
             name: "gallerySearch"; extend: "gallery"
