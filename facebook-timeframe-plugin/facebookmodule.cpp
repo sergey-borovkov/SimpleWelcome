@@ -70,7 +70,6 @@ void FacebookModule::onAcessTokenChanged()
     if(m_authorizer->isAuthorized())
     {
         m_authorizationView->hide();
-        emit authorized();
     }
 }
 
