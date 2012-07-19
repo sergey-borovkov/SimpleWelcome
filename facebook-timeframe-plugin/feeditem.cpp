@@ -5,7 +5,7 @@
 
 QString FeedItem::pluginName() const
 {
-    return QLatin1String("facebook");
+    return QLatin1String("Facebook");
 }
 
 FeedItem::Type FeedItem::type() const
@@ -32,4 +32,6 @@ void FeedItem::fillFromMap(QVariantMap map)
         m_data.insert(Text, map.value("message").toString());
     if(map.contains("picture"))
         m_data.insert(Image, map.value("picture").toString());
+
+    m_data.insert(PluginName, pluginName());
 }
