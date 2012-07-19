@@ -120,11 +120,11 @@ Item {
                     onClicked: {
                         var prevSelection = selectedText
                         if ( dropboxListSelection.model.get( index ).itemText != prevSelection ) {
-                            selectedIndexChanged()
                             dropboxListSelection.currentIndex = index;
                             selectedText = dropboxListSelection.model.get( index ).itemText
                             dropboxListSelection.focus = true
                             dropboxListBody.hide()
+                            selectedIndexChanged()
                         }
                         comboClicked()
                     }
