@@ -1,6 +1,6 @@
 Name:		rosa-launcher-qtquick
 Version:	0.2.2
-Release:	18
+Release:	19
 Epoch:		1
 Summary:	ROSA Desktop Application Launcher QtQuick
 Group:		Graphical desktop/KDE

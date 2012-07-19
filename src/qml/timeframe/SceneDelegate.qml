@@ -58,7 +58,7 @@ Item {
             var component = Qt.createComponent("CloudDelegate.qml");
 
             for(var i = 0; i < activity.count; i++)
-            {                
+            {
                 var cloud = component.createObject(sceneDelegate, settings[i]);
 
                 var arr = objects;
