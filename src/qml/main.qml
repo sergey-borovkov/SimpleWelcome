@@ -26,20 +26,12 @@ Item {
 
     Image {
         anchors.fill: parent
-        fillMode: Image.PreserveAspectCrop
-        smooth: true
+        //fillMode: Image.PreserveAspectCrop
+        //smooth: true
         source: "image://generalicon/asset/bubbles.jpg"
-        opacity: 0.6
+//        opacity: 0.9
         z: -10
     }
-
-    Rectangle {
-        anchors.fill: parent
-        color: "black"
-        opacity: 0.8
-        z: -5
-    }
-
 
     VisualItemModel {
         id: tabListModel
@@ -61,82 +53,58 @@ Item {
             width: tabListView.width
             height: tabListView.height
         }
-
-/*        TestingTab {
-            id: testingTab
-            width: tabListView.width
-            height: tabListView.height
-        }*/
     }
 
     TopBar {
         id: topBar
-        width: parent.width
 
         KeyNavigation.tab: tabListView
         KeyNavigation.backtab: tabListView
     }
 
-    Item {
-        id: listViewRect
+    ListView {
+        id: tabListView
+
+        KeyNavigation.tab: topBar
+        KeyNavigation.backtab: topBar
+
+        interactive: false
+
+        anchors.top: topBar.bottom
+        anchors.topMargin: 16
         width: parent.width
-        y: topBar.height
         height: parent.height - topBar.height - bottomBar.height
-        clip: true
-        //color: "transparent"
 
-        ListView {
-            id: tabListView
+        model: tabListModel
 
-            KeyNavigation.tab: topBar
-            KeyNavigation.backtab: topBar
-            interactive: false
+        snapMode: ListView.SnapOneItem
+        orientation: ListView.Horizontal
+        boundsBehavior: Flickable.StopAtBounds
+        flickDeceleration: 5000
+        highlightFollowsCurrentItem: true
+        highlightMoveDuration: 240
+        highlightRangeMode: ListView.StrictlyEnforceRange
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            //anchors.topMargin: 16
-            width: parent.width
-            height: parent.height
-            anchors.fill: parent
+        currentIndex: 1
+        onCurrentIndexChanged: {
+            if (currentItem && currentItem.grid)
+                currentItem.grid.forceActiveFocus()
+            topBar.forceActiveFocus()
+        }
 
-            model: tabListModel
+        function currentTabIndexChanged(newCurrentIndex) {
+            tabListView.currentIndex = newCurrentIndex
+        }
 
-            snapMode: ListView.SnapOneItem
-            orientation: ListView.Horizontal
-            boundsBehavior: Flickable.StopAtBounds
-            flickDeceleration: 5000
-            highlightFollowsCurrentItem: true
-            highlightMoveDuration: 240
-            highlightRangeMode: ListView.StrictlyEnforceRange
-
-            currentIndex: 1
-            onCurrentIndexChanged: {
-                if (currentItem && currentItem.grid)
-                    currentItem.grid.forceActiveFocus()
-                topBar.forceActiveFocus()
-            }
-
-            function currentTabIndexChanged(newCurrentIndex) {
-                tabListView.currentIndex = newCurrentIndex
-            }
-
-            Component.onCompleted: {
-                searchGridModel.currentTabIndexChanged.connect(currentTabIndexChanged)
-            }
-
-            //currentIndex: searchGridModel.
+        Component.onCompleted: {
+            searchGridModel.currentTabIndexChanged.connect(currentTabIndexChanged)
         }
     }
+
 
     BottomBar {
         id: bottomBar
         width: parent.width
-
-        Component.onCompleted: test();
-
-        function test()
-        {
-        }
     }
 
 }

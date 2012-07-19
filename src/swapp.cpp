@@ -52,8 +52,8 @@ SWApp::SWApp()
     m_viewer = new QmlApplicationViewer();
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     // Window transparency
-    m_viewer->setAttribute(Qt::WA_TranslucentBackground);
-    m_viewer->setStyleSheet("background:transparent;");
+    //m_viewer->setAttribute(Qt::WA_TranslucentBackground);
+    //m_viewer->setStyleSheet("background:transparent;");
 
     m_viewer->rootContext()->setContextProperty("sessionProvider", new SessionProvider(this));
 
@@ -80,8 +80,8 @@ SWApp::SWApp()
 
 
     m_viewer->showExpanded();
-    //m_viewer->showFullScreen();
-    m_viewer->setGeometry(896, 0, 800, 600); // 1000); //
+    m_viewer->showFullScreen();
+    //m_viewer->setGeometry(896, 0, 800, 600); // 1000); //
     //m_viewer->setFixedSize( m_viewer->sizeHint() );
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination

@@ -1,5 +1,6 @@
 #include "favoritesgridmodel.h"
 #include <KFilePlacesModel>
+#include "appitem.h"
 
 FavoritesGridModel::FavoritesGridModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -9,15 +10,6 @@ FavoritesGridModel::FavoritesGridModel(QObject *parent)
     names[ ImagePathRole ] = "imagePath";
     setRoleNames(names);
 }
-
-class AppItem
-{
-public:
-    QString caption;
-    QString icon;
-    QString desktopEntry;
-    QString relPath;
-};
 
 QList<AppItem> FavoritesGridModel::GetList(QString currentGroup) const
 {

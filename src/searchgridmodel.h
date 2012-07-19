@@ -6,12 +6,11 @@
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
 
-namespace Plasma {
-class RunnerManager;
-class QueryMatch;
+namespace Plasma
+{
+    class RunnerManager;
+    class QueryMatch;
 }
-
-class AppItem;
 
 class SearchGridModel : public QAbstractListModel
 {
