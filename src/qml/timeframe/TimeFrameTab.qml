@@ -414,8 +414,8 @@ Item {
         orientation: ListView.Horizontal
 
         delegate: ShadowRectangle {
-            width: 300
-            height: 300
+            width: 200
+            height: 200
 
             Text {
                 id: msg
@@ -440,6 +440,8 @@ Item {
             Image {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
+                anchors.rightMargin: 5
+                anchors.bottomMargin: 5
                 width: 32
                 height: 32
                 fillMode: Image.PreserveAspectFit
