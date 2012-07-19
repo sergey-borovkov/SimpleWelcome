@@ -413,42 +413,7 @@ Item {
         spacing: 10
         orientation: ListView.Horizontal
 
-        delegate: ShadowRectangle {
-            width: 200
-            height: 200
-
-            Text {
-                id: msg
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                wrapMode: Text.Wrap
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                width: 200
-                text: message
-            }
-            Image {
-                id: img
-                anchors.centerIn: parent
-                fillMode: Image.PreserveAspectFit
-                width: Math.min( sourceSize.width, parent.width)
-                height: Math.min( sourceSize.height, parent.height)
-                smooth: true
-                source: picture
-            }
-            Image {
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.rightMargin: 5
-                anchors.bottomMargin: 5
-                width: 32
-                height: 32
-                fillMode: Image.PreserveAspectFit
-                smooth: true
-                source: "image://plugin/" + pluginName
-            }
-        }
+        delegate: SocialDelegate {}
     }
 
     SocialAuthorization {
