@@ -116,9 +116,12 @@ SWApp::SWApp()
     m_model = new ActivityModel;
     m_proxy = new ActivityProxy;
     m_source = new NepomukSource;
-    m_nepomukThread = new QThread(this);
-    m_source->moveToThread(m_nepomukThread);
-    m_nepomukThread->start();
+
+    //m_nepomukThread = new QThread(this);
+    //m_source->moveToThread(m_nepomukThread);
+    //m_nepomukThread->start();
+    QRect r = QDesktopWidget().screenGeometry(m_viewer);
+    m_viewer->rootContext()->setContextProperty( "desktopWidth", r.width() );
 
     /* TF Gallery mode */
 
