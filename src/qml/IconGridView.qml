@@ -2,6 +2,7 @@ import QtQuick 1.0
 
 GridView {
     id: grid
+    property variant dataSource
     property int columns: 7
     property variant prevGrid
     property variant nextGrid
@@ -30,6 +31,33 @@ GridView {
     }
 
     highlightMoveDuration: highlightMoveDurationConst
+
+    ListModel {
+        id: appsModel
+        signal itemClicked(int newIndex)
+    }
+
+    model: appsModel
+
+    function newItemData(iconPath, name) {
+        appsModel.append( { imagePath: iconPath, caption: name, id: appsModel.count})
+    }
+
+    function dataClear() {
+        appsModel.clear()
+    }
+
+    function onItemClicked(newIndex) {
+        dataSource.itemClicked(newIndex == -1 ? newIndex : appsModel.get(newIndex).id)
+    }
+
+    Component.onCompleted: {
+        dataSource.newItemData.connect(newItemData)
+        dataSource.dataClear.connect(dataClear)
+        dataSource.updateContent()
+        appsModel.itemClicked.connect(onItemClicked)
+    }
+
 
     onActiveFocusChanged: {
         if (highlightItem) // we are not empty and we have selection rectangle
@@ -162,6 +190,7 @@ GridView {
 
         property int draggingItemIndex: -1
         property int newIndex
+        property int pressedOnIndex
 
         function getItemUnderCursor(isForceRecheck)
         {
@@ -214,9 +243,13 @@ GridView {
             }
         }
 
+        onPressed: {
+            pressedOnIndex = getItemUnderCursor(true)
+        }
+
         onPressAndHold: {
             var index = getItemUnderCursor(true)
-            if (index != -1)
+            if (index != -1 && pressedOnIndex == index)
                 draggingItemIndex = model.get(newIndex = index).id
         }
         onReleased: {

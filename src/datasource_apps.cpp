@@ -1,15 +1,6 @@
-#include "appsgridmodel.h"
+#include "datasource_apps.h"
 #include <kservicegroup.h>
 #include <kdebug.h>
-
-AppsGridModel::AppsGridModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-    QHash<int, QByteArray> names;
-    names[ CaptionRole ] = "caption";
-    names[ ImagePathRole ] = "imagePath";
-    setRoleNames(names);
-}
 
 QList<AppItem> GetFlatList(QString group)
 {
@@ -69,55 +60,28 @@ QList<AppItem> GetFlatList(QString group)
     return out;
 }
 
-QList<AppItem> AppsGridModel::GetList(QString currentGroup) const
+void DataSource_Apps::updateContent()
 {
-    static QList<AppItem> out;
-    static QString prevCurrentGroup = "-1";
-    if (prevCurrentGroup == currentGroup && !out.isEmpty())
-        return out;
+    if (prevCurrentGroup == currentGroup && !appsList.isEmpty())
+        return;
 
     prevCurrentGroup = currentGroup;
-    out = GetFlatList(currentGroup);
+    appsList = GetFlatList(currentGroup);
 
-    for (int i = 0; i < out.size(); i++)
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(out[i].icon), out[i].caption);
-
-    return out;
-}
-
-int AppsGridModel::rowCount( const QModelIndex & /*parent*/ ) const
-{
-    return GetList(currentGroup).size();
-}
-
-QVariant AppsGridModel::data( const QModelIndex &index, int role ) const
-{
-    QList<AppItem> list = GetList(currentGroup);
-
-    if ( index.row() < 0 || index.row() >= list.size() )
-        return QVariant();
-
-    switch (role)
-    {
-    case CaptionRole:
-        return list[index.row()].caption;
-    case ImagePathRole:
-        return QString("image://generalicon/appicon/%1").arg(list[index.row()].icon);
-    }
-
-    return QVariant();
+    for (int i = 0; i < appsList.size(); i++)
+        emit newItemData(QString("image://generalicon/appicon/%1").arg(appsList[i].icon), appsList[i].caption);
 }
 
 #include <QMessageBox>
 
-void AppsGridModel::itemClicked(int newIndex)
+void DataSource_Apps::itemClicked(int newIndex)
 {
     if (currentGroup == "" && newIndex == -1)
         return;
 
     if (newIndex != -1)
     {
-        AppItem clickedItem = GetList(currentGroup)[newIndex];
+        AppItem clickedItem = appsList[newIndex];
         if (clickedItem.relPath.isEmpty())
         {
             QMessageBox::information(0, clickedItem.desktopEntry, clickedItem.caption);
@@ -125,29 +89,12 @@ void AppsGridModel::itemClicked(int newIndex)
         }
     }
 
-
     emit dataClear();
-
-    int rowCountWas = rowCount();
-    beginRemoveRows(QModelIndex(), 0, rowCountWas);
-    endRemoveRows();
 
     if (newIndex == -1)
         currentGroup = "";
     else
-    {
-        AppItem clickedItem = GetList(currentGroup)[newIndex];
-        currentGroup = clickedItem.relPath;
-    }
+        currentGroup = appsList[newIndex].relPath;
 
-    int rowCountNew = rowCount();
-    beginInsertRows(QModelIndex(), 0, rowCountNew);
-    endInsertRows();
-
-    emit contentChanged();
-}
-
-void AppsGridModel::updateContent()
-{
-    GetList(currentGroup);
+    updateContent();
 }

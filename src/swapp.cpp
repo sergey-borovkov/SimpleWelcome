@@ -31,10 +31,10 @@
 #include "sessionprovider.h"
 #include "userinfoprovider.h"
 
-#include "appsgridmodel.h"
-#include "recentappsgridmodel.h"
-#include "favoritesgridmodel.h"
-#include "documentsgridmodel.h"
+#include "datasource_apps.h"
+#include "datasource_recentapps.h"
+#include "datasource_favorites.h"
+#include "datasource_documents.h"
 #include "searchgridmodel.h"
 
 SWApp* SWApp::self()
@@ -69,10 +69,10 @@ SWApp::SWApp()
     m_generalIconProvider->setSearchGridModel(searchGridModel);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
-    m_viewer->rootContext()->setContextProperty("appsGridModel", new AppsGridModel(this) );
-    m_viewer->rootContext()->setContextProperty("recentAppsGridModel", new RecentAppsGridModel(this));
-    m_viewer->rootContext()->setContextProperty("favoritesGridModel", new FavoritesGridModel(this));
-    m_viewer->rootContext()->setContextProperty("documentsGridModel", new DocumentsGridModel(this));
+    m_viewer->rootContext()->setContextProperty("dataSource_Apps", new DataSource_Apps(this));
+    m_viewer->rootContext()->setContextProperty("dataSource_RecentApps", new DataSource_RecentApps(this));
+    m_viewer->rootContext()->setContextProperty("dataSource_Favorites", new DataSource_Favorites(this));
+    m_viewer->rootContext()->setContextProperty("dataSource_Documents", new DataSource_Documents(this));
 
     m_viewer->rootContext()->setContextProperty("searchCmdGridModel", new SearchFilterGridModel(this, searchGridModel));
     m_viewer->rootContext()->setContextProperty("searchAppsGridModel", new SearchFilterGridModel(this, searchGridModel));

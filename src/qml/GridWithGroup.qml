@@ -2,7 +2,7 @@ import QtQuick 1.1
 
 Column {
     property string groupName
-    property variant gridModel
+    property variant gridDataSource
     property variant prevGridGroup
     property variant nextGridGroup
 
@@ -39,7 +39,7 @@ Column {
 
     IconGridView {
         id: iconGridView
-        model: gridModel
+        dataSource: gridDataSource
 
         width: parent.width
         height: Math.ceil(count / columns) * 200

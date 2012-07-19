@@ -15,17 +15,17 @@ FocusScope {
 
             GridWithGroup {
                 groupName: "Command Line"
-                gridModel: searchCmdGridModel
+                gridDataSource: searchCmdGridModel
             }
 
             GridWithGroup {
                 groupName: "Recent Documents"
-                gridModel: searchRecentDocsGridModel
+                gridDataSource: searchRecentDocsGridModel
             }
 
             GridWithGroup {
                 groupName: "Applications"
-                gridModel: searchAppsGridModel
+                gridDataSource: searchAppsGridModel
             }
         }
 
