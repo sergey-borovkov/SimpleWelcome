@@ -549,11 +549,4 @@ Item {
 
         }
     ]
-    /*
-    transitions: Transition {
-
-         AnchorAnimation {duration: 500}
-     }
-*/
 }
-
