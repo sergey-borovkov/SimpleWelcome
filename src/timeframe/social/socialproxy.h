@@ -23,6 +23,7 @@ public:
 public slots:
     void authorized();
     void deauthorized();
+    bool anyPluginsEnabled();
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
     void startSearch();
@@ -31,6 +32,7 @@ private:
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;
     ListModel *m_socialModel;
+    bool m_anyEnabled; // true if any plugins enabled and authorized
 };
 
 #endif // SOCIALPROXY_H
