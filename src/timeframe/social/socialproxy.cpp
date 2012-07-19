@@ -25,8 +25,6 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent) :
 
         PluginItem *item = new PluginItem(plugin);
         m_pluginModel->appendRow(item);
-
-        //plugin->requestManager()->queryWall(QDate(), QDate());
     }
 }
 
