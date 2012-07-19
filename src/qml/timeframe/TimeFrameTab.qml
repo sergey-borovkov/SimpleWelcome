@@ -106,8 +106,9 @@ Item {
             onSelectedIndexChanged: {
                 console.debug( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
             }
+
             onClicked: {
-                console.debug( "My Local Documents clicked" )
+                console.log(selectedText + " " + selectedIndex)
                 state = "current"
                 timeFrameTab.state = ""
                 socialNetworks.state = ""
@@ -118,16 +119,18 @@ Item {
             id: socialNetworks
             model: menuSocialItems
             name: "Social networking sites"
+            property int __wasSearching: 0
             onSelectedIndexChanged: {
                 console.debug( selectedText + ", " + menuSocialItems.get( selectedIndex ).itemText )
-            }
-
-            onClicked: {
-                console.debug( "Social networking sites clicked" )
-                state = "current"
-                timeFrameTab.state = "socialgallery"
-                socialProxy.startSearch()
-                localDocs.state = ""
+                if(selectedIndex == 4)
+                    timeFrameTab.state = "socialauthorization"
+                else
+                {
+                    timeFrameTab.state = "socialgallery"
+                    if(__wasSearching == 0)
+                        socialProxy.startSearch()
+                    __wasSearching = 1
+                }
             }
         }
     }
@@ -198,18 +201,16 @@ Item {
         preferredHighlightEnd : timeLine.width*2/3
         boundsBehavior : Flickable.StopAtBounds
         cacheBuffer: desktopWidth
-        //snapMode: ListView.SnapToItem
+
         onCurrentIndexChanged: {
             var date = galleryModel.getDateOfIndex(timeLine.currentIndex)
             timeFrameTab.__year = date.getFullYear()
             timeFrameTab.__month = date.getMonth()
             timeFrameTab.day = date.getDay()
         }
-        //layoutDirection: Qt.RightToLeft
 
         onCountChanged:
         {
-            //console.log("new items added, scene count: " +  scene.count)
             if(timeFrameTab.state == "") {
                 timeFrameTab.state = "timeLineSearch"
                 searchTimer.restart()
@@ -462,8 +463,7 @@ Item {
         anchors.topMargin: width / 8
     }
 
-
-    state: "socialauthorization"
+    state: socialProxy.anyPluginsEnabled() ? "socialgallery" : "socialauthorization"
 
     states: [
 

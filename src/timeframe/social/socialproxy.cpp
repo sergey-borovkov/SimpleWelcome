@@ -12,8 +12,11 @@
 SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent) :
     QObject(parent), m_plugins(plugins),
     m_socialModel(new ListModel(SocialItem::roleNames(), this)),
-    m_pluginModel(new PluginModel(PluginItem::roleNames(), this))
+    m_pluginModel(new PluginModel(PluginItem::roleNames(), this)),
+    m_anyEnabled(false)
 {
+    QSettings settings("ROSA", "Timeframe");
+
     foreach(ISocialPlugin *plugin, plugins)
     {
         QObject *object;
@@ -25,6 +28,13 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent) :
 
         PluginItem *item = new PluginItem(plugin);
         m_pluginModel->appendRow(item);
+
+        // not the best solution... need to redo all this reading from settings later
+        if(settings.value(plugin->name()).toInt() == 1)
+        {
+            plugin->requestManager()->queryWall(QDate(), QDate());
+            m_anyEnabled = true;
+        }
     }
 }
 
@@ -68,6 +78,11 @@ void SocialProxy::authorized()
 
 void SocialProxy::deauthorized()
 {
+}
+
+bool SocialProxy::anyPluginsEnabled()
+{
+    return m_anyEnabled;
 }
 
 void SocialProxy::newItem(SocialItem *item)

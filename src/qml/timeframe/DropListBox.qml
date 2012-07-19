@@ -130,9 +130,7 @@ Item {
                     }
                 }
             }
-
         }
-
     }
 
     MouseArea {
