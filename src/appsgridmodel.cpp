@@ -11,15 +11,6 @@ AppsGridModel::AppsGridModel(QObject *parent)
     setRoleNames(names);
 }
 
-class AppItem
-{
-public:
-    QString caption;
-    QString icon;
-    QString desktopEntry;
-    QString relPath;
-};
-
 QList<AppItem> GetFlatList(QString group)
 {
     QList<AppItem> out;
@@ -78,7 +69,7 @@ QList<AppItem> GetFlatList(QString group)
     return out;
 }
 
-QList<AppItem> GetList(QString currentGroup)
+QList<AppItem> AppsGridModel::GetList(QString currentGroup) const
 {
     static QList<AppItem> out;
     static QString prevCurrentGroup = "-1";
@@ -87,6 +78,9 @@ QList<AppItem> GetList(QString currentGroup)
 
     prevCurrentGroup = currentGroup;
     out = GetFlatList(currentGroup);
+
+    for (int i = 0; i < out.size(); i++)
+        emit newItemData(QString("image://generalicon/appicon/%1").arg(out[i].icon), out[i].caption);
 
     return out;
 }
@@ -131,6 +125,9 @@ void AppsGridModel::itemClicked(int newIndex)
         }
     }
 
+
+    emit dataClear();
+
     int rowCountWas = rowCount();
     beginRemoveRows(QModelIndex(), 0, rowCountWas);
     endRemoveRows();
@@ -148,4 +145,9 @@ void AppsGridModel::itemClicked(int newIndex)
     endInsertRows();
 
     emit contentChanged();
+}
+
+void AppsGridModel::updateContent()
+{
+    GetList(currentGroup);
 }

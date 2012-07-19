@@ -20,8 +20,6 @@ GridView {
     highlight: Rectangle {
         id: gridSelection
         property int animationDuration: 150
-        width: 120
-        height: 140
         color: "#c8b0c4de"
         radius: 5
         opacity: 1
@@ -158,8 +156,12 @@ GridView {
     }
 
     MouseArea {
+        id: gridMouseArea
         anchors.fill: parent
         hoverEnabled: true
+
+        property int draggingItemIndex: -1
+        property int newIndex
 
         function getItemUnderCursor(isForceRecheck)
         {
@@ -187,7 +189,7 @@ GridView {
 
 
         onMousePositionChanged: {
-            if (!grid.moving)
+            if (!grid.moving && draggingItemIndex == -1)
             {
                 // Optimize later to lesser use of getItemUnderCursor(true)
                 var newCurrentIndex = getItemUnderCursor(!grid.activeFocus)
@@ -201,14 +203,24 @@ GridView {
                         grid.highlightMoveDuration = highlightMoveDurationConst
                     }
                     else
-                    {
-                        //if (grid.highlightItem && grid.highlightItem.opacity == 0)
-                        //    grid.highlightItem.opacity = 1
-                        //console.log("NONACTIVEFOCUS")
                         grid.currentIndex = newCurrentIndex
-                    }
                 }
             }
+            else
+            {
+                var index = getItemUnderCursor(true)
+                if (draggingItemIndex != -1 && index != -1 && index != newIndex)
+                    model.move(newIndex, newIndex = index, 1)
+            }
+        }
+
+        onPressAndHold: {
+            var index = getItemUnderCursor(true)
+            if (index != -1)
+                draggingItemIndex = model.get(newIndex = index).id
+        }
+        onReleased: {
+            draggingItemIndex = -1
         }
 
         onClicked: {
@@ -218,8 +230,6 @@ GridView {
                 model.itemClicked(indexClicked)
             }
         }
-
-        property int index: grid.indexAt(mouseX, mouseY)
     }
 }
 

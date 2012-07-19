@@ -1,15 +1,7 @@
 #pragma once
 
 #include <QAbstractListModel>
-
-class AppItem
-{
-public:
-    QString caption;
-    QString icon;
-    QString desktopEntry;
-    QString relPath;
-};
+#include "appitem.h"
 
 class RecentAppsGridModel : public QAbstractListModel
 {

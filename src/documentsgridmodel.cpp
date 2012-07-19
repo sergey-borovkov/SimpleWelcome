@@ -3,6 +3,7 @@
 #include <KDesktopFile>
 #include <QStringList>
 #include <QFile>
+#include "appitem.h"
 
 DocumentsGridModel::DocumentsGridModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -12,15 +13,6 @@ DocumentsGridModel::DocumentsGridModel(QObject *parent)
     names[ ImagePathRole ] = "imagePath";
     setRoleNames(names);
 }
-
-class AppItem
-{
-public:
-    QString caption;
-    QString icon;
-    QString desktopEntry;
-    QString relPath;
-};
 
 QList<AppItem> DocumentsGridModel::GetList(QString currentGroup) const
 {
