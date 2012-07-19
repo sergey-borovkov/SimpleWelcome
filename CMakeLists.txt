@@ -19,10 +19,10 @@ set(rosa-launcher-qtquick_SRCS src/main.cpp
                                src/sessionprovider.cpp
                                src/userinfoprovider.cpp
                                src/qmlapplicationviewer/qmlapplicationviewer.cpp
-                               src/appsgridmodel.cpp
-                               src/recentappsgridmodel.cpp
-                               src/favoritesgridmodel.cpp
-                               src/documentsgridmodel.cpp
+                               src/datasource_apps.cpp
+                               src/datasource_recentapps.cpp
+                               src/datasource_favorites.cpp
+                               src/datasource_documents.cpp
                                ${qml_files})
 
 kde4_add_executable(rosa-launcher-qtquick ${rosa-launcher-qtquick_SRCS})

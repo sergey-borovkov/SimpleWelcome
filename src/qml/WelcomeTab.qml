@@ -15,17 +15,17 @@ FocusScope {
 
             GridWithGroup {
                 groupName: "Recent Applications"
-                gridModel: recentAppsGridModel
+                gridDataSource: dataSource_RecentApps
             }
 
             GridWithGroup {
                 groupName: "Favorites"
-                gridModel: favoritesGridModel
+                gridDataSource: dataSource_Favorites
             }
 
             GridWithGroup {
                 groupName: "Recent documents"
-                gridModel: documentsGridModel
+                gridDataSource: dataSource_Documents
             }
         }
 
