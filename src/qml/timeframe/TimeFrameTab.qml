@@ -103,10 +103,6 @@ Item {
             model: menuDocItems
             name: "My Local Documents"
             state: "current"
-            onSelectedIndexChanged: {
-                console.debug( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
-            }
-
             onClicked: {
                 console.log(selectedText + " " + selectedIndex)
                 state = "current"
@@ -121,18 +117,17 @@ Item {
             name: "Social networking sites"
             property int __wasSearching: 0
             onSelectedIndexChanged: {
-                console.debug( selectedText + ", " + menuSocialItems.get( selectedIndex ).itemText )
-                if(selectedIndex == 4)
-                    timeFrameTab.state = "socialauthorization"
-                else
-                {
-                    timeFrameTab.state = "socialgallery"
-                    if(__wasSearching == 0)
-                        socialProxy.startSearch()
+                if(selectedIndex == 4 && __wasSearching == 0) {
+                    socialProxy.startSearch()
                     __wasSearching = 1
                 }
             }
             onClicked: {
+                if(selectedIndex == 4)
+                    timeFrameTab.state = "socialauthorization"
+                else
+                    timeFrameTab.state = "socialgallery"
+
                 state = "current"
                 localDocs.state = ""
             }
@@ -237,7 +232,7 @@ Item {
     }
 
 
-    TimeScale{
+    TimeScale {
         id: timeScale
         anchors.verticalCenter: timeLine.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
@@ -352,7 +347,6 @@ Item {
         orientation: ListView.Horizontal
     }
 
-
     /*Timer starts wnen user start dragging gallery or timeline*/
     Timer {
         id: flickableTimer
@@ -383,7 +377,6 @@ Item {
         anchors.centerIn: parent
         visible: false
     }
-
 
     Connections {
         target: galleryView
