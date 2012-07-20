@@ -105,7 +105,8 @@ Item {
             name: "My Local Documents"
             state: "current"
             onSelectedIndexChanged: {
-                console.debug( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
+                console.log( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
+                galleryLister.changeType(selectedText)
             }
             onClicked: {
                 console.debug( "My Local Documents clicked" )

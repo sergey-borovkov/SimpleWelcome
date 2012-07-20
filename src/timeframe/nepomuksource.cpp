@@ -21,6 +21,8 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
 
+#include <kmimetype.h>
+
 #include <unistd.h>
 
 NepomukSource::NepomukSource(QObject *parent) :
@@ -32,10 +34,17 @@ NepomukSource::NepomukSource(QObject *parent) :
 NepomukSource::~NepomukSource()
 {
     if(m_searchClient)
+    {
         m_searchClient->close();
+        delete m_searchClient;
+    }
     if(m_timeScaleClient)
-        m_timeScaleClient->close();
+    {
+        m_timeScaleClient->close();    
+        delete m_timeScaleClient;
+    }
     m_searchClient = 0;
+    m_timeScaleClient = 0;
 }
 
 ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, const QDate &endDate)
@@ -58,10 +67,12 @@ Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &date)
 
     Nepomuk::Query::AndTerm term1(beginDateTerm,endDateTerm, image);
     Nepomuk::Query::AndTerm term2(beginDateTerm,endDateTerm, video);
+    Nepomuk::Query::AndTerm term3(beginDateTerm,endDateTerm);
 
     Nepomuk::Query::OrTerm orTerm(term1,term2);
 
-    Nepomuk::Query::FileQuery query(orTerm);
+    //Nepomuk::Query::FileQuery query(orTerm);
+    Nepomuk::Query::FileQuery query(term3);
     return query;
 }
 
@@ -113,15 +124,21 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
         QString uri = res.toFile().url().path();
 
         //qDebug() << "after path";
-        QString type = list.at(i).resource().type();
+        //QString type = list.at(i).resource().resourceType().toString();
+        QList <QUrl> typesList = list.at(i).resource().types();
+
+        QString type = resolveType(uri, typesList);
+        if (type.isEmpty())
+            continue;
+        //type = type.right(type.size() - (type.indexOf('#')+1));
         //qDebug() << "after type";
         QFileInfo fi(uri);
         activities.append(new Activity(uri, type, fi.lastModified().date()));
         //qDebug() << "-----after resorce";
         set->addActivity(new Activity(uri, type, fi.lastModified().date()));
     }
-
-    emit newActivities(activities);
+    if (activities.size())
+        emit newActivities(activities);
 }
 
 void NepomukSource::error(QString str)
@@ -148,8 +165,6 @@ void NepomukSource::listingFinished()
     }
     */
 
-
-
     // month changed on this step so we emit previous month
     QDate d = queryDate;
     d.setDate(d.year(), d.month(), 1);
@@ -171,7 +186,8 @@ void NepomukSource::fillTimeScaleModel(const QDate &date)
     if(m_timeScaleClient)
     {
         m_timeScaleClient->close();
-        m_timeScaleClient = 0;
+        m_timeScaleClient->deleteLater();
+        m_timeScaleClient = 0;        
     }
 
     m_timeScaleDate = date;
@@ -179,14 +195,14 @@ void NepomukSource::fillTimeScaleModel(const QDate &date)
 
     Nepomuk::Query::Query query = createTimeScaleQuery(date);
     query.setLimit(1);
-    m_timeScaleClient = new Nepomuk::Query::QueryServiceClient( this );
+
+    m_timeScaleClient = new Nepomuk::Query::QueryServiceClient( this );    
 
     connect(m_timeScaleClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processTSEntry(const QList<Nepomuk::Query::Result> &)));
 
     connect(m_timeScaleClient, SIGNAL(finishedListing()), SLOT(listingTSFinished()));
 
-    m_timeScaleClient->query(query);
-
+    m_timeScaleClient->query(query);    
 }
 
 Nepomuk::Query::FileQuery NepomukSource::createTimeScaleQuery(const QDate &date)
@@ -275,3 +291,28 @@ void NepomukSource::startSearchFromQueue()
 }
 
 
+QString NepomukSource::resolveType(QString path, QList<QUrl> typesList)
+{
+    /*
+    KMimeType::Ptr ptr =  KMimeType::findByFileContent( path );
+    KMimeType* type = ptr.data();
+    QString mime = type->name();
+    if (mime.contains("image/"))
+        return "Image";
+    else if ((mime.contains("video/") || (mime == "application/x-matroska")))
+        return "Video";
+    qDebug() << path << mime;
+    return QString();
+    */
+    if (path.contains(".svg"))
+        return "Image";
+    foreach(QUrl url, typesList)
+    {
+        if (url.toString().contains("Video"))
+            return "Video";
+        else if ((url.toString().contains("Photo")) || (url.toString().contains("RasterImage")))
+            return "Image";
+    }
+    //qDebug() << "Not resolved type for" << path;
+    return QString();
+}
