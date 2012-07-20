@@ -29,6 +29,7 @@
 #include <QMovie>
 #include <QThread>
 #include <QTimer>
+#include <QSortFilterProxyModel>
 
 #include <KDebug>
 #include <KIcon>
@@ -128,6 +129,8 @@ SWApp::SWApp()
     /* TF Gallery mode */
 
     GalleryModel* model = new GalleryModel;
+    QSortFilterProxyModel* proxymodel = new QSortFilterProxyModel(this);
+    proxymodel->setSourceModel(model);
     m_viewer->rootContext()->setContextProperty( "galleryModel", model );
     GalleryLister* lister = new GalleryLister;
     lister->addNepomukSource(m_source);

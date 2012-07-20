@@ -7,6 +7,7 @@
 #include "nepomuksource.h"
 
 class Activity;
+class GalleryModel;
 
 class GalleryLister : public QObject
 {
@@ -15,17 +16,26 @@ public:
     explicit GalleryLister(QObject *parent = 0);
 
     void addNepomukSource(NepomukSource* source);
+    void setModel(GalleryModel* model);
+
 signals:
     void newActivities (QList<Activity*>);
     void newMonth(int, int);
+    void changeFilterString(const QString&);
+
 public slots:
     void startSearch(QDate date, int direction);
     void resultCount(int);
+    int getIndexByDate(int year, int month,  bool direction);
+    QDate getDateOfIndex(int listIndex);
+    QObject* itemsModel(QDate date) const;
+    void changeType(QString type);
+
 private slots:
     void newData(QList<Activity*>);
 
 private:
-
+    GalleryModel* m_model;
     NepomukSource* m_source;
 };
 

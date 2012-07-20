@@ -43,6 +43,7 @@ public slots:
     int getIndexByDate(int year, int month, bool direction);
     QDate getDateOfIndex(int listIndex);
     void imageReady(QString url);
+    void setActivityType(const QString& type);
 
 protected:
     bool removeNullItem(int, int);

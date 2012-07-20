@@ -56,6 +56,8 @@ private:
     ActivitySet *createActivitySet(const QList<Nepomuk::Query::Result> &result);
     void fillTimeScaleModel(const QDate &beginDate);
 
+    QString resolveType(QString path,QList<QUrl> typesList);
+
     Nepomuk::Query::QueryServiceClient* m_searchClient;
     Nepomuk::Query::QueryServiceClient* m_timeScaleClient;
     QDate queryDate;

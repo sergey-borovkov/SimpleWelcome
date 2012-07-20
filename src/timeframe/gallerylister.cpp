@@ -1,4 +1,5 @@
 #include "gallerylister.h"
+#include "gallerymodel.h"
 #include "activityset.h"
 #include "nepomuksource.h"
 #include "previewgenerator.h"
@@ -7,7 +8,8 @@
 
 GalleryLister::GalleryLister(QObject *parent) :
     QObject(parent),
-    m_source(0)
+    m_source(0),
+    m_model(0)
 {
 }
 
@@ -61,3 +63,38 @@ void GalleryLister::newData(QList<Activity *> list)
     // send events to the model
     emit newActivities(list);
 }
+
+void GalleryLister::setModel(GalleryModel* model)
+{
+    if (m_model)
+        m_model = model;
+}
+
+
+int GalleryLister::getIndexByDate(int year, int month,  bool direction)
+{
+    if (m_model)
+     return m_model->getIndexByDate(year, month, direction);
+    return -1;
+}
+
+QDate GalleryLister::getDateOfIndex(int listIndex)
+{
+    if (m_model)
+        return m_model->getDateOfIndex(listIndex);
+    return QDate();
+}
+
+QObject* GalleryLister::itemsModel(QDate date) const
+{
+    if (m_model)
+        return m_model->itemsModel(date);
+    return 0;
+}
+
+void GalleryLister::changeType(QString type)
+{
+    qDebug() << "GalleryLister::set filter" << type;
+    emit changeFilterString(type);
+}
+

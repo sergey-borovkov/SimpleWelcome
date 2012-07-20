@@ -5,6 +5,8 @@
 #include "itemmodel.h"
 
 #include <QVariant>
+#include <QRegExp>
+#include <QSortFilterProxyModel>
 
 GalleryModel::GalleryModel(QObject *parent) :
     QAbstractListModel(parent),
@@ -39,14 +41,14 @@ QVariant GalleryModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
     if (role == CurrentDateRole)
-    {
+    {        
         return m_items.value(index.row())->getDate();
     }
     else if(role == ItemsRole)
     {
-        QVariant v;
-        v.setValue( m_items[index.row()]->model());
-        return v;//m_items.value(index.row());
+        //QVariant v;
+        //v.setValue( m_items[index.row()]->model());
+        return 0;//m_items.value(index.row());
     }
     else if(role == CountRole)
     {
@@ -82,8 +84,10 @@ void GalleryModel::setLister(GalleryLister *lister)
     if (m_lister)
         delete m_lister;
     m_lister = lister;
+    m_lister->setModel(this);
     connect( m_lister, SIGNAL(newActivities(QList<Activity*>)), this, SLOT(newActivities(QList<Activity*>)) );
     connect( m_lister, SIGNAL(newMonth(int,int)), this, SLOT(newMonth(int,int)));
+    connect( m_lister, SIGNAL(changeFilterString(QString)), this, SLOT(setActivityType(QString)));
 }
 
 void GalleryModel::newActivities(QList<Activity*> list)
@@ -166,7 +170,7 @@ void GalleryModel::newActivities(QList<Activity*> list)
           //  j--;
 
         GalleryItem * gallItem = new GalleryItem(item->getDate());
-        gallItem->model()->addActivityItem(item);        
+        gallItem->addActivity(item);
         insertRow(j,gallItem);
 
         //insertRow(j+1,gallItem);
@@ -369,6 +373,23 @@ void GalleryModel::imageReady(QString url)
     {
         QDate date = m_urlHash[url];
         GalleryItem* item = find(date);
-        item->thumbnailReady(url);
+        if (item)
+            item->thumbnailReady(url);
+    }
+}
+
+void GalleryModel::setActivityType(const QString& type)
+{
+    qDebug() << "123" <<type;
+    QRegExp filter;
+    if (type == "All")
+        filter = QRegExp("Image|Video");
+    else if (type == "Photo")
+        filter = QRegExp("Image");
+    else if (type == "Video")
+        filter = QRegExp("Video");
+    foreach(GalleryItem* item, m_items)
+    {
+        item->setActivityFilter(filter);
     }
 }

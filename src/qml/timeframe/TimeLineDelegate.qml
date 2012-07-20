@@ -1,7 +1,6 @@
 import QtQuick 1.1
 
-Item {
-
+Item {    
     property int margin: 10
     property int labelHeight: 20
 

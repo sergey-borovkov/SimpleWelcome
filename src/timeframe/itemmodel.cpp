@@ -78,15 +78,15 @@ void ItemModel::addActivityItem(Activity *item)
 }
 
 void ItemModel::thumbnailReady(QString url)
-{
+{        
     int row;
     for(row = 0; row<m_items.size(); ++row)
     {
       if(m_items.at(row)->getUrl() == url)
           break;
-    }
-    dataChanged(index(row),index(row));
-    emit gotThumbnail();
+    }    
+    dataChanged(index(row),index(row));    
+    emit gotThumbnail();    
 }
 
 QString ItemModel::url(int row)

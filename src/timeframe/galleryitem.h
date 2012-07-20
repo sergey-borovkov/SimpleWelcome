@@ -3,11 +3,30 @@
 
 #include <QObject>
 #include <QMetaType>
-
+#include <QStringList>
 #include <QDate>
+#include <QSortFilterProxyModel>
 
 class ItemModel;
+//class QSortFilterProxyModel;
 class Activity;
+//class QStringList;
+
+
+class TimeFrameFilterModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    explicit TimeFrameFilterModel(QObject * parent = 0);
+    virtual void setSourceModel ( ItemModel * sourceModel );
+
+signals:
+    void gotThumbnail();
+
+public slots:
+    QString url(int row);
+
+};
 
 
 class GalleryItem : public QObject
@@ -19,7 +38,11 @@ public:
 
     QDate getDate();
     int   getCount();
-    ItemModel * model();
+    //ItemModel * model();
+    TimeFrameFilterModel * model();
+    QStringList types() const;
+    void thumbnailReady(QString);
+    void setActivityFilter(const QRegExp&);
 
 signals:
     void dataChanged();
@@ -27,13 +50,14 @@ signals:
 public slots:
     void setDate(const QDate&);
     void addActivity(Activity* item);
-    void thumbnailReady(QString);
+
 
 private:
-
-    QDate      m_date;
-    int        m_count;
-    ItemModel *m_model;
+    QStringList m_types;
+    QDate       m_date;
+    int         m_count;
+    ItemModel*  m_itemModel;
+    TimeFrameFilterModel*  m_model;
 };
 
 #endif // GALLERYITEM_H
