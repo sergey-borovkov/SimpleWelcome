@@ -19,8 +19,10 @@ void PluginModel::show(int r)
     if(item)
     {
         ISocialPlugin *plugin = item->plugin();
-        if(plugin->authorized())
+        if(plugin->authorized()) {
+            qDebug() << "PluginModel::show:   LOGOUT";
             plugin->requestManager()->logout();
+        }
         else
         {
             // add this plugin to list of enabled plugins

@@ -14,6 +14,10 @@ public:
         Text,
         ImageUrl,
         LikeUrl,
+        Date,
+        Likes,
+        Comments,
+        Audio,
         PluginName
     };
 
@@ -34,6 +38,10 @@ public:
         QHash<int,QByteArray> roles;
         roles.insert(Text, "message");
         roles.insert(Image, "picture");
+        roles.insert(Date, "date");
+        roles.insert(Likes, "likes");
+        roles.insert(Comments, "comments");
+        roles.insert(Audio, "audio");
         roles.insert(PluginName, "pluginName");
 
         return roles;
