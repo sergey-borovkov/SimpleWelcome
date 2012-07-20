@@ -5,11 +5,18 @@ Component {
     ShadowRectangle {
         width: 200
         height: Math.max(120, childrenRect.height)
+        clip: true
+        Behavior on height {
+            NumberAnimation {
+                duration: 150
+            }
+        }
+
         Column {
             id: column
             width: parent.width
+            height: childrenRect.height + 10
             anchors.topMargin: 2
-            anchors.bottomMargin: 10
             anchors.top: parent.top
             spacing: 10
 
@@ -34,7 +41,6 @@ Component {
             Text {
                 id: msg
                 width: parent.width
-                anchors.bottomMargin: 3
                 wrapMode: Text.Wrap
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter

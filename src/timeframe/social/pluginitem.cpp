@@ -23,6 +23,9 @@ QVariant PluginItem::data(int role) const
         v.setValue(const_cast<PluginItem *>(this));
         return v;
     }
+    else if(role == Authorized)
+        return m_module->authorized();
+
     return m_module->icon();
 }
 
