@@ -63,6 +63,8 @@ void SocialProxy::startSearch()
     {
         if(settings.value(plugin->name()).toInt() == 1)
         {
+            qDebug() << "SocialProxy::startSearch:   start queryWall....";
+
             plugin->requestManager()->queryWall(QDate(), QDate());
         }
     }
@@ -70,9 +72,10 @@ void SocialProxy::startSearch()
 
 void SocialProxy::authorized()
 {
+    qDebug() << "SocialProxy::authorized";
     ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
     plugin->requestManager()->queryWall(QDate(), QDate());
-    if(plugin->authenticationWidget())
+    if ( plugin->authenticationWidget() )
         plugin->authenticationWidget()->hide();
 }
 
