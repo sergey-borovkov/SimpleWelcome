@@ -117,16 +117,12 @@ Item {
             name: "Social networking sites"
             property int __wasSearching: 0
             onSelectedIndexChanged: {
-                if(selectedIndex == 4 && __wasSearching == 0) {
-                    socialProxy.startSearch()
-                    __wasSearching = 1
-                }
-            }
-            onClicked: {
                 if(selectedIndex == 4)
                     timeFrameTab.state = "socialauthorization"
-                else
+                else {
                     timeFrameTab.state = "socialgallery"
+                    socialProxy.startSearch()
+                }
 
                 state = "current"
                 localDocs.state = ""
