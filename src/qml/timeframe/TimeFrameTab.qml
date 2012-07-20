@@ -132,6 +132,10 @@ Item {
                     __wasSearching = 1
                 }
             }
+            onClicked: {
+                state = "current"
+                localDocs.state = ""
+            }
         }
     }
 
@@ -508,6 +512,14 @@ Item {
                 target: timeScale
                 opacity: 0
             }
+            PropertyChanges {
+                target: socialNetworks
+                state: "current"
+            }
+            PropertyChanges {
+                target: localDocs
+                state: ""
+            }
         },
         State {
             name: "socialauthorization"; extend: "socialgallery"
@@ -520,7 +532,6 @@ Item {
                 target: authorizationView
                 visible: true
             }
-
         }
     ]
 }
