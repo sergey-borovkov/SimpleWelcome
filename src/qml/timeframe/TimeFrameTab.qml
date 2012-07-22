@@ -91,11 +91,13 @@ Item {
 
         ListModel {
             id: menuSocialItems
-            ListElement { itemText: "All" }
-            ListElement { itemText: "Facebook" }
-            ListElement { itemText: "Twitter" }
-            ListElement { itemText: "VK" }
-            ListElement { itemText: "Manage networks" }
+            Component.onCompleted: {
+                append({ "itemText": "All"})
+                var count = socialProxy.count();
+                for(var i = 0; i < count; i++)
+                    append({ "itemText": socialProxy.name(i) })
+                append({ "itemText": "Manage networks"})
+            }
         }
 
         DropListBox {
@@ -117,7 +119,7 @@ Item {
             name: "Social networking sites"
             property int __wasSearching: 0
             onSelectedIndexChanged: {
-                if(selectedIndex == 4)
+                if(selectedText == "Manage networks")
                     timeFrameTab.state = "socialauthorization"
                 else {
                     timeFrameTab.state = "socialgallery"
