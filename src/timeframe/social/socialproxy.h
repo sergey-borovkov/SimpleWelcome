@@ -28,6 +28,12 @@ public slots:
     void newItems(QList<SocialItem *> items);
     void startSearch();
 
+    // temporary to get plugin names in QML
+    // this functionality should perphaps be made available
+    // to  QML via models
+    int count() const;
+    QString name(int i);
+
 private:
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;

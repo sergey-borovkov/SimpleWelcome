@@ -68,6 +68,16 @@ void SocialProxy::startSearch()
     }
 }
 
+int SocialProxy::count() const
+{
+    return m_plugins.size();
+}
+
+QString SocialProxy::name(int i)
+{
+    return m_plugins.at(i)->name();
+}
+
 void SocialProxy::authorized()
 {
     ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
