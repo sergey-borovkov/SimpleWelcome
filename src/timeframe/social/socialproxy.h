@@ -3,6 +3,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QList>
+#include <QtCore/QSet>
 
 class ISocialPlugin;
 class ListModel;
@@ -38,6 +39,8 @@ private:
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;
     ListModel *m_socialModel;
+    QSet<QString> m_idSet;
+
     bool m_anyEnabled; // true if any plugins enabled and authorized
 };
 

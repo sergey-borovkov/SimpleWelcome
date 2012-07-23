@@ -11,8 +11,8 @@
 
 SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent) :
     QObject(parent), m_plugins(plugins),
-    m_socialModel(new ListModel(SocialItem::roleNames(), this)),
     m_pluginModel(new PluginModel(PluginItem::roleNames(), this)),
+    m_socialModel(new ListModel(SocialItem::roleNames(), this)),
     m_anyEnabled(false)
 {
     QSettings settings("ROSA", "Timeframe");
@@ -103,7 +103,13 @@ void SocialProxy::newItem(SocialItem *item)
 void SocialProxy::newItems(QList<SocialItem *> items)
 {
     QList<ListItem *> list;
-    foreach(SocialItem *item, items)
-        list.append(item);
+    foreach( SocialItem *item, items ) {
+        QString strId = QString( "%1-%2" ).arg( item->pluginName() ).arg( item->id() );
+        if ( m_idSet.contains( strId ) )
+                continue;
+        m_idSet.insert( strId );
+
+        list.append( item );
+    }
     m_socialModel->appendRows(list);
 }
