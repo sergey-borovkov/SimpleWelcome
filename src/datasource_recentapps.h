@@ -12,7 +12,7 @@ public:
     ~DataSource_RecentApps();
 
 signals:
-    void newItemData(QString iconPath, QString name);
+    void newItemData(QString iconPath, QString name, int id);
     void dataClear();
 
 public slots:

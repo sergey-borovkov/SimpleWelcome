@@ -39,8 +39,8 @@ GridView {
 
     model: appsModel
 
-    function newItemData(iconPath, name) {
-        appsModel.append( { imagePath: iconPath, caption: name, id: appsModel.count})
+    function newItemData(iconPath, name, itemId) {
+        appsModel.append( { imagePath: iconPath, caption: name, id: itemId})
     }
 
     function dataClear() {

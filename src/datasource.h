@@ -13,6 +13,6 @@ public slots:
     virtual void updateContent() = 0;
 
 signals:
-    void newItemData(QString iconPath, QString name) const;
+    void newItemData(QString iconPath, QString name, int id) const;
     void dataClear();
 };

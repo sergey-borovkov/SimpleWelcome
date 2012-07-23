@@ -61,6 +61,12 @@ Column {
             gridItemCountChanged()
         }
 
+        function newItemData(iconPath, name, itemId, group) {
+            if (group === undefined || group == groupName)
+                model.append( { imagePath: iconPath, caption: name, id: itemId})
+        }
+
+
         Component.onCompleted: {
             if ('group' in model)
                 model.group = groupName

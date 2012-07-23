@@ -10,14 +10,14 @@ void DataSource_Documents::updateContent()
         return;
 
     QStringList recentDocsList = KRecentDocument::recentDocuments();
-    foreach (QString fileName, recentDocsList)
+    for (int i = 0; i < recentDocsList.size(); i++)
     {
-        if(! KDesktopFile::isDesktopFile(fileName))
+        if(! KDesktopFile::isDesktopFile(recentDocsList[i]))
             continue;
-        if(! QFile::exists(fileName))
+        if(! QFile::exists(recentDocsList[i]))
             continue;
 
-        KDesktopFile desktopFile(fileName);
+        KDesktopFile desktopFile(recentDocsList[i]);
         if(desktopFile.noDisplay())
             continue;
 
@@ -28,7 +28,7 @@ void DataSource_Documents::updateContent()
         if (!newItem.caption.isEmpty())
             docsList.append(newItem);
 
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(newItem.icon), newItem.caption);
+        emit newItemData(QString("image://generalicon/appicon/%1").arg(newItem.icon), newItem.caption, i);
     }
 }
 

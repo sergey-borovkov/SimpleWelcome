@@ -74,14 +74,14 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("dataSource_Favorites", new DataSource_Favorites(this));
     m_viewer->rootContext()->setContextProperty("dataSource_Documents", new DataSource_Documents(this));
 
-    m_viewer->rootContext()->setContextProperty("searchCmdGridModel", new SearchFilterGridModel(this, searchGridModel));
-    m_viewer->rootContext()->setContextProperty("searchAppsGridModel", new SearchFilterGridModel(this, searchGridModel));
-    m_viewer->rootContext()->setContextProperty("searchRecentDocsGridModel", new SearchFilterGridModel(this, searchGridModel));
+    m_viewer->rootContext()->setContextProperty("searchCmdGridModel", searchGridModel);
+    m_viewer->rootContext()->setContextProperty("searchAppsGridModel", searchGridModel);
+    m_viewer->rootContext()->setContextProperty("searchRecentDocsGridModel", searchGridModel);
 
 
     m_viewer->showExpanded();
-    m_viewer->showFullScreen();
-    //m_viewer->setGeometry(896, 0, 800, 600); // 1000); //
+    //m_viewer->showFullScreen();
+    m_viewer->setGeometry(896, 0, 800, 600); // 1000); //
     //m_viewer->setFixedSize( m_viewer->sizeHint() );
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
