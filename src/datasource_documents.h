@@ -12,7 +12,7 @@ public:
         : DataSource(parent) {}
 
 signals:
-    void newItemData(QString iconPath, QString name);
+    void newItemData(QString iconPath, QString name, int id);
     void dataClear();
 
 public slots:

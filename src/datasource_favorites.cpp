@@ -17,7 +17,7 @@ void DataSource_Favorites::updateContent()
         newItem.icon = bm.icon();
 
         favoritesList.append(newItem);
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(newItem.icon), newItem.caption);
+        emit newItemData(QString("image://generalicon/appicon/%1").arg(newItem.icon), newItem.caption, i);
    }
 }
 

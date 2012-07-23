@@ -33,14 +33,8 @@
 #include <KRecentDocument>
 
 SearchGridModel::SearchGridModel(QObject *parent)
-    : QAbstractListModel(parent)
+    : DataSource(parent)
 {
-    QHash<int, QByteArray> names;
-    names[ CaptionRole ] = "caption";
-    names[ ImagePathRole ] = "imagePath";
-    names[ GroupRole ] = "group";
-    setRoleNames(names);
-
     m_runnerManager = new Plasma::RunnerManager();
 
     QStringList activeRunners;
@@ -50,31 +44,6 @@ SearchGridModel::SearchGridModel(QObject *parent)
     m_runnerManager->setAllowedRunners(activeRunners);
 
     connect(m_runnerManager, SIGNAL(matchesChanged(const QList<Plasma::QueryMatch> &)), this, SLOT(newSearchMatches(const QList<Plasma::QueryMatch> &)));
-}
-
-int SearchGridModel::rowCount( const QModelIndex & /*parent*/ ) const
-{
-    return m_matches.size();
-}
-
-QVariant SearchGridModel::data( const QModelIndex &index, int role ) const
-{
-    if ( index.row() < 0 || index.row() >= m_matches.size() )
-        return QVariant();
-
-    QString match = m_matches.keys()[index.row()];
-
-    switch (role)
-    {
-    case CaptionRole:
-        return match;
-    case ImagePathRole:
-        return QString("image://generalicon/search/%1").arg(match);
-    case GroupRole:
-        return getMatchGroupName(match);
-    }
-
-    return QVariant();
 }
 
 
@@ -94,69 +63,58 @@ QString SearchGridModel::getSearchQuery()
     return m_searchQuery;
 }
 
-QStringList SearchGridModel::getMatchNames()
-{
-    return m_matches.keys();
-}
-
-QStringList SearchGridModel::getGroupNames()
-{
-    return m_groups.toList();
-}
-
-QString SearchGridModel::getMatchGroupName(const QString &name) const
-{
-    if(m_matches.contains(name))
-        return m_matches[name]->runner()->name();
-
-    return "";
-}
-
 QIcon SearchGridModel::getMatchIcon(const QString &name)
 {
-    if(m_matches.contains(name))
-        return m_matches[name]->icon();
+    for (int i= 0; i < matches.size(); i++)
+        if(matches[i].name == name)
+            return matches[i].plasmaMatch->icon();
 
     return QIcon();
 }
 
 void SearchGridModel::runMatch(const QString &name)
 {
-    if(m_matches.contains(name))
-        m_runnerManager->run(*(m_matches[name]));
+    //if(m_matches.contains(name))
+    //    m_runnerManager->run(*(m_matches[name]));
 }
 
-
-void SearchGridModel::newSearchMatches(const QList<Plasma::QueryMatch> &matches)
+void SearchGridModel::itemClicked(int newIndex)
 {
-    beginRemoveRows(QModelIndex(), 0, rowCount());
-    endRemoveRows();
-    _clearMatches();
+    m_runnerManager->run(*matches[newIndex].plasmaMatch);
+    //qDebug() << ->run( << newIndex;
+    //runMatch();
+}
 
-    for(QList<Plasma::QueryMatch>::const_iterator it = matches.begin(); it != matches.end(); it++)
+void SearchGridModel::updateContent()
+{
+
+}
+
+void SearchGridModel::newSearchMatches(const QList<Plasma::QueryMatch> &newMatches)
+{
+    for (int i = 0; i < newMatches.size(); i++)
     {
-        m_matches.insert(it->text(), new Plasma::QueryMatch((*it)));
-        m_groups.insert(it->runner()->name());
+        matches.resize(matches.size() + 1);
+        matches.last().name = newMatches.at(i).text();
+        matches.last().group = newMatches.at(i).runner()->name();
+        matches.last().plasmaMatch = new Plasma::QueryMatch(newMatches.at(i));
+        emit newItemData(QString("image://generalicon/search/%1").arg(matches.last().name), matches.last().name, matches.size() - 1, matches.last().group);
     }
-
-    beginInsertRows(QModelIndex(), 0, rowCount());
-    endInsertRows();
 
     emit newSearchMatchesFound();
 }
 
-void SearchGridModel::_clearMatches()
-{
-    for(QHash<QString, Plasma::QueryMatch*>::iterator it = m_matches.begin(); it != m_matches.end(); it++)
-        delete it.value();
-
-    m_matches.clear();
-    m_groups.clear();
-}
-
 void SearchGridModel::launchSearch(const QString &text)
 {
-    //kDebug() << "launchSearch called with: " << text;
+    //for(QHash<QString, Plasma::QueryMatch*>::iterator it = m_matches.begin(); it != m_matches.end(); it++)
+    //    delete it.value();
+    /// FIXFIXFIX
+
+    matches.clear();
+    emit dataClear();
+
+
+
     if(text.size() > 0)
         m_runnerManager->launchQuery(text);
     else
@@ -165,21 +123,3 @@ void SearchGridModel::launchSearch(const QString &text)
     }
 }
 
-SearchFilterGridModel::SearchFilterGridModel(QObject *parent, QAbstractListModel *sourceModel)
-    : QSortFilterProxyModel(parent)
-{
-    setFilterRole(SearchGridModel::GroupRole);
-    setSourceModel(sourceModel);
-}
-
-bool SearchFilterGridModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
-{
-    return sourceModel()->index(sourceRow, 0, sourceParent).data(SearchGridModel::GroupRole).toString() == group;
-}
-
-
-void SearchFilterGridModel::itemClicked(int newIndex)
-{
-    QString match = mapToSource(index(newIndex, 0)).data(SearchGridModel::CaptionRole).toString();
-    static_cast<SearchGridModel *>(sourceModel())->runMatch(match);
-}

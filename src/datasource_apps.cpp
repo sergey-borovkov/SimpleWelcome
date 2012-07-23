@@ -69,7 +69,7 @@ void DataSource_Apps::updateContent()
     appsList = GetFlatList(currentGroup);
 
     for (int i = 0; i < appsList.size(); i++)
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(appsList[i].icon), appsList[i].caption);
+        emit newItemData(QString("image://generalicon/appicon/%1").arg(appsList[i].icon), appsList[i].caption, i);
 }
 
 #include <QMessageBox>
