@@ -80,9 +80,8 @@ void SearchGridModel::runMatch(const QString &name)
 
 void SearchGridModel::itemClicked(int newIndex)
 {
-    m_runnerManager->run(*matches[newIndex].plasmaMatch);
-    //qDebug() << ->run( << newIndex;
-    //runMatch();
+    if (newIndex != -1)
+        m_runnerManager->run(*matches[newIndex].plasmaMatch);
 }
 
 void SearchGridModel::updateContent()
