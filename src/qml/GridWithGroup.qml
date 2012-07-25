@@ -1,28 +1,28 @@
 import QtQuick 1.1
 
 Column {
-    property string groupName
-    property variant gridDataSource
-    property variant prevGridGroup
-    property variant nextGridGroup
+    property alias groupName: groupLabel.text
+    property alias gridDataSource: iconGridView.dataSource
+    property alias prevGridGroup: iconGridView.prevGrid
+    property alias nextGridGroup: iconGridView.nextGrid
 
-    property variant gridView: iconGridView
-    property int count: iconGridView.count
+    property alias gridView: iconGridView
+    property alias count: iconGridView.count
     signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
 
 
     spacing: 16
-    width: parent.width
-    height: childrenRect.height
-    visible: iconGridView.count != 0
+    //width: parent.width
+    //height: childrenRect.height
+    //visible: iconGridView.count != 0
 
     Component.onCompleted: {
         iconGridView.selectionChangedByKeyboard.connect(gridCurrentItemChanged)
     }
 
     Text {
-        text: groupName
+        id: groupLabel
         width: parent.width
         height: 24
         maximumLineCount: 1
@@ -39,19 +39,15 @@ Column {
 
     IconGridView {
         id: iconGridView
-        dataSource: gridDataSource
 
         width: parent.width
         height: Math.ceil(count / columns) * 200
-
-        prevGrid: prevGridGroup.gridView
-        nextGrid: nextGridGroup.gridView
 
         interactive: false
 
         function updateSelection()
         {
-            parent.count = count // without this it is updated too late
+            //parent.count = count // without this it is updated too late// TEST WHAT THE HELL NOW'S HAPPENING
             if (highlightItem)
             {
                 highlightItem.animationDuration = 0
