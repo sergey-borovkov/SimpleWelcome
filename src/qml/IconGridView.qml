@@ -52,6 +52,7 @@ GridView {
     }
 
     Component.onCompleted: {
+        console.log("COMPLETED")
         dataSource.newItemData.connect(newItemData)
         dataSource.dataClear.connect(dataClear)
         dataSource.updateContent()
