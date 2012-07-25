@@ -2,7 +2,8 @@
 #define OAUTH2AUTHORIZER_H
 
 #include <QtCore/QObject>
-#include <QtCore/QUrl>
+
+class QUrl;
 
 class OAuth2Authorizer : public QObject
 {

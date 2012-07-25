@@ -5,6 +5,13 @@ Component {
     ShadowRectangle {
         width: 200
         height: Math.max( 120, ( column.height + bottomLine.height ) )
+        clip: true
+        Behavior on height {
+            NumberAnimation {
+                duration: 150
+            }
+        }
+
         Column {
             id: column
             width: parent.width

@@ -3,6 +3,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QList>
+#include <QtCore/QSet>
 
 class ISocialPlugin;
 class ListModel;
@@ -28,10 +29,21 @@ public slots:
     void newItems(QList<SocialItem *> items);
     void startSearch();
 
+    // temporary to get plugin names in QML
+    // this functionality should perphaps be made available
+    // to  QML via models
+    int count() const;
+    QString name(int i);
+
+signals:
+    void pluginAuthorized();
+
 private:
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;
     ListModel *m_socialModel;
+    QSet<QString> m_idSet;
+
     bool m_anyEnabled; // true if any plugins enabled and authorized
 };
 

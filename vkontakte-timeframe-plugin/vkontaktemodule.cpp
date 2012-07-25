@@ -58,6 +58,7 @@ QPixmap VkontakteModule::icon() const
 
 QWidget *VkontakteModule::authenticationWidget()
 {
+    qDebug() << "VkontakteModule::authenticationWidget";
     if ( !m_authorizer->isAuthorized() ) {
         m_authorizationView->setUrl( QUrl( "http://oauth.vk.com/authorize?client_id=2944872&"
                                            "scope=wall&"
@@ -66,6 +67,8 @@ QWidget *VkontakteModule::authenticationWidget()
                                            "response_type=token" ) );
         connect( m_authorizationView, SIGNAL( urlChanged( QUrl ) ),
                  m_authorizer, SLOT( urlChanged( QUrl ) ) );
+
+        qDebug() << "VkontakteModule::authenticationWidget:   setUrl for m_authorizationView...";
     }
 
     return m_authorizationView;
@@ -75,8 +78,12 @@ void VkontakteModule::onAcessTokenChanged()
 {
     if ( m_authorizer->isAuthorized() ) {
         m_authorizationView->hide();
-        qDebug() << "VkontakteModule::onAcessTokenChanged:  emit authorized!!!!!!!!";
+        qDebug() << "VkontakteModule::onAcessTokenChanged:  is authorized!!!!!!!!";
         emit authorized();
+    }
+    else {
+        disconnect( m_authorizationView, SIGNAL( urlChanged( QUrl ) ),
+                    m_authorizer, SLOT( urlChanged( QUrl ) ) );
     }
 }
 

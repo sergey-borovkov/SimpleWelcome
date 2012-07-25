@@ -44,29 +44,63 @@ void FeedItem::fillFromMap( QVariantMap map )
         dt.setTime_t( t );
         m_data.insert( Date, dt.toString( "d MMMM, h:mm" ) );
     }
-    if ( map.contains( "attachment" ) ) {
-        QVariantMap attachmentMap = map[ "attachment" ].toMap();
-        if ( attachmentMap.contains( "type" ) ) {
-//            qDebug() << "***********       attachment type = " << attachmentMap.value("type").toString();
-            QString typeAttachment = attachmentMap.value( "type" ).toString();
+    //    if ( map.contains( "attachment" ) ) {
+    //        QVariantMap attachmentMap = map[ "attachment" ].toMap();
+    //        if ( attachmentMap.contains( "type" ) ) {
+    //            //            qDebug() << "***********       attachment type = " << attachmentMap.value("type").toString();
+    //            QString typeAttachment = attachmentMap.value( "type" ).toString();
 
-            if ( typeAttachment == "photo" ) {
-                QVariantMap photoMap = attachmentMap[ "photo" ].toMap();
+    //            if ( typeAttachment == "photo" ) {
+    //                QVariantMap photoMap = attachmentMap[ "photo" ].toMap();
 
-                if ( photoMap.contains( "src" ) ) {
-                    m_data.insert( Image, photoMap.value( "src" ).toString() );
+    //                if ( photoMap.contains( "src" ) ) {
+    //                    m_data.insert( ImageUrl, photoMap.value( "src" ).toString() );
+    //                }
+    //            }
+
+    //            if ( typeAttachment == "audio" ) {
+    //                QVariantMap audioMap = attachmentMap[ "audio" ].toMap();
+
+    //                if ( audioMap.contains( "title" ) ) {
+    //                    m_data.insert( Audio, audioMap.value( "performer" ).toString() + " - " + audioMap.value( "title" ).toString());
+    //                    qDebug() <<  "FeedItem::fillFromMap:   audio - " << audioMap.value( "performer" ).toString() + " - " + audioMap.value( "title" ).toString();
+    //                }
+    //            }
+    //        }
+    //    }
+
+    if ( map.contains( "attachments" ) ) {
+        QVariantList attachmentList = map[ "attachments" ].toList();
+        qDebug() << "FeedItem::fillFromMap:   it is attachmentss list!!!";
+
+        foreach ( QVariant item, attachmentList ) {
+            QVariantMap map = item.toMap();
+
+            if ( map.contains( "type" ) ) {
+                //                    qDebug() << "***********       attachments type = " << map.value( "type" ).toString();
+                QString typeAttachment = map.value( "type" ).toString();
+
+                if ( typeAttachment == "photo" ) {
+                    QVariantMap photoMap = map[ "photo" ].toMap();
+
+                    if ( photoMap.contains( "src" ) ) {
+                        m_data.insert( ImageUrl, photoMap.value( "src" ).toString() );
+                        qDebug() <<  "FeedItem::fillFromMap:   " << map.value( "type" ).toString() << " - " << photoMap.value( "src" ).toString();
+                    }
                 }
-            }
 
-            if ( typeAttachment == "audio" ) {
-                QVariantMap audioMap = attachmentMap[ "audio" ].toMap();
+                if ( typeAttachment == "audio" ) {
+                    QVariantMap audioMap = map[ "audio" ].toMap();
 
-                if ( audioMap.contains( "title" ) ) {
-                    m_data.insert( Audio, audioMap.value( "performer" ).toString() + " - " + audioMap.value( "title" ).toString());
+                    if ( audioMap.contains( "title" ) ) {
+                        m_data.insert( Audio, audioMap.value( "performer" ).toString() + " - " + audioMap.value( "title" ).toString());
+                        qDebug() <<  "FeedItem::fillFromMap:   " << map.value( "type" ).toString() << " - " << audioMap.value( "performer" ).toString() + " - " + audioMap.value( "title" ).toString();
+                    }
                 }
             }
         }
     }
+
 
     if ( map.contains( "likes" ) ) {
         QVariantMap likesMap = map[ "likes" ].toMap();
