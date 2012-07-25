@@ -9,8 +9,11 @@ const QString Request::wallUrl = QLatin1String( "https://api.vk.com/method/wall.
 const QString Request::logoutUrl = QLatin1String( "http://oauth.vk.com/oauth/logout" );
 // response http://oauth.vk.com/oauth/authorize?&_hash=0&success=1
 
-Request::Request(const QString &accessToken, RequestType type, QObject *parent) :
-    QObject(parent), m_accessToken(accessToken), m_type(type)
+Request::Request( const QString &accessToken, RequestType type, QObject *parent, int offset )
+    : QObject( parent )
+    , m_accessToken( accessToken )
+    , m_type( type )
+    , m_offset( offset )
 {
 }
 
@@ -20,7 +23,7 @@ void Request::startQuery()
 
     if ( m_type == WallPosts ) {
         requestUrl = wallUrl;
-        requestUrl.addQueryItem( QLatin1String( "offset" ), "0" );
+        requestUrl.addQueryItem( QLatin1String( "offset" ), QString( "%1" ).arg( m_offset ) );
         requestUrl.addQueryItem( QLatin1String( "count" ), "100" );
         requestUrl.addQueryItem( QLatin1String( "filter" ), "all" );
 

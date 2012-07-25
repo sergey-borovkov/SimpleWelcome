@@ -43,7 +43,7 @@ void FeedItem::fillFromMap(QVariantMap map)
             m_data.insert(Text, message);
     }
     if(map.contains("picture"))
-        m_data.insert(Image, map.value("picture").toString());
+        m_data.insert(ImageUrl, map.value("picture").toString());
 
     if(map.contains("story"))
     {

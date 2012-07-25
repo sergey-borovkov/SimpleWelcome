@@ -9,11 +9,12 @@
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
 
-SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent) :
-    QObject(parent), m_plugins(plugins),
-    m_socialModel(new ListModel(SocialItem::roleNames(), this)),
-    m_pluginModel(new PluginModel(PluginItem::roleNames(), this)),
-    m_anyEnabled(false)
+SocialProxy::SocialProxy( QList<ISocialPlugin *> plugins, QObject *parent )
+    : QObject( parent )
+    , m_plugins( plugins )
+    , m_pluginModel( new PluginModel( PluginItem::roleNames(), this ) )
+    , m_socialModel( new ListModel( SocialItem::roleNames(), this ) )
+    , m_anyEnabled( false )
 {
     QSettings settings("ROSA", "Timeframe");
 
@@ -23,9 +24,10 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent) :
         if((object = dynamic_cast<QObject *>(plugin->requestManager())) != 0)
             connect(object, SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
 
-        if((object = dynamic_cast<QObject *>(plugin)) != 0)
+        if((object = dynamic_cast<QObject *>(plugin)) != 0) {
             connect(object, SIGNAL(authorized()), SLOT(authorized()));
-
+            connect(object, SIGNAL(deauthorized()), SLOT(deauthorized()));
+        }
         PluginItem *item = new PluginItem(plugin);
         m_pluginModel->appendRow(item);
 
@@ -70,6 +72,16 @@ void SocialProxy::startSearch()
     }
 }
 
+int SocialProxy::count() const
+{
+    return m_plugins.size();
+}
+
+QString SocialProxy::name(int i)
+{
+    return m_plugins.at(i)->name();
+}
+
 void SocialProxy::authorized()
 {
     qDebug() << "SocialProxy::authorized";
@@ -77,10 +89,13 @@ void SocialProxy::authorized()
     plugin->requestManager()->queryWall(QDate(), QDate());
     if ( plugin->authenticationWidget() )
         plugin->authenticationWidget()->hide();
+
+    emit pluginAuthorized();
 }
 
 void SocialProxy::deauthorized()
 {
+    qDebug() << "SocialProxy::deauthorized";
 }
 
 bool SocialProxy::anyPluginsEnabled()
@@ -96,7 +111,13 @@ void SocialProxy::newItem(SocialItem *item)
 void SocialProxy::newItems(QList<SocialItem *> items)
 {
     QList<ListItem *> list;
-    foreach(SocialItem *item, items)
-        list.append(item);
+    foreach( SocialItem *item, items ) {
+        QString strId = QString( "%1-%2" ).arg( item->pluginName() ).arg( item->id() );
+        if ( m_idSet.contains( strId ) )
+                continue;
+        m_idSet.insert( strId );
+
+        list.append( item );
+    }
     m_socialModel->appendRows(list);
 }

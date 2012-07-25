@@ -15,7 +15,8 @@ public:
     {
         Name,
         Icon,
-        Item
+        Item,
+        Authorized
     };
 
     PluginItem(ISocialPlugin *module);
@@ -29,6 +30,7 @@ public:
         roles.insert(Name, "name");
         roles.insert(Icon, "icon");
         roles.insert(Item, "item");
+        roles.insert(Authorized, "authorized");
         return roles;
     }
 

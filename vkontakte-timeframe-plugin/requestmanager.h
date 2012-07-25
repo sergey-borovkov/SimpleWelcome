@@ -16,7 +16,8 @@ public:
     void logout();
 
 private slots:
-    void reply(QByteArray reply);
+    void reply( QByteArray reply );
+    void replyQueryWall( QByteArray reply );
 
 signals:
     void authorizationComplete();

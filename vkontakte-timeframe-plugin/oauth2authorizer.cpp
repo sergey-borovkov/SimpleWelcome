@@ -3,6 +3,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QStringList>
 #include <QtCore/QtDebug>
+#include <QtCore/QUrl>
 
 const QString OAuth2Authorizer::redirectUrl = "http://oauth.vk.com/blank.html";
 

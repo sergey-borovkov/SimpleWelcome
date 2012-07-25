@@ -15,7 +15,7 @@ public:
         Logout
     };
 
-    explicit Request(const QString &accessToken, RequestType type, QObject *parent = 0);
+    explicit Request(const QString &accessToken, RequestType type, QObject *parent = 0, int offset = 0);
     void startQuery();
 
 signals:
@@ -31,6 +31,7 @@ private:
     static const QString logoutUrl;
     RequestType m_type;
     QString m_accessToken;
+    int m_offset;
 };
 
 #endif // REQUEST_H

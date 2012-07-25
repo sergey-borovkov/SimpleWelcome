@@ -91,11 +91,13 @@ Item {
 
         ListModel {
             id: menuSocialItems
-            ListElement { itemText: "All" }
-            ListElement { itemText: "Facebook" }
-            ListElement { itemText: "Twitter" }
-            ListElement { itemText: "VK" }
-            ListElement { itemText: "Manage networks" }
+            Component.onCompleted: {
+                append({ "itemText": "All"})
+                var count = socialProxy.count();
+                for(var i = 0; i < count; i++)
+                    append({ "itemText": socialProxy.name(i) })
+                append({ "itemText": "Manage networks"})
+            }
         }
 
         DropListBox {
@@ -103,9 +105,6 @@ Item {
             model: menuDocItems
             name: "My Local Documents"
             state: "current"
-            onSelectedIndexChanged: {
-                console.debug( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
-            }
 
             onClicked: {
                 console.log(selectedText + " " + selectedIndex)
@@ -121,18 +120,13 @@ Item {
             name: "Social networking sites"
             property int __wasSearching: 0
             onSelectedIndexChanged: {
-                console.debug( selectedText + ", " + menuSocialItems.get( selectedIndex ).itemText )
-                if(selectedIndex == 4)
+                if(selectedText == "Manage networks")
                     timeFrameTab.state = "socialauthorization"
-                else
-                {
+                else {
                     timeFrameTab.state = "socialgallery"
-                    if(__wasSearching == 0)
-                        socialProxy.startSearch()
-                    __wasSearching = 1
+                    socialProxy.startSearch()
                 }
-            }
-            onClicked: {
+
                 state = "current"
                 localDocs.state = ""
             }
@@ -520,6 +514,10 @@ Item {
                 target: localDocs
                 state: ""
             }
+            PropertyChanges {
+                target: socialView
+                opacity: 1
+            }
         },
         State {
             name: "socialauthorization"; extend: "socialgallery"
@@ -527,6 +525,10 @@ Item {
             PropertyChanges {
                 target: socialView
                 visible: false
+            }
+            PropertyChanges {
+                target: socialView
+                opacity: 0
             }
             PropertyChanges {
                 target: authorizationView
