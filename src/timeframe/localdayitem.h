@@ -29,18 +29,18 @@ public slots:
 };
 
 
-class GalleryItem : public QObject
+class LocalDayItem : public QObject
 {
     Q_OBJECT
 public:
-    explicit GalleryItem(const QDate &date, QObject *parent = 0);
-    ~GalleryItem();
+    explicit LocalDayItem(const QDate &date, QObject *parent = 0);
+    ~LocalDayItem();
 
     QDate getDate();
     int   getCount();
     //ItemModel * model();
     TimeFrameFilterModel * model();
-    QStringList types() const;
+    QString types() const;
     void thumbnailReady(QString);
     void setActivityFilter(const QRegExp&);
 
@@ -53,7 +53,7 @@ public slots:
 
 
 private:
-    QStringList m_types;
+    QString     m_types;
     QDate       m_date;
     int         m_count;
     ItemModel*  m_itemModel;

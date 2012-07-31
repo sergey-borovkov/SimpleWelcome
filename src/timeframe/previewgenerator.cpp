@@ -20,7 +20,7 @@
  */
 
 #include "previewgenerator.h"
-#include "gallerymodel.h"
+#include "localdaymodel.h"
 
 #include <QtCore/QStringList>
 #include <QtCore/QRect>
@@ -94,7 +94,7 @@ void PreviewGenerator::start(const QStringList& list)
         m_files.insert(list[i],list[i]);
     }
 
-    m_job = KIO::filePreview(m_fileList, 512, 0 , 0, 0, false, true, &m_plugins);
+    m_job = KIO::filePreview(m_fileList, 512, 0 , 0, 0, true, true, &m_plugins);
     m_job->setIgnoreMaximumSize();
     m_job->setAutoDelete(true);
 
@@ -102,7 +102,7 @@ void PreviewGenerator::start(const QStringList& list)
     connect(m_job, SIGNAL(failed(const KFileItem&)), SLOT(setNullIcon(const KFileItem &)));
 }
 
-void PreviewGenerator::setModel(GalleryModel* model)
+void PreviewGenerator::setModel(LocalDayModel* model)
 {
     m_model = model;
 }

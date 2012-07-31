@@ -7,21 +7,22 @@
 #include "nepomuksource.h"
 
 class Activity;
-class GalleryModel;
+class LocalDayModel;
 
-class GalleryLister : public QObject
+class ActivityProxy : public QObject
 {
     Q_OBJECT
 public:
-    explicit GalleryLister(QObject *parent = 0);
+    explicit ActivityProxy(QObject *parent = 0);
 
     void addNepomukSource(NepomukSource* source);
-    void setModel(GalleryModel* model);
+    void setModel(LocalDayModel* model);
 
 signals:
     void newActivities (QList<Activity*>);
-    void newMonth(int, int);
+    void newMonth(int, int , QString type);
     void changeFilterString(const QString&);
+    void finished();
 
 public slots:
     void startSearch(QDate date, int direction);
@@ -35,7 +36,7 @@ private slots:
     void newData(QList<Activity*>);
 
 private:
-    GalleryModel* m_model;
+    LocalDayModel* m_model;
     NepomukSource* m_source;
 };
 

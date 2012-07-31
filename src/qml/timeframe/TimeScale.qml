@@ -3,39 +3,39 @@ import QtQuick 1.1
 Item {
     id: timeScale
     property variant list: timeScaleList
-    property variant  model: monthModel
+    //property variant  model: monthModel
 
     function getMonthStr(index) {
 
         switch (index) {
-        case 0:
-            return "JAN"
         case 1:
-            return "FEB"
+            return "JAN"
         case 2:
-            return "MAR"
+            return "FEB"
         case 3:
-            return "APR"
+            return "MAR"
         case 4:
-            return "MAY"
+            return "APR"
         case 5:
-            return "JUN"
+            return "MAY"
         case 6:
-            return "JUL"
+            return "JUN"
         case 7:
-            return "AUG"
+            return "JUL"
         case 8:
-            return "SEP"
+            return "AUG"
         case 9:
-            return "OCT"
+            return "SEP"
         case 10:
-            return "NOV"
+            return "OCT"
         case 11:
+            return "NOV"
+        case 12:
             return "DEC"
         }
         return "UND"
     }
-
+/*
     Connections {
         target: nepomukSource
         onNewTSEntries: {
@@ -46,7 +46,7 @@ Item {
     ListModel {
         id: monthModel
     }
-
+*/
     Component {
         id: monthDelegate
         Item {
@@ -77,7 +77,7 @@ Item {
             Text {
                 color: "white"
                 id: monthLabel
-                text: qsTr(month)
+                text: getMonthStr(month)// + ' ' + year
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 10
@@ -124,8 +124,8 @@ Item {
 
         Connections {
             target: timeScaleList
-            onCurrentIndexChanged: {
-                yearLabel.text = monthModel.get(timeScaleList.currentIndex).year
+            onCurrentIndexChanged: {                
+                yearLabel.text = timeScaleModel.getYear(timeScaleList.currentIndex)
             }
         }
     }
@@ -146,12 +146,12 @@ Item {
 
         ListView {
             id: timeScaleList
-            model: monthModel
+            model: timeScaleModel
             delegate: monthDelegate
             highlight: highlight
             highlightFollowsCurrentItem: false
             boundsBehavior: Flickable.StopAtBounds
-            layoutDirection: Qt.RightToLeft
+            //layoutDirection: Qt.RightToLeft
             anchors.fill: parent
             anchors.rightMargin: 3
             anchors.leftMargin: 3
@@ -176,8 +176,10 @@ Item {
                             timeFrameTab.direction = false // moving left
                         else
                             timeFrameTab.direction = true  // moving right
-                        timeFrameTab.__year = monthModel.get(timeScale.list.currentIndex).year
-                        timeFrameTab.__month = monthModel.get(timeScale.list.currentIndex).monthNumber - 1
+                        //timeFrameTab.__year = monthModel.get(timeScale.list.currentIndex).year
+                        timeFrameTab.__year = timeScaleModel.getYear(timeScaleList.currentIndex)
+                        //timeFrameTab.__month = monthModel.get(timeScale.list.currentIndex).monthNumber - 1
+                        timeFrameTab.__month = timeScaleModel.getMonth(timeScaleList.currentIndex) - 1
                         timeFrameTab.currentDateChanged()
                         //scene.currentIndex = timeFrameTab.getTimeLineProperlyItem()
 
@@ -187,7 +189,7 @@ Item {
                         timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
 
                         //set index on gallery
-                        galleryView.currentIndex = timeFrameTab.getTimeLineGalleryIndex()
+                        galleryView.currentIndex = timeLine.currentIndex
                         galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center )
                     }
                 }

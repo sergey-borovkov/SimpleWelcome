@@ -1,17 +1,29 @@
-#ifndef GALLERYMODEL_H
-#define GALLERYMODEL_H
+#ifndef LOCALDAYMODEL_H
+#define LOCALDAYMODEL_H
 
 #include <QAbstractListModel>
+#include <QSortFilterProxyModel>
 #include <QObject>
-#include "galleryitem.h"
+#include "localdayitem.h"
 #include "itemmodel.h"
 
 class ItemModel;
-//class GalleryItem;
 class Activity;
-class GalleryLister;
+class ActivityProxy;
 
-class GalleryModel : public QAbstractListModel
+class TimeFrameDayFilterModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    explicit TimeFrameDayFilterModel(QObject * parent = 0);
+public slots:
+    void setFilter(const QString &filter);
+    QObject* itemsModel(QDate date) const;
+    int getIndexByDate(int year, int month, bool direction);
+    QDate getDateOfIndex(int listIndex);
+};
+
+class LocalDayModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
@@ -21,20 +33,21 @@ public:
         CurrentDateRole = Qt::UserRole + 1,
         ItemsRole,
         CountRole,
+        TypesRole,
         ItemsCountRole
     };
-    explicit GalleryModel(QObject *parent = 0);
-     ~GalleryModel();
+    explicit LocalDayModel(QObject *parent = 0);
+     ~LocalDayModel();
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    void appendRow(GalleryItem* item);
-    void appendRows(const QList<GalleryItem*> &items);
-    void insertRow(int row, GalleryItem *item);
+    void appendRow(LocalDayItem* item);
+    void appendRows(const QList<LocalDayItem*> &items);
+    void insertRow(int row, LocalDayItem *item);
     bool removeRow(int row, const QModelIndex &parent);
     bool removeRows(int row, int count, const QModelIndex &parent);
-    void setLister(GalleryLister* lister);
-    QModelIndex indexFromItem(const GalleryItem *item) const;
-    GalleryItem * find(const QDate &date) const;
+    void setLister(ActivityProxy* lister);
+    QModelIndex indexFromItem(const LocalDayItem *item) const;
+    LocalDayItem * find(const QDate &date) const;
     void clear();
 
 public slots:
@@ -53,10 +66,10 @@ private slots:
     void handleItemChange();
 
 private:
-    QList <GalleryItem *> m_items;
+    QList <LocalDayItem *> m_items;
     QHash<int, QByteArray> hash;
     QHash<QString, QDate> m_urlHash;
-    GalleryLister* m_lister;
+    ActivityProxy* m_lister;
 };
 
 #endif // GALLERYMODEL_H

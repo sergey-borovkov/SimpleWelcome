@@ -20,7 +20,7 @@ Item {
     //    }
 
     function getTimeLineGalleryIndex() {
-        var index = galleryModel.getIndexByDate(__year, __month+1, direction)
+        var index = localDayModel.getIndexByDate(__year, __month+1, direction)
         //console.log("getIndexByDate: " + index)
         return index
     }
@@ -39,12 +39,12 @@ Item {
     function currentDateChanged()
     {                
         var d = new Date(__year, __month, day )
-        //galleryLister.startSearch(d, direction)
-        galleryLister.startSearch(d, true)
+        //activityProxy.startSearch(d, direction)
+        activityProxy.startSearch(d, true)
         __isSearching = true
-        searchLabel.visible = true
-        if (timeFrameTab.state ==="gallery" )
-            timeFrameTab.state = "gallerySearch"
+        //searchLabel.visible = true
+       // if (timeFrameTab.state ==="gallery" )
+         //   timeFrameTab.state = "gallerySearch"
     }
 
     //Start initial search
@@ -65,9 +65,9 @@ Item {
         onFinished: {
             __isSearching = false
             //console.log("search finished")
-            searchLabel.visible = false
-            if (timeFrameTab.state === "gallerySearch")
-                timeFrameTab.state = "gallery"
+            //searchLabel.visible = false
+           // if (timeFrameTab.state === "gallerySearch")
+             //   timeFrameTab.state = "gallery"
             //else if (timeFrameTab.state === "timeLineSearch")
             //  timeFrameTab.state = ""
 
@@ -106,7 +106,9 @@ Item {
             state: "current"
             onSelectedIndexChanged: {
                 console.log( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
-                galleryLister.changeType(selectedText)
+                activityProxy.changeType(selectedText)
+                timeScaleModel.setFilter(selectedText)
+                localDayModel.setFilter(selectedText)
             }
             onClicked: {
                 console.debug( "My Local Documents clicked" )
@@ -146,23 +148,23 @@ Item {
         color: "grey"
         radius: 1
     }
-
+/*
     function getTSCurrentDate() {
-        var date = new Date(timeScale.model.get(timeScale.list.currentIndex).year, timeScale.model.get(timeScale.list.currentIndex).monthNumber - 1, 1)
+        var date = new Date(timeScaleModel.getYear(timeScale.list.currentIndex), timeScaleModel.getMonth(timeScale.list.currentIndex).monthNumber, 1)
         return date
     }
 
-
+*/
     //get index of date in TimeScale
     function getTSIndex(year, monthNumber) {
         var i
-        for (i = 0; i < timeScale.model.count; i++ ) {
-            if ((year === timeScale.model.get(i).year) && (monthNumber === timeScale.model.get(i).monthNumber - 1 ))
+        for (i = 0; i < timeScaleModel.count(); i++ ) {
+            if ((year === timeScaleModel.getYear(i)) && (monthNumber === timeScaleModel.getMonth(i) - 1 ))
                 return i
         }
         return -1
     }
-
+/*
     Text {
         id: searchLabel
         color: "white"
@@ -173,14 +175,14 @@ Item {
         visible: false
         z: 1000
     }
-
-
+*/
+/*
     Binding {
         target: timeFrameTab
         property: __isSearching
         value:  searchLabel.visible
     }
-
+*/
     ListView {
         id: timeLine
 
@@ -190,7 +192,7 @@ Item {
 
         height: parent.height - menuBar.height - separator.height
         delegate: TimeLineDelegate {}
-        model: galleryModel
+        model: localDayModel
         orientation: Qt.Horizontal
         highlightFollowsCurrentItem: true
         highlightRangeMode: ListView.StrictlyEnforceRange
@@ -201,7 +203,7 @@ Item {
         cacheBuffer: desktopWidth
         //snapMode: ListView.SnapToItem
         onCurrentIndexChanged: {
-            var date = galleryModel.getDateOfIndex(timeLine.currentIndex)
+            var date = localDayModel.getDateOfIndex(timeLine.currentIndex)
             timeFrameTab.__year = date.getFullYear()
             timeFrameTab.__month = date.getMonth()
             timeFrameTab.day = date.getDay()
@@ -339,7 +341,7 @@ Item {
         anchors.leftMargin: 20
         anchors.rightMargin: 20
         visible: false
-        model: galleryModel
+        model: localDayModel
         delegate: GalleryDelegate { }
         orientation: ListView.Horizontal
     }
@@ -361,7 +363,7 @@ Item {
                                             galleryView.y + galleryView.height/2 + galleryView.contentY)
             }
 
-            var date = galleryModel.getDateOfIndex(index)
+            var date = localDayModel.getDateOfIndex(index)
             timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
             __year = date.getFullYear()
             __month = date.getMonth()
@@ -434,7 +436,7 @@ Item {
         onTriggered: {
             var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
                                             galleryView.y + galleryView.height/2 + galleryView.contentY)
-            var date = galleryModel.getDateOfIndex(index)
+            var date = localDayModel.getDateOfIndex(index)
             timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
         }
     }
