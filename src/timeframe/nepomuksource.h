@@ -8,6 +8,7 @@
 #include <Nepomuk/Query/FileQuery>
 
 #include <QDate>
+#include <QTimer>
 
 namespace Nepomuk
 {
@@ -68,6 +69,7 @@ private:
     Mode m_mode;
     int m_limit;
     QList<QDate> m_searchQueue;
+    QTimer* m_timer;
 };
 
 #endif // NEPOMUKSOURCE_H

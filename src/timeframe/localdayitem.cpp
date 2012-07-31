@@ -1,4 +1,4 @@
-#include "galleryitem.h"
+#include "localdayitem.h"
 #include "itemmodel.h"
 #include "activityset.h"
 #include <QVariant>
@@ -26,7 +26,7 @@ QString TimeFrameFilterModel::url(int row)
 }
 
 
-GalleryItem::GalleryItem(const QDate &date, QObject *parent) :
+LocalDayItem::LocalDayItem(const QDate &date, QObject *parent) :
     QObject(parent), m_model(0), m_date(date)
 {
     m_itemModel = new ItemModel(this);
@@ -38,46 +38,46 @@ GalleryItem::GalleryItem(const QDate &date, QObject *parent) :
     //m_model->setFilterRegExp("Video");
 }
 
-GalleryItem::~GalleryItem()
+LocalDayItem::~LocalDayItem()
 {
     qDebug() << "delete item";
     //delete m_model;
 }
 
 
-void GalleryItem::setDate(const QDate &d)
+void LocalDayItem::setDate(const QDate &d)
 {
     m_date = d;
     emit dataChanged();
 }
 
-void GalleryItem::addActivity(Activity* item)
+void LocalDayItem::addActivity(Activity* item)
 {
     if (!m_types.contains(item->getType()))
     {
-        m_types.append(item->getType());        
+        m_types += (';'+ item->getType());
     }
     //ItemModel* model = qobject_cast<ItemModel*>(m_model->sourceModel());
     m_itemModel->addActivityItem(item);
     emit dataChanged();
 }
 
-QDate GalleryItem::getDate()
+QDate LocalDayItem::getDate()
 {
     return m_date;
 }
 
-int GalleryItem::getCount()
+int LocalDayItem::getCount()
 {
     return m_model->rowCount(QModelIndex());
 }
 
-TimeFrameFilterModel * GalleryItem::model()
+TimeFrameFilterModel * LocalDayItem::model()
 {
     return m_model;
 }
 
-void GalleryItem::thumbnailReady(QString url)
+void LocalDayItem::thumbnailReady(QString url)
 {
 //    if (!m_model)
 //        return;
@@ -90,12 +90,12 @@ void GalleryItem::thumbnailReady(QString url)
 
 }
 
-QStringList GalleryItem::types() const
+QString LocalDayItem::types() const
 {
     return m_types;
 }
 
-void GalleryItem::setActivityFilter(const QRegExp& filter)
+void LocalDayItem::setActivityFilter(const QRegExp& filter)
 {
    m_model->setFilterRegExp(filter);
    emit dataChanged();

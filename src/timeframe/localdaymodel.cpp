@@ -1,14 +1,63 @@
-#include "gallerymodel.h"
+#include "localdaymodel.h"
 #include "activityset.h"
-#include "galleryitem.h"
-#include "gallerylister.h"
+#include "localdayitem.h"
+#include "activityproxy.h"
 #include "itemmodel.h"
 
 #include <QVariant>
 #include <QRegExp>
 #include <QSortFilterProxyModel>
 
-GalleryModel::GalleryModel(QObject *parent) :
+
+TimeFrameDayFilterModel::TimeFrameDayFilterModel(QObject *parent) :
+    QSortFilterProxyModel (parent)
+{
+    setDynamicSortFilter(true);
+    setFilterRole(LocalDayModel::TypesRole);
+}
+
+void TimeFrameDayFilterModel::setFilter(const QString &filter)
+{
+    QRegExp filterRegExp;
+    if (filter == "Local")
+        filterRegExp = QRegExp("Image|Video|Doc");
+    else if (filter == "Photo")
+        filterRegExp = QRegExp("Image");
+    else if (filter == "Video")
+        filterRegExp = QRegExp("Video");
+    else if (filter == "Documents")
+        filterRegExp = QRegExp("Doc");
+    setFilterRegExp(filterRegExp);
+}
+
+QObject* TimeFrameDayFilterModel::itemsModel(QDate date) const
+{
+    LocalDayModel* model = qobject_cast<LocalDayModel*>(sourceModel());
+    if (model)
+        return model->itemsModel(date);
+    return 0;
+}
+
+QDate TimeFrameDayFilterModel::getDateOfIndex(int listIndex)
+{
+    if ((listIndex >= rowCount()) || (listIndex < 0))
+        return QDate();
+    return data(index(listIndex,0),LocalDayModel::CurrentDateRole).toDate();
+}
+
+int TimeFrameDayFilterModel::getIndexByDate(int year, int month,  bool direction)
+{
+    for (int i = 0; i < rowCount(); i++)
+    {
+        QDate date = data(index(i,0),LocalDayModel::CurrentDateRole).toDate();
+        if((date.year() == year) && (date.month() == month))
+                return i;
+    }
+    return -1;
+}
+
+
+LocalDayModel::LocalDayModel(QObject *parent) :
     QAbstractListModel(parent),
     m_lister(0)
 
@@ -16,6 +65,7 @@ GalleryModel::GalleryModel(QObject *parent) :
     hash.insert(ItemsRole, "items");
     hash.insert(CurrentDateRole, "date");
     hash.insert(CountRole, "count");
+    hash.insert(TypesRole, "type");
     hash.insert(ItemsCountRole, "size");
     setRoleNames(hash);
     /*
@@ -29,12 +79,12 @@ GalleryModel::GalleryModel(QObject *parent) :
     */
 }
 
-GalleryModel::~GalleryModel()
+LocalDayModel::~LocalDayModel()
 {
     clear();
 }
 
-QVariant GalleryModel::data(const QModelIndex &index, int role) const
+QVariant LocalDayModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
     {
@@ -54,6 +104,10 @@ QVariant GalleryModel::data(const QModelIndex &index, int role) const
     {
         return m_items.size();
     }
+    else if(role == TypesRole)
+    {
+        return m_items.at(index.row())->types();
+    }
     else if(role == ItemsCountRole)
     {
         return m_items[index.row()]->getCount();
@@ -61,7 +115,7 @@ QVariant GalleryModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-int GalleryModel::rowCount(const QModelIndex &parent) const
+int LocalDayModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
@@ -69,7 +123,7 @@ int GalleryModel::rowCount(const QModelIndex &parent) const
         return m_items.size();
 }
 
-QObject* GalleryModel::itemsModel(QDate date) const
+QObject* LocalDayModel::itemsModel(QDate date) const
 {
     for (int i = 0; i < m_items.size(); i++)
     {
@@ -79,7 +133,7 @@ QObject* GalleryModel::itemsModel(QDate date) const
     return 0;
 }
 
-void GalleryModel::setLister(GalleryLister *lister)
+void LocalDayModel::setLister(ActivityProxy *lister)
 {
     if (m_lister)
         delete m_lister;
@@ -90,7 +144,7 @@ void GalleryModel::setLister(GalleryLister *lister)
     connect( m_lister, SIGNAL(changeFilterString(QString)), this, SLOT(setActivityType(QString)));
 }
 
-void GalleryModel::newActivities(QList<Activity*> list)
+void LocalDayModel::newActivities(QList<Activity*> list)
 {
     // qDebug() << "------new Activities--------";
     for (int i = 0; i < list.size() ; i++)
@@ -103,7 +157,7 @@ void GalleryModel::newActivities(QList<Activity*> list)
         //qDebug() << item->getDate();
 
         //first check of null item, if we find one, edit him with new data
-        foreach (GalleryItem* it, m_items)
+        foreach (LocalDayItem* it, m_items)
         {
             if ( (it->getDate().year() == item->getDate().year())
                  && (it->getDate().month() == item->getDate().month())
@@ -169,7 +223,7 @@ void GalleryModel::newActivities(QList<Activity*> list)
         //if (removeNullItem(item->getDate().year(), item->getDate().month()))
           //  j--;
 
-        GalleryItem * gallItem = new GalleryItem(item->getDate());
+        LocalDayItem * gallItem = new LocalDayItem(item->getDate());
         gallItem->addActivity(item);
         insertRow(j,gallItem);
 
@@ -179,10 +233,10 @@ void GalleryModel::newActivities(QList<Activity*> list)
 }
 
 //Add null gallery item to model
-void GalleryModel::newMonth(int year, int month)
+void LocalDayModel::newMonth(int year, int month)
 {
     QDate date(year, month, 1);
-    foreach(GalleryItem* item, m_items)
+    foreach(LocalDayItem* item, m_items)
     {
         if((item->getDate().year() == year) && (item->getDate().month() == month))
         {
@@ -190,7 +244,7 @@ void GalleryModel::newMonth(int year, int month)
         }
     }
     int j = 0;
-    GalleryItem * gallItem = new GalleryItem(date);
+    LocalDayItem * gallItem = new LocalDayItem(date);
     if (m_items.size() > 0)
     {
         while (m_items.at(j)->getDate() <= gallItem->getDate())
@@ -223,7 +277,7 @@ void GalleryModel::newMonth(int year, int month)
 }
 
 //Remove null gallery item from model
-bool GalleryModel::removeNullItem(int year, int month)
+bool LocalDayModel::removeNullItem(int year, int month)
 {
     //qDebug() << "call Remove null" << year << month;
     QDate date(year, month, 1);
@@ -252,22 +306,22 @@ bool GalleryModel::removeNullItem(int year, int month)
 }
 
 
-void GalleryModel::appendRow(GalleryItem *item)
+void LocalDayModel::appendRow(LocalDayItem *item)
 {
-    appendRows(QList<GalleryItem*>() << item);
+    appendRows(QList<LocalDayItem*>() << item);
 }
 
-void GalleryModel::appendRows(const QList<GalleryItem *> &items)
+void LocalDayModel::appendRows(const QList<LocalDayItem *> &items)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount()+items.size()-1);
-    foreach(GalleryItem *item, items) {
+    foreach(LocalDayItem *item, items) {
         connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
         m_items.append(item);
     }
     endInsertRows();
 }
 
-void GalleryModel::insertRow(int row, GalleryItem *item)
+void LocalDayModel::insertRow(int row, LocalDayItem *item)
 {
     beginInsertRows(QModelIndex(), row, row);
     connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
@@ -275,23 +329,23 @@ void GalleryModel::insertRow(int row, GalleryItem *item)
     endInsertRows();
 }
 
-void GalleryModel::handleItemChange()
+void LocalDayModel::handleItemChange()
 {
-    GalleryItem* item = static_cast<GalleryItem*>(sender());
+    LocalDayItem* item = static_cast<LocalDayItem*>(sender());
     QModelIndex index = indexFromItem(item);
     if(index.isValid())
         emit dataChanged(index, index);
 }
 
-GalleryItem * GalleryModel::find(const QDate &date) const
+LocalDayItem * LocalDayModel::find(const QDate &date) const
 {
-    foreach(GalleryItem* item, m_items) {
+    foreach(LocalDayItem* item, m_items) {
         if(item->getDate() == date) return item;
     }
     return 0;
 }
 
-QModelIndex GalleryModel::indexFromItem(const GalleryItem *item) const
+QModelIndex LocalDayModel::indexFromItem(const LocalDayItem *item) const
 {
     Q_ASSERT(item);
     for(int row=0; row<m_items.size(); ++row) {
@@ -300,13 +354,13 @@ QModelIndex GalleryModel::indexFromItem(const GalleryItem *item) const
     return QModelIndex();
 }
 
-void GalleryModel::clear()
+void LocalDayModel::clear()
 {
     qDeleteAll(m_items);
     m_items.clear();
 }
 
-bool GalleryModel::removeRow(int row, const QModelIndex &parent)
+bool LocalDayModel::removeRow(int row, const QModelIndex &parent)
 {
     Q_UNUSED(parent);
     if(row < 0 || row >= m_items.size()) return false;
@@ -316,7 +370,7 @@ bool GalleryModel::removeRow(int row, const QModelIndex &parent)
     return true;
 }
 
-bool GalleryModel::removeRows(int row, int count, const QModelIndex &parent)
+bool LocalDayModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     Q_UNUSED(parent);
     if(row < 0 || (row+count) >= m_items.size()) return false;
@@ -328,12 +382,12 @@ bool GalleryModel::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
-int GalleryModel::getIndexByDate(int year, int month,  bool direction)
+int LocalDayModel::getIndexByDate(int year, int month,  bool direction)
 {
     //QDate date(year, month, day);
     //return indexFromItem(find(date)).row();    
 
-    GalleryItem* ptr=0;
+    LocalDayItem* ptr=0;
 
 //    for (int i = m_items.size() -1; i >= 0; i--)
 //    {
@@ -344,7 +398,7 @@ int GalleryModel::getIndexByDate(int year, int month,  bool direction)
 //        }
 //    }
 
-    foreach(GalleryItem* item, m_items)
+    foreach(LocalDayItem* item, m_items)
     {
         if((item->getDate().year() == year) && (item->getDate().month() == month))
         {
@@ -358,29 +412,28 @@ int GalleryModel::getIndexByDate(int year, int month,  bool direction)
 }
 
 
-QDate GalleryModel::getDateOfIndex(int listIndex)
+QDate LocalDayModel::getDateOfIndex(int listIndex)
 {
     if (listIndex >= m_items.size() || listIndex < 0)
         return QDate();
-    GalleryItem* item = m_items.at(listIndex);
+    LocalDayItem* item = m_items.at(listIndex);
     QDate date = item->getDate();
     return date;
 }
 
-void GalleryModel::imageReady(QString url)
+void LocalDayModel::imageReady(QString url)
 {
     if (m_urlHash.contains(url))
     {
         QDate date = m_urlHash[url];
-        GalleryItem* item = find(date);
+        LocalDayItem* item = find(date);
         if (item)
             item->thumbnailReady(url);
     }
 }
 
-void GalleryModel::setActivityType(const QString& type)
+void LocalDayModel::setActivityType(const QString& type)
 {
-    qDebug() << "123" <<type;
     QRegExp filter;
     if (type == "All")
         filter = QRegExp("Image|Video");
@@ -388,7 +441,7 @@ void GalleryModel::setActivityType(const QString& type)
         filter = QRegExp("Image");
     else if (type == "Video")
         filter = QRegExp("Video");
-    foreach(GalleryItem* item, m_items)
+    foreach(LocalDayItem* item, m_items)
     {
         item->setActivityFilter(filter);
     }

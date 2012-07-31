@@ -15,7 +15,6 @@
 #include "sessionprovider.h"
 #include "userinfoprovider.h"
 
-class ActivityModel;
 class NepomukSource;
 class SocialProxy;
 class QThread;
@@ -44,7 +43,7 @@ private:
     QmlApplicationViewer *m_viewer;
     AppProvider *m_appProvider;
 
-    ActivityModel* m_model;
+
     NepomukSource* m_source;
     ActivityProxy *m_proxy;
     QThread *m_nepomukThread;
