@@ -70,7 +70,7 @@ Item {
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.margins: 10
-        model: galleryModel.itemsModel(date)
+        model: localDayModel.itemsModel(date)
         cellWidth: (parent.height - 2*margin - dateLabel.height) / 3 //-20
         cellHeight: (parent.height - 2*margin - dateLabel.height) /3 //-20
         flow: GridView.TopToBottom
