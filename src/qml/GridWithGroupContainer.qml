@@ -52,16 +52,9 @@ Column {
 
     function addGridGroup(group, dataSource, start, end)
     {
-        //console.log("-- creating component")
-        var tmp = Qt.createComponent("GridWithGroup.qml");
-        //console.log("-- creating object with " + dataSource)
-        console.log("::: start: " + start + "; end: " + end)
-        var tmp2 = tmp.createObject(gridsContainer, { groupName: group, gridDataSource: dataSource, startIndex: start, endIndex: end });
-        //console.log("-- created")
-
-        activeGridView = tmp2.gridView
-        //console.log("item_count: " + dataSource.getItemCount())
-        //dataSource.updateContent()
+        var groupComponent = Qt.createComponent("GridWithGroup.qml");
+        var groupObject = groupComponent.createObject(gridsContainer, { groupName: group, gridDataSource: dataSource, startIndex: start, endIndex: end });
+        activeGridView = groupObject.gridView
     }
 
     Component.onCompleted: {
