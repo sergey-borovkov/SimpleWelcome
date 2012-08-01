@@ -5,7 +5,7 @@ import Qt 4.7
 Item {
     id: page
     width: 1280
-    height: 944 // 944
+    height: 950 // 944
     //color: "white"
     opacity: 0.0
 
