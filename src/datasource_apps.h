@@ -8,8 +8,8 @@ class DataSource_Apps : public DataSource
     Q_OBJECT
 
 public:
-    explicit DataSource_Apps(QObject* parent = 0)
-        : DataSource(parent), prevCurrentGroup("-1") {}
+    explicit DataSource_Apps(QObject* parent = 0);
+    Q_INVOKABLE virtual int getItemCount() { return appsList.count(); }
 
 signals:
     void newItemData(QString iconPath, QString name, int id);

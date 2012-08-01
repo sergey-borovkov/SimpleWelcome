@@ -36,11 +36,11 @@ Item {
     VisualItemModel {
         id: tabListModel
 
-        SearchTab {
+        /*SearchTab {
             id: searchTab
             width: tabListView.width
             height: tabListView.height
-        }
+        }*/
 
         WelcomeTab {
             id: welcomeTab
@@ -48,11 +48,11 @@ Item {
             height: tabListView.height
         }
 
-        ApplicationsTab {
+        /*ApplicationsTab {
             id: appsTab
             width: tabListView.width
             height: tabListView.height
-        }
+        }*/
     }
 
     TopBar {

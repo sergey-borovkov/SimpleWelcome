@@ -7,6 +7,7 @@ class DataSource : public QObject
 public:
     DataSource(QObject *parent = 0)
         : QObject(parent) {}
+    Q_INVOKABLE virtual int getItemCount() = 0;
 
 public slots:
     virtual void itemClicked(int newIndex) = 0;

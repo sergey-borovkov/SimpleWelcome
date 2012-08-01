@@ -60,13 +60,20 @@ QList<AppItem> GetFlatList(QString group)
     return out;
 }
 
-void DataSource_Apps::updateContent()
+DataSource_Apps::DataSource_Apps(QObject *parent)
+    : DataSource(parent), prevCurrentGroup("-1")
 {
-    if (prevCurrentGroup == currentGroup && !appsList.isEmpty())
-        return;
-
     prevCurrentGroup = currentGroup;
     appsList = GetFlatList(currentGroup);
+}
+
+void DataSource_Apps::updateContent()
+{
+    if (prevCurrentGroup != currentGroup)
+    {
+        prevCurrentGroup = currentGroup;
+        appsList = GetFlatList(currentGroup);
+    }
 
     for (int i = 0; i < appsList.size(); i++)
         emit newItemData(QString("image://generalicon/appicon/%1").arg(appsList[i].icon), appsList[i].caption, i);

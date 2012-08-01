@@ -6,6 +6,8 @@ GridView {
     property int columns: 7
     property variant prevGrid
     property variant nextGrid
+    property int iconIndexStart
+    property int iconIndexEnd
     property int highlightMoveDurationConst: 150
     property int spacing: Math.max(0, (parent.width - 120 * columns) / (columns + 1))
     signal selectionChangedByKeyboard(variant newCurrentItem)
@@ -52,7 +54,7 @@ GridView {
     }
 
     Component.onCompleted: {
-        console.log("COMPLETED")
+        console.log("COMPLETED " + dataSource + " VIEW")
         dataSource.newItemData.connect(newItemData)
         dataSource.dataClear.connect(dataClear)
         dataSource.updateContent()

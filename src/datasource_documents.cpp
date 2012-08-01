@@ -4,11 +4,9 @@
 #include <QStringList>
 #include <QFile>
 
-void DataSource_Documents::updateContent()
+DataSource_Documents::DataSource_Documents(QObject* parent)
+    : DataSource(parent)
 {
-    if (!docsList.isEmpty())
-        return;
-
     QStringList recentDocsList = KRecentDocument::recentDocuments();
     for (int i = 0; i < recentDocsList.size(); i++)
     {
@@ -27,9 +25,13 @@ void DataSource_Documents::updateContent()
         newItem.desktopEntry = desktopFile.fileName();
         if (!newItem.caption.isEmpty())
             docsList.append(newItem);
-
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(newItem.icon), newItem.caption, i);
     }
+}
+
+void DataSource_Documents::updateContent()
+{
+    for (int i = 0; i < docsList.size(); i++)
+        emit newItemData(QString("image://generalicon/appicon/%1").arg(docsList[i].icon), docsList[i].caption, i);
 }
 
 #include <QMessageBox>

@@ -8,8 +8,8 @@ class DataSource_Documents : public DataSource
     Q_OBJECT
 
 public:
-    explicit DataSource_Documents(QObject* parent = 0)
-        : DataSource(parent) {}
+    explicit DataSource_Documents(QObject* parent = 0);
+    Q_INVOKABLE virtual int getItemCount() { return docsList.count(); }
 
 signals:
     void newItemData(QString iconPath, QString name, int id);
