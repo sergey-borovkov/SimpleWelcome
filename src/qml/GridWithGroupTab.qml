@@ -84,13 +84,6 @@ ListView {
     Component.onCompleted: {
         //gridsContainer.gridCurrentItemChanged.connect(gridsSelectionChanged)
 
-        //var tmp = Qt.createComponent("GridWithGroup.qml");
-        //var tmp2 = tmp.createObject(gridsListView, { group: "Favorites", dataSource: dataSource_Favorites });
-
-        //newObject.parent = gridsVisualModel
-//        console.log(newObject)
-        //gridsVisualModel.children.append(newObject)
-
         var groups = [
                     {
                         group: "Recent Applications",
@@ -151,10 +144,10 @@ ListView {
                     var rowsFit = Math.floor(availableHeight / cellRealHeight)
                     console.log(i + " - Rows fit currently: " + rowsFit + "; availableHeight: " + availableHeight + "; cellRealHeight: " + cellRealHeight + "; " + (availableHeight / cellRealHeight))
                     if (rowsFit <= 0) // Current tab has no space left. Creating new tab
-                    { // Here it happens to loop when height is less than 400. FIX SOMEDAY
+                    {
                         console.log(i + " - " + "Current tab has no space left. Creating new tab")
                         availableHeight = gridsListView.height - textHeight
-                        rowsFit = Math.floor(availableHeight / cellRealHeight)
+                        rowsFit = Math.max(1, Math.floor(availableHeight / cellRealHeight)) // We definitely want to have at least one row on newly created tab
                         console.log(i + " - availableHeight: " + availableHeight + "; cellRealHeight: " + cellRealHeight)
                         currentGroup['startIndex'] = lastNotInsertedItem
                         currentGroup['endIndex'] = lastNotInsertedItem + rowsFit * columns - 1
