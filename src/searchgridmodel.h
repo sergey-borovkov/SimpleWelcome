@@ -27,6 +27,7 @@ class SearchGridModel : public DataSource
 
 public:
     explicit SearchGridModel(QObject* parent = 0);
+    Q_INVOKABLE virtual int getItemCount() { return matches.count(); }
 
 
 

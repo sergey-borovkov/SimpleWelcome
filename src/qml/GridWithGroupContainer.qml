@@ -10,6 +10,10 @@ Column {
     signal gridCurrentItemChanged(variant newCurrentItem)
 
     property variant activeGridView
+    property variant groups
+    property variant prevGridGroup: activeGridView.prevGrid
+    property variant nextGridGroup: activeGridView.nextGrid
+
 
     function gridsConnectionChanged()
     {
@@ -46,6 +50,20 @@ Column {
         }
     }
 
+    function addGridGroup(group, dataSource, start, end)
+    {
+        //console.log("-- creating component")
+        var tmp = Qt.createComponent("GridWithGroup.qml");
+        //console.log("-- creating object with " + dataSource)
+        console.log("::: start: " + start + "; end: " + end)
+        var tmp2 = tmp.createObject(gridsContainer, { groupName: group, gridDataSource: dataSource, startIndex: start, endIndex: end });
+        //console.log("-- created")
+
+        activeGridView = tmp2.gridView
+        //console.log("item_count: " + dataSource.getItemCount())
+        //dataSource.updateContent()
+    }
+
     Component.onCompleted: {
         for (var i = 0; i < children.length; i++)
         {
@@ -56,6 +74,11 @@ Column {
                 children[i].gridCurrentItemChanged.connect(gridCurrentItemChanged)
         }
 
+        if (groups !== undefined)
+        {
+            console.log("Constructing GridWithGroupContainer for: " + groups.group + "; ds: " + groups.dataSource + "; start: " + groups.startIndex + "; " + groups.endIndex)
+            addGridGroup(groups.group, groups.dataSource, groups.startIndex, groups.endIndex)
+        }
         gridsConnectionChanged()
     }
 }

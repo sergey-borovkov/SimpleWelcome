@@ -8,13 +8,16 @@ Column {
 
     property alias gridView: iconGridView
     property alias count: iconGridView.count
+
+    property int startIndex
+    property int endIndex
+
     signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
 
-
     spacing: 16
-    //width: parent.width
-    //height: childrenRect.height
+    width: parent.width
+    height: childrenRect.height
     //visible: iconGridView.count != 0
 
     Component.onCompleted: {
@@ -58,8 +61,17 @@ Column {
         }
 
         function newItemData(iconPath, name, itemId, group) {
-            if (group === undefined || group == groupName)
+            if ((group === undefined || group == groupName) &&
+                    (startIndex === endIndex && endIndex === 0 ||
+                     startIndex <= itemId && itemId <= endIndex &&
+                     count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
+            {
+                console.log("--- Added [" + startIndex + " to " + endIndex + "] with id: " + itemId)
                 model.append( { imagePath: iconPath, caption: name, id: itemId})
+            }
+            else
+                console.log("--- Skipped [" + startIndex + " to " + endIndex + "] with id: " + itemId + "; bool: " + (startIndex <= itemId && itemId <= endIndex))
+
         }
 
 

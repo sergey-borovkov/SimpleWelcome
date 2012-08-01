@@ -12,11 +12,10 @@ ListView {
             id: gridsListModel
         }
 
-        delegate: GridWithGroup {
-            groupName: group
-            gridDataSource: dataSource
+        delegate: GridWithGroupContainer {
             width: gridsListView.width
             height: gridsListView.height
+            groups: groupsList
         }
 
 //        SearchTab {
@@ -92,24 +91,121 @@ ListView {
 //        console.log(newObject)
         //gridsVisualModel.children.append(newObject)
 
-        gridsListModel.append( { group: "Recent Applications", dataSource: dataSource_RecentApps } )
-        gridsListModel.append( { group: "Recent documents", dataSource: dataSource_Documents } )
-        gridsListModel.append( { group: "Favorites", dataSource: dataSource_Favorites } )
+        var groups = [
+                    {
+                        group: "Recent Applications",
+                        dataSource: dataSource_RecentApps
+                    },
+                    {
+                        group: "Favorites",
+                        dataSource: dataSource_Favorites
+                    },
+                    {
+                        group: "Recent documents",
+                        dataSource: dataSource_Documents
+                    },
+                ]
+
+        var availableHeight = 0
+        console.log("Starting to split " + availableHeight + "px to grids")
+        for (var i = 0; i < groups.length; i++) // Iterating by grids
+        {
+            console.log(i + " - NEW ITERATION!!!!!!!!!")
+            var itemCount = groups[i].dataSource.getItemCount()
+            var textHeight = 24, spacing = 16, columns = 7, cellRealHeight = 200
+
+            var projectedGroupHeight = textHeight + spacing + Math.ceil(itemCount / columns) * cellRealHeight
+            if (projectedGroupHeight < availableHeight) // Grid can be fully placed on the tab
+            {
+                console.log(i + " - " + groups[i].dataSource + " is fitting the same screen");
+                availableHeight -= projectedGroupHeight
+                gridsListView.currentItem.addGridGroup(groups[i].group, groups[i].dataSource)
+                console.log(i + " - " + availableHeight + "px left");
+            }
+            else // Grid should be split
+            {
+                console.log(i + " - " + groups[i].group + " is going to be split")
+                var currentGroup = groups[i]
+                var rowsLeftToFit = Math.ceil(itemCount / columns)
+                var lastNotInsertedItem = 0
+
+                if (rowsLeftToFit <= 0)
+                {
+                    console.log(i + " - " + "Empty group. Left: " + availableHeight)
+                    gridsListModel.append( { groupsList: currentGroup } )
+                    gridsListView.currentIndex = count - 1
+                    console.log(i + " - " + "Current: " + gridsListView.currentIndex)
+                    availableHeight = gridsListView.height - (textHeight + spacing)
+                }
+
+                while (rowsLeftToFit > 0)
+                {
+                    availableHeight -= textHeight + spacing
+                    var rowsFit = Math.ceil(availableHeight / cellRealHeight)
+                    console.log(i + " - Next iteration on " + currentGroup.dataSource + "; lastNotInsertedItem: " + lastNotInsertedItem)
+                    if (!rowsFit) // Current tab has no space left. Creating new tab
+                    {
+                        console.log(i + " - " + "Current tab has no space left. Creating new tab")
+
+                        availableHeight = gridsListView.height - (textHeight + spacing)
+                        rowsFit = Math.ceil(availableHeight / cellRealHeight)
+                        currentGroup['startIndex'] = lastNotInsertedItem
+                        currentGroup['endIndex'] = lastNotInsertedItem + rowsFit * columns - 1
+                        lastNotInsertedItem += rowsFit * columns
+                        rowsLeftToFit -= rowsFit
+                        console.log(i + " - " + "Fitted "  + rowsFit + " rows")
+
+                        console.log("=== " + currentGroup.startIndex + "; " + currentGroup.endIndex)
+                        gridsListModel.append( { groupsList: currentGroup } )
+                        gridsListView.currentIndex = count - 1
+                        availableHeight -= rowsFit * cellRealHeight
+                    }
+                    else // It's still possible to insert some rows to current tab. Inserting
+                    {
+                        console.log(i + " - " + "It's still possible to insert some rows to current tab. Inserting " + rowsFit)
+
+                        currentGroup['startIndex'] = lastNotInsertedItem
+                        currentGroup['endIndex'] = lastNotInsertedItem + rowsFit * columns - 1
+                        lastNotInsertedItem += rowsFit * columns
+                        rowsLeftToFit -= rowsFit
+
+                        console.log("|")
+                        console.log("|")
+                        console.log("|")
+                        console.log(i + " - adding to current tab: " + currentGroup.group + ", " + currentGroup.dataSource + " [" + currentGroup.startIndex + " to " + currentGroup.endIndex + "]")
+                        gridsListView.currentItem.addGridGroup(currentGroup.group, currentGroup.dataSource, currentGroup.startIndex, currentGroup.endIndex)
+                        availableHeight -= rowsFit * cellRealHeight
+                        console.log(i + " - Taken " + rowsFit * cellRealHeight + "px; " + availableHeight)
+                    }
 
 
+                    console.log(i + " - " + "On " + i + " tab is alailable " + rowsFit + " rows")
+
+                }
+            }
+        }
+
+//        gridsListModel.append( { groupsList: {group: "Recent Applications", dataSource: dataSource_RecentApps} } )
+//        gridsListModel.append( { groupsList: {group: "Recent documents", dataSource: dataSource_Documents} } )
+//        gridsListModel.append( { groupsList: {group: "Favorites", dataSource: dataSource_Favorites} } )
+
+        /*console.log("CHANGING CURRENT INDEX")
         var wasCurrent = gridsListView.currentIndex
         gridsListView.currentIndex = 1
-        var item0 = gridsListView.currentItem
-        gridsListView.currentIndex = 2
+        var item0 = gridsListView.currentItem*/
+        /*gridsListView.currentIndex = 2
         var item1 = gridsListView.currentItem
         gridsListView.currentIndex = wasCurrent
 
-        item0.prevGridGroup = item1
-        item0.nextGridGroup = item1
-        item1.prevGridGroup = item0
-        item1.nextGridGroup = item0
+        item0.prevGridGroup = item1.gridView
+        item0.nextGridGroup = item1.gridView
+        item1.prevGridGroup = item0.gridView
+        item1.nextGridGroup = item0.gridView*/
 
-        console.log("got: " + item0 + " and " + item1)
+        /*console.log("TRYING TO ADD FAVS")
+        item0.addGridGroup("Favorites", dataSource_Favorites)
+
+        console.log("got: " + item0 + " and " + item1)*/
 
         //gridsListModel.setProperty(0, "nextGroup", )
 

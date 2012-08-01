@@ -1,11 +1,9 @@
 #include "datasource_favorites.h"
 #include <KFilePlacesModel>
 
-void DataSource_Favorites::updateContent()
+DataSource_Favorites::DataSource_Favorites(QObject *parent)
+    : DataSource(parent)
 {
-    if (!favoritesList.isEmpty())
-        return;
-
     KFilePlacesModel *places = new KFilePlacesModel();
 
     for(int i = 0; i < places->rowCount(); i++)
@@ -17,7 +15,15 @@ void DataSource_Favorites::updateContent()
         newItem.icon = bm.icon();
 
         favoritesList.append(newItem);
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(newItem.icon), newItem.caption, i);
+   }
+}
+
+
+void DataSource_Favorites::updateContent()
+{
+    for(int i = 0; i < favoritesList.count(); i++)
+    {
+        emit newItemData(QString("image://generalicon/appicon/%1").arg(favoritesList[i].icon), favoritesList[i].caption, i);
    }
 }
 
