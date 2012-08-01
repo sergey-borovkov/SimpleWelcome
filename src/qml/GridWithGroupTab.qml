@@ -113,8 +113,9 @@ ListView {
             console.log(i + " - NEW ITERATION!!!!!!!!!")
             var itemCount = groups[i].dataSource.getItemCount()
             var textHeight = 24, spacing = 16, columns = 7, cellRealHeight = 200
-
             var projectedGroupHeight = textHeight + spacing + Math.ceil(itemCount / columns) * cellRealHeight
+            console.log(i + " - Projected group height: " + projectedGroupHeight)
+
             if (projectedGroupHeight < availableHeight) // Grid can be fully placed on the tab
             {
                 console.log(i + " - " + groups[i].dataSource + " is fitting the same screen");
@@ -122,7 +123,7 @@ ListView {
                 gridsListView.currentItem.addGridGroup(groups[i].group, groups[i].dataSource)
                 console.log(i + " - " + availableHeight + "px left");
             }
-            else // Grid should be split
+            else // Grid should be split or created new tab or both
             {
                 console.log(i + " - " + groups[i].group + " is going to be split")
                 var currentGroup = groups[i]
@@ -141,14 +142,13 @@ ListView {
                 while (rowsLeftToFit > 0)
                 {
                     availableHeight -= textHeight + spacing
-                    var rowsFit = Math.ceil(availableHeight / cellRealHeight)
-                    console.log(i + " - Next iteration on " + currentGroup.dataSource + "; lastNotInsertedItem: " + lastNotInsertedItem)
+                    var rowsFit = Math.floor(availableHeight / cellRealHeight)
+                    console.log(i + " - Rows fit currently: " + rowsFit + "; availableHeight: " + availableHeight + "; cellRealHeight: " + cellRealHeight + "; " + (availableHeight / cellRealHeight))
                     if (!rowsFit) // Current tab has no space left. Creating new tab
                     {
                         console.log(i + " - " + "Current tab has no space left. Creating new tab")
-
                         availableHeight = gridsListView.height - (textHeight + spacing)
-                        rowsFit = Math.ceil(availableHeight / cellRealHeight)
+                        rowsFit = Math.floor(availableHeight / cellRealHeight)
                         currentGroup['startIndex'] = lastNotInsertedItem
                         currentGroup['endIndex'] = lastNotInsertedItem + rowsFit * columns - 1
                         lastNotInsertedItem += rowsFit * columns
