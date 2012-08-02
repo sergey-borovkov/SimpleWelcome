@@ -13,6 +13,8 @@ TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
     sort(0);
 }
 
+/*TO-DO: add dinamyque plugin type*/
+
 void TimeScaleFilterModel::setFilter(const QString &filter)
 {
     QRegExp filterRegExp;
@@ -24,6 +26,11 @@ void TimeScaleFilterModel::setFilter(const QString &filter)
         filterRegExp = QRegExp("Video");
     else if (filter == "Documents")
         filterRegExp = QRegExp("Doc");
+    else if (filter == "Social")
+        filterRegExp = QRegExp("VKontakte|Facebook|Twitter");
+    else if (filter == "VKontakte")
+        filterRegExp = QRegExp("VKontakte");
+
     setFilterRegExp(filterRegExp);
 }
 
@@ -110,9 +117,10 @@ QString TimeScaleItem::types() const
 
 void TimeScaleItem::addType(QString type)
 {
+    //qDebug() << type;
     if (!m_type.contains(type))
     {
-        m_type += (';' + type);
+        m_type += (type + ";");
         emit dataChanged();
     }
 }
@@ -130,17 +138,19 @@ TimeScaleModel::~TimeScaleModel()
 }
 
 void TimeScaleModel:: newItem(int year, int month, QString type)
-{
+{        
     QPair <int,int> pair;
     pair.first = year;
     pair.second = month;
     if (m_dates.contains(pair)) // add new type to existing item
-    {
+    {        
         TimeScaleItem* item = find(year, month);
         if (!item)
             return;
         if (!item->types().contains(type))
+        {
             item->addType(type);
+        }
     }
     else //add new item
     {

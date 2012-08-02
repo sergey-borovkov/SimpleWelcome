@@ -28,7 +28,8 @@ QVariant FeedItem::data( int role ) const
 
 QDate FeedItem::date() const
 {
-    return data( Date ).toDate();
+    //qDebug() << "123" <<  QDate::fromString( data( Date ).toString(), QString("d MM yyyy") );
+    return QDate::fromString( data( Date ).toString(), QString("d MM yyyy") );
 }
 
 void FeedItem::fillFromMap( QVariantMap map )
@@ -47,12 +48,13 @@ void FeedItem::fillFromMap( QVariantMap map )
         uint t  = map.value( "date" ).toUInt();
         QDateTime dt;
         dt.setTime_t( t );
-        m_data.insert( Date, dt.toString( "d MMMM, h:mm" ) );
+        QDate date = dt.date();
+        m_data.insert( Date, date.toString( "d MM yyyy" ) );
     }
 
     if ( map.contains( "attachments" ) ) {
         QVariantList attachmentList = map[ "attachments" ].toList();
-        qDebug() << "FeedItem::fillFromMap:   it is attachmentss list!!!";
+        //qDebug() << "FeedItem::fillFromMap:   it is attachmentss list!!!";
 
         foreach ( QVariant item, attachmentList ) {
             QVariantMap map = item.toMap();
@@ -66,7 +68,7 @@ void FeedItem::fillFromMap( QVariantMap map )
 
                     if ( photoMap.contains( "src" ) ) {
                         m_data.insert( ImageUrl, photoMap.value( "src" ).toString() );
-                        qDebug() <<  "FeedItem::fillFromMap:   " << map.value( "type" ).toString() << " - " << photoMap.value( "src" ).toString();
+                        //qDebug() <<  "FeedItem::fillFromMap:   " << map.value( "type" ).toString() << " - " << photoMap.value( "src" ).toString();
                     }
                 }
 
@@ -75,7 +77,7 @@ void FeedItem::fillFromMap( QVariantMap map )
 
                     if ( audioMap.contains( "title" ) ) {
                         m_data.insert( Audio, audioMap.value( "performer" ).toString() + " - " + audioMap.value( "title" ).toString());
-                        qDebug() <<  "FeedItem::fillFromMap:   " << map.value( "type" ).toString() << " - " << audioMap.value( "performer" ).toString() + " - " + audioMap.value( "title" ).toString();
+                        //qDebug() <<  "FeedItem::fillFromMap:   " << map.value( "type" ).toString() << " - " << audioMap.value( "performer" ).toString() + " - " + audioMap.value( "title" ).toString();
                     }
                 }
             }

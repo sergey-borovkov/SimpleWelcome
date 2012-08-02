@@ -149,6 +149,7 @@ SWApp::SWApp()
     PluginLoader loader;
     QList<ISocialPlugin *> plugins = loader.loadPlugins();
 
+
     SocialDayModel* socialModel = new SocialDayModel( SocialDayItem::roleNames() );
     SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel( this );
     socialProxyModel->setSourceModel( socialModel );
@@ -157,21 +158,23 @@ SWApp::SWApp()
     m_manager->setModel(socialModel );
 
     m_viewer->rootContext()->setContextProperty( "socialProxy", m_manager );
-    //m_viewer->rootContext()->setContextProperty( "socialModel", m_manager->socialModel() );
+    m_viewer->rootContext()->setContextProperty( "socialModel", m_manager->socialModel() );
     m_viewer->rootContext()->setContextProperty( "pluginModel", m_manager->pluginModel() );
 
     m_viewer->engine()->addImageProvider( "plugin", new PluginImageProvider( plugins ) );
 
-
     /* ------------------*/
     /*Time scale model*/
+
     TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
     TimeScaleItem* item = new TimeScaleItem();
     TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
     m_viewer->rootContext()->setContextProperty( "timeScaleModel", timeScaleFilterModel );
+
     connect(m_proxy,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
 
+    connect(m_manager,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
     /*----------------------------*/
 
 

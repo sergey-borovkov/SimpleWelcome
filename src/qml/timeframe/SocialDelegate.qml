@@ -1,7 +1,11 @@
 import QtQuick 1.1
 
-Component {
+//Component {
+Item {
     id: desu
+    width: childrenRect.width
+    height: childrenRect.height
+
     ShadowRectangle {
         width: 200
         height: Math.max( 120, ( column.height + bottomLine.height ) )

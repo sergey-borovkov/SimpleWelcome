@@ -19,11 +19,18 @@ Item {
     //        return index
     //    }
 
-    function getTimeLineGalleryIndex() {
+    function getTimeLineIndex() {
         var index = localDayModel.getIndexByDate(__year, __month+1, direction)
         //console.log("getIndexByDate: " + index)
         return index
     }
+
+    function getSocialTimeLineIndex() {
+        var index = socialDayModel.getIndexByDate(__year, __month+1, direction)
+        //console.log("social index " + index)
+        return index
+    }
+
 
 
     //Start new serch
@@ -43,8 +50,8 @@ Item {
         activityProxy.startSearch(d, true)
         __isSearching = true
         //searchLabel.visible = true
-       // if (timeFrameTab.state ==="gallery" )
-         //   timeFrameTab.state = "gallerySearch"
+        // if (timeFrameTab.state ==="gallery" )
+        //   timeFrameTab.state = "gallerySearch"
     }
 
     //Start initial search
@@ -65,8 +72,8 @@ Item {
             __isSearching = false
             //console.log("search finished")
             //searchLabel.visible = false
-           // if (timeFrameTab.state === "gallerySearch")
-             //   timeFrameTab.state = "gallery"
+            // if (timeFrameTab.state === "gallerySearch")
+            //   timeFrameTab.state = "gallery"
             //else if (timeFrameTab.state === "timeLineSearch")
             //  timeFrameTab.state = ""
 
@@ -107,15 +114,21 @@ Item {
             state: "current"
             onSelectedIndexChanged: {
                 console.log( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
+                if (selectedText === "All")
+                    timeScaleModel.setFilter("Local")
+                else
+                    timeScaleModel.setFilter(selectedText)
                 activityProxy.changeType(selectedText)
-                timeScaleModel.setFilter(selectedText)
                 localDayModel.setFilter(selectedText)
+                state = "current"
+                socialNetworks.state = ""
             }
             onClicked: {
                 console.log(selectedText + " " + selectedIndex)
                 state = "current"
                 timeFrameTab.state = ""
                 socialNetworks.state = ""
+                timeScaleModel.setFilter("Local")
             }
         }
 
@@ -126,14 +139,30 @@ Item {
             property int __wasSearching: 0
             onSelectedIndexChanged: {
                 if(selectedText == "Manage networks")
-                    timeFrameTab.state = "socialauthorization"
+                    timeFrameTab.state = "socialAuthorization"
                 else {
-                    timeFrameTab.state = "socialgallery"
+                    timeFrameTab.state = "social"
                     socialProxy.startSearch()
+                    if (selectedText === "All")
+                        timeScaleModel.setFilter("Social")
+                    else
+                        timeScaleModel.setFilter(selectedText)
                 }
-
                 state = "current"
                 localDocs.state = ""
+            }
+            onClicked: {
+                console.log(selectedText + " " + selectedIndex)
+                state = "current"
+                if (timeFrameTab.state != "socialAuthorization")
+                {
+                    timeFrameTab.state = "social"
+                }
+                localDocs.state = ""
+                if ((selectedText === "All") || (selectedText === ""))
+                    timeScaleModel.setFilter("Social")
+                else
+                    timeScaleModel.setFilter(selectedText)
             }
         }
     }
@@ -151,7 +180,7 @@ Item {
         color: "grey"
         radius: 1
     }
-/*
+    /*
     function getTSCurrentDate() {
         var date = new Date(timeScaleModel.getYear(timeScale.list.currentIndex), timeScaleModel.getMonth(timeScale.list.currentIndex).monthNumber, 1)
         return date
@@ -167,7 +196,7 @@ Item {
         }
         return -1
     }
-/*
+    /*
     Text {
         id: searchLabel
         color: "white"
@@ -179,7 +208,7 @@ Item {
         z: 1000
     }
 */
-/*
+    /*
     Binding {
         target: timeFrameTab
         property: __isSearching
@@ -226,17 +255,47 @@ Item {
         id: searchTimer
         interval: 1000;
         onTriggered: {
+            if ( (timeFrameTab.state === "social") || (timeFrameTab.state === "socialGallery") )
+                return
             console.log("state changed")
-//            if(timeFrameTab.state == "timeLineSearch") {
-                timeLine.currentIndex = timeFrameTab.getTimeLineGalleryIndex()
-                timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
-                timeFrameTab.state = ""
-//            }
+            //            if(timeFrameTab.state == "timeLineSearch") {
+            timeLine.currentIndex = timeFrameTab.getTimeLineIndex()
+            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
+            timeFrameTab.state = ""
+            //            }
+        }
+    }
+
+    ListView {
+        id: socialTimeLine
+
+        anchors.top: separator.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: parent.width
+        height: parent.height - menuBar.height - separator.height
+
+        delegate: SocialCloudDelegate {}
+        model: socialDayModel
+
+        orientation: Qt.Horizontal
+        highlightFollowsCurrentItem: true
+        highlightRangeMode: ListView.StrictlyEnforceRange
+        preferredHighlightBegin : timeLine.width /3
+        preferredHighlightEnd : timeLine.width*2/3
+        boundsBehavior : Flickable.StopAtBounds
+        visible: false
+        cacheBuffer: desktopWidth
+
+        onCurrentIndexChanged: {
+            var date = socialDayModel.getDateOfIndex(timeLine.currentIndex)
+            timeFrameTab.__year = date.getFullYear()
+            timeFrameTab.__month = date.getMonth()
+            timeFrameTab.day = date.getDay()
         }
     }
 
 
-    TimeScale{
+    TimeScale {
         id: timeScale
         anchors.verticalCenter: timeLine.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
@@ -312,7 +371,7 @@ Item {
                     galleryView.currentIndex = timeLine.currentIndex
                     galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center )
                 }
-                else {
+                else if ( timeFrameTab.state === "gallery" ) {
                     var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
                                                     galleryView.y + galleryView.height/2 + galleryView.contentY)
                     timeFrameTab.state = ""
@@ -320,6 +379,10 @@ Item {
                     timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Contain)
 
                 }
+                else if ( timeFrameTab.state === "social" ) {
+                    timeFrameTab.state = "socialGallery"
+                }
+                else timeFrameTab.state = "social"
             }
         }
     }
@@ -349,6 +412,27 @@ Item {
         model: localDayModel
         delegate: GalleryDelegate { }
         orientation: ListView.Horizontal
+        boundsBehavior : Flickable.StopAtBounds
+    }
+
+    ListView {
+        id: socialGalleryView
+
+        anchors.top: separator.bottom
+        anchors.bottom: timeScale.top
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.leftMargin: 20
+        anchors.rightMargin: 20
+
+        model: socialDayModel
+        delegate: SocialGalleryDelegate {}
+
+        visible: false
+        spacing: 10
+        orientation: ListView.Horizontal
+        boundsBehavior : Flickable.StopAtBounds
+
     }
 
 
@@ -357,19 +441,33 @@ Item {
         id: flickableTimer
         interval: 100; running: false; repeat: true
         onTriggered: {
-            var index
+            var index = 0
+            var date = new Date()
             if ((timeFrameTab.state === "") || (timeFrameTab.state === "timeLineSearch"))
             {
                 index = timeLine.indexAt(timeLine.x + timeLine.width/2 + timeLine.contentX,
                                          timeLine.y + timeLine.height/2 + timeLine.contentY)
-            } else
+                date = localDayModel.getDateOfIndex(index)
+            } else if (timeFrameTab.state === "gallery")
             {
                 index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
                                             galleryView.y + galleryView.height/2 + galleryView.contentY)
+                date = localDayModel.getDateOfIndex(index)
+            } else if (timeFrameTab.state === "social")
+            {
+                index = socialTimeLine.indexAt(socialTimeLine.x + socialTimeLine.width/2 + socialTimeLine.contentX,
+                                            socialTimeLine.y + socialTimeLine.height/2 + socialTimeLine.contentY)
+                date = socialDayModel.getDateOfIndex(index)
+            } else if (timeFrameTab.state === "socialGallery")
+            {
+                index = socialGalleryView.indexAt(socialGalleryView.x + socialGalleryView.width/2 + socialGalleryView.contentX,
+                                            socialGalleryView.y + socialGalleryView.height/2 + socialGalleryView.contentY)
+                date = socialDayModel.getDateOfIndex(index)
             }
 
-            var date = localDayModel.getDateOfIndex(index)
+
             timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
+
             __year = date.getFullYear()
             __month = date.getMonth()
             day = date.getDay()
@@ -377,38 +475,23 @@ Item {
     }
 
 
-    ListView {
-            id: socialView
-            model: socialDayModel
-            anchors.top: separator.bottom
-            anchors.bottom: timeScale.top
-            anchors.right: parent.right
-            anchors.left: parent.left
-            anchors.leftMargin: 20
-            anchors.rightMargin: 20
-            anchors.topMargin: 30
-            visible: false
-            spacing: 10
-            orientation: ListView.Horizontal
 
-            delegate: SocialDelegate {}
-        }
 
-        SocialAuthorization {
-            id: authorizationView
-            visible: false
-            orientation: ListView.Horizontal
-            model: pluginModel
-            anchors.top: separator.bottom
-            anchors.bottom: timeScale.top
-            anchors.right: parent.right
-            anchors.left: parent.left
-            anchors.leftMargin: 80
-            anchors.rightMargin: 20
-            anchors.topMargin: width / 8
-        }
+    SocialAuthorization {
+        id: authorizationView
+        visible: false
+        orientation: ListView.Horizontal
+        model: pluginModel
+        anchors.top: separator.bottom
+        anchors.bottom: timeScale.top
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.leftMargin: 80
+        anchors.rightMargin: 20
+        anchors.topMargin: width / 8
+    }
 
-        state: socialProxy.anyPluginsEnabled() ? "socialgallery" : "socialauthorization"
+    //state: socialProxy.anyPluginsEnabled() ? "socialgallery" : "socialauthorization"
 
 
     AnimatedImage {
@@ -427,16 +510,34 @@ Item {
         target: timeLine
         onFlickStarted : flickableTimer.start()
     }
+    Connections {
+        target: socialTimeLine
+        onFlickStarted : flickableTimer.start()
+    }
+    Connections {
+        target: socialGalleryView
+        onFlickStarted : flickableTimer.start()
+    }
 
     Connections {
         target: galleryView
         onFlickEnded: flickableTimer.stop()
     }
-
     Connections {
         target: timeLine
         onFlickEnded: flickableTimer.stop()
     }
+    Connections {
+        target: socialTimeLine
+        onFlickEnded: flickableTimer.stop()
+    }
+    Connections {
+        target: socialGalleryView
+        onFlickEnded: flickableTimer.stop()
+    }
+
+
+    state: ""
 
     states: [
 
@@ -495,24 +596,15 @@ Item {
             }
         },
         State {
-            name: "socialgallery"
-
-            PropertyChanges {
-                target: galleryView
-                visible: false
-            }
+            name: "social"
             PropertyChanges {
                 target: timeLine
                 visible: false
-            }
-            PropertyChanges {
-                target: socialView
-                visible: true
-            }
-
-            PropertyChanges {
-                target: timeScale
                 opacity: 0
+            }
+            PropertyChanges {
+                target: socialTimeLine
+                visible: true
             }
             PropertyChanges {
                 target: socialNetworks
@@ -522,26 +614,66 @@ Item {
                 target: localDocs
                 state: ""
             }
-            PropertyChanges {
-                target: socialView
-                opacity: 1
-            }
+
         },
+
         State {
-            name: "socialauthorization"; extend: "socialgallery"
+            name: "socialGallery"; extend: "social"
 
             PropertyChanges {
-                target: socialView
+                target: socialTimeLine
                 visible: false
+                opacity:0
+            }
+
+            PropertyChanges {
+                target: socialGalleryView
+                visible: true
+            }
+
+            AnchorChanges {
+                target: timeScale
+                anchors.verticalCenter: undefined
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom:  timeFrameTab.bottom
+            }
+
+            PropertyChanges {
+                target: socialGalleryView
+                opacity: 1
             }
             PropertyChanges {
-                target: socialView
+                target: menuBar
+                visible : false
+            }
+            PropertyChanges {
+                target: stateChangeButtonText
+                text : "<--"
+            }
+            PropertyChanges {
+                target: buttonImage
+                visible : false
+            }
+
+        },
+        State {
+            name: "socialAuthorization"; extend: "social"
+
+            PropertyChanges {
+                target: socialTimeLine
+                visible: false
                 opacity: 0
             }
             PropertyChanges {
                 target: authorizationView
                 visible: true
             }
+            PropertyChanges {
+                target: timeScale
+                visible: false
+                opacity: 0
+            }
+
         }
     ]
 }

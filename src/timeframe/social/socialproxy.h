@@ -38,6 +38,7 @@ public slots:
 
 signals:
     void pluginAuthorized();
+    void newMonth(int, int, QString);
 
 private:
     QList<ISocialPlugin *> m_plugins;
