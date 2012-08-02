@@ -1,21 +1,24 @@
 import QtQuick 1.1
 
 Column {
+    property alias gridView: iconGridView
     property alias groupName: groupLabel.text
+
     property alias gridDataSource: iconGridView.dataSource
     property alias prevGridGroup: iconGridView.prevGrid
     property alias nextGridGroup: iconGridView.nextGrid
-
-    property alias gridView: iconGridView
     property alias count: iconGridView.count
-
-    property int startIndex
-    property int endIndex
+    property alias startIndex: iconGridView.iconIndexStart
+    property alias endIndex: iconGridView.iconIndexEnd
 
     signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
 
-    spacing: 16
+    // constants
+    property int textToGridSpacing: constants.textToGridSpacing
+    property int textHeight: constants.groupTextHeight
+
+    spacing: textToGridSpacing
     width: parent.width
     height: childrenRect.height
     //visible: iconGridView.count != 0
@@ -27,7 +30,7 @@ Column {
     Text {
         id: groupLabel
         width: parent.width
-        height: 24
+        height: textHeight
         maximumLineCount: 1
         anchors.left: parent.left
         anchors.leftMargin: 16
@@ -44,7 +47,7 @@ Column {
         id: iconGridView
 
         width: parent.width
-        height: Math.ceil(count / columns) * 200
+        height: Math.ceil(count / columns) * gridCellHeight
 
         interactive: false
 

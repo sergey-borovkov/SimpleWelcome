@@ -3,7 +3,10 @@ import QtQuick 1.1
 Item {
     id: cell
 
-    width: 120
+    // constants
+    property int cellWidth: constants.cellWidth
+
+    width: cellWidth
     height: wrapper.height//140
 
     Item {
@@ -11,7 +14,7 @@ Item {
         parent: gridMouseArea
         x: cell.x
         y: cell.y
-        width: 120
+        width: cellWidth
         height: childrenRect.height
 
         Image {

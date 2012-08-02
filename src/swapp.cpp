@@ -78,6 +78,8 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("searchAppsGridModel", searchGridModel);
     m_viewer->rootContext()->setContextProperty("searchRecentDocsGridModel", searchGridModel);
 
+    m_viewer->rootContext()->setContextProperty("constants", new QMLConstants(this));
+
 
     m_viewer->showExpanded();
     //m_viewer->showFullScreen();
