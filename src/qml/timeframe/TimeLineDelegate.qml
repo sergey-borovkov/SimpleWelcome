@@ -1,7 +1,6 @@
 import QtQuick 1.1
 
-Item {
-
+Item {    
     property int margin: 10
     property int labelHeight: 20
 
@@ -38,7 +37,7 @@ Item {
             source: getSourceComponent(size)
             onLoaded: {
                    cloud.item.cloudDate = date
-                   cloud.item.model = galleryModel.itemsModel(date)
+                   cloud.item.model = localDayModel.itemsModel(date)
                    cloud.item.createConnection()
             }
         }

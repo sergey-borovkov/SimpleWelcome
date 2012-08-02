@@ -27,20 +27,19 @@
 #include <QDeclarativeContext>
 #include <QDeclarativeEngine>
 #include <QMovie>
+#include <QObject>
 #include <QThread>
 #include <QTimer>
+#include <QSortFilterProxyModel>
 
 #include <KDebug>
 #include <KIcon>
 #include <KServiceGroup>
 
-#include "timeframe/activitylist.h"
-#include "timeframe/activitymodel.h"
 #include "timeframe/activityproxy.h"
 #include "timeframe/activityset.h"
-#include "timeframe/galleryitem.h"
-#include "timeframe/gallerylister.h"
-#include "timeframe/gallerymodel.h"
+#include "timeframe/localdaymodel.h"
+#include "timeframe/timescalemodel.h"
 #include "timeframe/itemmodel.h"
 #include "timeframe/listmodel.h"
 #include "timeframe/nepomuksource.h"
@@ -113,44 +112,51 @@ SWApp::SWApp()
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
     /*TF*/
-    m_model = new ActivityModel;
-    m_proxy = new ActivityProxy;
+    //m_model = new ActivityModel;
+
     m_source = new NepomukSource;
 
-    //m_nepomukThread = new QThread(this);
-    //m_source->moveToThread(m_nepomukThread);
-    //m_nepomukThread->start();
+    m_nepomukThread = new QThread(this);
+    m_source->moveToThread(m_nepomukThread);
+    m_nepomukThread->start();
     QRect r = QDesktopWidget().screenGeometry(m_viewer);
     m_viewer->rootContext()->setContextProperty( "desktopWidth", r.width() );
 
     /* TF Gallery mode */
 
-    GalleryModel* model = new GalleryModel;
-    m_viewer->rootContext()->setContextProperty( "galleryModel", model );
-    GalleryLister* lister = new GalleryLister;
-    lister->addNepomukSource(m_source);
-    model->setLister(lister);
-    m_viewer->rootContext()->setContextProperty( "galleryLister", lister );
-    qmlRegisterUncreatableType<Activity>("Acitivity", 1, 0, "Activity", "Activity is supposed to be used from C++");
-    qmlRegisterUncreatableType<GalleryItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
+    LocalDayModel* model = new LocalDayModel;
+    TimeFrameDayFilterModel* proxymodel = new TimeFrameDayFilterModel(this);
+    proxymodel->setSourceModel(model);
+    m_viewer->rootContext()->setContextProperty( "localDayModel", proxymodel );
+    m_proxy = new ActivityProxy;
+    m_proxy->addNepomukSource(m_source);
+    model->setLister(m_proxy);
+    m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
+    //qmlRegisterUncreatableType<Activity>("Acitivity", 1, 0, "Activity", "Activity is supposed to be used from C++");
+   // qmlRegisterUncreatableType<LocalDayItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
+   // qmlRegisterUncreatableType<LocalDayItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
     PreviewGenerator::instance()->setModel(model);
     /* ------------------*/
 
-    m_proxy->addSource( m_source );
-    m_model->addProxy(m_proxy);
+    /*Time scale model*/
+    TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
+    TimeScaleItem* item = new TimeScaleItem();
+    TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
+    timeScaleFilterModel->setSourceModel(timeScaleModel);
+    m_viewer->rootContext()->setContextProperty( "timeScaleModel", timeScaleFilterModel );
+    connect(m_proxy,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
 
     /*----------------------------*/
 
 
     m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
     m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
-    m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
-    m_viewer->rootContext()->setContextProperty( "activityModel", m_model );
+    m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );    
 
     m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
 
-    qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
-    qmlRegisterUncreatableType<ActivityList>("ActivityList", 1, 0, "ActivityList", "ActivityList is supposed to be used from C++");
+    //qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
+
 
 
     m_viewer->show();
@@ -191,8 +197,7 @@ SWApp::~SWApp()
     delete m_placesProvider;
     delete m_documentsProvider;
     delete m_sessionProvider;
-    delete m_userInfoProvider;
-    delete m_model;
+    delete m_userInfoProvider;    
     delete m_proxy;
     delete m_source;
     delete m_manager;

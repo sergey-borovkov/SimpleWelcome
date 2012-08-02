@@ -9,9 +9,12 @@
 #include <Nepomuk/Query/ComparisonTerm>
 #include <Nepomuk/Query/LiteralTerm>
 #include <Nepomuk/Query/QueryServiceClient>
+#include <Nepomuk/Query/StandardQuery>
+#include <Nepomuk/Query/ResourceTypeTerm>
 #include <Nepomuk/Query/Result>
 #include <Nepomuk/Query/FileQuery>
 #include <Nepomuk/Vocabulary/NIE>
+#include <Nepomuk/Vocabulary/NFO>
 
 #include <QFile>
 #include <QFileInfo>
@@ -21,10 +24,13 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
 
+#include <kmimetype.h>
+
 #include <unistd.h>
 
 NepomukSource::NepomukSource(QObject *parent) :
     ActivitySource(parent), m_searchClient(0) , m_timeScaleClient(0), m_tsSearch(false), set(0), m_limit(0)
+  , m_timer(0)
 {
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
@@ -32,10 +38,17 @@ NepomukSource::NepomukSource(QObject *parent) :
 NepomukSource::~NepomukSource()
 {
     if(m_searchClient)
+    {
         m_searchClient->close();
+        delete m_searchClient;
+    }
     if(m_timeScaleClient)
-        m_timeScaleClient->close();
+    {
+        m_timeScaleClient->close();    
+        delete m_timeScaleClient;
+    }
     m_searchClient = 0;
+    m_timeScaleClient = 0;
 }
 
 ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, const QDate &endDate)
@@ -51,17 +64,24 @@ ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, co
 
 Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &date)
 {
-    Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( date );
-    Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() < Nepomuk::Query::LiteralTerm( date.addDays(date.daysInMonth()) );
-    Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image/"));
-    Nepomuk::Query::ComparisonTerm video(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("video/"));
 
-    Nepomuk::Query::AndTerm term1(beginDateTerm,endDateTerm, image);
-    Nepomuk::Query::AndTerm term2(beginDateTerm,endDateTerm, video);
+    //Nepomuk::Query::ComparisonTerm beginDateTerm = Nepomuk::Vocabulary::NIE::lastModified() >= Nepomuk::Query::LiteralTerm( date );
+    //Nepomuk::Query::ComparisonTerm endDateTerm = Nepomuk::Vocabulary::NIE::lastModified() < Nepomuk::Query::LiteralTerm( date.addDays(date.daysInMonth()) );
+    //Nepomuk::Query::ComparisonTerm image(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("image/"));
+    //Nepomuk::Query::ComparisonTerm video(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("video/"));
+    Nepomuk::Query::ResourceTypeTerm image = Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Image());
+    Nepomuk::Query::ResourceTypeTerm video = Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Video());
+    Nepomuk::Query::ResourceTypeTerm text = Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::TextDocument());
+    //Nepomuk::Query::AndTerm term1(beginDateTerm,endDateTerm, image);
+    //Nepomuk::Query::AndTerm term2(beginDateTerm,endDateTerm, video);
+    //Nepomuk::Query::AndTerm term3(beginDateTerm,endDateTerm);
 
-    Nepomuk::Query::OrTerm orTerm(term1,term2);
+    //Nepomuk::Query::OrTerm orTerm(term1,term2);
+    Nepomuk::Query::OrTerm orTerm(video, image, text);
 
     Nepomuk::Query::FileQuery query(orTerm);
+    //Nepomuk::Query::FileQuery query(term3);
+    //Nepomuk::Query::FileQuery query = Nepomuk::Query::dateRangeQuery(date, date.addDays(date.daysInMonth()));
     return query;
 }
 
@@ -113,15 +133,21 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
         QString uri = res.toFile().url().path();
 
         //qDebug() << "after path";
-        QString type = list.at(i).resource().type();
+        //QString type = list.at(i).resource().resourceType().toString();
+        QList <QUrl> typesList = list.at(i).resource().types();
+
+        QString type = resolveType(uri, typesList);
+        if (type.isEmpty())
+            continue;
+        //type = type.right(type.size() - (type.indexOf('#')+1));
         //qDebug() << "after type";
         QFileInfo fi(uri);
         activities.append(new Activity(uri, type, fi.lastModified().date()));
         //qDebug() << "-----after resorce";
         set->addActivity(new Activity(uri, type, fi.lastModified().date()));
     }
-
-    emit newActivities(activities);
+    if (activities.size())
+        emit newActivities(activities);
 }
 
 void NepomukSource::error(QString str)
@@ -148,8 +174,6 @@ void NepomukSource::listingFinished()
     }
     */
 
-
-
     // month changed on this step so we emit previous month
     QDate d = queryDate;
     d.setDate(d.year(), d.month(), 1);
@@ -171,7 +195,8 @@ void NepomukSource::fillTimeScaleModel(const QDate &date)
     if(m_timeScaleClient)
     {
         m_timeScaleClient->close();
-        m_timeScaleClient = 0;
+        m_timeScaleClient->deleteLater();
+        m_timeScaleClient = 0;        
     }
 
     m_timeScaleDate = date;
@@ -179,14 +204,14 @@ void NepomukSource::fillTimeScaleModel(const QDate &date)
 
     Nepomuk::Query::Query query = createTimeScaleQuery(date);
     query.setLimit(1);
-    m_timeScaleClient = new Nepomuk::Query::QueryServiceClient( this );
+
+    m_timeScaleClient = new Nepomuk::Query::QueryServiceClient( this );    
 
     connect(m_timeScaleClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processTSEntry(const QList<Nepomuk::Query::Result> &)));
 
     connect(m_timeScaleClient, SIGNAL(finishedListing()), SLOT(listingTSFinished()));
 
-    m_timeScaleClient->query(query);
-
+    m_timeScaleClient->query(query);    
 }
 
 Nepomuk::Query::FileQuery NepomukSource::createTimeScaleQuery(const QDate &date)
@@ -232,6 +257,15 @@ void NepomukSource::processTSEntry(const QList<Nepomuk::Query::Result> &list)
 
 void NepomukSource::startSearchFromQueue()
 {
+    if (m_timer)
+    {
+        if (m_timer->isActive())
+        {
+            emit finishedListing();
+            return;
+        }
+    }
+    qDebug("return");
     m_mode = Normal;
     this->direction = NepomukSource::Right;
 
@@ -250,12 +284,14 @@ void NepomukSource::startSearchFromQueue()
     connect(m_searchClient, SIGNAL(error(QString)), this, SLOT(error(QString)));
 
     connect(m_searchClient, SIGNAL(resultCount(int)), this, SIGNAL(resultCount(int)));
-
+/*
     if(!m_tsSearch)
     {
         m_tsSearch = true;
         fillTimeScaleModel( QDate::currentDate());
     }
+*/
+    //queryDate = beginDate;
 
     set = new ActivitySet;
 
@@ -264,6 +300,36 @@ void NepomukSource::startSearchFromQueue()
     query.setLimit(m_limit);
 
     m_searchClient->query(query);
+    if (!m_timer)
+    {
+        m_timer = new QTimer(this);
+    }
+    m_timer->start(1000*60*10); //One querry in ten minutes
 }
 
 
+QString NepomukSource::resolveType(QString path, QList<QUrl> typesList)
+{
+    /*
+    KMimeType::Ptr ptr =  KMimeType::findByFileContent( path );
+    KMimeType* type = ptr.data();
+    QString mime = type->name();
+    if (mime.contains("image/"))
+        return "Image";
+    else if ((mime.contains("video/") || (mime == "application/x-matroska")))
+        return "Video";
+    qDebug() << path << mime;
+    return QString();
+    */
+    if (path.contains(".svg"))
+        return "Image";
+    foreach(QUrl url, typesList)
+    {
+        if (url.toString().contains("Video"))
+            return "Video";
+        else if ((url.toString().contains("Photo")) || (url.toString().contains("RasterImage")))
+            return "Image";
+    }
+    //qDebug() << "Not resolved type for" << path;
+    return QString();
+}
