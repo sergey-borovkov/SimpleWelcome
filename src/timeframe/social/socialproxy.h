@@ -9,6 +9,7 @@ class ISocialPlugin;
 class ListModel;
 class PluginModel;
 class SocialItem;
+class SocialDayModel;
 
 class SocialProxy : public QObject
 {
@@ -16,7 +17,7 @@ class SocialProxy : public QObject
 public:
     explicit SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent = 0);
     ~SocialProxy();
-    void setModel(ListModel *model);
+    void setModel( SocialDayModel *model );
 
     ListModel *socialModel();
     PluginModel *pluginModel();
@@ -41,7 +42,7 @@ signals:
 private:
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;
-    ListModel *m_socialModel;
+    SocialDayModel *m_socialModel;
     QSet<QString> m_idSet;
 
     bool m_anyEnabled; // true if any plugins enabled and authorized

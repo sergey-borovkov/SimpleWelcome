@@ -27,7 +27,6 @@
 #include <QDeclarativeContext>
 #include <QDeclarativeEngine>
 #include <QMovie>
-#include <QObject>
 #include <QThread>
 #include <QTimer>
 #include <QSortFilterProxyModel>
@@ -45,11 +44,13 @@
 #include "timeframe/nepomuksource.h"
 #include "timeframe/previewgenerator.h"
 #include "timeframe/previewprovider.h"
-#include "timeframe/social/pluginimageprovider.h"
 #include "timeframe/social/pluginloader.h"
-#include "timeframe/social/socialitem.h"
 #include "timeframe/social/socialproxy.h"
+#include "timeframe/social/pluginimageprovider.h"
+#include "timeframe/social/socialitem.h"
 #include "timeframe/social/pluginmodel.h"
+#include "timeframe/social/socialdaymodel.h"
+#include "timeframe/social/socialdayitem.h"
 
 SWApp* SWApp::self()
 {
@@ -64,12 +65,17 @@ SWApp::SWApp()
     : KUniqueApplication(),
       m_inited(false)
 {
+    qDebug() << "here";
     m_viewer = new QmlApplicationViewer();
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
     // Window transparency
-    //m_viewer->setAttribute(Qt::WA_TranslucentBackground);
-    //m_viewer->setStyleSheet("background:transparent;");
+    m_viewer->setAttribute(Qt::WA_TranslucentBackground);
+    m_viewer->setStyleSheet("background:transparent;");
+
+    //kDebug() << QMovie::supportedFormats();
+
+    //m_viewer->addImportPath("/usr/lib/kde4/imports/");
 
     m_appProvider = new AppProvider();
     m_appProvider->init();
@@ -138,6 +144,26 @@ SWApp::SWApp()
     PreviewGenerator::instance()->setModel(model);
     /* ------------------*/
 
+    /* Social mode */
+
+    PluginLoader loader;
+    QList<ISocialPlugin *> plugins = loader.loadPlugins();
+
+    SocialDayModel* socialModel = new SocialDayModel( SocialDayItem::roleNames() );
+    SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel( this );
+    socialProxyModel->setSourceModel( socialModel );
+    m_viewer->rootContext()->setContextProperty( "socialDayModel", socialProxyModel );
+    m_manager = new SocialProxy( plugins, this );
+    m_manager->setModel(socialModel );
+
+    m_viewer->rootContext()->setContextProperty( "socialProxy", m_manager );
+    //m_viewer->rootContext()->setContextProperty( "socialModel", m_manager->socialModel() );
+    m_viewer->rootContext()->setContextProperty( "pluginModel", m_manager->pluginModel() );
+
+    m_viewer->engine()->addImageProvider( "plugin", new PluginImageProvider( plugins ) );
+
+
+    /* ------------------*/
     /*Time scale model*/
     TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
     TimeScaleItem* item = new TimeScaleItem();
@@ -164,32 +190,22 @@ SWApp::SWApp()
     m_viewer->setGeometry(100, 000, 640, 480);
     //m_viewer->showFullScreen();
 
-    PluginLoader loader;
-    QList<ISocialPlugin *> plugins = loader.loadPlugins();
-    m_manager = new SocialProxy(plugins, this);
-
-    m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
-    m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
-    m_viewer->rootContext()->setContextProperty("socialProxy", m_manager);
-    m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
-
-
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
+    qDebug() << "THERE";
 
-    if(isLocal())
-        m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
+    if ( isLocal() )
+        m_viewer->setMainQmlFile( QLatin1String( "../src/qml/main.qml" ) );
     else
-        m_viewer->setMainQmlFile(QLatin1String("/usr/share/rosa-launcher-qtquick/qml/main.qml"));
+        m_viewer->setMainQmlFile( QLatin1String( "/usr/share/rosa-launcher-qtquick/qml/main.qml" ) );
 
-    QTimer::singleShot(1000, this, SLOT(init()));
+    QTimer::singleShot( 1000, this, SLOT( init() ) );
 
-    setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
+    setQuitOnLastWindowClosed( true ); // NEED TO CHANGE TO false
 
 }
 
 SWApp::~SWApp()
 {
-    /*
     delete m_viewer;
     delete m_appProvider;
     delete m_searchRunner;
@@ -201,8 +217,13 @@ SWApp::~SWApp()
     delete m_proxy;
     delete m_source;
     delete m_manager;
-    */
 }
+
+int SWApp::newInstance()
+{
+    return 0;
+}
+
 
 bool SWApp::event(QEvent *event)
 {
