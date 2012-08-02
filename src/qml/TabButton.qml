@@ -9,6 +9,7 @@ Item {
     property color buttonColor: "lightblue"
     property color onHoverColor: "gold"
     property color borderColor: "white"
+    property bool active: false
 
     property alias label: buttonLabel.text
 
@@ -19,6 +20,7 @@ Item {
         border.bottom: 6
         anchors.fill: parent
         source: "image://generalicon/asset/button_small_border_bg.png"
+        opacity: active ? 1 : 0.3
     }
 
     Text {
@@ -27,7 +29,7 @@ Item {
         text: "button label"
         style: Text.Sunken
         styleColor: "#000"
-        color: "#eee"
+        color: active ? '#eee' : "#606060"
         font.bold: true
         font.family: "Bitstream Vera Sans"
     }

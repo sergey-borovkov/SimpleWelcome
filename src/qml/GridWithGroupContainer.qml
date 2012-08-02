@@ -74,7 +74,7 @@ Column {
 
         if (groups !== undefined)
         {
-            console.log("Constructing GridWithGroupContainer for: " + groups.group + "; ds: " + groups.dataSource + "; start: " + groups.startIndex + "; " + groups.endIndex)
+            //console.log("Constructing GridWithGroupContainer for: " + groups.group + "; ds: " + groups.dataSource + "; start: " + groups.startIndex + "; " + groups.endIndex)
             addGridGroup(groups.group, groups.dataSource, groups.startIndex, groups.endIndex)
         }
         gridsConnectionChanged()

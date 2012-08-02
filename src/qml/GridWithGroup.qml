@@ -69,11 +69,13 @@ Column {
                      startIndex <= itemId && itemId <= endIndex &&
                      count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
             {
-                console.log("--- Added [" + startIndex + " to " + endIndex + "] with id: " + itemId)
+                //console.log("--- Added [" + startIndex + " to " + endIndex + "] with id: " + itemId)
                 model.append( { imagePath: iconPath, caption: name, id: itemId})
             }
             else
-                console.log("--- Skipped [" + startIndex + " to " + endIndex + "] with id: " + itemId + "; bool: " + (startIndex <= itemId && itemId <= endIndex))
+            {
+                //console.log("--- Skipped [" + startIndex + " to " + endIndex + "] with id: " + itemId + "; bool: " + (startIndex <= itemId && itemId <= endIndex))
+            }
 
         }
 
