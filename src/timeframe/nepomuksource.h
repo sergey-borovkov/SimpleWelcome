@@ -8,6 +8,7 @@
 #include <Nepomuk/Query/FileQuery>
 
 #include <QDate>
+#include <QTimer>
 
 namespace Nepomuk
 {
@@ -56,6 +57,8 @@ private:
     ActivitySet *createActivitySet(const QList<Nepomuk::Query::Result> &result);
     void fillTimeScaleModel(const QDate &beginDate);
 
+    QString resolveType(QString path,QList<QUrl> typesList);
+
     Nepomuk::Query::QueryServiceClient* m_searchClient;
     Nepomuk::Query::QueryServiceClient* m_timeScaleClient;
     QDate queryDate;
@@ -66,6 +69,7 @@ private:
     Mode m_mode;
     int m_limit;
     QList<QDate> m_searchQueue;
+    QTimer* m_timer;
 };
 
 #endif // NEPOMUKSOURCE_H

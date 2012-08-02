@@ -1,44 +1,43 @@
-#ifndef ACTIVITYPROXY_H
-#define ACTIVITYPROXY_H
+#ifndef GALLERYLISTER_H
+#define GALLERYLISTER_H
 
 #include <QObject>
-#include <QList>
 #include <QDate>
-#include <QMetaType>
 
-#include "activitysource.h"
+#include "nepomuksource.h"
 
-class ActivitySet;
-class ActivityList;
+class Activity;
+class LocalDayModel;
 
 class ActivityProxy : public QObject
 {
     Q_OBJECT
 public:
     explicit ActivityProxy(QObject *parent = 0);
-    ~ActivityProxy();
 
-    void addSource(ActivitySource *source);
+    void addNepomukSource(NepomukSource* source);
+    void setModel(LocalDayModel* model);
 
 signals:
-    void newSearch(QDate, ActivitySource::Direction);
-    void newActivitySet(ActivitySet*);
-    void newMonth(int year, int month);
-    void monthFinished(QDate date);
+    void newActivities (QList<Activity*>);
+    void newMonth(int, int , QString type);
+    void changeFilterString(const QString&);
     void finished();
 
 public slots:
-    void addActivitySet(ActivitySet *set);
-    void setMonth(int year, int month);
-    void startNewSearch(int year, int month, bool direction);
-
+    void startSearch(QDate date, int direction);
+    void resultCount(int);
+    int getIndexByDate(int year, int month,  bool direction);
+    QDate getDateOfIndex(int listIndex);
+    QObject* itemsModel(QDate date) const;
+    void changeType(QString type);
 
 private slots:
-    void listingFinished();
+    void newData(QList<Activity*>);
 
 private:
-
-    QList < ActivityList *> activityList;
+    LocalDayModel* m_model;
+    NepomukSource* m_source;
 };
 
-#endif // ACTIVITYPROXY_H
+#endif // GALLERYLISTER_H

@@ -33,7 +33,7 @@
 #include <kfileitem.h>
 
 class FileModel;
-class GalleryModel;
+class LocalDayModel;
 
 class PreviewGenerator : public QObject
 {
@@ -42,7 +42,7 @@ class PreviewGenerator : public QObject
 public:
     static PreviewGenerator *instance();
     QPixmap getPreviewPixmap(QString filePath);
-    void setModel(GalleryModel* model);
+    void setModel(LocalDayModel* model);
 
 public slots:
     void start(const QStringList& list);
@@ -55,7 +55,7 @@ private slots:
 
 private:
     explicit PreviewGenerator(QObject *parent = 0);
-    GalleryModel * m_model;
+    LocalDayModel * m_model;
 
     QHash<QString, QPixmap> previews;
     QSet<QString> m_files;

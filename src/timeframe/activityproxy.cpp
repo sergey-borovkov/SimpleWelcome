@@ -1,65 +1,101 @@
 #include "activityproxy.h"
+#include "localdaymodel.h"
 #include "activityset.h"
-#include "activitylist.h"
+#include "nepomuksource.h"
 #include "previewgenerator.h"
 
-#include <QDate>
-#include <QList>
 #include <QDebug>
-#include <QtAlgorithms>
 
 ActivityProxy::ActivityProxy(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_source(0),
+    m_model(0)
 {
 }
 
-ActivityProxy::~ActivityProxy()
+void ActivityProxy::addNepomukSource(NepomukSource *source)
 {
-}
-
-void ActivityProxy::addSource(ActivitySource *source)
-{
-    connect(source, SIGNAL(newActivitySet(ActivitySet*)), SLOT(addActivitySet(ActivitySet*)));
-    connect(this, SIGNAL(newSearch(QDate, ActivitySource::Direction)), source, SLOT(startSearch(QDate, ActivitySource::Direction)));
+    m_source = source;
+    //connect(source, SIGNAL(newActivities(QList<Activity*>)), this, SIGNAL(newActivities(QList<Activity*>)));
+    connect(source, SIGNAL(newActivities(QList<Activity*>)), this, SLOT(newData(QList<Activity*>)));
+    //connect(this, SIGNAL(newSearch(QDate, ActivitySource::Direction)), source, SLOT(startDetailedSearch(QDate, ActivitySource::Direction)));
     connect(source, SIGNAL(finishedListing()), SIGNAL(finished()));
-    connect(source, SIGNAL(finishedListing()), SLOT(listingFinished()));
-    connect(source, SIGNAL(newTSEntries(int, int)), SIGNAL(newMonth(int,int)));
-    connect(source, SIGNAL(monthFinished(QDate)), SIGNAL(monthFinished(QDate)));
+    connect(source, SIGNAL(resultCount(int)), this, SLOT(resultCount(int)));
+    //connect(source, SIGNAL(newTSEntries(int, int)), SIGNAL(newMonth(int,int)));
+    //connect(source, SIGNAL(monthFinished(QDate)), SIGNAL(monthFinished(QDate)));
 }
 
-void ActivityProxy::addActivitySet(ActivitySet *set)
+void ActivityProxy::startSearch(QDate date, int direction)
 {
-    // start generating previews for set
-    QStringList files;
-    for(int i = 0; i < set->count(); i++)
-        files.append(set->getUrl(i));
-    PreviewGenerator::instance()->start(files);
+    QDate d = date;
+    if (!m_source)
+       return;
+    ActivitySource::Direction dir;
+    if (direction)
+    {
+        dir = ActivitySource::Right;
+        d.setDate(d.year(),d.month(),1);
 
-    // emit again for models
-    emit newActivitySet(set);
+    } else
+    {
+        dir = ActivitySource::Left;
+        d.setDate(d.year(),d.month(),d.daysInMonth());
+    }    
+    //qDebug() << d;
+    m_source->setLimit(0);
+    m_source->startSearch(d, dir);
 }
 
-void ActivityProxy::setMonth(int year, int month)
+void ActivityProxy::resultCount(int count)
 {
-    QDate date;
-    date.setDate(year, month + 1, 1);
-    date.setDate(date.year(), date.month(), date.daysInMonth());
-
-    if(date > QDate::currentDate())
-        date = QDate::currentDate();
-
-    emit newSearch(date, ActivitySource::Left);
+    //qDebug() << "Result count: " << count;
 }
 
-void ActivityProxy::listingFinished()
+void ActivityProxy::newData(QList<Activity *> list)
 {
-
+    // start generating previews
+    QStringList urls;
+    foreach(Activity* item, list)
+    {
+        urls.append(item->getUrl());
+        emit newMonth(item->getDate().year() , item->getDate().month(), item->getType());  //fill timeScaleModel
+    }
+    PreviewGenerator::instance()->start(urls);
+    // send events to the model
+    emit newActivities(list);
 }
 
-void ActivityProxy::startNewSearch(int year, int month, bool direction)
+void ActivityProxy::setModel(LocalDayModel* model)
 {
-    QDate date(year, month + 1, 1);
-    date.setDate(year, month + 1, direction ? 1 : date.daysInMonth());
-    //qDebug() << "+++" << date;
-    emit newSearch(date, direction ? ActivitySource::Right : ActivitySource::Left);
+    if (m_model)
+        m_model = model;
 }
+
+
+int ActivityProxy::getIndexByDate(int year, int month,  bool direction)
+{
+    if (m_model)
+     return m_model->getIndexByDate(year, month, direction);
+    return -1;
+}
+
+QDate ActivityProxy::getDateOfIndex(int listIndex)
+{
+    if (m_model)
+        return m_model->getDateOfIndex(listIndex);
+    return QDate();
+}
+
+QObject* ActivityProxy::itemsModel(QDate date) const
+{
+    if (m_model)
+        return m_model->itemsModel(date);
+    return 0;
+}
+
+void ActivityProxy::changeType(QString type)
+{
+    qDebug() << "GalleryLister::set filter" << type;
+    emit changeFilterString(type);
+}
+

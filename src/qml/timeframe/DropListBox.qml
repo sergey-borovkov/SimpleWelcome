@@ -119,7 +119,7 @@ Item {
 
                     onClicked: {
                         var prevSelection = selectedText
-                        if ( dropboxListSelection.model.get( index ).itemText != prevSelection ) {
+                        if ( dropboxListSelection.model.get( index ).itemText != prevSelection ) {                            
                             dropboxListSelection.currentIndex = index;
                             selectedText = dropboxListSelection.model.get( index ).itemText
                             dropboxListSelection.focus = true
