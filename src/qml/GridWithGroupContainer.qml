@@ -2,17 +2,22 @@ import QtQuick 1.1
 
 Column {
     id: gridsContainer
-    width: parent.width
-    height: childrenRect.height
-    anchors.bottom: parent.bottom
-    spacing: 32
+
+    property variant groups
+    property variant activeGridView
+    property variant prevGridGroup: activeGridView.prevGrid
+    property variant nextGridGroup: activeGridView.nextGrid
 
     signal gridCurrentItemChanged(variant newCurrentItem)
 
-    property variant activeGridView
-    property variant groups
-    property variant prevGridGroup: activeGridView.prevGrid
-    property variant nextGridGroup: activeGridView.nextGrid
+    // constants
+    property int gridContainersSpacing: constants.gridWithGroupsSpacing
+
+
+    width: parent.width
+    height: childrenRect.height
+    anchors.bottom: parent.bottom
+    spacing: gridContainersSpacing
 
 
     function gridsConnectionChanged()

@@ -3,20 +3,28 @@ import QtQuick 1.0
 GridView {
     id: grid
     property variant dataSource
-    property int columns: 7
+
     property variant prevGrid
     property variant nextGrid
+
     property int iconIndexStart
     property int iconIndexEnd
-    property int highlightMoveDurationConst: 150
-    property int spacing: Math.max(0, (parent.width - 120 * columns) / (columns + 1))
+
     signal selectionChangedByKeyboard(variant newCurrentItem)
 
-    anchors.leftMargin: spacing
-    anchors.left: parent.left
+    // constants
+    property int columns: constants.gridColumns
+    property int highlightMoveDurationConst: 150
+    property int gridCellHeight: constants.cellHeight
 
-    cellWidth: (width - spacing) / columns - 1
-    cellHeight: 200
+    property int cellHorizontalSpacing: Math.max(0, (parent.width - constants.cellWidth * columns) / (columns + 1))
+
+    anchors {
+        left: parent.left
+        leftMargin: cellHorizontalSpacing
+    }
+    cellWidth: (width - cellHorizontalSpacing) / columns - 1
+    cellHeight: gridCellHeight
 
     delegate: Cell {}
 

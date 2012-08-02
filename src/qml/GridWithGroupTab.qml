@@ -47,7 +47,7 @@ Item {
     }*/
 
 
-        function gridsSelectionChanged(obj)
+        function gridsSelectionChanged(obj) // Used to be used for vertical scrolling
         {
             if (moving)
                 return
@@ -55,11 +55,11 @@ Item {
             var itemHere = mapFromItem(obj, 0, 0)
             var itemInContainer = mapToItem(gridsContainer, itemHere.x, itemHere.y)
 
-            if (itemInContainer.y + 200 > height + contentY)
-                contentY += itemHere.y - height + 200
+            if (itemInContainer.y + constants.cellHeight > height + contentY)
+                contentY += itemHere.y - height + constants.cellHeight
             else if(itemInContainer.y < contentY)
             {
-                if (itemInContainer.y < 200)
+                if (itemInContainer.y < constants.cellHeight)
                     contentY = 0
                 else
                     contentY += itemHere.y
@@ -68,11 +68,11 @@ Item {
 
         function createTabsFromGroups()
         {
-            // Constants. Replace them with the appropriate reference
-            var textHeight = 24 + 16, // text height + spacing after it
-                    spacing = 32, // spacing between GridWithGroups
-                    columns = 7,
-                    cellRealHeight = 200
+            // Constants. Used hack to retrieve them from C++, no way to do it straightforward AFAIK
+            var textHeight = constants.groupTextHeight + constants.textToGridSpacing,
+                    spacing = constants.gridWithGroupsSpacing, // spacing between GridWithGroups
+                    columns = constants.gridColumns,
+                    cellRealHeight = constants.cellHeight
 
 
             var availableHeight = 0
