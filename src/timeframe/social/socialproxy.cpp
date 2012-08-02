@@ -1,6 +1,7 @@
 #include "socialproxy.h"
 #include "socialitem.h"
 #include "socialplugin.h"
+#include "socialdaymodel.h"
 #include "pluginitem.h"
 #include "pluginmodel.h"
 #include "../listmodel.h"
@@ -13,7 +14,7 @@ SocialProxy::SocialProxy( QList<ISocialPlugin *> plugins, QObject *parent )
     : QObject( parent )
     , m_plugins( plugins )
     , m_pluginModel( new PluginModel( PluginItem::roleNames(), this ) )
-    , m_socialModel( new ListModel( SocialItem::roleNames(), this ) )
+    , m_socialModel( 0 )
     , m_anyEnabled( false )
 {
     QSettings settings("ROSA", "Timeframe");
@@ -110,7 +111,9 @@ void SocialProxy::newItem(SocialItem *item)
 
 void SocialProxy::newItems(QList<SocialItem *> items)
 {
-    QList<ListItem *> list;
+    if (!m_socialModel)
+        return;
+    QList<SocialItem *> list;
     foreach( SocialItem *item, items ) {
         QString strId = QString( "%1-%2" ).arg( item->pluginName() ).arg( item->id() );
         if ( m_idSet.contains( strId ) )
@@ -119,5 +122,10 @@ void SocialProxy::newItems(QList<SocialItem *> items)
 
         list.append( item );
     }
-    m_socialModel->appendRows(list);
+    m_socialModel->newSocialItems( list );
+}
+
+void SocialProxy::setModel(SocialDayModel *model)
+{
+    m_socialModel = model;
 }

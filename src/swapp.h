@@ -27,6 +27,8 @@ public:
     SWApp();
     ~SWApp();
 
+    int newInstance();
+
     static SWApp* self();
 
 public Q_SLOTS:
@@ -39,21 +41,20 @@ private Q_SLOTS:
 private:
     bool m_inited;
     QmlApplicationViewer *m_viewer;
-    AppProvider *m_appProvider;
+    AppProvider         *m_appProvider;
 
+    NepomukSource       *m_source;
+    QThread             *m_nepomukThread;
+    ActivityProxy       *m_proxy;
+    SocialProxy         *m_manager;
 
-    NepomukSource* m_source;
-    ActivityProxy *m_proxy;
-    QThread *m_nepomukThread;
-    SocialProxy *m_manager;
-
-    SearchRunner *m_searchRunner;
+    SearchRunner        *m_searchRunner;
     GeneralIconProvider *m_generalIconProvider;
-    RecentAppsProvider *m_recentAppsProvider;
-    PlacesProvider *m_placesProvider;
-    DocumentsProvider *m_documentsProvider;
-    SessionProvider *m_sessionProvider;
-    UserInfoProvider *m_userInfoProvider;
+    RecentAppsProvider  *m_recentAppsProvider;
+    PlacesProvider      *m_placesProvider;
+    DocumentsProvider   *m_documentsProvider;
+    SessionProvider     *m_sessionProvider;
+    UserInfoProvider    *m_userInfoProvider;
 };
 
 #endif // SW_APP_H

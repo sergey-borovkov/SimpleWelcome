@@ -11,14 +11,16 @@ class SocialItem : public ListItem
 public:
     enum Role
     {
-        Text,
+        Text = Qt::UserRole + 1,
         ImageUrl,
         LikeUrl,
         Date,
         Likes,
         Comments,
         Audio,
-        PluginName
+        PluginName,
+        Count,
+        ItemsCount
     };
 
     enum Type
@@ -31,18 +33,21 @@ public:
     virtual QString pluginName() const = 0;
     virtual Type type() const = 0;
     virtual QString id() const = 0;
-    virtual QVariant data(int role) const = 0;
+    virtual QVariant data( int role ) const = 0;
+    virtual QDate date() const = 0;
 
-    static const QHash<int,QByteArray> roleNames()
+    static const QHash<int, QByteArray> roleNames()
     {
-        QHash<int,QByteArray> roles;
-        roles.insert( Text, "message" );
-        roles.insert( ImageUrl, "picture" );
-        roles.insert( Date, "date" );
-        roles.insert( Likes, "likes" );
-        roles.insert( Comments, "comments" );
-        roles.insert( Audio, "audio" );
-        roles.insert( PluginName, "pluginName" );
+        QHash<int, QByteArray> roles;
+        roles.insert( Count,        "count" );
+        roles.insert( PluginName,   "pluginName" );
+        roles.insert( Text,         "message" );
+        roles.insert( ImageUrl,     "picture" );
+        roles.insert( Audio,        "audio" );
+        roles.insert( Likes,        "likes" );
+        roles.insert( Comments,     "comments" );
+        roles.insert( Count,        "count" );
+        roles.insert( ItemsCount,   "size" );
 
         return roles;
     }

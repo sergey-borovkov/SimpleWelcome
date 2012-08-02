@@ -30,7 +30,7 @@ private slots:
     void handleItemChange();
 
 private:
-    QList<ListItem *> m_list;
+    QList<ListItem *> m_items;
     QHash<int, QByteArray> m_roles;
 };
 
