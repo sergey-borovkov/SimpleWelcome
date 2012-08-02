@@ -18,8 +18,9 @@ public:
     explicit SocialDayFilterModel( QObject * parent = 0 );
 
 public slots:
-
+    int getIndexByDate(int year, int month,  bool direction);
     QObject* itemsModel(QDate date) const;
+    QDate getDateOfIndex(int listIndex);
 //    QString url( int row );
 
 };
@@ -34,8 +35,11 @@ public:
      ~SocialDayModel();
 
     QVariant data( const QModelIndex &index, int role ) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     void appendRows(const QList<SocialDayItem*> &items);
+    void insertRow(int row, SocialDayItem* item);
+    QModelIndex indexFromItem(const SocialDayItem *item) const;
 
 public slots:
     void newSocialItems( QList<SocialItem*> list );

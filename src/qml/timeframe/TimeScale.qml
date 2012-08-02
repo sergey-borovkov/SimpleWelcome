@@ -183,14 +183,28 @@ Item {
                         timeFrameTab.currentDateChanged()
                         //scene.currentIndex = timeFrameTab.getTimeLineProperlyItem()
 
-                        //set index on timeLine
+                        if ((timeFrameTab.state === "") || (timeFrameTab.state === "gallery"))
+                        {
+                            //set index on timeLine
 
-                        timeLine.currentIndex = timeFrameTab.getTimeLineGalleryIndex()
-                        timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
+                            timeLine.currentIndex = timeFrameTab.getTimeLineIndex()
+                            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
 
-                        //set index on gallery
-                        galleryView.currentIndex = timeLine.currentIndex
-                        galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center )
+                            //set index on gallery
+                            galleryView.currentIndex = timeLine.currentIndex
+                            galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center )
+                        }
+                        else if ((timeFrameTab.state === "social") || (timeFrameTab.state === "socialGallery"))
+                        {
+                            //set index on socialTimeLine
+
+                            socialTimeLine.currentIndex = timeFrameTab.getSocialTimeLineIndex()
+                            socialTimeLine.positionViewAtIndex(socialTimeLine.currentIndex, ListView.Center )
+
+                            //set index on social gallery
+                            socialGalleryView.currentIndex = timeFrameTab.getSocialTimeLineIndex()
+                            socialGalleryView.positionViewAtIndex(socialGalleryView.currentIndex, ListView.Center )
+                        }
                     }
                 }
             }

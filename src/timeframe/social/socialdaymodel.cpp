@@ -5,6 +5,7 @@
 
 #include <QVariant>
 #include <QRegExp>
+#include <QDebug>
 
 SocialDayFilterModel::SocialDayFilterModel( QObject * parent )
     : QSortFilterProxyModel( parent )
@@ -18,6 +19,24 @@ QObject* SocialDayFilterModel::itemsModel(QDate date) const
     if (model)
         return model->itemsModel(date);
     return 0;
+}
+
+int SocialDayFilterModel::getIndexByDate(int year, int month,  bool direction)
+{
+    for (int i = 0; i < rowCount(); i++)
+    {
+        QDate date = data(index(i,0),SocialDayItem::DateRole).toDate();
+        if((date.year() == year) && (date.month() == month))
+                return i;
+    }
+    return -1;
+}
+
+QDate SocialDayFilterModel::getDateOfIndex(int listIndex)
+{
+    if ((listIndex >= rowCount()) || (listIndex < 0))
+        return QDate();
+    return data(index(listIndex,0),SocialDayItem::DateRole).toDate();
 }
 
 //QString SocialDayFilterModel::url( int row )
@@ -42,25 +61,20 @@ QVariant SocialDayModel::data( const QModelIndex &index, int role ) const
     if ( !index.isValid() ) {
         return QVariant();
     }
-
-//    if ( role == SocialDayItem::CountRole ) {
-//        return m_items.size();
-//    }
-//    else if(role == ItemsRole)
-//    {
-//        //QVariant v;
-//        //v.setValue( m_items[index.row()]->model());
-//        return 0;//m_items.value(index.row());
-//    }
-//    else if(role == CountRole)
-//    {
-//        return m_items.size();
-//    }
-//    else if(role == ItemsCountRole)
-//    {
-//        return m_items[index.row()]->getCount();
-//    }
+    if (role == SocialDayItem::DateRole)
+    {
+        return m_items.value(index.row())->date();
+    }
+    if (role == SocialDayItem::ItemsCountRole)
+    {
+        return m_items.value(index.row())->count();
+    }
     return QVariant();
+}
+
+int SocialDayModel::rowCount(const QModelIndex &parent) const
+{
+    return m_items.size();
 }
 
 void SocialDayModel::appendRows(const QList<SocialDayItem *> &items)
@@ -70,6 +84,14 @@ void SocialDayModel::appendRows(const QList<SocialDayItem *> &items)
         connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
         m_items.append(item);
     }
+    endInsertRows();
+}
+
+void SocialDayModel::insertRow(int row, SocialDayItem *item)
+{
+    beginInsertRows(QModelIndex(), row, row);
+    m_items.insert(row, item);
+    connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
     endInsertRows();
 }
 
@@ -85,33 +107,44 @@ QObject* SocialDayModel::itemsModel( QDate date ) const
 
 void SocialDayModel::handleItemChange()
 {
-    SocialDayItem* item = static_cast<SocialDayItem*>(sender());
+    SocialDayItem* item = static_cast<SocialDayItem*>(sender());    
     QModelIndex index = indexFromItem(item);
     if(index.isValid())
         emit dataChanged(index, index);
 }
 
+QModelIndex SocialDayModel::indexFromItem(const SocialDayItem *item) const
+{
+    Q_ASSERT(item);
+    for(int row = 0; row < m_items.size(); ++row)
+        if(m_items.at(row) == item)
+            return index(row);
+
+    return QModelIndex();
+}
+
+
+
 void SocialDayModel::newSocialItems(QList < SocialItem * > list)
 {
-    // qDebug() << "------new Activities--------";
     for (int i = 0; i < list.size() ; i++)
     {
 
-        SocialItem* item = list.at(i);
+        SocialItem* item = list.at(i);       
         QString uniqueId = item->pluginName() + item->id();
         if (m_idSet.contains(uniqueId))
             continue;
         m_idSet.insert(uniqueId);
 
         int j = 0;
-        bool flag = false;
+        bool flag = false;        
         if (m_items.size() > 0)
         {
             while (m_items.at(j)->date() <= item->date())
             {
                 if ( m_items.at(j)->date() == item->date())
                 {
-                    m_items.at(j)->addSocialItem(item);
+                    m_items.at(j)->addSocialItem(item);                    
                     flag = true;
                     break;
                 }
@@ -135,7 +168,7 @@ void SocialDayModel::newSocialItems(QList < SocialItem * > list)
         SocialDayItem * socialDayItem = new SocialDayItem(item->date());
         socialDayItem->addSocialItem(item);
         insertRow(j,socialDayItem);
-
+        //qDebug() << "create new";
         //insertRow(j+1,gallItem);
         //qDebug() <<" add new activity" << item->getDate();
     }    

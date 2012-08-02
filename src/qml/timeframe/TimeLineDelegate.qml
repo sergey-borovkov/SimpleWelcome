@@ -47,7 +47,7 @@ Item {
     {
         if (count === 0)
         {
-            galleryLister.startSearch(date,1)   //Start new search if null item becomes visible
+            //galleryLister.startSearch(date,1)   //Start new search if null item becomes visible
             return "CloudNull.qml"
         }
         else if (count === 1)

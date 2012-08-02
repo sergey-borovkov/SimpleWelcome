@@ -74,7 +74,7 @@ QDate SocialDayItem::date()
 }
 
 int SocialDayItem::count()
-{
+{    
     return m_model->rowCount( QModelIndex() );
 }
 

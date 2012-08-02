@@ -48,6 +48,7 @@ public:
         roles.insert( Comments,     "comments" );
         roles.insert( Count,        "count" );
         roles.insert( ItemsCount,   "size" );
+        roles.insert( Date,   "date" );
 
         return roles;
     }

@@ -10,12 +10,12 @@ ListModel::ListModel(QHash<int, QByteArray> roles, QObject *parent) :
 
 int ListModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
-    return m_items.size();
+    Q_UNUSED(parent);    
+    return m_items.size();    
 }
 
 QVariant ListModel::data(const QModelIndex &index, int role) const
-{
+{    
     if(index.row() < 0 || index.row() >= m_items.size())
         return QVariant();
     return m_items.at(index.row())->data(role);
