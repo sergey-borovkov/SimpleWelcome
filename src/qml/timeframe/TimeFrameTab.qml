@@ -227,11 +227,11 @@ Item {
         interval: 1000;
         onTriggered: {
             console.log("state changed")
-            if(timeFrameTab.state == "timeLineSearch") {
+//            if(timeFrameTab.state == "timeLineSearch") {
                 timeLine.currentIndex = timeFrameTab.getTimeLineGalleryIndex()
                 timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
                 timeFrameTab.state = ""
-            }
+//            }
         }
     }
 
@@ -376,6 +376,41 @@ Item {
         }
     }
 
+
+    ListView {
+            id: socialView
+            model: socialDayModel
+            anchors.top: separator.bottom
+            anchors.bottom: timeScale.top
+            anchors.right: parent.right
+            anchors.left: parent.left
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
+            anchors.topMargin: 30
+            visible: false
+            spacing: 10
+            orientation: ListView.Horizontal
+
+            delegate: SocialDelegate {}
+        }
+
+        SocialAuthorization {
+            id: authorizationView
+            visible: false
+            orientation: ListView.Horizontal
+            model: pluginModel
+            anchors.top: separator.bottom
+            anchors.bottom: timeScale.top
+            anchors.right: parent.right
+            anchors.left: parent.left
+            anchors.leftMargin: 80
+            anchors.rightMargin: 20
+            anchors.topMargin: width / 8
+        }
+
+        state: socialProxy.anyPluginsEnabled() ? "socialgallery" : "socialauthorization"
+
+
     AnimatedImage {
         id: waitIndicator
         source: "images/ajax-loader.gif"
@@ -397,87 +432,11 @@ Item {
         target: galleryView
         onFlickEnded: flickableTimer.stop()
     }
+
     Connections {
         target: timeLine
         onFlickEnded: flickableTimer.stop()
     }
-
-    ListView {
-        id: socialView
-        model: socialModel
-        anchors.top: separator.bottom
-        anchors.bottom: timeScale.top
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.leftMargin: 20
-        anchors.rightMargin: 20
-        anchors.topMargin: 30
-        visible: false
-        spacing: 10
-        model: socialModel
-
-        delegate: ShadowRectangle {
-            width: 300
-            height: 300
-
-            Text {
-                id: msg
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                wrapMode: Text.Wrap
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                width: 200
-                text: message
-            }
-
-            Image {
-                anchors.centerIn: parent
-                fillMode: Image.PreserveAspectFit
-                width: Math.min( sourceSize.width, parent.width)
-                height: Math.min( sourceSize.height, parent.height)
-                smooth: true
-                source: picture
-            }
-        }
-    }
-
-
-    Timer {
-        id: galleryTimer
-        interval: 100; running: false; repeat: true
-        onTriggered: {
-            var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
-                                            galleryView.y + galleryView.height/2 + galleryView.contentY)
-            var date = localDayModel.getDateOfIndex(index)
-            timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
-        }
-    }
-
-    Connections {
-        target: galleryView
-        onFlickStarted : galleryTimer.start()
-    }
-
-        delegate: SocialDelegate {}
-    }
-
-//    SocialAuthorization {
-//        id: authorizationView
-//        visible: false
-//        orientation: ListView.Horizontal
-//        model: pluginModel
-//        anchors.top: separator.bottom
-//        anchors.bottom: timeScale.top
-//        anchors.right: parent.right
-//        anchors.left: parent.left
-//        anchors.leftMargin: 80
-//        anchors.rightMargin: 20
-//        anchors.topMargin: width / 8
-//    }
-
-    state: socialProxy.anyPluginsEnabled() ? "socialgallery" : "socialauthorization"
 
     states: [
 
