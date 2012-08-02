@@ -5,20 +5,28 @@ FocusScope {
     width: parent.width
     clip: true
 
-    property variant grid: appsGrid
+    property variant grid//: appsGrid
 
-    IconGridView {
-        id: appsGrid
-        dataSource: dataSource_Apps
-        anchors.fill: parent
-
-        interactive: false
-        focus: true
-        keyNavigationWraps: true
-        //flow: GridView.TopToBottom
-
-        anchors.top: parent.top
-        anchors.topMargin: 32
+    GridWithGroupTab {
+        groups: [
+            {
+                //group: "Recent Applications",
+                dataSource: dataSource_Apps
+            }
+        ]
     }
+//    IconGridView {
+//        id: appsGrid
+//        dataSource: dataSource_Apps
+//        anchors.fill: parent
+
+//        interactive: false
+//        focus: true
+//        keyNavigationWraps: true
+//        //flow: GridView.TopToBottom
+
+//        anchors.top: parent.top
+//        anchors.topMargin: 32
+//    }
 
 }

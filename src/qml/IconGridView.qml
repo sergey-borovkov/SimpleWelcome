@@ -62,7 +62,7 @@ GridView {
     }
 
     Component.onCompleted: {
-        console.log("COMPLETED " + dataSource + " VIEW")
+        //console.log("COMPLETED " + dataSource + " VIEW")
         dataSource.newItemData.connect(newItemData)
         dataSource.dataClear.connect(dataClear)
         dataSource.updateContent()
@@ -88,6 +88,7 @@ GridView {
         case Qt.Key_Left:
             if (currentIndex == 0 && prevGrid)
             {
+                console.log(prevGrid)
                 prevGrid.highlightMoveDuration = 1
                 prevGrid.currentIndex = prevGrid.count - 1
                 prevGrid.forceActiveFocus()
