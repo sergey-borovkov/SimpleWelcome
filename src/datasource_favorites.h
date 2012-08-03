@@ -9,7 +9,7 @@ class DataSource_Favorites : public DataSource
 
 public:
     explicit DataSource_Favorites(QObject* parent = 0);
-    Q_INVOKABLE virtual int getItemCount() { return favoritesList.count(); }
+    Q_INVOKABLE virtual int getItemCount(QString group = "") { return favoritesList.count(); }
 
 signals:
     void newItemData(QString iconPath, QString name, int id);

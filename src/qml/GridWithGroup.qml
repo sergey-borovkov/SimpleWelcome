@@ -86,10 +86,6 @@ Column {
             updateSelection()
         }
 
-        Behavior on height {
-            NumberAnimation { duration: 150 }
-        }
-
         onCountChanged: {
             updateSelection()
         }
