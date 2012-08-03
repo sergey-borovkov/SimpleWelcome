@@ -10,9 +10,10 @@ public:
     virtual QString pluginName() const;
     virtual Type type() const;
     virtual QString id() const;
-    virtual QVariant data(int role) const;
+    virtual QVariant data( int role ) const;
+    virtual QDate date() const;
 
-    void fillFromMap(QVariantMap map);
+    void fillFromMap( QVariantMap map );
 
 private:
     QString m_id;
