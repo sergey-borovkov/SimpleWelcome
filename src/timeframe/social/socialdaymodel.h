@@ -18,6 +18,7 @@ public:
     explicit SocialDayFilterModel( QObject * parent = 0 );
 
 public slots:
+    void setFilter(const QString &filter);
     int getIndexByDate(int year, int month,  bool direction);
     QObject* itemsModel(QDate date) const;
     QDate getDateOfIndex(int listIndex);
