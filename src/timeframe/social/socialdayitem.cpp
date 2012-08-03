@@ -8,6 +8,8 @@
 SocialItemFilterModel::SocialItemFilterModel( QObject * parent )
     : QSortFilterProxyModel( parent )
 {
+    setDynamicSortFilter(true);
+    setFilterRole(SocialItem::PluginName);
 }
 
 //QString SocialItemFilterModel::url( int row )

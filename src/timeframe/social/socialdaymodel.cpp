@@ -10,7 +10,27 @@
 SocialDayFilterModel::SocialDayFilterModel( QObject * parent )
     : QSortFilterProxyModel( parent )
 {
+    setDynamicSortFilter(true);
+    setFilterRole(SocialDayItem::ItemsTypes);
+}
 
+void SocialDayFilterModel::setFilter(const QString &filter)
+{
+    QRegExp filterRegExp;
+    if (filter == "Social")
+        filterRegExp = QRegExp("Facebook|VKontakte|Twitter");
+    else
+        filterRegExp = QRegExp(filter);
+
+    setFilterRegExp(filterRegExp);
+
+    for (int i = 0; i < rowCount(); i++) //Set filter on nested models
+    {
+        QDate date = data(index(i,0),SocialDayItem::DateRole).toDate();
+        SocialItemFilterModel * sModel = qobject_cast<SocialItemFilterModel *> (itemsModel(date));
+        if (sModel)
+            sModel->setFilterRegExp(filterRegExp);
+    }
 }
 
 QObject* SocialDayFilterModel::itemsModel(QDate date) const

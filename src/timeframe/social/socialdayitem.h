@@ -36,7 +36,8 @@ public:
         DateRole = Qt::UserRole + 1,
         ItemsRole,
         CountRole,
-        ItemsCountRole
+        ItemsCountRole,
+        ItemsTypes
     };
 
     explicit SocialDayItem( const QDate &date, QObject *parent = 0 );
@@ -60,6 +61,7 @@ public:
         roles.insert( ItemsRole,        "items" );
         roles.insert( CountRole,        "count" );
         roles.insert( ItemsCountRole,   "size" );
+        roles.insert( ItemsTypes,      "type" );
 
         return roles;
     }
