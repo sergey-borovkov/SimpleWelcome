@@ -144,9 +144,15 @@ Item {
                     timeFrameTab.state = "social"
                     socialProxy.startSearch()
                     if (selectedText === "All")
+                    {
                         timeScaleModel.setFilter("Social")
+                        socialDayModel.setFilter("Social")
+                    }
                     else
+                    {
+                        socialDayModel.setFilter(selectedText)
                         timeScaleModel.setFilter(selectedText)
+                    }
                 }
                 state = "current"
                 localDocs.state = ""
