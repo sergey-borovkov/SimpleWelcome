@@ -30,6 +30,8 @@ void TimeScaleFilterModel::setFilter(const QString &filter)
         filterRegExp = QRegExp("VKontakte|Facebook|Twitter");
     else if (filter == "VKontakte")
         filterRegExp = QRegExp("VKontakte");
+    else if (filter == "Facebook")
+        filterRegExp = QRegExp("Facebook");
 
     setFilterRegExp(filterRegExp);
 }

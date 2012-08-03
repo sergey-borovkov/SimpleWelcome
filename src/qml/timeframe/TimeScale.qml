@@ -202,7 +202,7 @@ Item {
                             socialTimeLine.positionViewAtIndex(socialTimeLine.currentIndex, ListView.Center )
 
                             //set index on social gallery
-                            socialGalleryView.currentIndex = timeFrameTab.getSocialTimeLineIndex()
+                            socialGalleryView.currentIndex = socialTimeLine.currentIndex
                             socialGalleryView.positionViewAtIndex(socialGalleryView.currentIndex, ListView.Center )
                         }
                     }

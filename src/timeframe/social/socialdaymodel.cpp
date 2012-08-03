@@ -21,7 +21,7 @@ void SocialDayFilterModel::setFilter(const QString &filter)
         filterRegExp = QRegExp("Facebook|VKontakte|Twitter");
     else
         filterRegExp = QRegExp(filter);
-
+    //qDebug() << "!!!!!!!filter set on " << filter;
     setFilterRegExp(filterRegExp);
 
     for (int i = 0; i < rowCount(); i++) //Set filter on nested models
@@ -88,6 +88,10 @@ QVariant SocialDayModel::data( const QModelIndex &index, int role ) const
     if (role == SocialDayItem::ItemsCountRole)
     {
         return m_items.value(index.row())->count();
+    }
+    if (role == SocialDayItem::ItemsTypes)
+    {
+        return m_items.value(index.row())->types();
     }
     return QVariant();
 }
