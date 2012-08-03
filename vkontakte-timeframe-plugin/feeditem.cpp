@@ -34,7 +34,7 @@ QDate FeedItem::date() const
 
 void FeedItem::fillFromMap( QVariantMap map )
 {
-    // http://developers.facebook.com/docs/reference/api/post/
+    // http://vk.com/developers.php?oid=-1&p=%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5_%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D0%BE%D0%B2_API
     if ( map.contains( "id" ) ) {
         m_id = map.value("id").toString();
     }
@@ -54,13 +54,11 @@ void FeedItem::fillFromMap( QVariantMap map )
 
     if ( map.contains( "attachments" ) ) {
         QVariantList attachmentList = map[ "attachments" ].toList();
-        //qDebug() << "FeedItem::fillFromMap:   it is attachmentss list!!!";
 
         foreach ( QVariant item, attachmentList ) {
             QVariantMap map = item.toMap();
 
             if ( map.contains( "type" ) ) {
-                //                    qDebug() << "***********       attachments type = " << map.value( "type" ).toString();
                 QString typeAttachment = map.value( "type" ).toString();
 
                 if ( typeAttachment == "photo" ) {
@@ -68,7 +66,6 @@ void FeedItem::fillFromMap( QVariantMap map )
 
                     if ( photoMap.contains( "src" ) ) {
                         m_data.insert( ImageUrl, photoMap.value( "src" ).toString() );
-                        //qDebug() <<  "FeedItem::fillFromMap:   " << map.value( "type" ).toString() << " - " << photoMap.value( "src" ).toString();
                     }
                 }
 
@@ -77,7 +74,6 @@ void FeedItem::fillFromMap( QVariantMap map )
 
                     if ( audioMap.contains( "title" ) ) {
                         m_data.insert( Audio, audioMap.value( "performer" ).toString() + " - " + audioMap.value( "title" ).toString());
-                        //qDebug() <<  "FeedItem::fillFromMap:   " << map.value( "type" ).toString() << " - " << audioMap.value( "performer" ).toString() + " - " + audioMap.value( "title" ).toString();
                     }
                 }
             }
