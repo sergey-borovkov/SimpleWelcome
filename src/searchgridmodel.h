@@ -27,7 +27,7 @@ class SearchGridModel : public DataSource
 
 public:
     explicit SearchGridModel(QObject* parent = 0);
-    Q_INVOKABLE virtual int getItemCount() { return matches.count(); }
+    Q_INVOKABLE virtual int getItemCount(QString group = "");
 
 
 
@@ -45,6 +45,9 @@ public slots:
 
     virtual void itemClicked(int newIndex);
     virtual void updateContent();
+
+
+    virtual void test2();
 
 signals:
     void newItemData(QString iconPath, QString name, int id, QString group);

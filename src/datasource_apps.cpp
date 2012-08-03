@@ -69,12 +69,6 @@ DataSource_Apps::DataSource_Apps(QObject *parent)
 
 void DataSource_Apps::updateContent()
 {
-    if (prevCurrentGroup != currentGroup)
-    {
-        prevCurrentGroup = currentGroup;
-        appsList = GetFlatList(currentGroup);
-    }
-
     for (int i = 0; i < appsList.size(); i++)
         emit newItemData(QString("image://generalicon/appicon/%1").arg(appsList[i].icon), appsList[i].caption, i);
 }
@@ -96,12 +90,18 @@ void DataSource_Apps::itemClicked(int newIndex)
         }
     }
 
-    emit dataClear();
-
     if (newIndex == -1)
         currentGroup = "";
     else
         currentGroup = appsList[newIndex].relPath;
 
-    updateContent();
+    if (prevCurrentGroup != currentGroup)
+    {
+        prevCurrentGroup = currentGroup;
+        appsList = GetFlatList(currentGroup);
+    }
+
+    emit dataClear();
+
+    //updateContent();
 }

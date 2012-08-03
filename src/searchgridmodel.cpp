@@ -44,6 +44,16 @@ SearchGridModel::SearchGridModel(QObject *parent)
     m_runnerManager->setAllowedRunners(activeRunners);
 
     connect(m_runnerManager, SIGNAL(matchesChanged(const QList<Plasma::QueryMatch> &)), this, SLOT(newSearchMatches(const QList<Plasma::QueryMatch> &)));
+    qDebug() << connect(m_runnerManager, SIGNAL(queryFinished()), SLOT(test2()));
+}
+
+int SearchGridModel::getItemCount(QString group)
+{
+    int count = 0;
+    for (int i = 0; i < matches.size(); i++)
+        if (matches[i].group == group)
+            count++;
+    return count;
 }
 
 
@@ -86,7 +96,15 @@ void SearchGridModel::itemClicked(int newIndex)
 
 void SearchGridModel::updateContent()
 {
+    for (int i = 0; i < matches.size(); i++)
+    {
+        emit newItemData(QString("image://generalicon/search/%1").arg(matches[i].name), matches[i].name, i, matches[i].group);
+    }
+}
 
+void SearchGridModel::test2()
+{
+    qDebug() << "WE ARE HERE!";
 }
 
 void SearchGridModel::newSearchMatches(const QList<Plasma::QueryMatch> &newMatches)
@@ -97,7 +115,7 @@ void SearchGridModel::newSearchMatches(const QList<Plasma::QueryMatch> &newMatch
         matches.last().name = newMatches.at(i).text();
         matches.last().group = newMatches.at(i).runner()->name();
         matches.last().plasmaMatch = new Plasma::QueryMatch(newMatches.at(i));
-        emit newItemData(QString("image://generalicon/search/%1").arg(matches.last().name), matches.last().name, matches.size() - 1, matches.last().group);
+        //emit newItemData(QString("image://generalicon/search/%1").arg(matches.last().name), matches.last().name, matches.size() - 1, matches.last().group);
     }
 
     emit newSearchMatchesFound();
@@ -110,7 +128,7 @@ void SearchGridModel::launchSearch(const QString &text)
     /// FIXFIXFIX
 
     matches.clear();
-    emit dataClear();
+    //emit dataClear();
 
 
 

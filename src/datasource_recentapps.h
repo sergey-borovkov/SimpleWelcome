@@ -10,7 +10,7 @@ class DataSource_RecentApps : public DataSource
 public:
     explicit DataSource_RecentApps(QObject* parent = 0);
     ~DataSource_RecentApps();
-    Q_INVOKABLE virtual int getItemCount() { return recentAppsList.count(); }
+    Q_INVOKABLE virtual int getItemCount(QString group = "") { return recentAppsList.count(); }
 
 signals:
     void newItemData(QString iconPath, QString name, int id);

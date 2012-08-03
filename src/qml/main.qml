@@ -26,8 +26,8 @@ Item {
 
     Image {
         anchors.fill: parent
-        //fillMode: Image.PreserveAspectCrop
-        //smooth: true
+        fillMode: Image.PreserveAspectCrop
+        smooth: true
         source: "image://generalicon/asset/bubbles.jpg"
 //        opacity: 0.9
         z: -10
