@@ -1,7 +1,11 @@
 import QtQuick 1.1
 
 Item {
-    anchors.fill: parent
+    //anchors.fill: parent
+    width: parent.width
+    height: parent.height
+    anchors.top: parent.top
+    anchors.topMargin: popupFrame.open ? -200 : 0
 
     property variant groups
 
@@ -47,7 +51,6 @@ Item {
         gridsContainer.gridCurrentItemChanged.connect(gridsSelectionChanged)
     }*/
 
-
         function gridsSelectionChanged(obj) // Used to be used for vertical scrolling
         {
             if (moving)
@@ -66,6 +69,31 @@ Item {
                     contentY += itemHere.y
             }
         }
+
+        function showPopup()
+        {
+            popupFrame.open = !popupFrame.open
+            //console.log("popup")
+        }
+
+        function insertGrid(groupData, isOnNewTab)
+        {
+            var newGridGroup
+            if (isOnNewTab)
+            {
+                gridsListModel.append( { groupsList: groupData } )
+                gridsListView.currentIndex = count - 1
+            }
+            else
+            {
+                gridsListView.currentItem.addGridGroup(groupData.group, groupData.dataSource, groupData.startIndex, groupData.endIndex)
+            }
+
+            gridsListView.currentItem.activeGridView.model.itemClicked.connect(showPopup)
+
+            //appsModel.itemClicked.connect()
+        }
+
 
         function createTabsFromGroups()
         {
@@ -87,8 +115,8 @@ Item {
                 if (projectedGroupHeight < availableHeight) // Grid can be fully placed on the tab
                 {
                     //console.log(i + " - " + groups[i].dataSource + " is fitting the same screen");
+                    insertGrid(groups[i], false)
                     availableHeight -= projectedGroupHeight + spacing
-                    gridsListView.currentItem.addGridGroup(groups[i].group, groups[i].dataSource)
                     //console.log(i + " - " + availableHeight + "px left");
                 }
                 else // Grid should be split or created new tab or both
@@ -101,10 +129,9 @@ Item {
                     if (rowsLeftToFit <= 0) // REMOVE THIS
                     {
                         //console.log(i + " - " + "Empty group. Left: " + availableHeight)
-                        gridsListModel.append( { groupsList: currentGroup } )
-                        gridsListView.currentIndex = count - 1
-                        //console.log(i + " - " + "Current: " + gridsListView.currentIndex)
+                        insertGrid(currentGroup, true)
                         availableHeight = gridsListView.height - textHeight - spacing
+                        //console.log(i + " - " + "Current: " + gridsListView.currentIndex)
                     }
 
                     while (rowsLeftToFit > 0)
@@ -125,8 +152,7 @@ Item {
                             //console.log(i + " - " + "Fitted "  + rowsFit + " rows")
 
                             //console.log("=== " + currentGroup.startIndex + "; " + currentGroup.endIndex)
-                            gridsListModel.append( { groupsList: currentGroup } )
-                            gridsListView.currentIndex = count - 1
+                            insertGrid(currentGroup, true)
                             availableHeight -= rowsFit * cellRealHeight + spacing
                         }
                         else // It's still possible to insert some rows to current tab. Inserting
@@ -139,7 +165,7 @@ Item {
                             rowsLeftToFit -= rowsFit
 
                             //console.log(i + " - adding to current tab: " + currentGroup.group + ", " + currentGroup.dataSource + " [" + currentGroup.startIndex + " to " + currentGroup.endIndex + "]")
-                            gridsListView.currentItem.addGridGroup(currentGroup.group, currentGroup.dataSource, currentGroup.startIndex, currentGroup.endIndex)
+                            insertGrid(currentGroup, false)
                             availableHeight -= rowsFit * cellRealHeight + spacing
                             //console.log(i + " - Taken " + rowsFit * cellRealHeight + "px; " + availableHeight)
                         }
@@ -209,5 +235,17 @@ Item {
                 }
             }
         }
+    }
+
+    PopupFrame {
+        id: popupFrame
+        anchors.top: parent.bottom
+        height: 260
+        width: parent.width
+        z: 1
+    }
+
+    Behavior on anchors.topMargin {
+        NumberAnimation { duration: 600; /*easing.type: Easing.OutQuint*/ }
     }
 }
