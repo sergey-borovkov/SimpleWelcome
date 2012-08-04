@@ -84,7 +84,7 @@ SWApp::SWApp()
     m_viewer->showExpanded();
     //m_viewer->showFullScreen();
     //m_viewer->setGeometry(896, 0, 1280, 800); // 1000); //
-    m_viewer->move(896, 0);
+    m_viewer->move(/*896*/0, 0);
     //m_viewer->setFixedSize( m_viewer->sizeHint() );
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
