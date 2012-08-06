@@ -1,8 +1,6 @@
 import QtQuick 1.1
 
 Component {
-    id: desu
-
     ShadowRectangle {
         width: cloudItemGridView.cellWidth - 10
         height: cloudItemGridView.cellHeight - 32
