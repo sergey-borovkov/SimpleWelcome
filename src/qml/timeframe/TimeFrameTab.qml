@@ -141,7 +141,6 @@ Item {
                 if(selectedText == "Manage networks")
                     timeFrameTab.state = "socialAuthorization"
                 else {
-                    timeFrameTab.state = "social"
                     socialProxy.startSearch()
                     if (selectedText === "All")
                     {
@@ -158,17 +157,20 @@ Item {
                 localDocs.state = ""
             }
             onClicked: {
-                console.log(selectedText + " " + selectedIndex)
                 state = "current"
-                if (timeFrameTab.state != "socialAuthorization")
-                {
-                    timeFrameTab.state = "social"
-                }
                 localDocs.state = ""
-                if ((selectedText === "All") || (selectedText === ""))
-                    timeScaleModel.setFilter("Social")
+                if (timeFrameTab.state != "socialAuthorization" && socialProxy.anyPluginsEnabled()) {
+                    console.log("here")
+                    timeFrameTab.state = "social"
+                    if ((selectedText === "All") || (selectedText === ""))
+                        timeScaleModel.setFilter("Social")
+                    else
+                        timeScaleModel.setFilter(selectedText)
+
+                }
                 else
-                    timeScaleModel.setFilter(selectedText)
+                    timeFrameTab.state = "socialAuthorization"
+
             }
         }
     }
@@ -480,9 +482,6 @@ Item {
         }
     }
 
-
-
-
     SocialAuthorization {
         id: authorizationView
         visible: false
@@ -496,9 +495,6 @@ Item {
         anchors.rightMargin: 20
         anchors.topMargin: width / 8
     }
-
-    //state: socialProxy.anyPluginsEnabled() ? "socialgallery" : "socialauthorization"
-
 
     AnimatedImage {
         id: waitIndicator
