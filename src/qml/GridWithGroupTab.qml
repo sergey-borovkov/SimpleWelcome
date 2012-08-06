@@ -5,7 +5,7 @@ Item {
     width: parent.width
     height: parent.height
     anchors.top: parent.top
-    anchors.topMargin: popupFrame.open ? -200 : 0
+    //anchors.topMargin: popupFrame.open ? -200 : 0
 
     property variant groups
 
@@ -110,19 +110,20 @@ Item {
                 //console.log(i + " - NEW ITERATION!!!!!!!!!")
                 var itemCount = groups[i].dataSource.getItemCount(groups[i].group)
                 var projectedGroupHeight = textHeight + Math.ceil(itemCount / columns) * cellRealHeight
+                var currentGroup = groups[i]
                 //console.log(i + " - Projected group height: " + projectedGroupHeight)
 
                 if (projectedGroupHeight < availableHeight) // Grid can be fully placed on the tab
                 {
                     //console.log(i + " - " + groups[i].dataSource + " is fitting the same screen");
-                    insertGrid(groups[i], false)
+                    currentGroup['endIndex'] = itemCount - 1
+                    insertGrid(currentGroup, false)
                     availableHeight -= projectedGroupHeight + spacing
                     //console.log(i + " - " + availableHeight + "px left");
                 }
                 else // Grid should be split or created new tab or both
                 {
                     //console.log(i + " - " + groups[i].group + " is going to be split or created new tab or both")
-                    var currentGroup = groups[i]
                     var rowsLeftToFit = Math.ceil(itemCount / columns)
                     var lastNotInsertedItem = 0
 

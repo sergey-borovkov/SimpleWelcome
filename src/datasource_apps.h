@@ -23,4 +23,6 @@ private:
     QList<AppItem> appsList;
     QString currentGroup;
     QString prevCurrentGroup;
+
+    void updateItems();
 };

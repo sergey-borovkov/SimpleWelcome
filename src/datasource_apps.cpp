@@ -40,16 +40,16 @@ QList<AppItem> GetFlatList(QString group)
             if (serviceGroup->noDisplay() || serviceGroup->childCount() == 0)
                 continue;
 
-            if (serviceGroup->relPath().indexOf("/") != serviceGroup->relPath().size() - 1)
+            //if (serviceGroup->relPath().indexOf("/") != serviceGroup->relPath().size() - 1)
                 out.append(GetFlatList(serviceGroup->relPath()));
-            else
+            /*else
             {
                 AppItem newItem;
                 newItem.icon = serviceGroup->icon();
                 newItem.caption = serviceGroup->caption();
                 newItem.relPath = serviceGroup->relPath();
                 out.append(newItem);
-            }
+            }*/
         }
         else
         {
@@ -63,14 +63,20 @@ QList<AppItem> GetFlatList(QString group)
 DataSource_Apps::DataSource_Apps(QObject *parent)
     : DataSource(parent), prevCurrentGroup("-1")
 {
-    prevCurrentGroup = currentGroup;
-    appsList = GetFlatList(currentGroup);
+    updateItems();
 }
 
 void DataSource_Apps::updateContent()
 {
     for (int i = 0; i < appsList.size(); i++)
         emit newItemData(QString("image://generalicon/appicon/%1").arg(appsList[i].icon), appsList[i].caption, i);
+}
+
+void DataSource_Apps::updateItems()
+{
+    prevCurrentGroup = currentGroup;
+    appsList = GetFlatList(currentGroup);
+    qSort(appsList);
 }
 
 #include <QMessageBox>
@@ -96,10 +102,7 @@ void DataSource_Apps::itemClicked(int newIndex)
         currentGroup = appsList[newIndex].relPath;
 
     if (prevCurrentGroup != currentGroup)
-    {
-        prevCurrentGroup = currentGroup;
-        appsList = GetFlatList(currentGroup);
-    }
+        updateItems();
 
     emit dataClear();
 

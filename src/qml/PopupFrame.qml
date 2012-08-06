@@ -22,7 +22,7 @@ FocusScope {
 
             IconGridView {
                 id: appsGrid
-                dataSource: dataSource_Apps
+                dataSource: dataSource_Favorites
                 anchors.fill: parent
 
                 interactive: false
