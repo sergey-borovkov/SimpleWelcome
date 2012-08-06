@@ -34,6 +34,6 @@ public:
     Q_PROPERTY(int groupTextHeight READ groupTextHeight CONSTANT) int groupTextHeight() { return 24; }
     Q_PROPERTY(int gridWithGroupsSpacing READ gridWithGroupsSpacing CONSTANT) int gridWithGroupsSpacing() { return 32; }
     Q_PROPERTY(int gridColumns READ gridColumns CONSTANT) int gridColumns() { return 7; }
-    Q_PROPERTY(int cellWidth READ cellWidth CONSTANT) int cellWidth() { return 120; }
+    Q_PROPERTY(int cellWidth READ cellWidth CONSTANT) int cellWidth() { return 140; } // 120
     Q_PROPERTY(int cellHeight READ cellHeight CONSTANT) int cellHeight() { return 200; }
 };

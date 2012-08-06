@@ -40,6 +40,7 @@ GeneralIconProvider::GeneralIconProvider()
 
 QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, const QSize &requestedSize)
 {
+#define icons_size 128
     KIcon icon;
     QPixmap iconPixmap;
 
@@ -76,11 +77,11 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
         return iconPixmap;
     }
 
-    size->setWidth(128);
-    size->setHeight(128);
+    size->setWidth(icons_size);
+    size->setHeight(icons_size);
 
     if (requestedSize.isEmpty())
-        iconPixmap = icon.pixmap(128, 128, QIcon::Normal, QIcon::On);
+        iconPixmap = icon.pixmap(icons_size, icons_size, QIcon::Normal, QIcon::On);
     else
         iconPixmap = icon.pixmap(requestedSize.width(), requestedSize.height(), QIcon::Normal, QIcon::On);
 
