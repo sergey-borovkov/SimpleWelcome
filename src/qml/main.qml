@@ -4,9 +4,8 @@ import Qt 4.7
 
 Item {
     id: page
-    width: 1280
-    height: 950
-    //color: "white"
+    width: mainWindow.width
+    height: mainWindow.height
     opacity: 0.0
 
     Keys.onPressed: {
@@ -14,6 +13,10 @@ Item {
             event.accepted = true;
             Qt.quit();
         }
+    }
+
+    Component.onCompleted: {
+        console.log("completed with: " + width + "x" + height + "")
     }
 
     NumberAnimation on opacity { to: 1.0; duration: 500 }

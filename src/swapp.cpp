@@ -37,6 +37,8 @@
 #include "datasource_documents.h"
 #include "searchgridmodel.h"
 
+#include <QDesktopWidget>
+
 SWApp* SWApp::self()
 {
     if (!kapp) {
@@ -50,10 +52,12 @@ SWApp::SWApp()
     : KUniqueApplication()
 {
     m_viewer = new QmlApplicationViewer();
+    m_viewer->setGeometry(0, 0, QApplication::desktop()->width(), QApplication::desktop()->height());
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     // Window transparency
     //m_viewer->setAttribute(Qt::WA_TranslucentBackground);
     //m_viewer->setStyleSheet("background:transparent;");
+    m_viewer->rootContext()->setContextProperty("mainWindow", m_viewer);
 
     m_viewer->rootContext()->setContextProperty("sessionProvider", new SessionProvider(this));
 
@@ -81,10 +85,10 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("constants", new QMLConstants(this));
 
 
-    m_viewer->showExpanded();
+    m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
+    m_viewer->show();
     //m_viewer->showFullScreen();
-    //m_viewer->setGeometry(896, 0, 1280, 800); // 1000); //
-    m_viewer->move(/*896*/0, 0);
+    //m_viewer->move(/*896*/0, 0);
     //m_viewer->setFixedSize( m_viewer->sizeHint() );
 
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
