@@ -20,10 +20,10 @@ Item {
         Image {
             id: cellIcon
             source: imagePath
-            width: 96
-            height: 96
+            width: constants.iconSize
+            height: constants.iconSize
             anchors.top: parent.top
-            anchors.topMargin: 16
+            anchors.topMargin: constants.iconSize / 5 //20
             anchors.horizontalCenter: parent.horizontalCenter
 
             smooth: true
@@ -35,7 +35,7 @@ Item {
 
             width: parent.width - 10
             anchors.top: cellIcon.bottom
-            anchors.topMargin: 24
+            anchors.topMargin: constants.iconSize / 4 //24
             anchors.horizontalCenter: parent.horizontalCenter
 
             style: Text.Sunken
@@ -43,6 +43,7 @@ Item {
             color: "#eee"
             font.bold: true
             font.family: "Bitstream Vera Sans"
+            font.pointSize: constants.iconTextSize
 
             maximumLineCount: 3
             elide: Text.ElideRight
@@ -94,7 +95,7 @@ Item {
         }
 
         Item { // Necessary for correct highlight height
-            height: 16 + cellIcon.height + 16 + cellText.height + 16
+            height: cellIcon.anchors.topMargin + cellIcon.height + cellText.anchors.topMargin + cellText.height + cellIcon.anchors.topMargin/2
         }
     }
 }

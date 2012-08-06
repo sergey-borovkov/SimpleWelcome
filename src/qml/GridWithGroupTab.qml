@@ -98,8 +98,7 @@ Item {
         function createTabsFromGroups()
         {
             // Constants. Used hack to retrieve them from C++, no way to do it straightforward AFAIK
-            var textHeight = constants.groupTextHeight + constants.textToGridSpacing,
-                    spacing = constants.gridWithGroupsSpacing, // spacing between GridWithGroups
+            var spacing = constants.gridWithGroupsSpacing, // spacing between GridWithGroups
                     columns = constants.gridColumns,
                     cellRealHeight = constants.cellHeight
 
@@ -108,9 +107,10 @@ Item {
             for (var i = 0; i < groups.length; i++) // Iterating by grids
             {
                 //console.log(i + " - NEW ITERATION!!!!!!!!!")
-                var itemCount = groups[i].dataSource.getItemCount(groups[i].group)
-                var projectedGroupHeight = textHeight + Math.ceil(itemCount / columns) * cellRealHeight
-                var currentGroup = groups[i]
+                var textHeight = groups[i].group ? constants.groupTextHeight + constants.textToGridSpacing : 1,
+                    itemCount = groups[i].dataSource.getItemCount(groups[i].group),
+                    projectedGroupHeight = textHeight + Math.ceil(itemCount / columns) * cellRealHeight,
+                    currentGroup = groups[i]
                 //console.log(i + " - Projected group height: " + projectedGroupHeight)
 
                 if (projectedGroupHeight < availableHeight) // Grid can be fully placed on the tab
