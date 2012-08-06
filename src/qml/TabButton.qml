@@ -3,7 +3,7 @@ import QtQuick 1.0
 Item {
     id: button
 
-    width: 200
+    width: constants.iconSize >= 64 ? 200 : 180
     height: 36
 
     property color buttonColor: "lightblue"

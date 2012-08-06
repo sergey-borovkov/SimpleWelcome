@@ -13,9 +13,14 @@
 
 #include <QtDeclarative/QDeclarativeView>
 
+class QResizeEvent;
+
 class QmlApplicationViewer : public QDeclarativeView
 {
     Q_OBJECT
+
+    Q_PROPERTY(int updatableWidth READ updatableWidth NOTIFY windowSizeChanged)
+    Q_PROPERTY(int updatableHeight READ updatableHeight NOTIFY windowSizeChanged)
 
 public:
     enum ScreenOrientation {
@@ -34,6 +39,13 @@ public:
     void setOrientation(ScreenOrientation orientation);
 
     void showExpanded();
+
+    int updatableWidth() { return width(); }
+    int updatableHeight() { return height(); }
+    virtual void resizeEvent(QResizeEvent *event);
+
+signals:
+    void windowSizeChanged(int newWidth, int newHeight);
 
 private:
     class QmlApplicationViewerPrivate *m_d;

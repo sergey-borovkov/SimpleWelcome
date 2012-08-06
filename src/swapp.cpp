@@ -82,8 +82,7 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("searchAppsGridModel", searchGridModel);
     m_viewer->rootContext()->setContextProperty("searchRecentDocsGridModel", searchGridModel);
 
-    m_viewer->rootContext()->setContextProperty("constants", new QMLConstants(this));
-
+    m_viewer->rootContext()->setContextProperty("constants", new QMLConstants(this, m_viewer));
 
     m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
     m_viewer->show();
@@ -91,7 +90,7 @@ SWApp::SWApp()
     //m_viewer->move(/*896*/0, 0);
     //m_viewer->setFixedSize( m_viewer->sizeHint() );
 
-    QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
+    connect(m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 
     if(isLocal())
         m_viewer->setMainQmlFile(QLatin1String("../src/qml/main.qml"));
@@ -119,4 +118,31 @@ bool SWApp::isLocal()
         return false;
 
     return true;
+}
+
+
+QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
+    : QObject(parent), viewer(inViewer)
+{
+    connect(viewer, SIGNAL(windowSizeChanged(int,int)), SIGNAL(iconSizeChanged()));
+}
+
+int QMLConstants::cellWidth()
+{
+    return viewer->updatableWidth() >= 1280 ? 140 : viewer->updatableWidth() >= 800 ? 120 : 70;
+}
+
+int QMLConstants::cellHeight()
+{
+     return viewer->updatableWidth() >= 1280 ? 200 : viewer->updatableWidth() >= 800 ? 150 : 100;
+}
+
+int QMLConstants::iconTextSize()
+{
+     return viewer->updatableWidth() >= 1280 ? 12 : viewer->updatableWidth() >= 800 ? 10 : 8;
+}
+
+int QMLConstants::iconSize()
+{
+    return viewer->updatableWidth() >= 1280 ? 96 : viewer->updatableWidth() >= 800 ? 64 : 32;
 }

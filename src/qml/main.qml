@@ -4,9 +4,13 @@ import Qt 4.7
 
 Item {
     id: page
-    width: mainWindow.width
-    height: mainWindow.height
+    width: mainWindow.updatableWidth
+    height: mainWindow.updatableHeight
     opacity: 0.0
+
+    onWidthChanged: {
+        console.log("RESIze")
+    }
 
     Keys.onPressed: {
         if(event.key == Qt.Key_Escape) {
