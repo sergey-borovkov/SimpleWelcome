@@ -50,7 +50,6 @@ Item {
         BorderImage {
             z: -1
             anchors.fill: parent
-    //        anchors.fill: parent
             width: rectangle.width
             height: rectangle.height
             anchors { leftMargin: -6; topMargin: -6; rightMargin: -8; bottomMargin: -8 }
