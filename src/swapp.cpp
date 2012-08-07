@@ -168,10 +168,8 @@ void SWApp::initTimeframeSocialMode()
     SocialDayModel* socialModel = new SocialDayModel( SocialDayItem::roleNames() );
     SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel( this );
     socialProxyModel->setSourceModel( socialModel );
-    m_viewer->rootContext()->setContextProperty( "socialDayModel", socialProxyModel );
     m_manager = new SocialProxy( plugins, this );
     m_manager->setModel(socialModel );
-
 
     m_viewer->engine()->addImageProvider( "plugin", new PluginImageProvider( plugins ) );
 
@@ -180,10 +178,11 @@ void SWApp::initTimeframeSocialMode()
     TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
 
-    m_viewer->rootContext()->setContextProperty( "socialProxy", m_manager );
-    m_viewer->rootContext()->setContextProperty( "socialModel", m_manager->socialModel() );
-    m_viewer->rootContext()->setContextProperty( "pluginModel", m_manager->pluginModel() );
-    m_viewer->rootContext()->setContextProperty( "timeScaleModel", timeScaleFilterModel );
+    m_viewer->rootContext()->setContextProperty("socialProxy", m_manager );
+    m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
+    m_viewer->rootContext()->setContextProperty("socialDayModel", socialProxyModel );
+    m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
+    m_viewer->rootContext()->setContextProperty("timeScaleModel", timeScaleFilterModel);
 
     connect(m_proxy,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
     connect(m_manager,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
