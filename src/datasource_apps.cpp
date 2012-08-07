@@ -1,6 +1,7 @@
 #include "datasource_apps.h"
 #include <kservicegroup.h>
 #include <kdebug.h>
+#include "datasource_recentapps.h"
 
 QList<AppItem> GetFlatList(QString group)
 {
@@ -60,8 +61,8 @@ QList<AppItem> GetFlatList(QString group)
     return out;
 }
 
-DataSource_Apps::DataSource_Apps(QObject *parent)
-    : DataSource(parent), prevCurrentGroup("-1")
+DataSource_Apps::DataSource_Apps(QObject *parent, DataSource_RecentApps *inRecentApps)
+    : DataSource(parent), prevCurrentGroup("-1"), recentApps(inRecentApps)
 {
     updateItems();
 }

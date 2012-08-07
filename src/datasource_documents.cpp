@@ -8,7 +8,7 @@ DataSource_Documents::DataSource_Documents(QObject* parent)
     : DataSource(parent)
 {
     QStringList recentDocsList = KRecentDocument::recentDocuments();
-    for (int i = 0; i < recentDocsList.size(); i++)
+    for (int i = 0; i < qMin(7, recentDocsList.size()); i++)
     {
         if(! KDesktopFile::isDesktopFile(recentDocsList[i]))
             continue;

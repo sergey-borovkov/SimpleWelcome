@@ -73,8 +73,9 @@ SWApp::SWApp()
     m_generalIconProvider->setSearchGridModel(searchGridModel);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
-    m_viewer->rootContext()->setContextProperty("dataSource_Apps", new DataSource_Apps(this));
-    m_viewer->rootContext()->setContextProperty("dataSource_RecentApps", new DataSource_RecentApps(this));
+    DataSource_RecentApps *recentApps = new DataSource_RecentApps(this);
+    m_viewer->rootContext()->setContextProperty("dataSource_RecentApps", recentApps);
+    m_viewer->rootContext()->setContextProperty("dataSource_Apps", new DataSource_Apps(this, recentApps));
     m_viewer->rootContext()->setContextProperty("dataSource_Favorites", new DataSource_Favorites(this));
     m_viewer->rootContext()->setContextProperty("dataSource_Documents", new DataSource_Documents(this));
 
@@ -84,9 +85,9 @@ SWApp::SWApp()
 
     m_viewer->rootContext()->setContextProperty("constants", new QMLConstants(this, m_viewer));
 
-    m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
-    m_viewer->show();
-    //m_viewer->showFullScreen();
+    //m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
+    //m_viewer->show();
+    m_viewer->showFullScreen();
     //m_viewer->move(/*896*/0, 0);
     //m_viewer->setFixedSize( m_viewer->sizeHint() );
 
