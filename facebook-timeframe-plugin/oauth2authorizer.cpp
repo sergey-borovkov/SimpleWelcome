@@ -17,16 +17,17 @@ void OAuth2Authorizer::setAccessToken(const QString &accessToken)
     if (accessToken != m_accessToken)
     {
         m_accessToken = accessToken;
-
         QSettings settings("ROSA", "facebook-timeframe-plugin");
         settings.setValue("accessToken", accessToken);
         emit accessTokenChanged(m_accessToken);
+
+        if(!accessToken.isEmpty())
+            emit authorized();
     }
 }
 
 void OAuth2Authorizer::logout()
 {
-    qDebug() << "logout...";
     if(!accessToken().isEmpty())
     {
         setAccessToken("");
