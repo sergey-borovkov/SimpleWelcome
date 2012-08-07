@@ -11,6 +11,7 @@ public:
     explicit DataSource_RecentApps(QObject* parent = 0);
     ~DataSource_RecentApps();
     Q_INVOKABLE virtual int getItemCount(QString group = "") { return recentAppsList.count(); }
+    void addRecentApp(QString desktopFile);
 
 signals:
     void newItemData(QString iconPath, QString name, int id);

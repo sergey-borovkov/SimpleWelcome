@@ -10,19 +10,7 @@ DataSource_RecentApps::DataSource_RecentApps(QObject *parent)
     QStringList recentAppsStringList = configGroup.readEntry("Recent applications", QStringList());
 
     foreach (QString recentApp, recentAppsStringList)
-    {
-        if(!KDesktopFile::isDesktopFile(recentApp))
-            continue;
-
-        KDesktopFile desktopFile(recentApp);
-        AppItem newItem;
-
-        newItem.caption = desktopFile.readName();
-        newItem.icon = desktopFile.readIcon();
-        newItem.desktopEntry = recentApp;
-        if (!newItem.caption.isEmpty())
-            recentAppsList.append(newItem);
-    }
+        addRecentApp(recentApp);
 }
 
 DataSource_RecentApps::~DataSource_RecentApps()
@@ -34,6 +22,21 @@ DataSource_RecentApps::~DataSource_RecentApps()
     KConfigGroup configGroup(KGlobal::config(), "General");
     configGroup.writeEntry("Recent applications", desktopFiles);
     configGroup.sync();
+}
+
+void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
+{
+    if(!KDesktopFile::isDesktopFile(desktopFilePath))
+        return;
+
+    KDesktopFile desktopFile(desktopFilePath);
+    AppItem newItem;
+
+    newItem.caption = desktopFile.readName();
+    newItem.icon = desktopFile.readIcon();
+    newItem.desktopEntry = desktopFilePath;
+    if (!newItem.caption.isEmpty())
+        recentAppsList.append(newItem);
 }
 
 #include <QMessageBox>
