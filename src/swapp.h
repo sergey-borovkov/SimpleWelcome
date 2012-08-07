@@ -39,6 +39,9 @@ private Q_SLOTS:
     void init(void);
 
 private:
+    void initTimeframeLocalMode();
+    void initTimeframeSocialMode();
+
     bool m_inited;
     QmlApplicationViewer *m_viewer;
     AppProvider         *m_appProvider;
