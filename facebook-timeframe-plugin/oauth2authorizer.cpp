@@ -27,8 +27,11 @@ void OAuth2Authorizer::setAccessToken(const QString &accessToken)
 void OAuth2Authorizer::logout()
 {
     qDebug() << "logout...";
-    setAccessToken("");
-    emit deauthorized();
+    if(!accessToken().isEmpty())
+    {
+        setAccessToken("");
+        emit deauthorized();
+    }
 }
 
 bool OAuth2Authorizer::isAuthorized() const

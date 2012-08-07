@@ -15,12 +15,11 @@ SocialProxy::SocialProxy( QList<ISocialPlugin *> plugins, QObject *parent )
     , m_plugins( plugins )
     , m_pluginModel( new PluginModel( PluginItem::roleNames(), this ) )
     , m_socialModel( 0 )
-    , m_anyEnabled( false )
 {
-    QSettings settings("ROSA", "Timeframe");    
+    QSettings settings("ROSA", "Timeframe");
     foreach(ISocialPlugin *plugin, plugins)
     {
-        QObject *object;
+        QObject *object = 0;
         if((object = dynamic_cast<QObject *>(plugin->requestManager())) != 0)
         {
             connect(object, SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
@@ -29,15 +28,16 @@ SocialProxy::SocialProxy( QList<ISocialPlugin *> plugins, QObject *parent )
         {
             connect(object, SIGNAL(authorized()), SLOT(authorized()));
             connect(object, SIGNAL(deauthorized()), SLOT(deauthorized()));
-        }        
+        }
+
         PluginItem *item = new PluginItem(plugin);
         m_pluginModel->appendRow(item);
 
-        // not the best solution... need to redo all this reading from settings later
-        if(settings.value(plugin->name()).toInt() == 1)
+        bool isEnabled = settings.value(plugin->name()).toBool();
+        if(isEnabled && plugin->authorized())
         {
             plugin->requestManager()->queryWall(QDate(), QDate());
-            m_anyEnabled = true;
+            m_enabledPlugins.insert(plugin->name());
         }
 
     }
@@ -60,35 +60,29 @@ PluginModel *SocialProxy::pluginModel()
 
 void SocialProxy::startSearch()
 {
-    // not sure if I need to use this but for now whether plugins
-    // are authorized will be kept here
-
-    QSettings settings("ROSA", "Timeframe");
     foreach(ISocialPlugin *plugin, m_plugins)
     {
-        if(settings.value(plugin->name()).toInt() == 1)
-        {
-            qDebug() << "SocialProxy::startSearch:   start queryWall....";
-
+        if(m_enabledPlugins.contains(plugin->name())) {
             plugin->requestManager()->queryWall(QDate(), QDate());
         }
     }
 }
 
-int SocialProxy::count() const
+int SocialProxy::authorizedPluginCount() const
 {
-    return m_plugins.size();
+    return m_enabledPlugins.count();
 }
 
-QString SocialProxy::name(int i)
+QString SocialProxy::authorizedPluginName(int i) const
 {
-    return m_plugins.at(i)->name();
+    QStringList authorizedPlugins = m_enabledPlugins.toList();
+    return authorizedPlugins.at(i);
 }
 
 void SocialProxy::authorized()
 {
-    qDebug() << "SocialProxy::authorized";
     ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
+    m_enabledPlugins.insert(plugin->name());
     plugin->requestManager()->queryWall(QDate(), QDate());
     if ( plugin->authenticationWidget() )
         plugin->authenticationWidget()->hide();
@@ -98,12 +92,19 @@ void SocialProxy::authorized()
 
 void SocialProxy::deauthorized()
 {
-    qDebug() << "SocialProxy::deauthorized";
+    ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
+    m_enabledPlugins.remove(plugin->name());
+
+    // set plugin as disabled
+    QSettings settings("ROSA", "Timeframe");
+    settings.setValue(plugin->name(), 0);
+
+    emit pluginDeauthorized();
 }
 
 bool SocialProxy::anyPluginsEnabled()
 {
-    return m_anyEnabled;
+    return m_enabledPlugins.count() > 0;
 }
 
 void SocialProxy::newItem(SocialItem *item)
@@ -118,13 +119,12 @@ void SocialProxy::newItems(QList<SocialItem *> items)
     QList<SocialItem *> list;
     foreach( SocialItem *item, items )
     {
-        //qDebug() << "New item" << item->id() << item->date() << item->type();
         QString strId = QString( "%1-%2" ).arg( item->pluginName() ).arg( item->id() );
         if ( m_idSet.contains( strId ) )
                 continue;
         m_idSet.insert( strId );
 
-        list.append( item );        
+        list.append( item );
         emit newMonth(item->date().year(), item->date().month(), item->pluginName());
     }
     m_socialModel->newSocialItems( list );

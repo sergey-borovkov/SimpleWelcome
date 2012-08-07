@@ -99,10 +99,17 @@ Item {
         ListModel {
             id: menuSocialItems
             Component.onCompleted: {
-                append({ "itemText": "All"})
-                var count = socialProxy.count();
+                fillModel()
+            }
+
+            function fillModel() {
+                clear()
+                var count = socialProxy.authorizedPluginCount()
+                if(count > 0)
+                    append({ "itemText": "All"})
+
                 for(var i = 0; i < count; i++)
-                    append({ "itemText": socialProxy.name(i) })
+                    append({ "itemText": socialProxy.authorizedPluginName(i) })
                 append({ "itemText": "Manage networks"})
             }
         }
@@ -113,7 +120,6 @@ Item {
             name: "My Local Documents"
             state: "current"
             onSelectedIndexChanged: {
-                console.log( selectedText + ", " + menuDocItems.get( selectedIndex ).itemText )
                 if (selectedText === "All")
                     timeScaleModel.setFilter("Local")
                 else
@@ -123,7 +129,6 @@ Item {
                 socialNetworks.state = ""
             }
             onClicked: {
-                console.log(selectedText + " " + selectedIndex)
                 state = "current"
                 timeFrameTab.state = ""
                 socialNetworks.state = ""
@@ -137,7 +142,8 @@ Item {
             name: "Social networking sites"
             property int __wasSearching: 0
             onSelectedIndexChanged: {
-                if(selectedText == "Manage networks")
+                console.log(selectedText)
+                if(selectedText === "Manage networks")
                     timeFrameTab.state = "socialAuthorization"
                 else {
                     timeFrameTab.state = "social"
@@ -157,17 +163,28 @@ Item {
                 localDocs.state = ""
             }
             onClicked: {
-                console.log(selectedText + " " + selectedIndex)
                 state = "current"
-                if (timeFrameTab.state != "socialAuthorization")
-                {
-                    timeFrameTab.state = "social"
-                }
                 localDocs.state = ""
-                if ((selectedText === "All") || (selectedText === ""))
-                    timeScaleModel.setFilter("Social")
+                console.log("State" + timeFrameTab.state)
+                if (timeFrameTab.state != "socialAuthorization" && socialProxy.anyPluginsEnabled()) {
+                    timeFrameTab.state = "social"
+                    if ((selectedText === "All") || (selectedText === ""))
+                        timeScaleModel.setFilter("Social")
+                    else
+                        timeScaleModel.setFilter(selectedText)
+                }
                 else
-                    timeScaleModel.setFilter(selectedText)
+                    timeFrameTab.state = "socialAuthorization"
+            }
+            Connections {
+                target: socialProxy
+                // simply reset model if authorized plugins changed
+                onPluginAuthorized: {
+                    menuSocialItems.fillModel()
+                }
+                onPluginDeauthorized: {
+                    menuSocialItems.fillModel()
+                }
             }
         }
     }
@@ -268,7 +285,6 @@ Item {
             timeLine.currentIndex = timeFrameTab.getTimeLineIndex()
             timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
             timeFrameTab.state = ""
-            //            }
         }
     }
 
@@ -480,9 +496,6 @@ Item {
         }
     }
 
-
-
-
     SocialAuthorization {
         id: authorizationView
         visible: false
@@ -496,9 +509,6 @@ Item {
         anchors.rightMargin: 20
         anchors.topMargin: width / 8
     }
-
-    //state: socialProxy.anyPluginsEnabled() ? "socialgallery" : "socialauthorization"
-
 
     AnimatedImage {
         id: waitIndicator
