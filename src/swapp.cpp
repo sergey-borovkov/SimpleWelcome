@@ -85,9 +85,9 @@ SWApp::SWApp()
 
     m_viewer->rootContext()->setContextProperty("constants", new QMLConstants(this, m_viewer));
 
-    //m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
-    //m_viewer->show();
-    m_viewer->showFullScreen();
+    m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
+    m_viewer->show();
+    //m_viewer->showFullScreen();
     //m_viewer->move(/*896*/0, 0);
     //m_viewer->setFixedSize( m_viewer->sizeHint() );
 
@@ -140,7 +140,7 @@ int QMLConstants::cellHeight()
 
 int QMLConstants::iconTextSize()
 {
-     return viewer->updatableWidth() >= 1280 ? 12 : viewer->updatableWidth() >= 800 ? 10 : 8;
+     return viewer->updatableWidth() >= 1280 ? 10 : viewer->updatableWidth() >= 800 ? 9 : 8;
 }
 
 int QMLConstants::iconSize()

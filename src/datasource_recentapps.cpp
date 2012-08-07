@@ -17,7 +17,7 @@ DataSource_RecentApps::~DataSource_RecentApps()
 {
     QStringList desktopFiles;
     for (int i = 0; i < recentAppsList.size(); i++)
-        desktopFiles.append(recentAppsList[i].desktopEntry);
+        desktopFiles.prepend(recentAppsList[i].desktopEntry);
 
     KConfigGroup configGroup(KGlobal::config(), "General");
     configGroup.writeEntry("Recent applications", desktopFiles);
@@ -29,14 +29,34 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
     if(!KDesktopFile::isDesktopFile(desktopFilePath))
         return;
 
-    KDesktopFile desktopFile(desktopFilePath);
-    AppItem newItem;
+    bool isFound = false;
 
-    newItem.caption = desktopFile.readName();
-    newItem.icon = desktopFile.readIcon();
-    newItem.desktopEntry = desktopFilePath;
-    if (!newItem.caption.isEmpty())
-        recentAppsList.append(newItem);
+    for (int i = 0; i < recentAppsList.size(); i++)
+    {
+        if (recentAppsList[i].desktopEntry == desktopFilePath)
+        {
+            recentAppsList.move(i, 0);
+            isFound = true;
+            break;
+        }
+    }
+
+    if (!isFound)
+    {
+        KDesktopFile desktopFile(desktopFilePath);
+        AppItem newItem;
+
+        newItem.caption = desktopFile.readName();
+        newItem.icon = desktopFile.readIcon();
+        newItem.desktopEntry = desktopFilePath;
+        if (!newItem.caption.isEmpty())
+            recentAppsList.prepend(newItem);
+    }
+
+    if (recentAppsList.size() > 7)
+        recentAppsList.removeAt(7);
+
+    emit resetContent();
 }
 
 #include <QMessageBox>
@@ -47,7 +67,7 @@ void DataSource_RecentApps::itemClicked(int newIndex)
         QMessageBox::information(0, recentAppsList[newIndex].desktopEntry, recentAppsList[newIndex].caption);
 }
 
-void DataSource_RecentApps::updateContent()
+void DataSource_RecentApps::getContent()
 {
     for (int i = 0; i < recentAppsList.size(); i++)
         emit newItemData(QString("image://generalicon/appicon/%1").arg(recentAppsList[i].icon), recentAppsList[i].caption, i);
