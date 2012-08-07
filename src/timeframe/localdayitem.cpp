@@ -95,8 +95,10 @@ QString LocalDayItem::types() const
     return m_types;
 }
 
+/*
 void LocalDayItem::setActivityFilter(const QRegExp& filter)
 {
    m_model->setFilterRegExp(filter);
    emit dataChanged();
 }
+*/

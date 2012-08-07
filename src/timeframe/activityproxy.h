@@ -21,16 +21,13 @@ public:
 signals:
     void newActivities (QList<Activity*>);
     void newMonth(int, int , QString type);
-    void changeFilterString(const QString&);
     void finished();
 
 public slots:
     void startSearch(QDate date, int direction);
     void resultCount(int);
     int getIndexByDate(int year, int month,  bool direction);
-    QDate getDateOfIndex(int listIndex);
-    QObject* itemsModel(QDate date) const;
-    void changeType(QString type);
+    QDate getDateOfIndex(int listIndex);    
 
 private slots:
     void newData(QList<Activity*>);

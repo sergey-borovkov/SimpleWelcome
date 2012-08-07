@@ -65,13 +65,16 @@ Nepomuk::Query::FileQuery NepomukSource::createQuery(const QDate &date)
     //Nepomuk::Query::ComparisonTerm video(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("video/"));
     Nepomuk::Query::ResourceTypeTerm image = Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Image());
     Nepomuk::Query::ResourceTypeTerm video = Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Video());
-    Nepomuk::Query::ResourceTypeTerm text = Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::TextDocument());
+    Nepomuk::Query::ResourceTypeTerm document = Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Document());
+    //Nepomuk::Query::ComparisonTerm odt(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("vnd.oasis.opendocument.text"));
+    //Nepomuk::Query::ComparisonTerm txt(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("plain"));
+    //Nepomuk::Query::ComparisonTerm pdf(Nepomuk::Vocabulary::NIE::mimeType(), Nepomuk::Query::LiteralTerm("pdf"));
     //Nepomuk::Query::AndTerm term1(beginDateTerm,endDateTerm, image);
     //Nepomuk::Query::AndTerm term2(beginDateTerm,endDateTerm, video);
     //Nepomuk::Query::AndTerm term3(beginDateTerm,endDateTerm);
 
     //Nepomuk::Query::OrTerm orTerm(term1,term2);
-    Nepomuk::Query::OrTerm orTerm(video, image, text);
+    Nepomuk::Query::OrTerm orTerm(video, image, document);
 
     Nepomuk::Query::FileQuery query(orTerm);
     //Nepomuk::Query::FileQuery query(term3);
@@ -126,7 +129,7 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
             continue;
         //qDebug() << "after result" << i;
         QString uri = res.toFile().url().path();
-
+        //qDebug() << uri;
         //qDebug() << "after path";
         //QString type = list.at(i).resource().resourceType().toString();
         QList <QUrl> typesList = list.at(i).resource().types();
@@ -316,14 +319,18 @@ QString NepomukSource::resolveType(QString path, QList<QUrl> typesList)
     qDebug() << path << mime;
     return QString();
     */
+
     if (path.contains(".svg"))
         return "Image";
+
     foreach(QUrl url, typesList)
     {
         if (url.toString().contains("Video"))
             return "Video";
         else if ((url.toString().contains("Photo")) || (url.toString().contains("RasterImage")))
-            return "Image";
+            return "Image";        
+        else if ((url.toString().contains("TextDocument")) || (url.toString().contains("PaginatedTextDocument")))
+            return "Document";
     }
     //qDebug() << "Not resolved type for" << path;
     return QString();
