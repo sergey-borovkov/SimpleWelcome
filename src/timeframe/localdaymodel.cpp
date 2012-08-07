@@ -26,8 +26,18 @@ void TimeFrameDayFilterModel::setFilter(const QString &filter)
     else if (filter == "Video")
         filterRegExp = QRegExp("Video");
     else if (filter == "Documents")
-        filterRegExp = QRegExp("Doc");
+        filterRegExp = QRegExp("Document");
     setFilterRegExp(filterRegExp);
+
+    for (int i = 0; i < rowCount(); i++) //Set filter on nested models
+    {
+        QDate date = data(index(i,0),LocalDayModel::CurrentDateRole).toDate();
+        TimeFrameFilterModel * tModel = qobject_cast<TimeFrameFilterModel *> (itemsModel(date));
+        if (tModel)
+            tModel->setFilterRegExp(filterRegExp);
+    }
+
+
 }
 
 QObject* TimeFrameDayFilterModel::itemsModel(QDate date) const
@@ -428,20 +438,5 @@ void LocalDayModel::imageReady(QString url)
         LocalDayItem* item = find(date);
         if (item)
             item->thumbnailReady(url);
-    }
-}
-
-void LocalDayModel::setActivityType(const QString& type)
-{
-    QRegExp filter;
-    if (type == "All")
-        filter = QRegExp("Image|Video");
-    else if (type == "Photo")
-        filter = QRegExp("Image");
-    else if (type == "Video")
-        filter = QRegExp("Video");
-    foreach(LocalDayItem* item, m_items)
-    {
-        item->setActivityFilter(filter);
     }
 }

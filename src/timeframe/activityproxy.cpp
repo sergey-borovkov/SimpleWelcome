@@ -86,16 +86,3 @@ QDate ActivityProxy::getDateOfIndex(int listIndex)
     return QDate();
 }
 
-QObject* ActivityProxy::itemsModel(QDate date) const
-{
-    if (m_model)
-        return m_model->itemsModel(date);
-    return 0;
-}
-
-void ActivityProxy::changeType(QString type)
-{
-    qDebug() << "GalleryLister::set filter" << type;
-    emit changeFilterString(type);
-}
-

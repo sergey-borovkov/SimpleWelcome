@@ -55,8 +55,7 @@ public slots:
     QObject* itemsModel(QDate date) const;
     int getIndexByDate(int year, int month, bool direction);
     QDate getDateOfIndex(int listIndex);
-    void imageReady(QString url);
-    void setActivityType(const QString& type);
+    void imageReady(QString url);    
 
 protected:
     bool removeNullItem(int, int);

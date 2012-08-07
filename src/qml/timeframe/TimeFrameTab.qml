@@ -117,8 +117,7 @@ Item {
                 if (selectedText === "All")
                     timeScaleModel.setFilter("Local")
                 else
-                    timeScaleModel.setFilter(selectedText)
-                activityProxy.changeType(selectedText)
+                    timeScaleModel.setFilter(selectedText)                
                 localDayModel.setFilter(selectedText)
                 state = "current"
                 socialNetworks.state = ""
@@ -226,9 +225,10 @@ Item {
 
         anchors.top: separator.bottom
         anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
         width: parent.width
 
-        height: parent.height - menuBar.height - separator.height
+
         delegate: TimeLineDelegate {}
         model: localDayModel
         orientation: Qt.Horizontal
@@ -278,7 +278,7 @@ Item {
         anchors.top: separator.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
-        height: parent.height - menuBar.height - separator.height
+        anchors.bottom: parent.bottom
 
         delegate: SocialCloudDelegate {}
         model: socialDayModel

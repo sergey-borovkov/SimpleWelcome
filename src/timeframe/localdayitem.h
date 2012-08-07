@@ -42,7 +42,7 @@ public:
     TimeFrameFilterModel * model();
     QString types() const;
     void thumbnailReady(QString);
-    void setActivityFilter(const QRegExp&);
+    //void setActivityFilter(const QRegExp&);
 
 signals:
     void dataChanged();
