@@ -10,6 +10,7 @@ TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
     setDynamicSortFilter(true);
     setFilterRole(TimeScaleItem::TypesRole);
     setSortRole(TimeScaleItem::YearRole);
+    setFilterRegExp(QRegExp("Image|Video|Document"));
     sort(0);
 }
 
@@ -25,7 +26,7 @@ void TimeScaleFilterModel::setFilter(const QString &filter)
     else if (filter == "Video")
         filterRegExp = QRegExp("Video");
     else if (filter == "Documents")
-        filterRegExp = QRegExp("Doc");
+        filterRegExp = QRegExp("Document");
     else if (filter == "Social")
         filterRegExp = QRegExp("VKontakte|Facebook|Twitter");
     else if (filter == "VKontakte")

@@ -1,13 +1,13 @@
 import QtQuick 1.1
 
-Item {
+Rectangle {
     //property string imageUrl: image.source
     property string url
     property variant image: image
 
     id: cloudRect
-    //color: "black"
-    //radius: 10
+    color: "transparent"
+    radius: 10
 
     Image{
         id: image
