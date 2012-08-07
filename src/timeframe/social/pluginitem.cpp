@@ -6,6 +6,12 @@
 PluginItem::PluginItem(ISocialPlugin *module)
     : m_module(module)
 {
+    QObject *object = 0;
+    if( (object = dynamic_cast<QObject *>(module)))
+    {
+        connect(object, SIGNAL(authorized()), SIGNAL(dataChanged()));
+        connect(object, SIGNAL(deauthorized()), SIGNAL(dataChanged()));
+    }
 }
 
 QString PluginItem::id() const
@@ -24,7 +30,7 @@ QVariant PluginItem::data(int role) const
         return v;
     }
     else if(role == Authorized)
-           return m_module->authorized();
+        return m_module->authorized();
 
     return m_module->icon();
 }
