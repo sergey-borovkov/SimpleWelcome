@@ -43,6 +43,9 @@ signals:
     void newMonth(int, int, QString);
 
 private:
+
+    int findPluginInModel(const QString &pluginName);
+
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;
     SocialDayModel *m_socialModel;
