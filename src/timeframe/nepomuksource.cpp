@@ -191,7 +191,7 @@ void NepomukSource::fillTimeScaleModel(const QDate &date)
     {
         m_timeScaleClient->close();
         m_timeScaleClient->deleteLater();
-        m_timeScaleClient = 0;        
+        m_timeScaleClient = 0;
     }
 
     m_timeScaleDate = date;
@@ -200,13 +200,13 @@ void NepomukSource::fillTimeScaleModel(const QDate &date)
     Nepomuk::Query::Query query = createTimeScaleQuery(date);
     query.setLimit(1);
 
-    m_timeScaleClient = new Nepomuk::Query::QueryServiceClient( this );    
+    m_timeScaleClient = new Nepomuk::Query::QueryServiceClient( this );
 
     connect(m_timeScaleClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processTSEntry(const QList<Nepomuk::Query::Result> &)));
 
     connect(m_timeScaleClient, SIGNAL(finishedListing()), SLOT(listingTSFinished()));
 
-    m_timeScaleClient->query(query);    
+    m_timeScaleClient->query(query);
 }
 
 Nepomuk::Query::FileQuery NepomukSource::createTimeScaleQuery(const QDate &date)
