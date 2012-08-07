@@ -92,7 +92,7 @@ QVariant LocalDayModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
     if (role == CurrentDateRole)
-    {        
+    {
         return m_items.value(index.row())->getDate();
     }
     else if(role == ItemsRole)
@@ -141,7 +141,6 @@ void LocalDayModel::setLister(ActivityProxy *lister)
     m_lister = lister;
     m_lister->setModel(this);
     connect( m_lister, SIGNAL(newActivities(QList<Activity*>)), this, SLOT(newActivities(QList<Activity*>)) );
-    connect( m_lister, SIGNAL(newMonth(int,int)), this, SLOT(newMonth(int,int)));
     connect( m_lister, SIGNAL(changeFilterString(QString)), this, SLOT(setActivityType(QString)));
 }
 
@@ -230,7 +229,7 @@ void LocalDayModel::newActivities(QList<Activity*> list)
 
         //insertRow(j+1,gallItem);
         //qDebug() <<" add new activity" << item->getDate();
-    }    
+    }
 }
 
 //Add null gallery item to model
