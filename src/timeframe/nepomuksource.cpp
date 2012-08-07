@@ -38,17 +38,11 @@ NepomukSource::NepomukSource(QObject *parent) :
 NepomukSource::~NepomukSource()
 {
     if(m_searchClient)
-    {
         m_searchClient->close();
-        delete m_searchClient;
-    }
+    delete m_searchClient;
     if(m_timeScaleClient)
-    {
-        m_timeScaleClient->close();    
-        delete m_timeScaleClient;
-    }
-    m_searchClient = 0;
-    m_timeScaleClient = 0;
+        m_timeScaleClient->close();
+    delete m_timeScaleClient;
 }
 
 ActivitySet *NepomukSource::getActivitySet(int limit, const QDate &beginDate, const QDate &endDate)
@@ -105,6 +99,7 @@ ActivitySet *NepomukSource::createActivitySet(const QList<Nepomuk::Query::Result
 
 void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
 {
+    Q_UNUSED(direction)
     if (m_searchQueue.size()==0)
     {
         m_searchQueue.append(beginDate);

@@ -47,6 +47,7 @@ QDate TimeFrameDayFilterModel::getDateOfIndex(int listIndex)
 
 int TimeFrameDayFilterModel::getIndexByDate(int year, int month,  bool direction)
 {
+    Q_UNUSED(direction)
     for (int i = 0; i < rowCount(); i++)
     {
         QDate date = data(index(i,0),LocalDayModel::CurrentDateRole).toDate();
@@ -383,8 +384,9 @@ bool LocalDayModel::removeRows(int row, int count, const QModelIndex &parent)
 
 int LocalDayModel::getIndexByDate(int year, int month,  bool direction)
 {
+    Q_UNUSED(direction)
     //QDate date(year, month, day);
-    //return indexFromItem(find(date)).row();    
+    //return indexFromItem(find(date)).row();
 
     LocalDayItem* ptr=0;
 

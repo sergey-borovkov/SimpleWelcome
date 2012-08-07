@@ -1,12 +1,9 @@
 import QtQuick 1.1
 
 ListView {
-
     delegate: Item {
-        //        anchors.centerIn: parent
         width: Math.max( img.width, txt.paintedWidth ) + 10
         height: img.height + txt.height + 10
-        //        anchors.fill: parent
 
         Image {
             id: icon
@@ -20,7 +17,6 @@ ListView {
             Connections {
                 target: socialProxy
                 onPluginAuthorized: {
-                    console.log( "************ onPluginAuthorized" );
                     icon.source = authorized ? "images/green_icon.png" : "";
                 }
             }
