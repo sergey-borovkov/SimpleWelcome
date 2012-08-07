@@ -19,6 +19,7 @@ public:
 
 signals:
     void accessTokenChanged(QString accessToken);
+    void authorized();
     void deauthorized();
 
 public slots:
