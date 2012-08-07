@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NAME=rosa-launcher-qtquick
-VER=0.3.3
+VER=0.3.4
 DIR_NAME=$NAME-$VER
 
 mkdir $DIR_NAME

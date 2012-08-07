@@ -9,7 +9,15 @@ Item {
     opacity: 0.0
 
     onWidthChanged: {
-        console.log("RESIze")
+        console.log("resize to " + width + "x" + height)
+        welcomeTab.tab.updateGridsContent()
+        appsTab.tab.updateGridsContent() // FIX LATER
+    }
+
+    onHeightChanged: {
+        console.log("resize to " + width + "x" + height)
+        welcomeTab.tab.updateGridsContent()
+        appsTab.tab.updateGridsContent() // FIX LATER
     }
 
     Keys.onPressed: {
@@ -43,11 +51,13 @@ Item {
     VisualItemModel {
         id: tabListModel
 
-        SearchTab {
+        /*SearchTab {
             id: searchTab
             width: tabListView.width
             height: tabListView.height
-        }
+        }*/
+
+        Item{}
 
         WelcomeTab {
             id: welcomeTab

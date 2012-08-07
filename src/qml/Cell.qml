@@ -35,7 +35,7 @@ Item {
 
             width: parent.width - 10
             anchors.top: cellIcon.bottom
-            anchors.topMargin: constants.iconSize / 4 //24
+            anchors.topMargin: constants.iconSize / 5 //24
             anchors.horizontalCenter: parent.horizontalCenter
 
             style: Text.Sunken

@@ -67,7 +67,7 @@ DataSource_Apps::DataSource_Apps(QObject *parent, DataSource_RecentApps *inRecen
     updateItems();
 }
 
-void DataSource_Apps::updateContent()
+void DataSource_Apps::getContent()
 {
     for (int i = 0; i < appsList.size(); i++)
         emit newItemData(QString("image://generalicon/appicon/%1").arg(appsList[i].icon), appsList[i].caption, i);
@@ -92,6 +92,7 @@ void DataSource_Apps::itemClicked(int newIndex)
         AppItem clickedItem = appsList[newIndex];
         if (clickedItem.relPath.isEmpty())
         {
+            recentApps->addRecentApp(clickedItem.desktopEntry);
             QMessageBox::information(0, clickedItem.desktopEntry, clickedItem.caption);
             return;
         }
@@ -105,7 +106,7 @@ void DataSource_Apps::itemClicked(int newIndex)
     if (prevCurrentGroup != currentGroup)
         updateItems();
 
-    emit dataClear();
+    emit resetContent();
 
-    //updateContent();
+    //getContent();
 }

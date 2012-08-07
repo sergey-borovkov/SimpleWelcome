@@ -6,8 +6,10 @@ FocusScope {
     clip: true
     anchors.topMargin: 16
     property variant grid//: gridsContainer.activeGridView
+    property alias tab: groupTab
 
     GridWithGroupTab {
+        id: groupTab
         groups: [
             {
                 group: "Recent Applications",
