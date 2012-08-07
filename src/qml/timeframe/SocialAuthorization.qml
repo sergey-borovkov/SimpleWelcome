@@ -14,14 +14,7 @@ ListView {
             z: 1
             source: authorized ? "images/green_icon.png" : ""
 
-            Connections {
-                target: socialProxy
-                onPluginAuthorized: {
-                    icon.source = authorized ? "images/green_icon.png" : "";
-                }
-            }
         }
-
         Image {
             // get icon for this plugin
             id: img
@@ -41,12 +34,8 @@ ListView {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                if ( authorized )
-                    icon.source = ""
-                pluginModel.show(index)
+                pluginModel.logout(index)
             }
         }
     }
 }
-
-
