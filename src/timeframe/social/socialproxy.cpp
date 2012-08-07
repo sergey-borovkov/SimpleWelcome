@@ -17,6 +17,7 @@ SocialProxy::SocialProxy( QList<ISocialPlugin *> plugins, QObject *parent )
     , m_socialModel( 0 )
 {
     QSettings settings("ROSA", "Timeframe");
+
     foreach(ISocialPlugin *plugin, plugins)
     {
         QObject *object = 0;
@@ -39,7 +40,6 @@ SocialProxy::SocialProxy( QList<ISocialPlugin *> plugins, QObject *parent )
             plugin->requestManager()->queryWall(QDate(), QDate());
             m_enabledPlugins.insert(plugin->name());
         }
-
     }
 }
 
@@ -79,12 +79,36 @@ QString SocialProxy::authorizedPluginName(int i) const
     return authorizedPlugins.at(i);
 }
 
+int SocialProxy::findPluginInModel(const QString &pluginName)
+{
+    // return row number or -1 if plugin not found for some reason
+    int index = -1;
+    for(int i = 0; i < m_pluginModel->rowCount(); i++)
+    {
+        QModelIndex ind = m_pluginModel->index(i);
+        if(pluginName == m_pluginModel->data(ind, PluginItem::Name))
+        {
+            index = i;
+            break;
+        }
+    }
+    return index;
+}
+
 void SocialProxy::authorized()
 {
+    static int i = 0;
+    qDebug() << ++i;
     ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
     m_enabledPlugins.insert(plugin->name());
+
+    int row = findPluginInModel(plugin->name());
+    if(row != -1)
+        m_pluginModel->refreshRow(row);
+
     plugin->requestManager()->queryWall(QDate(), QDate());
-    if ( plugin->authenticationWidget() )
+
+    if (plugin->authenticationWidget())
         plugin->authenticationWidget()->hide();
 
     emit pluginAuthorized();
@@ -94,6 +118,10 @@ void SocialProxy::deauthorized()
 {
     ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
     m_enabledPlugins.remove(plugin->name());
+
+    int row = findPluginInModel(plugin->name());
+    if(row != -1)
+        m_pluginModel->refreshRow(row);
 
     // set plugin as disabled
     QSettings settings("ROSA", "Timeframe");
