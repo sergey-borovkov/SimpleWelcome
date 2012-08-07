@@ -280,8 +280,6 @@ Item {
         onTriggered: {
             if ( (timeFrameTab.state === "social") || (timeFrameTab.state === "socialGallery") )
                 return
-            console.log("state changed")
-            //            if(timeFrameTab.state == "timeLineSearch") {
             timeLine.currentIndex = timeFrameTab.getTimeLineIndex()
             timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
             timeFrameTab.state = ""

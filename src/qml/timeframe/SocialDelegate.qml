@@ -1,8 +1,6 @@
 import QtQuick 1.1
 
-//Component {
 Item {
-    id: desu
     width: childrenRect.width
     height: childrenRect.height
 

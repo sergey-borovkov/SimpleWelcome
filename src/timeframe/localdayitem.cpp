@@ -27,7 +27,7 @@ QString TimeFrameFilterModel::url(int row)
 
 
 LocalDayItem::LocalDayItem(const QDate &date, QObject *parent) :
-    QObject(parent), m_model(0), m_date(date)
+    QObject(parent), m_date(date), m_model(0)
 {
     m_itemModel = new ItemModel(this);
     m_model = new TimeFrameFilterModel(this);

@@ -8,21 +8,17 @@
 
 ActivityProxy::ActivityProxy(QObject *parent) :
     QObject(parent),
-    m_source(0),
-    m_model(0)
+    m_model(0),
+    m_source(0)
 {
 }
 
 void ActivityProxy::addNepomukSource(NepomukSource *source)
 {
     m_source = source;
-    //connect(source, SIGNAL(newActivities(QList<Activity*>)), this, SIGNAL(newActivities(QList<Activity*>)));
     connect(source, SIGNAL(newActivities(QList<Activity*>)), this, SLOT(newData(QList<Activity*>)));
-    //connect(this, SIGNAL(newSearch(QDate, ActivitySource::Direction)), source, SLOT(startDetailedSearch(QDate, ActivitySource::Direction)));
     connect(source, SIGNAL(finishedListing()), SIGNAL(finished()));
     connect(source, SIGNAL(resultCount(int)), this, SLOT(resultCount(int)));
-    //connect(source, SIGNAL(newTSEntries(int, int)), SIGNAL(newMonth(int,int)));
-    //connect(source, SIGNAL(monthFinished(QDate)), SIGNAL(monthFinished(QDate)));
 }
 
 void ActivityProxy::startSearch(QDate date, int direction)
@@ -40,7 +36,7 @@ void ActivityProxy::startSearch(QDate date, int direction)
     {
         dir = ActivitySource::Left;
         d.setDate(d.year(),d.month(),d.daysInMonth());
-    }    
+    }
     //qDebug() << d;
     m_source->setLimit(0);
     m_source->startSearch(d, dir);
@@ -48,6 +44,7 @@ void ActivityProxy::startSearch(QDate date, int direction)
 
 void ActivityProxy::resultCount(int count)
 {
+    Q_UNUSED(count)
     //qDebug() << "Result count: " << count;
 }
 
