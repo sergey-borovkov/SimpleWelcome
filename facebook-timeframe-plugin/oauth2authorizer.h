@@ -11,6 +11,7 @@ class OAuth2Authorizer : public QObject
     Q_PROPERTY(QString accessToken READ accessToken WRITE setAccessToken NOTIFY accessTokenChanged)
 public:
     static const QString redirectUrl;
+    static const QString redirectUrl1;
 
     explicit OAuth2Authorizer(QObject *parent = 0);
     QString accessToken() const;

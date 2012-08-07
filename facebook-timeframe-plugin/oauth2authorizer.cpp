@@ -6,6 +6,8 @@
 #include <QtCore/QUrl>
 
 const QString OAuth2Authorizer::redirectUrl = "http://www.facebook.com/connect/login_success.html";
+const QString OAuth2Authorizer::redirectUrl1 = "https://www.facebook.com/connect/login_success.html";
+
 
 OAuth2Authorizer::OAuth2Authorizer(QObject *parent) :
     QObject(parent)
@@ -47,7 +49,7 @@ QString OAuth2Authorizer::accessToken() const
 
 void OAuth2Authorizer::urlChanged(const QUrl &url)
 {
-    if (!url.isEmpty() && url.toString().startsWith(redirectUrl))
+    if (!url.isEmpty() && (url.toString().startsWith(redirectUrl) || url.toString().startsWith(redirectUrl1)))
     {
         QString accessToken = url.encodedFragment();        // Get the URL fragment part
         accessToken = accessToken.split("&").first();       // Remove the "expires_in" part.
