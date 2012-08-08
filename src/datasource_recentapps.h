@@ -14,7 +14,7 @@ public:
     void addRecentApp(QString desktopFile);
 
 signals:
-    void newItemData(QString iconPath, QString name, int id);
+    void newItemData(QString iconPath, QString name, int id, bool isPinned) const;
     void resetContent();
 
 public slots:

@@ -5,6 +5,7 @@ Item {
 
     // constants
     property int cellWidth: constants.cellWidth
+    //property bool pinned: false
 
     width: cellWidth
     height: wrapper.height//140
@@ -27,6 +28,18 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
 
             smooth: true
+        }
+
+        Image {
+            id: icon
+            anchors.top: cellIcon.top
+            anchors.right: cellIcon.right
+            width: 16
+            height: 16
+            z: 1
+            source: {
+                pinned === true ? "image://generalicon/asset/pinned.png" : ""
+            }
         }
 
         Text {

@@ -73,5 +73,5 @@ void DataSource_RecentApps::itemClicked(int newIndex)
 void DataSource_RecentApps::getContent()
 {
     for (int i = 0; i < recentAppsList.size(); i++)
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(recentAppsList[i].icon), recentAppsList[i].caption, i);
+        emit newItemData(QString("image://generalicon/appicon/%1").arg(recentAppsList[i].icon), recentAppsList[i].caption, i, i < 4 ? true : false);
 }
