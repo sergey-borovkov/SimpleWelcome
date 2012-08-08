@@ -63,7 +63,8 @@ Column {
             gridItemCountChanged()
         }
 
-        function newItemData(iconPath, name, itemId, group) {
+        function newItemData(iconPath, name, itemId, group)
+        {
             if ((group === undefined || group == groupName) &&
                     (startIndex === endIndex && endIndex === 0 ||
                      startIndex <= itemId && itemId <= endIndex &&
@@ -77,6 +78,28 @@ Column {
                 //console.log("--- Skipped [" + startIndex + " to " + endIndex + "] with id: " + itemId + "; bool: " + (startIndex <= itemId && itemId <= endIndex))
             }
 
+        }
+
+        function onItemClicked(newIndex)
+        {
+            if (newIndex != -1)
+            {
+                var realIndex = model.get(newIndex).id
+                if (groupName == "Recent Applications")
+                {
+                    draggingItemIndex = realIndex
+                    model.move(newIndex, 0, 1)
+
+                    for (var i = 0; i < model.count; i++)
+                        if (model.get(i).id < realIndex)
+                            model.get(i).id++
+                        else if (model.get(i).id == realIndex)
+                            model.get(i).id = 0
+
+                    draggingItemIndex = -1
+                }
+            }
+            dataSource.itemClicked(newIndex == -1 ? newIndex : realIndex)
         }
 
 

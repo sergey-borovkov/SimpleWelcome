@@ -37,6 +37,6 @@ void DataSource_Favorites::getContent()
 
 void DataSource_Favorites::itemClicked(int newIndex)
 {
-//    if (newIndex != -1)
-//        QMessageBox::information(0, favoritesList[newIndex].desktopEntry, favoritesList[newIndex].caption);
+    if (newIndex != -1)
+        QMessageBox::information(0, favoritesList[newIndex].desktopEntry, favoritesList[newIndex].caption);
 }
