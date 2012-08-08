@@ -30,7 +30,7 @@ Column {
     Text {
         id: groupLabel
         width: parent.width
-        height: text ? textHeight : 1
+        height: text ? textHeight : 0
         maximumLineCount: 1
         anchors.left: parent.left
         anchors.leftMargin: 16

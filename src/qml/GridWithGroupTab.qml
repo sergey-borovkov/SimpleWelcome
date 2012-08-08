@@ -120,7 +120,7 @@ Item {
             for (var i = 0; i < groups.length; i++) // Iterating by grids
             {
                 //console.log(i + " - NEW ITERATION!!!!!!!!! with " + groups[i].group)
-                var textHeight = (groups[i].group ? constants.groupTextHeight + constants.textToGridSpacing : 1),
+                var textHeight = (groups[i].group ? constants.groupTextHeight + constants.textToGridSpacing : 0),
                     itemCount = groups[i].dataSource.getItemCount(groups[i].group),
                     projectedGroupHeight = textHeight + Math.ceil(itemCount / columns) * cellRealHeight,
                     currentGroup = groups[i]
