@@ -15,17 +15,15 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     void appendRow(ListItem* item);
-    void appendRows(const QList<ListItem*> &items);
+    virtual void appendRows(const QList<ListItem*> &items);
     void insertRow(int row, ListItem* item);
     bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    void refreshRow(int row);
     ListItem* takeRow(int row);
     ListItem* find(const QString &id) const;
     QModelIndex indexFromItem( const ListItem* item) const;
     void clear();
-
-public slots:
-    virtual void show(int r);
 private slots:
     void handleItemChange();
 

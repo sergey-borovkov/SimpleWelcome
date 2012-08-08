@@ -16,12 +16,6 @@ FacebookModule::FacebookModule()
     QSettings settings("ROSA", "facebook-timeframe-plugin");
     QString accessToken = settings.value("accessToken").toString();
 
-    if(!accessToken.isEmpty())
-    {
-        m_authorizer->setAccessToken(accessToken);
-        emit authorized();
-    }
-
     m_authorizationView = new QWebView;
     m_authorizationView->resize(800, 700);
 
@@ -29,7 +23,11 @@ FacebookModule::FacebookModule()
     m_requestManager->setAuthorizer(m_authorizer);
 
     connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SLOT(onAcessTokenChanged()));
+    connect(m_authorizer, SIGNAL(authorized()), SIGNAL(authorized()));
     connect(m_authorizer, SIGNAL(deauthorized()), SIGNAL(deauthorized()));
+
+    if(!accessToken.isEmpty())
+        m_authorizer->setAccessToken(accessToken);
 
     m_pixmap.load(":/images/facebook.png");
 }
@@ -68,9 +66,7 @@ QWidget *FacebookModule::authenticationWidget()
 void FacebookModule::onAcessTokenChanged()
 {
     if(m_authorizer->isAuthorized())
-    {
         m_authorizationView->hide();
-    }
 }
 
 Q_EXPORT_PLUGIN2(facebook-timeframe-plugin, FacebookModule)

@@ -5,11 +5,15 @@
 
 class PluginModel : public ListModel
 {
+    Q_OBJECT
 public:
     PluginModel(QHash<int, QByteArray> roles, QObject* parent = 0);
-
+    virtual void appendRows(const QList<ListItem*> &items);
 public slots:
-    void show(int r);
+    void logout(int row);
+
+private slots:
+    void itemChanged();
 };
 
 #endif // PLUGINMODEl_H

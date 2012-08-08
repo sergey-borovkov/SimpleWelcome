@@ -10,12 +10,12 @@ ListModel::ListModel(QHash<int, QByteArray> roles, QObject *parent) :
 
 int ListModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);    
-    return m_items.size();    
+    Q_UNUSED(parent);
+    return m_items.size();
 }
 
 QVariant ListModel::data(const QModelIndex &index, int role) const
-{    
+{
     if(index.row() < 0 || index.row() >= m_items.size())
         return QVariant();
     return m_items.at(index.row())->data(role);
@@ -74,11 +74,6 @@ void ListModel::clear()
     m_items.clear();
 }
 
-void ListModel::show(int r)
-{
-    qDebug() << "show 100600";
-}
-
 bool ListModel::removeRow(int row, const QModelIndex &parent)
 {
     Q_UNUSED(parent);
@@ -102,6 +97,12 @@ bool ListModel::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
+void ListModel::refreshRow(int row)
+{
+    QModelIndex ind = index(row);
+    emit dataChanged(ind, ind);
+}
+
 ListItem * ListModel::takeRow(int row)
 {
     beginRemoveRows(QModelIndex(), row, row);
@@ -109,4 +110,3 @@ ListItem * ListModel::takeRow(int row)
     endRemoveRows();
     return item;
 }
-

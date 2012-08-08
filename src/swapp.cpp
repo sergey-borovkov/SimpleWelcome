@@ -65,17 +65,12 @@ SWApp::SWApp()
     : KUniqueApplication(),
       m_inited(false)
 {
-    qDebug() << "here";
     m_viewer = new QmlApplicationViewer();
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
     // Window transparency
     m_viewer->setAttribute(Qt::WA_TranslucentBackground);
     m_viewer->setStyleSheet("background:transparent;");
-
-    //kDebug() << QMovie::supportedFormats();
-
-    //m_viewer->addImportPath("/usr/lib/kde4/imports/");
 
     m_appProvider = new AppProvider();
     m_appProvider->init();
@@ -117,84 +112,16 @@ SWApp::SWApp()
     m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
-    /*TF*/
-    //m_model = new ActivityModel;
-
-    m_source = new NepomukSource;
-
-    m_nepomukThread = new QThread(this);
-    m_source->moveToThread(m_nepomukThread);
-    m_nepomukThread->start();
-    QRect r = QDesktopWidget().screenGeometry(m_viewer);
-    m_viewer->rootContext()->setContextProperty( "desktopWidth", r.width() );
-
-    /* TF Gallery mode */
-
-    LocalDayModel* model = new LocalDayModel;
-    TimeFrameDayFilterModel* proxymodel = new TimeFrameDayFilterModel(this);
-    proxymodel->setSourceModel(model);
-    m_viewer->rootContext()->setContextProperty( "localDayModel", proxymodel );
-    m_proxy = new ActivityProxy;
-    m_proxy->addNepomukSource(m_source);
-    model->setLister(m_proxy);
-    m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
-    //qmlRegisterUncreatableType<Activity>("Acitivity", 1, 0, "Activity", "Activity is supposed to be used from C++");
-   // qmlRegisterUncreatableType<LocalDayItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
-   // qmlRegisterUncreatableType<LocalDayItem>("GalleryItem", 1, 0, "Activity", "Activity is supposed to be used from C++");
-    PreviewGenerator::instance()->setModel(model);
-    /* ------------------*/
-
-    /* Social mode */
-
-    PluginLoader loader;
-    QList<ISocialPlugin *> plugins = loader.loadPlugins();
-
-
-    SocialDayModel* socialModel = new SocialDayModel( SocialDayItem::roleNames() );
-    SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel( this );
-    socialProxyModel->setSourceModel( socialModel );
-    m_viewer->rootContext()->setContextProperty( "socialDayModel", socialProxyModel );
-    m_manager = new SocialProxy( plugins, this );
-    m_manager->setModel(socialModel );
-
-    m_viewer->rootContext()->setContextProperty( "socialProxy", m_manager );
-    m_viewer->rootContext()->setContextProperty( "socialModel", m_manager->socialModel() );
-    m_viewer->rootContext()->setContextProperty( "pluginModel", m_manager->pluginModel() );
-
-    m_viewer->engine()->addImageProvider( "plugin", new PluginImageProvider( plugins ) );
-
-    /* ------------------*/
-    /*Time scale model*/
-
-    TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
-    TimeScaleItem* item = new TimeScaleItem();
-    TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
-    timeScaleFilterModel->setSourceModel(timeScaleModel);
-    m_viewer->rootContext()->setContextProperty( "timeScaleModel", timeScaleFilterModel );
-
-    connect(m_proxy,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
-
-    connect(m_manager,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
-    /*----------------------------*/
-
-
-    m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
-    m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
-    m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );    
-
-    m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
-
-    //qmlRegisterUncreatableType<ActivitySet>("AcitivitySet", 1, 0, "ActivitySet", "ActivitySet is supposed to be used from C++");
-
-
 
     m_viewer->show();
     //m_viewer->showExpanded();
     m_viewer->setGeometry(100, 000, 640, 480);
     //m_viewer->showFullScreen();
 
+    initTimeframeLocalMode();
+    initTimeframeSocialMode();
+
     QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
-    qDebug() << "THERE";
 
     if ( isLocal() )
         m_viewer->setMainQmlFile( QLatin1String( "../src/qml/main.qml" ) );
@@ -204,11 +131,68 @@ SWApp::SWApp()
     QTimer::singleShot( 1000, this, SLOT( init() ) );
 
     setQuitOnLastWindowClosed( true ); // NEED TO CHANGE TO false
+}
 
+void SWApp::initTimeframeLocalMode()
+{
+    m_source = new NepomukSource;
+    m_nepomukThread = new QThread(this);
+    m_source->moveToThread(m_nepomukThread);
+    m_nepomukThread->start();
+
+    m_proxy = new ActivityProxy;
+    m_proxy->addNepomukSource(m_source);
+
+    LocalDayModel* model = new LocalDayModel;
+    TimeFrameDayFilterModel* proxymodel = new TimeFrameDayFilterModel(this);
+    model->setLister(m_proxy);
+    proxymodel->setSourceModel(model);
+    PreviewGenerator::instance()->setModel(model);
+
+    QRect r = QDesktopWidget().screenGeometry(m_viewer);
+
+    m_viewer->rootContext()->setContextProperty( "desktopWidth", r.width() );
+    m_viewer->rootContext()->setContextProperty( "localDayModel", proxymodel );
+    m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
+    m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
+    m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
+    m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
+    m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
+}
+
+void SWApp::initTimeframeSocialMode()
+{
+    PluginLoader loader;
+    QList<ISocialPlugin *> plugins = loader.loadPlugins();
+
+    SocialDayModel* socialModel = new SocialDayModel( SocialDayItem::roleNames() );
+    SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel( this );
+    socialProxyModel->setSourceModel( socialModel );
+    m_manager = new SocialProxy( plugins, this );
+    m_manager->setModel(socialModel );
+
+    m_viewer->engine()->addImageProvider( "plugin", new PluginImageProvider( plugins ) );
+
+    TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
+    TimeScaleItem* item = new TimeScaleItem();
+    TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
+    timeScaleFilterModel->setSourceModel(timeScaleModel);
+
+    m_viewer->rootContext()->setContextProperty("socialProxy", m_manager );
+    m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
+    m_viewer->rootContext()->setContextProperty("socialDayModel", socialProxyModel );
+    m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
+    m_viewer->rootContext()->setContextProperty("timeScaleModel", timeScaleFilterModel);
+
+    connect(m_proxy,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
+    connect(m_manager,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
 }
 
 SWApp::~SWApp()
 {
+    m_nepomukThread->exit();
+    m_nepomukThread->wait(100);
+
     delete m_viewer;
     delete m_appProvider;
     delete m_searchRunner;
@@ -216,7 +200,7 @@ SWApp::~SWApp()
     delete m_placesProvider;
     delete m_documentsProvider;
     delete m_sessionProvider;
-    delete m_userInfoProvider;    
+    delete m_userInfoProvider;
     delete m_proxy;
     delete m_source;
     delete m_manager;
