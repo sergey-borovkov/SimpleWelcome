@@ -17,6 +17,8 @@
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
 
+#include <QResizeEvent>
+
 #if defined(QMLJSDEBUGGER)
 #include <qt_private/qdeclarativedebughelper_p.h>
 #endif
@@ -153,4 +155,10 @@ void QmlApplicationViewer::showExpanded()
 #else
     show();
 #endif
+}
+
+void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
+{
+    emit windowSizeChanged(event->size().width(), event->size().height());
+    QDeclarativeView::resizeEvent(event);
 }

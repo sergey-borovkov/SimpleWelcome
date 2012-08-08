@@ -1,5 +1,5 @@
 Name:		rosa-launcher-qtquick
-Version:	0.2.2
+Version:	0.3.4
 Release:	19
 Epoch:		1
 Summary:	ROSA Desktop Application Launcher QtQuick
@@ -18,8 +18,6 @@ ROSA Desktop Application Launcher QtQuick
 %defattr(-,root,root)
 %_kde_bindir/rosa-launcher-qtquick
 %_kde_datadir/rosa-launcher-qtquick/*
-%_kde_libdir/kde4/plasma_runner_rosa_services2.so
-%_kde_services/plasma-runner-rosa-services2.desktop
 %_datadir/timeframe
 
 #--------------------------------------------------------------------

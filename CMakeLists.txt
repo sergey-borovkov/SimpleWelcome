@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8)
 
 project (rosa-launcher-qtquick)
 
-add_subdirectory(rosa-service-runner)
 add_subdirectory(facebook-timeframe-plugin)
 add_subdirectory(vkontakte-timeframe-plugin)
 add_subdirectory(src)

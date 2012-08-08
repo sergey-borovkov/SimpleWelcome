@@ -5,10 +5,29 @@ import "timeframe"
 
 Item {
     id: page
-    width: 1280
-    height: 800
-    //color: "white"
+    width: mainWindow.updatableWidth
+    height: mainWindow.updatableHeight
     opacity: 0.0
+
+    property bool isCompleted: false
+
+    onWidthChanged: {
+        if (isCompleted)
+        {
+            console.log("resize to " + width + "x" + height)
+            welcomeTab.tab.updateGridsContent()
+            appsTab.tab.updateGridsContent() // FIX LATER
+        }
+    }
+
+    onHeightChanged: {
+        if (isCompleted)
+        {
+            console.log("resize to " + width + "x" + height)
+            welcomeTab.tab.updateGridsContent()
+            appsTab.tab.updateGridsContent() // FIX LATER
+        }
+    }
 
     Keys.onPressed: {
         if(event.key == Qt.Key_Escape) {
@@ -17,59 +36,38 @@ Item {
         }
     }
 
+    Component.onCompleted: {
+        isCompleted = true
+        console.log("completed with: " + width + "x" + height + "")
+    }
+
     NumberAnimation on opacity { to: 1.0; duration: 500 }
 
-    /*
-    Component.onCompleted: testing()
-
-    function testing()
-    {
-        console.log("RecentApps:", recentAppsProvider.getRecentAppsList());
-        console.log("Places:", placesProvider.getPlacesList());
-        console.log("RecentDocs:", documentsProvider.getDocsList());
-    }
-    */
-
     function reloadTabs() {
-        welcomeTab.reload();
-        //appsTab.reload();
+        //console.log("reload here")
+        /*welcomeTab.reload();
+        appsTab.reload();*/
     }
-
-    /*
-    Image {
-        width: 64
-        height: 64
-        anchors.fill: parent
-        fillMode: Image.Tile
-        source: "image://generalicon/asset/background2.png"
-    }
-    */
 
     Image {
         anchors.fill: parent
         fillMode: Image.PreserveAspectCrop
         smooth: true
         source: "image://generalicon/asset/bubbles.jpg"
-//        opacity: 0.6
+//        opacity: 0.9
         z: -10
     }
-
-    Rectangle {
-        anchors.fill: parent
-        color: "black"
-        opacity: 0.6
-        z: -5
-    }
-
 
     VisualItemModel {
         id: tabListModel
 
-        SearchTab {
+        /*SearchTab {
             id: searchTab
             width: tabListView.width
             height: tabListView.height
-        }
+        }*/
+
+        Item{}
 
         WelcomeTab {
             id: welcomeTab
@@ -77,15 +75,13 @@ Item {
             height: tabListView.height
         }
 
-
         ApplicationsTab {
             id: appsTab
             width: tabListView.width
             height: tabListView.height
         }
 
-        TimeFrameTab
-        {
+        TimeFrameTab {
             width: tabListView.width
             height: tabListView.height
         }
@@ -93,52 +89,54 @@ Item {
 
     TopBar {
         id: topBar
-        width: parent.width
 
+        KeyNavigation.tab: tabListView
+        KeyNavigation.backtab: tabListView
     }
 
-    Item {
-        id: listViewRect
+    ListView {
+        id: tabListView
+
+        KeyNavigation.tab: topBar
+        KeyNavigation.backtab: topBar
+
+        interactive: false
+
+        anchors.top: topBar.bottom
+        anchors.topMargin: 16
         width: parent.width
-        y: topBar.height
         height: parent.height - topBar.height - bottomBar.height
-        clip: true
-        //color: "transparent"
 
-        ListView {
-            id: tabListView
+        model: tabListModel
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            //anchors.topMargin: 16
+        snapMode: ListView.SnapOneItem
+        orientation: ListView.Horizontal
+        boundsBehavior: Flickable.StopAtBounds
+        flickDeceleration: 5000
+        highlightFollowsCurrentItem: true
+        highlightMoveDuration: 240
+        highlightRangeMode: ListView.StrictlyEnforceRange
 
-            width: parent.width
-            height: parent.height
+        currentIndex: 1
+        onCurrentIndexChanged: {
+            if (currentItem && currentItem.grid)
+                currentItem.grid.forceActiveFocus()
+            topBar.forceActiveFocus()
+        }
 
-            model: tabListModel
-            anchors.fill: parent
+        function currentTabIndexChanged(newCurrentIndex) {
+            tabListView.currentIndex = newCurrentIndex
+        }
 
-            snapMode: ListView.SnapOneItem
-            orientation: ListView.Horizontal
-            boundsBehavior: Flickable.StopAtBounds
-            flickDeceleration: 5000
-            highlightFollowsCurrentItem: true
-            highlightMoveDuration: 240
-            highlightRangeMode: ListView.StrictlyEnforceRange
-
-            currentIndex: 1
+        Component.onCompleted: {
+            searchGridModel.currentTabIndexChanged.connect(currentTabIndexChanged)
         }
     }
+
 
     BottomBar {
         id: bottomBar
         width: parent.width
-
-        Component.onCompleted: test();
-
-        function test()
-        {
-        }
     }
 
 }
