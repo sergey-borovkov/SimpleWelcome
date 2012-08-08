@@ -123,7 +123,7 @@ Item {
                 if (selectedText === "All")
                     timeScaleModel.setFilter("Local")
                 else
-                    timeScaleModel.setFilter(selectedText)                
+                    timeScaleModel.setFilter(selectedText)
                 localDayModel.setFilter(selectedText)
                 state = "current"
                 socialNetworks.state = ""
@@ -142,7 +142,6 @@ Item {
             name: "Social networking sites"
             property int __wasSearching: 0
             onSelectedIndexChanged: {
-                console.log(selectedText)
                 if(selectedText === "Manage networks")
                     timeFrameTab.state = "socialAuthorization"
                 else {
@@ -165,7 +164,6 @@ Item {
             onClicked: {
                 state = "current"
                 localDocs.state = ""
-                console.log("State" + timeFrameTab.state)
                 if (timeFrameTab.state != "socialAuthorization" && socialProxy.anyPluginsEnabled()) {
                     timeFrameTab.state = "social"
                     if ((selectedText === "All") || (selectedText === ""))
@@ -280,8 +278,6 @@ Item {
         onTriggered: {
             if ( (timeFrameTab.state === "social") || (timeFrameTab.state === "socialGallery") )
                 return
-            console.log("state changed")
-            //            if(timeFrameTab.state == "timeLineSearch") {
             timeLine.currentIndex = timeFrameTab.getTimeLineIndex()
             timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
             timeFrameTab.state = ""

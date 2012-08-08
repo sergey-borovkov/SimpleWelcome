@@ -1,12 +1,9 @@
 import QtQuick 1.1
 
 ListView {
-
     delegate: Item {
-        //        anchors.centerIn: parent
         width: Math.max( img.width, txt.paintedWidth ) + 10
         height: img.height + txt.height + 10
-        //        anchors.fill: parent
 
         Image {
             id: icon
@@ -17,15 +14,7 @@ ListView {
             z: 1
             source: authorized ? "images/green_icon.png" : ""
 
-            Connections {
-                target: socialProxy
-                onPluginAuthorized: {
-                    console.log( "************ onPluginAuthorized" );
-                    icon.source = authorized ? "images/green_icon.png" : "";
-                }
-            }
         }
-
         Image {
             // get icon for this plugin
             id: img
@@ -45,12 +34,8 @@ ListView {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                if ( authorized )
-                    icon.source = ""
-                pluginModel.show(index)
+                pluginModel.logout(index)
             }
         }
     }
 }
-
-

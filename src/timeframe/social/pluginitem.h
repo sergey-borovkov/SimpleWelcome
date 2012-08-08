@@ -10,6 +10,7 @@ class ISocialPlugin;
 
 class PluginItem : public QObject, public ListItem
 {
+    Q_OBJECT
 public:
     enum
     {
@@ -33,6 +34,8 @@ public:
         roles.insert(Authorized, "authorized");
         return roles;
     }
+signals:
+    void dataChanged();
 
 private:
     ISocialPlugin *m_module;

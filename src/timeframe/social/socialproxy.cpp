@@ -17,6 +17,7 @@ SocialProxy::SocialProxy( QList<ISocialPlugin *> plugins, QObject *parent )
     , m_socialModel( 0 )
 {
     QSettings settings("ROSA", "Timeframe");
+
     foreach(ISocialPlugin *plugin, plugins)
     {
         QObject *object = 0;
@@ -39,7 +40,6 @@ SocialProxy::SocialProxy( QList<ISocialPlugin *> plugins, QObject *parent )
             plugin->requestManager()->queryWall(QDate(), QDate());
             m_enabledPlugins.insert(plugin->name());
         }
-
     }
 }
 
@@ -62,9 +62,8 @@ void SocialProxy::startSearch()
 {
     foreach(ISocialPlugin *plugin, m_plugins)
     {
-        if(m_enabledPlugins.contains(plugin->name())) {
+        if(m_enabledPlugins.contains(plugin->name()))
             plugin->requestManager()->queryWall(QDate(), QDate());
-        }
     }
 }
 
@@ -83,8 +82,10 @@ void SocialProxy::authorized()
 {
     ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
     m_enabledPlugins.insert(plugin->name());
+
     plugin->requestManager()->queryWall(QDate(), QDate());
-    if ( plugin->authenticationWidget() )
+
+    if (plugin->authenticationWidget())
         plugin->authenticationWidget()->hide();
 
     emit pluginAuthorized();
