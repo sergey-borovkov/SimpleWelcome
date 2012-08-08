@@ -23,11 +23,8 @@
  */
 
 #include "generaliconprovider.h"
-#include "searchrunner.h"
-#include "recentappsprovider.h"
-#include "placesprovider.h"
-#include "documentsprovider.h"
 #include "userinfoprovider.h"
+#include "searchgridmodel.h"
 
 #include <KDebug>
 #include <KIcon>
@@ -35,22 +32,15 @@
 GeneralIconProvider::GeneralIconProvider()
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
       m_isLocal(true),
-      m_searchRunner(0),
-      m_recentAppsProvider(0),
-      m_placesProvider(0),
-      m_documentsProvider(0),
-      m_userInfoProvider(0)
-{
-
-}
-
-GeneralIconProvider::~GeneralIconProvider()
+      m_userInfoProvider(NULL),
+      m_searchGridModel(NULL)
 {
 
 }
 
 QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, const QSize &requestedSize)
 {
+#define icons_size 128
     KIcon icon;
     QPixmap iconPixmap;
 
@@ -58,28 +48,11 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     QString iconName = name.section('/', 1, -1, QString::SectionSkipEmpty);
 
     if(iconType == "appicon")
-    {
         icon = KIcon(iconName);
-    }
-    else if(iconType == "search" && m_searchRunner != NULL)
+    else if (iconType == "search")
     {
-        icon = KIcon(m_searchRunner->getMatchIcon(iconName));
-    }
-    else if(iconType == "recentApp" && m_recentAppsProvider != NULL)
-    {
-        icon = KIcon(m_recentAppsProvider->getRecentAppIconName(iconName));
-    }
-    else if(iconType == "place" && m_placesProvider != NULL)
-    {
-        icon = KIcon(m_placesProvider->getPlaceIcon(iconName));
-    }
-    else if(iconType == "document" && m_documentsProvider != NULL)
-    {
-        icon = KIcon(m_documentsProvider->getDocIconName(iconName));
-    }
-    else if(iconType == "stock")
-    {
-        icon = KIcon(iconName);
+        if (m_searchGridModel)
+            icon = KIcon(m_searchGridModel->getMatchIcon(iconName));
     }
     else if(iconType == "asset")
     {
@@ -104,17 +77,13 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
         return iconPixmap;
     }
 
-    size->setWidth(128);
-    size->setHeight(128);
+    size->setWidth(icons_size);
+    size->setHeight(icons_size);
 
     if (requestedSize.isEmpty())
-    {
-        iconPixmap = icon.pixmap(128, 128, QIcon::Normal, QIcon::On);
-    }
+        iconPixmap = icon.pixmap(icons_size, icons_size, QIcon::Normal, QIcon::On);
     else
-    {
         iconPixmap = icon.pixmap(requestedSize.width(), requestedSize.height(), QIcon::Normal, QIcon::On);
-    }
 
     return iconPixmap;
 }

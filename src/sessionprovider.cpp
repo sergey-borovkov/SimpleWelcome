@@ -23,31 +23,22 @@
  */
 
 #include "sessionprovider.h"
+#include <QtDBus/QtDBus>
 
-SessionProvider::SessionProvider(void) : QObject()
+SessionProvider::SessionProvider(QObject *parent)
+    : QObject(parent)
 {
 }
 
-SessionProvider::~SessionProvider(void)
-{
-}
-
-void SessionProvider::init(void)
-{
-
-}
-
-void SessionProvider::lock(void)
+void SessionProvider::lock()
 {
     QDBusMessage message = QDBusMessage::createMethodCall("org.kde.screensaver", "/ScreenSaver", "org.freedesktop.ScreenSaver", "Lock");
     QDBusConnection::sessionBus().send(message);
 }
 
-void SessionProvider::shutdown(void)
+void SessionProvider::shutdown()
 {
     QDBusMessage message = QDBusMessage::createMethodCall("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface", "logout");
     message << -1 << -1 << -1; // Arguments
     QDBusConnection::sessionBus().send(message);
 }
-
-#include "sessionprovider.moc"

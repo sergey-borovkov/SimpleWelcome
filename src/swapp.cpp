@@ -23,24 +23,30 @@
  */
 
 #include "swapp.h"
-
-#include <QDeclarativeContext>
 #include <QDeclarativeEngine>
-#include <QMovie>
-#include <QThread>
-#include <QTimer>
-#include <QSortFilterProxyModel>
+#include <QDeclarativeContext>
+#include "qmlapplicationviewer/qmlapplicationviewer.h"
 
-#include <KDebug>
-#include <KIcon>
+#include "generaliconprovider.h"
+#include "sessionprovider.h"
+#include "userinfoprovider.h"
+
+#include "datasource_apps.h"
+#include "datasource_recentapps.h"
+#include "datasource_favorites.h"
+#include "datasource_documents.h"
+#include "searchgridmodel.h"
+
+#include <QDesktopWidget>
+
 #include <KServiceGroup>
 
-#include "timeframe/activityproxy.h"
 #include "timeframe/activityset.h"
 #include "timeframe/localdaymodel.h"
 #include "timeframe/timescalemodel.h"
 #include "timeframe/itemmodel.h"
 #include "timeframe/listmodel.h"
+#include "timeframe/activityproxy.h"
 #include "timeframe/nepomuksource.h"
 #include "timeframe/previewgenerator.h"
 #include "timeframe/previewprovider.h"
@@ -62,73 +68,56 @@ SWApp* SWApp::self()
 }
 
 SWApp::SWApp()
-    : KUniqueApplication(),
-      m_inited(false)
+    : KUniqueApplication()
 {
     m_viewer = new QmlApplicationViewer();
+    m_viewer->setGeometry(0, 0, QApplication::desktop()->width(), QApplication::desktop()->height());
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
-
     // Window transparency
-    m_viewer->setAttribute(Qt::WA_TranslucentBackground);
-    m_viewer->setStyleSheet("background:transparent;");
+    //m_viewer->setAttribute(Qt::WA_TranslucentBackground);
+    //m_viewer->setStyleSheet("background:transparent;");
+    m_viewer->rootContext()->setContextProperty("mainWindow", m_viewer);
 
-    m_appProvider = new AppProvider();
-    m_appProvider->init();
+    m_viewer->rootContext()->setContextProperty("sessionProvider", new SessionProvider(this));
 
-    qmlRegisterType<AppEntity>("AppEntity", 1, 0, "AppEntity");
-    m_viewer->rootContext()->setContextProperty("appProvider", m_appProvider);
+    UserInfoProvider *userInfoProvider = new UserInfoProvider(this);
+    m_viewer->rootContext()->setContextProperty("userInfoProvider", userInfoProvider);
 
-    m_searchRunner = new SearchRunner();
-    m_searchRunner->init();
-    m_viewer->rootContext()->setContextProperty("searchRunner", m_searchRunner);
-
-    m_recentAppsProvider = new RecentAppsProvider();
-    m_recentAppsProvider->init();
-    m_appProvider->setAppLaunchReciever(m_recentAppsProvider);
-    m_viewer->rootContext()->setContextProperty("recentAppsProvider", m_recentAppsProvider);
-
-    m_placesProvider = new PlacesProvider();
-    m_placesProvider->init();
-    m_viewer->rootContext()->setContextProperty("placesProvider", m_placesProvider);
-
-    m_documentsProvider = new DocumentsProvider();
-    m_documentsProvider->init();
-    m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
-
-    m_sessionProvider = new SessionProvider();
-    m_sessionProvider->init();
-    m_viewer->rootContext()->setContextProperty("sessionProvider", m_sessionProvider);
-
-    m_userInfoProvider = new UserInfoProvider();
-    m_userInfoProvider->init();
-    m_viewer->rootContext()->setContextProperty("userInfoProvider", m_userInfoProvider);
+    SearchGridModel *searchGridModel = new SearchGridModel(this);
+    m_viewer->rootContext()->setContextProperty("searchGridModel", searchGridModel);
 
     m_generalIconProvider = new GeneralIconProvider();
     m_generalIconProvider->setIsLocal(isLocal());
-    m_generalIconProvider->setSearchRunner(m_searchRunner);
-    m_generalIconProvider->setRecentAppsProvider(m_recentAppsProvider);
-    m_generalIconProvider->setPlacesProvider(m_placesProvider);
-    m_generalIconProvider->setDocumentsProvider(m_documentsProvider);
-    m_generalIconProvider->setUserInfoProvider(m_userInfoProvider);
+    m_generalIconProvider->setUserInfoProvider(userInfoProvider);
+    m_generalIconProvider->setSearchGridModel(searchGridModel);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
+    DataSource_RecentApps *recentApps = new DataSource_RecentApps(this);
+    m_viewer->rootContext()->setContextProperty("dataSource_RecentApps", recentApps);
+    m_viewer->rootContext()->setContextProperty("dataSource_Apps", new DataSource_Apps(this, recentApps));
+    m_viewer->rootContext()->setContextProperty("dataSource_Favorites", new DataSource_Favorites(this));
+    m_viewer->rootContext()->setContextProperty("dataSource_Documents", new DataSource_Documents(this));
 
+    m_viewer->rootContext()->setContextProperty("searchCmdGridModel", searchGridModel);
+    m_viewer->rootContext()->setContextProperty("searchAppsGridModel", searchGridModel);
+    m_viewer->rootContext()->setContextProperty("searchRecentDocsGridModel", searchGridModel);
+
+    m_viewer->rootContext()->setContextProperty("constants", new QMLConstants(this, m_viewer));
+
+    m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
     m_viewer->show();
     //m_viewer->showExpanded();
-    m_viewer->setGeometry(100, 000, 640, 480);
     //m_viewer->showFullScreen();
-
+    //m_viewer->move(/*896*/0, 0);
     initTimeframeLocalMode();
     initTimeframeSocialMode();
 
-    QObject::connect((QObject*)m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
+    connect(m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 
     if ( isLocal() )
         m_viewer->setMainQmlFile( QLatin1String( "../src/qml/main.qml" ) );
     else
         m_viewer->setMainQmlFile( QLatin1String( "/usr/share/rosa-launcher-qtquick/qml/main.qml" ) );
-
-    QTimer::singleShot( 1000, this, SLOT( init() ) );
 
     setQuitOnLastWindowClosed( true ); // NEED TO CHANGE TO false
 }
@@ -154,7 +143,6 @@ void SWApp::initTimeframeLocalMode()
     m_viewer->rootContext()->setContextProperty( "desktopWidth", r.width() );
     m_viewer->rootContext()->setContextProperty( "localDayModel", proxymodel );
     m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
-    m_viewer->rootContext()->setContextProperty("documentsProvider", m_documentsProvider);
     m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
     m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
     m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
@@ -192,41 +180,15 @@ SWApp::~SWApp()
 {
     m_nepomukThread->exit();
     m_nepomukThread->wait(100);
-
     delete m_viewer;
-    delete m_appProvider;
-    delete m_searchRunner;
-    delete m_recentAppsProvider;
-    delete m_placesProvider;
-    delete m_documentsProvider;
-    delete m_sessionProvider;
-    delete m_userInfoProvider;
-    delete m_proxy;
-    delete m_source;
-    delete m_manager;
 }
-
-int SWApp::newInstance()
-{
-    return 0;
-}
-
 
 bool SWApp::event(QEvent *event)
 {
     return KUniqueApplication::event(event);
 }
 
-void SWApp::init(void)
-{
-    if(m_inited)
-        return;
-
-    m_inited = true;
-
-}
-
-bool SWApp::isLocal(void)
+bool SWApp::isLocal()
 {
     QString appPath = applicationFilePath();
 
@@ -236,4 +198,29 @@ bool SWApp::isLocal(void)
     return true;
 }
 
-#include "swapp.moc"
+
+QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
+    : QObject(parent), viewer(inViewer)
+{
+    connect(viewer, SIGNAL(windowSizeChanged(int,int)), SIGNAL(iconSizeChanged()));
+}
+
+int QMLConstants::cellWidth()
+{
+    return viewer->updatableWidth() >= 1280 ? 140 : viewer->updatableWidth() >= 800 ? 120 : 70;
+}
+
+int QMLConstants::cellHeight()
+{
+     return viewer->updatableWidth() >= 1280 ? 200 : viewer->updatableWidth() >= 800 ? 150 : 100;
+}
+
+int QMLConstants::iconTextSize()
+{
+     return viewer->updatableWidth() >= 1280 ? 10 : viewer->updatableWidth() >= 800 ? 9 : 8;
+}
+
+int QMLConstants::iconSize()
+{
+    return viewer->updatableWidth() >= 1280 ? 96 : viewer->updatableWidth() >= 800 ? 64 : 32;
+}
