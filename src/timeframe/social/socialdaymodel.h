@@ -3,6 +3,7 @@
 
 #include <QSortFilterProxyModel>
 #include <QSet>
+#include <QDate>
 #include <QObject>
 
 #include "../listmodel.h"
