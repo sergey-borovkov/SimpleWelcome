@@ -9,6 +9,11 @@ Item {
 
     property variant groups
 
+    function updateGridsContent()
+    {
+        gridsListView.updateGridsContent()
+    }
+
     ListView {
         id: gridsListView
 
@@ -20,6 +25,7 @@ Item {
         highlightMoveDuration: 240
         cacheBuffer: 20000
         highlightRangeMode: ListView.StrictlyEnforceRange
+        interactive: true
 
         model: VisualDataModel {
             id: gridsVisualModel
@@ -76,6 +82,11 @@ Item {
             //console.log("popup")
         }
 
+        function dndStateChanged(isDrag)
+        {
+            interactive = !isDrag
+        }
+
         function insertGrid(groupData, isOnNewTab)
         {
             var newGridGroup
@@ -89,7 +100,9 @@ Item {
                 gridsListView.currentItem.addGridGroup(groupData.group, groupData.dataSource, groupData.startIndex, groupData.endIndex)
             }
 
-            gridsListView.currentItem.activeGridView.model.itemClicked.connect(showPopup)
+            if (gridsListView.currentItem)
+                gridsListView.currentItem.activeGridView.dndStateChanged.connect(dndStateChanged)
+            //gridsListView.currentItem.activeGridView.model.itemClicked.connect(showPopup)
 
             //appsModel.itemClicked.connect()
         }
@@ -106,12 +119,12 @@ Item {
             //console.log("Starting to split " + availableHeight + "px to grids")
             for (var i = 0; i < groups.length; i++) // Iterating by grids
             {
-                //console.log(i + " - NEW ITERATION!!!!!!!!!")
-                var textHeight = groups[i].group ? constants.groupTextHeight + constants.textToGridSpacing : 1,
+                //console.log(i + " - NEW ITERATION!!!!!!!!! with " + groups[i].group)
+                var textHeight = (groups[i].group ? constants.groupTextHeight + constants.textToGridSpacing : 1),
                     itemCount = groups[i].dataSource.getItemCount(groups[i].group),
                     projectedGroupHeight = textHeight + Math.ceil(itemCount / columns) * cellRealHeight,
                     currentGroup = groups[i]
-                //console.log(i + " - Projected group height: " + projectedGroupHeight)
+                //console.log(i + " - Projected group height: " + projectedGroupHeight + "; Left here: " + availableHeight + ";  itemCount: " + itemCount)
 
                 if (projectedGroupHeight < availableHeight) // Grid can be fully placed on the tab
                 {
@@ -142,9 +155,9 @@ Item {
                         //console.log(i + " - Rows fit currently: " + rowsFit + "; availableHeight: " + availableHeight + "; cellRealHeight: " + cellRealHeight + "; " + (availableHeight / cellRealHeight))
                         if (rowsFit <= 0) // Current tab has no space left. Creating new tab
                         {
-                            //console.log(i + " - " + "Current tab has no space left. Creating new tab")
+                            //console.log(i + " - " + "Tab [" + (gridsListView.count - 1) +  "] has no space left. Creating new tab")
                             availableHeight = gridsListView.height - textHeight
-                            rowsFit = Math.max(1, Math.floor(availableHeight / cellRealHeight)) // We definitely want to have at least one row on newly created tab
+                            rowsFit = Math.min(rowsLeftToFit, Math.max(1, Math.floor(availableHeight / cellRealHeight)) ) // We definitely want to have at least one row on newly created tab
                             //console.log(i + " - availableHeight: " + availableHeight + "; cellRealHeight: " + cellRealHeight)
                             currentGroup['startIndex'] = lastNotInsertedItem
                             currentGroup['endIndex'] = lastNotInsertedItem + rowsFit * columns - 1
@@ -182,7 +195,7 @@ Item {
 
             for (var i = 0; i < groups.length; i++)
             {
-                groups[i].dataSource.dataClear.connect(updateGridsContent)
+                groups[i].dataSource.resetContent.connect(updateGridsContent)
             }
 
             createTabsFromGroups()

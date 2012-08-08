@@ -64,7 +64,10 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
 void DataSource_RecentApps::itemClicked(int newIndex)
 {
     if (newIndex != -1)
+    {
         QMessageBox::information(0, recentAppsList[newIndex].desktopEntry, recentAppsList[newIndex].caption);
+        recentAppsList.move(newIndex, 0);
+    }
 }
 
 void DataSource_RecentApps::getContent()

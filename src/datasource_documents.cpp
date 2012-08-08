@@ -28,7 +28,7 @@ DataSource_Documents::DataSource_Documents(QObject* parent)
     }
 }
 
-void DataSource_Documents::updateContent()
+void DataSource_Documents::getContent()
 {
     for (int i = 0; i < docsList.size(); i++)
         emit newItemData(QString("image://generalicon/appicon/%1").arg(docsList[i].icon), docsList[i].caption, i);

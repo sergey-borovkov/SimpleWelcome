@@ -13,11 +13,11 @@ public:
 
 signals:
     void newItemData(QString iconPath, QString name, int id);
-    void dataClear();
+    void resetContent();
 
 public slots:
     virtual void itemClicked(int newIndex);
-    virtual void updateContent();
+    virtual void getContent();
 
 private:
     QList<AppItem> docsList;

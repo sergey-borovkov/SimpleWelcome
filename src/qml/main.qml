@@ -8,16 +8,24 @@ Item {
     height: mainWindow.updatableHeight
     opacity: 0.0
 
+    property bool isCompleted: false
+
     onWidthChanged: {
-        console.log("resize to " + width + "x" + height)
-        welcomeTab.tab.updateGridsContent()
-        appsTab.tab.updateGridsContent() // FIX LATER
+        if (isCompleted)
+        {
+            console.log("resize to " + width + "x" + height)
+            welcomeTab.tab.updateGridsContent()
+            appsTab.tab.updateGridsContent() // FIX LATER
+        }
     }
 
     onHeightChanged: {
-        console.log("resize to " + width + "x" + height)
-        welcomeTab.tab.updateGridsContent()
-        appsTab.tab.updateGridsContent() // FIX LATER
+        if (isCompleted)
+        {
+            console.log("resize to " + width + "x" + height)
+            welcomeTab.tab.updateGridsContent()
+            appsTab.tab.updateGridsContent() // FIX LATER
+        }
     }
 
     Keys.onPressed: {
@@ -28,6 +36,7 @@ Item {
     }
 
     Component.onCompleted: {
+        isCompleted = true
         console.log("completed with: " + width + "x" + height + "")
     }
 

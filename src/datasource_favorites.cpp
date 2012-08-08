@@ -15,11 +15,17 @@ DataSource_Favorites::DataSource_Favorites(QObject *parent)
         newItem.icon = bm.icon();
 
         favoritesList.append(newItem);
-   }
+    }
+}
+
+int DataSource_Favorites::getItemCount(QString group)
+{
+    qDebug() << "Favors item count is" << favoritesList.count();
+    return favoritesList.count();
 }
 
 
-void DataSource_Favorites::updateContent()
+void DataSource_Favorites::getContent()
 {
     for(int i = 0; i < favoritesList.count(); i++)
     {
