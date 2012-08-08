@@ -6,8 +6,10 @@ FocusScope {
     clip: true
 
     property variant grid//: appsGrid
+    property alias tab: groupTab
 
     GridWithGroupTab {
+        id: groupTab
         groups: [
             {
                 //group: "Recent Applications",

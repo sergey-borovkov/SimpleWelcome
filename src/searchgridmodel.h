@@ -44,14 +44,14 @@ public slots:
 
 
     virtual void itemClicked(int newIndex);
-    virtual void updateContent();
+    virtual void getContent();
 
 
     virtual void test2();
 
 signals:
     void newItemData(QString iconPath, QString name, int id, QString group);
-    void dataClear();
+    void resetContent();
 
 
 

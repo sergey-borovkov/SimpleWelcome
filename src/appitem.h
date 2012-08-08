@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QString>
+#include <QDebug>
 
 class AppItem
 {

@@ -94,7 +94,7 @@ void SearchGridModel::itemClicked(int newIndex)
         m_runnerManager->run(*matches[newIndex].plasmaMatch);
 }
 
-void SearchGridModel::updateContent()
+void SearchGridModel::getContent()
 {
     for (int i = 0; i < matches.size(); i++)
     {
@@ -128,7 +128,7 @@ void SearchGridModel::launchSearch(const QString &text)
     /// FIXFIXFIX
 
     matches.clear();
-    //emit dataClear();
+    //emit resetContent();
 
 
 

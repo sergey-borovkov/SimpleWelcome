@@ -10,6 +10,7 @@ GridView {
     property int iconIndexStart
     property int iconIndexEnd
 
+    signal dndStateChanged(bool isDrag)
     signal selectionChangedByKeyboard(variant newCurrentItem)
 
     // constants
@@ -53,19 +54,33 @@ GridView {
         appsModel.append( { imagePath: iconPath, caption: name, id: itemId})
     }
 
-    function dataClear() {
+    function resetContent() {
         appsModel.clear()
     }
 
     function onItemClicked(newIndex) {
-        dataSource.itemClicked(newIndex == -1 ? newIndex : appsModel.get(newIndex).id)
+        if (newIndex != -1)
+        {
+            var realIndex = appsModel.get(newIndex).id
+            gridMouseArea.draggingItemIndex = realIndex
+            appsModel.move(newIndex, 0, 1)
+
+            for (var i = 0; i < appsModel.count; i++)
+                if (appsModel.get(i).id < realIndex)
+                    appsModel.get(i).id++
+                else if (appsModel.get(i).id == realIndex)
+                    appsModel.get(i).id = 0
+
+            gridMouseArea.draggingItemIndex = -1
+        }
+        dataSource.itemClicked(newIndex == -1 ? newIndex : realIndex)
     }
 
     Component.onCompleted: {
         //console.log("COMPLETED " + dataSource + " VIEW")
         dataSource.newItemData.connect(newItemData)
-        dataSource.dataClear.connect(dataClear)
-        dataSource.updateContent()
+        dataSource.resetContent.connect(resetContent)
+        dataSource.getContent()
         appsModel.itemClicked.connect(onItemClicked)
     }
 
@@ -262,9 +277,14 @@ GridView {
         onPressAndHold: {
             var index = getItemUnderCursor(true)
             if (index != -1 && pressedOnIndex == index)
+            {
                 draggingItemIndex = model.get(newIndex = index).id
+                dndStateChanged(true)
+            }
         }
         onReleased: {
+            if (draggingItemIndex != -1)
+                dndStateChanged(false)
             draggingItemIndex = -1
         }
 

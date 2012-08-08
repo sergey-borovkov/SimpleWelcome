@@ -11,9 +11,9 @@ public:
 
 public slots:
     virtual void itemClicked(int newIndex) = 0;
-    virtual void updateContent() = 0;
+    virtual void getContent() = 0;
 
 signals:
     void newItemData(QString iconPath, QString name, int id) const;
-    void dataClear();
+    void resetContent();
 };
