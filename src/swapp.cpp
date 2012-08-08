@@ -106,8 +106,7 @@ SWApp::SWApp()
 
     m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
     m_viewer->show();
-    //m_viewer->showExpanded();
-    //m_viewer->showFullScreen();
+     //m_viewer->showFullScreen();
     //m_viewer->move(/*896*/0, 0);
     initTimeframeLocalMode();
     initTimeframeSocialMode();
@@ -207,20 +206,20 @@ QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
 
 int QMLConstants::cellWidth()
 {
-    return viewer->updatableWidth() >= 1280 ? 140 : viewer->updatableWidth() >= 800 ? 120 : 70;
+    return viewer->updatableHeight() >= 1080 ? 140 : viewer->updatableHeight() >= 1024 ? 130 : viewer->updatableHeight() >= 600 ? 120 : 70;
 }
 
 int QMLConstants::cellHeight()
 {
-     return viewer->updatableWidth() >= 1280 ? 200 : viewer->updatableWidth() >= 800 ? 150 : 100;
+     return viewer->updatableHeight() >= 1080 ? 180 : viewer->updatableHeight() >= 1024 ? 165 : viewer->updatableHeight() >= 600 ? 150 : 100;
 }
 
 int QMLConstants::iconTextSize()
 {
-     return viewer->updatableWidth() >= 1280 ? 10 : viewer->updatableWidth() >= 800 ? 9 : 8;
+     return viewer->updatableHeight() >= 1080 ? 10 : viewer->updatableHeight() >= 1024 ? 10 : viewer->updatableHeight() >= 600 ? 9 : 8;
 }
 
 int QMLConstants::iconSize()
 {
-    return viewer->updatableWidth() >= 1280 ? 96 : viewer->updatableWidth() >= 800 ? 64 : 32;
+    return viewer->updatableHeight() >= 1080 ? 96 : viewer->updatableHeight() >= 1024 ? 80 : viewer->updatableHeight() >= 600 ? 64 : 32;
 }

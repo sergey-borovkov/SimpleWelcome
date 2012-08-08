@@ -10,6 +10,8 @@ GridView {
     property int iconIndexStart
     property int iconIndexEnd
 
+    property alias draggingItemIndex: gridMouseArea.draggingItemIndex
+
     signal dndStateChanged(bool isDrag)
     signal selectionChangedByKeyboard(variant newCurrentItem)
 
@@ -59,21 +61,7 @@ GridView {
     }
 
     function onItemClicked(newIndex) {
-        if (newIndex != -1)
-        {
-            var realIndex = appsModel.get(newIndex).id
-            gridMouseArea.draggingItemIndex = realIndex
-            appsModel.move(newIndex, 0, 1)
-
-            for (var i = 0; i < appsModel.count; i++)
-                if (appsModel.get(i).id < realIndex)
-                    appsModel.get(i).id++
-                else if (appsModel.get(i).id == realIndex)
-                    appsModel.get(i).id = 0
-
-            gridMouseArea.draggingItemIndex = -1
-        }
-        dataSource.itemClicked(newIndex == -1 ? newIndex : realIndex)
+        dataSource.itemClicked(newIndex == -1 ? newIndex : appsModel.get(newIndex).id)
     }
 
     Component.onCompleted: {
