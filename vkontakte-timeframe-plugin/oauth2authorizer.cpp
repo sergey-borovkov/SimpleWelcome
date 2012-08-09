@@ -19,7 +19,6 @@ void OAuth2Authorizer::setAccessToken( const QString &accessToken )
 
         QSettings settings( "ROSA", "vkontakte-timeframe-plugin" );
         settings.setValue( "accessToken", accessToken );
-        qDebug() << "OAuth2Authorizer::setAccessToken:    emit accessTokenChanged!!!!!";
         emit accessTokenChanged( m_accessToken );
     }
 }
@@ -36,13 +35,10 @@ bool OAuth2Authorizer::isAuthorized() const
 
 void OAuth2Authorizer::urlChanged( const QUrl &url )
 {
-    qDebug() << "OAuth2Authorizer::urlChanged:   url = " << url;
     if ( !url.isEmpty() && url.toString().startsWith( redirectUrl ) ) {
         QString accessToken = url.encodedFragment();        // Get the URL fragment part
         accessToken = accessToken.split( "&" ).first();       // Remove the "expires_in" part.
         accessToken = accessToken.split( "=" ).at( 1 );         // Split by "access_token=..." and take latter part
-
-        qDebug() << "OAuth2Authorizer::urlChanged:   setAccessToken = " << accessToken;
         setAccessToken( accessToken );
     }
 }
