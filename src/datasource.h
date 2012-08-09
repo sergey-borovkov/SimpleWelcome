@@ -14,6 +14,6 @@ public slots:
     virtual void getContent() = 0;
 
 signals:
-    void newItemData(QString iconPath, QString name, int id) const;
+    //void newItemData(QString iconPath, QString name, int id) const;
     void resetContent();
 };
