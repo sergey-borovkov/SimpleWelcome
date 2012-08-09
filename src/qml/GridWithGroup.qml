@@ -65,7 +65,7 @@ Column {
 
         function newItemData(iconPath, name, itemId, advParam)
         {
-            if ((startIndex === endIndex && endIndex === 0 ||
+            if ((//startIndex === endIndex && endIndex === 0 ||
                      startIndex <= itemId && itemId <= endIndex &&
                      count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
             {
@@ -75,8 +75,11 @@ Column {
                 }
                 else if (typeof advParam == 'string') // New item from search, advParam is group
                 {
-                    if (advParam == advParamName)
+                    if (advParam == groupName)
+                    {
+                        console.log("Added " + name + " : " + itemId + " in [" + startIndex + "-" + endIndex + "] of " + count)
                         model.append({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
+                    }
                 }
                 else
                     model.append({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
