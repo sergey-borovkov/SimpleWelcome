@@ -54,7 +54,6 @@ int SearchGridModel::getItemCount(QString group)
         if (matches[i].group == group)
             count++;
 
-    qDebug() << group << count;
     return count;
 }
 

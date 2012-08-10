@@ -77,7 +77,7 @@ Column {
                 {
                     if (advParam == groupName)
                     {
-                        console.log("Added " + name + " : " + itemId + " in [" + startIndex + "-" + endIndex + "] of " + count)
+                        //console.log("Added " + name + " : " + itemId + " in [" + startIndex + "-" + endIndex + "] of " + count)
                         model.append({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
                     }
                 }
