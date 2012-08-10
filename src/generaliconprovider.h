@@ -2,13 +2,15 @@
 
 #include <QDeclarativeImageProvider>
 
+#include <QtCore/QString>
+
 class UserInfoProvider;
 class SearchGridModel;
 
 class GeneralIconProvider : public QDeclarativeImageProvider
 {
 public:
-    GeneralIconProvider();
+    GeneralIconProvider(QString path_to_assets);
 
     void setUserInfoProvider(UserInfoProvider *userInfoProvider) { m_userInfoProvider = userInfoProvider; }
     void setSearchGridModel(SearchGridModel *searchGridModel) { m_searchGridModel = searchGridModel; }
@@ -18,4 +20,5 @@ public:
 private:
     UserInfoProvider *m_userInfoProvider;
     SearchGridModel *m_searchGridModel;
+    QString m_pathToAssets;
 };

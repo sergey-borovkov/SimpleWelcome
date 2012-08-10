@@ -26,15 +26,14 @@
 #include "userinfoprovider.h"
 #include "searchgridmodel.h"
 
-#include "config.h"
-
 #include <KDebug>
 #include <KIcon>
 
-GeneralIconProvider::GeneralIconProvider()
+GeneralIconProvider::GeneralIconProvider(QString path_to_assets)
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
       m_userInfoProvider(NULL),
-      m_searchGridModel(NULL)
+      m_searchGridModel(NULL),
+      m_pathToAssets(path_to_assets)
 {
 
 }
@@ -57,7 +56,7 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     }
     else if(iconType == "asset")
     {
-        iconPixmap.load(QString(SW_SHARE_ASSETS_DIR"/") + iconName);
+        iconPixmap.load(m_pathToAssets + iconName);
 
       // TODO: Fill size struct
 

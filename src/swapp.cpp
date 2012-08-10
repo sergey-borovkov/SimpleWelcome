@@ -24,8 +24,6 @@
 
 #include "swapp.h"
 
-#include "config.h"
-
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
@@ -61,6 +59,11 @@
 #include "timeframe/social/socialdaymodel.h"
 #include "timeframe/social/socialdayitem.h"
 
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
+
+#include "config.h"
+
 SWApp* SWApp::self()
 {
     if (!kapp) {
@@ -69,6 +72,17 @@ SWApp* SWApp::self()
 
     return qobject_cast<SWApp*>(kapp);
 }
+
+
+QString SWApp::pathToShareDir()
+{
+    QDir root_dir = QCoreApplication::applicationDirPath();
+    root_dir.cdUp(); // skip 'bin' directory
+    QString path = root_dir.canonicalPath();
+    path += QString::fromLatin1("/share/" SW_PROJECT_NAME "/");
+    return path;
+}
+
 
 SWApp::SWApp()
     : KUniqueApplication()
@@ -89,7 +103,7 @@ SWApp::SWApp()
     SearchGridModel *searchGridModel = new SearchGridModel(this);
     m_viewer->rootContext()->setContextProperty("searchGridModel", searchGridModel);
 
-    m_generalIconProvider = new GeneralIconProvider();
+    m_generalIconProvider = new GeneralIconProvider(pathToShareDir() + QString::fromLatin1("assets/"));
     m_generalIconProvider->setUserInfoProvider(userInfoProvider);
     m_generalIconProvider->setSearchGridModel(searchGridModel);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
@@ -115,7 +129,7 @@ SWApp::SWApp()
 
     connect(m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 
-    m_viewer->setMainQmlFile( QLatin1String( SW_SHARE_DIR "/qml/main.qml" ) ); // Qt converts path to native automatically
+    m_viewer->setMainQmlFile( pathToShareDir() + QString::fromLatin1("qml/main.qml") ); // Qt converts path to native automatically
 
     setQuitOnLastWindowClosed( true ); // NEED TO CHANGE TO false
 }
