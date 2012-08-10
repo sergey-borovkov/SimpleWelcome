@@ -1,4 +1,5 @@
 #include "localdayitem.h"
+#include "localdaymodel.h"
 #include "itemmodel.h"
 #include "activityset.h"
 #include <QVariant>
@@ -34,8 +35,10 @@ LocalDayItem::LocalDayItem(const QDate &date, QObject *parent) :
     m_model->setSourceModel(m_itemModel);
     m_model->setDynamicSortFilter(true);
     m_model->setFilterRole(ItemModel::TypeRole);
-    //m_model->setFilterFixedString("Video");
-    //m_model->setFilterRegExp("Video");
+
+    LocalDayModel *model = qobject_cast<LocalDayModel *>(parent);
+    if(model)
+        m_model->setFilterRegExp(model->filter());
 }
 
 LocalDayItem::~LocalDayItem()
