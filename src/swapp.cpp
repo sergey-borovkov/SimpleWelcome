@@ -106,7 +106,7 @@ SWApp::SWApp()
 
     m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
     m_viewer->show();
-     //m_viewer->showFullScreen();
+    //m_viewer->showFullScreen();
     //m_viewer->move(/*896*/0, 0);
     initTimeframeLocalMode();
     initTimeframeSocialMode();

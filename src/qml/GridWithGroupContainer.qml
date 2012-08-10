@@ -58,6 +58,7 @@ Column {
     function addGridGroup(group, dataSource, start, end)
     {
         var groupComponent = Qt.createComponent("GridWithGroup.qml");
+        //console.log("ADDING GRID WITH GROUP OF " + group + " FROM " + start + " TO " + end)
         var groupObject = groupComponent.createObject(gridsContainer, { groupName: group, gridDataSource: dataSource, startIndex: start, endIndex: end });
         activeGridView = groupObject.gridView
     }
