@@ -107,14 +107,15 @@ Item {
             onSelectedIndexChanged: {
                 if (selectedText === "All") {
                     timeScaleModel.setFilter("Local")
+                    localDayModel.setFilter("Local")
                     name = "My Local Documents"
                 }
                 else {
                     timeScaleModel.setFilter(selectedText)
+                    localDayModel.setFilter(selectedText)
                     name = selectedText
                 }
 
-                localDayModel.setFilter(selectedText)
             }
 
             onClicked: {
@@ -122,8 +123,6 @@ Item {
                     timeFrameTab.state = "gallery"
                 else
                     timeFrameTab.state = ""
-
-                timeScaleModel.setFilter("Local")
             }
         }
 
@@ -157,11 +156,6 @@ Item {
                         timeFrameTab.state = "socialGallery"
                     else
                         timeFrameTab.state = "social"
-
-                    if ((selectedText === "All") || (selectedText === ""))
-                        timeScaleModel.setFilter("Social")
-                    else
-                        timeScaleModel.setFilter(selectedText)
                 }
                 else
                     timeFrameTab.state = "socialAuthorization"
