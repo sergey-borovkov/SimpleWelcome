@@ -2,11 +2,18 @@ cmake_minimum_required(VERSION 2.8)
 
 project (rosa-launcher-qtquick)
 
-set(_share_dir "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}") # path to main share directory
+set(_implicit_install FALSE)
 
-configure_file("config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
+if(${CMAKE_INSTALL_PREFIX} STREQUAL NOT_SPECIFIED)
+	# if CMAKE_INSTALL_PREFIX isn't specified we will implicit install project into binary dir (like make install) for
+	# convenience of developers
+	message("Warning: install prefix isn't specified, it will be set to ${CMAKE_BINARY_DIR}")
+	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
+	set(_implicit_install TRUE)
+endif()
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+configure_file("config.h.in" "config.h")
+include_directories(${CMAKE_BINARY_DIR})
 
 add_subdirectory(facebook-timeframe-plugin)
 add_subdirectory(vkontakte-timeframe-plugin)

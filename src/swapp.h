@@ -1,6 +1,8 @@
 #pragma once
 #include <KUniqueApplication>
 
+#include <QtCore/QString>
+
 class QmlApplicationViewer;
 class GeneralIconProvider;
 
@@ -18,6 +20,7 @@ public:
     ~SWApp();
 
     static SWApp* self();
+    static QString pathToShareDir(); ///< Returns path to 'share' directory
 
 public Q_SLOTS:
     bool event(QEvent *event);
