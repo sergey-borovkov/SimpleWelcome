@@ -20,7 +20,6 @@ Component {
             height: Math.max( icon.height, dt.paintedHeight )
             anchors.top: parent.top
             anchors.margins: 6
-//            border.color: "green"
 
             Image {
                 id: icon
