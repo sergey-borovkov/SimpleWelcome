@@ -3,8 +3,9 @@
 
 #include <QObject>
 
+#include <QtCore/QDate>
+
 class ActivitySet;
-class QDate;
 class Activity;
 
 class ActivitySource : public QObject
