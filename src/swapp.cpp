@@ -23,6 +23,9 @@
  */
 
 #include "swapp.h"
+
+#include "config.h"
+
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
@@ -87,7 +90,6 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("searchGridModel", searchGridModel);
 
     m_generalIconProvider = new GeneralIconProvider();
-    m_generalIconProvider->setIsLocal(isLocal());
     m_generalIconProvider->setUserInfoProvider(userInfoProvider);
     m_generalIconProvider->setSearchGridModel(searchGridModel);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
@@ -113,10 +115,7 @@ SWApp::SWApp()
 
     connect(m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 
-    if ( isLocal() )
-        m_viewer->setMainQmlFile( QLatin1String( "../src/qml/main.qml" ) );
-    else
-        m_viewer->setMainQmlFile( QLatin1String( "/usr/share/rosa-launcher-qtquick/qml/main.qml" ) );
+    m_viewer->setMainQmlFile( QLatin1String( SW_SHARE_DIR "/qml/main.qml" ) ); // Qt converts path to native automatically
 
     setQuitOnLastWindowClosed( true ); // NEED TO CHANGE TO false
 }
@@ -185,16 +184,6 @@ SWApp::~SWApp()
 bool SWApp::event(QEvent *event)
 {
     return KUniqueApplication::event(event);
-}
-
-bool SWApp::isLocal()
-{
-    QString appPath = applicationFilePath();
-
-    if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
-        return false;
-
-    return true;
 }
 
 

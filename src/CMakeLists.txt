@@ -1,5 +1,3 @@
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 
@@ -22,9 +20,4 @@ target_link_libraries(rosa-launcher-qtquick ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIB
 # INSTALL
 install(TARGETS rosa-launcher-qtquick ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-file(GLOB qml_files "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml")
-file(GLOB qml_tf_files "${CMAKE_CURRENT_SOURCE_DIR}/qml/timeframe/*.qml")
-file(GLOB qml_js_files "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.js")
-install(FILES ${qml_files} DESTINATION share/${PROJECT_NAME}/qml)
-install(FILES ${qml_tf_files} DESTINATION share/${PROJECT_NAME}/qml/timeframe/)
-install(FILES ${qml_js_files} DESTINATION share/${PROJECT_NAME}/qml)
+install(DIRECTORY qml/ DESTINATION "share/${PROJECT_NAME}/qml")

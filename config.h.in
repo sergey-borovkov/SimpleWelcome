@@ -1,0 +1,5 @@
+/// defines path to main share directory
+#define SW_SHARE_DIR "${_share_dir}"
+
+/// defined path to assets directory
+#define SW_SHARE_ASSETS_DIR "${_share_dir}/assets"
