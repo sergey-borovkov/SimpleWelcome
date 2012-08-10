@@ -32,7 +32,6 @@ void Request::startQuery()
     else if ( m_type == Logout ) {
         requestUrl = logoutUrl;
     }
-    qDebug() << "Request::startQuery():   requestUrl is " << requestUrl;
 
     QNetworkAccessManager *manager = new QNetworkAccessManager( this );
     connect( manager, SIGNAL( finished( QNetworkReply* ) ), SLOT( replyFinished( QNetworkReply* ) ) );
