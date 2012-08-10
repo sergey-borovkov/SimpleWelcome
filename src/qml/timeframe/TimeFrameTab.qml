@@ -11,6 +11,7 @@ Item {
     property int day: new Date().getDate()
     property bool __isSearching: false              //New search in process
     property bool direction: false  //true is - right direction; false - is left
+    property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
 
     function getTimeLineIndex() {
         var index = localDayModel.getIndexByDate(__year, __month+1, direction)
@@ -89,8 +90,7 @@ Item {
             function fillModel() {
                 clear()
                 var count = socialProxy.authorizedPluginCount()
-                if(count > 0)
-                    append({ "itemText": "All"})
+                append({ "itemText": "All"})
 
                 for(var i = 0; i < count; i++)
                     append({ "itemText": socialProxy.authorizedPluginName(i) })
@@ -100,28 +100,36 @@ Item {
 
         DropListBox {
             id: localDocs
+            width: 240
             model: menuDocItems
             name: "My Local Documents"
             state: "current"
             onSelectedIndexChanged: {
-                if (selectedText === "All")
+                if (selectedText === "All") {
                     timeScaleModel.setFilter("Local")
-                else
+                    name = "My Local Documents"
+                }
+                else {
                     timeScaleModel.setFilter(selectedText)
+                    name = selectedText
+                }
+
                 localDayModel.setFilter(selectedText)
-                state = "current"
-                socialNetworks.state = ""
             }
+
             onClicked: {
-                state = "current"
-                timeFrameTab.state = ""
-                socialNetworks.state = ""
+                if(inGallery)
+                    timeFrameTab.state = "gallery"
+                else
+                    timeFrameTab.state = ""
+
                 timeScaleModel.setFilter("Local")
             }
         }
 
         DropListBox {
             id: socialNetworks
+            width: 260
             model: menuSocialItems
             name: "Social networking sites"
             property int __wasSearching: 0
@@ -131,25 +139,25 @@ Item {
                 else {
                     timeFrameTab.state = "social"
                     socialProxy.startSearch()
-                    if (selectedText === "All")
-                    {
+                    if (selectedText === "All") {
                         timeScaleModel.setFilter("Social")
                         socialDayModel.setFilter("Social")
+                        name = "Social networking sites"
                     }
-                    else
-                    {
+                    else {
                         socialDayModel.setFilter(selectedText)
                         timeScaleModel.setFilter(selectedText)
+                        name = selectedText
                     }
                 }
-                state = "current"
-                localDocs.state = ""
             }
             onClicked: {
-                state = "current"
-                localDocs.state = ""
                 if (timeFrameTab.state != "socialAuthorization" && socialProxy.anyPluginsEnabled()) {
-                    timeFrameTab.state = "social"
+                    if(inGallery)
+                        timeFrameTab.state = "socialGallery"
+                    else
+                        timeFrameTab.state = "social"
+
                     if ((selectedText === "All") || (selectedText === ""))
                         timeScaleModel.setFilter("Social")
                     else
@@ -331,7 +339,7 @@ Item {
             source: "images/gallery_normal.png"
         }
 
-        MouseArea{
+        MouseArea {
             id: stateTestButtonMouseArea
             anchors.fill: parent
             onClicked: {
@@ -404,7 +412,7 @@ Item {
 
     }
 
-    /*Timer starts wnen user start dragging gallery or timeline*/
+    /*Timer starts wnen user starts dragging gallery or timeline*/
     Timer {
         id: flickableTimer
         interval: 100; running: false; repeat: true
@@ -519,11 +527,6 @@ Item {
                 visible : true
             }
             PropertyChanges {
-                target: menuBar
-                visible : false
-            }
-
-            PropertyChanges {
                 target: stateChangeButtonText
                 text : "<--"
             }
@@ -573,7 +576,6 @@ Item {
                 target: localDocs
                 state: ""
             }
-
         },
 
         State {
@@ -600,10 +602,6 @@ Item {
             PropertyChanges {
                 target: socialGalleryView
                 opacity: 1
-            }
-            PropertyChanges {
-                target: menuBar
-                visible : false
             }
             PropertyChanges {
                 target: stateChangeButtonText
