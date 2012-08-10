@@ -50,6 +50,9 @@ public:
     LocalDayItem * find(const QDate &date) const;
     void clear();
 
+    void setFilter(QRegExp regexp);
+    QRegExp filter() const;
+
 public slots:
     void newActivities(QList <Activity*> list);
     QObject* itemsModel(QDate date) const;
@@ -69,6 +72,7 @@ private:
     QHash<int, QByteArray> hash;
     QHash<QString, QDate> m_urlHash;
     ActivityProxy* m_lister;
+    QRegExp m_filter;
 };
 
 #endif // GALLERYMODEL_H
