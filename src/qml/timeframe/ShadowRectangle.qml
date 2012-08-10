@@ -56,7 +56,5 @@ Item {
             border { left: 10; top: 10; right: 10; bottom: 10 }
             source: "images/shadow.png"; smooth: true
         }
-
     }
-
 }

@@ -3,21 +3,15 @@ import QtQuick 1.1
 Item {
     id: timeFrameTab
     width: parent.width
-    //height: 800
     clip: true
     anchors.topMargin: 16
-    //property ListView lv: timeLine
 
     property int __year: new Date().getFullYear()   //Current year
     property int __month: new Date().getMonth()
     property int day: new Date().getDate()
     property bool __isSearching: false              //New search in process
     property bool direction: false  //true is - right direction; false - is left
-
-    //    function getTimeLineProperlyItem() {
-    //        var index = activityModel.getListIndex(__year, __month+1, direction)
-    //        return index
-    //    }
+    property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
 
     function getTimeLineIndex() {
         var index = localDayModel.getIndexByDate(__year, __month+1, direction)
@@ -30,8 +24,6 @@ Item {
         //console.log("social index " + index)
         return index
     }
-
-
 
     //Start new serch
     function prevMonth() {
@@ -70,13 +62,6 @@ Item {
         target: activityProxy
         onFinished: {
             __isSearching = false
-            //console.log("search finished")
-            //searchLabel.visible = false
-            // if (timeFrameTab.state === "gallerySearch")
-            //   timeFrameTab.state = "gallery"
-            //else if (timeFrameTab.state === "timeLineSearch")
-            //  timeFrameTab.state = ""
-
         }
     }
 
@@ -105,8 +90,7 @@ Item {
             function fillModel() {
                 clear()
                 var count = socialProxy.authorizedPluginCount()
-                if(count > 0)
-                    append({ "itemText": "All"})
+                append({ "itemText": "All"})
 
                 for(var i = 0; i < count; i++)
                     append({ "itemText": socialProxy.authorizedPluginName(i) })
@@ -116,28 +100,36 @@ Item {
 
         DropListBox {
             id: localDocs
+            width: 240
             model: menuDocItems
             name: "My Local Documents"
             state: "current"
             onSelectedIndexChanged: {
-                if (selectedText === "All")
+                if (selectedText === "All") {
                     timeScaleModel.setFilter("Local")
-                else
+                    name = "My Local Documents"
+                }
+                else {
                     timeScaleModel.setFilter(selectedText)
+                    name = selectedText
+                }
+
                 localDayModel.setFilter(selectedText)
-                state = "current"
-                socialNetworks.state = ""
             }
+
             onClicked: {
-                state = "current"
-                timeFrameTab.state = ""
-                socialNetworks.state = ""
+                if(inGallery)
+                    timeFrameTab.state = "gallery"
+                else
+                    timeFrameTab.state = ""
+
                 timeScaleModel.setFilter("Local")
             }
         }
 
         DropListBox {
             id: socialNetworks
+            width: 260
             model: menuSocialItems
             name: "Social networking sites"
             property int __wasSearching: 0
@@ -147,25 +139,25 @@ Item {
                 else {
                     timeFrameTab.state = "social"
                     socialProxy.startSearch()
-                    if (selectedText === "All")
-                    {
+                    if (selectedText === "All") {
                         timeScaleModel.setFilter("Social")
                         socialDayModel.setFilter("Social")
+                        name = "Social networking sites"
                     }
-                    else
-                    {
+                    else {
                         socialDayModel.setFilter(selectedText)
                         timeScaleModel.setFilter(selectedText)
+                        name = selectedText
                     }
                 }
-                state = "current"
-                localDocs.state = ""
             }
             onClicked: {
-                state = "current"
-                localDocs.state = ""
                 if (timeFrameTab.state != "socialAuthorization" && socialProxy.anyPluginsEnabled()) {
-                    timeFrameTab.state = "social"
+                    if(inGallery)
+                        timeFrameTab.state = "socialGallery"
+                    else
+                        timeFrameTab.state = "social"
+
                     if ((selectedText === "All") || (selectedText === ""))
                         timeScaleModel.setFilter("Social")
                     else
@@ -200,13 +192,7 @@ Item {
         color: "grey"
         radius: 1
     }
-    /*
-    function getTSCurrentDate() {
-        var date = new Date(timeScaleModel.getYear(timeScale.list.currentIndex), timeScaleModel.getMonth(timeScale.list.currentIndex).monthNumber, 1)
-        return date
-    }
 
-*/
     //get index of date in TimeScale
     function getTSIndex(year, monthNumber) {
         var i
@@ -216,25 +202,7 @@ Item {
         }
         return -1
     }
-    /*
-    Text {
-        id: searchLabel
-        color: "white"
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.leftMargin: 50
-        text: "Searching in process..."
-        visible: false
-        z: 1000
-    }
-*/
-    /*
-    Binding {
-        target: timeFrameTab
-        property: __isSearching
-        value:  searchLabel.visible
-    }
-*/
+
     ListView {
         id: timeLine
 
@@ -270,7 +238,6 @@ Item {
                 timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center)
             }
         }
-
     }
     Timer {
         id: searchTimer
@@ -283,7 +250,6 @@ Item {
             timeFrameTab.state = ""
         }
     }
-
     ListView {
         id: socialTimeLine
 
@@ -311,8 +277,6 @@ Item {
             timeFrameTab.day = date.getDay()
         }
     }
-
-
     TimeScale {
         id: timeScale
         anchors.verticalCenter: timeLine.verticalCenter
@@ -320,7 +284,6 @@ Item {
         height: 80
         width: parent.width - 100
     }
-
     ToolButton {
         id: prevButton
         width: 60
@@ -332,7 +295,6 @@ Item {
             galleryView.decrementCurrentIndex()
         }
     }
-
     ToolButton {
         id: nextButton
         width: 60
@@ -344,17 +306,14 @@ Item {
             galleryView.incrementCurrentIndex()
         }
     }
-
     Keys.onLeftPressed: {
         console.log( "left key pressed..." )
         prevMonth()
     }
-
     Keys.onRightPressed: {
         console.log( "right key pressed..." )
         nextMonth()
     }
-
     Keys.onEscapePressed: {
         Qt.quit()
     }
@@ -380,7 +339,7 @@ Item {
             source: "images/gallery_normal.png"
         }
 
-        MouseArea{
+        MouseArea {
             id: stateTestButtonMouseArea
             anchors.fill: parent
             onClicked: {
@@ -453,8 +412,7 @@ Item {
 
     }
 
-
-    /*Timer starts wnen user start dragging gallery or timeline*/
+    /*Timer starts wnen user starts dragging gallery or timeline*/
     Timer {
         id: flickableTimer
         interval: 100; running: false; repeat: true
@@ -513,7 +471,6 @@ Item {
         visible: false
     }
 
-
     Connections {
         target: galleryView
         onFlickStarted : flickableTimer.start()
@@ -547,10 +504,8 @@ Item {
         target: socialGalleryView
         onFlickEnded: flickableTimer.stop()
     }
-
 
     state: ""
-
     states: [
 
         State {
@@ -571,11 +526,6 @@ Item {
                 target: galleryView
                 visible : true
             }
-            PropertyChanges {
-                target: menuBar
-                visible : false
-            }
-
             PropertyChanges {
                 target: stateChangeButtonText
                 text : "<--"
@@ -626,7 +576,6 @@ Item {
                 target: localDocs
                 state: ""
             }
-
         },
 
         State {
@@ -655,10 +604,6 @@ Item {
                 opacity: 1
             }
             PropertyChanges {
-                target: menuBar
-                visible : false
-            }
-            PropertyChanges {
                 target: stateChangeButtonText
                 text : "<--"
             }
@@ -685,7 +630,6 @@ Item {
                 visible: false
                 opacity: 0
             }
-
         }
     ]
 }
