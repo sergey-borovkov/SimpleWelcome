@@ -19,7 +19,6 @@ qt4_add_resources(QRC_SOURCES ${RESOURCES})
 
 file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
-file(GLOB QML ${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml)
 qt4_wrap_cpp(MOC_OUT ${HEADERS})
 
 add_library(vkontakte-timeframe-plugin SHARED ${HEADERS} ${SOURCES} ${QML} ${MOC_OUT} ${QRC_SOURCES})

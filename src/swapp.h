@@ -21,7 +21,6 @@ public:
 
 public Q_SLOTS:
     bool event(QEvent *event);
-    bool isLocal();
 
 private:
     void initTimeframeLocalMode();

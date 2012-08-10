@@ -26,12 +26,13 @@
 #include "userinfoprovider.h"
 #include "searchgridmodel.h"
 
+#include "config.h"
+
 #include <KDebug>
 #include <KIcon>
 
 GeneralIconProvider::GeneralIconProvider()
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
-      m_isLocal(true),
       m_userInfoProvider(NULL),
       m_searchGridModel(NULL)
 {
@@ -56,10 +57,7 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     }
     else if(iconType == "asset")
     {
-        if(m_isLocal)
-            iconPixmap.load(QString("../assets/") + iconName);
-        else
-            iconPixmap.load(QString("/usr/share/rosa-launcher-qtquick/assets/") + iconName);
+        iconPixmap.load(QString(SW_SHARE_ASSETS_DIR"/") + iconName);
 
       // TODO: Fill size struct
 
