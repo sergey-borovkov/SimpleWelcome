@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project (rosa-launcher-qtquick)
 
-set(_share_dir "../share/${PROJECT_NAME}") # path to main share directory
+set(_share_dir "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}") # path to main share directory
 
 configure_file("config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
 
