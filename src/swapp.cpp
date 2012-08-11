@@ -161,7 +161,7 @@ void SWApp::initTimeframeLocalMode()
 void SWApp::initTimeframeSocialMode()
 {
     PluginLoader loader;
-    QList<ISocialPlugin *> plugins = loader.loadPlugins();
+    QList<ISocialPlugin *> plugins = loader.loadPlugins(pathToRoot() + QString::fromLatin1("/" SW_TIMEFRAME_PLUGINS_PATH));
 
     SocialDayModel* socialModel = new SocialDayModel( SocialDayItem::roleNames() );
     SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel( this );
