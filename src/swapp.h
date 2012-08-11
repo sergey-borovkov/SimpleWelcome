@@ -20,7 +20,7 @@ public:
     ~SWApp();
 
     static SWApp* self();
-    static QString pathToShareDir(); ///< Returns path to 'share' directory
+    static QString pathToRoot(); ///< Returns path to root of installation
 
 public Q_SLOTS:
     bool event(QEvent *event);
