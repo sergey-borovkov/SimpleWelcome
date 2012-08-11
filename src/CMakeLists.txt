@@ -30,7 +30,7 @@ if(_implicit_install)
 		COMMAND ${CMAKE_COMMAND} -E copy "${_executable_path}" "${CMAKE_INSTALL_PREFIX}/bin"
 		COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/assets"
 		COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/qml" "${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}/qml"
-		COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}" "${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}"
+		COMMAND ${CMAKE_COMMAND} -E create_symlink "bin/${PROJECT_NAME}" "${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}"
 	)
 endif()
 
