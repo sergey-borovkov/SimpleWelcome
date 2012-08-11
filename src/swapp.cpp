@@ -74,13 +74,11 @@ SWApp* SWApp::self()
 }
 
 
-QString SWApp::pathToShareDir()
+QString SWApp::pathToRoot()
 {
     QDir root_dir = QCoreApplication::applicationDirPath();
     root_dir.cdUp(); // skip 'bin' directory
-    QString path = root_dir.canonicalPath();
-    path += QString::fromLatin1("/share/" SW_PROJECT_NAME "/");
-    return path;
+    return root_dir.canonicalPath();
 }
 
 
@@ -103,7 +101,7 @@ SWApp::SWApp()
     SearchGridModel *searchGridModel = new SearchGridModel(this);
     m_viewer->rootContext()->setContextProperty("searchGridModel", searchGridModel);
 
-    m_generalIconProvider = new GeneralIconProvider(pathToShareDir() + QString::fromLatin1("assets/"));
+    m_generalIconProvider = new GeneralIconProvider(pathToRoot() + QString::fromLatin1("/" SW_ASSETS_PATH "/"));
     m_generalIconProvider->setUserInfoProvider(userInfoProvider);
     m_generalIconProvider->setSearchGridModel(searchGridModel);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
@@ -129,7 +127,7 @@ SWApp::SWApp()
 
     connect(m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 
-    m_viewer->setMainQmlFile( pathToShareDir() + QString::fromLatin1("qml/main.qml") ); // Qt converts path to native automatically
+    m_viewer->setMainQmlFile( pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml") ); // Qt converts path to native automatically
 
     setQuitOnLastWindowClosed( true ); // NEED TO CHANGE TO false
 }
