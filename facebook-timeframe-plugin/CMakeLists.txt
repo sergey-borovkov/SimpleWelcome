@@ -1,5 +1,7 @@
 project (facebook-timeframe-plugin)
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${_timeframe_plugins_install_path}")
+
 find_package (Qt4 REQUIRED QtCore QtGui QtNetwork QtWebkit)
 include(${QT_USE_FILE})
 
@@ -21,13 +23,5 @@ qt4_wrap_cpp(MOC_OUT ${HEADERS})
 
 add_library(facebook-timeframe-plugin SHARED ${HEADERS} ${SOURCES} ${QML} ${MOC_OUT} ${QRC_SOURCES})
 target_link_libraries(facebook-timeframe-plugin ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES} ${QT_WEBKIT_LIBRARIES} ${QJSON_LIBRARIES})
-
-if(_implicit_install)
-	get_target_property(_library_path facebook-timeframe-plugin LOCATION)
-	add_custom_command(TARGET facebook-timeframe-plugin POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_INSTALL_PREFIX}/${_timeframe_plugins_install_path}"
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different "${_library_path}" "${CMAKE_INSTALL_PREFIX}/${_timeframe_plugins_install_path}/"
-	)
-endif()
 
 install(TARGETS facebook-timeframe-plugin DESTINATION "${_timeframe_plugins_install_path}")

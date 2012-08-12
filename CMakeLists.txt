@@ -14,21 +14,20 @@ set(_timeframe_plugins_install_path "${_share_dir_name}/${_timeframe_plugins_pat
 set(_assets_install_path "${_share_dir_install_path}/${_assets_dir_path}") # path where assets have to be installed to
 set(_qml_install_path "${_share_dir_install_path}/${_qml_dir_path}") # path where qml files have to be installed to
 
-set(_implicit_install FALSE)
 
-if(${CMAKE_INSTALL_PREFIX} STREQUAL NOT_SPECIFIED)
-	# if CMAKE_INSTALL_PREFIX isn't specified we will implicit install project into binary dir (like make install) for
-	# convenience of developers
-	message("Warning: install prefix isn't specified, it will be set to ${CMAKE_BINARY_DIR}")
-	set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
-	set(_implicit_install TRUE)
-endif()
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${_bin_dir_name}")
 
 configure_file("config.h.in" "config.h")
 include_directories(${CMAKE_BINARY_DIR})
+
+# Special target for assets
+add_custom_target(build-assets ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_BINARY_DIR}/${_assets_install_path}"
+	COMMENT "Building/copying the assets"
+)
 
 add_subdirectory(facebook-timeframe-plugin)
 add_subdirectory(vkontakte-timeframe-plugin)
 add_subdirectory(src)
 
-install(DIRECTORY assets/ DESTINATION "${_assets_install_path}")
+install(DIRECTORY "${CMAKE_BINARY_DIR}/${_assets_install_path}/" DESTINATION "${_assets_install_path}")
