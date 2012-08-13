@@ -17,6 +17,14 @@ set(_qml_install_path "${_share_dir_install_path}/${_qml_dir_path}") # path wher
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${_bin_dir_name}")
 
+#check out of source build
+get_filename_component(_src_dir_real_path "${CMAKE_SOURCE_DIR}" REALPATH)
+get_filename_component(_bin_dir_real_path "${CMAKE_BINARY_DIR}" REALPATH)
+
+if(${_src_dir_real_path} STREQUAL ${_bin_dir_real_path})
+	message(FATAL_ERROR "In-source builds are forbidden! Choose separate build directory.")
+endif()
+
 configure_file("config.h.in" "config.h")
 include_directories(${CMAKE_BINARY_DIR})
 
