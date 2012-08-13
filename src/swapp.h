@@ -1,6 +1,8 @@
 #pragma once
 #include <KUniqueApplication>
 
+#include <QtCore/QString>
+
 class QmlApplicationViewer;
 class GeneralIconProvider;
 
@@ -18,10 +20,10 @@ public:
     ~SWApp();
 
     static SWApp* self();
+    static QString pathToRoot(); ///< Returns path to root of installation
 
 public Q_SLOTS:
     bool event(QEvent *event);
-    bool isLocal();
 
 private:
     void initTimeframeLocalMode();
