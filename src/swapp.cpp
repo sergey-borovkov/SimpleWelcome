@@ -126,7 +126,7 @@ void SWApp::initTimeframeLocalMode()
     m_source = new NepomukSource;
     m_nepomukThread = new QThread(this);
     m_source->moveToThread(m_nepomukThread);
-    m_nepomukThread->start();
+    m_nepomukThread->start(QThread::LowPriority);
 
     m_proxy = new ActivityProxy;
     m_proxy->addNepomukSource(m_source);
