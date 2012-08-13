@@ -1,6 +1,7 @@
 #ifndef PLUGINLOADER_H
 #define PLUGINLOADER_H
 
+#include <QtCore/QString>
 #include <QtCore/QList>
 
 class ISocialPlugin;
@@ -8,7 +9,11 @@ class ISocialPlugin;
 class PluginLoader
 {
 public:
-    QList<ISocialPlugin *> loadPlugins();
+    /**
+     * Loads plugins from specified directory.
+     * @param dir_path A path to directory containing plugins.
+     */
+    QList<ISocialPlugin *> loadPlugins(QString dir_path);
 };
 
 #endif // PLUGINLOADER_H

@@ -5,9 +5,9 @@
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
 
-QList<ISocialPlugin*> PluginLoader::loadPlugins()
+QList<ISocialPlugin*> PluginLoader::loadPlugins(QString dir_path)
 {
-    QDir modulesDir(QCoreApplication::applicationDirPath() + "/plugins");
+    QDir modulesDir(dir_path);
     QList<ISocialPlugin*> plugins;
 
     foreach (QString fileName, modulesDir.entryList(QDir::AllEntries))
