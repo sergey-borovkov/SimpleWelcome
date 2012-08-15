@@ -12,6 +12,7 @@ class RequestManager : public QObject, public ISocialRequestManager
 public:
     explicit RequestManager(QObject *parent = 0);
     virtual void queryWall(const QDate &beginDate, const QDate &endDate);
+    virtual void queryImage(const QString &id);
     void setAuthorizer(OAuth2Authorizer *authorizer);
     void logout();
 

@@ -24,6 +24,11 @@ void RequestManager::queryWall( const QDate &beginDate, const QDate &endDate )
     request->startQuery();
 }
 
+void RequestManager::queryImage(const QString &id)
+{
+    Q_UNUSED(id)
+}
+
 void RequestManager::setAuthorizer( OAuth2Authorizer *authorizer )
 {
     m_authorizer = authorizer;
