@@ -12,6 +12,32 @@ SocialItemFilterModel::SocialItemFilterModel( QObject * parent )
     setFilterRole(SocialItem::PluginName);
 }
 
+QString SocialItemFilterModel::imageUrl(int row)
+{
+    return data(index(row,0),SocialItem::ImageUrl).toString();
+}
+
+QString SocialItemFilterModel::text(int row)
+{
+    return data(index(row,0),SocialItem::Text).toString();
+}
+
+int SocialItemFilterModel::likesCount(int row)
+{
+    return data(index(row,0),SocialItem::Likes).toInt();
+}
+
+int SocialItemFilterModel::commentsCount(int row)
+{
+    return data(index(row,0),SocialItem::Comments).toInt();
+}
+
+QString SocialItemFilterModel::pluginName(int row)
+{
+    return data(index(row,0),SocialItem::PluginName).toString();
+}
+
+
 //QString SocialItemFilterModel::url( int row )
 //{
 //    return data( index( row, 0 ), ItemModel::UrlRole).toString();

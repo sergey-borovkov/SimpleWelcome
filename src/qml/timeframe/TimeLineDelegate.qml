@@ -22,14 +22,16 @@ Item {
         //visible: (size === 0) ? false : true
     }
     */
+
     Item {
         id: cloudBorder
         //border.color: "white"
         //color: "transparent"
         y: (index%2 === 1)? parent.height/2 + timeScale.height/2 : 0
-        anchors.leftMargin: -50
+        x: -100
+        //anchors.leftMargin: -50
         //anchors.rightMargin: -25
-        width: parent.width + 100
+        width: parent.width + 200
         height: parent.height/2 - timeScale.height/2
         Loader {
             id: cloud
