@@ -53,6 +53,7 @@ int SearchGridModel::getItemCount(QString group)
     for (int i = 0; i < matches.size(); i++)
         if (matches[i].group == group)
             count++;
+
     return count;
 }
 
@@ -96,9 +97,16 @@ void SearchGridModel::itemClicked(int newIndex)
 
 void SearchGridModel::getContent()
 {
-    for (int i = 0; i < matches.size(); i++)
+    QString group;
+    for (int i = 0, counter = 0; i < matches.size(); i++)
     {
-        emit newItemData(QString("image://generalicon/search/%1").arg(matches[i].name), matches[i].name, i, matches[i].group);
+        if (group != matches[i].group)
+        {
+            group = matches[i].group;
+            counter = 0;
+        }
+        emit newItemData(QString("image://generalicon/search/%1").arg(matches[i].name), matches[i].name, counter, matches[i].group);
+        counter++;
     }
 }
 
@@ -117,8 +125,7 @@ void SearchGridModel::newSearchMatches(const QList<Plasma::QueryMatch> &newMatch
         matches.last().plasmaMatch = new Plasma::QueryMatch(newMatches.at(i));
         //emit newItemData(QString("image://generalicon/search/%1").arg(matches.last().name), matches.last().name, matches.size() - 1, matches.last().group);
     }
-
-    emit newSearchMatchesFound();
+    emit resetContent();
 }
 
 void SearchGridModel::launchSearch(const QString &text)
@@ -128,9 +135,6 @@ void SearchGridModel::launchSearch(const QString &text)
     /// FIXFIXFIX
 
     matches.clear();
-    //emit resetContent();
-
-
 
     if(text.size() > 0)
         m_runnerManager->launchQuery(text);

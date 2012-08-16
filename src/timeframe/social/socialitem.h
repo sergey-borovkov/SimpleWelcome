@@ -54,4 +54,22 @@ public:
     }
 };
 
+class CommentItem
+{
+public:
+    enum Role
+    {
+        From = Qt::UserRole + 1,
+        FromId,
+        Message,
+        CreatedTime,
+        LikeCount,
+        Id
+    };
+
+    virtual ~CommentItem() {}
+    virtual QString id() const = 0;
+    virtual QVariant data(int role) const = 0;
+};
+
 #endif // SOCIALITEM_H

@@ -1,0 +1,29 @@
+
+
+
+=====================================================
+	Building the project
+=====================================================
+
+To build SimpleWelcome (SW) you have to install next applications/packages first: make, cmake, gcc (g++), kde-devel.
+You should choose directory for products of building. Let it be "build". It may be in a root directory of project. Never build SW in root of project (cmake will stop building if it detects "in source" build). Choose directory for installation, let it be "install_dir". It may be a system installation directory ("/usr", "/usr/local", "/opt") if you want install SW systemwide. If you are a developer you will have to specify install_dir pointing to some directory in your home directory (for example, "/home/user/build"). Choose configuration (type) of build from: Release, Debug, RelWithDebInfo (default), MinSizeRel. You should do the next steps to build and install SW:
+
+	$ mkdir "build"  # create build directory
+	$ cd "build"
+	$ cmake -DCMAKE_INSTALL_PREFIX=<prefix> -DCMAKE_BUILD_TYPE=<configuration_type> <path_to_project_root>
+	$ make   # build SW
+	$ make install DESTDIR=<install_dir>  # install project
+	$ <install_dir>/<prefix>/bin/rosa-launcher-qtquick  # run SW
+
+Variable DESTDIR has been introduced for package managers. Historically installation directory is defined with <prefix> and fixed (for example, always /usr). Package managers (for example, RPM) defines prefix as /usr and DESTDIR as / (it is default value). So, you can do next:
+
+	$ cmake -DCMAKE_INSTALL_PREFIX=<install_dir> -DCMAKE_BUILD_TYPE=<configuration_type> <path_to_project_root>
+	$ make && make install  # install project
+	$ <install_dir>/bin/rosa-launcher-qtquick  # run SW
+
+SimpleWelcome doesn't use fixed absoulute paths. You can move "build" directory without rebuilding application. So, if you are a developer you can simply run SimpleWelcome without installation at all:
+
+	$ mkdir "build" && cd "build"  # create build directory
+	$ cmake <path_to_project_root>
+	$ make   # build SW
+	$ bin/rosa-launcher-qtquick  # run SW

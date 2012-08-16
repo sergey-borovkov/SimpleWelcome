@@ -54,8 +54,6 @@ signals:
     void resetContent();
 
 
-
-    void newSearchMatchesFound();
     void currentTabIndexChanged(int newCurrentIndex);
 
 private:

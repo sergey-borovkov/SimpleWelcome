@@ -6,6 +6,11 @@
 #include <qjson/parser.h>
 
 
+FeedItem::FeedItem(const QVariantMap &map)
+{
+    fillFromMap(map);
+}
+
 QString FeedItem::pluginName() const
 {
     return QLatin1String( "Facebook" );
@@ -31,17 +36,19 @@ QDate FeedItem::date() const
     return QDate::fromString( data( Date ).toString(), QString("d MM yyyy") );
 }
 
-void FeedItem::fillFromMap(QVariantMap map)
+void FeedItem::fillFromMap(const QVariantMap &map)
 {
     // http://developers.facebook.com/docs/reference/api/post/
     if ( map.contains( "id" ) )
         m_id = map.value("id").toString();
-    if ( map.contains( "message" ) ) {
+    if ( map.contains( "message" ) )
+    {
         QString message = map.value( "message" ).toString();
 
         // if user posts a link
         bool isLink = message.startsWith( "http://" );
-        if ( isLink ) {
+        if ( isLink )
+        {
             QString name = isLink ? map.value( "name" ).toString() : message;
             m_data.insert( Text, QString( "<a href=%1>%2</a>" ).arg( message, name ) );
         }
@@ -51,14 +58,63 @@ void FeedItem::fillFromMap(QVariantMap map)
     if ( map.contains( "picture" ) )
         m_data.insert( ImageUrl, map.value( "picture" ).toString() );
 
-    if ( map.contains( "story" ) ) {
+    if ( map.contains( "story" ) )
         m_data.insert( Text, map.value( "story" ).toString() );
-    }
-    if ( map.contains( "created_time" ) ) {
+
+    if ( map.contains( "created_time" ) )
+    {
         QDateTime dt = map.value( "created_time" ).toDateTime();
         QDate date = dt.date();
         m_data.insert( Date, date.toString( "d MM yyyy" ) );
     }
 
+    if(map.contains("comments"))
+    {
+        QVariantMap comments = map.value("comments").toMap();
+        if(comments.value("count").toInt() > 0)
+        {
+            FacebookCommentItem *item = new FacebookCommentItem(comments.value("data").toList());
+            m_comments.append(item);
+        }
+    }
+    QVariant var;
+    var.setValue(m_comments);
+
+    m_data.insert(Comments, var);
     m_data.insert( PluginName, pluginName() );
 }
+
+
+FacebookCommentItem::FacebookCommentItem(const QVariantList &list)
+{
+    fillFromList(list);
+}
+
+QString FacebookCommentItem::id() const
+{
+    return data(Id).toString();
+}
+
+QVariant FacebookCommentItem::data(int role) const
+{
+    return m_data.value(role);
+}
+
+void FacebookCommentItem::fillFromList(const QVariantList &comments)
+{
+    foreach(QVariant v, comments)
+    {
+        QVariantMap map = v.toMap();
+        qDebug() << map.value("id").toString();
+        m_data.insert(Id, map.value("id"));
+        m_data.insert(CreatedTime, map.value("created_time"));
+        if(map.contains("from"))
+        {
+            QVariantMap fromMap = map.value("from").toMap();
+            m_data.insert(FromId, fromMap.value("id"));
+            m_data.insert(From, fromMap.value("name"));
+        }
+    }
+}
+
+

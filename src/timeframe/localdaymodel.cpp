@@ -28,7 +28,9 @@ void TimeFrameDayFilterModel::setFilter(const QString &filter)
     else if (filter == "Documents")
         filterRegExp = QRegExp("Document");
     setFilterRegExp(filterRegExp);
-
+    LocalDayModel *model = qobject_cast<LocalDayModel *>(sourceModel());
+    if(model)
+        model->setFilter(filterRegExp);
     for (int i = 0; i < rowCount(); i++) //Set filter on nested models
     {
         QDate date = data(index(i,0),LocalDayModel::CurrentDateRole).toDate();
@@ -149,8 +151,7 @@ void LocalDayModel::setLister(ActivityProxy *lister)
         delete m_lister;
     m_lister = lister;
     m_lister->setModel(this);
-    connect( m_lister, SIGNAL(newActivities(QList<Activity*>)), this, SLOT(newActivities(QList<Activity*>)) );
-    connect( m_lister, SIGNAL(changeFilterString(QString)), this, SLOT(setActivityType(QString)));
+    connect( m_lister, SIGNAL(newActivities(QList<Activity*>)), SLOT(newActivities(QList<Activity*>)) );
 }
 
 void LocalDayModel::newActivities(QList<Activity*> list)
@@ -232,7 +233,7 @@ void LocalDayModel::newActivities(QList<Activity*> list)
         //if (removeNullItem(item->getDate().year(), item->getDate().month()))
           //  j--;
 
-        LocalDayItem * gallItem = new LocalDayItem(item->getDate());
+        LocalDayItem * gallItem = new LocalDayItem(item->getDate(), this);
         gallItem->addActivity(item);
         insertRow(j,gallItem);
 
@@ -253,7 +254,7 @@ void LocalDayModel::newMonth(int year, int month)
         }
     }
     int j = 0;
-    LocalDayItem * gallItem = new LocalDayItem(date);
+    LocalDayItem * gallItem = new LocalDayItem(date, this);
     if (m_items.size() > 0)
     {
         while (m_items.at(j)->getDate() <= gallItem->getDate())
@@ -366,6 +367,16 @@ void LocalDayModel::clear()
 {
     qDeleteAll(m_items);
     m_items.clear();
+}
+
+void LocalDayModel::setFilter(QRegExp regexp)
+{
+    m_filter = regexp;
+}
+
+QRegExp LocalDayModel::filter() const
+{
+    return m_filter;
 }
 
 bool LocalDayModel::removeRow(int row, const QModelIndex &parent)

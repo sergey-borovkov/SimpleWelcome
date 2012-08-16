@@ -71,7 +71,7 @@ Item {
         width: dropboxButtonBody.width
         height: 0
         z: 200
-
+        enabled: false
         property int unfoldedHeight: dropboxButtonBody.height * dropboxListSelection.count
 
         anchors.top: dropboxButtonBody.bottom
@@ -84,10 +84,12 @@ Item {
         {
             if ( height == 0 )
                 height = unfoldedHeight
+            enabled = true
         }
 
         function hide()
         {
+            enabled = false
             height = 0
         }
 
@@ -119,7 +121,7 @@ Item {
 
                     onClicked: {
                         var prevSelection = selectedText
-                        if ( dropboxListSelection.model.get( index ).itemText != prevSelection ) {                            
+                        if ( dropboxListSelection.model.get( index ).itemText != prevSelection ) {
                             dropboxListSelection.currentIndex = index;
                             selectedText = dropboxListSelection.model.get( index ).itemText
                             dropboxListSelection.focus = true

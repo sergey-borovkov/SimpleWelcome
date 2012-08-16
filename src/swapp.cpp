@@ -23,6 +23,7 @@
  */
 
 #include "swapp.h"
+
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
@@ -58,6 +59,11 @@
 #include "timeframe/social/socialdaymodel.h"
 #include "timeframe/social/socialdayitem.h"
 
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
+
+#include "config.h"
+
 SWApp* SWApp::self()
 {
     if (!kapp) {
@@ -66,6 +72,15 @@ SWApp* SWApp::self()
 
     return qobject_cast<SWApp*>(kapp);
 }
+
+
+QString SWApp::pathToRoot()
+{
+    QDir root_dir = QCoreApplication::applicationDirPath();
+    root_dir.cdUp(); // skip 'bin' directory
+    return root_dir.canonicalPath();
+}
+
 
 SWApp::SWApp()
     : KUniqueApplication()
@@ -86,8 +101,7 @@ SWApp::SWApp()
     SearchGridModel *searchGridModel = new SearchGridModel(this);
     m_viewer->rootContext()->setContextProperty("searchGridModel", searchGridModel);
 
-    m_generalIconProvider = new GeneralIconProvider();
-    m_generalIconProvider->setIsLocal(isLocal());
+    m_generalIconProvider = new GeneralIconProvider(pathToRoot() + QString::fromLatin1("/" SW_ASSETS_PATH "/"));
     m_generalIconProvider->setUserInfoProvider(userInfoProvider);
     m_generalIconProvider->setSearchGridModel(searchGridModel);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
@@ -106,17 +120,14 @@ SWApp::SWApp()
 
     m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
     m_viewer->show();
-     //m_viewer->showFullScreen();
+    //m_viewer->showFullScreen();
     //m_viewer->move(/*896*/0, 0);
     initTimeframeLocalMode();
     initTimeframeSocialMode();
 
     connect(m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 
-    if ( isLocal() )
-        m_viewer->setMainQmlFile( QLatin1String( "../src/qml/main.qml" ) );
-    else
-        m_viewer->setMainQmlFile( QLatin1String( "/usr/share/rosa-launcher-qtquick/qml/main.qml" ) );
+    m_viewer->setMainQmlFile( pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml") ); // Qt converts path to native automatically
 
     setQuitOnLastWindowClosed( true ); // NEED TO CHANGE TO false
 }
@@ -126,7 +137,7 @@ void SWApp::initTimeframeLocalMode()
     m_source = new NepomukSource;
     m_nepomukThread = new QThread(this);
     m_source->moveToThread(m_nepomukThread);
-    m_nepomukThread->start();
+    m_nepomukThread->start(QThread::LowPriority);
 
     m_proxy = new ActivityProxy;
     m_proxy->addNepomukSource(m_source);
@@ -150,7 +161,7 @@ void SWApp::initTimeframeLocalMode()
 void SWApp::initTimeframeSocialMode()
 {
     PluginLoader loader;
-    QList<ISocialPlugin *> plugins = loader.loadPlugins();
+    QList<ISocialPlugin *> plugins = loader.loadPlugins(pathToRoot() + QString::fromLatin1("/" SW_TIMEFRAME_PLUGINS_PATH));
 
     SocialDayModel* socialModel = new SocialDayModel( SocialDayItem::roleNames() );
     SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel( this );
@@ -185,16 +196,6 @@ SWApp::~SWApp()
 bool SWApp::event(QEvent *event)
 {
     return KUniqueApplication::event(event);
-}
-
-bool SWApp::isLocal()
-{
-    QString appPath = applicationFilePath();
-
-    if(appPath.startsWith("/usr/bin") || appPath.startsWith("/usr/local/bin"))
-        return false;
-
-    return true;
 }
 
 

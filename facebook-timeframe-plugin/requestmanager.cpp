@@ -23,6 +23,11 @@ void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
     request->startQuery();
 }
 
+void RequestManager::queryImage(const QString &id)
+{
+    Q_UNUSED(id)
+}
+
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 {
     m_authorizer = authorizer;
@@ -62,8 +67,7 @@ void RequestManager::reply(QByteArray reply)
     foreach(QVariant item, list)
     {
         QVariantMap map = item.toMap();
-        FeedItem *feedItem = new FeedItem();
-        feedItem->fillFromMap(map);
+        FeedItem *feedItem = new FeedItem(map);
         feedItems.append(feedItem);
     }
     emit newSocialItems(feedItems);
