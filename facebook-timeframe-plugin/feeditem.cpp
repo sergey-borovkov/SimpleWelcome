@@ -39,27 +39,21 @@ QDate FeedItem::date() const
 void FeedItem::fillFromMap(const QVariantMap &map)
 {
     // http://developers.facebook.com/docs/reference/api/post/
-    if ( map.contains( "id" ) )
-        m_id = map.value("id").toString();
-    if ( map.contains( "message" ) )
+    m_id = map.value("id").toString();
+    QString message = map.value( "message" ).toString();
+    // if user posts a link
+    bool isLink = message.startsWith( "http://" );
+    if ( isLink )
     {
-        QString message = map.value( "message" ).toString();
-
-        // if user posts a link
-        bool isLink = message.startsWith( "http://" );
-        if ( isLink )
-        {
-            QString name = isLink ? map.value( "name" ).toString() : message;
-            m_data.insert( Text, QString( "<a href=%1>%2</a>" ).arg( message, name ) );
-        }
-        else
-            m_data.insert( Text, message );
+        QString name = isLink ? map.value( "name" ).toString() : message;
+        m_data.insert( Text, QString( "<a href=%1>%2</a>" ).arg( message, name ) );
     }
-    if ( map.contains( "picture" ) )
-        m_data.insert( ImageUrl, map.value( "picture" ).toString() );
+    else
+        m_data.insert( Text, message );
 
-    if ( map.contains( "story" ) )
-        m_data.insert( Text, map.value( "story" ).toString() );
+    m_data.insert( ImageUrl, map.value( "picture" ).toString() );
+
+    m_data.insert( Text, map.value( "story" ).toString() );
 
     if ( map.contains( "created_time" ) )
     {
@@ -77,10 +71,21 @@ void FeedItem::fillFromMap(const QVariantMap &map)
             m_comments.append(item);
         }
     }
+
+    if(map.contains("likes"))
+    {
+        QVariantMap likes = map.value("likes").toMap();
+        m_data.insert(Likes, likes.value("count").toInt());
+    }
+    else
+        m_data.insert(Likes, 0);
+
+
     QVariant var;
     var.setValue(m_comments);
-
+    m_data.insert(CommentCount, m_comments.size());
     m_data.insert(Comments, var);
+
     m_data.insert( PluginName, pluginName() );
 }
 

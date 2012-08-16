@@ -66,14 +66,23 @@ Item {
                 text: message
             }
 
+
             Text {
+                function getAudio()
+                {
+                    if(typeof audio === "undefined")
+                        return ""
+                    else
+                        return "Audio: " + audio
+                }
+
                 id: audioItem
                 width: parent.width
                 anchors.bottomMargin: 3
                 wrapMode: Text.Wrap
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: "Audio: " + audio
+                text: getAudio()
                 color: "lightblue"
                 visible: audio !== ""
             }
@@ -82,24 +91,24 @@ Item {
         Item {
             id: bottomLine
             width: parent.width
-            height: Math.max( commentsCount.paintedHeight, dt.paintedHeight )
+            height: Math.max( commentsCountText.paintedHeight, dt.paintedHeight )
             anchors.bottom: parent.bottom
             anchors.topMargin: 3
 
             Text {
-                id: commentsCount
+                id: commentsCountText
                 anchors.left: parent.left
                 anchors.leftMargin: 3
                 wrapMode: Text.WordWrap
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
-                text: "Comments: " + comments
+                text: "Comments: " + commentCount
                 color: "grey"
                 visible: comments !== ""
             }
             Text {
                 id: likesCount
-                anchors.left: commentsCount.right
+                anchors.left: commentsCountText.right
                 anchors.right: parent.right
                 anchors.rightMargin: 3
                 wrapMode: Text.WordWrap
