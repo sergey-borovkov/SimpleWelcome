@@ -35,10 +35,13 @@ void RequestManager::queryImage(const QString &id)
     Q_UNUSED(id)
 }
 
-void RequestManager::postComment(const QString &parent)
+void RequestManager::postComment(const QString &parent, const QString &message)
 {
-    //Request *request = new Request(m_authorizer->accessToken(), Request::PostComment, this);
-    //request->setQ
+    Request *request = new Request(Request::Post, this);
+    QUrl url = QLatin1String("https://graph.facebook.com/") + parent + "/comments";
+    url.addQueryItem("access_token", m_authorizer->accessToken());
+    request->setMessage(message);
+    request->startQuery();
 }
 
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
