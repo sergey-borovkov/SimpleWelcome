@@ -16,6 +16,7 @@ public:
     virtual ~ISocialRequestManager() {}
     virtual void queryWall(const QDate &beginDate, const QDate &endDate) = 0;
     virtual void queryImage(const QString &id) = 0;
+    virtual void postComment(const QString &parent) = 0;
     virtual void logout() = 0;
 };
 
