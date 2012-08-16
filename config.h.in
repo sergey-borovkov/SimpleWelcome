@@ -1,0 +1,21 @@
+/// Defines name of project
+#define SW_PROJECT_NAME "${PROJECT_NAME}"
+
+/// Defines name of binary directory
+#define SW_BIN_DIR_NAME "${_bin_dir_name}"
+
+/// Defines name of system share directory name
+#define SW_SHARE_DIR_NAME "${_share_dir_name}"
+
+/// Defines path to share directory of application from root installation directory
+#define SW_SHARE_PATH "${_share_dir_install_path}"
+
+/// Defines path to assets from root of installation
+#define SW_ASSETS_PATH "${_assets_install_path}"
+
+/// Defines path to timeframe plugins directory from root of installation
+#define SW_TIMEFRAME_PLUGINS_PATH "${_timeframe_plugins_install_path}"
+
+/// Defines path to QML files directory from root directory of installation
+#define SW_QML_PATH "${_qml_install_path}"
+

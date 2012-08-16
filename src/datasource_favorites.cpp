@@ -20,7 +20,6 @@ DataSource_Favorites::DataSource_Favorites(QObject *parent)
 
 int DataSource_Favorites::getItemCount(QString group)
 {
-    qDebug() << "Favors item count is" << favoritesList.count();
     return favoritesList.count();
 }
 

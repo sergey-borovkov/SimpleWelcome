@@ -63,21 +63,29 @@ Column {
             gridItemCountChanged()
         }
 
-        function newItemData(iconPath, name, itemId, group)
+        function newItemData(iconPath, name, itemId, advParam)
         {
-            if ((group === undefined || group == groupName) &&
-                    (startIndex === endIndex && endIndex === 0 ||
+            if ((//startIndex === endIndex && endIndex === 0 ||
                      startIndex <= itemId && itemId <= endIndex &&
                      count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
             {
-                //console.log("--- Added [" + startIndex + " to " + endIndex + "] with id: " + itemId)
-                model.append( { imagePath: iconPath, caption: name, id: itemId})
-            }
-            else
-            {
-                //console.log("--- Skipped [" + startIndex + " to " + endIndex + "] with id: " + itemId + "; bool: " + (startIndex <= itemId && itemId <= endIndex))
+                if (typeof advParam == 'boolean') // New item from RecentApps, advParam is pinned state of icon
+                {
+                    model.append({ imagePath: iconPath, caption: name, id: itemId, pinned: advParam })
+                }
+                else if (typeof advParam == 'string') // New item from search, advParam is group
+                {
+                    if (advParam == groupName)
+                    {
+                        //console.log("Added " + name + " : " + itemId + " in [" + startIndex + "-" + endIndex + "] of " + count)
+                        model.append({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
+                    }
+                }
+                else
+                    model.append({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
             }
 
+            //console.log("--- Added [" + startIndex + " to " + endIndex + "] with id: " + itemId)
         }
 
         function onItemClicked(newIndex)

@@ -24,6 +24,11 @@ void RequestManager::queryWall( const QDate &beginDate, const QDate &endDate )
     request->startQuery();
 }
 
+void RequestManager::queryImage(const QString &id)
+{
+    Q_UNUSED(id)
+}
+
 void RequestManager::setAuthorizer( OAuth2Authorizer *authorizer )
 {
     m_authorizer = authorizer;
@@ -36,7 +41,6 @@ void RequestManager::setAuthorizer( OAuth2Authorizer *authorizer )
 
 void RequestManager::logout()
 {
-    qDebug() << "Logging out...";
     Request *request = new Request( m_authorizer->accessToken(), Request::Logout );
     connect( request, SIGNAL( success() ), m_authorizer, SLOT( logout() ) );
     request->startQuery();
@@ -69,8 +73,6 @@ void RequestManager::reply( QByteArray reply )
     if ( itemCount >= 100 ) {
         cycles = itemCount / 100;
     }
-    qDebug() << "RequestManager::reply:   itemCount = " << itemCount;
-    qDebug() << "RequestManager::reply:   cycles = " << cycles;
 
     // need repeat query
     if ( cycles ) {
@@ -95,13 +97,11 @@ void RequestManager::reply( QByteArray reply )
 
 void RequestManager::replyQueryWall( QByteArray reply )
 {
-    qDebug() << "RequestManager::replyQueryWall";
     QJson::Parser parser;
     QVariantMap result = parser.parse( reply ).toMap();
 
     if ( result.contains( "error" ) ) {
         m_authorizer->logout();
-        qDebug() << "RequestManager::replyQueryWall:   got ERROR from server...";
         return;
     }
 

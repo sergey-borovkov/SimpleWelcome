@@ -46,7 +46,8 @@ Item {
         anchors.margins: 10
         model: localDayModel.itemsModel(date)
         cellWidth: (parent.height - 2*margin - dateLabel.height) / 3 //-20
-        cellHeight: (parent.height - 2*margin - dateLabel.height) /3 -1//-20
+        cellHeight: (parent.height - 2*margin - dateLabel.height) / 3 -1//-20
+
         flow: GridView.TopToBottom
         interactive: false
         delegate: Column {

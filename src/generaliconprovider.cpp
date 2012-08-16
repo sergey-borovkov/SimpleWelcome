@@ -29,11 +29,11 @@
 #include <KDebug>
 #include <KIcon>
 
-GeneralIconProvider::GeneralIconProvider()
+GeneralIconProvider::GeneralIconProvider(QString path_to_assets)
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
-      m_isLocal(true),
       m_userInfoProvider(NULL),
-      m_searchGridModel(NULL)
+      m_searchGridModel(NULL),
+      m_pathToAssets(path_to_assets)
 {
 
 }
@@ -56,10 +56,7 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     }
     else if(iconType == "asset")
     {
-        if(m_isLocal)
-            iconPixmap.load(QString("../assets/") + iconName);
-        else
-            iconPixmap.load(QString("/usr/share/rosa-launcher-qtquick/assets/") + iconName);
+        iconPixmap.load(m_pathToAssets + iconName);
 
       // TODO: Fill size struct
 

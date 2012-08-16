@@ -101,8 +101,10 @@ Item {
             }
 
             if (gridsListView.currentItem)
+            {
                 gridsListView.currentItem.activeGridView.dndStateChanged.connect(dndStateChanged)
-            //gridsListView.currentItem.activeGridView.model.itemClicked.connect(showPopup)
+                gridsListView.currentItem.activeGridView.model.itemClicked.connect(showPopup)
+            }
 
             //appsModel.itemClicked.connect()
         }
@@ -125,6 +127,9 @@ Item {
                     projectedGroupHeight = textHeight + Math.ceil(itemCount / columns) * cellRealHeight,
                     currentGroup = groups[i]
                 //console.log(i + " - Projected group height: " + projectedGroupHeight + "; Left here: " + availableHeight + ";  itemCount: " + itemCount)
+
+                if (!itemCount) // No need to add an empty group
+                    continue
 
                 if (projectedGroupHeight < availableHeight) // Grid can be fully placed on the tab
                 {
@@ -160,7 +165,7 @@ Item {
                             rowsFit = Math.min(rowsLeftToFit, Math.max(1, Math.floor(availableHeight / cellRealHeight)) ) // We definitely want to have at least one row on newly created tab
                             //console.log(i + " - availableHeight: " + availableHeight + "; cellRealHeight: " + cellRealHeight)
                             currentGroup['startIndex'] = lastNotInsertedItem
-                            currentGroup['endIndex'] = lastNotInsertedItem + rowsFit * columns - 1
+                            currentGroup['endIndex'] = Math.min(itemCount - 1, lastNotInsertedItem + rowsFit * columns - 1)
                             lastNotInsertedItem += rowsFit * columns
                             rowsLeftToFit -= rowsFit
                             //console.log(i + " - " + "Fitted "  + rowsFit + " rows")
@@ -174,7 +179,7 @@ Item {
                             //console.log(i + " - " + "It's still possible to insert some rows to current tab. Inserting " + rowsFit)
 
                             currentGroup['startIndex'] = lastNotInsertedItem
-                            currentGroup['endIndex'] = lastNotInsertedItem + rowsFit * columns - 1
+                            currentGroup['endIndex'] = Math.min(itemCount - 1, lastNotInsertedItem + rowsFit * columns - 1)
                             lastNotInsertedItem += rowsFit * columns
                             rowsLeftToFit -= rowsFit
 

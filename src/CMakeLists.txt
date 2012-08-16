@@ -1,5 +1,3 @@
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
 
@@ -16,15 +14,21 @@ file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/qm
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/qmlapplicationviewer/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/timeframe/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/timeframe/social/*.cpp)
 file(GLOB QML ${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml ${CMAKE_CURRENT_SOURCE_DIR}/qml/timeframe/*.qml)
 
+# Special target for QML files
+add_custom_target(build-qml ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/qml" "${CMAKE_BINARY_DIR}/${_qml_install_path}"
+	COMMENT "Building/copying the QML files"
+)
+
 kde4_add_executable(rosa-launcher-qtquick ${HEADERS} ${SOURCES} ${QML} ${QRC_SOURCES})
+#add_dependencies(rosa-launcher-qtquick build-assets build-qml)
 
 target_link_libraries(rosa-launcher-qtquick ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KFILE_LIBS} ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES} ${NEPOMUK_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES})
+
+add_custom_command(TARGET rosa-launcher-qtquick POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E create_symlink "${_bin_dir_name}/${PROJECT_NAME}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}"
+)
+
 # INSTALL
 install(TARGETS rosa-launcher-qtquick ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-file(GLOB qml_files "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qml")
-file(GLOB qml_tf_files "${CMAKE_CURRENT_SOURCE_DIR}/qml/timeframe/*.qml")
-file(GLOB qml_js_files "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.js")
-install(FILES ${qml_files} DESTINATION share/${PROJECT_NAME}/qml)
-install(FILES ${qml_tf_files} DESTINATION share/${PROJECT_NAME}/qml/timeframe/)
-install(FILES ${qml_js_files} DESTINATION share/${PROJECT_NAME}/qml)
+install(DIRECTORY "${CMAKE_BINARY_DIR}/${_qml_install_path}/" DESTINATION "${_qml_install_path}")

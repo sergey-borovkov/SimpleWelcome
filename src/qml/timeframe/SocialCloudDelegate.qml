@@ -1,6 +1,6 @@
 import QtQuick 1.1
 
-Item {    
+Item {
     property int margin: 10
     property int labelHeight: 20
 
@@ -10,14 +10,11 @@ Item {
 
     // using Rectangle because with Item there is painting bug...
     Rectangle {
-        //    Item {
-        id: cloudBorder
-        //border.color: "white"
+
+        id: cloudBorder        
         color: "transparent"
         y: (index%2 === 1) ? parent.height/2 + timeScale.height/2 : 0
-        x: -100
-        //anchors.leftMargin: -100
-        //anchors.rightMargin: -25
+        x: -100        
         width: parent.width + 200
         height: parent.height/2 - timeScale.height/2 - 10
 

@@ -15,6 +15,7 @@ Item {
         if (isCompleted)
         {
             console.log("resize to " + width + "x" + height)
+            searchTab.tab.updateGridsContent()
             welcomeTab.tab.updateGridsContent()
             appsTab.tab.updateGridsContent() // FIX LATER
         }
@@ -24,6 +25,7 @@ Item {
         if (isCompleted)
         {
             console.log("resize to " + width + "x" + height)
+            searchTab.tab.updateGridsContent()
             welcomeTab.tab.updateGridsContent()
             appsTab.tab.updateGridsContent() // FIX LATER
         }
@@ -61,13 +63,11 @@ Item {
     VisualItemModel {
         id: tabListModel
 
-        /*SearchTab {
+        SearchTab {
             id: searchTab
             width: tabListView.width
             height: tabListView.height
-        }*/
-
-        Item{}
+        }
 
         WelcomeTab {
             id: welcomeTab
