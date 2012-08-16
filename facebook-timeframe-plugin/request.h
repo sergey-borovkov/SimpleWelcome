@@ -10,12 +10,19 @@ class Request : public QObject
 public:
     enum RequestType
     {
+        Get,
+        Post
+    };
+
+    enum Content
+    {
         WallPosts,
         User,
         Logout
     };
 
-    explicit Request(const QString &accessToken, RequestType type, QObject *parent = 0);
+    explicit Request(RequestType type, QObject *parent = 0);
+    void setUrl(const QUrl &url);
     void startQuery();
 
 signals:
@@ -24,13 +31,10 @@ signals:
 
 private slots:
     void replyFinished(QNetworkReply *reply);
-    void networkError(QNetworkReply::NetworkError);
-
 private:
-    static const QString wallUrl;
-    static const QString logoutUrl;
-    RequestType m_type;
-    QString m_accessToken;
+    RequestType m_requestType;
+    QUrl m_url;
+    QString m_message;
 };
 
 #endif // REQUEST_H
