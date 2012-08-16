@@ -2,11 +2,12 @@ import QtQuick 1.1
 
 Item {
     id: timeFrameTab
-    width: parent.width
+    //width: parent.width
     //height: 800
     clip: true
-    anchors.topMargin: 16
+    //anchors.topMargin: 16
     //property ListView lv: timeLine
+    //anchors.fill: parent
 
     property int __year: new Date().getFullYear()   //Current year
     property int __month: new Date().getMonth()
@@ -235,6 +236,7 @@ Item {
         value:  searchLabel.visible
     }
 */
+
     ListView {
         id: timeLine
 
@@ -295,7 +297,7 @@ Item {
         delegate: SocialCloudDelegate {}
         model: socialDayModel
 
-        orientation: Qt.Horizontal
+        orientation: Qt.Horizontal        
         highlightFollowsCurrentItem: true
         highlightRangeMode: ListView.StrictlyEnforceRange
         preferredHighlightBegin : timeLine.width /3
@@ -312,7 +314,6 @@ Item {
         }
     }
 
-
     TimeScale {
         id: timeScale
         anchors.verticalCenter: timeLine.verticalCenter
@@ -320,6 +321,7 @@ Item {
         height: 80
         width: parent.width - 100
     }
+
 
     ToolButton {
         id: prevButton

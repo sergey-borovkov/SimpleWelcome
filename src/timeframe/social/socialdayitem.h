@@ -21,7 +21,11 @@ public:
 signals:
 
 public slots:
-//    QString url(int row);
+    QString imageUrl(int row);
+    QString text(int row);
+    int likesCount(int row);
+    int commentsCount(int row);
+    QString pluginName(int row);
 
 };
 

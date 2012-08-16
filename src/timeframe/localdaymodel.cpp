@@ -37,7 +37,6 @@ void TimeFrameDayFilterModel::setFilter(const QString &filter)
             tModel->setFilterRegExp(filterRegExp);
     }
 
-
 }
 
 QObject* TimeFrameDayFilterModel::itemsModel(QDate date) const
