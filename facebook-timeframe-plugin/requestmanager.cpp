@@ -14,18 +14,31 @@ RequestManager::RequestManager(QObject *parent)
 
 void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
 {
+    Q_UNUSED(beginDate)
+    Q_UNUSED(endDate)
+
     if(!m_authorizer)
         return;
 
-    Request *request = new Request(m_authorizer->accessToken(), Request::WallPosts, this);
+    QUrl url(QLatin1String("https://graph.facebook.com/me/feed"));
+    url.addQueryItem("access_token", m_authorizer->accessToken());
 
+    Request *request = new Request(Request::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(reply(QByteArray)));
+
+    request->setUrl(url);
     request->startQuery();
 }
 
 void RequestManager::queryImage(const QString &id)
 {
     Q_UNUSED(id)
+}
+
+void RequestManager::postComment(const QString &parent)
+{
+    //Request *request = new Request(m_authorizer->accessToken(), Request::PostComment, this);
+    //request->setQ
 }
 
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
@@ -40,9 +53,11 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 
 void RequestManager::logout()
 {
-    qDebug() << "Logging out...";
-    Request *request = new Request(m_authorizer->accessToken(), Request::Logout);
+    Request *request = new Request(Request::Get, this);
     connect(request, SIGNAL(success()), m_authorizer, SLOT(logout()));
+
+    QUrl url(QLatin1String("https://www.facebook.com/logout.php"));
+    url.addQueryItem("access_token", m_authorizer->accessToken());
     request->startQuery();
 
     // actually first need to do some error checking
