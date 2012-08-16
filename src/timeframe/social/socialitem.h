@@ -56,7 +56,7 @@ public:
     }
 };
 
-class CommentItem
+class CommentItem : public ListItem
 {
 public:
     enum Role
@@ -72,6 +72,21 @@ public:
     virtual ~CommentItem() {}
     virtual QString id() const = 0;
     virtual QVariant data(int role) const = 0;
+
+    static const QHash<int, QByteArray> roleNames()
+    {
+        QHash<int, QByteArray> roles;
+        roles.insert(From, "from" );
+        roles.insert(FromId, "fromId" );
+        roles.insert(Message, "message" );
+        roles.insert(CreatedTime, "createdTime" );
+        roles.insert(LikeCount, "likeCount" );
+        roles.insert(Id, "id" );
+
+        return roles;
+    }
 };
+
+Q_DECLARE_METATYPE(QList<CommentItem *>)
 
 #endif // SOCIALITEM_H

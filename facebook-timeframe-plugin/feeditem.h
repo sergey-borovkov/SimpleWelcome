@@ -35,6 +35,4 @@ private:
     QMap<int, QVariant> m_data;
 };
 
-Q_DECLARE_METATYPE(QList<CommentItem *>)
-
 #endif // FEEDITEM_H
