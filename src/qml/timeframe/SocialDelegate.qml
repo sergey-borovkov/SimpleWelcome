@@ -66,14 +66,23 @@ Item {
                 text: message
             }
 
+
             Text {
+                function getAudio()
+                {
+                    if(typeof audio === "undefined")
+                        return ""
+                    else
+                        return "Audio: " + audio
+                }
+
                 id: audioItem
                 width: parent.width
                 anchors.bottomMargin: 3
                 wrapMode: Text.Wrap
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: "Audio: " + audio
+                text: getAudio()
                 color: "lightblue"
                 visible: audio !== ""
             }
