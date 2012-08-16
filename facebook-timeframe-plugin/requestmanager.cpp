@@ -62,9 +62,6 @@ void RequestManager::logout()
     QUrl url(QLatin1String("https://www.facebook.com/logout.php"));
     url.addQueryItem("access_token", m_authorizer->accessToken());
     request->startQuery();
-
-    // actually first need to do some error checking
-    m_authorizer->logout();
 }
 
 void RequestManager::reply(QByteArray reply)
