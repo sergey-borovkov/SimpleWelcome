@@ -96,7 +96,7 @@ void FeedItem::fillFromMap( QVariantMap map )
     {
         QVariantMap commentsMap = map[ "comments" ].toMap();
         if ( commentsMap.contains( "count" ) )
-            m_data.insert( Comments, commentsMap.value( "count" ).toString() );
+            m_data.insert( CommentCount, commentsMap.value( "count" ).toString() );
     }
 
     m_data.insert( PluginName, pluginName() );

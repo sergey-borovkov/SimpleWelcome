@@ -17,6 +17,7 @@ public:
         Date,
         Likes,
         Comments,
+        CommentCount,
         Audio,
         PluginName,
         Count,
@@ -45,6 +46,7 @@ public:
         roles.insert( ImageUrl,     "picture" );
         roles.insert( Audio,        "audio" );
         roles.insert( Likes,        "likes" );
+        roles.insert( CommentCount,     "commentCount" );
         roles.insert( Comments,     "comments" );
         roles.insert( Count,        "count" );
         roles.insert( ItemsCount,   "size" );
