@@ -79,7 +79,7 @@ void FeedItem::fillFromMap(const QVariantMap &map)
     }
     QVariant var;
     var.setValue(m_comments);
-
+    m_data.insert(CommentCount, m_comments.size());
     m_data.insert(Comments, var);
     m_data.insert( PluginName, pluginName() );
 }
