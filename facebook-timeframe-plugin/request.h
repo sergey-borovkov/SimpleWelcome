@@ -23,6 +23,7 @@ public:
 
     explicit Request(RequestType type, QObject *parent = 0);
     void setUrl(const QUrl &url);
+    void setMessage(const QString &message);
     void startQuery();
 
 signals:
