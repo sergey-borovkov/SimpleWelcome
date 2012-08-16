@@ -2,7 +2,9 @@
 #define REQUEST_H
 
 #include <QtCore/QObject>
-#include <QtNetwork/QNetworkReply>
+#include <QtCore/QUrl>
+
+class QNetworkReply;
 
 class Request : public QObject
 {
@@ -10,12 +12,13 @@ class Request : public QObject
 public:
     enum RequestType
     {
-        WallPosts,
-        User,
-        Logout
+        Get,
+        Post
     };
 
-    explicit Request(const QString &accessToken, RequestType type, QObject *parent = 0);
+    explicit Request(RequestType type, QObject *parent = 0);
+    void setUrl(const QUrl &url);
+    void setMessage(const QString &message);
     void startQuery();
 
 signals:
@@ -24,13 +27,11 @@ signals:
 
 private slots:
     void replyFinished(QNetworkReply *reply);
-    void networkError(QNetworkReply::NetworkError);
 
 private:
-    static const QString wallUrl;
-    static const QString logoutUrl;
-    RequestType m_type;
-    QString m_accessToken;
+    RequestType m_requestType;
+    QUrl m_url;
+    QString m_message;
 };
 
 #endif // REQUEST_H

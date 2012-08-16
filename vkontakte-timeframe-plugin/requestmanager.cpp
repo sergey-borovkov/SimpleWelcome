@@ -29,6 +29,12 @@ void RequestManager::queryImage(const QString &id)
     Q_UNUSED(id)
 }
 
+void RequestManager::postComment(const QString &postId, const QString &message)
+{
+    Q_UNUSED(postId)
+    Q_UNUSED(message)
+}
+
 void RequestManager::setAuthorizer( OAuth2Authorizer *authorizer )
 {
     m_authorizer = authorizer;
