@@ -1,12 +1,7 @@
 #include "request.h"
 
-#include <qjson/parser.h>
-#include <QtCore/QDebug>
-#include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>
-
-//const QString Request::wallUrl = QLatin1String("https://graph.facebook.com/me/feed");
-//const QString Request::logoutUrl = QLatin1String("https://www.facebook.com/logout.php");
+#include <QtNetwork/QNetworkReply>
 
 Request::Request(RequestType type, QObject *parent) :
     QObject(parent), m_requestType(type)
