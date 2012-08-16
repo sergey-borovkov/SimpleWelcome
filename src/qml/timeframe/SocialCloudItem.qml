@@ -32,24 +32,6 @@ Item{
         width: parent.width
         height: parent.height
 
-
-
-        //visible: index > 3 ? false : true
-        //visible: PathView.onPath
-        //    BorderImage {
-        //        id: innerShadow
-        //        anchors.fill: parent
-        //        anchors { leftMargin: -6; topMargin: -6; rightMargin: -8; bottomMargin: -8 }
-        //        border { left: 5; top: 5; right: 5; bottom: 5 }
-        //        //horizontalTileMode: BorderImage.Stretch
-        //        //verticalTileMode: BorderImage.Stretch
-        //        //anchors.horizontalCenter: parent.horizontalCenter
-        //        //anchors.verticalCenter: parent.verticalCenter
-        //        source: "images/inner-shadow.png"
-        //        smooth: true
-        //        visible: false
-        //    }
-
         BorderImage {
             id: shadowBorder
             anchors.fill: parent
@@ -165,8 +147,6 @@ Item{
                     clip: true
                 }
             }
-
-
             Rectangle {
                 id: bottomLine
                 color: "#335f5f5f"
@@ -187,18 +167,29 @@ Item{
                     color: "grey"
                     visible: false
                 }
-
-                Text {
+                Item {
                     id: commentsCount
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right:  parent.right
                     anchors.rightMargin: 10
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    text: "Comments: " + comments
-                    color: "grey"
-                    visible: false
+                    width: 100
+                    height: parent.height
+
+                    Text {
+                        anchors.fill: parent
+                        wrapMode: Text.WordWrap
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                        text: "Comments: " + comments
+                        color: "grey"
+                        visible: false
+                    }
+                    MouseArea{
+                        anchors.fill: parent
+                        onClicked: {
+                            cloudRect.state = "comments"
+                        }
+                    }
                 }
                 Image {
                     id: likeIcon
@@ -233,10 +224,61 @@ Item{
                     fillMode: Image.PreserveAspectFit
                     smooth: true
                     source: "images/comment.png"
-                }
-
-
+                }                
             }
+            ListModel {
+                id: commentsModel
+
+                ListElement {
+                    name: "Apple"
+                    cost: 2.45
+                    attributes: [
+                        ListElement { description: "Core" },
+                        ListElement { description: "Deciduous" }
+                    ]
+                }
+                ListElement {
+                    name: "Orange"
+                    cost: 3.25
+                    attributes: [
+                        ListElement { description: "Citrus" }
+                    ]
+                }
+                ListElement {
+                    name: "Banana"
+                    cost: 1.95
+                    attributes: [
+                        ListElement { description: "Tropical" },
+                        ListElement { description: "Seedless" }
+                    ]
+                }
+            }
+
+            ListView {
+                id: commentsListView
+                anchors.top : bottomLine.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                model: commentsModel
+                clip: true
+                visible: false
+                delegate: Item {
+                    width: 200; height: 50
+                    Text { id: nameField; text: name }
+                    Text { text: '$' + cost; anchors.left: nameField.right }
+                    Row {
+                        anchors.top: nameField.bottom
+                        spacing: 5
+                        Text { text: "Attributes:" }
+                        Repeater {
+                            model: attributes
+                            Text { text: description }
+                        }
+                    }
+                }
+            }
+
         }
 
 
@@ -328,6 +370,31 @@ Item{
             PropertyChanges { target: detailsOnArea; enabled: false }
 
             PropertyChanges { target: innerShadow; opacity: 1 }
+        },
+        State {
+            name: "comments" ; extend: "details"
+            PropertyChanges {
+                target: socialCloudItem
+                height: 600
+            }
+            AnchorChanges {
+                target: bodyItem
+                anchors.top: topLine.bottom
+                anchors.bottom: undefined
+            }
+            PropertyChanges {
+                target: bodyItem
+                height: 300 - topLine.height - bottomLine.height
+            }
+            AnchorChanges {
+                target: bottomLine
+                anchors.bottom: undefined
+                anchors.top: bodyItem
+            }
+            PropertyChanges {
+                target: commentsListView
+                visible: true
+            }
         }
     ]
 
@@ -345,22 +412,6 @@ Item{
         }
     }
 
-
-    //    Text {
-    //        id: img
-    //        anchors.horizontalCenter: parent.horizontalCenter
-    //        anchors.leftMargin: 5
-    //        anchors.rightMargin: 5
-    //    }
-    //    Image {
-    //        id: img
-    //        anchors.horizontalCenter: parent.horizontalCenter
-    //        fillMode: Image.PreserveAspectFit
-    //        anchors.leftMargin: 5
-    //        anchors.rightMargin: 5
-    //        smooth: true
-    //        source: picture
-    //    }
     function textVisible()
     {
         console.log(picture)
