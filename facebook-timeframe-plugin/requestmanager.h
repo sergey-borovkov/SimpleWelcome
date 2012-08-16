@@ -19,7 +19,7 @@ public:
     void logout();
 
 private slots:
-    void reply(QByteArray reply);
+    void feedReply(QByteArray feedReply);
 
 signals:
     void authorizationComplete();

@@ -24,7 +24,7 @@ void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
     url.addQueryItem("access_token", m_authorizer->accessToken());
 
     Request *request = new Request(Request::Get, this);
-    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(reply(QByteArray)));
+    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
 
     request->setUrl(url);
     request->startQuery();
@@ -64,7 +64,7 @@ void RequestManager::logout()
     request->startQuery();
 }
 
-void RequestManager::reply(QByteArray reply)
+void RequestManager::feedReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
@@ -76,7 +76,6 @@ void RequestManager::reply(QByteArray reply)
     }
 
     QVariantList list = result.value("data").toList();
-
     QList<SocialItem *> feedItems;
 
     foreach(QVariant item, list)
