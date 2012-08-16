@@ -29,7 +29,7 @@ int SocialItemFilterModel::likesCount(int row)
 
 int SocialItemFilterModel::commentsCount(int row)
 {
-    return data(index(row,0),SocialItem::Comments).toInt();
+    return data(index(row,0),SocialItem::CommentCount).toInt();
 }
 
 QString SocialItemFilterModel::pluginName(int row)
@@ -102,7 +102,7 @@ QDate SocialDayItem::date()
 }
 
 int SocialDayItem::count()
-{    
+{
     return m_model->rowCount( QModelIndex() );
 }
 
