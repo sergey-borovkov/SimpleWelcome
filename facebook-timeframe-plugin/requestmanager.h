@@ -13,11 +13,13 @@ public:
     explicit RequestManager(QObject *parent = 0);
     virtual void queryWall(const QDate &beginDate, const QDate &endDate);
     virtual void queryImage(const QString &id);
+    virtual void postComment(const QString &postId, const QString &message);
+
     void setAuthorizer(OAuth2Authorizer *authorizer);
     void logout();
 
 private slots:
-    void reply(QByteArray reply);
+    void feedReply(QByteArray feedReply);
 
 signals:
     void authorizationComplete();

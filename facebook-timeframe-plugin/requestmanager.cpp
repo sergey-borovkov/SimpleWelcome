@@ -14,18 +14,34 @@ RequestManager::RequestManager(QObject *parent)
 
 void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
 {
+    Q_UNUSED(beginDate)
+    Q_UNUSED(endDate)
+
     if(!m_authorizer)
         return;
 
-    Request *request = new Request(m_authorizer->accessToken(), Request::WallPosts, this);
+    QUrl url(QLatin1String("https://graph.facebook.com/me/feed"));
+    url.addQueryItem("access_token", m_authorizer->accessToken());
 
-    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(reply(QByteArray)));
+    Request *request = new Request(Request::Get, this);
+    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
+
+    request->setUrl(url);
     request->startQuery();
 }
 
 void RequestManager::queryImage(const QString &id)
 {
     Q_UNUSED(id)
+}
+
+void RequestManager::postComment(const QString &parent, const QString &message)
+{
+    Request *request = new Request(Request::Post, this);
+    QUrl url = QLatin1String("https://graph.facebook.com/") + parent + "/comments";
+    url.addQueryItem("access_token", m_authorizer->accessToken());
+    request->setMessage(message);
+    request->startQuery();
 }
 
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
@@ -40,16 +56,15 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 
 void RequestManager::logout()
 {
-    qDebug() << "Logging out...";
-    Request *request = new Request(m_authorizer->accessToken(), Request::Logout);
+    Request *request = new Request(Request::Get, this);
     connect(request, SIGNAL(success()), m_authorizer, SLOT(logout()));
-    request->startQuery();
 
-    // actually first need to do some error checking
-    m_authorizer->logout();
+    QUrl url(QLatin1String("https://www.facebook.com/logout.php"));
+    url.addQueryItem("access_token", m_authorizer->accessToken());
+    request->startQuery();
 }
 
-void RequestManager::reply(QByteArray reply)
+void RequestManager::feedReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
@@ -61,7 +76,6 @@ void RequestManager::reply(QByteArray reply)
     }
 
     QVariantList list = result.value("data").toList();
-
     QList<SocialItem *> feedItems;
 
     foreach(QVariant item, list)
