@@ -67,8 +67,7 @@ void RequestManager::reply(QByteArray reply)
     foreach(QVariant item, list)
     {
         QVariantMap map = item.toMap();
-        FeedItem *feedItem = new FeedItem();
-        feedItem->fillFromMap(map);
+        FeedItem *feedItem = new FeedItem(map);
         feedItems.append(feedItem);
     }
     emit newSocialItems(feedItems);
