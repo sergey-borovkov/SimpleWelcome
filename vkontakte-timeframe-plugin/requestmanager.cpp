@@ -35,6 +35,11 @@ void RequestManager::postComment(const QString &postId, const QString &message)
     Q_UNUSED(message)
 }
 
+void RequestManager::like(const QString &id)
+{
+    Q_UNUSED(id)
+}
+
 void RequestManager::setAuthorizer( OAuth2Authorizer *authorizer )
 {
     m_authorizer = authorizer;
