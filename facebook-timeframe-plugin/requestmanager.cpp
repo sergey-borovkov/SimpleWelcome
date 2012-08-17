@@ -44,6 +44,14 @@ void RequestManager::postComment(const QString &parent, const QString &message)
     request->startQuery();
 }
 
+void RequestManager::like(const QString &id)
+{
+    Request *request = new Request(Request::Post, this);
+    QUrl url = QLatin1String("https://graph.facebook.com/") + id + QLatin1String("/likes");
+    url.addQueryItem("access_token", m_authorizer->accessToken());
+    request->startQuery();
+}
+
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 {
     m_authorizer = authorizer;
