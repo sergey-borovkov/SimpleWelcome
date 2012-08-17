@@ -108,11 +108,12 @@ Item {
             width: 240
             model: menuDocItems
             name: "My Local Documents"
+            selectedText: name
             state: "current"
 
             function setLocalFilter()
             {
-                if (selectedText === "All") {
+                if (name === "My Local Documents") {
                     timeScaleModel.setFilter("Local")
                     localDayModel.setFilter("Local")
                 }
@@ -136,11 +137,12 @@ Item {
             width: 260
             model: menuSocialItems
             name: "Social networking sites"
+            selectedText: name
             property int __wasSearching: 0
 
             function setSocialFilter()
             {
-                if (selectedText === "All") {
+                if (name === "Social networking sites") {
                     timeScaleModel.setFilter("Social")
                     socialDayModel.setFilter("Social")
                 }
