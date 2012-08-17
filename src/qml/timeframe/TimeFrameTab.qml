@@ -160,7 +160,7 @@ Item {
                     if(inGallery)
                         timeFrameTab.state = "socialGallery"
                     else
-                        timeFrameTab.state = "social"
+                        timeFrameTab.state = "social"          
                 }
                 else
                     timeFrameTab.state = "socialAuthorization"

@@ -36,10 +36,9 @@ QObject *SocialItemFilterModel::comments(int row)
 {
     QVariant v = data(index(row,0),SocialItem::Comments);
     QList<CommentItem *> comments = qvariant_cast< QList<CommentItem *> >(v);
-    QList<ListItem *> t;
+    QList<ListItem *> t;    
     foreach(CommentItem *item, comments)
-        t.append(item);
-
+        t.append(item);    
     ListModel *model = new ListModel(CommentItem::roleNames(), this);
     model->appendRows(t);
     return model;

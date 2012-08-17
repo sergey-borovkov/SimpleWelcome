@@ -78,7 +78,7 @@ public:
         QHash<int, QByteArray> roles;
         roles.insert(From, "from" );
         roles.insert(FromId, "fromId" );
-        roles.insert(Message, "message" );
+        roles.insert(Message, "messageText" );
         roles.insert(CreatedTime, "createdTime" );
         roles.insert(LikeCount, "likeCount" );
         roles.insert(Id, "id" );

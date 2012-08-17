@@ -9,7 +9,7 @@ Item{
     property string picture: ""
     property string pluginName: ""
     property variant pluginIcon : iconPlugin
-
+    property variant commentsView : commentsListView
     MouseArea {
         id: modal
         anchors.fill: parent
@@ -174,6 +174,7 @@ Item{
                     anchors.rightMargin: 10
                     width: 100
                     height: parent.height
+                    visible: false
 
                     Text {
                         anchors.fill: parent
@@ -182,12 +183,15 @@ Item{
                         verticalAlignment: Text.AlignVCenter
                         text: "Comments: " + comments
                         color: "grey"
-                        visible: false
+
                     }
                     MouseArea{
                         anchors.fill: parent
                         onClicked: {
-                            cloudRect.state = "comments"
+                            if (cloudRect.state === "details")
+                                cloudRect.state = "comments"
+                            else if (cloudRect.state === "comments")
+                                cloudRect.state = "details"
                         }
                     }
                 }
@@ -228,7 +232,7 @@ Item{
             }
             ListModel {
                 id: commentsModel
-
+/*
                 ListElement {
                     name: "Apple"
                     cost: 2.45
@@ -252,6 +256,7 @@ Item{
                         ListElement { description: "Seedless" }
                     ]
                 }
+                */
             }
 
             ListView {
@@ -260,22 +265,48 @@ Item{
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                model: commentsModel
+                //model: commentsModel
                 clip: true
                 visible: false
                 delegate: Item {
-                    width: 200; height: 50
-                    Text { id: nameField; text: name }
-                    Text { text: '$' + cost; anchors.left: nameField.right }
-                    Row {
-                        anchors.top: nameField.bottom
-                        spacing: 5
-                        Text { text: "Attributes:" }
-                        Repeater {
-                            model: attributes
-                            Text { text: description }
-                        }
+                    width: 200; height: 60
+                    Image
+                    {
+                        id: userPhoto
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        fillMode: Image.PreserveAspectFit
+                        width: 55
+                        anchors.rightMargin: 5
+                        source: "images/user.png"
                     }
+                    Text {
+                        id: nameField;
+                        anchors.left: userPhoto.right
+                        anchors.top: parent.top
+                        anchors.leftMargin: 10
+                        text: from
+                    }
+                    Text {
+                        id: textField;
+                        anchors.left: userPhoto.right
+                        anchors.top: nameField.bottom
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        anchors.leftMargin: 10
+                        text: messageText
+                        elide: Text.ElideRight
+                    }
+//                    Text { text: '$' + cost; anchors.left: nameField.right }
+//                    Row {
+//                        anchors.top: nameField.bottom
+//                        spacing: 5
+//                        Text { text: messageText }
+//                       /* Repeater {
+//                            model: attributes
+//                            Text { text: description }
+//                        }*/
+//                    }
                 }
             }
 
@@ -375,11 +406,11 @@ Item{
             name: "comments" ; extend: "details"
             PropertyChanges {
                 target: socialCloudItem
-                height: 600
+                height: 300 + 60 * comments
             }
             AnchorChanges {
                 target: bodyItem
-                anchors.top: topLine.bottom
+                anchors.top : topLine.bottom
                 anchors.bottom: undefined
             }
             PropertyChanges {
@@ -389,7 +420,7 @@ Item{
             AnchorChanges {
                 target: bottomLine
                 anchors.bottom: undefined
-                anchors.top: bodyItem
+                anchors.top: bodyItem.bottom
             }
             PropertyChanges {
                 target: commentsListView

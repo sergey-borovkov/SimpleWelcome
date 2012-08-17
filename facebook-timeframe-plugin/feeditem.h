@@ -25,12 +25,12 @@ private:
 class FacebookCommentItem : public CommentItem
 {
 public:
-    FacebookCommentItem(const QVariantList &map);
+    FacebookCommentItem(const QVariantMap &map);
     virtual QString id() const;
     virtual QVariant data(int role) const;
 
 private:
-    void fillFromList( const QVariantList &comments );
+    void fillFromMap( const QVariantMap &map );
 
     QMap<int, QVariant> m_data;
 };
