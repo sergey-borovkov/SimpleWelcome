@@ -109,25 +109,25 @@ Item {
             model: menuDocItems
             name: "My Local Documents"
             state: "current"
-            onSelectedIndexChanged: {
+
+            function setLocalFilter()
+            {
                 if (selectedText === "All") {
                     timeScaleModel.setFilter("Local")
                     localDayModel.setFilter("Local")
-                    name = "My Local Documents"
                 }
                 else {
                     timeScaleModel.setFilter(selectedText)
                     localDayModel.setFilter(selectedText)
-                    name = selectedText
                 }
-
             }
-
+            onSelectedIndexChanged: {
+                name = ( selectedText === "All" ) ? "My Local Documents" : selectedText
+                setLocalFilter()
+            }
             onClicked: {
-                if(inGallery)
-                    timeFrameTab.state = "gallery"
-                else
-                    timeFrameTab.state = ""
+                timeFrameTab.state = inGallery ? "gallery" : ""
+                setLocalFilter()
             }
         }
 
@@ -137,30 +137,29 @@ Item {
             model: menuSocialItems
             name: "Social networking sites"
             property int __wasSearching: 0
-            onSelectedIndexChanged: {
-                if(selectedText === "Manage networks")
-                    timeFrameTab.state = "socialAuthorization"
-                else {
-                    timeFrameTab.state = "social"
-                    socialProxy.startSearch()
-                    if (selectedText === "All") {
-                        timeScaleModel.setFilter("Social")
-                        socialDayModel.setFilter("Social")
-                        name = "Social networking sites"
-                    }
-                    else {
-                        socialDayModel.setFilter(selectedText)
-                        timeScaleModel.setFilter(selectedText)
-                        name = selectedText
-                    }
+
+            function setSocialFilter()
+            {
+                if (selectedText === "All") {
+                    timeScaleModel.setFilter("Social")
+                    socialDayModel.setFilter("Social")
                 }
+                else {
+                    socialDayModel.setFilter(selectedText)
+                    timeScaleModel.setFilter(selectedText)
+                }
+            }
+
+            onSelectedIndexChanged: {
+                timeFrameTab.state = ( selectedText === "Manage networks" ) ? "socialAuthorization" : "social"
+                socialProxy.startSearch()
+                name = ( selectedText === "All" ) ? "Social networking sites" : selectedText
+                setSocialFilter()
             }
             onClicked: {
                 if (timeFrameTab.state != "socialAuthorization" && socialProxy.anyPluginsEnabled()) {
-                    if(inGallery)
-                        timeFrameTab.state = "socialGallery"
-                    else
-                        timeFrameTab.state = "social"          
+                    timeFrameTab.state =  inGallery ? "socialGallery" : "social"
+                    setSocialFilter()
                 }
                 else
                     timeFrameTab.state = "socialAuthorization"
@@ -260,7 +259,7 @@ Item {
         delegate: SocialCloudDelegate {}
         model: socialDayModel
 
-        orientation: Qt.Horizontal        
+        orientation: Qt.Horizontal
         highlightFollowsCurrentItem: true
         highlightRangeMode: ListView.StrictlyEnforceRange
         preferredHighlightBegin : timeLine.width /3
