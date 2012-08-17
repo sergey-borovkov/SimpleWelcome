@@ -21,7 +21,7 @@ void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
         return;
 
     QUrl url(QLatin1String("https://graph.facebook.com/me/feed"));
-    url.addQueryItem("access_token", m_authorizer->accessToken());
+    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
 
     Request *request = new Request(Request::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
@@ -38,9 +38,17 @@ void RequestManager::queryImage(const QString &id)
 void RequestManager::postComment(const QString &parent, const QString &message)
 {
     Request *request = new Request(Request::Post, this);
-    QUrl url = QLatin1String("https://graph.facebook.com/") + parent + "/comments";
-    url.addQueryItem("access_token", m_authorizer->accessToken());
+    QUrl url = QLatin1String("https://graph.facebook.com/") + parent + QLatin1String("/comments");
+    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
     request->setMessage(message);
+    request->startQuery();
+}
+
+void RequestManager::like(const QString &id)
+{
+    Request *request = new Request(Request::Post, this);
+    QUrl url = QLatin1String("https://graph.facebook.com/") + id + QLatin1String("/likes");
+    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
     request->startQuery();
 }
 
@@ -60,7 +68,7 @@ void RequestManager::logout()
     connect(request, SIGNAL(success()), m_authorizer, SLOT(logout()));
 
     QUrl url(QLatin1String("https://www.facebook.com/logout.php"));
-    url.addQueryItem("access_token", m_authorizer->accessToken());
+    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
     request->startQuery();
 }
 
@@ -69,13 +77,13 @@ void RequestManager::feedReply(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
 
-    if(result.contains("error"))
+    if(result.contains(QLatin1String("error")))
     {
         m_authorizer->logout();
         return;
     }
 
-    QVariantList list = result.value("data").toList();
+    QVariantList list = result.value(QLatin1String("data")).toList();
     QList<SocialItem *> feedItems;
 
     foreach(QVariant item, list)
