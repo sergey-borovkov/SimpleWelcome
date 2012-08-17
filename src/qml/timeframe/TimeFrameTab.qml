@@ -456,12 +456,18 @@ Item {
         orientation: ListView.Horizontal
         model: pluginModel
         anchors.top: separator.bottom
-        anchors.bottom: timeScale.top
+        anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.leftMargin: 80
         anchors.rightMargin: 20
         anchors.topMargin: width / 8
+
+        //Rectangle to force repaint
+        Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+        }
     }
 
     AnimatedImage {
