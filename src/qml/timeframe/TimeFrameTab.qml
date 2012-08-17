@@ -153,7 +153,8 @@ Item {
             }
 
             onSelectedIndexChanged: {
-                timeFrameTab.state = ( selectedText === "Manage networks" ) ? "socialAuthorization" : "social"
+                timeFrameTab.state = ( selectedText === "Manage networks" ) ? "socialAuthorization"
+                                                                            : (inGallery ? "socialGallery" : "social")
                 socialProxy.startSearch()
                 name = ( selectedText === "All" ) ? "Social networking sites" : selectedText
                 setSocialFilter()
