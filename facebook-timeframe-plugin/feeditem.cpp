@@ -37,10 +37,10 @@ QDate FeedItem::date() const
 }
 
 void FeedItem::fillFromMap(const QVariantMap &map)
-{
+{    
     // http://developers.facebook.com/docs/reference/api/post/
     m_id = map.value("id").toString();
-    QString message = map.value( "message" ).toString();
+    QString message = map.value( "message" ).toString(); 
     // if user posts a link
     bool isLink = message.startsWith( "http://" );
     if ( isLink )
@@ -52,9 +52,10 @@ void FeedItem::fillFromMap(const QVariantMap &map)
         m_data.insert( Text, message );
 
     m_data.insert( ImageUrl, map.value( "picture" ).toString() );
-
-    m_data.insert( Text, map.value( "story" ).toString() );
-
+    if ( message.isEmpty() )
+    {
+        m_data.insert( Text, map.value( "story" ).toString() );
+    }
     if ( map.contains( "created_time" ) )
     {
         QDateTime dt = map.value( "created_time" ).toDateTime();
@@ -67,8 +68,12 @@ void FeedItem::fillFromMap(const QVariantMap &map)
         QVariantMap comments = map.value("comments").toMap();
         if(comments.value("count").toInt() > 0)
         {
-            FacebookCommentItem *item = new FacebookCommentItem(comments.value("data").toList());
-            m_comments.append(item);
+            QVariantList commentsList = comments.value("data").toList();
+            foreach(QVariant v, commentsList)
+            {
+                FacebookCommentItem *item = new FacebookCommentItem(v.toMap());
+                m_comments.append(item);
+            }
         }
     }
 
@@ -90,9 +95,9 @@ void FeedItem::fillFromMap(const QVariantMap &map)
 }
 
 
-FacebookCommentItem::FacebookCommentItem(const QVariantList &list)
+FacebookCommentItem::FacebookCommentItem(const QVariantMap &map)
 {
-    fillFromList(list);
+    fillFromMap(map);
 }
 
 QString FacebookCommentItem::id() const
@@ -105,20 +110,16 @@ QVariant FacebookCommentItem::data(int role) const
     return m_data.value(role);
 }
 
-void FacebookCommentItem::fillFromList(const QVariantList &comments)
+void FacebookCommentItem::fillFromMap(const QVariantMap &map)
 {
-    foreach(QVariant v, comments)
+    m_data.insert(Id, map.value("id"));
+    m_data.insert(Message, map.value("message"));
+    m_data.insert(CreatedTime, map.value("created_time"));
+    if(map.contains("from"))
     {
-        QVariantMap map = v.toMap();
-        qDebug() << map.value("id").toString();
-        m_data.insert(Id, map.value("id"));
-        m_data.insert(CreatedTime, map.value("created_time"));
-        if(map.contains("from"))
-        {
-            QVariantMap fromMap = map.value("from").toMap();
-            m_data.insert(FromId, fromMap.value("id"));
-            m_data.insert(From, fromMap.value("name"));
-        }
+        QVariantMap fromMap = map.value("from").toMap();
+        m_data.insert(FromId, fromMap.value("id"));
+        m_data.insert(From, fromMap.value("name"));
     }
 }
 
