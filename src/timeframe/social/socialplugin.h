@@ -10,6 +10,16 @@
 
 class SocialItem;
 
+/* All subclasses of this class should emit
+   success() and error(QString errorString) signals
+*/
+
+class Request {
+public:
+    virtual ~Request() {}
+    virtual void start() = 0;
+};
+
 class ISocialRequestManager
 {
 public:

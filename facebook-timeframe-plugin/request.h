@@ -4,9 +4,11 @@
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
 
+#include <socialplugin.h>
+
 class QNetworkReply;
 
-class Request : public QObject
+class FacebookRequest : public QObject, public Request
 {
     Q_OBJECT
 public:
@@ -15,14 +17,15 @@ public:
         Post
     };
 
-    explicit Request(RequestType type, QObject *parent = 0);
+    explicit FacebookRequest(RequestType type, QObject *parent = 0);
     void setUrl(const QUrl &url);
     void setMessage(const QString &message);
-    void startQuery();
+    void start();
 
 signals:
     void replyReady(QByteArray);
     void success();
+    void error(QString);
 
 private slots:
     void replyFinished(QNetworkReply *reply);

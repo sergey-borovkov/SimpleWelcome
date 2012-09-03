@@ -18,10 +18,10 @@ void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
     if(!m_authorizer)
         return;
 
-    Request *request = new Request(m_authorizer->accessToken(), Request::WallPosts, this, 0);
+    VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::WallPosts, this, 0);
 
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(reply(QByteArray)));
-    request->startQuery();
+    request->start();
 }
 
 void RequestManager::queryImage(const QString &id)
@@ -52,9 +52,9 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 
 void RequestManager::logout()
 {
-    Request *request = new Request(m_authorizer->accessToken(), Request::Logout);
+    VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::Logout);
     connect(request, SIGNAL(success()), m_authorizer, SLOT(logout()));
-    request->startQuery();
+    request->start();
 
     // actually first need to do some error checking
     m_authorizer->logout();
@@ -88,9 +88,9 @@ void RequestManager::reply(QByteArray reply)
     // need repeat query
     if(cycles) {
         for(int i = 0; i < cycles; i++) {
-            Request *request = new Request(m_authorizer->accessToken(), Request::WallPosts, this, 100 *(i + 1));
+            VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::WallPosts, this, 100 *(i + 1));
             connect(request, SIGNAL(replyReady(QByteArray)), SLOT(replyQueryWall(QByteArray)));
-            request->startQuery();
+            request->start();
         }
     }
 

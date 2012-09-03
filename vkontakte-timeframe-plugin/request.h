@@ -4,7 +4,9 @@
 #include <QtCore/QObject>
 #include <QtNetwork/QNetworkReply>
 
-class Request : public QObject
+#include <socialplugin.h>
+
+class VkRequest : public QObject, public Request
 {
     Q_OBJECT
 public:
@@ -14,8 +16,8 @@ public:
         Logout
     };
 
-    explicit Request(const QString &accessToken, RequestType type, QObject *parent = 0, int offset = 0);
-    void startQuery();
+    explicit VkRequest(const QString &accessToken, RequestType type, QObject *parent = 0, int offset = 0);
+    void start();
 
 signals:
     void replyReady(QByteArray);
