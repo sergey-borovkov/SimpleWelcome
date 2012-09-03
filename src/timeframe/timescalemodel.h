@@ -21,7 +21,7 @@ class TimeScaleFilterModel : public QSortFilterProxyModel
 public:
     explicit TimeScaleFilterModel(QObject * parent = 0);
 protected:
-    bool lessThan( const QModelIndex & left, const QModelIndex & right ) const;
+    bool lessThan(const QModelIndex & left, const QModelIndex & right) const;
 public slots:
     void setFilter(const QString &filter);
     int getYear(int ind);
@@ -34,10 +34,10 @@ class TimeScaleItem : public QObject
     Q_OBJECT
 public:
     enum Roles {
-        YearRole = Qt::UserRole+1,
+        YearRole = Qt::UserRole + 1,
         MonthRole,
         TypesRole
-      };
+    };
 public:
     TimeScaleItem(QObject *parent = 0): QObject(parent) {}
     explicit TimeScaleItem(int year, int month, QString type, QObject* parent = 0);
@@ -70,7 +70,7 @@ public:
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
     TimeScaleItem* takeRow(int row);
     TimeScaleItem* find(const int year, const int month);
-    QModelIndex indexFromItem( const TimeScaleItem* item) const;
+    QModelIndex indexFromItem(const TimeScaleItem* item) const;
     void clear();
 
 public slots:
@@ -80,7 +80,7 @@ private slots:
     void handleItemChange();
 
 private:
-    QSet <QPair <int,int> > m_dates;
+    QSet <QPair <int, int> > m_dates;
     TimeScaleItem* m_prototype;
     QList<TimeScaleItem*> m_list;
 

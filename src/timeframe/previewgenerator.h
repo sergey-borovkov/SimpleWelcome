@@ -51,7 +51,7 @@ public slots:
 private slots:
     void setPreview(const KFileItem&, const QPixmap&);
     void setNullIcon(const KFileItem &item);
-    void notifyModel( const QString& filePath );
+    void notifyModel(const QString& filePath);
 
 private:
     explicit PreviewGenerator(QObject *parent = 0);

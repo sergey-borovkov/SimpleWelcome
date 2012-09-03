@@ -12,17 +12,17 @@
 
 namespace Nepomuk
 {
-    namespace Query
-    {
-        class QueryServiceClient;
-    }
+namespace Query
+{
+class QueryServiceClient;
+}
 }
 
 class NepomukSource : public ActivitySource
 {
     Q_OBJECT
 public:
-    enum Mode{
+    enum Mode {
         Normal = 0,
         Detailed
     };
@@ -34,7 +34,7 @@ public:
     ActivitySet *getActivitySet(int limit, const QDate &beginDate, const QDate &endDate);
 signals:
     void newEntries(const QList<Nepomuk::Query::Result>&);
-    void newTSEntries(int year,int month);
+    void newTSEntries(int year, int month);
     void monthFinished(QDate date);
     void resultCount(int);
 
@@ -57,7 +57,7 @@ private:
     ActivitySet *createActivitySet(const QList<Nepomuk::Query::Result> &result);
     void fillTimeScaleModel(const QDate &beginDate);
 
-    QString resolveType(QString path,QList<QUrl> typesList);
+    QString resolveType(QString path, QList<QUrl> typesList);
 
     Nepomuk::Query::QueryServiceClient* m_searchClient;
     Nepomuk::Query::QueryServiceClient* m_timeScaleClient;

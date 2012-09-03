@@ -11,19 +11,14 @@ class PluginImageProvider : public QDeclarativeImageProvider
 public:
     PluginImageProvider(const QList<ISocialPlugin *> &plugins)
         : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
-          m_plugins(plugins)
-    {
+          m_plugins(plugins) {
     }
 
-    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
-    {
-        foreach(ISocialPlugin *plugin, m_plugins)
-        {
-            if(plugin->name() == id)
-            {
+    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) {
+        foreach(ISocialPlugin * plugin, m_plugins) {
+            if(plugin->name() == id) {
                 QPixmap p = plugin->icon();
-                if(requestedSize.isValid())
-                {
+                if(requestedSize.isValid()) {
                     p = p.scaled(*size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
                     if(size)
                         *size = p.size();

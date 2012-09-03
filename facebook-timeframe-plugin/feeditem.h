@@ -11,7 +11,7 @@ public:
     virtual QString pluginName() const;
     virtual Type type() const;
     virtual QString id() const;
-    virtual QVariant data( int role ) const;
+    virtual QVariant data(int role) const;
     virtual QDate date() const;
 
 private:
@@ -30,7 +30,7 @@ public:
     virtual QVariant data(int role) const;
 
 private:
-    void fillFromList( const QVariantList &comments );
+    void fillFromList(const QVariantList &comments);
 
     QMap<int, QVariant> m_data;
 };
