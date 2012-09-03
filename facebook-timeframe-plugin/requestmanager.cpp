@@ -79,8 +79,7 @@ void RequestManager::feedReply(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
 
-    if(result.contains(QLatin1String("error")))
-    {
+    if(result.contains(QLatin1String("error"))) {
         m_authorizer->logout();
         return;
     }
@@ -88,8 +87,7 @@ void RequestManager::feedReply(QByteArray reply)
     QVariantList list = result.value(QLatin1String("data")).toList();
     QList<SocialItem *> feedItems;
 
-    foreach(QVariant item, list)
-    {
+    foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
         FeedItem *feedItem = new FeedItem(map);
         feedItems.append(feedItem);

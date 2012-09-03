@@ -66,7 +66,7 @@
 
 SWApp* SWApp::self()
 {
-    if (!kapp) {
+    if(!kapp) {
         return new SWApp();
     }
 
@@ -127,9 +127,9 @@ SWApp::SWApp()
 
     connect(m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
 
-    m_viewer->setMainQmlFile( pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml") ); // Qt converts path to native automatically
+    m_viewer->setMainQmlFile(pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml"));   // Qt converts path to native automatically
 
-    setQuitOnLastWindowClosed( true ); // NEED TO CHANGE TO false
+    setQuitOnLastWindowClosed(true);   // NEED TO CHANGE TO false
 }
 
 void SWApp::initTimeframeLocalMode()
@@ -150,11 +150,11 @@ void SWApp::initTimeframeLocalMode()
 
     QRect r = QDesktopWidget().screenGeometry(m_viewer);
 
-    m_viewer->rootContext()->setContextProperty( "desktopWidth", r.width() );
-    m_viewer->rootContext()->setContextProperty( "localDayModel", proxymodel );
-    m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
-    m_viewer->rootContext()->setContextProperty( "activityProxy", m_proxy );
-    m_viewer->rootContext()->setContextProperty( "nepomukSource", m_source );
+    m_viewer->rootContext()->setContextProperty("desktopWidth", r.width());
+    m_viewer->rootContext()->setContextProperty("localDayModel", proxymodel);
+    m_viewer->rootContext()->setContextProperty("activityProxy", m_proxy);
+    m_viewer->rootContext()->setContextProperty("activityProxy", m_proxy);
+    m_viewer->rootContext()->setContextProperty("nepomukSource", m_source);
     m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
 }
 
@@ -163,27 +163,27 @@ void SWApp::initTimeframeSocialMode()
     PluginLoader loader;
     QList<ISocialPlugin *> plugins = loader.loadPlugins(pathToRoot() + QString::fromLatin1("/" SW_TIMEFRAME_PLUGINS_PATH));
 
-    SocialDayModel* socialModel = new SocialDayModel( SocialDayItem::roleNames() );
-    SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel( this );
-    socialProxyModel->setSourceModel( socialModel );
-    m_manager = new SocialProxy( plugins, this );
-    m_manager->setModel(socialModel );
+    SocialDayModel* socialModel = new SocialDayModel(SocialDayItem::roleNames());
+    SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel(this);
+    socialProxyModel->setSourceModel(socialModel);
+    m_manager = new SocialProxy(plugins, this);
+    m_manager->setModel(socialModel);
 
-    m_viewer->engine()->addImageProvider( "plugin", new PluginImageProvider( plugins ) );
+    m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
 
     TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
     TimeScaleItem* item = new TimeScaleItem();
     TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
 
-    m_viewer->rootContext()->setContextProperty("socialProxy", m_manager );
+    m_viewer->rootContext()->setContextProperty("socialProxy", m_manager);
     m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
-    m_viewer->rootContext()->setContextProperty("socialDayModel", socialProxyModel );
+    m_viewer->rootContext()->setContextProperty("socialDayModel", socialProxyModel);
     m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
     m_viewer->rootContext()->setContextProperty("timeScaleModel", timeScaleFilterModel);
 
-    connect(m_proxy,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
-    connect(m_manager,SIGNAL(newMonth(int,int,QString)),timeScaleModel,SLOT(newItem(int,int,QString)));
+    connect(m_proxy, SIGNAL(newMonth(int, int, QString)), timeScaleModel, SLOT(newItem(int, int, QString)));
+    connect(m_manager, SIGNAL(newMonth(int, int, QString)), timeScaleModel, SLOT(newItem(int, int, QString)));
 }
 
 SWApp::~SWApp()
@@ -202,7 +202,7 @@ bool SWApp::event(QEvent *event)
 QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
     : QObject(parent), viewer(inViewer)
 {
-    connect(viewer, SIGNAL(windowSizeChanged(int,int)), SIGNAL(iconSizeChanged()));
+    connect(viewer, SIGNAL(windowSizeChanged(int, int)), SIGNAL(iconSizeChanged()));
 }
 
 int QMLConstants::cellWidth()
@@ -212,12 +212,12 @@ int QMLConstants::cellWidth()
 
 int QMLConstants::cellHeight()
 {
-     return viewer->updatableHeight() >= 1080 ? 180 : viewer->updatableHeight() >= 1024 ? 165 : viewer->updatableHeight() >= 600 ? 150 : 100;
+    return viewer->updatableHeight() >= 1080 ? 180 : viewer->updatableHeight() >= 1024 ? 165 : viewer->updatableHeight() >= 600 ? 150 : 100;
 }
 
 int QMLConstants::iconTextSize()
 {
-     return viewer->updatableHeight() >= 1080 ? 10 : viewer->updatableHeight() >= 1024 ? 10 : viewer->updatableHeight() >= 600 ? 9 : 8;
+    return viewer->updatableHeight() >= 1080 ? 10 : viewer->updatableHeight() >= 1024 ? 10 : viewer->updatableHeight() >= 600 ? 9 : 8;
 }
 
 int QMLConstants::iconSize()

@@ -9,8 +9,7 @@
 class SocialItem : public ListItem
 {
 public:
-    enum Role
-    {
+    enum Role {
         Text = Qt::UserRole + 1,
         ImageUrl,
         LikeUrl,
@@ -24,8 +23,7 @@ public:
         ItemsCount
     };
 
-    enum Type
-    {
+    enum Type {
         Post,
         Image
     };
@@ -34,23 +32,22 @@ public:
     virtual QString pluginName() const = 0;
     virtual Type type() const = 0;
     virtual QString id() const = 0;
-    virtual QVariant data( int role ) const = 0;
+    virtual QVariant data(int role) const = 0;
     virtual QDate date() const = 0;
 
-    static const QHash<int, QByteArray> roleNames()
-    {
+    static const QHash<int, QByteArray> roleNames() {
         QHash<int, QByteArray> roles;
-        roles.insert( Count,        "count" );
-        roles.insert( PluginName,   "pluginName" );
-        roles.insert( Text,         "message" );
-        roles.insert( ImageUrl,     "picture" );
-        roles.insert( Audio,        "audio" );
-        roles.insert( Likes,        "likes" );
-        roles.insert( CommentCount,     "commentCount" );
-        roles.insert( Comments,     "comments" );
-        roles.insert( Count,        "count" );
-        roles.insert( ItemsCount,   "size" );
-        roles.insert( Date,   "date" );
+        roles.insert(Count,        "count");
+        roles.insert(PluginName,   "pluginName");
+        roles.insert(Text,         "message");
+        roles.insert(ImageUrl,     "picture");
+        roles.insert(Audio,        "audio");
+        roles.insert(Likes,        "likes");
+        roles.insert(CommentCount,     "commentCount");
+        roles.insert(Comments,     "comments");
+        roles.insert(Count,        "count");
+        roles.insert(ItemsCount,   "size");
+        roles.insert(Date,   "date");
 
         return roles;
     }
@@ -59,8 +56,7 @@ public:
 class CommentItem : public ListItem
 {
 public:
-    enum Role
-    {
+    enum Role {
         From = Qt::UserRole + 1,
         FromId,
         Message,
@@ -73,15 +69,14 @@ public:
     virtual QString id() const = 0;
     virtual QVariant data(int role) const = 0;
 
-    static const QHash<int, QByteArray> roleNames()
-    {
+    static const QHash<int, QByteArray> roleNames() {
         QHash<int, QByteArray> roles;
-        roles.insert(From, "from" );
-        roles.insert(FromId, "fromId" );
-        roles.insert(Message, "message" );
-        roles.insert(CreatedTime, "createdTime" );
-        roles.insert(LikeCount, "likeCount" );
-        roles.insert(Id, "id" );
+        roles.insert(From, "from");
+        roles.insert(FromId, "fromId");
+        roles.insert(Message, "message");
+        roles.insert(CreatedTime, "createdTime");
+        roles.insert(LikeCount, "likeCount");
+        roles.insert(Id, "id");
 
         return roles;
     }

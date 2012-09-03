@@ -12,8 +12,7 @@ class ActivitySource : public QObject
 {
     Q_OBJECT
 public:
-    enum Direction
-    {
+    enum Direction {
         Right,
         Left
     };

@@ -13,17 +13,16 @@ TimeFrameFilterModel::TimeFrameFilterModel(QObject * parent) :
 
 }
 
-void TimeFrameFilterModel::setSourceModel ( ItemModel * sourceModel )
+void TimeFrameFilterModel::setSourceModel(ItemModel * sourceModel)
 {
-    if (sourceModel)
-    {
+    if(sourceModel) {
         QSortFilterProxyModel::setSourceModel(sourceModel);
         connect(sourceModel, SIGNAL(gotThumbnail()), this, SIGNAL(gotThumbnail()));
     }
 }
 QString TimeFrameFilterModel::url(int row)
 {
-    return data(index(row,0),ItemModel::UrlRole).toString();
+    return data(index(row, 0), ItemModel::UrlRole).toString();
 }
 
 
@@ -56,9 +55,8 @@ void LocalDayItem::setDate(const QDate &d)
 
 void LocalDayItem::addActivity(Activity* item)
 {
-    if (!m_types.contains(item->getType()))
-    {
-        m_types += (';'+ item->getType());
+    if(!m_types.contains(item->getType())) {
+        m_types += (';' + item->getType());
     }
     //ItemModel* model = qobject_cast<ItemModel*>(m_model->sourceModel());
     m_itemModel->addActivityItem(item);

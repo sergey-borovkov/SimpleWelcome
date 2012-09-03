@@ -10,23 +10,20 @@
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
 
-SocialProxy::SocialProxy( QList<ISocialPlugin *> plugins, QObject *parent )
-    : QObject( parent )
-    , m_plugins( plugins )
-    , m_pluginModel( new PluginModel( PluginItem::roleNames(), this ) )
-    , m_socialModel( 0 )
+SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
+    : QObject(parent)
+    , m_plugins(plugins)
+    , m_pluginModel(new PluginModel(PluginItem::roleNames(), this))
+    , m_socialModel(0)
 {
     QSettings settings("ROSA", "Timeframe");
 
-    foreach(ISocialPlugin *plugin, plugins)
-    {
+    foreach(ISocialPlugin * plugin, plugins) {
         QObject *object = 0;
-        if((object = dynamic_cast<QObject *>(plugin->requestManager())) != 0)
-        {
+        if((object = dynamic_cast<QObject *>(plugin->requestManager())) != 0) {
             connect(object, SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
         }
-        if((object = dynamic_cast<QObject *>(plugin)) != 0)
-        {
+        if((object = dynamic_cast<QObject *>(plugin)) != 0) {
             connect(object, SIGNAL(authorized()), SLOT(authorized()));
             connect(object, SIGNAL(deauthorized()), SLOT(deauthorized()));
         }
@@ -35,8 +32,7 @@ SocialProxy::SocialProxy( QList<ISocialPlugin *> plugins, QObject *parent )
         m_pluginModel->appendRow(item);
 
         bool isEnabled = settings.value(plugin->name()).toBool();
-        if(isEnabled && plugin->authorized())
-        {
+        if(isEnabled && plugin->authorized()) {
             plugin->requestManager()->queryWall(QDate(), QDate());
             m_enabledPlugins.insert(plugin->name());
         }
@@ -60,8 +56,7 @@ PluginModel *SocialProxy::pluginModel()
 
 void SocialProxy::startSearch()
 {
-    foreach(ISocialPlugin *plugin, m_plugins)
-    {
+    foreach(ISocialPlugin * plugin, m_plugins) {
         if(m_enabledPlugins.contains(plugin->name()))
             plugin->requestManager()->queryWall(QDate(), QDate());
     }
@@ -85,7 +80,7 @@ void SocialProxy::authorized()
 
     plugin->requestManager()->queryWall(QDate(), QDate());
 
-    if (plugin->authenticationWidget())
+    if(plugin->authenticationWidget())
         plugin->authenticationWidget()->hide();
 
     emit pluginAuthorized();
@@ -115,20 +110,19 @@ void SocialProxy::newItem(SocialItem *item)
 
 void SocialProxy::newItems(QList<SocialItem *> items)
 {
-    if (!m_socialModel)
+    if(!m_socialModel)
         return;
     QList<SocialItem *> list;
-    foreach( SocialItem *item, items )
-    {
-        QString strId = QString( "%1-%2" ).arg( item->pluginName() ).arg( item->id() );
-        if ( m_idSet.contains( strId ) )
-                continue;
-        m_idSet.insert( strId );
+    foreach(SocialItem * item, items) {
+        QString strId = QString("%1-%2").arg(item->pluginName()).arg(item->id());
+        if(m_idSet.contains(strId))
+            continue;
+        m_idSet.insert(strId);
 
-        list.append( item );
+        list.append(item);
         emit newMonth(item->date().year(), item->date().month(), item->pluginName());
     }
-    m_socialModel->newSocialItems( list );
+    m_socialModel->newSocialItems(list);
 }
 
 void SocialProxy::setModel(SocialDayModel *model)

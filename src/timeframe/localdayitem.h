@@ -18,7 +18,7 @@ class TimeFrameFilterModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit TimeFrameFilterModel(QObject * parent = 0);
-    virtual void setSourceModel ( ItemModel * sourceModel );
+    virtual void setSourceModel(ItemModel * sourceModel);
 
 signals:
     void gotThumbnail();

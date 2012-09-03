@@ -50,8 +50,8 @@ SearchGridModel::SearchGridModel(QObject *parent)
 int SearchGridModel::getItemCount(QString group)
 {
     int count = 0;
-    for (int i = 0; i < matches.size(); i++)
-        if (matches[i].group == group)
+    for(int i = 0; i < matches.size(); i++)
+        if(matches[i].group == group)
             count++;
 
     return count;
@@ -76,7 +76,7 @@ QString SearchGridModel::getSearchQuery()
 
 QIcon SearchGridModel::getMatchIcon(const QString &name)
 {
-    for (int i= 0; i < matches.size(); i++)
+    for(int i = 0; i < matches.size(); i++)
         if(matches[i].name == name)
             return matches[i].plasmaMatch->icon();
 
@@ -91,17 +91,15 @@ void SearchGridModel::runMatch(const QString &name)
 
 void SearchGridModel::itemClicked(int newIndex)
 {
-    if (newIndex != -1)
+    if(newIndex != -1)
         m_runnerManager->run(*matches[newIndex].plasmaMatch);
 }
 
 void SearchGridModel::getContent()
 {
     QString group;
-    for (int i = 0, counter = 0; i < matches.size(); i++)
-    {
-        if (group != matches[i].group)
-        {
+    for(int i = 0, counter = 0; i < matches.size(); i++) {
+        if(group != matches[i].group) {
             group = matches[i].group;
             counter = 0;
         }
@@ -117,8 +115,7 @@ void SearchGridModel::test2()
 
 void SearchGridModel::newSearchMatches(const QList<Plasma::QueryMatch> &newMatches)
 {
-    for (int i = 0; i < newMatches.size(); i++)
-    {
+    for(int i = 0; i < newMatches.size(); i++) {
         matches.resize(matches.size() + 1);
         matches.last().name = newMatches.at(i).text();
         matches.last().group = newMatches.at(i).runner()->name();
@@ -138,8 +135,7 @@ void SearchGridModel::launchSearch(const QString &text)
 
     if(text.size() > 0)
         m_runnerManager->launchQuery(text);
-    else
-    {
+    else {
         m_runnerManager->reset();
     }
 }

@@ -33,10 +33,8 @@
 #if defined(QMLJSDEBUGGER)
 
 // Enable debugging before any QDeclarativeEngine is created
-struct QmlJsDebuggingEnabler
-{
-    QmlJsDebuggingEnabler()
-    {
+struct QmlJsDebuggingEnabler {
+    QmlJsDebuggingEnabler() {
         QDeclarativeDebugHelper::enableDebugging();
     }
 };
@@ -57,13 +55,13 @@ QString QmlApplicationViewerPrivate::adjustPath(const QString &path)
 {
 #ifdef Q_OS_UNIX
 #ifdef Q_OS_MAC
-    if (!QDir::isAbsolutePath(path))
+    if(!QDir::isAbsolutePath(path))
         return QCoreApplication::applicationDirPath()
-                + QLatin1String("/../Resources/") + path;
+               + QLatin1String("/../Resources/") + path;
 #else
     const QString pathInInstallDir = QCoreApplication::applicationDirPath()
-        + QLatin1String("/../") + path;
-    if (pathInInstallDir.contains(QLatin1String("opt"))
+                                     + QLatin1String("/../") + path;
+    if(pathInInstallDir.contains(QLatin1String("opt"))
             && pathInInstallDir.contains(QLatin1String("bin"))
             && QFileInfo(pathInInstallDir).exists()) {
         return pathInInstallDir;
@@ -107,9 +105,9 @@ void QmlApplicationViewer::setOrientation(ScreenOrientation orientation)
 {
 #if defined(Q_OS_SYMBIAN)
     // If the version of Qt on the device is < 4.7.2, that attribute won't work
-    if (orientation != ScreenOrientationAuto) {
+    if(orientation != ScreenOrientationAuto) {
         const QStringList v = QString::fromAscii(qVersion()).split(QLatin1Char('.'));
-        if (v.count() == 3 && (v.at(0).toInt() << 16 | v.at(1).toInt() << 8 | v.at(2).toInt()) < 0x040702) {
+        if(v.count() == 3 && (v.at(0).toInt() << 16 | v.at(1).toInt() << 8 | v.at(2).toInt()) < 0x040702) {
             qWarning("Screen orientation locking only supported with Qt 4.7.2 and above");
             return;
         }
@@ -117,9 +115,9 @@ void QmlApplicationViewer::setOrientation(ScreenOrientation orientation)
 #endif // Q_OS_SYMBIAN
 
     Qt::WidgetAttribute attribute;
-    switch (orientation) {
+    switch(orientation) {
 #if QT_VERSION < 0x040702
-    // Qt < 4.7.2 does not yet have the Qt::WA_*Orientation attributes
+        // Qt < 4.7.2 does not yet have the Qt::WA_*Orientation attributes
     case ScreenOrientationLockPortrait:
         attribute = static_cast<Qt::WidgetAttribute>(128);
         break;
