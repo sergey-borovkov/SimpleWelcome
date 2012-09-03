@@ -3,17 +3,17 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
-Request::Request(RequestType type, QObject *parent) :
+FacebookRequest::FacebookRequest(RequestType type, QObject *parent) :
     QObject(parent), m_requestType(type)
 {
 }
 
-void Request::setUrl(const QUrl &url)
+void FacebookRequest::setUrl(const QUrl &url)
 {
     m_url = url;
 }
 
-void Request::startQuery()
+void FacebookRequest::start()
 {
     if(m_url.isEmpty())
         return;
@@ -28,7 +28,7 @@ void Request::startQuery()
         manager->post(QNetworkRequest(m_url), m_message.toUtf8());
 }
 
-void Request::replyFinished(QNetworkReply *reply)
+void FacebookRequest::replyFinished(QNetworkReply *reply)
 {
     QByteArray a = reply->readAll();
     emit replyReady(a);

@@ -23,11 +23,11 @@ void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
     QUrl url(QLatin1String("https://graph.facebook.com/me/feed"));
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
 
-    Request *request = new Request(Request::Get, this);
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
 
     request->setUrl(url);
-    request->startQuery();
+    request->start();
 }
 
 void RequestManager::queryImage(const QString &id)
@@ -37,19 +37,19 @@ void RequestManager::queryImage(const QString &id)
 
 void RequestManager::postComment(const QString &parent, const QString &message)
 {
-    Request *request = new Request(Request::Post, this);
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
     QUrl url = QLatin1String("https://graph.facebook.com/") + parent + QLatin1String("/comments");
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
     request->setMessage(message);
-    request->startQuery();
+    request->start();
 }
 
 void RequestManager::like(const QString &id)
 {
-    Request *request = new Request(Request::Post, this);
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
     QUrl url = QLatin1String("https://graph.facebook.com/") + id + QLatin1String("/likes");
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-    request->startQuery();
+    request->start();
 }
 
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
@@ -64,12 +64,12 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 
 void RequestManager::logout()
 {
-    Request *request = new Request(Request::Get, this);
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
     connect(request, SIGNAL(success()), m_authorizer, SLOT(logout()));
 
     QUrl url(QLatin1String("https://www.facebook.com/logout.php"));
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-    request->startQuery();
+    request->start();
 
     m_authorizer->logout();
 }
