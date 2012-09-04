@@ -19,7 +19,7 @@ public:
     void setModel(LocalDayModel* model);
 
 signals:
-    void newActivities (QList<Activity*>);
+    void newActivities(QList<Activity*>);
     void newMonth(int, int , QString type);
     void finished();
 
@@ -27,7 +27,7 @@ public slots:
     void startSearch(QDate date, int direction);
     void resultCount(int);
     int getIndexByDate(int year, int month,  bool direction);
-    QDate getDateOfIndex(int listIndex);    
+    QDate getDateOfIndex(int listIndex);
 
 private slots:
     void newData(QList<Activity*>);

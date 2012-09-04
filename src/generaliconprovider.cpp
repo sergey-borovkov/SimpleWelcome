@@ -49,35 +49,28 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
 
     if(iconType == "appicon")
         icon = KIcon(iconName);
-    else if (iconType == "search")
-    {
-        if (m_searchGridModel)
+    else if(iconType == "search") {
+        if(m_searchGridModel)
             icon = KIcon(m_searchGridModel->getMatchIcon(iconName));
-    }
-    else if(iconType == "asset")
-    {
+    } else if(iconType == "asset") {
         iconPixmap.load(m_pathToAssets + iconName);
 
-      // TODO: Fill size struct
+        // TODO: Fill size struct
 
         return iconPixmap;
-    }
-    else if(iconType == "general")
-    {
+    } else if(iconType == "general") {
         if(iconName == "usericon" && m_userInfoProvider != NULL)
             icon = KIcon(m_userInfoProvider->getIconPath());
         else
             return iconPixmap;
-    }
-    else
-    {
+    } else {
         return iconPixmap;
     }
 
     size->setWidth(icons_size);
     size->setHeight(icons_size);
 
-    if (requestedSize.isEmpty())
+    if(requestedSize.isEmpty())
         iconPixmap = icon.pixmap(icons_size, icons_size, QIcon::Normal, QIcon::On);
     else
         iconPixmap = icon.pixmap(requestedSize.width(), requestedSize.height(), QIcon::Normal, QIcon::On);

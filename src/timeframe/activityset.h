@@ -47,7 +47,9 @@ public:
 
     void addActivity(const QString &url, const QString &type, const QDate &date);
     void addActivity(Activity *activity);
-    void setDate(const QDate &d) { date = d; }
+    void setDate(const QDate &d) {
+        date = d;
+    }
 
 signals:
     void countChanged();

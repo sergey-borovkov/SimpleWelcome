@@ -24,18 +24,16 @@ void ActivityProxy::addNepomukSource(NepomukSource *source)
 void ActivityProxy::startSearch(QDate date, int direction)
 {
     QDate d = date;
-    if (!m_source)
-       return;
+    if(!m_source)
+        return;
     ActivitySource::Direction dir;
-    if (direction)
-    {
+    if(direction) {
         dir = ActivitySource::Right;
-        d.setDate(d.year(),d.month(),1);
+        d.setDate(d.year(), d.month(), 1);
 
-    } else
-    {
+    } else {
         dir = ActivitySource::Left;
-        d.setDate(d.year(),d.month(),d.daysInMonth());
+        d.setDate(d.year(), d.month(), d.daysInMonth());
     }
     //qDebug() << d;
     m_source->setLimit(0);
@@ -52,8 +50,7 @@ void ActivityProxy::newData(QList<Activity *> list)
 {
     // start generating previews
     QStringList urls;
-    foreach(Activity* item, list)
-    {
+    foreach(Activity * item, list) {
         urls.append(item->getUrl());
         emit newMonth(item->getDate().year() , item->getDate().month(), item->getType());  //fill timeScaleModel
     }
@@ -64,21 +61,21 @@ void ActivityProxy::newData(QList<Activity *> list)
 
 void ActivityProxy::setModel(LocalDayModel* model)
 {
-    if (m_model)
+    if(m_model)
         m_model = model;
 }
 
 
 int ActivityProxy::getIndexByDate(int year, int month,  bool direction)
 {
-    if (m_model)
-     return m_model->getIndexByDate(year, month, direction);
+    if(m_model)
+        return m_model->getIndexByDate(year, month, direction);
     return -1;
 }
 
 QDate ActivityProxy::getDateOfIndex(int listIndex)
 {
-    if (m_model)
+    if(m_model)
         return m_model->getDateOfIndex(listIndex);
     return QDate();
 }

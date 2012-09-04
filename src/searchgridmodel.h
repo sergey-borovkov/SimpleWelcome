@@ -8,12 +8,11 @@
 
 namespace Plasma
 {
-    class RunnerManager;
-    class QueryMatch;
+class RunnerManager;
+class QueryMatch;
 }
 
-struct MatchResults
-{
+struct MatchResults {
     QString group;
     QString name;
     Plasma::QueryMatch* plasmaMatch;
