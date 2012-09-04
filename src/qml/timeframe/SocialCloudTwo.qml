@@ -59,13 +59,13 @@ Item{
     }
 
     function setProperties(item, index)
-    {
+    {        
         item.message = model.text(index)
         item.picture = model.imageUrl(index)
         item.likes = model.likesCount(index)
         item.comments = model.commentsCount(index)
         item.pluginName = model.pluginName(index)
         item.pluginIcon.source =  "image://plugin/" + item.pluginName
-        item.commentsView.model = model.comments(0)
+        item.commentsView.model = model.comments(index)
     }
 }

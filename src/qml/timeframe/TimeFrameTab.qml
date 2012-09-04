@@ -639,6 +639,11 @@ Item {
                 visible: false
                 opacity: 0
             }
+            PropertyChanges {
+                target: stateChangeButton
+                visible: false
+                opacity: 0
+            }
         }
     ]
 }

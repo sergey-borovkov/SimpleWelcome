@@ -38,10 +38,10 @@ void FeedItem::fillFromMap( QVariantMap map )
     {
         m_id = map.value("id").toString();
     }
+
     if ( map.contains( "text") )
     {
         QString message = map.value( "text" ).toString();
-
         m_data.insert( Text, message );
     }
 
@@ -69,7 +69,6 @@ void FeedItem::fillFromMap( QVariantMap map )
                 if ( typeAttachment == "photo" )
                 {
                     QVariantMap photoMap = map[ "photo" ].toMap();
-
                     if ( photoMap.contains( "src" ) )
                         m_data.insert( ImageUrl, photoMap.value( "src" ).toString() );
                 }
