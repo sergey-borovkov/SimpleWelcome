@@ -8,8 +8,7 @@ class Request : public QObject
 {
     Q_OBJECT
 public:
-    enum RequestType
-    {
+    enum RequestType {
         WallPosts,
         User,
         Logout

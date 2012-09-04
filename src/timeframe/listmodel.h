@@ -22,7 +22,7 @@ public:
     void refreshRow(int row);
     ListItem* takeRow(int row);
     ListItem* find(const QString &id) const;
-    QModelIndex indexFromItem( const ListItem* item) const;
+    QModelIndex indexFromItem(const ListItem* item) const;
     void clear();
 private slots:
     void handleItemChange();

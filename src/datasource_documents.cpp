@@ -8,8 +8,7 @@ DataSource_Documents::DataSource_Documents(QObject* parent)
     : DataSource(parent)
 {
     QStringList recentDocsList = KRecentDocument::recentDocuments();
-    for (int i = 0; i < qMin(7, recentDocsList.size()); i++)
-    {
+    for(int i = 0; i < qMin(7, recentDocsList.size()); i++) {
         if(! KDesktopFile::isDesktopFile(recentDocsList[i]))
             continue;
         if(! QFile::exists(recentDocsList[i]))
@@ -23,14 +22,14 @@ DataSource_Documents::DataSource_Documents(QObject* parent)
         newItem.caption = desktopFile.readName();
         newItem.icon = desktopFile.readIcon();
         newItem.desktopEntry = desktopFile.fileName();
-        if (!newItem.caption.isEmpty())
+        if(!newItem.caption.isEmpty())
             docsList.append(newItem);
     }
 }
 
 void DataSource_Documents::getContent()
 {
-    for (int i = 0; i < docsList.size(); i++)
+    for(int i = 0; i < docsList.size(); i++)
         emit newItemData(QString("image://generalicon/appicon/%1").arg(docsList[i].icon), docsList[i].caption, i);
 }
 
@@ -38,6 +37,6 @@ void DataSource_Documents::getContent()
 
 void DataSource_Documents::itemClicked(int newIndex)
 {
-    if (newIndex != -1)
+    if(newIndex != -1)
         QMessageBox::information(0, docsList[newIndex].desktopEntry, docsList[newIndex].caption);
 }

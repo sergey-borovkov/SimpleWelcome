@@ -12,8 +12,7 @@ class ItemModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum
-    {
+    enum {
         CurrentDateRole = Qt::UserRole + 1,
         ActivitiesRole,
         CountRole,
@@ -24,16 +23,16 @@ public:
     ~ItemModel();
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent) const;
-    
+
 signals:
     void gotThumbnail();
 
 public slots:
-    void addActivityItem( Activity* item);
+    void addActivityItem(Activity* item);
     void thumbnailReady(QString);
 
     QString url(int row);
-    
+
 private:
     QHash<int, QByteArray> m_hash;
     QList<Activity *> m_items;

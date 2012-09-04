@@ -40,8 +40,12 @@ public:
 
     void showExpanded();
 
-    int updatableWidth() { return width(); }
-    int updatableHeight() { return height(); }
+    int updatableWidth() {
+        return width();
+    }
+    int updatableHeight() {
+        return height();
+    }
     virtual void resizeEvent(QResizeEvent *event);
 
 signals:

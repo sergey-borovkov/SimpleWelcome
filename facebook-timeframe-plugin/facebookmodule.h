@@ -22,7 +22,9 @@ public:
     QPixmap icon() const;
 
     QWidget *authenticationWidget();
-    bool authorized() const { return !m_authorizer->accessToken().isEmpty(); }
+    bool authorized() const {
+        return !m_authorizer->accessToken().isEmpty();
+    }
 
 private slots:
     void onAcessTokenChanged();

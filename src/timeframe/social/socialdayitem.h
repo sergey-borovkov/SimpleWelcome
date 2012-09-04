@@ -16,7 +16,7 @@ class SocialItemFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit SocialItemFilterModel( QObject * parent = 0 );
+    explicit SocialItemFilterModel(QObject * parent = 0);
 
 signals:
 
@@ -36,8 +36,7 @@ class SocialDayItem : public QObject, public ListItem
     Q_OBJECT
 
 public:
-    enum Role
-    {
+    enum Role {
         DateRole = Qt::UserRole + 1,
         ItemsRole,
         CountRole,
@@ -45,11 +44,11 @@ public:
         ItemsTypes
     };
 
-    explicit SocialDayItem( const QDate &date, QObject *parent = 0 );
+    explicit SocialDayItem(const QDate &date, QObject *parent = 0);
     ~SocialDayItem();
 
     virtual QString id() const;
-    virtual QVariant data( int role ) const;
+    virtual QVariant data(int role) const;
 
     QDate date();
     int   count();
@@ -57,16 +56,15 @@ public:
     SocialItemFilterModel *model();
 
     QString types() const;
-    void setSocialFilter( const QRegExp& );
+    void setSocialFilter(const QRegExp&);
 
-    static const QHash<int, QByteArray> roleNames()
-    {
+    static const QHash<int, QByteArray> roleNames() {
         QHash<int, QByteArray> roles;
-        roles.insert( DateRole,         "date" );
-        roles.insert( ItemsRole,        "items" );
-        roles.insert( CountRole,        "count" );
-        roles.insert( ItemsCountRole,   "size" );
-        roles.insert( ItemsTypes,      "type" );
+        roles.insert(DateRole,         "date");
+        roles.insert(ItemsRole,        "items");
+        roles.insert(CountRole,        "count");
+        roles.insert(ItemsCountRole,   "size");
+        roles.insert(ItemsTypes,      "type");
 
         return roles;
     }
@@ -75,8 +73,8 @@ signals:
     void dataChanged();
 
 public slots:
-    void setDate( const QDate& );
-    void addSocialItem( SocialItem* item );
+    void setDate(const QDate&);
+    void addSocialItem(SocialItem* item);
 
 private:
     QString m_types;

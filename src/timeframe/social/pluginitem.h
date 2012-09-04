@@ -12,8 +12,7 @@ class PluginItem : public QObject, public ListItem
 {
     Q_OBJECT
 public:
-    enum
-    {
+    enum {
         Name,
         Icon,
         Item,
@@ -25,9 +24,8 @@ public:
     virtual QString id() const;
     virtual QVariant data(int role) const;
     ISocialPlugin *plugin();
-    static const QHash<int,QByteArray> roleNames()
-    {
-        QHash<int,QByteArray> roles;
+    static const QHash<int, QByteArray> roleNames() {
+        QHash<int, QByteArray> roles;
         roles.insert(Name, "name");
         roles.insert(Icon, "icon");
         roles.insert(Item, "item");

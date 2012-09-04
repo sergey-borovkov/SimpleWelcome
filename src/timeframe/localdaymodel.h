@@ -28,8 +28,7 @@ class LocalDayModel : public QAbstractListModel
     Q_OBJECT
 public:
 
-    enum
-    {
+    enum {
         CurrentDateRole = Qt::UserRole + 1,
         ItemsRole,
         CountRole,
@@ -37,7 +36,7 @@ public:
         ItemsCountRole
     };
     explicit LocalDayModel(QObject *parent = 0);
-     ~LocalDayModel();
+    ~LocalDayModel();
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     void appendRow(LocalDayItem* item);
@@ -58,7 +57,7 @@ public slots:
     QObject* itemsModel(QDate date) const;
     int getIndexByDate(int year, int month, bool direction);
     QDate getDateOfIndex(int listIndex);
-    void imageReady(QString url);    
+    void imageReady(QString url);
 
 protected:
     bool removeNullItem(int, int);

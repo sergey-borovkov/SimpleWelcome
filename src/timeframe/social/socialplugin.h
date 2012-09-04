@@ -24,8 +24,7 @@ public:
 class ISocialPlugin
 {
 public:
-    enum AuthorizationStatus
-    {
+    enum AuthorizationStatus {
         Success,
         Expired,
         Failure

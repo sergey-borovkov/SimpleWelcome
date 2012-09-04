@@ -18,7 +18,7 @@ class SocialProxy : public QObject
 public:
     explicit SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent = 0);
     ~SocialProxy();
-    void setModel( SocialDayModel *model );
+    void setModel(SocialDayModel *model);
 
     ListModel *socialModel();
     PluginModel *pluginModel();
