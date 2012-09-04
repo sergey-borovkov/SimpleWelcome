@@ -86,6 +86,6 @@ Item{
         item.comments = model.commentsCount(index)
         item.pluginName = model.pluginName(index)
         item.pluginIcon.source =  "image://plugin/" + item.pluginName
-        item.commentsView.model = model.comments(0)
+        item.commentsView.model = model.comments(index)
     }
 }
