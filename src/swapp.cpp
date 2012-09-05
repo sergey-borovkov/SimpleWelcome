@@ -27,6 +27,10 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
+#include <QDesktopWidget>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
+#include <KServiceGroup>
 
 #include "generaliconprovider.h"
 #include "sessionprovider.h"
@@ -37,10 +41,6 @@
 #include "datasource_favorites.h"
 #include "datasource_documents.h"
 #include "searchgridmodel.h"
-
-#include <QDesktopWidget>
-
-#include <KServiceGroup>
 
 #include "timeframe/activityset.h"
 #include "timeframe/localdaymodel.h"
@@ -58,9 +58,8 @@
 #include "timeframe/social/pluginmodel.h"
 #include "timeframe/social/socialdaymodel.h"
 #include "timeframe/social/socialdayitem.h"
+#include "timeframe/social/pluginrequestreply.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
 
 #include "config.h"
 
@@ -152,7 +151,6 @@ void SWApp::initTimeframeLocalMode()
 
     m_viewer->rootContext()->setContextProperty("desktopWidth", r.width());
     m_viewer->rootContext()->setContextProperty("localDayModel", proxymodel);
-    m_viewer->rootContext()->setContextProperty("activityProxy", m_proxy);
     m_viewer->rootContext()->setContextProperty("activityProxy", m_proxy);
     m_viewer->rootContext()->setContextProperty("nepomukSource", m_source);
     m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);

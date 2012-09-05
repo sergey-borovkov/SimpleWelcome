@@ -35,7 +35,7 @@ void ActivityProxy::startSearch(QDate date, int direction)
         dir = ActivitySource::Left;
         d.setDate(d.year(), d.month(), d.daysInMonth());
     }
-    //qDebug() << d;
+
     m_source->setLimit(0);
     m_source->startSearch(d, dir);
 }
@@ -43,7 +43,6 @@ void ActivityProxy::startSearch(QDate date, int direction)
 void ActivityProxy::resultCount(int count)
 {
     Q_UNUSED(count)
-    //qDebug() << "Result count: " << count;
 }
 
 void ActivityProxy::newData(QList<Activity *> list)

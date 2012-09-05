@@ -18,8 +18,8 @@ class SocialProxy : public QObject
 public:
     explicit SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent = 0);
     ~SocialProxy();
-    void setModel(SocialDayModel *model);
 
+    void setModel(SocialDayModel *model);
     ListModel *socialModel();
     PluginModel *pluginModel();
 
@@ -31,7 +31,7 @@ public slots:
     void newItems(QList<SocialItem *> items);
     void startSearch();
 
-    // temporary solution to get plugin names in QML
+      // temporary solution to get plugin names in QML
     // this functionality should perphaps be made available
     // to  QML via models
     int authorizedPluginCount() const;
