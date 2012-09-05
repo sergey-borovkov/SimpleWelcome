@@ -13,7 +13,9 @@ public:
     enum RequestType {
         WallPosts,
         User,
-        Logout
+        Logout,
+        Like,
+        Image
     };
 
     explicit VkRequest(const QString &accessToken, RequestType type, QObject *parent = 0, int offset = 0);
