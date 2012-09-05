@@ -1,6 +1,7 @@
 #include "request.h"
 
 #include <QtNetwork/QNetworkAccessManager>
+#include <qjson/parser.h>
 
 QNetworkAccessManager *FacebookRequest::manager = 0;
 
@@ -21,7 +22,6 @@ void FacebookRequest::start()
 {
     if(m_url.isEmpty())
         return;
-
     QNetworkReply *reply = 0;
     QNetworkRequest request(m_url);
 
@@ -29,17 +29,18 @@ void FacebookRequest::start()
     {
     case Get:
         reply = manager->get(request);
+        connect(reply, SIGNAL(finished()), SLOT(replyFinished()));
         break;
     case Post:
         request.setHeader(QNetworkRequest::ContentTypeHeader, "text/plain");
         reply = manager->post(request, QByteArray());
+        connect(reply, SIGNAL(finished()), SLOT(postFinished()));
         break;
     default:
         qWarning("FacebookRequest::start() -- Invalid argument");
         return;
     }
 
-    connect(reply, SIGNAL(finished()), SLOT(replyFinished()));
     connect(reply, SIGNAL(finished()), SIGNAL(success()));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
 }
@@ -50,6 +51,16 @@ void FacebookRequest::replyFinished()
     QByteArray answer = reply->readAll();
     emit replyReady(answer);
     reply->deleteLater();
+}
+
+void FacebookRequest::postFinished()
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    QByteArray answer = reply->readAll();
+    QJson::Parser parser;
+    QVariantMap result = parser.parse(answer).toMap();
+    QString id =  result.value("id").toString();
+    emit newItemId(id);
 }
 
 void FacebookRequest::error(QNetworkReply::NetworkError error)
