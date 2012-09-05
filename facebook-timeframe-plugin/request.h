@@ -29,6 +29,8 @@ signals:
     void error(QString);
 private slots:
     void replyFinished();
+    void postFinished();
+    void newItemId(QString);
     void error(QNetworkReply::NetworkError error);
 
 private:
