@@ -23,7 +23,10 @@ QString FeedItem::id() const
 
 QVariant FeedItem::data(int role) const
 {
-    return m_data.value(role);
+    if(role == Id)
+        return m_id;
+    else
+        return m_data.value(role);
 }
 
 QDate FeedItem::date() const
