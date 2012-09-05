@@ -8,6 +8,7 @@
 #include <socialplugin.h>
 
 class QNetworkReply;
+class QNetworkAccessManager;
 
 class FacebookRequest : public QObject, public Request
 {
@@ -20,22 +21,21 @@ public:
 
     explicit FacebookRequest(RequestType type, QObject *parent = 0);
     void setUrl(const QUrl &url);
-    void setMessage(const QString &message);
     void start();
 
 signals:
     void replyReady(QByteArray);
     void success();
     void error(QString);
-
 private slots:
-    void replyFinished(QNetworkReply *reply);
+    void replyFinished();
     void error(QNetworkReply::NetworkError error);
 
 private:
     RequestType m_requestType;
     QUrl m_url;
     QString m_message;
+    static QNetworkAccessManager *manager;
 };
 
 #endif // REQUEST_H

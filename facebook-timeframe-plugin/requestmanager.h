@@ -5,6 +5,7 @@
 
 class OAuth2Authorizer;
 class FeedItem;
+class QNetworkAccessManager;
 
 class RequestManager : public QObject, public ISocialRequestManager
 {

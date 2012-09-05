@@ -38,7 +38,7 @@ Request *RequestManager::postComment(const QString &parent, const QString &messa
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
     QUrl url = QLatin1String("https://graph.facebook.com/") + parent + QLatin1String("/comments");
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-    request->setMessage(message);
+    url.addQueryItem("message", message);
     return request;
 }
 
@@ -47,6 +47,7 @@ Request *RequestManager::like(const QString &id)
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
     QUrl url = QLatin1String("https://graph.facebook.com/") + id + QLatin1String("/likes");
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
+    request->setUrl(url);
     return request;
 }
 
