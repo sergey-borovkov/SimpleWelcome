@@ -13,31 +13,31 @@ RequestManager::RequestManager(QObject *parent)
 {
 }
 
-void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
+Request *RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
 {
-    if(!m_authorizer)
-        return;
-
     VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::WallPosts, this, 0);
-
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(reply(QByteArray)));
-    request->start();
+    return request;
 }
 
-void RequestManager::queryImage(const QString &id)
+Request *RequestManager::queryImage(const QString &id)
 {
     Q_UNUSED(id)
+    VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::Image, this, 0);
+
 }
 
-void RequestManager::postComment(const QString &postId, const QString &message)
+Request *RequestManager::postComment(const QString &postId, const QString &message)
 {
     Q_UNUSED(postId)
     Q_UNUSED(message)
 }
 
-void RequestManager::like(const QString &id)
+Request *RequestManager::like(const QString &id)
 {
     Q_UNUSED(id)
+    VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::Like);
+    return request;
 }
 
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
@@ -50,25 +50,23 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
         connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SIGNAL(authorizationComplete()));
 }
 
-void RequestManager::logout()
+Request *RequestManager::logout()
 {
     VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::Logout);
     connect(request, SIGNAL(success()), m_authorizer, SLOT(logout()));
-    request->start();
 
     // actually first need to do some error checking
     m_authorizer->logout();
+    return request;
 }
 
 void RequestManager::reply(QByteArray reply)
 {
-    qDebug() << "RequestManager::reply";
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
 
     if(result.contains("error")) {
         m_authorizer->logout();
-        qDebug() << "RequestManager::reply:   got ERROR from server...";
         return;
     }
 

@@ -24,11 +24,11 @@ class ISocialRequestManager
 {
 public:
     virtual ~ISocialRequestManager() {}
-    virtual void queryWall(const QDate &beginDate, const QDate &endDate) = 0;
-    virtual void queryImage(const QString &id) = 0;
-    virtual void postComment(const QString &postId, const QString &message) = 0;
-    virtual void like(const QString &id) = 0;
-    virtual void logout() = 0;
+    virtual Request *queryWall(const QDate &beginDate, const QDate &endDate) = 0;
+    virtual Request *queryImage(const QString &id) = 0;
+    virtual Request *postComment(const QString &postId, const QString &message) = 0;
+    virtual Request *like(const QString &id) = 0;
+    virtual Request *logout() = 0;
 };
 
 class ISocialPlugin
