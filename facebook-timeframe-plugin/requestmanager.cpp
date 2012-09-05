@@ -39,6 +39,8 @@ Request *RequestManager::postComment(const QString &parent, const QString &messa
     QUrl url = QLatin1String("https://graph.facebook.com/") + parent + QLatin1String("/comments");
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
     url.addQueryItem("message", message);
+    request->setUrl(url);
+
     return request;
 }
 
