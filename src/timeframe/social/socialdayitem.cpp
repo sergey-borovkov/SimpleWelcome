@@ -27,6 +27,12 @@ int SocialItemFilterModel::likesCount(int row)
     return data(index(row, 0), SocialItem::Likes).toInt();
 }
 
+void SocialItemFilterModel::like(int row)
+{
+    int likes = likesCount(row);
+    setData(index(row, 0), likes + 1, SocialItem::Likes);
+}
+
 int SocialItemFilterModel::commentsCount(int row)
 {
     return data(index(row, 0), SocialItem::CommentCount).toInt();

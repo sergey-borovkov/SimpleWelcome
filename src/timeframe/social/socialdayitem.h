@@ -24,6 +24,7 @@ public slots:
     QString imageUrl(int row);
     QString text(int row);
     int likesCount(int row);
+    void like(int row);
     int commentsCount(int row);
     QObject *comments(int row);
     QString pluginName(int row);
