@@ -3,6 +3,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
+#include <QtNetwork/QNetworkReply>
 
 #include <socialplugin.h>
 
@@ -29,6 +30,7 @@ signals:
 
 private slots:
     void replyFinished(QNetworkReply *reply);
+    void error(QNetworkReply::NetworkError error);
 
 private:
     RequestType m_requestType;
