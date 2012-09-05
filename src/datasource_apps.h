@@ -12,6 +12,7 @@ class DataSource_Apps : public DataSource
 public:
     explicit DataSource_Apps(QObject* parent = 0, DataSource_RecentApps *recentApps = 0);
     Q_INVOKABLE virtual int getItemCount(QString group = "") {
+        Q_UNUSED(group)
         return appsList.count();
     }
 

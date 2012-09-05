@@ -10,6 +10,7 @@ class DataSource_Documents : public DataSource
 public:
     explicit DataSource_Documents(QObject* parent = 0);
     Q_INVOKABLE virtual int getItemCount(QString group = "") {
+        Q_UNUSED(group)
         return docsList.count();
     }
 
