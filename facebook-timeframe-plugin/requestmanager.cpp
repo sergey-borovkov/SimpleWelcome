@@ -91,5 +91,17 @@ void RequestManager::feedReply(QByteArray reply)
         FeedItem *feedItem = new FeedItem(map);
         feedItems.append(feedItem);
     }
+
     emit newSocialItems(feedItems);
+
+    // make request get more items if necessary
+    // need to fix it though - client won't get signals from created request
+    // because it does not have access to it
+    QVariantMap paging = result.value(QLatin1String("paging")).toMap();
+    if(paging.contains("previous")) {
+        FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
+        connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
+        request->setUrl(paging.value("previous").toUrl());
+        request->start();
+    }
 }
