@@ -105,7 +105,6 @@ void FacebookCommentItem::fillFromList(const QVariantList &comments)
 {
     foreach(QVariant v, comments) {
         QVariantMap map = v.toMap();
-        qDebug() << map.value("id").toString();
         m_data.insert(Id, map.value("id"));
         m_data.insert(CreatedTime, map.value("created_time"));
         if(map.contains("from")) {

@@ -28,7 +28,6 @@ public slots:
     int commentsCount(int row);
     QObject *comments(int row);
     QString pluginName(int row);
-
 };
 
 

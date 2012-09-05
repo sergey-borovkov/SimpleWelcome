@@ -2,12 +2,10 @@
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
 
-#include <QtCore/QDebug>
 #include <QtCore/QSettings>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
-#include <QWebView>
-
+#include <QtWebKit/QWebView>
 
 FacebookModule::FacebookModule()
 {

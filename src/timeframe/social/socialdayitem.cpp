@@ -2,8 +2,6 @@
 #include "socialitemmodel.h"
 #include "socialitem.h"
 #include "../listmodel.h"
-#include <QDebug>
-
 
 SocialItemFilterModel::SocialItemFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
@@ -44,7 +42,7 @@ QObject *SocialItemFilterModel::comments(int row)
     QList<CommentItem *> comments = qvariant_cast< QList<CommentItem *> >(v);
     QList<ListItem *> t;
     foreach(CommentItem * item, comments)
-    t.append(item);
+        t.append(item);
 
     ListModel *model = new ListModel(CommentItem::roleNames(), this);
     model->appendRows(t);
@@ -56,15 +54,6 @@ QString SocialItemFilterModel::pluginName(int row)
     return data(index(row, 0), SocialItem::PluginName).toString();
 }
 
-
-//QString SocialItemFilterModel::url( int row )
-//{
-//    return data( index( row, 0 ), ItemModel::UrlRole).toString();
-//}
-
-///////////////////////////////////////////////////////////////////////////////
-
-
 SocialDayItem::SocialDayItem(const QDate &date, QObject *parent)
     : QObject(parent)
     , m_date(date)
@@ -73,14 +62,10 @@ SocialDayItem::SocialDayItem(const QDate &date, QObject *parent)
     m_model = new SocialItemFilterModel(this);
     m_model->setSourceModel(m_itemModel);
     m_model->setDynamicSortFilter(true);
-//    m_model->setFilterRole( SocialItem::PluginName );
-    //m_model->setFilterFixedString("Video");
-    //m_model->setFilterRegExp("Video");
 }
 
 SocialDayItem::~SocialDayItem()
 {
-    qDebug() << "delete item";
 }
 
 QString SocialDayItem::id() const

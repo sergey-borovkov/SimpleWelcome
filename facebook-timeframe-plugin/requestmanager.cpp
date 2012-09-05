@@ -4,7 +4,6 @@
 #include "oauth2authorizer.h"
 
 #include <qjson/parser.h>
-#include <QtCore/QDebug>
 #include <QtCore/QStringList>
 
 RequestManager::RequestManager(QObject *parent)

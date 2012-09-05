@@ -1,14 +1,12 @@
 #ifndef SOCIALPLUGIN_H
 #define SOCIALPLUGIN_H
 
-#include <QtCore/QObject>
 #include <QtCore/QList>
-#include <QtCore/QDate>
-#include <QtCore/QUrl>
 #include <QtGui/QPixmap>
-#include <QtPlugin>
+#include <QtCore/QtPlugin>
 
 class SocialItem;
+class QDate;
 
 /* All subclasses of this class should emit
    success() and error(QString errorString) signals
