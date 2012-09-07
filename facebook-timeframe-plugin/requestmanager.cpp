@@ -4,7 +4,6 @@
 #include "oauth2authorizer.h"
 
 #include <qjson/parser.h>
-#include <QtCore/QDebug>
 #include <QtCore/QStringList>
 
 RequestManager::RequestManager(QObject *parent)
@@ -12,44 +11,46 @@ RequestManager::RequestManager(QObject *parent)
 {
 }
 
-void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
+Request *RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
 {
     Q_UNUSED(beginDate)
     Q_UNUSED(endDate)
 
-    if(!m_authorizer)
-        return;
-
     QUrl url(QLatin1String("https://graph.facebook.com/me/feed"));
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
 
-    Request *request = new Request(Request::Get, this);
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
 
     request->setUrl(url);
-    request->startQuery();
+    return request;
 }
 
-void RequestManager::queryImage(const QString &id)
+Request *RequestManager::queryImage(const QString &id)
 {
     Q_UNUSED(id)
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
+    return request;
 }
 
-void RequestManager::postComment(const QString &parent, const QString &message)
+Request *RequestManager::postComment(const QString &message, const QString &parentId)
 {
-    Request *request = new Request(Request::Post, this);
-    QUrl url = QLatin1String("https://graph.facebook.com/") + parent + QLatin1String("/comments");
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
+    QUrl url = QLatin1String("https://graph.facebook.com/") + parentId + QLatin1String("/comments");
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-    request->setMessage(message);
-    request->startQuery();
+    url.addQueryItem("message", message);
+    request->setUrl(url);
+
+    return request;
 }
 
-void RequestManager::like(const QString &id)
+Request *RequestManager::like(const QString &id)
 {
-    Request *request = new Request(Request::Post, this);
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
     QUrl url = QLatin1String("https://graph.facebook.com/") + id + QLatin1String("/likes");
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-    request->startQuery();
+    request->setUrl(url);
+    return request;
 }
 
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
@@ -62,16 +63,16 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
         connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SIGNAL(authorizationComplete()));
 }
 
-void RequestManager::logout()
+Request *RequestManager::logout()
 {
-    Request *request = new Request(Request::Get, this);
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
     connect(request, SIGNAL(success()), m_authorizer, SLOT(logout()));
 
     QUrl url(QLatin1String("https://www.facebook.com/logout.php"));
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-    request->startQuery();
 
     m_authorizer->logout();
+    return request;
 }
 
 void RequestManager::feedReply(QByteArray reply)
@@ -92,5 +93,17 @@ void RequestManager::feedReply(QByteArray reply)
         FeedItem *feedItem = new FeedItem(map);
         feedItems.append(feedItem);
     }
+
     emit newSocialItems(feedItems);
+
+    // make request get more items if necessary
+    // need to fix it though - client won't get signals from created request
+    // because it does not have access to it
+    QVariantMap paging = result.value(QLatin1String("paging")).toMap();
+    if(paging.contains("previous")) {
+        FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
+        connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
+        request->setUrl(paging.value("previous").toUrl());
+        request->start();
+    }
 }

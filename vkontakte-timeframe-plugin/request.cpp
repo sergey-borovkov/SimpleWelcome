@@ -5,11 +5,11 @@
 #include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 
-const QString Request::wallUrl = QLatin1String("https://api.vk.com/method/wall.get");
-const QString Request::logoutUrl = QLatin1String("http://oauth.vk.com/oauth/logout");
+const QString VkRequest::wallUrl = QLatin1String("https://api.vk.com/method/wall.get");
+const QString VkRequest::logoutUrl = QLatin1String("http://oauth.vk.com/oauth/logout");
 // response http://oauth.vk.com/oauth/authorize?&_hash=0&success=1
 
-Request::Request(const QString &accessToken, RequestType type, QObject *parent, int offset)
+VkRequest::VkRequest(const QString &accessToken, RequestType type, QObject *parent, int offset)
     : QObject(parent)
     , m_accessToken(accessToken)
     , m_type(type)
@@ -17,7 +17,7 @@ Request::Request(const QString &accessToken, RequestType type, QObject *parent, 
 {
 }
 
-void Request::startQuery()
+void VkRequest::start()
 {
     QUrl requestUrl;
 
@@ -37,13 +37,13 @@ void Request::startQuery()
     manager->get(QNetworkRequest(requestUrl));
 }
 
-void Request::replyFinished(QNetworkReply *reply)
+void VkRequest::replyFinished(QNetworkReply *reply)
 {
     QByteArray a = reply->readAll();
     emit replyReady(a);
     reply->deleteLater();
 }
 
-void Request::networkError(QNetworkReply::NetworkError)
+void VkRequest::networkError(QNetworkReply::NetworkError)
 {
 }

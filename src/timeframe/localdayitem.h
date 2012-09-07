@@ -8,10 +8,7 @@
 #include <QSortFilterProxyModel>
 
 class ItemModel;
-//class QSortFilterProxyModel;
 class Activity;
-//class QStringList;
-
 
 class TimeFrameFilterModel : public QSortFilterProxyModel
 {
@@ -38,11 +35,10 @@ public:
 
     QDate getDate();
     int   getCount();
-    //ItemModel * model();
+
     TimeFrameFilterModel * model();
     QString types() const;
     void thumbnailReady(QString);
-    //void setActivityFilter(const QRegExp&);
 
 signals:
     void dataChanged();

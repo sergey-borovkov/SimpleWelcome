@@ -78,15 +78,6 @@ LocalDayModel::LocalDayModel(QObject *parent) :
     hash.insert(TypesRole, "type");
     hash.insert(ItemsCountRole, "size");
     setRoleNames(hash);
-    /*
-    beginInsertRows(QModelIndex(), 0 , 4);
-    for (int i = 0; i < 5; i++)
-    {
-        GalleryItem * item = new GalleryItem(QDate(2012,05,i+1));
-        m_items.append(item);
-    }
-    endInsertRows();
-    */
 }
 
 LocalDayModel::~LocalDayModel()
@@ -102,9 +93,7 @@ QVariant LocalDayModel::data(const QModelIndex &index, int role) const
     if(role == CurrentDateRole) {
         return m_items.value(index.row())->getDate();
     } else if(role == ItemsRole) {
-        //QVariant v;
-        //v.setValue( m_items[index.row()]->model());
-        return 0;//m_items.value(index.row());
+        return 0;
     } else if(role == CountRole) {
         return m_items.size();
     } else if(role == TypesRole) {
@@ -143,14 +132,12 @@ void LocalDayModel::setLister(ActivityProxy *lister)
 
 void LocalDayModel::newActivities(QList<Activity*> list)
 {
-    // qDebug() << "------new Activities--------";
     for(int i = 0; i < list.size() ; i++) {
 
         Activity* item = list.at(i);
         if(m_urlHash.contains(item->getUrl()))
             continue;
         m_urlHash.insert(item->getUrl(), item->getDate());
-        //qDebug() << item->getDate();
 
         //first check of null item, if we find one, edit him with new data
         foreach(LocalDayItem * it, m_items) {
@@ -160,7 +147,6 @@ void LocalDayModel::newActivities(QList<Activity*> list)
               ) {
                 it->setDate(item->getDate());
                 it->addActivity(item);
-                //qDebug() << "add activity into null object" << item->getDate();
                 QModelIndex index = indexFromItem(it);
                 if(index.isValid())
                     dataChanged(index, index);
@@ -183,41 +169,14 @@ void LocalDayModel::newActivities(QList<Activity*> list)
                 }
             }
         }
-//        int j = m_items.size()-1;
-//        bool flag = false;
-//        if (m_items.size() > 0)
-//        {
-//            while (m_items.at(j)->getDate() <= item->getDate())
-//            {
-//                if ( m_items.at(j)->getDate() == item->getDate())
-//                {
-//                    m_items.at(j)->addActivity(item);
-//                    //qDebug("add activity into existing");
-//                    flag = true;
-//                    break;
-//                }
-//                j--;
-//                if ( j == 0 )
-//                {
-//                    break;
-//                }
-//            }
-//        }
 
         if(flag) {
             continue;
         }
 
-        //qDebug() << "new gallery item" << item->getDate();
-        //if (removeNullItem(item->getDate().year(), item->getDate().month()))
-        //  j--;
-
         LocalDayItem * gallItem = new LocalDayItem(item->getDate(), this);
         gallItem->addActivity(item);
         insertRow(j, gallItem);
-
-        //insertRow(j+1,gallItem);
-        //qDebug() <<" add new activity" << item->getDate();
     }
 }
 
@@ -240,36 +199,19 @@ void LocalDayModel::newMonth(int year, int month)
             }
         }
     }
-//    GalleryItem * gallItem = new GalleryItem(date);
-//    if (m_items.size() > 0)
-//    {
-//        qDebug() << m_items.at(j)->getDate() << gallItem->getDate();
-//        while (m_items.at(j)->getDate() <= gallItem->getDate())
-//        {
-//            qDebug() << "j--";
-//            j--;
-//            if ( j == 0 )
-//            {
-//                break;
-//            }
-//        }
-//    }
-//    qDebug() << "new null item" << date;
+
     insertRow(j, gallItem);
-    //insertRow(j+1,gallItem);
 }
 
 //Remove null gallery item from model
 bool LocalDayModel::removeNullItem(int year, int month)
 {
-//    qDebug() << "call Remove null" << year << month;
     QDate date(year, month, 1);
     int j = 0;
     if(m_items.size() > 0) {
         while(m_items.at(j)->getDate() <= date) {
             if(m_items.at(j)->getDate() == date) {
                 if(m_items.at(j)->model()->rowCount(QModelIndex()) == 0) {
-//                    qDebug() << "Remove null" << year << month;
                     removeRow(j, QModelIndex());
                     return true;
                 }
@@ -373,19 +315,8 @@ bool LocalDayModel::removeRows(int row, int count, const QModelIndex &parent)
 int LocalDayModel::getIndexByDate(int year, int month,  bool direction)
 {
     Q_UNUSED(direction)
-    //QDate date(year, month, day);
-    //return indexFromItem(find(date)).row();
 
     LocalDayItem* ptr = 0;
-
-//    for (int i = m_items.size() -1; i >= 0; i--)
-//    {
-//        if((m_items.at(i)->getDate().year() == year) && (m_items.at(i)->getDate().month() == month))
-//        {
-//            ptr = m_items.at(i);
-//            break;
-//        }
-//    }
 
     foreach(LocalDayItem * item, m_items) {
         if((item->getDate().year() == year) && (item->getDate().month() == month)) {
