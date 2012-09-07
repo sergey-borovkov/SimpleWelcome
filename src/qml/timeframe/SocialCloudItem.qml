@@ -223,10 +223,18 @@ Item{
                     MouseArea{
                         anchors.fill: parent
                         onClicked: {
-                            if (cloudRect.state === "details")
+                            if (cloudRect.state === "details") {
+                                //Set source on comments loader
+                                commentsEdit.source = "CommentsEditBox.qml"
+                                commentsEdit.item.edit.color = "grey"
+                                commentsEdit.item.edit.text = "Write comment..."
                                 cloudRect.state = "comments"
+                            }
                             else if (cloudRect.state === "comments")
+                            {
+                                commentsEdit.source = ""
                                 cloudRect.state = "details"
+                            }
                         }
                     }
                 }
@@ -305,18 +313,16 @@ Item{
                     }
                 }
             }
-            CommentsEditBox
-            {
+            Loader {
                 id: commentsEdit
                 height: 0
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.left: parent.left
-                edit.color: "grey"
-                edit.text: "Write comment..."
+                visible: false
             }
             Connections {
-                target: commentsEdit
+                target: commentsEdit.item
                 onSend: console.log("comment sending via text edit: " +comment)
             }
 
@@ -415,7 +421,7 @@ Item{
                 height: 60 * comments
             }
 
-            PropertyChanges { target: commentsEdit; height: 60 }
+            PropertyChanges { target: commentsEdit; height: 60; visible: true }
         }
     ]
 
