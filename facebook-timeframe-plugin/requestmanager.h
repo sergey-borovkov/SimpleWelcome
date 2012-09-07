@@ -5,19 +5,20 @@
 
 class OAuth2Authorizer;
 class FeedItem;
+class QNetworkAccessManager;
 
 class RequestManager : public QObject, public ISocialRequestManager
 {
     Q_OBJECT
 public:
     explicit RequestManager(QObject *parent = 0);
-    virtual void queryWall(const QDate &beginDate, const QDate &endDate);
-    virtual void queryImage(const QString &id);
-    virtual void postComment(const QString &postId, const QString &message);
-    virtual void like(const QString &id);
+    virtual Request *queryWall(const QDate &beginDate, const QDate &endDate);
+    virtual Request *queryImage(const QString &id);
+    virtual Request *postComment(const QString &message, const QString &parentId);
+    virtual Request *like(const QString &id);
 
     void setAuthorizer(OAuth2Authorizer *authorizer);
-    void logout();
+    virtual Request *logout();
 
 private slots:
     void feedReply(QByteArray feedReply);

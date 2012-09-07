@@ -21,7 +21,6 @@ void SocialDayFilterModel::setFilter(const QString &filter)
         filterRegExp = QRegExp("Facebook|VKontakte|Twitter");
     else
         filterRegExp = QRegExp(filter);
-    //qDebug() << "!!!!!!!filter set on " << filter;
     setFilterRegExp(filterRegExp);
 
     for(int i = 0; i < rowCount(); i++) { //Set filter on nested models
@@ -56,13 +55,6 @@ QDate SocialDayFilterModel::getDateOfIndex(int listIndex)
         return QDate();
     return data(index(listIndex, 0), SocialDayItem::DateRole).toDate();
 }
-
-//QString SocialDayFilterModel::url( int row )
-//{
-//    return data( index( row, 0 ), ItemModel::UrlRole).toString();
-//}
-
-///////////////////////////////////////////////////////////////////////////////
 
 SocialDayModel::SocialDayModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)
@@ -173,81 +165,8 @@ void SocialDayModel::newSocialItems(QList < SocialItem * > list)
             continue;
         }
 
-        //qDebug() << "new gallery item" << item->getDate();
-        //if (removeNullItem(item->getDate().year(), item->getDate().month()))
-        //  j--;
-
         SocialDayItem * socialDayItem = new SocialDayItem(item->date());
         socialDayItem->addSocialItem(item);
         insertRow(j, socialDayItem);
-        //qDebug() << "create new";
-        //insertRow(j+1,gallItem);
-        //qDebug() <<" add new activity" << item->getDate();
     }
 }
-
-//int SocialDayModel::getIndexByDate(int year, int month,  bool direction)
-//{
-//    //QDate date(year, month, day);
-//    //return indexFromItem(find(date)).row();
-
-//    GalleryItem* ptr=0;
-
-////    for (int i = m_items.size() -1; i >= 0; i--)
-////    {
-////        if((m_items.at(i)->getDate().year() == year) && (m_items.at(i)->getDate().month() == month))
-////        {
-////            ptr = m_items.at(i);
-////            break;
-////        }
-////    }
-
-//    foreach(GalleryItem* item, m_items)
-//    {
-//        if((item->getDate().year() == year) && (item->getDate().month() == month))
-//        {
-//            ptr = item;
-//            break;
-//        }
-//    }
-//    if (ptr)
-//        return indexFromItem(ptr).row();
-//    return -1;
-//}
-
-
-//QDate SocialDayModel::getDateOfIndex(int listIndex)
-//{
-//    if (listIndex >= m_items.size() || listIndex < 0)
-//        return QDate();
-//    GalleryItem* item = m_items.at(listIndex);
-//    QDate date = item->getDate();
-//    return date;
-//}
-
-//void SocialDayModel::imageReady(QString url)
-//{
-//    if (m_urlHash.contains(url))
-//    {
-//        QDate date = m_urlHash[url];
-//        GalleryItem* item = find(date);
-//        if (item)
-//            item->thumbnailReady(url);
-//    }
-//}
-
-//void SocialDayModel::setActivityType(const QString& type)
-//{
-//    qDebug() << "123" <<type;
-//    QRegExp filter;
-//    if (type == "All")
-//        filter = QRegExp("Image|Video");
-//    else if (type == "Photo")
-//        filter = QRegExp("Image");
-//    else if (type == "Video")
-//        filter = QRegExp("Video");
-//    foreach(GalleryItem* item, m_items)
-//    {
-//        item->setActivityFilter(filter);
-//    }
-//}
