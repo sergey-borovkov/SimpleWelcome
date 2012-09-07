@@ -14,7 +14,7 @@ public:
     explicit RequestManager(QObject *parent = 0);
     virtual Request *queryWall(const QDate &beginDate, const QDate &endDate);
     virtual Request *queryImage(const QString &id);
-    virtual Request *postComment(const QString &postId, const QString &message);
+    virtual Request *postComment(const QString &message, const QString &parentId);
     virtual Request *like(const QString &id);
 
     void setAuthorizer(OAuth2Authorizer *authorizer);
