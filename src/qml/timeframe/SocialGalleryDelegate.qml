@@ -6,8 +6,7 @@ Item {
 
     id: socialGalleryItem
     height: parent.height
-    width: flow.childrenRect.width + 15
-    clip: true
+    width: flow.childrenRect.width + 15    
 
     Text {
         id: dateLabel
@@ -28,6 +27,7 @@ Item {
         anchors.left: dateLabel.left
         width: parent.width + 10
         height: parent.height + 10
+        z: -1
     }
 
     AnimatedImage {
@@ -59,11 +59,12 @@ Item {
             Repeater {
                 id: repeater
                 model: socialDayModel.itemsModel(date)
-                SocialDelegate {
-                }
+                SocialDelegate { }
             }
         }
+
     }
+
 
     function getDelegateWidth( count ){
         if (count === 0)

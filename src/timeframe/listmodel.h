@@ -11,7 +11,7 @@ class ListModel : public QAbstractListModel
 
 public:
     explicit ListModel(QHash<int, QByteArray> roles, QObject* parent = 0);
-    ~ListModel();
+    ~ListModel();    
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     void appendRow(ListItem* item);
