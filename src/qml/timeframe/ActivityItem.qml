@@ -48,7 +48,7 @@ Item {
                 opacity: cloudDelegate.ListView.isCurrentItem ? 1 : 0.5
             }
             Text {
-                text:  mimeType + " " + activityItem.num + ( ( typeItem == 1 ) ? 'x1 ' : ( typeItem == 2 ) ? 'x2 ' : 'x3 ')//  + url
+                text:  mimeType + " " + activityItem.num + ( ( typeItem == 1 ) ? 'x1 ' : ( typeItem == 2 ) ? 'x2 ' : 'x3 ')
                 anchors.centerIn: img
             }
         }
@@ -68,25 +68,21 @@ Item {
                 opacity: cloudDelegate.ListView.isCurrentItem ? 1 : 0.5
             }
             Text {
-                text:  mimeType + " " + activityItem.num + ( ( typeItem == 1 ) ? 'x1 ' : ( typeItem == 2 ) ? 'x2 ' : 'x3 ')//  + url
+                text:  mimeType + " " + activityItem.num + ( ( typeItem == 1 ) ? 'x1 ' : ( typeItem == 2 ) ? 'x2 ' : 'x3 ')
                 anchors.centerIn: img
             }
         }
     }
 
     function bestDelegate( mt ) {
-        if ( mt === "image" )
-        {
-            return imgDelegate;
+        if ( mt === "image" ) {
+            return imgDelegate
         }
-        else if ( mt === "video" )
-        {
-            return videoDelegate;
+        else if ( mt === "video" ) {
+            return videoDelegate
         }
-        else
-        {
-            return docDelegate;
-        }
+
+        return docDelegate
     }
 
     Loader {

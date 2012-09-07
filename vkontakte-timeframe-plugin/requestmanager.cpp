@@ -13,31 +13,31 @@ RequestManager::RequestManager(QObject *parent)
 {
 }
 
-void RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
+Request *RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
 {
-    if(!m_authorizer)
-        return;
-
-    Request *request = new Request(m_authorizer->accessToken(), Request::WallPosts, this, 0);
-
+    VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::WallPosts, this, 0);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(reply(QByteArray)));
-    request->startQuery();
+    return request;
 }
 
-void RequestManager::queryImage(const QString &id)
+Request *RequestManager::queryImage(const QString &id)
 {
     Q_UNUSED(id)
+    VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::Image, this, 0);
+
 }
 
-void RequestManager::postComment(const QString &postId, const QString &message)
+Request *RequestManager::postComment(const QString &message, const QString &parent)
 {
-    Q_UNUSED(postId)
+    Q_UNUSED(parent)
     Q_UNUSED(message)
 }
 
-void RequestManager::like(const QString &id)
+Request *RequestManager::like(const QString &id)
 {
     Q_UNUSED(id)
+    VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::Like);
+    return request;
 }
 
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
@@ -50,25 +50,23 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
         connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SIGNAL(authorizationComplete()));
 }
 
-void RequestManager::logout()
+Request *RequestManager::logout()
 {
-    Request *request = new Request(m_authorizer->accessToken(), Request::Logout);
+    VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::Logout);
     connect(request, SIGNAL(success()), m_authorizer, SLOT(logout()));
-    request->startQuery();
 
     // actually first need to do some error checking
     m_authorizer->logout();
+    return request;
 }
 
 void RequestManager::reply(QByteArray reply)
 {
-    qDebug() << "RequestManager::reply";
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
 
     if(result.contains("error")) {
         m_authorizer->logout();
-        qDebug() << "RequestManager::reply:   got ERROR from server...";
         return;
     }
 
@@ -88,9 +86,9 @@ void RequestManager::reply(QByteArray reply)
     // need repeat query
     if(cycles) {
         for(int i = 0; i < cycles; i++) {
-            Request *request = new Request(m_authorizer->accessToken(), Request::WallPosts, this, 100 *(i + 1));
+            VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::WallPosts, this, 100 *(i + 1));
             connect(request, SIGNAL(replyReady(QByteArray)), SLOT(replyQueryWall(QByteArray)));
-            request->startQuery();
+            request->start();
         }
     }
 

@@ -20,7 +20,8 @@ public:
         Audio,
         PluginName,
         Count,
-        ItemsCount
+        ItemsCount,
+        Id
     };
 
     enum Type {
@@ -37,17 +38,19 @@ public:
 
     static const QHash<int, QByteArray> roleNames() {
         QHash<int, QByteArray> roles;
-        roles.insert(Count,        "count");
-        roles.insert(PluginName,   "pluginName");
-        roles.insert(Text,         "message");
-        roles.insert(ImageUrl,     "picture");
-        roles.insert(Audio,        "audio");
-        roles.insert(Likes,        "likes");
-        roles.insert(CommentCount,     "commentCount");
-        roles.insert(Comments,     "comments");
-        roles.insert(Count,        "count");
-        roles.insert(ItemsCount,   "size");
-        roles.insert(Date,   "date");
+        roles.insert(Id, "id");
+        roles.insert(Count, "count");
+        roles.insert(PluginName, "pluginName");
+        roles.insert(Text, "message");
+        roles.insert(ImageUrl, "picture");
+        roles.insert(Audio, "audio");
+        roles.insert(Likes, "likes");
+        roles.insert(LikeUrl, "likeUrl");
+        roles.insert(CommentCount, "commentCount");
+        roles.insert(Comments, "comments");
+        roles.insert(Count, "count");
+        roles.insert(ItemsCount, "size");
+        roles.insert(Date, "date");
 
         return roles;
     }
