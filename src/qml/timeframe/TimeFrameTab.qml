@@ -514,6 +514,11 @@ Item {
         onFlickEnded: flickableTimer.stop()
     }
 
+    Item {
+        id: foreground
+        anchors.fill: parent
+    }
+
     state: ""
     states: [
 

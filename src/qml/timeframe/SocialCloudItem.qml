@@ -8,8 +8,8 @@ Item{
     property string message: ""
     property string picture: ""
     property string pluginName: ""
-    property variant pluginIcon : iconPlugin
-    property variant commentsView : commentsListView
+    property alias pluginIcon : iconPlugin
+    property alias commentsView : commentsListView
     MouseArea {
         id: modal
         anchors.fill: parent
@@ -61,7 +61,7 @@ Item{
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.left: parent.left
-                height: 26
+                height: 0
                 visible: false
 
                 Image {
@@ -112,8 +112,8 @@ Item{
             }
             Item {
                 id: bodyItem
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                anchors.top: topLine.bottom
+                anchors.bottom: bottomLine.top
                 width: parent.width
                 clip: true
                 Text {
@@ -135,22 +135,18 @@ Item{
                     id: socialImage
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
-                    fillMode: Image.PreserveAspectCrop
-                    //anchors.leftMargin:
-                    //anchors.rightMargin: 1
+                    fillMode: Image.PreserveAspectFit
                     smooth: true
                     source: picture
-                    //width: Math.min( sourceSize.width, parent.width-4)
-                    //height: Math.min( sourceSize.height, parent.height-4)
-                    width: parent.width
-                    height: parent.height
+                    width: Math.min( sourceSize.width, parent.width)
+                    height: Math.min( sourceSize.height, parent.height)
                     clip: true
                 }
             }
             Rectangle {
                 id: bottomLine
                 color: "#335f5f5f"
-                anchors.bottom: parent.bottom
+                anchors.bottom: commentsListView.top
                 anchors.right: parent.right
                 anchors.left: parent.left
                 height: 26
@@ -168,6 +164,45 @@ Item{
                     visible: false
                 }
                 Item {
+                    id: likeItem
+                    anchors.centerIn: parent
+                    height: parent.height
+                    width: 30
+                    visible: false
+                    state: "" // To-Do add like role to social item
+                    Text {
+                        id: likesText
+                        anchors.fill: parent
+                        wrapMode: Text.WordWrap
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        text: "Like"
+                        color: "grey"
+                    }
+                    MouseArea{
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: likesText.font.bold = true
+                        onExited: likesText.font.bold = false
+                        onClicked: {
+                            console.log("add like to item, item id: " + "To-do: add id role")
+                            if (likeItem.state === "")
+                                likeItem.state = "liked"
+                            else
+                                likeItem.state = ""
+                        }
+                    }
+                    states: [
+                        State {
+                            name: "liked"
+                            PropertyChanges {
+                                target: likesText
+                                text: "Unlike"
+                            }
+                        }
+                    ]
+                }
+                Item {
                     id: commentsCount
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right:  parent.right
@@ -179,7 +214,7 @@ Item{
                     Text {
                         anchors.fill: parent
                         wrapMode: Text.WordWrap
-                        horizontalAlignment: Text.AlignLeft
+                        horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                         text: "Comments: " + comments
                         color: "grey"
@@ -230,42 +265,13 @@ Item{
                     source: "images/comment.png"
                 }                
             }
-            ListModel {
-                id: commentsModel
-/*
-                ListElement {
-                    name: "Apple"
-                    cost: 2.45
-                    attributes: [
-                        ListElement { description: "Core" },
-                        ListElement { description: "Deciduous" }
-                    ]
-                }
-                ListElement {
-                    name: "Orange"
-                    cost: 3.25
-                    attributes: [
-                        ListElement { description: "Citrus" }
-                    ]
-                }
-                ListElement {
-                    name: "Banana"
-                    cost: 1.95
-                    attributes: [
-                        ListElement { description: "Tropical" },
-                        ListElement { description: "Seedless" }
-                    ]
-                }
-                */
-            }
 
             ListView {
                 id: commentsListView
-                anchors.top : bottomLine.bottom
+                //anchors.top : bottomLine.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                //model: commentsModel
+                anchors.bottom: commentsEdit.top
                 clip: true
                 visible: false
                 delegate: Item {
@@ -297,17 +303,21 @@ Item{
                         text: messageText
                         elide: Text.ElideRight
                     }
-//                    Text { text: '$' + cost; anchors.left: nameField.right }
-//                    Row {
-//                        anchors.top: nameField.bottom
-//                        spacing: 5
-//                        Text { text: messageText }
-//                       /* Repeater {
-//                            model: attributes
-//                            Text { text: description }
-//                        }*/
-//                    }
                 }
+            }
+            CommentsEditBox
+            {
+                id: commentsEdit
+                height: 0
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.left: parent.left
+                edit.color: "grey"
+                edit.text: "Write comment..."
+            }
+            Connections {
+                target: commentsEdit
+                onSend: console.log("comment sending via text edit: " +comment)
             }
 
         }
@@ -319,25 +329,22 @@ Item{
             anchors.fill: parent
             z: 9999
             onClicked: {
-                if (cloudRect.state === "")
-                {
+                if (cloudRect.state === "") {
                     cloudRect.state = "details"
                     modal.parent = timeFrameTab;
                 }
-                else
-                {
-
+                else {
                     modal.parent = socialCloudItem
                     cloudRect.state = ""
                 }
             }
-
         }
     }
 
     states: [
         State {
             name: "details"
+
             AnchorChanges {
                 target: socialCloudItem
                 anchors.left : undefined
@@ -355,12 +362,7 @@ Item{
                 y: timeFrameTab.height/2 - socialCloudItem.height/2
                 width: 400
                 height: 300
-            }
-            AnchorChanges {
-                target: bodyItem
-                anchors.top: topLine.bottom
-                anchors.bottom: bottomLine.top
-            }
+            }/*
             AnchorChanges {
                 target: socialMessage
                 anchors.verticalCenter: undefined
@@ -373,12 +375,14 @@ Item{
                 anchors.top: socialMessage.bottom
                 anchors.horizontalCenter: bodyItem.horizontalCenter
                 anchors.bottom: bodyItem.bottom
+            }*/
+            PropertyChanges {
+                target: topLine
+                height: 26
+                visible: true
             }
-            //PropertyChanges { target: socialImage; width:  }
 
             PropertyChanges { target: socialMessage; text: message }
-
-            PropertyChanges { target: socialCloudItem; z:1000 }
 
             PropertyChanges { target: background; color: "white" }
 
@@ -394,54 +398,38 @@ Item{
 
             PropertyChanges { target: commentIcon; visible: false }
 
-            PropertyChanges { target: timeScale; z: -1 }
-
-            PropertyChanges { target: topLine; visible: true }
-
             PropertyChanges { target: detailsOnArea; enabled: false }
 
             PropertyChanges { target: innerShadow; opacity: 1 }
+
+            PropertyChanges { target: likeItem; visible: true}
         },
         State {
             name: "comments" ; extend: "details"
-            PropertyChanges {
-                target: socialCloudItem
-                height: 300 + 60 * comments
-            }
-            AnchorChanges {
-                target: bodyItem
-                anchors.top : topLine.bottom
-                anchors.bottom: undefined
-            }
-            PropertyChanges {
-                target: bodyItem
-                height: 300 - topLine.height - bottomLine.height
-            }
-            AnchorChanges {
-                target: bottomLine
-                anchors.bottom: undefined
-                anchors.top: bodyItem.bottom
-            }
+
+            PropertyChanges { target: socialCloudItem; height: 300 + 60 * (comments + 1) }
+
             PropertyChanges {
                 target: commentsListView
                 visible: true
+                height: 60 * comments
             }
+
+            PropertyChanges { target: commentsEdit; height: 60 }
         }
     ]
 
-    transitions: Transition {
-        ParentAnimation {
+    transitions: [
+        Transition {
             ColorAnimation { property: "color"; duration: 300 }
-            NumberAnimation { target: socialCloudItem; property: "z" }
-            //SequentialAnimation {
+            //AnchorAnimation { duration: 300 }
+            ParentAnimation {
+                via: foreground
                 NumberAnimation { properties: "x,y,width,height,opacity,z"; duration: 300 }
-              //  NumberAnimation { properties: "z"; duration: 300 }
-            //}
 
-
-            AnchorAnimation { duration: 300 }
+            }
         }
-    }
+    ]
 
     function textVisible()
     {
