@@ -30,6 +30,7 @@ void FacebookRequest::start()
     case Get:
         reply = manager->get(request);
         connect(reply, SIGNAL(finished()), SLOT(replyFinished()));
+        connect(reply, SIGNAL(finished()), SIGNAL(success()));
         break;
     case Post:
         request.setHeader(QNetworkRequest::ContentTypeHeader, "text/plain");
@@ -41,7 +42,6 @@ void FacebookRequest::start()
         return;
     }
 
-    connect(reply, SIGNAL(finished()), SIGNAL(success()));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
 }
 
@@ -59,8 +59,12 @@ void FacebookRequest::postFinished()
     QByteArray answer = reply->readAll();
     QJson::Parser parser;
     QVariantMap result = parser.parse(answer).toMap();
+
     QString id =  result.value("id").toString();
-    emit newItemId(id);
+    if(!id.isEmpty())
+        emit newItemId(id);
+
+    emit success();
 }
 
 void FacebookRequest::error(QNetworkReply::NetworkError error)
