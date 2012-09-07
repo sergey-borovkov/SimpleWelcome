@@ -120,8 +120,8 @@ Item{
                     id: img
                     anchors.horizontalCenter: parent.horizontalCenter
                     fillMode: Image.PreserveAspectFit
-                    width: Math.min( sourceSize.width, parent.width)
-                    height: Math.min( sourceSize.height, parent.height)
+                    width: Math.min(200, sourceSize.width)
+                    height: Math.min(150, sourceSize.height)
                     anchors.leftMargin: 5
                     anchors.rightMargin: 5
                     smooth: true
@@ -184,10 +184,18 @@ Item{
                     MouseArea{
                         anchors.fill: parent
                         onClicked: {
-                            if (galleryRect.state === "details")
+                            if (galleryRect.state === "details") {
+                                //Set source on comments loader
+                                commentsEdit.source = "CommentsEditBox.qml"
+                                commentsEdit.item.edit.color = "grey"
+                                commentsEdit.item.edit.text = "Write comment..."
                                 galleryRect.state = "comments"
-                            else if (galleryRect.state === "comments")
+                            }
+                            else if (galleryRect.state === "comments") {
+                                //Destroy loader component
+                                commentsEdit.source = ""
                                 galleryRect.state = "details"
+                            }
                         }
                     }
                 }
@@ -271,8 +279,7 @@ Item{
                 model: repeater.model.comments(index)
                 delegate: Item {
                     width: 200; height: 60
-                    Image
-                    {
+                    Image  {
                         id: userPhoto
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
@@ -310,19 +317,16 @@ Item{
 //                    }
                 }
             }
-            CommentsEditBox
-            {
+            Loader {
                 id: commentsEdit
                 height: 0
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.left: parent.left
                 visible: false
-                edit.color: "grey"
-                edit.text: "Write comment..."
             }
             Connections {
-                target: commentsEdit
+                target: commentsEdit.item
                 onSend: console.log("comment sending via text edit: " +comment)
             }
         }
