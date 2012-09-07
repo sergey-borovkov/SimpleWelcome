@@ -4,6 +4,7 @@
 #include "socialdaymodel.h"
 #include "pluginitem.h"
 #include "pluginmodel.h"
+#include "pluginrequestreply.h"
 #include "../listmodel.h"
 
 #include <QtGui/QWidget>
@@ -61,6 +62,26 @@ void SocialProxy::startSearch()
         if(m_enabledPlugins.contains(plugin->name()))
             plugin->requestManager()->queryWall(QDate(), QDate());
     }
+}
+
+PluginRequestReply *SocialProxy::like(const QString &id, const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    Request *request = plugin->requestManager()->like(id);
+    PluginRequestReply *reply = new PluginRequestReply(request, this);
+    request->start();
+
+    return reply;
+}
+
+PluginRequestReply *SocialProxy::postComment(const QString &message, const QString &parentId, const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    Request *request = plugin->requestManager()->postComment(message, parentId);
+    PluginRequestReply *reply = new PluginRequestReply(request, this);
+    request->start();
+
+    return reply;
 }
 
 int SocialProxy::authorizedPluginCount() const
@@ -129,4 +150,16 @@ void SocialProxy::newItems(QList<SocialItem *> items)
 void SocialProxy::setModel(SocialDayModel *model)
 {
     m_socialModel = model;
+}
+
+ISocialPlugin *SocialProxy::pluginFromName(const QString &pluginName)
+{
+    ISocialPlugin *plugin = 0;
+    foreach (ISocialPlugin *p, m_plugins) {
+        if(p->name() == pluginName) {
+            plugin = p;
+            break;
+        }
+    }
+    return plugin;
 }

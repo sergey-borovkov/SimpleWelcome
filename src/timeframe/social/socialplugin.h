@@ -8,13 +8,17 @@
 class SocialItem;
 class QDate;
 
-/* All subclasses of this class should emit
-   success() and error(QString errorString) signals
-*/
-
+/**
+ * @brief The Request class encapsulates all write requests to social plugins .
+ *        All subclasses of this class in social plugins should emit success()
+ *        and error(QString errorString) signals when appropriate.
+ */
 class Request {
 public:
     virtual ~Request() {}
+    /**
+     * @brief start Start request. This method must be not blocking.
+     */
     virtual void start() = 0;
 };
 

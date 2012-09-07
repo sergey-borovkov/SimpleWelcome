@@ -174,6 +174,8 @@ void SWApp::initTimeframeSocialMode()
     TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
 
+    qmlRegisterUncreatableType<PluginRequestReply>("Widgets", 1, 0, "PluginRequestReply", "This class should be created in cpp"); // it's not supposed to be in widgets, should move later
+
     m_viewer->rootContext()->setContextProperty("socialProxy", m_manager);
     m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
     m_viewer->rootContext()->setContextProperty("socialDayModel", socialProxyModel);
