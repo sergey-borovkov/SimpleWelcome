@@ -27,9 +27,9 @@ Request *RequestManager::queryImage(const QString &id)
 
 }
 
-Request *RequestManager::postComment(const QString &postId, const QString &message)
+Request *RequestManager::postComment(const QString &message, const QString &parent)
 {
-    Q_UNUSED(postId)
+    Q_UNUSED(parent)
     Q_UNUSED(message)
 }
 

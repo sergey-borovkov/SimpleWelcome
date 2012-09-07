@@ -33,10 +33,10 @@ Request *RequestManager::queryImage(const QString &id)
     return request;
 }
 
-Request *RequestManager::postComment(const QString &parent, const QString &message)
+Request *RequestManager::postComment(const QString &message, const QString &parentId)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
-    QUrl url = QLatin1String("https://graph.facebook.com/") + parent + QLatin1String("/comments");
+    QUrl url = QLatin1String("https://graph.facebook.com/") + parentId + QLatin1String("/comments");
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
     url.addQueryItem("message", message);
     request->setUrl(url);
