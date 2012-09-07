@@ -52,7 +52,7 @@ void PreviewGenerator::setPreview(const KFileItem &item, const QPixmap &pixmap)
         p.drawPixmap(pict.width() / 2 - scaledPixmap.width() / 2, pict.height() / 2 - scaledPixmap.height() / 2 ,  scaledPixmap);
     }
     previews.insert(item.localPath(), pict);
-    //m_fileList.removeAll(item);
+
     notifyModel(item.localPath());
 }
 

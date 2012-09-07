@@ -3,9 +3,6 @@
 #include "itemmodel.h"
 #include "activityset.h"
 #include <QVariant>
-//#include <QSortFilterProxyModel>
-//#include <QStringList>
-#include <QDebug>
 
 TimeFrameFilterModel::TimeFrameFilterModel(QObject * parent) :
     QSortFilterProxyModel(parent)
@@ -42,8 +39,6 @@ LocalDayItem::LocalDayItem(const QDate &date, QObject *parent) :
 
 LocalDayItem::~LocalDayItem()
 {
-    qDebug() << "delete item";
-    //delete m_model;
 }
 
 
@@ -58,7 +53,7 @@ void LocalDayItem::addActivity(Activity* item)
     if(!m_types.contains(item->getType())) {
         m_types += (';' + item->getType());
     }
-    //ItemModel* model = qobject_cast<ItemModel*>(m_model->sourceModel());
+
     m_itemModel->addActivityItem(item);
     emit dataChanged();
 }
@@ -80,13 +75,6 @@ TimeFrameFilterModel * LocalDayItem::model()
 
 void LocalDayItem::thumbnailReady(QString url)
 {
-//    if (!m_model)
-//        return;
-
-//    m_model->sourceModel();
-
-//    ItemModel* model = qobject_cast<ItemModel*>(m_model->sourceModel());
-//    if (model)
     m_itemModel->thumbnailReady(url);
 
 }
@@ -95,11 +83,3 @@ QString LocalDayItem::types() const
 {
     return m_types;
 }
-
-/*
-void LocalDayItem::setActivityFilter(const QRegExp& filter)
-{
-   m_model->setFilterRegExp(filter);
-   emit dataChanged();
-}
-*/

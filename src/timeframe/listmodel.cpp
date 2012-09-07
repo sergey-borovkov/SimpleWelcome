@@ -35,7 +35,7 @@ void ListModel::appendRows(const QList<ListItem *> &items)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount() + items.size() - 1);
     foreach(ListItem * item, items)
-    m_items.append(item);
+        m_items.append(item);
     endInsertRows();
 }
 

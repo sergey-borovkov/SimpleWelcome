@@ -10,11 +10,6 @@
 
 class ActivityProxy;
 
-/*
-class ActivityList;
-class ActivitySet;
-*/
-
 class TimeScaleFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT

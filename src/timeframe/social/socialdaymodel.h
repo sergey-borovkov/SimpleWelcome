@@ -11,7 +11,6 @@
 class SocialDayItem;
 class SocialItem;
 
-
 class SocialDayFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
@@ -23,10 +22,8 @@ public slots:
     int getIndexByDate(int year, int month,  bool direction);
     QObject* itemsModel(QDate date) const;
     QDate getDateOfIndex(int listIndex);
-//    QString url( int row );
 
 };
-
 
 class SocialDayModel : public ListModel
 {
@@ -46,11 +43,6 @@ public:
 public slots:
     void newSocialItems(QList<SocialItem*> list);
     QObject* itemsModel(QDate date) const;
-
-
-//    int getIndexByDate( int year, int month, bool direction );
-//    QDate getDateOfIndex( int listIndex);
-//    void setActivityType( const QString& type );
 
 private slots:
     void handleItemChange();

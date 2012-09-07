@@ -115,7 +115,6 @@ QString TimeScaleItem::types() const
 
 void TimeScaleItem::addType(QString type)
 {
-    //qDebug() << type;
     if(!m_type.contains(type)) {
         m_type += (type + ";");
         emit dataChanged();

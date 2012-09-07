@@ -27,6 +27,10 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
+#include <QDesktopWidget>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
+#include <KServiceGroup>
 
 #include "generaliconprovider.h"
 #include "sessionprovider.h"
@@ -37,10 +41,6 @@
 #include "datasource_favorites.h"
 #include "datasource_documents.h"
 #include "searchgridmodel.h"
-
-#include <QDesktopWidget>
-
-#include <KServiceGroup>
 
 #include "timeframe/activityset.h"
 #include "timeframe/localdaymodel.h"
@@ -58,9 +58,8 @@
 #include "timeframe/social/pluginmodel.h"
 #include "timeframe/social/socialdaymodel.h"
 #include "timeframe/social/socialdayitem.h"
+#include "timeframe/social/pluginrequestreply.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
 
 #include "config.h"
 
@@ -153,7 +152,6 @@ void SWApp::initTimeframeLocalMode()
     m_viewer->rootContext()->setContextProperty("desktopWidth", r.width());
     m_viewer->rootContext()->setContextProperty("localDayModel", proxymodel);
     m_viewer->rootContext()->setContextProperty("activityProxy", m_proxy);
-    m_viewer->rootContext()->setContextProperty("activityProxy", m_proxy);
     m_viewer->rootContext()->setContextProperty("nepomukSource", m_source);
     m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
 }
@@ -175,6 +173,8 @@ void SWApp::initTimeframeSocialMode()
     TimeScaleItem* item = new TimeScaleItem();
     TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
+
+    qmlRegisterUncreatableType<PluginRequestReply>("Widgets", 1, 0, "PluginRequestReply", "This class should be created in cpp"); // it's not supposed to be in widgets, should move later
 
     m_viewer->rootContext()->setContextProperty("socialProxy", m_manager);
     m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
