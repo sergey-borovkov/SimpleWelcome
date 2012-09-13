@@ -216,6 +216,7 @@ Item{
                         color: "grey"
                     }
                     MouseArea{
+                        id: likeSendArea
                         anchors.fill: parent
                         hoverEnabled: true
                         onEntered: likesText.font.bold = true
@@ -228,10 +229,8 @@ Item{
                     states: [
                         State {
                             name: "liked"
-                            PropertyChanges {
-                                target: likesText
-                                text: "Unlike"
-                            }
+                            PropertyChanges { target: likesText; text: "Liked" }
+                            PropertyChanges { target: likeSendArea; enabled: false }
                         }
                     ]
                 }
