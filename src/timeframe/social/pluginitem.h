@@ -4,7 +4,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 
-#include "../listitem.h"
+#include "../timeframelib/listitem.h"
 
 class ISocialPlugin;
 
@@ -23,6 +23,8 @@ public:
     virtual ~PluginItem() {}
     virtual QString id() const;
     virtual QVariant data(int role) const;
+    virtual bool setData(const QVariant &value, int role);
+
     ISocialPlugin *plugin();
     static const QHash<int, QByteArray> roleNames() {
         QHash<int, QByteArray> roles;

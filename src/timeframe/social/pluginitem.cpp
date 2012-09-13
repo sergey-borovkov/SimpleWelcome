@@ -32,6 +32,11 @@ QVariant PluginItem::data(int role) const
     return m_module->icon();
 }
 
+bool PluginItem::setData(const QVariant &value, int role)
+{
+    return true;
+}
+
 ISocialPlugin *PluginItem::plugin()
 {
     return m_module;

@@ -6,8 +6,10 @@
 #include <qjson/parser.h>
 
 
+
 FeedItem::FeedItem(const QVariantMap &map)
 {
+    m_commentsModel = new ListModel(CommentItem::roleNames());
     fillFromMap(map);
 }
 
@@ -34,13 +36,21 @@ QVariant FeedItem::data(int role) const
         return m_data.value(role);
 }
 
+#include <QDebug>
+
+bool FeedItem::setData(const QVariant &value, int role)
+{    
+    m_data[role] = value;
+    return true;
+}
+
 QDate FeedItem::date() const
 {
     return QDate::fromString(data(Date).toString(), QString("d MM yyyy"));
 }
 
 void FeedItem::fillFromMap(const QVariantMap &map)
-{    
+{
     // http://developers.facebook.com/docs/reference/api/post/
     m_id = map.value("id").toString();
     QString message = map.value("message").toString();
@@ -71,6 +81,10 @@ void FeedItem::fillFromMap(const QVariantMap &map)
                 FacebookCommentItem *item = new FacebookCommentItem(v.toMap());
                 m_comments.append(item);
             }
+            QList<ListItem *> t;
+            foreach(CommentItem *item, m_comments)
+                t.append(item);
+            m_commentsModel->appendRows(t);
         }
     }
 
@@ -80,12 +94,10 @@ void FeedItem::fillFromMap(const QVariantMap &map)
     } else
         m_data.insert(Likes, 0);
 
-
     QVariant var;
-    var.setValue(m_comments);
-    m_data.insert(CommentCount, m_comments.size());
+    var.setValue(m_commentsModel);
+    m_data.insert(CommentCount, m_commentsModel->rowCount());
     m_data.insert(Comments, var);
-
     m_data.insert(PluginName, pluginName());
 }
 
@@ -103,6 +115,11 @@ QString FacebookCommentItem::id() const
 QVariant FacebookCommentItem::data(int role) const
 {
     return m_data.value(role);
+}
+
+bool FacebookCommentItem::setData(const QVariant &value, int role)
+{
+    return false;
 }
 
 void FacebookCommentItem::fillFromMap(const QVariantMap &map)

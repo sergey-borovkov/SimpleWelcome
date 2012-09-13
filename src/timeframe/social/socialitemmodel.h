@@ -4,9 +4,10 @@
 #include <QSortFilterProxyModel>
 #include <QSet>
 
-#include "../listmodel.h"
+#include "../timeframelib/listmodel.h"
 
 class SocialItem;
+class GenericCommentItem;
 
 class SocialItemModel : public ListModel
 {
@@ -20,6 +21,8 @@ signals:
 
 public slots:
     void addSocialItem(SocialItem* item);
+    void like(QString id);
+    void addComment(GenericCommentItem* item, QString id);
 
 private:
     QSet<QString> m_idSet;

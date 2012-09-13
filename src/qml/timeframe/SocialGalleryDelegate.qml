@@ -55,18 +55,16 @@ Item {
             spacing: 10
             flow: Flow.TopToBottom
 
-
             Repeater {
                 id: repeater
                 model: socialDayModel.itemsModel(date)
                 SocialDelegate { }
-            }
+            }            
         }
-
     }
 
 
-    function getDelegateWidth( count ){
+    function getDelegateWidth( count ){        
         if (count === 0)
         {
             galleryLister.startSearch(date,1)   //Start new search if null item becomes visible

@@ -1,6 +1,7 @@
 import QtQuick 1.1
 Item{
     id: cloudRect
+    property string id
     property date cloudDate
     property variant model
     property int likes: 0
@@ -185,7 +186,8 @@ Item{
                         onEntered: likesText.font.bold = true
                         onExited: likesText.font.bold = false
                         onClicked: {
-                            console.log("add like to item, item id: " + "To-do: add id role")
+                            console.log("add like to item, item id: " + id)
+                            socialProxy.likeItem(id, pluginName);
                             if (likeItem.state === "")
                                 likeItem.state = "liked"
                             else
@@ -271,7 +273,7 @@ Item{
                     fillMode: Image.PreserveAspectFit
                     smooth: true
                     source: "images/comment.png"
-                }                
+                }
             }
 
             ListView {
@@ -323,7 +325,10 @@ Item{
             }
             Connections {
                 target: commentsEdit.item
-                onSend: console.log("comment sending via text edit: " +comment)
+                onSend: {
+                    console.log("comment sending via text edit: " +comment)
+                    socialProxy.commentItem(comment, id, pluginName)
+                }
             }
 
         }

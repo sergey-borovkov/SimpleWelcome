@@ -1,7 +1,7 @@
 #ifndef PLUGINMODEl_H
 #define PLUGINMODEl_H
 
-#include "../listmodel.h"
+#include "../timeframelib/listmodel.h"
 
 class PluginModel : public ListModel
 {
