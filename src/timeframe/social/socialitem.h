@@ -15,6 +15,7 @@ public:
         LikeUrl,
         Date,
         Likes,
+        Like,
         Comments,
         CommentCount,
         Audio,
@@ -27,6 +28,12 @@ public:
     enum Type {
         Post,
         Image
+    };
+
+    enum LikeType {
+        NotLiked,
+        Liked,
+        LikeNotAvailable
     };
 
     virtual ~SocialItem() {}
@@ -44,8 +51,9 @@ public:
         roles.insert(Text, "message");
         roles.insert(ImageUrl, "picture");
         roles.insert(Audio, "audio");
+        roles.insert(Like, "like");
         roles.insert(Likes, "likes");
-        roles.insert(LikeUrl, "likeUrl");
+        roles.insert(LikeUrl, "likeUrl");        
         roles.insert(CommentCount, "commentCount");
         roles.insert(Comments, "comments");
         roles.insert(Count, "count");

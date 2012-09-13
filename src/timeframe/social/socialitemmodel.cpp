@@ -39,8 +39,19 @@ void SocialItemModel::like(QString id)
     for (int i = 0; i < rowCount(); i++) {        
         if (data(index(i,0),SocialItem::Id).toString() == id) {
             int likesCount = data(index(i,0),SocialItem::Likes).toInt();
-            bool result = setData(index(i,0),++likesCount,SocialItem::Likes);
-            if (!result) qDebug("Error on set likes");
+            int liked = data(index(i,0),SocialItem::Like).toInt();
+            switch(liked){
+            case SocialItem::NotLiked :
+                 setData(index(i,0), SocialItem::Liked, SocialItem::Like);
+                 setData(index(i,0),++likesCount, SocialItem::Likes);
+                 break;
+            case SocialItem::Liked :
+                setData(index(i,0), SocialItem::NotLiked, SocialItem::Like);
+                setData(index(i,0),--likesCount, SocialItem::Likes);
+                break;
+            case SocialItem::LikeNotAvailable :
+                break;
+            }
             break;
         }
     }

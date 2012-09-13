@@ -26,6 +26,18 @@ Request *RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
     return request;
 }
 
+
+Request *RequestManager::queryUserId()
+{
+    QUrl url(QLatin1String("https://graph.facebook.com/me"));
+    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
+
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
+    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(idReply(QByteArray)));
+    request->setUrl(url);
+    return request;
+}
+
 Request *RequestManager::queryImage(const QString &id)
 {
     Q_UNUSED(id)
@@ -79,18 +91,16 @@ void RequestManager::feedReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-
     if(result.contains(QLatin1String("error"))) {
         m_authorizer->logout();
         return;
     }
-
     QVariantList list = result.value(QLatin1String("data")).toList();
     QList<SocialItem *> feedItems;
 
     foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
-        FeedItem *feedItem = new FeedItem(map);
+        FeedItem *feedItem = new FeedItem(map, m_selfId);
         feedItems.append(feedItem);
     }
 
@@ -106,4 +116,16 @@ void RequestManager::feedReply(QByteArray reply)
         request->setUrl(paging.value("previous").toUrl());
         request->start();
     }
+}
+#include <QDebug>
+
+void RequestManager::idReply(QByteArray reply)
+{
+    QJson::Parser parser;
+    QVariantMap result = parser.parse(reply).toMap();
+    if(result.contains(QLatin1String("error"))) {
+        m_authorizer->logout();
+        return;
+    }
+    m_selfId = result.value(QLatin1String("id")).toString();
 }

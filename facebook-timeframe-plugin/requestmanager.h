@@ -13,6 +13,7 @@ class RequestManager : public QObject, public ISocialRequestManager
 public:
     explicit RequestManager(QObject *parent = 0);
     virtual Request *queryWall(const QDate &beginDate, const QDate &endDate);
+    virtual Request *queryUserId();
     virtual Request *queryImage(const QString &id);
     virtual Request *postComment(const QString &message, const QString &parentId);
     virtual Request *like(const QString &id);
@@ -22,13 +23,16 @@ public:
 
 private slots:
     void feedReply(QByteArray feedReply);
+    void idReply(QByteArray reply);
 
 signals:
     void authorizationComplete();
     void newSocialItems(QList<SocialItem *> items);
+    void userId(QString id);
 
 private:
     OAuth2Authorizer *m_authorizer;
+    QString m_selfId;
 };
 
 #endif // REQUESTMANAGER_H

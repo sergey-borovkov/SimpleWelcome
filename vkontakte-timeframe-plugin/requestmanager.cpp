@@ -20,6 +20,11 @@ Request *RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
     return request;
 }
 
+Request *RequestManager::queryUserId()
+{
+    return 0;
+}
+
 Request *RequestManager::queryImage(const QString &id)
 {
     Q_UNUSED(id)

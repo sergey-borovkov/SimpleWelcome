@@ -4,6 +4,7 @@ Item{
     property string id
     property date cloudDate
     property variant model
+    property int like: 0
     property int likes: 0
     property int comments: 0
     property string message: ""
@@ -170,7 +171,7 @@ Item{
                     height: parent.height
                     width: 30
                     visible: false
-                    state: "" // To-Do add like role to social item
+                    state: (like == 1)? "liked" : ""
                     Text {
                         id: likesText
                         anchors.fill: parent
@@ -187,11 +188,7 @@ Item{
                         onExited: likesText.font.bold = false
                         onClicked: {
                             console.log("add like to item, item id: " + id)
-                            socialProxy.likeItem(id, pluginName);
-                            if (likeItem.state === "")
-                                likeItem.state = "liked"
-                            else
-                                likeItem.state = ""
+                            socialProxy.likeItem(id, pluginName);                            
                         }
                     }
                     states: [

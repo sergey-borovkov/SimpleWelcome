@@ -34,6 +34,8 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
 
         bool isEnabled = settings.value(plugin->name()).toBool();
         if(isEnabled && plugin->authorized()) {
+            Request *requestId = plugin->requestManager()->queryUserId();
+            requestId->start();
             Request *request = plugin->requestManager()->queryWall(QDate(), QDate());
             request->start();
             m_enabledPlugins.insert(plugin->name());
