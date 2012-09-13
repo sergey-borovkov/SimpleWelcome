@@ -221,7 +221,8 @@ Item{
                         onEntered: likesText.font.bold = true
                         onExited: likesText.font.bold = false
                         onClicked: {
-                            console.log("add like to item, item id: " + "To-do: add id role")
+                            console.log("add like to item, item id: " + id)
+                            socialProxy.likeItem(id, pluginName);
                             if (likeItem.state === "")
                                 likeItem.state = "liked"
                             else
@@ -316,7 +317,15 @@ Item{
 //                        }*/
 //                    }
                 }
+            }/*
+            Connections {
+                target: repeater.model
+                onUpdateData: {
+                    console.log("update!!!!")
+                    commentsListView.model = repeater.model.comments(index)
+                }
             }
+*/
             Loader {
                 id: commentsEdit
                 height: 0
@@ -327,7 +336,10 @@ Item{
             }
             Connections {
                 target: commentsEdit.item
-                onSend: console.log("comment sending via text edit: " +comment)
+                onSend: {
+                    console.log("comment sending via text edit: " +comment)
+                    socialProxy.commentItem(comment, id, pluginName)
+                }
             }
         }
         MouseArea

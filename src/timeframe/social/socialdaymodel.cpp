@@ -2,6 +2,7 @@
 #include "socialdayitem.h"
 #include "socialitem.h"
 #include "socialitemmodel.h"
+#include "socialproxy.h"
 
 #include <QVariant>
 #include <QRegExp>
@@ -83,6 +84,11 @@ QVariant SocialDayModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+bool SocialDayModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    return true;
+}
+
 int SocialDayModel::rowCount(const QModelIndex &parent) const
 {
     return m_items.size();
@@ -115,6 +121,28 @@ QObject* SocialDayModel::itemsModel(QDate date) const
     return 0;
 }
 
+void SocialDayModel::likeItem(QString eventId)
+{
+    QDate date = m_idHash.value(eventId);
+    foreach (SocialDayItem * item, m_items) {
+        if (item->date() == date) {
+            item->likeItem(eventId);
+            break;
+        }
+    }
+}
+
+void SocialDayModel::addCommentToItem(GenericCommentItem *commentItem, QString eventId)
+{
+    QDate date = m_idHash.value(eventId);
+    foreach (SocialDayItem * item, m_items) {
+        if (item->date() == date) {
+            item->addCommentToItem(commentItem,eventId);
+            break;
+        }
+    }
+}
+
 void SocialDayModel::handleItemChange()
 {
     SocialDayItem* item = static_cast<SocialDayItem*>(sender());
@@ -144,7 +172,7 @@ void SocialDayModel::newSocialItems(QList < SocialItem * > list)
         if(m_idSet.contains(uniqueId))
             continue;
         m_idSet.insert(uniqueId);
-
+        m_idHash.insert(item->id(), item->date());
         int j = 0;
         bool flag = false;
         if(m_items.size() > 0) {

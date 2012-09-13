@@ -4,7 +4,7 @@
 #include <QDebug>
 
 #include "socialitem.h"
-
+#include "socialproxy.h"
 
 SocialItemModel::SocialItemModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)
@@ -32,4 +32,32 @@ void SocialItemModel::addSocialItem(SocialItem *item)
     m_idSet.insert(strId);
 
     appendRow(item);
+}
+
+void SocialItemModel::like(QString id)
+{    
+    for (int i = 0; i < rowCount(); i++) {        
+        if (data(index(i,0),SocialItem::Id).toString() == id) {
+            int likesCount = data(index(i,0),SocialItem::Likes).toInt();
+            bool result = setData(index(i,0),++likesCount,SocialItem::Likes);
+            if (!result) qDebug("Error on set likes");
+            break;
+        }
+    }
+}
+
+void SocialItemModel::addComment(GenericCommentItem *item, QString id)
+{
+    for (int i = 0; i < rowCount(); i++) {
+        if (data(index(i,0),SocialItem::Id).toString() == id) {
+            QVariant v = data(index(i, 0), SocialItem::Comments);
+            ListModel * commentsModel = qvariant_cast<ListModel* >(v);
+            commentsModel->appendRow(item);
+            v.setValue(commentsModel->rowCount());
+            bool result = setData(index(i,0), v, SocialItem::CommentCount);
+            if (!result)
+                qDebug() << " error on set comments count";
+            emit dataChanged(index(i, 0),index(i, 0));
+        }
+    }
 }

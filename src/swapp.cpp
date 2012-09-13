@@ -46,7 +46,7 @@
 #include "timeframe/localdaymodel.h"
 #include "timeframe/timescalemodel.h"
 #include "timeframe/itemmodel.h"
-#include "timeframe/listmodel.h"
+#include "../timeframelib/listmodel.h"
 #include "timeframe/activityproxy.h"
 #include "timeframe/nepomuksource.h"
 #include "timeframe/previewgenerator.h"

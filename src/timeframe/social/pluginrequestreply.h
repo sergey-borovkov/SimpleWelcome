@@ -22,7 +22,7 @@ public:
      * @param request Pointer to Request
      * @param parent
      */
-    explicit PluginRequestReply(Request *request, QObject *parent = 0);
+    explicit PluginRequestReply(Request *request, const QString& sourceId, QObject *parent = 0);
 
     /**
      * @brief isComplete Check if request already completed
@@ -42,7 +42,11 @@ public:
      */
     Q_INVOKABLE QString errorString() const;
 
+    QString sourceId();
+
 signals:
+    void success (PluginRequestReply*);
+    void failure (PluginRequestReply*);
     void finished();
 
 private slots:
@@ -51,6 +55,7 @@ private slots:
     void error(QString error);
 
 private:
+    QString m_sourceId;
     QString m_id;
     QString m_errorString;
     bool m_finished;

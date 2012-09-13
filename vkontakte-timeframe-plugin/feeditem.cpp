@@ -3,7 +3,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
-
+#include <QVariant>
+#include <QMap>
 #include <qjson/parser.h>
 
 QString FeedItem::pluginName() const
@@ -28,6 +29,15 @@ QVariant FeedItem::data(int role) const
     else
         return m_data.value(role);
 }
+
+bool FeedItem::setData(const QVariant &value, int role)
+{
+    if (role < 0 || role >= roleNames().size())
+             return false;
+    m_data[role] = value.toString();
+    return true;
+}
+
 
 QDate FeedItem::date() const
 {

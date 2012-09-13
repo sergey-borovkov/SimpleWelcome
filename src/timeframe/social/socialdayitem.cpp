@@ -1,13 +1,18 @@
 #include "socialdayitem.h"
 #include "socialitemmodel.h"
 #include "socialitem.h"
-#include "../listmodel.h"
+#include "../timeframelib/listmodel.h"
 
 SocialItemFilterModel::SocialItemFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
     setFilterRole(SocialItem::PluginName);
+}
+
+QString SocialItemFilterModel::id(int row)
+{
+    return data(index(row, 0), SocialItem::Id).toString();
 }
 
 QString SocialItemFilterModel::imageUrl(int row)
@@ -38,21 +43,20 @@ int SocialItemFilterModel::commentsCount(int row)
 
 QObject *SocialItemFilterModel::comments(int row)
 {
-    QVariant v = data(index(row, 0), SocialItem::Comments);
-    QList<CommentItem *> comments = qvariant_cast< QList<CommentItem *> >(v);
-
-    QList<ListItem *> t;    
-    foreach(CommentItem *item, comments)
-        t.append(item);    
-
-    ListModel *model = new ListModel(CommentItem::roleNames(), this);
-    model->appendRows(t);
-    return model;
+    QVariant v = data(index(row, 0), SocialItem::Comments);    
+    ListModel * commentsModel = qvariant_cast<ListModel* >(v);
+    commentsModel->setParent(sourceModel());
+    return commentsModel;
 }
 
 QString SocialItemFilterModel::pluginName(int row)
 {
     return data(index(row, 0), SocialItem::PluginName).toString();
+}
+
+void SocialItemFilterModel::update()
+{    
+    emit updateData();
 }
 
 SocialDayItem::SocialDayItem(const QDate &date, QObject *parent)
@@ -84,6 +88,11 @@ QVariant SocialDayItem::data(int role) const
     return QVariant();
 }
 
+bool SocialDayItem::setData(const QVariant &value, int role)
+{
+    return true;
+}
+
 
 void SocialDayItem::setDate(const QDate &d)
 {
@@ -98,6 +107,18 @@ void SocialDayItem::addSocialItem(SocialItem* item)
     }
     m_itemModel->addSocialItem(item);
     emit dataChanged();
+}
+
+void SocialDayItem::likeItem(QString eventId)
+{
+    m_itemModel->like(eventId);
+    m_model->update();
+}
+
+void SocialDayItem::addCommentToItem(GenericCommentItem *item, QString id)
+{
+    m_itemModel->addComment(item, id);
+    m_model->update();
 }
 
 QDate SocialDayItem::date()
@@ -125,3 +146,5 @@ void SocialDayItem::setSocialFilter(const QRegExp& filter)
     m_model->setFilterRegExp(filter);
     emit dataChanged();
 }
+
+

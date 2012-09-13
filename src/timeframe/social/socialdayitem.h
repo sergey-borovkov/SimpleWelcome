@@ -9,8 +9,9 @@
 class SocialItemModel;
 class SocialItem;
 class SocialItemFilterModel;
+class GenericCommentItem;
 
-#include "../listitem.h"
+#include "../timeframelib/listitem.h"
 
 class SocialItemFilterModel : public QSortFilterProxyModel
 {
@@ -19,8 +20,14 @@ public:
     explicit SocialItemFilterModel(QObject * parent = 0);
 
 signals:
+    /**
+     * @brief updateData - signal is emitted for not-view-based delegates to update role values
+     */
+    void updateData();
 
 public slots:
+
+    QString id(int row);
     QString imageUrl(int row);
     QString text(int row);
     int likesCount(int row);
@@ -28,6 +35,7 @@ public slots:
     int commentsCount(int row);
     QObject *comments(int row);
     QString pluginName(int row);
+    void update();
 };
 
 
@@ -49,6 +57,7 @@ public:
 
     virtual QString id() const;
     virtual QVariant data(int role) const;
+    virtual bool setData(const QVariant &value, int role);
 
     QDate date();
     int   count();
@@ -75,6 +84,8 @@ signals:
 public slots:
     void setDate(const QDate&);
     void addSocialItem(SocialItem* item);
+    void likeItem(QString eventId);
+    void addCommentToItem(GenericCommentItem*, QString);
 
 private:
     QString m_types;

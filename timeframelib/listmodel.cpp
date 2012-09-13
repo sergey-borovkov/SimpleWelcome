@@ -21,6 +21,17 @@ QVariant ListModel::data(const QModelIndex &index, int role) const
     return m_items.at(index.row())->data(role);
 }
 
+bool ListModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+      ListItem *item = m_items.at(index.row());
+      bool result = item->setData(value, role);      
+      if (result){
+          emit dataChanged(index, index);
+      }
+
+      return result;
+}
+
 ListModel::~ListModel()
 {
     clear();
@@ -72,6 +83,13 @@ void ListModel::clear()
 {
     qDeleteAll(m_items);
     m_items.clear();
+}
+
+Qt::ItemFlags ListModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return 0;
+    return Qt::ItemIsEditable | Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
 bool ListModel::removeRow(int row, const QModelIndex &parent)

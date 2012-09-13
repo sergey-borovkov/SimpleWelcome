@@ -3,13 +3,15 @@
 
 #include <QSortFilterProxyModel>
 #include <QSet>
+#include <QHash>
 #include <QDate>
 #include <QObject>
 
-#include "../listmodel.h"
+#include "../timeframelib/listmodel.h"
 
 class SocialDayItem;
 class SocialItem;
+class GenericCommentItem;
 
 class SocialDayFilterModel : public QSortFilterProxyModel
 {
@@ -34,6 +36,7 @@ public:
     ~SocialDayModel();
 
     QVariant data(const QModelIndex &index, int role) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     void appendRows(const QList<SocialDayItem*> &items);
@@ -43,13 +46,15 @@ public:
 public slots:
     void newSocialItems(QList<SocialItem*> list);
     QObject* itemsModel(QDate date) const;
+    void likeItem(QString eventId);    
+    void addCommentToItem(GenericCommentItem*, QString);
 
 private slots:
     void handleItemChange();
 
 private:
     QList<SocialDayItem *> m_items;
-
+    QHash<QString, QDate> m_idHash;
     QSet<QString> m_idSet;
 };
 

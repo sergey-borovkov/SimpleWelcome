@@ -11,6 +11,7 @@ public:
     virtual Type type() const;
     virtual QString id() const;
     virtual QVariant data(int role) const;
+    virtual bool setData(const QVariant &value, int role);
     virtual QDate date() const;
 
     void fillFromMap(QVariantMap map);

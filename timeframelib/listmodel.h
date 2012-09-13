@@ -2,18 +2,22 @@
 #define LISTMODEL_H
 
 #include <QAbstractListModel>
+#include <QMetaType>
+
+#include "timeframelib_global.h"
 
 class ListItem;
 
-class ListModel : public QAbstractListModel
+class TIMEFRAMELIB_EXPORT ListModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
     explicit ListModel(QHash<int, QByteArray> roles, QObject* parent = 0);
-    ~ListModel();    
+    ~ListModel();
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
     void appendRow(ListItem* item);
     virtual void appendRows(const QList<ListItem*> &items);
     void insertRow(int row, ListItem* item);
@@ -24,6 +28,7 @@ public:
     ListItem* find(const QString &id) const;
     QModelIndex indexFromItem(const ListItem* item) const;
     void clear();
+    Qt::ItemFlags flags ( const QModelIndex & index ) const;
 private slots:
     void handleItemChange();
 
@@ -32,4 +37,8 @@ private:
     QHash<int, QByteArray> m_roles;
 };
 
+Q_DECLARE_METATYPE( ListModel* )
+
 #endif // LISTMODEL_H
+
+

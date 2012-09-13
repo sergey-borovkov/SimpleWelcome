@@ -58,12 +58,12 @@ void FacebookRequest::postFinished()
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     QByteArray answer = reply->readAll();
     QJson::Parser parser;
+
     QVariantMap result = parser.parse(answer).toMap();
 
     QString id =  result.value("id").toString();
     if(!id.isEmpty())
-        emit newItemId(id);
-
+        emit newItemId(id);    
     emit success();
 }
 

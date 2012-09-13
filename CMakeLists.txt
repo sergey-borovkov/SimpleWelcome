@@ -34,6 +34,7 @@ add_custom_target(build-assets ALL
 	COMMENT "Building/copying the assets"
 )
 
+add_subdirectory(timeframelib)
 add_subdirectory(facebook-timeframe-plugin)
 add_subdirectory(vkontakte-timeframe-plugin)
 add_subdirectory(src)

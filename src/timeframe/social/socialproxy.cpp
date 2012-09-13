@@ -5,7 +5,7 @@
 #include "pluginitem.h"
 #include "pluginmodel.h"
 #include "pluginrequestreply.h"
-#include "../listmodel.h"
+#include "../timeframelib/listmodel.h"
 
 #include <QtGui/QWidget>
 #include <QtCore/QDebug>
@@ -56,6 +56,23 @@ PluginModel *SocialProxy::pluginModel()
     return m_pluginModel;
 }
 
+void SocialProxy::likeItem(const QString &id, const QString &pluginName)
+{
+    PluginRequestReply* reply = like(id, pluginName);
+    connect(reply,SIGNAL(success(PluginRequestReply*)),this, SLOT(likeSuccess(PluginRequestReply*)));
+    /*TO-DO: process error replies*/
+    connect(reply,SIGNAL(finished()),reply,SLOT(deleteLater()));
+}
+
+void SocialProxy::commentItem(const QString &message, const QString &parentId, const QString &pluginName)
+{
+    PluginRequestReply* reply = postComment(message, parentId, pluginName);
+    m_cachedComment = message;
+    connect(reply,SIGNAL(success(PluginRequestReply*)),this, SLOT(commentSuccess(PluginRequestReply*)));
+    connect(reply,SIGNAL(finished()),reply,SLOT(deleteLater()));
+
+}
+
 void SocialProxy::startSearch()
 {
     foreach(ISocialPlugin * plugin, m_plugins) {
@@ -68,7 +85,7 @@ PluginRequestReply *SocialProxy::like(const QString &id, const QString &pluginNa
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
     Request *request = plugin->requestManager()->like(id);
-    PluginRequestReply *reply = new PluginRequestReply(request, this);
+    PluginRequestReply *reply = new PluginRequestReply(request, id, this);
     request->start();
 
     return reply;
@@ -78,7 +95,7 @@ PluginRequestReply *SocialProxy::postComment(const QString &message, const QStri
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
     Request *request = plugin->requestManager()->postComment(message, parentId);
-    PluginRequestReply *reply = new PluginRequestReply(request, this);
+    PluginRequestReply *reply = new PluginRequestReply(request, parentId, this);
     request->start();
 
     return reply;
@@ -93,6 +110,17 @@ QString SocialProxy::authorizedPluginName(int i) const
 {
     QStringList authorizedPlugins = m_enabledPlugins.toList();
     return authorizedPlugins.at(i);
+}
+
+void SocialProxy::likeSuccess(PluginRequestReply* reply)
+{
+    m_socialModel->likeItem(reply->sourceId());
+}
+
+void SocialProxy::commentSuccess(PluginRequestReply* reply)
+{    
+    GenericCommentItem* item = new GenericCommentItem(m_cachedComment,reply->id());
+    m_socialModel->addCommentToItem(item, reply->sourceId());
 }
 
 void SocialProxy::authorized()
@@ -163,3 +191,32 @@ ISocialPlugin *SocialProxy::pluginFromName(const QString &pluginName)
     }
     return plugin;
 }
+
+
+GenericCommentItem::GenericCommentItem(const QString &message, const QString &id)
+{
+    m_data.insert(Message, message);
+    m_data.insert(Id, id);
+    /*TO-DO : insert prorer self id*/
+    m_data.insert(From, "User");
+    m_data.insert(FromId, "111");
+
+    m_data.insert(CreatedTime, QDateTime::currentDateTime());
+}
+
+QString GenericCommentItem::id() const
+{
+    return data(Id).toString();
+}
+
+QVariant GenericCommentItem::data(int role) const
+{
+    return m_data.value(role);
+}
+
+bool GenericCommentItem::setData(const QVariant &, int)
+{
+    return true;
+}
+
+

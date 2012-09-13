@@ -3,8 +3,8 @@
 
 #include <QtCore/QHash>
 #include <QtCore/QVariant>
-
-#include "../listitem.h"
+#include <QMetaType>
+#include "../timeframelib/listitem.h"
 
 class SocialItem : public ListItem
 {
@@ -84,6 +84,8 @@ public:
         return roles;
     }
 };
+
+Q_DECLARE_METATYPE( CommentItem * )
 
 Q_DECLARE_METATYPE(QList<CommentItem *>)
 

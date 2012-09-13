@@ -32,7 +32,8 @@ Item{
     }
 
     function createConnection()
-    {        
+    {
+        rect1.id = model.id(0)
         rect1.message = model.text(0)
         rect1.picture = model.imageUrl(0)
         rect1.likes = model.likesCount(0)
@@ -40,5 +41,7 @@ Item{
         rect1.pluginName = model.pluginName(0)
         rect1.pluginIcon.source =  "image://plugin/" + rect1.pluginName
         rect1.commentsView.model = model.comments(0)
+        Qt.createQmlObject('import QtQuick 1.1;  Connections {target: model; \
+                onUpdateData: { rect1.likes = model.likesCount(0); rect1.comments = model.commentsCount(0) } }',cloudOne);
     }
 }
