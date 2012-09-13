@@ -182,22 +182,23 @@ Item{
                         color: "grey"
                     }
                     MouseArea{
+                        id: likeSendArea
                         anchors.fill: parent
                         hoverEnabled: true
                         onEntered: likesText.font.bold = true
                         onExited: likesText.font.bold = false
                         onClicked: {
-                            console.log("add like to item, item id: " + id)
-                            socialProxy.likeItem(id, pluginName);                            
+                            //TO-DO: add delete like
+                            console.log("add like to item, item id: " + id)                            
+                            socialProxy.likeItem(id, pluginName);
+
                         }
                     }
                     states: [
                         State {
                             name: "liked"
-                            PropertyChanges {
-                                target: likesText
-                                text: "Unlike"
-                            }
+                            PropertyChanges { target: likesText; text: "Liked" }
+                            PropertyChanges { target: likeSendArea; enabled: false }  //Disable until delete like implementation
                         }
                     ]
                 }
