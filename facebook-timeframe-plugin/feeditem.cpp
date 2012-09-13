@@ -7,7 +7,8 @@
 
 
 
-FeedItem::FeedItem(const QVariantMap &map)
+FeedItem::FeedItem(const QVariantMap &map, QString selfId) :
+    m_selfId(selfId)
 {
     m_commentsModel = new ListModel(CommentItem::roleNames());
     fillFromMap(map);
@@ -90,8 +91,21 @@ void FeedItem::fillFromMap(const QVariantMap &map)
 
     if(map.contains("likes")) {
         QVariantMap likes = map.value("likes").toMap();
+        if (likes.value("count").toInt() > 0) {
+            QVariantList likesList = likes.value("data").toList();
+            SocialItem::LikeType like = SocialItem::NotLiked;
+            foreach(QVariant v, likesList) {
+                QMap<QString, QVariant> map = v.toMap();
+                if (map.value("id") == m_selfId)  {
+                    like = SocialItem::Liked;
+                    break;
+                }
+            }
+            m_data.insert(Like,like);
+        }
         m_data.insert(Likes, likes.value("count").toInt());
-    } else
+    }
+    else
         m_data.insert(Likes, 0);
 
     QVariant var;

@@ -9,7 +9,7 @@
 class FeedItem : public SocialItem
 {
 public:
-    FeedItem(const QVariantMap &map);
+    FeedItem(const QVariantMap &map, QString selfId);
     virtual QString pluginName() const;
     virtual Type type() const;
     virtual QString id() const;
@@ -24,6 +24,7 @@ private:
     QMap<int, QVariant> m_data;
     QList<CommentItem *> m_comments;
     ListModel* m_commentsModel;
+    QString m_selfId;
 };
 
 class FacebookCommentItem : public CommentItem
