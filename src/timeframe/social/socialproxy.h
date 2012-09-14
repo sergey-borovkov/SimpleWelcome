@@ -33,6 +33,7 @@ public:
 
 public slots:
     void likeItem(const QString &id, const QString &pluginName);
+    void dislikeItem(const QString &id, const QString &pluginName);
     void commentItem(const QString &message, const QString &parentId, const QString &pluginName);
     void authorized();
     void deauthorized();
@@ -73,6 +74,9 @@ private:
      * @param pluginName Name of social plugin object originates from
      */
     PluginRequestReply *like(const QString &id, const QString &pluginName);
+
+
+    PluginRequestReply *dislike(const QString &id, const QString &pluginName);
 
     /**
      * @brief postComment

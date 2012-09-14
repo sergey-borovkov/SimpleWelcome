@@ -186,19 +186,22 @@ Item{
                         anchors.fill: parent
                         hoverEnabled: true
                         onEntered: likesText.font.bold = true
-                        onExited: likesText.font.bold = false
+                        onExited: likesText.font.bold = false                        
                         onClicked: {
-                            //TO-DO: add delete like
-                            console.log("add like to item, item id: " + id)                            
-                            socialProxy.likeItem(id, pluginName);
-
+                            if (likeItem.state === "") {
+                                console.log("add like to item, item id: " + id)
+                                socialProxy.likeItem(id, pluginName);
+                            } else {
+                                console.log("dislike item, item id: " + id)
+                                socialProxy.dislikeItem(id, pluginName);
+                            }
                         }
                     }
                     states: [
                         State {
                             name: "liked"
-                            PropertyChanges { target: likesText; text: "Liked" }
-                            PropertyChanges { target: likeSendArea; enabled: false }  //Disable until delete like implementation
+                            PropertyChanges { target: likesText; text: "Dislike" }
+                            //PropertyChanges { target: likeSendArea; enabled: false }
                         }
                     ]
                 }

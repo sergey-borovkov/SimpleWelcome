@@ -16,7 +16,8 @@ class FacebookRequest : public QObject, public Request
 public:
     enum RequestType {
         Get,
-        Post
+        Post,
+        Delete
     };
 
     explicit FacebookRequest(RequestType type, QObject *parent = 0);

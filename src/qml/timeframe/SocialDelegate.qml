@@ -11,7 +11,7 @@ Item{
 
     MouseArea {
         id: modal
-        anchors.fill: parent        
+        anchors.fill: parent
     }
 
     BorderImage {
@@ -28,7 +28,7 @@ Item{
         id: galleryItem
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        width: 200        
+        width: 200
         height: (__notDetailed) ? childrenRect.height : __height  //we dont want futher increase height after initial state
 
         ShadowRectangle {
@@ -162,7 +162,7 @@ Item{
             Item {
                 id: bottomLine
                 width: parent.width
-                height: 26//Math.max( commentsCountText.paintedHeight, dt.paintedHeight )                
+                height: 26//Math.max( commentsCountText.paintedHeight, dt.paintedHeight )
                 anchors.bottom: commentsListView.top
                 anchors.topMargin: 3
 
@@ -172,7 +172,7 @@ Item{
                     anchors.leftMargin: 3
                     width: 100
                     height: parent.height
-//                    visible: false
+                    //                    visible: false
                     Text {
                         anchors.fill: parent
                         wrapMode: Text.WordWrap
@@ -222,15 +222,20 @@ Item{
                         onEntered: likesText.font.bold = true
                         onExited: likesText.font.bold = false
                         onClicked: {
-                            console.log("add like to item, item id: " + id)
-                            socialProxy.likeItem(id, pluginName);                           
+                            if (likeItem.state === "") {
+                                console.log("add like to item, item id: " + id)
+                                socialProxy.likeItem(id, pluginName);
+                            } else {
+                                console.log("dislike item, item id: " + id)
+                                socialProxy.dislikeItem(id, pluginName);
+                            }
                         }
                     }
                     states: [
                         State {
                             name: "liked"
-                            PropertyChanges { target: likesText; text: "Liked" }
-                            PropertyChanges { target: likeSendArea; enabled: false }
+                            PropertyChanges { target: likesText; text: "Dislike" }
+                            //PropertyChanges { target: likeSendArea; enabled: false }
                         }
                     ]
                 }
@@ -301,16 +306,16 @@ Item{
                         text: messageText
                         elide: Text.ElideRight
                     }
-//                    Text { text: '$' + cost; anchors.left: nameField.right }
-//                    Row {
-//                        anchors.top: nameField.bottom
-//                        spacing: 5
-//                        Text { text: messageText }
-//                       /* Repeater {
-//                            model: attributes
-//                            Text { text: description }
-//                        }*/
-//                    }
+                    //                    Text { text: '$' + cost; anchors.left: nameField.right }
+                    //                    Row {
+                    //                        anchors.top: nameField.bottom
+                    //                        spacing: 5
+                    //                        Text { text: messageText }
+                    //                       /* Repeater {
+                    //                            model: attributes
+                    //                            Text { text: description }
+                    //                        }*/
+                    //                    }
                 }
             }/*
             Connections {
@@ -349,7 +354,7 @@ Item{
                     modal.parent = timeFrameTab;
                     __notDetailed = false
                     __height = galleryItem.childrenRect.height
-                    galleryRect.state = "details"                    
+                    galleryRect.state = "details"
                 }
             }
         }

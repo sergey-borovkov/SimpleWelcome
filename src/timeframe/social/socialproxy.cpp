@@ -66,6 +66,14 @@ void SocialProxy::likeItem(const QString &id, const QString &pluginName)
     connect(reply,SIGNAL(finished()),reply,SLOT(deleteLater()));
 }
 
+void SocialProxy::dislikeItem(const QString &id, const QString &pluginName)
+{
+    PluginRequestReply* reply = dislike(id, pluginName);
+    connect(reply,SIGNAL(success(PluginRequestReply*)),this, SLOT(likeSuccess(PluginRequestReply*)));
+    /*TO-DO: process error replies*/
+    connect(reply,SIGNAL(finished()),reply,SLOT(deleteLater()));
+}
+
 void SocialProxy::commentItem(const QString &message, const QString &parentId, const QString &pluginName)
 {
     PluginRequestReply* reply = postComment(message, parentId, pluginName);
@@ -93,6 +101,15 @@ PluginRequestReply *SocialProxy::like(const QString &id, const QString &pluginNa
     return reply;
 }
 
+PluginRequestReply *SocialProxy::dislike(const QString &id, const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    Request *request = plugin->requestManager()->dislike(id);
+    PluginRequestReply *reply = new PluginRequestReply(request, id, this);
+    request->start();
+    return reply;
+}
+
 PluginRequestReply *SocialProxy::postComment(const QString &message, const QString &parentId, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
@@ -115,7 +132,7 @@ QString SocialProxy::authorizedPluginName(int i) const
 }
 
 void SocialProxy::likeSuccess(PluginRequestReply* reply)
-{
+{    
     m_socialModel->likeItem(reply->sourceId());
 }
 
