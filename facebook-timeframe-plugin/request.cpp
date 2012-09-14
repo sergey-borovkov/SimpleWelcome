@@ -37,6 +37,12 @@ void FacebookRequest::start()
         reply = manager->post(request, QByteArray());
         connect(reply, SIGNAL(finished()), SLOT(postFinished()));
         break;
+    case Delete:
+        reply = manager->deleteResource(request);
+        connect(reply, SIGNAL(finished()), SLOT(replyFinished()));
+        connect(reply, SIGNAL(finished()), SIGNAL(success()));
+        break;
+
     default:
         qWarning("FacebookRequest::start() -- Invalid argument");
         return;
@@ -45,10 +51,12 @@ void FacebookRequest::start()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
 }
 
+#include <QDebug>
+
 void FacebookRequest::replyFinished()
-{
+{    
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    QByteArray answer = reply->readAll();
+    QByteArray answer = reply->readAll(); 
     emit replyReady(answer);
     reply->deleteLater();
 }

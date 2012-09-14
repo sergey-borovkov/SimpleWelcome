@@ -15,7 +15,9 @@ public:
     virtual Request *queryUserId();
     virtual Request *queryImage(const QString &id);
     virtual Request *postComment(const QString &message, const QString &parent);
+
     virtual Request *like(const QString &id);
+    virtual Request *dislike(const QString &id);
 
     virtual Request *logout();
 

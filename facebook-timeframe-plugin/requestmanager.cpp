@@ -65,6 +65,15 @@ Request *RequestManager::like(const QString &id)
     return request;
 }
 
+Request *RequestManager::dislike(const QString &id)
+{
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Delete, this);
+    QUrl url = QLatin1String("https://graph.facebook.com/") + id + QLatin1String("/likes");
+    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
+    request->setUrl(url);
+    return request;
+}
+
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 {
     m_authorizer = authorizer;

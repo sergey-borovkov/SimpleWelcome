@@ -45,6 +45,12 @@ Request *RequestManager::like(const QString &id)
     return request;
 }
 
+Request *RequestManager::dislike(const QString &id)
+{
+    Q_UNUSED(id)
+    return 0;
+}
+
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 {
     m_authorizer = authorizer;
