@@ -5,30 +5,18 @@ FocusScope {
     width: parent.width
     clip: true
 
-    property variant grid//: appsGrid
+    property variant grid: groupTab.tabListView.currentItem.activeGridGroup.gridView
     property alias tab: groupTab
 
     GridWithGroupTab {
         id: groupTab
         groups: [
             {
-                //group: "Recent Applications",
-                dataSource: dataSource_Apps
+                groupName: "Ololo",
+                dataSource: dataSource_Apps,
+                draggable: true,
+                groupNameVisible: false
             }
         ]
     }
-//    IconGridView {
-//        id: appsGrid
-//        dataSource: dataSource_Apps
-//        anchors.fill: parent
-
-//        interactive: false
-//        focus: true
-//        keyNavigationWraps: true
-//        //flow: GridView.TopToBottom
-
-//        anchors.top: parent.top
-//        anchors.topMargin: 32
-//    }
-
 }

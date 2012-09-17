@@ -1,0 +1,182 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+## Translators:
+#   <cullero@gmail.com>, 2011.
+#   <evidal86@gmail.com>, 2011.
+#   <jpbraun@mandriva.com>, 2011.
+#   <periliocastrol@gmail.com>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: SimpleWelcome\n"
+"Report-Msgid-Bugs-To: https://qa.mandriva.com/\n"
+"POT-Creation-Date: 2011-06-16 13:59+0400\n"
+"PO-Revision-Date: 2011-09-13 21:09+0000\n"
+"Last-Translator: Emilio Castro <periliocastrol@gmail.com>\n"
+"Language-Team: Spanish (Castilian) (http://transifex.mandriva.com/projects/p/mandriva_i18n/team/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: local-applet/src/documenteventwidget.cpp:57
+#: local-applet/src/photoeventwidget.cpp:59
+#: local-applet/src/timeframedirmodel.cpp:70
+#: local-applet/src/videoeventwidget.cpp:99
+msgid ""
+"%1\n"
+"rating: %2"
+msgstr ""
+"%1\n"
+"valoración: %2"
+
+#: local-applet/src/rosa-launcher.cpp:149
+msgid "Search"
+msgstr "Buscar"
+
+#: local-applet/src/rosa-launcher.cpp:153
+msgid "Welcome"
+msgstr "Bienvenido"
+
+#: local-applet/src/rosa-launcher.cpp:164
+msgid "Applications"
+msgstr "Aplicaciones"
+
+#: local-applet/src/rosa-launcher.cpp:177
+msgid "TimeFrame"
+msgstr "Línea del tiempo"
+
+#: local-applet/src/timeframe.cpp:65
+msgid "Home"
+msgstr "Inicio"
+
+#: local-applet/src/timeframe.cpp:67
+msgid "Photos"
+msgstr "Fotos"
+
+#: local-applet/src/timeframe.cpp:69
+msgid "Video"
+msgstr "VIDEO"
+
+#: local-applet/src/timeframe.cpp:71
+msgid "Documents"
+msgstr "Documentos"
+
+#: local-applet/src/timeframe.cpp:114
+msgid "Enable..."
+msgstr "Activar..."
+
+#: local-applet/src/timeframe.cpp:123
+msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
+msgstr ""
+"Nepomuk está desactivado. Puede activarlo en el Centro de Control de KDE"
+
+#: local-applet/src/timeframe.cpp:238 local-applet/src/timeframe.cpp:282
+msgid "VIDEO"
+msgstr "VÍDEO"
+
+#: local-applet/src/timeframe.cpp:243 local-applet/src/timeframe.cpp:268
+msgid "PHOTO"
+msgstr "FOTO"
+
+#: local-applet/src/timeframe.cpp:253 local-applet/src/timeframe.cpp:297
+msgid "DOCUMENTS"
+msgstr "DOCUMENTOS"
+
+#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
+msgid "JAN"
+msgstr "ENE"
+
+#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
+msgid "FEB"
+msgstr "FEB"
+
+#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
+msgid "MAR"
+msgstr "MAR"
+
+#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
+msgid "APR"
+msgstr "ABR"
+
+#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
+msgid "MAY"
+msgstr "MAY"
+
+#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
+msgid "JUNE"
+msgstr "JUN"
+
+#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
+msgid "JULY"
+msgstr "JUL"
+
+#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
+msgid "AUG"
+msgstr "AGO"
+
+#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
+msgid "SEP"
+msgstr "SEP"
+
+#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
+msgid "OCT"
+msgstr "OCT"
+
+#: local-applet/src/timeframeslider.cpp:39 local-applet/src/timeslider.cpp:100
+msgid "NOV"
+msgstr "NOV"
+
+#: local-applet/src/timeframeslider.cpp:39 local-applet/src/timeslider.cpp:100
+msgid "DEC"
+msgstr "DIC"
+
+#: local-applet/src/timeslider.cpp:70
+msgid "D"
+msgstr "D"
+
+#: local-applet/src/timeslider.cpp:73
+msgid "M"
+msgstr "M"
+
+#: local-applet/src/welcomewidget.cpp:139
+#: local-applet/src/welcomewidget.cpp:141
+#: local-applet/src/welcomewidget.cpp:146
+msgid "Recent Applications"
+msgstr "Aplicaciones recientes"
+
+#: local-applet/src/welcomewidget.cpp:176
+#: local-applet/src/welcomewidget.cpp:178
+#: local-applet/src/welcomewidget.cpp:183
+msgid "Places"
+msgstr "Lugares"
+
+#: local-applet/src/welcomewidget.cpp:208
+#: local-applet/src/welcomewidget.cpp:210
+#: local-applet/src/welcomewidget.cpp:215
+msgid "Recent Documents"
+msgstr "Documentos recientes"
+
+#: src/main.cpp:36 src/main.cpp:43
+msgid "ROSA Desktop Application Launcher"
+msgstr "Lanzador de aplicaciones de escritorio ROSA"
+
+#: src/main.cpp:45
+msgid "Copyright 2010-2011, ROSALab"
+msgstr "Derechos reservados 2010-2011, ROSALab"
+
+#: src/main.cpp:46
+msgid "Aleksey Yermakov"
+msgstr "Aleksey Yermakov"
+
+#: src/main.cpp:47
+msgid "Author"
+msgstr "Autor"
+
+#: src/main.cpp:54
+msgid "Silent run. Hide application window after start."
+msgstr "Ejecución silenciosa. La aplicación se oculta después de iniciarse."
+
+

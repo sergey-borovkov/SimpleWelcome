@@ -11,7 +11,8 @@ class UserInfoProvider : public QObject
     Q_PROPERTY(QString userName READ getUserName)
 
 public:
-    UserInfoProvider(QObject *parent = 0);
+    UserInfoProvider(QObject *parent = 0)
+        : QObject(parent) {}
 
     QString getFullName();
     QString getLoginName();

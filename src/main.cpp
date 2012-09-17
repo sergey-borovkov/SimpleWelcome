@@ -34,31 +34,36 @@
 
 #include "swapp.h"
 
-static const char description[] = I18N_NOOP("ROSA Desktop Application Launcher QtQuick");
-static const char version[] = "0.1";
+static const char description[] = I18N_NOOP("ROSA Desktop Application Launcher");
+static const char version[] = "2.0";
 
 extern "C"
 //KDE_EXPORT int kdemain(int argc, char **argv)
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData("ROSA_Launcher_QtQuick", 0, ki18n("ROSA Desktop Application Launcher QtQuick"),
+    KAboutData aboutData("ROSA_Launcher", 0, ki18n("ROSA Desktop Application Launcher"),
                          version, ki18n(description), KAboutData::License_GPL,
                          ki18n("Copyright 2010-2012, ROSALab"));
-    aboutData.addAuthor(ki18n("Aleksey Yermakov"),
-                        ki18n("Author"),
-                        "alexey.yermakov@rosalab.ru");
-
     aboutData.addAuthor(ki18n("Alexander Skakov"),
                         ki18n("Author"),
                         "alexander.skakov@osinit.ru");
 
+    aboutData.addAuthor(ki18n("Aleksey Yermakov"),
+                        ki18n("Author"),
+                        "alexey.yermakov@rosalab.ru");
+
     KCmdLineArgs::init(argc, argv, &aboutData);
-    /*
+
     KCmdLineOptions options;
     options.add("s");
     options.add("silent", ki18n("Silent run. Hide application window after start."));
     KCmdLineArgs::addCmdLineOptions(options);
-    */
+
+    if (!KUniqueApplication::start())
+    {
+        qDebug() << "SimpleWelcome2 is already running!";
+        return 0;
+    }
 
     SWApp *app = SWApp::self();
     int rc = app->exec();

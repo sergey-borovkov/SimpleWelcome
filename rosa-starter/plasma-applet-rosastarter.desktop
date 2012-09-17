@@ -1,0 +1,20 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=SimpleWelcome
+Name[ru]=SimpleWelcome
+Comment=SimpleWelcome Application Launcher
+Comment[ru]=Меню запуска приложений SimpleWelcome
+Type=Service
+ServiceTypes=Plasma/Applet
+Icon=rosalauncher
+X-KDE-Library=plasma_applet_rosastarter
+X-KDE-PluginInfo-Author=Aleksey Ermakov
+X-KDE-PluginInfo-Email=alexey.yermakov@rosalab.ru
+X-KDE-PluginInfo-Name=rosastarter
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=http://rosalab.ru
+X-KDE-PluginInfo-Category=Utilities
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+#X-Plasma-NotificationArea=true

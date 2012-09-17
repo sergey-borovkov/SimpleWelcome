@@ -1,0 +1,201 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+## Translators:
+#   <jpbraun@mandriva.com>, 2011.
+# Alexandre Lissy <alissy@mandriva.com>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: SimpleWelcome\n"
+"Report-Msgid-Bugs-To: https://qa.mandriva.com/\n"
+"POT-Creation-Date: 2011-06-16 13:59+0400\n"
+"PO-Revision-Date: 2011-06-17 12:06+0000\n"
+"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: local-applet/src/photoeventwidget.cpp:59
+#: local-applet/src/videoeventwidget.cpp:99
+msgid ""
+"%1\n"
+"rating: %2"
+msgstr ""
+"%1\n"
+"notation : %2"
+
+#: local-applet/src/rosa-launcher.cpp:145
+#: local-applet/src/rosa-launcher.cpp:149
+msgid "Welcome"
+msgstr "Bienvenue"
+
+#: local-applet/src/rosa-launcher.cpp:160
+msgid "Applications"
+msgstr "Applications"
+
+#: local-applet/src/rosa-launcher.cpp:173
+msgid "TimeFrame"
+msgstr "Frise temporelle"
+
+#: local-applet/src/timeframe.cpp:55
+msgid "Home"
+msgstr "Répertoire personnel"
+
+#: local-applet/src/timeframe.cpp:57
+msgid "Photos"
+msgstr "Photos"
+
+#: local-applet/src/timeframe.cpp:59
+msgid "Video"
+msgstr "VIDÉO"
+
+#: local-applet/src/timeframe.cpp:187 local-applet/src/timeframe.cpp:211
+msgid "PHOTO"
+msgstr "PHOTO"
+
+#: local-applet/src/timeframe.cpp:195 local-applet/src/timeframe.cpp:225
+msgid "VIDEO"
+msgstr "59b66c91d53ec2c32023fb3e7483714c_tr"
+
+#: local-applet/src/timeframedirmodel.cpp:161
+msgid ""
+"\n"
+"rating: "
+msgstr ""
+"\n"
+"notation: "
+
+#: local-applet/src/timeframeitemdelegate.cpp:244
+msgctxt "Items in a folder"
+msgid "1 item"
+msgid_plural "%1 items"
+msgstr[0] "1 élément"
+msgstr[1] "%1 éléments"
+
+#: local-applet/src/timeframeitemdelegate.cpp:300
+#: local-applet/src/timeframeitemdelegate.cpp:304
+msgctxt "@info mimetype"
+msgid "Unknown"
+msgstr "Inconnnu"
+
+#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
+msgid "JAN"
+msgstr "JAN"
+
+#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
+msgid "FEB"
+msgstr "FÉV"
+
+#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
+msgid "MAR"
+msgstr "MAR"
+
+#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
+msgid "APR"
+msgstr "AVR"
+
+#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
+msgid "MAY"
+msgstr "MAI"
+
+#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
+msgid "JUNE"
+msgstr "JUIN"
+
+#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
+msgid "JULY"
+msgstr "JUIL"
+
+#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
+msgid "AUG"
+msgstr "AOÛ"
+
+#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
+msgid "SEP"
+msgstr "SEP"
+
+#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
+msgid "OCT"
+msgstr "OCT"
+
+#: local-applet/src/timeframeslider.cpp:39 local-applet/src/timeslider.cpp:100
+msgid "NOV"
+msgstr "NOV"
+
+#: local-applet/src/timeframeslider.cpp:39 local-applet/src/timeslider.cpp:100
+msgid "DEC"
+msgstr "DÉC"
+
+#: local-applet/src/timeslider.cpp:70
+msgid "D"
+msgstr "J"
+
+#: local-applet/src/timeslider.cpp:73
+msgid "M"
+msgstr "M"
+
+#: local-applet/src/welcomewidget.cpp:124
+#: local-applet/src/welcomewidget.cpp:126
+#: local-applet/src/welcomewidget.cpp:131
+msgid "Recent Applications"
+msgstr "Dernières applications"
+
+#: local-applet/src/welcomewidget.cpp:161
+#: local-applet/src/welcomewidget.cpp:163
+#: local-applet/src/welcomewidget.cpp:168
+msgid "Places"
+msgstr "Endroits"
+
+#: local-applet/src/welcomewidget.cpp:191
+#: local-applet/src/welcomewidget.cpp:193
+#: local-applet/src/welcomewidget.cpp:198
+msgid "Recent Documents"
+msgstr "Derniers documents"
+
+#: src/main.cpp:36 src/main.cpp:43
+msgid "ROSA Desktop Application Launcher"
+msgstr "Lanceur d'application du bureau ROSA"
+
+#: src/main.cpp:45
+msgid "Copyright 2010-2011, ROSALab"
+msgstr "Copyright 2010-2011, ROSALab"
+
+#: src/main.cpp:46
+msgid "Aleksey Yermakov"
+msgstr "Aleksey Yermakov"
+
+#: src/main.cpp:47
+msgid "Author"
+msgstr "Auteur"
+
+#: src/main.cpp:53
+msgid "Show window decorations around the widget"
+msgstr "Afficher les décorations de fenêtre autour du widget"
+
+#: src/main.cpp:54
+msgid "Do not show window decorations around the widget"
+msgstr "Ne pas afficher les décorations de fenêtre autour du widget"
+
+#: src/main.cpp:56
+msgid "Display the widget fullscreen"
+msgstr "Afficher le widget en plein écran"
+
+#: src/main.cpp:57
+msgid ""
+"Name of applet to view; may refer to the plugin name or be a path (absolute "
+"or relative) to a package. If not provided, then an attempt is made to load "
+"a package from the current directory."
+msgstr ""
+"Nom de l'applet à visualiser; fait référence à un nom de plugin ou un chemin"
+" (absolu ou relatif à un paquet. Si non fourni, le chargement du paquet se "
+"fait depuis le dossier courant)"
+
+#: src/main.cpp:60
+msgid "Optional arguments for the applet to add"
+msgstr "Arguments optionnels de l'applet"
+
+

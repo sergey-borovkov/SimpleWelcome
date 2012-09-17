@@ -1,11 +1,11 @@
 #include "datasource_apps.h"
-#include <kservicegroup.h>
-#include <kdebug.h>
+#include <KServiceGroup>
+#include <KConfigGroup>
 #include "datasource_recentapps.h"
 
-QList<AppItem> GetFlatList(QString group)
+AppItemList GetFlatList(QString group)
 {
-    QList<AppItem> out;
+    AppItemList out;
 
     KServiceGroup::Ptr root = KServiceGroup::group(group);
 
@@ -47,18 +47,62 @@ QList<AppItem> GetFlatList(QString group)
                 newItem.relPath = serviceGroup->relPath();
                 out.append(newItem);
             }*/
-        } else {
-            kDebug(250) << "KServiceGroup: Unexpected object in list!";
+        }
+        else
+        {
+            qDebug() << "KServiceGroup: Unexpected object in list!";
             continue;
         }
     }
     return out;
 }
 
+bool userAppsLessThan(const QPair<QString, int> &a, const QPair<QString, int> &b)
+{
+    return a.second < b.second;
+}
+
 DataSource_Apps::DataSource_Apps(QObject *parent, DataSource_RecentApps *inRecentApps)
     : DataSource(parent), prevCurrentGroup("-1"), recentApps(inRecentApps)
 {
+    KConfigGroup configGroup(KGlobal::config(), "General");
+    QStringList appsOrderList = configGroup.readEntry("User applications order", QStringList());
+    for (int i = 0; i < appsOrderList.size(); i++)
+    {
+        int indexOfSpace = appsOrderList[i].indexOf(" ");
+        if (indexOfSpace != -1)
+        {
+            int index = appsOrderList[i].left(indexOfSpace).toInt();
+            QString caption = appsOrderList[i].right(appsOrderList[i].size() - indexOfSpace - 1);
+            userAppsOrder.append(qMakePair(caption, index));
+        }
+    }
+
+    qSort(userAppsOrder.begin(), userAppsOrder.end(), userAppsLessThan);
+
     updateItems();
+}
+
+DataSource_Apps::~DataSource_Apps()
+{
+    saveData();
+}
+
+int DataSource_Apps::getItemCount()
+{
+    return appsList.count();
+}
+
+
+void DataSource_Apps::saveData()
+{
+    QStringList out;
+    for (int i = 0; i < userAppsOrder.size(); i++)
+        out.append(QString("%1 %2").arg(userAppsOrder[i].second).arg(userAppsOrder[i].first));
+
+    KConfigGroup configGroup(KGlobal::config(), "General");
+    configGroup.writeEntry("User applications order", out);
+    configGroup.sync();
 }
 
 void DataSource_Apps::getContent()
@@ -67,14 +111,82 @@ void DataSource_Apps::getContent()
         emit newItemData(QString("image://generalicon/appicon/%1").arg(appsList[i].icon), appsList[i].caption, i);
 }
 
+void DataSource_Apps::itemDragged(int fromIndex, int toIndex)
+{
+//    qDebug() << "Moving from to:" << fromIndex << toIndex;
+//    qDebug() << "WAS-------------------------";
+//    for (int i = 0; i < appsList.size(); i++)
+//        qDebug() << appsList[i].caption;
+
+    int userAppIndex = -1;
+    for (int i = 0; i < userAppsOrder.size(); i++)
+    {
+        if (userAppsOrder[i].first == appsList[fromIndex].caption)
+            userAppIndex = i;
+    }
+
+    /*if (dndDest < dndSrc)
+    {
+        for (var i = dndDest + 1; i <= dndSrc; i++)
+            model.get(i).id++
+    }
+    else
+    {
+        for (var i = dndSrc; i < dndDest; i++)
+            model.get(i).id--
+    }*/
+
+
+
+    if (userAppIndex != -1)
+    {
+        if (toIndex < fromIndex)
+        {
+            for (int i = 0; i < userAppsOrder.size(); i++)
+            {
+                qDebug() << i << ": " << userAppsOrder[i].second << " index is examining for (" << toIndex << ";" << fromIndex;
+                if (userAppsOrder[i].second >= toIndex && userAppsOrder[i].second < fromIndex)
+                    userAppsOrder[i].second++;
+            }
+        }
+        else
+            for (int i = 0; i < userAppsOrder.size(); i++)
+            {
+                if (userAppsOrder[i].second > fromIndex && userAppsOrder[i].second <= toIndex)
+                    userAppsOrder[i].second--;
+            }
+    }
+    if (userAppIndex == -1)
+        userAppsOrder.append(qMakePair(appsList[fromIndex].caption, toIndex));
+    else
+        userAppsOrder[userAppIndex].second = toIndex;
+
+    appsList.move(fromIndex, toIndex);
+
+    saveData();
+
+//    qDebug() << "NOW-------------------------";
+//    for (int i = 0; i < appsList.size(); i++)
+//        qDebug() << appsList[i].caption;
+    //    qDebug() << "END-------------------------";
+}
+
 void DataSource_Apps::updateItems()
 {
     prevCurrentGroup = currentGroup;
     appsList = GetFlatList(currentGroup);
-    qSort(appsList);
-}
 
-#include <QMessageBox>
+    qSort(appsList);
+
+    for (int i = 0; i < userAppsOrder.size(); i++)
+    {
+        for (int j = 0; j < appsList.size(); j++)
+        {
+            if (userAppsOrder[i].first == appsList[j].caption)
+                appsList.move(j, qBound(0, userAppsOrder[i].second, appsList.size() - 1));
+        }
+    }
+}
 
 void DataSource_Apps::itemClicked(int newIndex)
 {
@@ -85,7 +197,7 @@ void DataSource_Apps::itemClicked(int newIndex)
         AppItem clickedItem = appsList[newIndex];
         if(clickedItem.relPath.isEmpty()) {
             recentApps->addRecentApp(clickedItem.desktopEntry);
-            QMessageBox::information(0, clickedItem.desktopEntry, clickedItem.caption);
+            emit runDesktopFile(clickedItem.desktopEntry);
             return;
         }
     }
@@ -99,6 +211,4 @@ void DataSource_Apps::itemClicked(int newIndex)
         updateItems();
 
     emit resetContent();
-
-    //getContent();
 }

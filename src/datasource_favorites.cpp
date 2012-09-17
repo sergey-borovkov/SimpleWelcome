@@ -17,7 +17,7 @@ DataSource_Favorites::DataSource_Favorites(QObject *parent)
     }
 }
 
-int DataSource_Favorites::getItemCount(QString group)
+int DataSource_Favorites::getItemCount()
 {
     return favoritesList.count();
 }
@@ -30,10 +30,8 @@ void DataSource_Favorites::getContent()
     }
 }
 
-#include <QMessageBox>
-
 void DataSource_Favorites::itemClicked(int newIndex)
 {
-    if(newIndex != -1)
-        QMessageBox::information(0, favoritesList[newIndex].desktopEntry, favoritesList[newIndex].caption);
+    if (newIndex != -1)
+        emit runDesktopFile(favoritesList[newIndex].desktopEntry);
 }

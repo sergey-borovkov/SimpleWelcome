@@ -9,14 +9,12 @@ class DataSource_Documents : public DataSource
 
 public:
     explicit DataSource_Documents(QObject* parent = 0);
-    Q_INVOKABLE virtual int getItemCount(QString group = "") {
-        Q_UNUSED(group)
-        return docsList.count();
-    }
+    Q_INVOKABLE virtual int getItemCount();
 
 signals:
     void newItemData(QString iconPath, QString name, int id);
     void resetContent();
+    void runDesktopFile(QString desktopFile);
 
 public slots:
     virtual void itemClicked(int newIndex);

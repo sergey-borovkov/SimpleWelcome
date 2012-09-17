@@ -3,6 +3,8 @@ import QtQuick 1.1
 FocusScope {
     id: topBar
 
+    property alias searchText: searchInput.text
+
     anchors.top: parent.top
     width: parent.width
     height: 80
@@ -22,6 +24,7 @@ FocusScope {
             source: "image://generalicon/general/usericon"
             width: 64
             height: 64
+            smooth: true
         }
     }
 
@@ -45,7 +48,7 @@ FocusScope {
             wrapMode: Text.Wrap
 
             font.pointSize: 18
-            font.bold: true
+            //font.bold: true
             font.family: "Bitstream Vera Sans"
             style: Text.Raised
             styleColor: "#000"
@@ -64,8 +67,8 @@ FocusScope {
         id: searchField
         //color: "white"
         x: Math.max(parent.width/2 - width/2, userNameItem.x + userNameItem.width + 30)
-        width: Math.max(40, Math.min(600, lockButton.x - (userNameItem.x + userNameItem.width) - 30*2))
-        height: 30
+        width: Math.max(40, Math.min(600, sessionButtons.x - (userNameItem.x + userNameItem.width) - 30*2))
+        height: 26
 
         visible: tabListView.currentIndex !== 3
 
@@ -84,15 +87,16 @@ FocusScope {
         TextInput {
             //anchors.horizontalCenter: parent.horizontalCenter
             id: searchInput
-            width: parent.width - 24
-            anchors.verticalCenter: parent.verticalCenter
+            width: parent.width - 20
+            anchors.top: parent.top
+            anchors.topMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
             selectByMouse: true
             focus: true
-            color: "white"
+            //color: "white"
             font.family: "Bitstream Vera Sans"
-            font.italic: true
-            font.pixelSize: 18
+            //font.italic: true
+            //font.pixelSize: 12
 
             /*Keys.onPressed: {
                 event.accepted = false
@@ -116,71 +120,53 @@ FocusScope {
         }
     }
 
-    /*SessionComboBox {
-        anchors.verticalCenter: parent.verticalCenter
+    Image {
+        id: sessionButtons
+        width: 114
+        height: 68
         anchors.right: parent.right
-        anchors.rightMargin: 16
+        anchors.rightMargin: 10
+        anchors.topMargin: 10
+        anchors.top: parent.top
+        source: "image://generalicon/asset/session_buttons_bg.png"
 
-        width: 180
-        height: 38
-    }*/
-
-
-    // Old Logout and Shutdown buttons
-    Item {
-        id: lockButton
-        width: childrenRect.width
-        height: childrenRect.height
-
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.right: shutdownButton.left
-        //anchors.rightMargin: 8
-        anchors.rightMargin: 0
-
-        Image {
-            id: lockIcon
-            source: "image://generalicon/asset/button_lock.png"
-            width: 47
+        SessionButton {
+            width: 41
             height: 41
+            anchors.left: parent.left
+            anchors.leftMargin: 7
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 9
+
+            imgNormal: "image://generalicon/asset/lock.png"
+            imgHover: "image://generalicon/asset/lock_hover.png"
+            imgPressed: "image://generalicon/asset/lock_press.png"
+            function onButtonClicked() {
+                sessionProvider.lock()
+            }
         }
 
-        MouseArea {
-            id: lockButtonMouseArea
+        SessionButton {
+            width: 55
+            height: 55
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 6
+            anchors.right: parent.right
+            anchors.rightMargin: 7
 
-            anchors.fill: parent
-
-            onClicked: {
-                sessionProvider.lock();
+            imgNormal: "image://generalicon/asset/shutdown.png"
+            imgHover: "image://generalicon/asset/shutdown_hover.png"
+            imgPressed: "image://generalicon/asset/shutdown_press.png"
+            function onButtonClicked() {
+                sessionProvider.shutdown()
             }
-
         }
     }
 
-    Item {
-        id: shutdownButton
-        width: childrenRect.width
-        height: childrenRect.height
-
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.right: parent.right
-        anchors.rightMargin: 16
-
-        Image {
-            id: shutdownIcon
-            source: "image://generalicon/asset/button_shutdown.png"
-            width: 46
-            height: 41
-        }
-
-        MouseArea {
-            id: shutdownButtonMouseArea
-
-            anchors.fill: parent
-
-            onClicked: {
-                sessionProvider.shutdown();
-            }
-
-        }
+    Image {
+        source: "image://generalicon/asset/lines_up.png"
+        anchors.top: parent.bottom
+        width: parent.width
+        height: 8
     }
 }

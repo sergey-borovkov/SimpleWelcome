@@ -7,7 +7,7 @@
 #include <QDate>
 #include <QObject>
 
-#include "../timeframelib/listmodel.h"
+#include <listmodel.h>
 
 class SocialDayItem;
 class SocialItem;
@@ -46,7 +46,7 @@ public:
 public slots:
     void newSocialItems(QList<SocialItem*> list);
     QObject* itemsModel(QDate date) const;
-    void likeItem(QString eventId);    
+    void likeItem(QString eventId);
     void addCommentToItem(GenericCommentItem*, QString);
 
 private slots:

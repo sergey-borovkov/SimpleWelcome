@@ -24,11 +24,6 @@
 
 #include "userinfoprovider.h"
 
-UserInfoProvider::UserInfoProvider(QObject *parent)
-    : QObject(parent)
-{
-}
-
 QString UserInfoProvider::getFullName()
 {
     return m_userInfo.fullName();
@@ -53,6 +48,3 @@ QString UserInfoProvider::getIconPath()
 {
     return m_userInfo.faceIconPath();
 }
-
-
-#include "userinfoprovider.moc"

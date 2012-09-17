@@ -47,9 +47,11 @@ public:
         return height();
     }
     virtual void resizeEvent(QResizeEvent *event);
+    virtual void closeEvent(QCloseEvent *event);
 
 signals:
     void windowSizeChanged(int newWidth, int newHeight);
+    void windowHid();
 
 private:
     class QmlApplicationViewerPrivate *m_d;

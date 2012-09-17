@@ -18,16 +18,18 @@ struct MatchResults {
     Plasma::QueryMatch* plasmaMatch;
 };
 
-class SearchGridModel : public DataSource
+class DataSource_RecentApps;
+
+class DataSource_Search : public DataSource
 {
     Q_OBJECT
     Q_PROPERTY(QString searchQuery READ getSearchQuery WRITE setSearchQuery)
 
 
 public:
-    explicit SearchGridModel(QObject* parent = 0);
+    explicit DataSource_Search(QObject* parent = 0, DataSource_RecentApps *recentApps = 0);
     Q_INVOKABLE virtual int getItemCount(QString group = "");
-
+    QList<QPair<QString, QString> > getRunnersNames();
 
 
 public slots:
@@ -38,11 +40,9 @@ public slots:
     QString getSearchQuery();
 
     QIcon getMatchIcon(const QString &name);
-    void runMatch(const QString &name);
 
 
-
-    virtual void itemClicked(int newIndex);
+    virtual void itemClicked(int newIndex, QString group);
     virtual void getContent();
 
 
@@ -51,6 +51,7 @@ public slots:
 signals:
     void newItemData(QString iconPath, QString name, int id, QString group);
     void resetContent();
+    void runDesktopFile(QString desktopFile);
 
 
     void currentTabIndexChanged(int newCurrentIndex);
@@ -62,4 +63,6 @@ private:
     QVector<MatchResults> matches;
     //QHash<QString, Plasma::QueryMatch*> m_matches;
     QSet<QString> m_groups;
+
+    DataSource_RecentApps *recentApps;
 };

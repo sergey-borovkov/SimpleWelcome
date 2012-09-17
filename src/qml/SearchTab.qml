@@ -5,22 +5,22 @@ FocusScope {
     width: parent.width
     clip: true
     anchors.topMargin: 16
-    property variant grid//: gridsContainer.activeGridView
+    property variant grid: groupTab.tabListView.currentItem.activeGridGroup.gridView
     property alias tab: groupTab
 
     GridWithGroupTab {
         id: groupTab
         groups: [
             {
-                group: "Command Line",
+                groupName: i18n_shell,//"Command Line",
                 dataSource: searchGridModel
             },
             {
-                group: "Recent Documents",
+                groupName: i18n_recentdocuments, //"Recent Documents",
                 dataSource: searchGridModel
             },
             {
-                group: "Applications",
+                groupName: i18n_services, //"Applications",
                 dataSource: searchGridModel
             },
         ]

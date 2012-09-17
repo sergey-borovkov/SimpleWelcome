@@ -9,11 +9,12 @@ class DataSource_Favorites : public DataSource
 
 public:
     explicit DataSource_Favorites(QObject* parent = 0);
-    Q_INVOKABLE virtual int getItemCount(QString group = "");
+    Q_INVOKABLE virtual int getItemCount();
 
 signals:
     void newItemData(QString iconPath, QString name, int id);
     void resetContent();
+    void runDesktopFile(QString desktopFile);
 
 public slots:
     virtual void itemClicked(int newIndex);
