@@ -89,7 +89,7 @@ Item {
             height: tabListView.height
         }
 
-        Text {
+        /*Text {
             text: "TimeFrame is disabled\nin this internal pre-alpha."
             width: tabListView.width
             height: tabListView.height
@@ -99,11 +99,11 @@ Item {
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideMiddle
 
-        }
-        /*TimeFrameTab {
+        }*/
+        TimeFrameTab {
             width: tabListView.width
             height: tabListView.height
-        }*/
+        }
     }
 
     TopBar {
