@@ -40,7 +40,7 @@
 #include "datasource_recentapps.h"
 #include "datasource_favorites.h"
 #include "datasource_documents.h"
-#include "searchgridmodel.h"
+#include "datasource_search.h"
 
 #include "timeframe/activityset.h"
 #include "timeframe/localdaymodel.h"
@@ -62,6 +62,12 @@
 
 
 #include "config.h"
+#include <KCmdLineArgs>
+#include <KRun>
+#include <KConfigGroup>
+#include <KAction>
+
+#include <klocalizedstring.h>
 
 SWApp* SWApp::self()
 {
@@ -80,55 +86,116 @@ QString SWApp::pathToRoot()
     return root_dir.canonicalPath();
 }
 
+int SWApp::newInstance()
+{
+    qDebug() << "New instance here";
+
+    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+
+    if(!args->isSet("silent"))
+    {
+        qDebug() << "Silent not set";
+        if (m_viewer)
+        {
+            if (!m_viewer->isVisible())
+            {
+                qDebug() << "Showing fullscreen";
+
+                //m_viewer->setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
+                //m_viewer->show();
+                m_viewer->showFullScreen();
+                //m_viewer->move(/*896*/0, 0);
+            }
+            else
+                m_viewer->close();
+        }
+    }
+
+    return 0;
+}
+
+#include <kglobalaccel.h>
+
+
+void SWApp::loadShortcut()
+{
+    m_globalShortcut = KShortcut("Alt+F1");
+
+    KGlobalAccel::stealShortcutSystemwide(QKeySequence("Alt+F1"));
+
+    connect(m_globalAction, SIGNAL(triggered(bool)), SLOT(newInstance()));
+    m_globalAction->setObjectName("Activate A ROSA Launcher Widget");
+    m_globalAction->setGlobalShortcut(m_globalShortcut, KAction::ActiveShortcut | KAction::DefaultShortcut, KAction::Autoloading);
+    qDebug() << m_globalShortcut.toString() << " is " << m_globalAction->isGlobalShortcutEnabled();
+}
 
 SWApp::SWApp()
     : KUniqueApplication()
 {
+    qDebug() << "constructor";
+    m_globalAction = new KAction(this);
+
     m_viewer = new QmlApplicationViewer();
     m_viewer->setGeometry(0, 0, QApplication::desktop()->width(), QApplication::desktop()->height());
     m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
     // Window transparency
-    //m_viewer->setAttribute(Qt::WA_TranslucentBackground);
-    //m_viewer->setStyleSheet("background:transparent;");
-    m_viewer->rootContext()->setContextProperty("mainWindow", m_viewer);
+    m_viewer->setAttribute(Qt::WA_TranslucentBackground);
+    m_viewer->setStyleSheet("background:transparent;");
 
+    m_viewer->rootContext()->setContextProperty("mainWindow", m_viewer);
     m_viewer->rootContext()->setContextProperty("sessionProvider", new SessionProvider(this));
 
     UserInfoProvider *userInfoProvider = new UserInfoProvider(this);
     m_viewer->rootContext()->setContextProperty("userInfoProvider", userInfoProvider);
 
-    SearchGridModel *searchGridModel = new SearchGridModel(this);
-    m_viewer->rootContext()->setContextProperty("searchGridModel", searchGridModel);
 
-    m_generalIconProvider = new GeneralIconProvider(pathToRoot() + QString::fromLatin1("/" SW_ASSETS_PATH "/"));
+    DataSource_RecentApps *recentAppsDataSource = new DataSource_RecentApps(this);
+    m_viewer->rootContext()->setContextProperty("dataSource_RecentApps", recentAppsDataSource);
+    connect(recentAppsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
+
+    DataSource_Apps *appsDataSource = new DataSource_Apps(this, recentAppsDataSource);
+    m_viewer->rootContext()->setContextProperty("dataSource_Apps", appsDataSource);
+    connect(appsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
+
+    DataSource_Favorites *favoritesDataSource = new DataSource_Favorites(this);
+    m_viewer->rootContext()->setContextProperty("dataSource_Favorites", favoritesDataSource);
+    connect(favoritesDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
+
+    DataSource_Documents *docsDataSource = new DataSource_Documents(this);
+    m_viewer->rootContext()->setContextProperty("dataSource_Documents", docsDataSource);
+    connect(docsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
+
+    DataSource_Search *searchDataSource = new DataSource_Search(this, recentAppsDataSource);
+    m_viewer->rootContext()->setContextProperty("searchGridModel", searchDataSource);
+    connect(searchDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
+
+    QMLConstants *constants = new QMLConstants(this, m_viewer);
+    m_viewer->rootContext()->setContextProperty("constants", constants);
+    m_viewer->rootContext()->setContextProperty("i18n_Welcome", i18n("Welcome"));
+    m_viewer->rootContext()->setContextProperty("i18n_Applications", i18n("Applications"));
+    m_viewer->rootContext()->setContextProperty("i18n_TimeFrame", i18n("TimeFrame"));
+
+    m_viewer->rootContext()->setContextProperty("i18n_Recent_Applications", i18n("Recent Applications"));
+    m_viewer->rootContext()->setContextProperty("i18n_Favorites", i18n("Places"));
+    m_viewer->rootContext()->setContextProperty("i18n_Recent_Documents", i18n("Recent Documents"));
+
+    QList<QPair<QString, QString> > runners = searchDataSource->getRunnersNames();
+    for (int i = 0; i < runners.size(); i++)
+        m_viewer->rootContext()->setContextProperty(QString("i18n_%1").arg(runners[i].first), runners[i].second);
+
+    m_generalIconProvider = new GeneralIconProvider(pathToRoot() + QString::fromLatin1("/" SW_ASSETS_PATH "/"), constants);
     m_generalIconProvider->setUserInfoProvider(userInfoProvider);
-    m_generalIconProvider->setSearchGridModel(searchGridModel);
+    m_generalIconProvider->setSearchGridModel(searchDataSource);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
-    DataSource_RecentApps *recentApps = new DataSource_RecentApps(this);
-    m_viewer->rootContext()->setContextProperty("dataSource_RecentApps", recentApps);
-    m_viewer->rootContext()->setContextProperty("dataSource_Apps", new DataSource_Apps(this, recentApps));
-    m_viewer->rootContext()->setContextProperty("dataSource_Favorites", new DataSource_Favorites(this));
-    m_viewer->rootContext()->setContextProperty("dataSource_Documents", new DataSource_Documents(this));
+    loadShortcut();
 
-    m_viewer->rootContext()->setContextProperty("searchCmdGridModel", searchGridModel);
-    m_viewer->rootContext()->setContextProperty("searchAppsGridModel", searchGridModel);
-    m_viewer->rootContext()->setContextProperty("searchRecentDocsGridModel", searchGridModel);
-
-    m_viewer->rootContext()->setContextProperty("constants", new QMLConstants(this, m_viewer));
-
-    m_viewer->setGeometry(896, 0, 1280, 1024); // 1000); //
-    m_viewer->show();
-    //m_viewer->showFullScreen();
-    //m_viewer->move(/*896*/0, 0);
     initTimeframeLocalMode();
     initTimeframeSocialMode();
 
-    connect(m_viewer->engine(), SIGNAL(quit()), this, SLOT(quit())); // Temporary solution for app termination
+    m_viewer->setMainQmlFile( pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml") ); // Qt converts path to native automatically
 
-    m_viewer->setMainQmlFile(pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml"));   // Qt converts path to native automatically
-
-    setQuitOnLastWindowClosed(true);   // NEED TO CHANGE TO false
+    setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
 }
 
 void SWApp::initTimeframeLocalMode()
@@ -153,6 +220,7 @@ void SWApp::initTimeframeLocalMode()
     m_viewer->rootContext()->setContextProperty("localDayModel", proxymodel);
     m_viewer->rootContext()->setContextProperty("activityProxy", m_proxy);
     m_viewer->rootContext()->setContextProperty("nepomukSource", m_source);
+
     m_viewer->rootContext()->engine()->addImageProvider("preview", new PreviewProvider);
 }
 
@@ -198,6 +266,21 @@ bool SWApp::event(QEvent *event)
     return KUniqueApplication::event(event);
 }
 
+void SWApp::runDesktopFile(QString desktopFile)
+{
+    if (!desktopFile.isEmpty())
+        new KRun(KUrl(desktopFile), QApplication::activeWindow());
+    m_viewer->close();
+}
+
+void SWApp::globalActionTriggered()
+{
+    if (m_viewer->isHidden())
+        m_viewer->showFullScreen();
+    else
+        m_viewer->hide();
+}
+
 
 QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
     : QObject(parent), viewer(inViewer)
@@ -207,12 +290,25 @@ QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
 
 int QMLConstants::cellWidth()
 {
-    return viewer->updatableHeight() >= 1080 ? 140 : viewer->updatableHeight() >= 1024 ? 130 : viewer->updatableHeight() >= 600 ? 120 : 70;
+    return viewer->updatableHeight() >= 1080 ? 140 :
+           viewer->updatableHeight() >= 1024 ? 130 :
+           viewer->updatableHeight() >= 900 ? 120 :
+           viewer->updatableHeight() >= 850 ? 110 :
+           viewer->updatableHeight() >= 800 ? 110 :
+           viewer->updatableHeight() >= 750 ? 100 :
+                                              70;
 }
 
 int QMLConstants::cellHeight()
 {
-    return viewer->updatableHeight() >= 1080 ? 180 : viewer->updatableHeight() >= 1024 ? 165 : viewer->updatableHeight() >= 600 ? 150 : 100;
+    //return (viewer->updatableHeight() - 80 /*topBar*/ - 80 /*bottomBar*/ - 80 - (textToGridSpacing() + groupTextHeight())*3 - gridWithGroupsSpacing()*2) / 4 - 1;
+    return viewer->updatableHeight() >= 1080 ? 180 :
+           viewer->updatableHeight() >= 1024 ? 165 :
+           viewer->updatableHeight() >= 900 ? 130 :
+           viewer->updatableHeight() >= 850 ? 120 :
+           viewer->updatableHeight() >= 800 ? 110 :
+           viewer->updatableHeight() >= 750 ? 100 :
+                                              80;
 }
 
 int QMLConstants::iconTextSize()
@@ -222,5 +318,9 @@ int QMLConstants::iconTextSize()
 
 int QMLConstants::iconSize()
 {
-    return viewer->updatableHeight() >= 1080 ? 96 : viewer->updatableHeight() >= 1024 ? 80 : viewer->updatableHeight() >= 600 ? 64 : 32;
+    return viewer->updatableHeight() >= 1080 ? 96 :
+           viewer->updatableHeight() >= 1024 ? 80 :
+           viewer->updatableHeight() >= 900 ? 64 :
+           viewer->updatableHeight() >= 800 ? 56 :
+           viewer->updatableHeight() >= 768 ? 48 : 32;
 }

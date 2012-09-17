@@ -3,14 +3,13 @@ import QtQuick 1.0
 GridView {
     id: grid
     property variant dataSource
-
     property variant prevGrid
     property variant nextGrid
+    property int startIndex
+    property int endIndex
+    property bool draggable: false
 
-    property int iconIndexStart
-    property int iconIndexEnd
-
-    property alias draggingItemIndex: gridMouseArea.draggingItemIndex
+    property alias dndSrcId: gridMouseArea.dndSrcId
 
     signal dndStateChanged(bool isDrag)
     signal selectionChangedByKeyboard(variant newCurrentItem)
@@ -31,12 +30,22 @@ GridView {
 
     delegate: Cell {}
 
-    highlight: Rectangle {
+    highlight: Item {
         id: gridSelection
         property int animationDuration: 150
-        color: "#c8b0c4de"
-        radius: 5
-        opacity: 1
+
+        BorderImage {
+            border.left: 5
+            border.right: 7
+            border.top: 5
+            border.bottom: 7
+
+            anchors.fill: parent
+            anchors.rightMargin: -2
+            anchors.bottomMargin: -2
+
+            source: "image://generalicon/asset/grid_selection.png"
+        }
 
         Behavior on opacity {
             NumberAnimation { duration: animationDuration }
@@ -57,7 +66,8 @@ GridView {
     }
 
     function resetContent() {
-        appsModel.clear()
+        if(typeof model !== 'undefined')
+            model.clear()
     }
 
     function onItemClicked(newIndex) {
@@ -66,9 +76,12 @@ GridView {
 
     Component.onCompleted: {
         //console.log("COMPLETED " + dataSource + " VIEW")
-        dataSource.newItemData.connect(newItemData)
-        dataSource.resetContent.connect(resetContent)
-        dataSource.getContent()
+        if (dataSource)
+        {
+            dataSource.newItemData.connect(newItemData)
+            dataSource.resetContent.connect(resetContent)
+            dataSource.getContent()
+        }
         appsModel.itemClicked.connect(onItemClicked)
     }
 
@@ -91,7 +104,6 @@ GridView {
         case Qt.Key_Left:
             if (currentIndex == 0 && prevGrid)
             {
-                console.log(prevGrid)
                 prevGrid.highlightMoveDuration = 1
                 prevGrid.currentIndex = prevGrid.count - 1
                 prevGrid.forceActiveFocus()
@@ -203,8 +215,10 @@ GridView {
         anchors.fill: parent
         hoverEnabled: true
 
-        property int draggingItemIndex: -1
-        property int newIndex
+        property int dndSrcId: -1
+        property int dndSrc: -1
+        property int dndDest: -1
+        property int dndDestId: -1
         property int pressedOnIndex
 
         function getItemUnderCursor(isForceRecheck)
@@ -233,7 +247,7 @@ GridView {
 
 
         onMousePositionChanged: {
-            if (!grid.moving && draggingItemIndex == -1)
+            if (!grid.moving && dndSrcId == -1)
             {
                 // Optimize later to lesser use of getItemUnderCursor(true)
                 var newCurrentIndex = getItemUnderCursor(!grid.activeFocus)
@@ -253,8 +267,12 @@ GridView {
             else
             {
                 var index = getItemUnderCursor(true)
-                if (draggingItemIndex != -1 && index != -1 && index != newIndex)
-                    model.move(newIndex, newIndex = index, 1)
+                if (dndSrcId != -1 && index != -1 && index != dndDest)
+                {
+                    dndDestId = model.get(index).id
+                    model.move(dndDest, index, 1)
+                    dndDest = index
+                }
             }
         }
 
@@ -263,17 +281,57 @@ GridView {
         }
 
         onPressAndHold: {
-            var index = getItemUnderCursor(true)
-            if (index != -1 && pressedOnIndex == index)
+            if (draggable)
             {
-                draggingItemIndex = model.get(newIndex = index).id
-                dndStateChanged(true)
+                var index = getItemUnderCursor(true)
+                if (index != -1 && pressedOnIndex == index)
+                {
+                    dndDest = index
+                    dndSrc = index
+                    dndSrcId = model.get(dndSrc).id
+                    dndDestId = dndSrcId
+                    console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
+                    dndStateChanged(true)
+                }
             }
+
         }
         onReleased: {
-            if (draggingItemIndex != -1)
+            if (dndSrcId != -1)
+            {
                 dndStateChanged(false)
-            draggingItemIndex = -1
+
+                if (typeof dataSource.itemDragged !== "undefined" && dndDestId != -1)
+                {
+                    console.log("dndDestId: " + dndDestId)
+                    dataSource.itemDragged(dndSrcId, dndDestId)
+
+                    //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
+                    model.get(dndDest).id = dndDestId
+                    console.log("For dragged item we set src id: " + dndDestId)
+                    if (dndDest < dndSrc)
+                    {
+                        for (var i = dndDest + 1; i <= dndSrc; i++)
+                            model.get(i).id++
+                    }
+                    else
+                    {
+                        for (var i = dndSrc; i < dndDest; i++)
+                            model.get(i).id--
+                    }
+                }
+
+//                console.log("NOW----------------")
+//                for (var i = 0; i < model.count; i++)
+//                    console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
+//                console.log("END----------------")
+            }
+            dndSrcId = -1
+            dndSrc = -1
+            dndDest = -1
+            dndDestId = -1
+
+            console.log("DND SRC ID NO LONGER VALID: " + dndSrcId)
         }
 
         onClicked: {

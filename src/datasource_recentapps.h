@@ -10,20 +10,21 @@ class DataSource_RecentApps : public DataSource
 public:
     explicit DataSource_RecentApps(QObject* parent = 0);
     ~DataSource_RecentApps();
-    Q_INVOKABLE virtual int getItemCount(QString group = "") {
-        Q_UNUSED(group)
-        return recentAppsList.count();
-    }
+    Q_INVOKABLE virtual int getItemCount();
     void addRecentApp(QString desktopFile);
 
 signals:
     void newItemData(QString iconPath, QString name, int id, bool isPinned) const;
     void resetContent();
+    void runDesktopFile(QString desktopFile);
 
 public slots:
     virtual void itemClicked(int newIndex);
     virtual void getContent();
+    void itemDragged(int fromIndex, int toIndex);
 
 private:
+    void saveData();
+
     QList<AppItem> recentAppsList;
 };

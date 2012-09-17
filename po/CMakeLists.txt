@@ -1,0 +1,16 @@
+#Translations
+find_package(Msgfmt REQUIRED)
+find_package(Gettext REQUIRED)
+
+add_subdirectory(ar)
+add_subdirectory(de)
+add_subdirectory(es)
+add_subdirectory(et)
+add_subdirectory(eu)
+add_subdirectory(fr)
+add_subdirectory(pt_BR)
+add_subdirectory(ru)
+add_subdirectory(sl)
+add_subdirectory(sw)
+add_subdirectory(tr)
+add_subdirectory(zh_TW)

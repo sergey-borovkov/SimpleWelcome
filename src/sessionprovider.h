@@ -7,9 +7,10 @@ class SessionProvider : public QObject
     Q_OBJECT
 
 public:
-    SessionProvider(QObject *parent = 0);
+    SessionProvider(QObject *parent = 0)
+        : QObject(parent) {}
 
 public slots:
-    void lock(void);
-    void shutdown(void);
+    void lock();
+    void shutdown();
 };

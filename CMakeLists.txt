@@ -1,6 +1,8 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.6)
 
-project (rosa-launcher-qtquick)
+project (rosa-launcher)
+
+#set(CMAKE_MODULE_PATH /usr/share/kde4/apps/cmake/modules/)
 
 # Some constants
 set(_bin_dir_name "bin")
@@ -22,21 +24,27 @@ get_filename_component(_src_dir_real_path "${CMAKE_SOURCE_DIR}" REALPATH)
 get_filename_component(_bin_dir_real_path "${CMAKE_BINARY_DIR}" REALPATH)
 
 if(${_src_dir_real_path} STREQUAL ${_bin_dir_real_path})
-	message(FATAL_ERROR "In-source builds are forbidden! Choose separate build directory.")
+    message(FATAL_ERROR "In-source builds are forbidden! Choose separate build directory.")
 endif()
 
 configure_file("config.h.in" "config.h")
 include_directories(${CMAKE_BINARY_DIR})
 
+find_package(KDE4 REQUIRED)
+include(KDE4Defaults)
+
 # Special target for assets
 add_custom_target(build-assets ALL
-	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_BINARY_DIR}/${_assets_install_path}"
-	COMMENT "Building/copying the assets"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_BINARY_DIR}/${_assets_install_path}"
+    COMMENT "Building/copying the assets"
 )
 
 add_subdirectory(timeframelib)
 add_subdirectory(facebook-timeframe-plugin)
 #add_subdirectory(vkontakte-timeframe-plugin)
+add_subdirectory(rosa-starter)
 add_subdirectory(src)
 
 install(DIRECTORY "${CMAKE_BINARY_DIR}/${_assets_install_path}/" DESTINATION "${_assets_install_path}")
+
+add_subdirectory(po)

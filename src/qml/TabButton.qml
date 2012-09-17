@@ -4,7 +4,7 @@ Item {
     id: button
 
     width: constants.iconSize >= 64 ? 200 : 180
-    height: 36
+    height: 27
 
     property color buttonColor: "lightblue"
     property color onHoverColor: "gold"
@@ -13,25 +13,15 @@ Item {
 
     property alias label: buttonLabel.text
 
-    BorderImage {
-        border.left: 6
-        border.right: 6
-        border.top: 6
-        border.bottom: 6
-        anchors.fill: parent
-        source: "image://generalicon/asset/button_small_border_bg.png"
-        opacity: active ? 1 : 0.3
-    }
-
     Text {
         id: buttonLabel
         anchors.centerIn: parent
         text: "button label"
-        style: Text.Sunken
-        styleColor: "#000"
-        color: active ? '#eee' : "#606060"
-        font.bold: true
-        font.family: "Bitstream Vera Sans"
+        color: active ? "black" : "white"
+
+        Behavior on color {
+            ColorAnimation { duration: 200 }
+        }
     }
 
     signal buttonClick()

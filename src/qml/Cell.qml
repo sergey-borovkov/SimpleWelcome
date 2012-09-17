@@ -78,26 +78,27 @@ Item {
         states: [
             State {
                 name: "cellActive";
-                when: cell.activeFocus && gridMouseArea.draggingItemIndex != id
-                PropertyChanges { target: cellIcon; scale: 1.2 }
+                when: cell.activeFocus && gridMouseArea.dndSrcId != id
+                PropertyChanges { target: cellIcon; /*scale: 1.2*/ }
             },
 
             State {
                 name: "gridInDrag"
-                when: gridMouseArea.draggingItemIndex != -1 && gridMouseArea.draggingItemIndex != id
+                when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id
             },
 
             State {
                 name: "cellInDrag"
-                when: gridMouseArea.draggingItemIndex == id
-                PropertyChanges { target: wrapper; parent: 0 }
+                when: gridMouseArea.dndSrcId === id
+                //PropertyChanges { target: wrapper; parent: 0 }
                 PropertyChanges {
                     target: wrapper;
+                    //parent: 0;
                     x: gridMouseArea.mouseX - wrapper.width/2;
                     y: gridMouseArea.mouseY - wrapper.height/2;
                     z: 10
                 }
-                PropertyChanges { target: cellIcon; scale: 1.2 }
+                /*PropertyChanges { target: cellIcon; scale: 1.2 }*/
             }
         ]
 

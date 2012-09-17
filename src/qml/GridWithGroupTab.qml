@@ -8,6 +8,8 @@ Item {
     //anchors.topMargin: popupFrame.open ? -200 : 0
 
     property variant groups
+    property bool isForceOnOneScreen: false
+    property alias tabListView: gridsListView
 
     function updateGridsContent()
     {
@@ -37,7 +39,7 @@ Item {
             delegate: GridWithGroupContainer {
                 width: gridsListView.width
                 height: gridsListView.height
-                groups: groupsList
+                defaultGroupData: defaultGroup
             }
         }
 
@@ -76,12 +78,6 @@ Item {
             }
         }
 
-        function showPopup()
-        {
-            popupFrame.open = !popupFrame.open
-            //console.log("popup")
-        }
-
         function dndStateChanged(isDrag)
         {
             interactive = !isDrag
@@ -92,21 +88,20 @@ Item {
             var newGridGroup
             if (isOnNewTab)
             {
-                gridsListModel.append( { groupsList: groupData } )
+                gridsListModel.append( { defaultGroup: groupData } )
                 gridsListView.currentIndex = count - 1
             }
             else
             {
-                gridsListView.currentItem.addGridGroup(groupData.group, groupData.dataSource, groupData.startIndex, groupData.endIndex)
+                gridsListView.currentItem.addGridGroup(groupData)
             }
 
             if (gridsListView.currentItem)
             {
-                gridsListView.currentItem.activeGridView.dndStateChanged.connect(dndStateChanged)
-                gridsListView.currentItem.activeGridView.model.itemClicked.connect(showPopup)
+                gridsListView.currentItem.activeGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
+                if (gridsListView.currentItem.activeGridGroup.gridView.draggable)
+                    gridsListView.currentItem.activeGridGroup.showPopupGroup.connect(showGroup)
             }
-
-            //appsModel.itemClicked.connect()
         }
 
 
@@ -121,9 +116,9 @@ Item {
             //console.log("Starting to split " + availableHeight + "px to grids")
             for (var i = 0; i < groups.length; i++) // Iterating by grids
             {
-                //console.log(i + " - NEW ITERATION!!!!!!!!! with " + groups[i].group)
-                var textHeight = (groups[i].group ? constants.groupTextHeight + constants.textToGridSpacing : 0),
-                    itemCount = groups[i].dataSource.getItemCount(groups[i].group),
+                //console.log(i + " - NEW ITERATION!!!!!!!!! with " + groups[i].groupName)
+                var textHeight = (groups[i].groupNameVisible !== undefined && groups[i].groupNameVisible === false ? 0 : constants.groupTextHeight + constants.textToGridSpacing),
+                    itemCount = groups[i].dataSource.getItemCount(groups[i].groupName),
                     projectedGroupHeight = textHeight + Math.ceil(itemCount / columns) * cellRealHeight,
                     currentGroup = groups[i]
                 //console.log(i + " - Projected group height: " + projectedGroupHeight + "; Left here: " + availableHeight + ";  itemCount: " + itemCount)
@@ -131,9 +126,10 @@ Item {
                 if (!itemCount) // No need to add an empty group
                     continue
 
-                if (projectedGroupHeight < availableHeight) // Grid can be fully placed on the tab
+                if (projectedGroupHeight < availableHeight || (isForceOnOneScreen && count)) // Grid can be fully placed on the tab
                 {
                     //console.log(i + " - " + groups[i].dataSource + " is fitting the same screen");
+                    currentGroup['startIndex'] = 0
                     currentGroup['endIndex'] = itemCount - 1
                     insertGrid(currentGroup, false)
                     availableHeight -= projectedGroupHeight + spacing
@@ -141,7 +137,7 @@ Item {
                 }
                 else // Grid should be split or created new tab or both
                 {
-                    //console.log(i + " - " + groups[i].group + " is going to be split or created new tab or both")
+                    //console.log(i + " - " + groups[i].groupName + " is going to be split or created new tab or both")
                     var rowsLeftToFit = Math.ceil(itemCount / columns)
                     var lastNotInsertedItem = 0
 
@@ -214,6 +210,33 @@ Item {
             gridsListView.currentIndex = 0
         }
 
+        function showGroup(groupData, iconBottom)
+        {
+            popupFrame.y = iconBottom + 10
+            if (popupFrame.state == "CLOSED")
+            {
+                popupFrame.state = "OPEN"
+
+                popupFrame.gridGroup.gridView.model.clear()
+
+                popupFrame.gridGroup.startIndex = groupData[0].id
+                popupFrame.gridGroup.endIndex = groupData[0].id + groupData.length - 1
+
+                //for (var groupData in groupDataArray)
+                //console.log("DATQA :" + groupData.length)
+                for (var i = 0; i < groupData.length; i++)
+                    popupFrame.gridGroup.gridView.newItemData(groupData[i].imagePath, groupData[i].caption, groupData[i].id)
+
+                /*
+
+                dataSource.newItemData.connect(newItemData)
+                dataSource.resetContent.connect(resetContent)
+                dataSource.getContent()*/
+            }
+            else
+                popupFrame.state = "CLOSED"
+        }
+
         transitions: Transition {
             NumberAnimation { properties: "opacity"; duration: 400 }
         }
@@ -229,7 +252,7 @@ Item {
             horizontalCenter: gridsListView.horizontalCenter
         }
         spacing: 20
-        //visible: gridsVisualModel.count > 1
+        visible: gridsVisualModel.count > 1
 
         Repeater {
             model: gridsVisualModel.count
@@ -256,12 +279,54 @@ Item {
         }
     }
 
+    Rectangle {
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+
+            onClicked: {
+                popupFrame.state = "CLOSED"
+            }
+        }
+
+        anchors.fill: parent
+        color: Qt.rgba(0, 0, 0, 0.5)
+        opacity: popupFrame.state == "OPEN"
+
+        Behavior on opacity {
+            NumberAnimation { duration: 200; /*easing.type: Easing.OutQuint*/ }
+        }
+    }
+
     PopupFrame {
         id: popupFrame
-        anchors.top: parent.bottom
-        height: 260
+        //anchors.top: parent.bottom
         width: parent.width
+        clip: true
         z: 1
+
+        state: "CLOSED"
+
+        states: [
+            State {
+                name: "CLOSED"
+                PropertyChanges {
+                    target: popupFrame
+                    height: 0
+                }
+            },
+            State {
+                name: "OPEN"
+                PropertyChanges {
+                    target: popupFrame
+                    height: 420//childrenRect.height
+                }
+            }
+        ]
+
+        transitions: Transition {
+            NumberAnimation { properties: "height"; easing.type: Easing.InOutQuad }
+        }
     }
 
     Behavior on anchors.topMargin {

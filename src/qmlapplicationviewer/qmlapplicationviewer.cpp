@@ -155,8 +155,32 @@ void QmlApplicationViewer::showExpanded()
 #endif
 }
 
+#include <Plasma/WindowEffects>
+#include <Plasma/Theme>
+#include <KWindowSystem>
+#include <QDebug>
+
 void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
 {
     emit windowSizeChanged(event->size().width(), event->size().height());
+
+    if(KWindowSystem::compositingActive()) // && Plasma::Theme::defaultTheme()->windowTranslucencyEnabled())
+    {
+        QRegion mask(QRect(QPoint(), size()));
+
+        Plasma::WindowEffects::enableBlurBehind(winId(), true, mask);
+        Plasma::WindowEffects::overrideShadow(winId(), true);
+    }
+
     QDeclarativeView::resizeEvent(event);
+}
+
+void QmlApplicationViewer::closeEvent(QCloseEvent *event)
+{
+    if (1)
+    {
+        event->ignore();
+        hide();
+        emit windowHid();
+    }
 }

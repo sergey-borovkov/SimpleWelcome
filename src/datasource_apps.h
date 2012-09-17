@@ -11,25 +11,28 @@ class DataSource_Apps : public DataSource
 
 public:
     explicit DataSource_Apps(QObject* parent = 0, DataSource_RecentApps *recentApps = 0);
-    Q_INVOKABLE virtual int getItemCount(QString group = "") {
-        Q_UNUSED(group)
-        return appsList.count();
-    }
+    ~DataSource_Apps();
+    Q_INVOKABLE virtual int getItemCount();
 
 signals:
     void newItemData(QString iconPath, QString name, int id);
     void resetContent();
+    void runDesktopFile(QString desktopFile);
 
 public slots:
     virtual void itemClicked(int newIndex);
     virtual void getContent();
+    void itemDragged(int fromIndex, int toIndex);
 
 private:
-    QList<AppItem> appsList;
+    void saveData();
+
+    AppItemList appsList;
     QString currentGroup;
     QString prevCurrentGroup;
 
     DataSource_RecentApps *recentApps;
+    QList<QPair<QString, int> > userAppsOrder;
 
     void updateItems();
 };

@@ -15,6 +15,16 @@ DataSource_RecentApps::DataSource_RecentApps(QObject *parent)
 
 DataSource_RecentApps::~DataSource_RecentApps()
 {
+    saveData();
+}
+
+int DataSource_RecentApps::getItemCount()
+{
+    return recentAppsList.count();
+}
+
+void DataSource_RecentApps::saveData()
+{
     QStringList desktopFiles;
     for(int i = 0; i < recentAppsList.size(); i++)
         desktopFiles.prepend(recentAppsList[i].desktopEntry);
@@ -53,21 +63,28 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
     if(recentAppsList.size() > 7)
         recentAppsList.removeAt(7);
 
+    saveData();
     emit resetContent();
 }
 
-#include <QMessageBox>
-
 void DataSource_RecentApps::itemClicked(int newIndex)
 {
-    if(newIndex != -1) {
-        QMessageBox::information(0, recentAppsList[newIndex].desktopEntry, recentAppsList[newIndex].caption);
+    if (newIndex != -1)
+    {
         recentAppsList.move(newIndex, 0);
+        saveData();
+        emit runDesktopFile(recentAppsList[0].desktopEntry);
     }
 }
 
 void DataSource_RecentApps::getContent()
 {
-    for(int i = 0; i < recentAppsList.size(); i++)
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(recentAppsList[i].icon), recentAppsList[i].caption, i, i < 4 ? true : false);
+    for (int i = 0; i < recentAppsList.size(); i++)
+        emit newItemData(QString("image://generalicon/appicon/%1").arg(recentAppsList[i].icon), recentAppsList[i].caption, i, /*i < 4 ? true :*/ false);
+}
+
+void DataSource_RecentApps::itemDragged(int fromIndex, int toIndex)
+{
+    recentAppsList.move(fromIndex, toIndex);
+    saveData();
 }
