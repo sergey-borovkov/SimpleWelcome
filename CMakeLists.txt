@@ -36,7 +36,7 @@ add_custom_target(build-assets ALL
 
 add_subdirectory(timeframelib)
 add_subdirectory(facebook-timeframe-plugin)
-add_subdirectory(vkontakte-timeframe-plugin)
+#add_subdirectory(vkontakte-timeframe-plugin)
 add_subdirectory(src)
 
 install(DIRECTORY "${CMAKE_BINARY_DIR}/${_assets_install_path}/" DESTINATION "${_assets_install_path}")
