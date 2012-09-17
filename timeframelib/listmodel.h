@@ -15,7 +15,7 @@ class TIMEFRAMELIB_EXPORT ListModel : public QAbstractListModel
 public:
     explicit ListModel(QHash<int, QByteArray> roles, QObject* parent = 0);
     ~ListModel();
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role);
     void appendRow(ListItem* item);
