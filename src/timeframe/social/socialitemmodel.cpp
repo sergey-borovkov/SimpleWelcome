@@ -64,8 +64,8 @@ void SocialItemModel::addComment(GenericCommentItem *item, QString id)
             QVariant v = data(index(i, 0), SocialItem::Comments);
             ListModel * commentsModel = qvariant_cast<ListModel* >(v);
             commentsModel->appendRow(item);
-            v.setValue(commentsModel->rowCount());
-            bool result = setData(index(i,0), v, SocialItem::CommentCount);
+            int commentCount = data(index(i, 0), SocialItem::CommentCount).toInt();
+            bool result = setData(index(i,0), ++commentCount, SocialItem::CommentCount);
             if (!result)
                 qDebug() << " error on set comments count";
             emit dataChanged(index(i, 0),index(i, 0));

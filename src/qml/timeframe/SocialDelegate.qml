@@ -306,16 +306,11 @@ Item{
                         text: messageText
                         elide: Text.ElideRight
                     }
-                    //                    Text { text: '$' + cost; anchors.left: nameField.right }
-                    //                    Row {
-                    //                        anchors.top: nameField.bottom
-                    //                        spacing: 5
-                    //                        Text { text: messageText }
-                    //                       /* Repeater {
-                    //                            model: attributes
-                    //                            Text { text: description }
-                    //                        }*/
-                    //                    }
+
+                    ListView.onAdd: {
+                        console.log("123")
+                        commentsListView.positionViewAtEnd()
+                    }
                 }
             }/*
             Connections {
@@ -339,6 +334,7 @@ Item{
                 onSend: {
                     console.log("comment sending via text edit: " +comment)
                     socialProxy.commentItem(comment, id, pluginName)
+                    commentsListView.positionViewAtEnd()
                 }
             }
         }
@@ -401,14 +397,14 @@ Item{
         State {
             name: "comments" ; extend: "details"
 
-            PropertyChanges { target: galleryItem; height: 300 + 60 * (commentCount + 1) }
+            PropertyChanges { target: galleryItem; height: 300 + 60 * ( commentsListView.model.rowCount() + 1) }
 
             PropertyChanges { target: shadowRect; height: galleryItem.height }
 
             PropertyChanges {
                 target: commentsListView
                 visible: true
-                height: 60 * commentCount
+                height: 60 * commentsListView.model.rowCount()
             }
 
             PropertyChanges {

@@ -76,6 +76,7 @@ void FeedItem::fillFromMap(const QVariantMap &map)
 
     if(map.contains("comments")) {
         QVariantMap comments = map.value("comments").toMap();
+        m_data.insert(CommentCount, comments.value("count").toInt());
         if(comments.value("count").toInt() > 0)  {
             QVariantList commentsList = comments.value("data").toList();
             foreach(QVariant v, commentsList) {
@@ -86,7 +87,7 @@ void FeedItem::fillFromMap(const QVariantMap &map)
             foreach(CommentItem *item, m_comments)
                 t.append(item);
             m_commentsModel->appendRows(t);
-        }
+        }        
     }
 
     if(map.contains("likes")) {
@@ -110,7 +111,6 @@ void FeedItem::fillFromMap(const QVariantMap &map)
 
     QVariant var;
     var.setValue(m_commentsModel);
-    m_data.insert(CommentCount, m_commentsModel->rowCount());
     m_data.insert(Comments, var);
     m_data.insert(PluginName, pluginName());
 }

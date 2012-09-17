@@ -285,6 +285,7 @@ Item{
                 anchors.bottom: commentsEdit.top
                 clip: true
                 visible: false
+                snapMode:  ListView.SnapToItem
                 delegate: Item {
                     width: 200; height: 60
                     Image
@@ -419,12 +420,12 @@ Item{
         State {
             name: "comments" ; extend: "details"
 
-            PropertyChanges { target: socialCloudItem; height: 300 + 60 * (comments + 1) }
+            PropertyChanges { target: socialCloudItem; height: 300 + 60 * (commentsListView.model.rowCount() + 1) }
 
             PropertyChanges {
                 target: commentsListView
                 visible: true
-                height: 60 * comments
+                height: 60 * commentsListView.model.rowCount()
             }
 
             PropertyChanges { target: commentsEdit; height: 60; visible: true }
