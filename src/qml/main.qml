@@ -65,9 +65,7 @@ Item {
         anchors.fill: parent
         color: "#263C50"
         opacity: 0.9
-        z: -10
     }
-
     VisualItemModel {
         id: tabListModel
 
