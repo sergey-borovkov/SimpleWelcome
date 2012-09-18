@@ -1,200 +1,262 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <sergio@mandriva.com.br>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: SimpleWelcome\n"
-"Report-Msgid-Bugs-To: https://qa.mandriva.com/\n"
-"POT-Creation-Date: 2011-06-16 13:59+0400\n"
+"Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
+"quicksearch=simplewelcome&list_id=4395\n"
+"POT-Creation-Date: 2012-09-18 17:44+0400\n"
 "PO-Revision-Date: 2011-06-16 19:13+0000\n"
 "Last-Translator: Sergio Rafael Lemke <sergio@mandriva.com.br>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mandriva_i18n/team/pt_BR/)\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
+"projects/p/mandriva_i18n/team/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: local-applet/src/photoeventwidget.cpp:59
-#: local-applet/src/videoeventwidget.cpp:99
-msgid ""
-"%1\n"
-"rating: %2"
-msgstr ""
-"%1\n"
-"avaliação: %2"
-
-#: local-applet/src/rosa-launcher.cpp:145
-#: local-applet/src/rosa-launcher.cpp:149
-msgid "Welcome"
-msgstr "Bem-vindo"
-
-#: local-applet/src/rosa-launcher.cpp:160
-msgid "Applications"
-msgstr "Aplicações"
-
-#: local-applet/src/rosa-launcher.cpp:173
-msgid "TimeFrame"
-msgstr "TimeFrame"
-
-#: local-applet/src/timeframe.cpp:55
-msgid "Home"
-msgstr "Home"
-
-#: local-applet/src/timeframe.cpp:57
-msgid "Photos"
-msgstr "Fotos"
-
-#: local-applet/src/timeframe.cpp:59
-msgid "Video"
-msgstr "VIDEO"
-
-#: local-applet/src/timeframe.cpp:187 local-applet/src/timeframe.cpp:211
-msgid "PHOTO"
-msgstr "FOTO"
-
-#: local-applet/src/timeframe.cpp:195 local-applet/src/timeframe.cpp:225
-msgid "VIDEO"
-msgstr "59b66c91d53ec2c32023fb3e7483714c_tr"
-
-#: local-applet/src/timeframedirmodel.cpp:161
-msgid ""
-"\n"
-"rating: "
-msgstr ""
-"\n"
-"avaliação: "
-
-#: local-applet/src/timeframeitemdelegate.cpp:244
-msgctxt "Items in a folder"
-msgid "1 item"
-msgid_plural "%1 items"
-msgstr[0] "1 item"
-msgstr[1] "outro: %1 itens"
-
-#: local-applet/src/timeframeitemdelegate.cpp:300
-#: local-applet/src/timeframeitemdelegate.cpp:304
-msgctxt "@info mimetype"
-msgid "Unknown"
-msgstr "Desconhecido"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "JAN"
-msgstr "JAN"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "FEB"
-msgstr "FEV"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "MAR"
-msgstr "MAR"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "APR"
-msgstr "ABR"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "MAY"
-msgstr "MAI"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "JUNE"
-msgstr "JUN"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "JULY"
-msgstr "JUL"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "AUG"
-msgstr "AGO"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "SEP"
-msgstr "SET"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "OCT"
-msgstr "OUT"
-
-#: local-applet/src/timeframeslider.cpp:39 local-applet/src/timeslider.cpp:100
-msgid "NOV"
-msgstr "NOV"
-
-#: local-applet/src/timeframeslider.cpp:39 local-applet/src/timeslider.cpp:100
-msgid "DEC"
-msgstr "DEZ"
-
-#: local-applet/src/timeslider.cpp:70
-msgid "D"
-msgstr "D"
-
-#: local-applet/src/timeslider.cpp:73
-msgid "M"
-msgstr "M"
-
-#: local-applet/src/welcomewidget.cpp:124
-#: local-applet/src/welcomewidget.cpp:126
-#: local-applet/src/welcomewidget.cpp:131
-msgid "Recent Applications"
-msgstr "Aplicações Recentes"
-
-#: local-applet/src/welcomewidget.cpp:161
-#: local-applet/src/welcomewidget.cpp:163
-#: local-applet/src/welcomewidget.cpp:168
-msgid "Places"
-msgstr "Locais"
-
-#: local-applet/src/welcomewidget.cpp:191
-#: local-applet/src/welcomewidget.cpp:193
-#: local-applet/src/welcomewidget.cpp:198
-msgid "Recent Documents"
-msgstr "Documentos Recentes"
-
-#: src/main.cpp:36 src/main.cpp:43
+#: main.cpp:37 main.cpp:44
 msgid "ROSA Desktop Application Launcher"
 msgstr "Lançador de Aplicações ROSA Desktop"
 
-#: src/main.cpp:45
-msgid "Copyright 2010-2011, ROSALab"
+#: main.cpp:46
+#, fuzzy
+msgid "Copyright 2010-2012, ROSALab"
 msgstr "Copyright 2010-2011, ROSALab"
 
-#: src/main.cpp:46
-msgid "Aleksey Yermakov"
-msgstr "Aleksey Yermakov"
+#: main.cpp:47
+msgid "Alexander Skakov"
+msgstr ""
 
-#: src/main.cpp:47
+#: main.cpp:48 main.cpp:51 main.cpp:54 main.cpp:57 main.cpp:60
 msgid "Author"
 msgstr "Autor"
 
-#: src/main.cpp:53
-msgid "Show window decorations around the widget"
-msgstr "Mostrar decorações de janela ao redor do widget"
-
-#: src/main.cpp:54
-msgid "Do not show window decorations around the widget"
-msgstr "Não mostrar decorações de janela ao redor do widget"
-
-#: src/main.cpp:56
-msgid "Display the widget fullscreen"
-msgstr "Mostar o widget em tela-cheia"
-
-#: src/main.cpp:57
-msgid ""
-"Name of applet to view; may refer to the plugin name or be a path (absolute "
-"or relative) to a package. If not provided, then an attempt is made to load "
-"a package from the current directory."
+#: main.cpp:50
+msgid "Evgeniy Augin"
 msgstr ""
-"Nome do applet a ser visto; deve referenciar o nome do plugin ou ser um "
-"caminho (absoluto ou relativo) para um pacote. Se não fornecido, uma "
-"tentativa de carregar um pacote é feita no diretório atual."
 
-#: src/main.cpp:60
-msgid "Optional arguments for the applet to add"
-msgstr "Argumentos opcionais para o applet a ser adicionado"
+#: main.cpp:53
+msgid "Sergey Borovkov"
+msgstr ""
 
+#: main.cpp:56
+msgid "Julia Mineeva"
+msgstr ""
 
+#: main.cpp:59
+msgid "Aleksey Yermakov"
+msgstr "Aleksey Yermakov"
+
+#: main.cpp:67
+msgid "Silent run. Hide application window after start."
+msgstr ""
+
+#: swapp.cpp:174
+msgid "Welcome"
+msgstr "Bem-vindo"
+
+#: swapp.cpp:175
+msgid "Applications"
+msgstr "Aplicações"
+
+#: swapp.cpp:176
+msgid "TimeFrame"
+msgstr "TimeFrame"
+
+#: swapp.cpp:178
+msgid "Recent Applications"
+msgstr "Aplicações Recentes"
+
+#: swapp.cpp:179
+msgid "Places"
+msgstr "Locais"
+
+#: swapp.cpp:180
+msgid "Recent Documents"
+msgstr "Documentos Recentes"
+
+#: swapp.cpp:182
+msgid "All"
+msgstr ""
+
+#: swapp.cpp:183
+#, fuzzy
+msgid "Photo"
+msgstr "Fotos"
+
+#: swapp.cpp:184
+msgid "Video"
+msgstr "VIDEO"
+
+#: swapp.cpp:185
+#, fuzzy
+msgid "Documents"
+msgstr "Documentos Recentes"
+
+#: swapp.cpp:186
+msgid "Manage networks"
+msgstr ""
+
+#: swapp.cpp:187
+#, fuzzy
+msgid "My Local Documents"
+msgstr "Documentos Recentes"
+
+#: swapp.cpp:188
+msgid "Local"
+msgstr ""
+
+#: swapp.cpp:189
+msgid "Write comment..."
+msgstr ""
+
+#: swapp.cpp:190
+msgid "Audio: "
+msgstr ""
+
+#: swapp.cpp:191
+#, fuzzy
+msgid "Comments: "
+msgstr "Documentos Recentes"
+
+#: swapp.cpp:192
+msgid "Likes: "
+msgstr ""
+
+#: swapp.cpp:193
+msgid "Like"
+msgstr ""
+
+#: swapp.cpp:194
+msgid "Unlike"
+msgstr ""
+
+#: swapp.cpp:195
+msgid "Social networking sites"
+msgstr ""
+
+#: swapp.cpp:197
+msgid "JAN"
+msgstr "JAN"
+
+#: swapp.cpp:198
+msgid "FEB"
+msgstr "FEV"
+
+#: swapp.cpp:199
+msgid "MAR"
+msgstr "MAR"
+
+#: swapp.cpp:200
+msgid "APR"
+msgstr "ABR"
+
+#: swapp.cpp:201
+msgid "MAY"
+msgstr "MAI"
+
+#: swapp.cpp:202
+#, fuzzy
+msgid "JUN"
+msgstr "JUN"
+
+#: swapp.cpp:203
+#, fuzzy
+msgid "JUL"
+msgstr "JUL"
+
+#: swapp.cpp:204
+msgid "AUG"
+msgstr "AGO"
+
+#: swapp.cpp:205
+msgid "SEP"
+msgstr "SET"
+
+#: swapp.cpp:206
+msgid "OCT"
+msgstr "OUT"
+
+#: swapp.cpp:207
+msgid "NOV"
+msgstr "NOV"
+
+#: swapp.cpp:208
+msgid "DEC"
+msgstr "DEZ"
+
+#: rc.cpp:1
+msgctxt "Julia Mineeva"
+msgid "Julia Mineeva"
+msgstr ""
+
+#: rc.cpp:2
+msgctxt "julia.mineeva@osinit.ru"
+msgid "julia.mineeva@osinit.ru"
+msgstr ""
+
+#~ msgid ""
+#~ "%1\n"
+#~ "rating: %2"
+#~ msgstr ""
+#~ "%1\n"
+#~ "avaliação: %2"
+
+#~ msgid "Home"
+#~ msgstr "Home"
+
+#~ msgid "PHOTO"
+#~ msgstr "FOTO"
+
+#~ msgid "VIDEO"
+#~ msgstr "59b66c91d53ec2c32023fb3e7483714c_tr"
+
+#~ msgid ""
+#~ "\n"
+#~ "rating: "
+#~ msgstr ""
+#~ "\n"
+#~ "avaliação: "
+
+#~ msgctxt "Items in a folder"
+#~ msgid "1 item"
+#~ msgid_plural "%1 items"
+#~ msgstr[0] "1 item"
+#~ msgstr[1] "outro: %1 itens"
+
+#~ msgctxt "@info mimetype"
+#~ msgid "Unknown"
+#~ msgstr "Desconhecido"
+
+#~ msgid "D"
+#~ msgstr "D"
+
+#~ msgid "M"
+#~ msgstr "M"
+
+#~ msgid "Show window decorations around the widget"
+#~ msgstr "Mostrar decorações de janela ao redor do widget"
+
+#~ msgid "Do not show window decorations around the widget"
+#~ msgstr "Não mostrar decorações de janela ao redor do widget"
+
+#~ msgid "Display the widget fullscreen"
+#~ msgstr "Mostar o widget em tela-cheia"
+
+#~ msgid ""
+#~ "Name of applet to view; may refer to the plugin name or be a path "
+#~ "(absolute or relative) to a package. If not provided, then an attempt is "
+#~ "made to load a package from the current directory."
+#~ msgstr ""
+#~ "Nome do applet a ser visto; deve referenciar o nome do plugin ou ser um "
+#~ "caminho (absoluto ou relativo) para um pacote. Se não fornecido, uma "
+#~ "tentativa de carregar um pacote é feita no diretório atual."
+
+#~ msgid "Optional arguments for the applet to add"
+#~ msgstr "Argumentos opcionais para o applet a ser adicionado"
