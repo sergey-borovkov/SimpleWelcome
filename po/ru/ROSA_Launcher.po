@@ -7,8 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-15 17:32+0400\n"
+"Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
+"quicksearch=simplewelcome&list_id=4395\n"
+"POT-Creation-Date: 2012-09-18 17:37+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,159 +17,203 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
-#: local-applet/src/documenteventwidget.cpp:57
-#: local-applet/src/photoeventwidget.cpp:59
-#: local-applet/src/timeframedirmodel.cpp:70
-#: local-applet/src/videoeventwidget.cpp:99
-msgid ""
-"%1\n"
-"rating: %2"
-msgstr "%1\nрейтинг: %2"
-
-#: local-applet/src/rosa-launcher.cpp:149
-msgid "Search"
-msgstr "Поиск"
-
-#: local-applet/src/rosa-launcher.cpp:153
-msgid "Welcome"
-msgstr "Приветствие"
-
-#: local-applet/src/rosa-launcher.cpp:164
-msgid "Applications"
-msgstr "Приложения"
-
-#: local-applet/src/rosa-launcher.cpp:177
-msgid "TimeFrame"
-msgstr ""
-
-#: local-applet/src/timeframe.cpp:65
-msgid "Home"
-msgstr "Домой"
-
-#: local-applet/src/timeframe.cpp:67
-msgid "Photos"
-msgstr "Фото"
-
-#: local-applet/src/timeframe.cpp:69
-msgid "Video"
-msgstr "Видео"
-
-#: local-applet/src/timeframe.cpp:71
-msgid "Documents"
-msgstr "Документы"
-
-#: local-applet/src/timeframe.cpp:114
-msgid "Enable..."
-msgstr "Включить..."
-
-#: local-applet/src/timeframe.cpp:123
-msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
-msgstr "Служба \"Поиск по меткам и содержимому\" выключена. Вы можете включить ее в параметрах системы."
-
-#: local-applet/src/timeframe.cpp:238 local-applet/src/timeframe.cpp:282
-msgid "VIDEO"
-msgstr "ВИДЕО"
-
-#: local-applet/src/timeframe.cpp:243 local-applet/src/timeframe.cpp:268
-msgid "PHOTO"
-msgstr "ФОТО"
-
-#: local-applet/src/timeframe.cpp:253 local-applet/src/timeframe.cpp:297
-msgid "DOCUMENTS"
-msgstr "ДОКУМЕНТЫ"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "JAN"
-msgstr "Янв"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "FEB"
-msgstr "Фев"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "MAR"
-msgstr "Март"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "APR"
-msgstr "Апр"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "MAY"
-msgstr "Май"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "JUNE"
-msgstr "Июнь"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "JULY"
-msgstr "Июль"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "AUG"
-msgstr "Авг"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "SEP"
-msgstr "Сен"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "OCT"
-msgstr "Окт"
-
-#: local-applet/src/timeframeslider.cpp:39 local-applet/src/timeslider.cpp:100
-msgid "NOV"
-msgstr "Нояб"
-
-#: local-applet/src/timeframeslider.cpp:39 local-applet/src/timeslider.cpp:100
-msgid "DEC"
-msgstr "Дек"
-
-#: local-applet/src/timeslider.cpp:70
-msgid "D"
-msgstr "Д"
-
-#: local-applet/src/timeslider.cpp:73
-msgid "M"
-msgstr "М"
-
-#: local-applet/src/welcomewidget.cpp:139
-#: local-applet/src/welcomewidget.cpp:141
-#: local-applet/src/welcomewidget.cpp:146
-msgid "Recent Applications"
-msgstr "Недавние приложения"
-
-#: local-applet/src/welcomewidget.cpp:176
-#: local-applet/src/welcomewidget.cpp:178
-#: local-applet/src/welcomewidget.cpp:183
-msgid "Places"
-msgstr "Точки входа"
-
-#: local-applet/src/welcomewidget.cpp:208
-#: local-applet/src/welcomewidget.cpp:210
-#: local-applet/src/welcomewidget.cpp:215
-msgid "Recent Documents"
-msgstr "Недавние документы"
-
-#: src/main.cpp:36 src/main.cpp:43
+#: main.cpp:37 main.cpp:44
 msgid "ROSA Desktop Application Launcher"
 msgstr ""
 
-#: src/main.cpp:45
-msgid "Copyright 2010-2011, ROSALab"
+#: main.cpp:46
+msgid "Copyright 2010-2012, ROSALab"
 msgstr ""
 
-#: src/main.cpp:46
-msgid "Aleksey Yermakov"
-msgstr ""
+#: main.cpp:47
+msgid "Alexander Skakov"
+msgstr "Александр Скаков"
 
-#: src/main.cpp:47
+#: main.cpp:48 main.cpp:52
 msgid "Author"
-msgstr ""
+msgstr "Автор"
 
-#: src/main.cpp:54
+#: main.cpp:51
+msgid "Aleksey Yermakov"
+msgstr "Алексей Ермаков"
+
+#: main.cpp:59
 msgid "Silent run. Hide application window after start."
 msgstr ""
+
+#: swapp.cpp:174
+msgid "Welcome"
+msgstr "Приветствие"
+
+#: swapp.cpp:175
+msgid "Applications"
+msgstr "Приложения"
+
+#: swapp.cpp:176
+msgid "TimeFrame"
+msgstr ""
+
+#: swapp.cpp:178
+msgid "Recent Applications"
+msgstr "Недавние приложения"
+
+#: swapp.cpp:179
+msgid "Places"
+msgstr "Точки входа"
+
+#: swapp.cpp:180
+msgid "Recent Documents"
+msgstr "Недавние документы"
+
+#: swapp.cpp:182
+msgid "All"
+msgstr "Все"
+
+#: swapp.cpp:183
+msgid "Photo"
+msgstr "Фото"
+
+#: swapp.cpp:184
+msgid "Video"
+msgstr "Видео"
+
+#: swapp.cpp:185
+msgid "Documents"
+msgstr "Документы"
+
+#: swapp.cpp:186
+msgid "Manage networks"
+msgstr "Управление сетями"
+
+#: swapp.cpp:187
+msgid "My Local Documents"
+msgstr "Мои локальные документы"
+
+#: swapp.cpp:188
+msgid "Local"
+msgstr ""
+
+#: swapp.cpp:189
+msgid "Write comment..."
+msgstr "Написать комментарий..."
+
+#: swapp.cpp:190
+msgid "Audio: "
+msgstr "Аудио: "
+
+#: swapp.cpp:191
+msgid "Comments: "
+msgstr "Комментарии: "
+
+#: swapp.cpp:192
+msgid "Likes: "
+msgstr "Нравится: "
+
+#: swapp.cpp:193
+msgid "Like"
+msgstr "Мне нравится"
+
+#: swapp.cpp:194
+msgid "Dislike"
+msgstr "Больше не нравится"
+
+#: swapp.cpp:195
+msgid "Social networking sites"
+msgstr "Социальные сети"
+
+#: swapp.cpp:197
+msgid "JAN"
+msgstr "Янв"
+
+#: swapp.cpp:198
+msgid "FEB"
+msgstr "Фев"
+
+#: swapp.cpp:199
+msgid "MAR"
+msgstr "Март"
+
+#: swapp.cpp:200
+msgid "APR"
+msgstr "Апр"
+
+#: swapp.cpp:201
+msgid "MAY"
+msgstr "Май"
+
+#: swapp.cpp:202
+msgid "JUN"
+msgstr "Июнь"
+
+#: swapp.cpp:203
+msgid "JUL"
+msgstr "Июль"
+
+#: swapp.cpp:204
+msgid "AUG"
+msgstr "Авг"
+
+#: swapp.cpp:205
+msgid "SEP"
+msgstr "Сен"
+
+#: swapp.cpp:206
+msgid "OCT"
+msgstr "Окт"
+
+#: swapp.cpp:207
+msgid "NOV"
+msgstr "Нояб"
+
+#: swapp.cpp:208
+msgid "DEC"
+msgstr "Дек"
+
+#: rc.cpp:1
+msgctxt "Julia Mineeva"
+msgid "Julia Mineeva"
+msgstr "Юлия Минеева"
+
+#: rc.cpp:2
+msgctxt "julia.mineeva@osinit.ru"
+msgid "julia.mineeva@osinit.ru"
+msgstr ""
+
+#~ msgid ""
+#~ "%1\n"
+#~ "rating: %2"
+#~ msgstr ""
+#~ "%1\n"
+#~ "рейтинг: %2"
+
+#~ msgid "Search"
+#~ msgstr "Поиск"
+
+#~ msgid "Home"
+#~ msgstr "Домой"
+
+#~ msgid "Enable..."
+#~ msgstr "Включить..."
+
+#~ msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
+#~ msgstr ""
+#~ "Служба \"Поиск по меткам и содержимому\" выключена. Вы можете включить ее "
+#~ "в параметрах системы."
+
+#~ msgid "VIDEO"
+#~ msgstr "ВИДЕО"
+
+#~ msgid "PHOTO"
+#~ msgstr "ФОТО"
+
+#~ msgid "DOCUMENTS"
+#~ msgstr "ДОКУМЕНТЫ"
+
+#~ msgid "D"
+#~ msgstr "Д"
+
+#~ msgid "M"
+#~ msgstr "М"

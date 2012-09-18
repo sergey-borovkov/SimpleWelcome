@@ -1,11 +1,11 @@
 find_package(KDE4 REQUIRED)
-include (KDE4Defaults)
+include(KDE4Defaults)
 
-find_package (Qt4 REQUIRED QtCore QtGui QtDeclarative)
+find_package(Qt4 REQUIRED QtCore QtGui QtDeclarative)
 include(${QT_USE_FILE})
 qt4_automoc(${qtproject_SRCS})
 add_definitions(${QT_DEFINITIONS})
-set (RESOURCES timeframe/resources.qrc)
+set(RESOURCES timeframe/resources.qrc)
 qt4_add_resources(QRC_SOURCES ${RESOURCES})
 
 include_directories(${KDE4_INCLUDES} ${QT_QDECLARATIVE_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../timeframelib)

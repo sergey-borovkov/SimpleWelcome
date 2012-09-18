@@ -51,6 +51,24 @@ Item {
         //   timeFrameTab.state = "gallerySearch"
     }
 
+    function getMenuItemText(id)
+    {
+        var txt = id
+        if (id == "All")
+            txt =  i18n_All
+        if (id == "Photo")
+            txt =  i18n_Photo
+        if (id == "Video")
+            txt =  i18n_Video
+        if (id == "Documents")
+            txt =  i18n_Documents
+        if (id == "Manage networks")
+            txt =  i18n_Manage_networks
+        if (id == "Documents")
+            txt =  i18n_Documents
+        return txt
+    }
+
     //Start initial search
     Connections {
         target:tabListView
@@ -80,10 +98,10 @@ Item {
 
         ListModel {
             id: menuDocItems
-            ListElement { itemText: "All" }
-            ListElement { itemText: "Photo" }
-            ListElement { itemText: "Video" }
-            ListElement { itemText: "Documents" }
+            ListElement{itemText: "All"}
+            ListElement{itemText: "Photo"}
+            ListElement{itemText: "Video"}
+            ListElement{itemText: "Documents"}
         }
 
         ListModel {
@@ -105,15 +123,15 @@ Item {
 
         DropListBox {
             id: localDocs
-            width: 240
+            width: 330
             model: menuDocItems
-            name: "My Local Documents"
+            name: i18n_My_Local_Documents
             selectedText: name
             state: "current"
 
             function setLocalFilter()
             {
-                if (name === "My Local Documents") {
+                if (name === i18n_My_Local_Documents) {
                     timeScaleModel.setFilter("Local")
                     localDayModel.setFilter("Local")
                 }
@@ -123,7 +141,7 @@ Item {
                 }
             }
             onSelectedIndexChanged: {
-                name = ( selectedText === "All" ) ? "My Local Documents" : selectedText
+                name = ( selectedText === "All" ) ? i18n_My_Local_Documents : getMenuItemText(selectedText)
                 setLocalFilter()
             }
             onClicked: {
@@ -136,13 +154,13 @@ Item {
             id: socialNetworks
             width: 260
             model: menuSocialItems
-            name: "Social networking sites"
+            name: i18n_Social_networkong_sites
             selectedText: name
             property int __wasSearching: 0
 
             function setSocialFilter()
             {
-                if (name === "Social networking sites") {
+                if (name === i18n_Social_networkong_sites) {
                     timeScaleModel.setFilter("Social")
                     socialDayModel.setFilter("Social")
                 }
@@ -156,7 +174,7 @@ Item {
                 timeFrameTab.state = ( selectedText === "Manage networks" ) ? "socialAuthorization"
                                                                             : (inGallery ? "socialGallery" : "social")
                 socialProxy.startSearch()
-                name = ( selectedText === "All" ) ? "Social networking sites" : selectedText
+                name = ( selectedText === "All" ) ? i18n_Social_networkong_sites : getMenuItemText(selectedText)
                 setSocialFilter()
             }
             onClicked: {
@@ -435,12 +453,12 @@ Item {
             } else if (timeFrameTab.state === "social")
             {
                 index = socialTimeLine.indexAt(socialTimeLine.x + socialTimeLine.width/2 + socialTimeLine.contentX,
-                                            socialTimeLine.y + socialTimeLine.height/2 + socialTimeLine.contentY)
+                                               socialTimeLine.y + socialTimeLine.height/2 + socialTimeLine.contentY)
                 date = socialDayModel.getDateOfIndex(index)
             } else if (timeFrameTab.state === "socialGallery")
             {
                 index = socialGalleryView.indexAt(socialGalleryView.x + socialGalleryView.width/2 + socialGalleryView.contentX,
-                                            socialGalleryView.y + socialGalleryView.height/2 + socialGalleryView.contentY)
+                                                  socialGalleryView.y + socialGalleryView.height/2 + socialGalleryView.contentY)
                 date = socialDayModel.getDateOfIndex(index)
             }
 

@@ -62,7 +62,7 @@ Rectangle {
                 wrapMode: TextEdit.Wrap
                 onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                 Keys.onPressed: {
-                    if (edit.text === "Write comment...")
+                    if (edit.text === i18n_Write_Comment)
                     {
                         edit.color = "black"
                         edit.text = ""
@@ -71,7 +71,7 @@ Rectangle {
                     if (event.key === Qt.Key_Return) {
                         commentBox.send(edit.text)
                         edit.color = "grey"
-                        edit.text = "Write comment..."
+                        edit.text = i18n_Write_Comment
                         event.accepted = true
                     }
                 }
