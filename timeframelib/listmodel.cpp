@@ -1,6 +1,5 @@
 #include "listmodel.h"
 #include "listitem.h"
-#include <QtCore/QDebug>
 
 ListModel::ListModel(QHash<int, QByteArray> roles, QObject *parent) :
     QAbstractListModel(parent), m_roles(roles)
@@ -24,7 +23,7 @@ QVariant ListModel::data(const QModelIndex &index, int role) const
 bool ListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
       ListItem *item = m_items.at(index.row());
-      bool result = item->setData(value, role);      
+      bool result = item->setData(value, role);
       if (result){
           emit dataChanged(index, index);
       }
