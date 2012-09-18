@@ -25,16 +25,35 @@ public:
     explicit SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent = 0);
     ~SocialProxy();
 
-    void setModel(SocialDayModel *model);
+    void setSocialModel(SocialDayModel *model);
     ListModel *socialModel();
 
     PluginModel *pluginModel();
 
+    /**
+     * @brief Like item with given id
+     * @param id of item to like
+     * @param plugin name
+     */
+    Q_INVOKABLE void likeItem(const QString &id, const QString &pluginName);
+
+    /**
+     * @brief Unlike already liked item
+     * @param id of item to unlike
+     * @param plugin name
+     */
+    Q_INVOKABLE void unlikeItem(const QString &id, const QString &pluginName);
+
+    /**
+     * @brief Comment item
+     * @param message
+     * @param post id
+     * @param plugin name
+     */
+    Q_INVOKABLE void commentItem(const QString &message, const QString &parentId, const QString &pluginName);
+
 
 public slots:
-    void likeItem(const QString &id, const QString &pluginName);
-    void dislikeItem(const QString &id, const QString &pluginName);
-    void commentItem(const QString &message, const QString &parentId, const QString &pluginName);
     void authorized();
     void deauthorized();
     bool anyPluginsEnabled();
@@ -91,7 +110,7 @@ private:
     PluginModel *m_pluginModel;
     SocialDayModel *m_socialModel;
     QSet<QString> m_idSet;
-    QSet<QString> m_enabledPlugins;    
+    QSet<QString> m_enabledPlugins;
     QString m_cachedComment;
 };
 

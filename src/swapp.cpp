@@ -233,7 +233,7 @@ void SWApp::initTimeframeSocialMode()
     SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel(this);
     socialProxyModel->setSourceModel(socialModel);
     m_manager = new SocialProxy(plugins, this);
-    m_manager->setModel(socialModel);
+    m_manager->setSocialModel(socialModel);
 
     m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
 
