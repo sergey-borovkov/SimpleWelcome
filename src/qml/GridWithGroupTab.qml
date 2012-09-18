@@ -210,9 +210,10 @@ Item {
             gridsListView.currentIndex = 0
         }
 
-        function showGroup(groupData, iconBottom)
+        function showGroup(groupData, iconCoords)
         {
-            popupFrame.y = iconBottom + 10
+            popupFrame.arrowX = iconCoords.x
+            popupFrame.y = iconCoords.y
             if (popupFrame.state == "CLOSED")
             {
                 popupFrame.state = "OPEN"
@@ -280,6 +281,14 @@ Item {
     }
 
     Rectangle {
+        anchors.top: parent.top
+        anchors.topMargin: -15
+        width: parent.width
+        height: parent.height + 28
+
+        color: Qt.rgba(0, 0, 0, 0.6)
+        opacity: popupFrame.state == "OPEN"
+
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
@@ -288,10 +297,6 @@ Item {
                 popupFrame.state = "CLOSED"
             }
         }
-
-        anchors.fill: parent
-        color: Qt.rgba(0, 0, 0, 0.5)
-        opacity: popupFrame.state == "OPEN"
 
         Behavior on opacity {
             NumberAnimation { duration: 200; /*easing.type: Easing.OutQuint*/ }
@@ -302,7 +307,6 @@ Item {
         id: popupFrame
         //anchors.top: parent.bottom
         width: parent.width
-        clip: true
         z: 1
 
         state: "CLOSED"
@@ -319,7 +323,7 @@ Item {
                 name: "OPEN"
                 PropertyChanges {
                     target: popupFrame
-                    height: 420//childrenRect.height
+                    height: childrenRect.height
                 }
             }
         ]
