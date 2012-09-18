@@ -3,7 +3,6 @@ import QtQuick 1.1
 FocusScope {
     id: applicationsTab
     width: parent.width
-    clip: true
 
     property variant grid: groupTab.tabListView.currentItem.activeGridGroup.gridView
     property alias tab: groupTab

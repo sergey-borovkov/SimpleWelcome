@@ -17,7 +17,7 @@ Column {
 
     signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
-    signal showPopupGroup(variant groupData, double iconBottom)
+    signal showPopupGroup(variant groupData, variant iconCoords)
 
     // constants
     property int textToGridSpacing: constants.textToGridSpacing
@@ -83,7 +83,7 @@ Column {
             model.append(itemData)
 
             // UNREM THIS TO ENABLE AUTO-STACKING
-            /*/if (!groupNameVisible)
+            /**/if (!groupNameVisible)
             {
                 appendItemToModel.lastItem = model.get(model.count - 1)
                 if (appendItemToModel.lastItem && appendItemToModel.lastLetter != appendItemToModel.lastItem.caption.charAt(0).toLowerCase())
@@ -156,7 +156,8 @@ Column {
                 if (model.get(newIndex).stack !== undefined)
                 {
                     //console.log("Group at: " + newIndex)
-                    showPopupGroup(model.get(newIndex).stack, mapToItem(groupTab, 0, currentItem.y + currentItem.height).y)
+                    var iconCoords = mapToItem(groupTab, currentItem.x + currentItem.width / 2 - 8, currentItem.y + currentItem.height)
+                    showPopupGroup(model.get(newIndex).stack, iconCoords)
                     return
                 }
                 if (groupName == i18n_Recent_Applications || groupName == i18n_Recent_Documents)
