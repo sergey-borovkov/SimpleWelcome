@@ -119,14 +119,13 @@ void RequestManager::feedReply(QByteArray reply)
     // need to fix it though - client won't get signals from created request
     // because it does not have access to it
     QVariantMap paging = result.value(QLatin1String("paging")).toMap();
-    if(paging.contains("previous")) {
+    if(paging.contains("next")) {
         FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
-        request->setUrl(paging.value("previous").toUrl());
+        request->setUrl(paging.value("next").toUrl());
         request->start();
     }
 }
-#include <QDebug>
 
 void RequestManager::idReply(QByteArray reply)
 {
