@@ -2,7 +2,6 @@
 #include "pluginitem.h"
 #include "socialplugin.h"
 
-#include <QtCore/QDebug>
 #include <QtGui/QWidget>
 #include <QtCore/QSettings>
 
