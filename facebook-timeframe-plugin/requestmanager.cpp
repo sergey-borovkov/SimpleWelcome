@@ -115,9 +115,6 @@ void RequestManager::feedReply(QByteArray reply)
 
     emit newSocialItems(feedItems);
 
-    // make request get more items if necessary
-    // need to fix it though - client won't get signals from created request
-    // because it does not have access to it
     QVariantMap paging = result.value(QLatin1String("paging")).toMap();
     if(paging.contains("next")) {
         FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);

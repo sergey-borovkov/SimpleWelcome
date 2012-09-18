@@ -22,6 +22,7 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
     foreach(ISocialPlugin * plugin, plugins) {
         QObject *object = 0;
         if((object = dynamic_cast<QObject *>(plugin->requestManager())) != 0) {
+            // perphaps need to make it work via PluginRequestReply later
             connect(object, SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
         }
         if((object = dynamic_cast<QObject *>(plugin)) != 0) {
@@ -132,12 +133,12 @@ QString SocialProxy::authorizedPluginName(int i) const
 }
 
 void SocialProxy::likeSuccess(PluginRequestReply* reply)
-{    
+{
     m_socialModel->likeItem(reply->sourceId());
 }
 
 void SocialProxy::commentSuccess(PluginRequestReply* reply)
-{    
+{
     GenericCommentItem* item = new GenericCommentItem(m_cachedComment,reply->id());
     m_socialModel->addCommentToItem(item, reply->sourceId());
 }
