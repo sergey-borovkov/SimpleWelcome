@@ -9,7 +9,7 @@ DIR_NAME=$NAME-$VER
 #rm $DIR_NAME.tar.gz
 
 mkdir $DIR_NAME
-cp -rf rosa-starter po assets facebook-timeframe-plugin vkontakte-timeframe-plugin src CMakeLists.txt config.h.in $DIR_NAME
+cp -rf rosa-starter po assets facebook-timeframe-plugin vkontakte-timeframe-plugin timeframelib src CMakeLists.txt config.h.in $DIR_NAME
 tar -czf $DIR_NAME.tar.gz $DIR_NAME
 rm -rf $DIR_NAME
 cp -f $DIR_NAME.tar.gz ~/rpmbuild/SOURCES

@@ -51,12 +51,10 @@ void FacebookRequest::start()
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
 }
 
-#include <QDebug>
-
 void FacebookRequest::replyFinished()
-{    
+{
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    QByteArray answer = reply->readAll(); 
+    QByteArray answer = reply->readAll();
     emit replyReady(answer);
     reply->deleteLater();
 }
@@ -71,7 +69,7 @@ void FacebookRequest::postFinished()
 
     QString id =  result.value("id").toString();
     if(!id.isEmpty())
-        emit newItemId(id);    
+        emit newItemId(id);
     emit success();
 }
 
