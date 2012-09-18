@@ -42,7 +42,7 @@ extern "C"
 int main(int argc, char *argv[])
 {
     KAboutData aboutData("ROSA_Launcher", 0, ki18n("ROSA Desktop Application Launcher"),
-                         version, ki18n(description), KAboutData::License_GPL,
+                         version, ki18n(description), KAboutData::License_GPL_V3,
                          ki18n("Copyright 2010-2012, ROSALab"));
     aboutData.addAuthor(ki18n("Alexander Skakov"),
                         ki18n("Author"),
