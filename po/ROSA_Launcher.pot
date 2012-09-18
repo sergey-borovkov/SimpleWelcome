@@ -15,10 +15,8 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
 #: main.cpp:37 main.cpp:44
 msgid "ROSA Desktop Application Launcher"
@@ -34,7 +32,7 @@ msgstr ""
 
 #: main.cpp:48 main.cpp:51 main.cpp:54 main.cpp:57 main.cpp:60
 msgid "Author"
-msgstr "Автор"
+msgstr ""
 
 #: main.cpp:50
 msgid "Evgeniy Augin"
@@ -58,11 +56,11 @@ msgstr ""
 
 #: swapp.cpp:174
 msgid "Welcome"
-msgstr "Приветствие"
+msgstr ""
 
 #: swapp.cpp:175
 msgid "Applications"
-msgstr "Приложения"
+msgstr ""
 
 #: swapp.cpp:176
 msgid "TimeFrame"
@@ -70,39 +68,39 @@ msgstr ""
 
 #: swapp.cpp:178
 msgid "Recent Applications"
-msgstr "Недавние приложения"
+msgstr ""
 
 #: swapp.cpp:179
 msgid "Places"
-msgstr "Точки входа"
+msgstr ""
 
 #: swapp.cpp:180
 msgid "Recent Documents"
-msgstr "Недавние документы"
+msgstr ""
 
 #: swapp.cpp:182
 msgid "All"
-msgstr "Все"
+msgstr ""
 
 #: swapp.cpp:183
 msgid "Photo"
-msgstr "Фото"
+msgstr ""
 
 #: swapp.cpp:184
 msgid "Video"
-msgstr "Видео"
+msgstr ""
 
 #: swapp.cpp:185
 msgid "Documents"
-msgstr "Документы"
+msgstr ""
 
 #: swapp.cpp:186
 msgid "Manage networks"
-msgstr "Управление сетями"
+msgstr ""
 
 #: swapp.cpp:187
 msgid "My Local Documents"
-msgstr "Мои локальные документы"
+msgstr ""
 
 #: swapp.cpp:188
 msgid "Local"
@@ -110,122 +108,86 @@ msgstr ""
 
 #: swapp.cpp:189
 msgid "Write comment..."
-msgstr "Написать комментарий..."
+msgstr ""
 
 #: swapp.cpp:190
 msgid "Audio: "
-msgstr "Аудио: "
+msgstr ""
 
 #: swapp.cpp:191
 msgid "Comments: "
-msgstr "Комментарии: "
+msgstr ""
 
 #: swapp.cpp:192
 msgid "Likes: "
-msgstr "Нравится: "
+msgstr ""
 
 #: swapp.cpp:193
 msgid "Like"
-msgstr "Мне нравится"
+msgstr ""
 
 #: swapp.cpp:194
 msgid "Unlike"
-msgstr "Больше не нравится"
+msgstr ""
 
 #: swapp.cpp:195
 msgid "Social networking sites"
-msgstr "Социальные сети"
+msgstr ""
 
 #: swapp.cpp:197
 msgid "JAN"
-msgstr "Янв"
+msgstr ""
 
 #: swapp.cpp:198
 msgid "FEB"
-msgstr "Фев"
+msgstr ""
 
 #: swapp.cpp:199
 msgid "MAR"
-msgstr "Март"
+msgstr ""
 
 #: swapp.cpp:200
 msgid "APR"
-msgstr "Апр"
+msgstr ""
 
 #: swapp.cpp:201
 msgid "MAY"
-msgstr "Май"
+msgstr ""
 
 #: swapp.cpp:202
 msgid "JUN"
-msgstr "Июнь"
+msgstr ""
 
 #: swapp.cpp:203
 msgid "JUL"
-msgstr "Июль"
+msgstr ""
 
 #: swapp.cpp:204
 msgid "AUG"
-msgstr "Авг"
+msgstr ""
 
 #: swapp.cpp:205
 msgid "SEP"
-msgstr "Сен"
+msgstr ""
 
 #: swapp.cpp:206
 msgid "OCT"
-msgstr "Окт"
+msgstr ""
 
 #: swapp.cpp:207
 msgid "NOV"
-msgstr "Нояб"
+msgstr ""
 
 #: swapp.cpp:208
 msgid "DEC"
-msgstr "Дек"
+msgstr ""
 
 #: rc.cpp:1
 msgctxt "Julia Mineeva"
 msgid "Julia Mineeva"
-msgstr "Юлия Минеева"
+msgstr ""
 
 #: rc.cpp:2
 msgctxt "julia.mineeva@osinit.ru"
 msgid "julia.mineeva@osinit.ru"
 msgstr ""
-
-#~ msgid ""
-#~ "%1\n"
-#~ "rating: %2"
-#~ msgstr ""
-#~ "%1\n"
-#~ "рейтинг: %2"
-
-#~ msgid "Search"
-#~ msgstr "Поиск"
-
-#~ msgid "Home"
-#~ msgstr "Домой"
-
-#~ msgid "Enable..."
-#~ msgstr "Включить..."
-
-#~ msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
-#~ msgstr ""
-#~ "Служба \"Поиск по меткам и содержимому\" выключена. Вы можете включить ее "
-#~ "в параметрах системы."
-
-#~ msgid "VIDEO"
-#~ msgstr "ВИДЕО"
-
-#~ msgid "PHOTO"
-#~ msgstr "ФОТО"
-
-#~ msgid "DOCUMENTS"
-#~ msgstr "ДОКУМЕНТЫ"
-
-#~ msgid "D"
-#~ msgstr "Д"
-
-#~ msgid "M"
-#~ msgstr "М"

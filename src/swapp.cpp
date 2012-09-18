@@ -179,6 +179,34 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("i18n_Favorites", i18n("Places"));
     m_viewer->rootContext()->setContextProperty("i18n_Recent_Documents", i18n("Recent Documents"));
 
+    m_viewer->rootContext()->setContextProperty("i18n_All", i18n("All"));
+    m_viewer->rootContext()->setContextProperty("i18n_Photo", i18n("Photo"));
+    m_viewer->rootContext()->setContextProperty("i18n_Video", i18n("Video"));
+    m_viewer->rootContext()->setContextProperty("i18n_Documents", i18n("Documents"));
+    m_viewer->rootContext()->setContextProperty("i18n_Manage_networks", i18n("Manage networks"));
+    m_viewer->rootContext()->setContextProperty("i18n_My_Local_Documents", i18n("My Local Documents"));
+    m_viewer->rootContext()->setContextProperty("i18n_Local", i18n("Local"));
+    m_viewer->rootContext()->setContextProperty("i18n_Write_Comment", i18n("Write comment..."));
+    m_viewer->rootContext()->setContextProperty("i18n_Audio", i18n("Audio: "));
+    m_viewer->rootContext()->setContextProperty("i18n_Comments", i18n("Comments: "));
+    m_viewer->rootContext()->setContextProperty("i18n_Likes", i18n("Likes: "));
+    m_viewer->rootContext()->setContextProperty("i18n_Like", i18n("Like"));
+    m_viewer->rootContext()->setContextProperty("i18n_Unlike", i18n("Unlike"));
+    m_viewer->rootContext()->setContextProperty("i18n_Social_networkong_sites", i18n("Social networking sites"));
+
+    m_viewer->rootContext()->setContextProperty("i18n_JAN", i18n("JAN"));
+    m_viewer->rootContext()->setContextProperty("i18n_FEB", i18n("FEB"));
+    m_viewer->rootContext()->setContextProperty("i18n_MAR", i18n("MAR"));
+    m_viewer->rootContext()->setContextProperty("i18n_APR", i18n("APR"));
+    m_viewer->rootContext()->setContextProperty("i18n_MAY", i18n("MAY"));
+    m_viewer->rootContext()->setContextProperty("i18n_JUN", i18n("JUN"));
+    m_viewer->rootContext()->setContextProperty("i18n_JUL", i18n("JUL"));
+    m_viewer->rootContext()->setContextProperty("i18n_AUG", i18n("AUG"));
+    m_viewer->rootContext()->setContextProperty("i18n_SEP", i18n("SEP"));
+    m_viewer->rootContext()->setContextProperty("i18n_OCT", i18n("OCT"));
+    m_viewer->rootContext()->setContextProperty("i18n_NOV", i18n("NOV"));
+    m_viewer->rootContext()->setContextProperty("i18n_DEC", i18n("DEC"));
+
     QList<QPair<QString, QString> > runners = searchDataSource->getRunnersNames();
     for (int i = 0; i < runners.size(); i++)
         m_viewer->rootContext()->setContextProperty(QString("i18n_%1").arg(runners[i].first), runners[i].second);
@@ -280,7 +308,6 @@ void SWApp::globalActionTriggered()
     else
         m_viewer->hide();
 }
-
 
 QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
     : QObject(parent), viewer(inViewer)

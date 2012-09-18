@@ -161,7 +161,7 @@ Item{
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignRight
                     verticalAlignment: Text.AlignVCenter
-                    text: "Likes: " + likes
+                    text: i18n_Likes + likes
                     color: "grey"
                     visible: false
                 }
@@ -178,7 +178,7 @@ Item{
                         wrapMode: Text.WordWrap
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
-                        text: "Like"
+                        text: i18n_Like
                         color: "grey"
                     }
                     MouseArea{
@@ -200,7 +200,7 @@ Item{
                     states: [
                         State {
                             name: "liked"
-                            PropertyChanges { target: likesText; text: "Dislike" }
+                            PropertyChanges { target: likesText; text: i18n_Unlike }
                             //PropertyChanges { target: likeSendArea; enabled: false }
                         }
                     ]
@@ -219,7 +219,7 @@ Item{
                         wrapMode: Text.WordWrap
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
-                        text: "Comments: " + comments
+                        text: i18n_Comments + comments
                         color: "grey"
 
                     }
@@ -230,7 +230,7 @@ Item{
                                 //Set source on comments loader
                                 commentsEdit.source = "CommentsEditBox.qml"
                                 commentsEdit.item.edit.color = "grey"
-                                commentsEdit.item.edit.text = "Write comment..."
+                                commentsEdit.item.edit.text = i18n_Write_Comment
                                 cloudRect.state = "comments"
                             }
                             else if (cloudRect.state === "comments")
