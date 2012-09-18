@@ -20,6 +20,7 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         //visible: (size === 0) ? false : true
     }
+    /*
     Rectangle {
         id: gridBorder
         border.color: "black"
@@ -30,7 +31,7 @@ Item {
         width: parent.width + 10
         height: parent.height + 10
     }
-
+*/
     AnimatedImage {
         id: waitIndicator
         source: "images/ajax-loader.gif"
@@ -54,9 +55,9 @@ Item {
             Rectangle {
                 id: imageBackground
                 color: "black"
-                border.color: "black"
-                border.width: 2
-                radius: 5
+                border.color: "#687584"
+                border.width: 1
+                radius: 8
                 width: itemGrid.cellWidth - 20
                 height: itemGrid.cellHeight -40
                 clip: true
@@ -81,6 +82,7 @@ Item {
                 color: "white"
                 elide: Text.ElideLeft
                 width: parent.width
+                verticalAlignment: Text.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
             }
 
