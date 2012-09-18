@@ -47,7 +47,15 @@ int main(int argc, char *argv[])
     aboutData.addAuthor(ki18n("Alexander Skakov"),
                         ki18n("Author"),
                         "alexander.skakov@osinit.ru");
-
+    aboutData.addAuthor(ki18n("Evgeniy Augin"),
+                        ki18n("Author"),
+                        "evgeniy.augin@osinit.ru");
+    aboutData.addAuthor(ki18n("Sergey Borovkov"),
+                        ki18n("Author"),
+                        "sergey.borovkov@osinit.ru");
+    aboutData.addAuthor(ki18n("Julia Mineeva"),
+                        ki18n("Author"),
+                        "julia.mineeva@osinit.ru");
     aboutData.addAuthor(ki18n("Aleksey Yermakov"),
                         ki18n("Author"),
                         "alexey.yermakov@rosalab.ru");
