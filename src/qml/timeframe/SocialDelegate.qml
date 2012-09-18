@@ -227,14 +227,14 @@ Item{
                                 socialProxy.likeItem(id, pluginName);
                             } else {
                                 console.log("dislike item, item id: " + id)
-                                socialProxy.dislikeItem(id, pluginName);
+                                socialProxy.unlikeItem(id, pluginName);
                             }
                         }
                     }
                     states: [
                         State {
                             name: "liked"
-                            PropertyChanges { target: likesText; text: "Dislike" }
+                            PropertyChanges { target: likesText; text: "Unlike" }
                             //PropertyChanges { target: likeSendArea; enabled: false }
                         }
                     ]
