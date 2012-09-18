@@ -1,36 +1,30 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-# # Translators:
-#   <cullero@gmail.com>, 2011.
-#   <evidal86@gmail.com>, 2011.
-#   <jpbraun@mandriva.com>, 2011.
-#   <periliocastrol@gmail.com>, 2011.
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: SimpleWelcome\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
 "POT-Creation-Date: 2012-09-18 17:37+0400\n"
-"PO-Revision-Date: 2011-09-13 21:09+0000\n"
-"Last-Translator: Emilio Castro <periliocastrol@gmail.com>\n"
-"Language-Team: Spanish (Castilian) (http://transifex.mandriva.com/projects/p/"
-"mandriva_i18n/team/es/)\n"
-"Language: es\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: main.cpp:37 main.cpp:44
 msgid "ROSA Desktop Application Launcher"
-msgstr "Lanzador de aplicaciones de escritorio ROSA"
+msgstr ""
 
 #: main.cpp:46
-#, fuzzy
 msgid "Copyright 2010-2012, ROSALab"
-msgstr "Derechos reservados 2010-2011, ROSALab"
+msgstr ""
 
 #: main.cpp:47
 msgid "Alexander Skakov"
@@ -38,65 +32,63 @@ msgstr ""
 
 #: main.cpp:48 main.cpp:52
 msgid "Author"
-msgstr "Autor"
+msgstr ""
 
 #: main.cpp:51
 msgid "Aleksey Yermakov"
-msgstr "Aleksey Yermakov"
+msgstr ""
 
 #: main.cpp:59
 msgid "Silent run. Hide application window after start."
-msgstr "Ejecución silenciosa. La aplicación se oculta después de iniciarse."
+msgstr ""
 
 #: swapp.cpp:174
 msgid "Welcome"
-msgstr "Bienvenido"
+msgstr ""
 
 #: swapp.cpp:175
 msgid "Applications"
-msgstr "Aplicaciones"
+msgstr ""
 
 #: swapp.cpp:176
 msgid "TimeFrame"
-msgstr "Línea del tiempo"
+msgstr ""
 
 #: swapp.cpp:178
 msgid "Recent Applications"
-msgstr "Aplicaciones recientes"
+msgstr ""
 
 #: swapp.cpp:179
 msgid "Places"
-msgstr "Lugares"
+msgstr ""
 
 #: swapp.cpp:180
 msgid "Recent Documents"
-msgstr "Documentos recientes"
+msgstr ""
 
 #: swapp.cpp:182
 msgid "All"
 msgstr ""
 
 #: swapp.cpp:183
-#, fuzzy
 msgid "Photo"
-msgstr "Fotos"
+msgstr ""
 
 #: swapp.cpp:184
 msgid "Video"
-msgstr "VIDEO"
+msgstr ""
 
 #: swapp.cpp:185
 msgid "Documents"
-msgstr "Documentos"
+msgstr ""
 
 #: swapp.cpp:186
 msgid "Manage networks"
 msgstr ""
 
 #: swapp.cpp:187
-#, fuzzy
 msgid "My Local Documents"
-msgstr "Documentos"
+msgstr ""
 
 #: swapp.cpp:188
 msgid "Local"
@@ -111,9 +103,8 @@ msgid "Audio: "
 msgstr ""
 
 #: swapp.cpp:191
-#, fuzzy
 msgid "Comments: "
-msgstr "Documentos"
+msgstr ""
 
 #: swapp.cpp:192
 msgid "Likes: "
@@ -133,53 +124,51 @@ msgstr ""
 
 #: swapp.cpp:197
 msgid "JAN"
-msgstr "ENE"
+msgstr ""
 
 #: swapp.cpp:198
 msgid "FEB"
-msgstr "FEB"
+msgstr ""
 
 #: swapp.cpp:199
 msgid "MAR"
-msgstr "MAR"
+msgstr ""
 
 #: swapp.cpp:200
 msgid "APR"
-msgstr "ABR"
+msgstr ""
 
 #: swapp.cpp:201
 msgid "MAY"
-msgstr "MAY"
+msgstr ""
 
 #: swapp.cpp:202
-#, fuzzy
 msgid "JUN"
-msgstr "JUN"
+msgstr ""
 
 #: swapp.cpp:203
-#, fuzzy
 msgid "JUL"
-msgstr "JUL"
+msgstr ""
 
 #: swapp.cpp:204
 msgid "AUG"
-msgstr "AGO"
+msgstr ""
 
 #: swapp.cpp:205
 msgid "SEP"
-msgstr "SEP"
+msgstr ""
 
 #: swapp.cpp:206
 msgid "OCT"
-msgstr "OCT"
+msgstr ""
 
 #: swapp.cpp:207
 msgid "NOV"
-msgstr "NOV"
+msgstr ""
 
 #: swapp.cpp:208
 msgid "DEC"
-msgstr "DIC"
+msgstr ""
 
 #: rc.cpp:1
 msgctxt "Julia Mineeva"
@@ -190,38 +179,3 @@ msgstr ""
 msgctxt "julia.mineeva@osinit.ru"
 msgid "julia.mineeva@osinit.ru"
 msgstr ""
-
-#~ msgid ""
-#~ "%1\n"
-#~ "rating: %2"
-#~ msgstr ""
-#~ "%1\n"
-#~ "valoración: %2"
-
-#~ msgid "Search"
-#~ msgstr "Buscar"
-
-#~ msgid "Home"
-#~ msgstr "Inicio"
-
-#~ msgid "Enable..."
-#~ msgstr "Activar..."
-
-#~ msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
-#~ msgstr ""
-#~ "Nepomuk está desactivado. Puede activarlo en el Centro de Control de KDE"
-
-#~ msgid "VIDEO"
-#~ msgstr "VÍDEO"
-
-#~ msgid "PHOTO"
-#~ msgstr "FOTO"
-
-#~ msgid "DOCUMENTS"
-#~ msgstr "DOCUMENTOS"
-
-#~ msgid "D"
-#~ msgstr "D"
-
-#~ msgid "M"
-#~ msgstr "M"

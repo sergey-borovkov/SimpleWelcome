@@ -110,7 +110,7 @@ Item {
                 z: 1000
 
                 ButtonText {
-                    text: itemText
+                    text: getMenuItemText(itemText)
                     anchors.fill: parent
                     font.bold: ( itemText == selectedText )
                     font.pointSize: 12
