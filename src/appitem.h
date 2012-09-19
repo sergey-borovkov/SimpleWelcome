@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QStringList>
 #include <QApplication>
+#include <QHash>
 
 class AppItem
 {
@@ -17,7 +18,15 @@ public:
         return caption.compare(other.caption, Qt::CaseInsensitive) < 0;
     }
 
+    bool operator ==(AppItem &other) const {
+        return other.caption == caption && other.desktopEntry == desktopEntry && other.icon == icon && other.relPath == relPath;
+    }
 };
+
+inline uint qHash (const AppItem &item) {
+    return qHash(item.caption);
+}
+
 
 class AppItemList : public QList<AppItem>
 {
@@ -31,4 +40,3 @@ public:
         return out;
     }
 };
-

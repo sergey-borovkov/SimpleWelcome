@@ -6,6 +6,7 @@ DataSource_Favorites::DataSource_Favorites(QObject *parent)
 {
     KFilePlacesModel *places = new KFilePlacesModel();
 
+    QList<AppItem> list;
     for(int i = 0; i < places->rowCount(); i++) {
         KBookmark bm = places->bookmarkForIndex(places->index(i, 0));
         AppItem newItem;
@@ -13,8 +14,13 @@ DataSource_Favorites::DataSource_Favorites(QObject *parent)
         newItem.desktopEntry = places->index(i, 0).data(KFilePlacesModel::UrlRole).toString();
         newItem.icon = bm.icon();
 
-        favoritesList.append(newItem);
+        list.append(newItem);
     }
+
+    QSet<AppItem> set = QSet<AppItem>::fromList(list);
+    favoritesList = set.toList();
+    qSort(favoritesList.begin(), favoritesList.end());
+    favoritesList = favoritesList.mid(0, qMin(favoritesList.size(), 14)); // Limiting favorites item count to two rows (14 items)
 }
 
 int DataSource_Favorites::getItemCount()
