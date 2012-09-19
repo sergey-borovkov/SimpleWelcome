@@ -43,6 +43,7 @@ Item {
         isCompleted = true
         console.log("completed with: " + width + "x" + height + "")
         mainWindow.windowHid.connect(onWindowHid)
+        bottomBar.wheelScroll.connect(tabListView.onWheelScroll)
     }
 
     function onWindowHid() {
@@ -146,6 +147,17 @@ Item {
 
         function currentTabIndexChanged(newCurrentIndex) {
             tabListView.currentIndex = newCurrentIndex
+        }
+
+        function onWheelScroll(delta) {
+            // See Qt documentation of QGraphicsSceneWheelEvent
+            // Most mice report delta = 120
+            var pages_delta = Math.round(delta / 120)
+            if (pages_delta === 0)
+                pages_delta = (delta > 0 ? 1 : -1)
+
+            var count2 = count - 1
+            currentTabIndexChanged((currentIndex + count2 - pages_delta - 1) % count2 + 1)
         }
 
         Component.onCompleted: {
