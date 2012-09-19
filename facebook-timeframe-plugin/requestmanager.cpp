@@ -7,7 +7,7 @@
 #include <QtCore/QStringList>
 
 RequestManager::RequestManager(QObject *parent)
-    : m_authorizer(0)
+    : QObject(parent), m_authorizer(0)
 {
 }
 
@@ -69,6 +69,15 @@ Request *RequestManager::dislike(const QString &id)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Delete, this);
     QUrl url = QLatin1String("https://graph.facebook.com/") + id + QLatin1String("/likes");
+    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
+    request->setUrl(url);
+    return request;
+}
+
+Request *RequestManager::queryComments(const QString &postId)
+{
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
+    QUrl url = QLatin1String("https://graph.facebook.com/") + postId + QLatin1String("/comments");
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
     request->setUrl(url);
     return request;

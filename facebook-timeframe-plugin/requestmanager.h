@@ -15,12 +15,14 @@ public:
     virtual Request *queryWall(const QDate &beginDate, const QDate &endDate);
     virtual Request *queryUserId();
     virtual Request *queryImage(const QString &id);
+    virtual Request *queryComments(const QString &postId);
     virtual Request *postComment(const QString &message, const QString &parentId);
     virtual Request *like(const QString &id);
     virtual Request *dislike(const QString &id);
 
     void setAuthorizer(OAuth2Authorizer *authorizer);
     virtual Request *logout();
+
 
 private slots:
     void feedReply(QByteArray feedReply);

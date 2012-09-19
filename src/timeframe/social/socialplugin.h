@@ -30,6 +30,7 @@ public:
     virtual Request *queryUserId() = 0;
     virtual Request *queryImage(const QString &id) = 0;
     virtual Request *postComment(const QString &message, const QString &parentId) = 0;
+    virtual Request *queryComments(const QString &postId) = 0;
     virtual Request *like(const QString &id) = 0;
     virtual Request *dislike(const QString &id) = 0;
     virtual Request *logout() = 0;
