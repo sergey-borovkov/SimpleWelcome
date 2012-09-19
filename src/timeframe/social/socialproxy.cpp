@@ -67,7 +67,7 @@ void SocialProxy::likeItem(const QString &id, const QString &pluginName)
     connect(reply,SIGNAL(finished()),reply,SLOT(deleteLater()));
 }
 
-void SocialProxy::dislikeItem(const QString &id, const QString &pluginName)
+void SocialProxy::unlikeItem(const QString &id, const QString &pluginName)
 {
     PluginRequestReply* reply = dislike(id, pluginName);
     connect(reply,SIGNAL(success(PluginRequestReply*)),this, SLOT(likeSuccess(PluginRequestReply*)));
@@ -105,7 +105,7 @@ PluginRequestReply *SocialProxy::like(const QString &id, const QString &pluginNa
 PluginRequestReply *SocialProxy::dislike(const QString &id, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
-    Request *request = plugin->requestManager()->dislike(id);
+    Request *request = plugin->requestManager()->unlike(id);
     PluginRequestReply *reply = new PluginRequestReply(request, id, this);
     request->start();
     return reply;
@@ -195,7 +195,7 @@ void SocialProxy::newItems(QList<SocialItem *> items)
     m_socialModel->newSocialItems(list);
 }
 
-void SocialProxy::setModel(SocialDayModel *model)
+void SocialProxy::setSocialModel(SocialDayModel *model)
 {
     m_socialModel = model;
 }

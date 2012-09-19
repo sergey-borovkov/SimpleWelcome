@@ -9,29 +9,29 @@ Item {
 
         switch (index) {
         case 1:
-            return "JAN"
+            return i18n_JAN
         case 2:
-            return "FEB"
+            return i18n_FEB
         case 3:
-            return "MAR"
+            return i18n_MAR
         case 4:
-            return "APR"
+            return i18n_APR
         case 5:
-            return "MAY"
+            return i18n_MAY
         case 6:
-            return "JUN"
+            return i18n_JUN
         case 7:
-            return "JUL"
+            return i18n_JUL
         case 8:
-            return "AUG"
+            return i18n_AUG
         case 9:
-            return "SEP"
+            return i18n_SEP
         case 10:
-            return "OCT"
+            return i18n_OCT
         case 11:
-            return "NOV"
+            return i18n_NOV
         case 12:
-            return "DEC"
+            return i18n_DEC
         }
         return "UND"
     }

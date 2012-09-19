@@ -144,7 +144,7 @@ Item{
                         if(typeof audio === "undefined")
                             return ""
                         else
-                            return "Audio: " + audio
+                            return i18n_Audio + audio
                     }
 
                     id: audioItem
@@ -178,7 +178,7 @@ Item{
                         wrapMode: Text.WordWrap
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
-                        text: "Comments: " + commentCount
+                        text: i18n_Comments + commentCount
                         color: "grey"
                     }
                     MouseArea{
@@ -188,7 +188,7 @@ Item{
                                 //Set source on comments loader
                                 commentsEdit.source = "CommentsEditBox.qml"
                                 commentsEdit.item.edit.color = "grey"
-                                commentsEdit.item.edit.text = "Write comment..."
+                                commentsEdit.item.edit.text = i18n_Write_Comment
                                 galleryRect.state = "comments"
                             }
                             else if (galleryRect.state === "comments") {
@@ -212,7 +212,7 @@ Item{
                         wrapMode: Text.WordWrap
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
-                        text: "Like"
+                        text: i18n_Like
                         color: "grey"
                     }
                     MouseArea{
@@ -227,14 +227,14 @@ Item{
                                 socialProxy.likeItem(id, pluginName);
                             } else {
                                 console.log("dislike item, item id: " + id)
-                                socialProxy.dislikeItem(id, pluginName);
+                                socialProxy.unlikeItem(id, pluginName);
                             }
                         }
                     }
                     states: [
                         State {
                             name: "liked"
-                            PropertyChanges { target: likesText; text: "Dislike" }
+                            PropertyChanges { target: likesText; text: i18n_Unlike }
                             //PropertyChanges { target: likeSendArea; enabled: false }
                         }
                     ]

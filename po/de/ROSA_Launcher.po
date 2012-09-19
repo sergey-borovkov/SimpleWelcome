@@ -1,179 +1,236 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <maikwagner@yahoo.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: SimpleWelcome\n"
-"Report-Msgid-Bugs-To: https://qa.mandriva.com/\n"
-"POT-Creation-Date: 2011-06-16 13:59+0400\n"
+"Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
+"quicksearch=simplewelcome&list_id=4395\n"
+"POT-Creation-Date: 2012-09-18 17:44+0400\n"
 "PO-Revision-Date: 2011-08-24 17:50+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
-"Language-Team: German (http://transifex.mandriva.com/projects/p/mandriva_i18n/team/de/)\n"
+"Language-Team: German (http://transifex.mandriva.com/projects/p/"
+"mandriva_i18n/team/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: local-applet/src/documenteventwidget.cpp:57
-#: local-applet/src/photoeventwidget.cpp:59
-#: local-applet/src/timeframedirmodel.cpp:70
-#: local-applet/src/videoeventwidget.cpp:99
-msgid ""
-"%1\n"
-"rating: %2"
-msgstr ""
-"%1\n"
-"Wertung: %2"
-
-#: local-applet/src/rosa-launcher.cpp:149
-msgid "Search"
-msgstr "Suchen"
-
-#: local-applet/src/rosa-launcher.cpp:153
-msgid "Welcome"
-msgstr "Willkommen"
-
-#: local-applet/src/rosa-launcher.cpp:164
-msgid "Applications"
-msgstr "Anwendungen"
-
-#: local-applet/src/rosa-launcher.cpp:177
-msgid "TimeFrame"
-msgstr "TimeFrame"
-
-#: local-applet/src/timeframe.cpp:65
-msgid "Home"
-msgstr "Home"
-
-#: local-applet/src/timeframe.cpp:67
-msgid "Photos"
-msgstr "Fotos"
-
-#: local-applet/src/timeframe.cpp:69
-msgid "Video"
-msgstr "VIDEO"
-
-#: local-applet/src/timeframe.cpp:71
-msgid "Documents"
-msgstr "Dokumente"
-
-#: local-applet/src/timeframe.cpp:114
-msgid "Enable..."
-msgstr "Aktivieren..."
-
-#: local-applet/src/timeframe.cpp:123
-msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
-msgstr ""
-"Nepomuk ist ausgeschaltet. Sie können es im KDE-Kontrollzentrum aktivieren"
-
-#: local-applet/src/timeframe.cpp:238 local-applet/src/timeframe.cpp:282
-msgid "VIDEO"
-msgstr "VIDEO"
-
-#: local-applet/src/timeframe.cpp:243 local-applet/src/timeframe.cpp:268
-msgid "PHOTO"
-msgstr "FOTO"
-
-#: local-applet/src/timeframe.cpp:253 local-applet/src/timeframe.cpp:297
-msgid "DOCUMENTS"
-msgstr "DOKUMENTE"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "JAN"
-msgstr "JAN"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "FEB"
-msgstr "FEB"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "MAR"
-msgstr "MÄR"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "APR"
-msgstr "APR"
-
-#: local-applet/src/timeframeslider.cpp:37 local-applet/src/timeslider.cpp:98
-msgid "MAY"
-msgstr "MAI"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "JUNE"
-msgstr "JUN"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "JULY"
-msgstr "JUL"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "AUG"
-msgstr "AUG"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "SEP"
-msgstr "SEP"
-
-#: local-applet/src/timeframeslider.cpp:38 local-applet/src/timeslider.cpp:99
-msgid "OCT"
-msgstr "OKT"
-
-#: local-applet/src/timeframeslider.cpp:39 local-applet/src/timeslider.cpp:100
-msgid "NOV"
-msgstr "NOV"
-
-#: local-applet/src/timeframeslider.cpp:39 local-applet/src/timeslider.cpp:100
-msgid "DEC"
-msgstr "DEZ"
-
-#: local-applet/src/timeslider.cpp:70
-msgid "D"
-msgstr "T"
-
-#: local-applet/src/timeslider.cpp:73
-msgid "M"
-msgstr "M"
-
-#: local-applet/src/welcomewidget.cpp:139
-#: local-applet/src/welcomewidget.cpp:141
-#: local-applet/src/welcomewidget.cpp:146
-msgid "Recent Applications"
-msgstr "Kürzlich verwendete Anwendungen"
-
-#: local-applet/src/welcomewidget.cpp:176
-#: local-applet/src/welcomewidget.cpp:178
-#: local-applet/src/welcomewidget.cpp:183
-msgid "Places"
-msgstr "Orte"
-
-#: local-applet/src/welcomewidget.cpp:208
-#: local-applet/src/welcomewidget.cpp:210
-#: local-applet/src/welcomewidget.cpp:215
-msgid "Recent Documents"
-msgstr "Kürzlich verwendete Dokumente"
-
-#: src/main.cpp:36 src/main.cpp:43
+#: main.cpp:37 main.cpp:44
 msgid "ROSA Desktop Application Launcher"
 msgstr "ROSA Desktop Application Launcher"
 
-#: src/main.cpp:45
-msgid "Copyright 2010-2011, ROSALab"
+#: main.cpp:46
+#, fuzzy
+msgid "Copyright 2010-2012, ROSALab"
 msgstr "Copyright 2010-2011, ROSALab"
 
-#: src/main.cpp:46
-msgid "Aleksey Yermakov"
-msgstr "Aleksey Yermakov"
+#: main.cpp:47
+msgid "Alexander Skakov"
+msgstr ""
 
-#: src/main.cpp:47
+#: main.cpp:48 main.cpp:51 main.cpp:54 main.cpp:57 main.cpp:60
 msgid "Author"
 msgstr "Autor"
 
-#: src/main.cpp:54
+#: main.cpp:50
+msgid "Evgeniy Augin"
+msgstr ""
+
+#: main.cpp:53
+msgid "Sergey Borovkov"
+msgstr ""
+
+#: main.cpp:56
+msgid "Julia Mineeva"
+msgstr ""
+
+#: main.cpp:59
+msgid "Aleksey Yermakov"
+msgstr "Aleksey Yermakov"
+
+#: main.cpp:67
 msgid "Silent run. Hide application window after start."
 msgstr "Stiller Lauf. Applikationsfenster nach Start verstecken."
 
+#: swapp.cpp:174
+msgid "Welcome"
+msgstr "Willkommen"
 
+#: swapp.cpp:175
+msgid "Applications"
+msgstr "Anwendungen"
+
+#: swapp.cpp:176
+msgid "TimeFrame"
+msgstr "TimeFrame"
+
+#: swapp.cpp:178
+msgid "Recent Applications"
+msgstr "Kürzlich verwendete Anwendungen"
+
+#: swapp.cpp:179
+msgid "Places"
+msgstr "Orte"
+
+#: swapp.cpp:180
+msgid "Recent Documents"
+msgstr "Kürzlich verwendete Dokumente"
+
+#: swapp.cpp:182
+msgid "All"
+msgstr ""
+
+#: swapp.cpp:183
+#, fuzzy
+msgid "Photo"
+msgstr "Fotos"
+
+#: swapp.cpp:184
+msgid "Video"
+msgstr "VIDEO"
+
+#: swapp.cpp:185
+msgid "Documents"
+msgstr "Dokumente"
+
+#: swapp.cpp:186
+msgid "Manage networks"
+msgstr ""
+
+#: swapp.cpp:187
+#, fuzzy
+msgid "My Local Documents"
+msgstr "Dokumente"
+
+#: swapp.cpp:188
+msgid "Local"
+msgstr ""
+
+#: swapp.cpp:189
+msgid "Write comment..."
+msgstr ""
+
+#: swapp.cpp:190
+msgid "Audio: "
+msgstr ""
+
+#: swapp.cpp:191
+#, fuzzy
+msgid "Comments: "
+msgstr "Dokumente"
+
+#: swapp.cpp:192
+msgid "Likes: "
+msgstr ""
+
+#: swapp.cpp:193
+msgid "Like"
+msgstr ""
+
+#: swapp.cpp:194
+msgid "Unlike"
+msgstr ""
+
+#: swapp.cpp:195
+msgid "Social networking sites"
+msgstr ""
+
+#: swapp.cpp:197
+msgid "JAN"
+msgstr "JAN"
+
+#: swapp.cpp:198
+msgid "FEB"
+msgstr "FEB"
+
+#: swapp.cpp:199
+msgid "MAR"
+msgstr "MÄR"
+
+#: swapp.cpp:200
+msgid "APR"
+msgstr "APR"
+
+#: swapp.cpp:201
+msgid "MAY"
+msgstr "MAI"
+
+#: swapp.cpp:202
+#, fuzzy
+msgid "JUN"
+msgstr "JUN"
+
+#: swapp.cpp:203
+#, fuzzy
+msgid "JUL"
+msgstr "JUL"
+
+#: swapp.cpp:204
+msgid "AUG"
+msgstr "AUG"
+
+#: swapp.cpp:205
+msgid "SEP"
+msgstr "SEP"
+
+#: swapp.cpp:206
+msgid "OCT"
+msgstr "OKT"
+
+#: swapp.cpp:207
+msgid "NOV"
+msgstr "NOV"
+
+#: swapp.cpp:208
+msgid "DEC"
+msgstr "DEZ"
+
+#: rc.cpp:1
+msgctxt "Julia Mineeva"
+msgid "Julia Mineeva"
+msgstr ""
+
+#: rc.cpp:2
+msgctxt "julia.mineeva@osinit.ru"
+msgid "julia.mineeva@osinit.ru"
+msgstr ""
+
+#~ msgid ""
+#~ "%1\n"
+#~ "rating: %2"
+#~ msgstr ""
+#~ "%1\n"
+#~ "Wertung: %2"
+
+#~ msgid "Search"
+#~ msgstr "Suchen"
+
+#~ msgid "Home"
+#~ msgstr "Home"
+
+#~ msgid "Enable..."
+#~ msgstr "Aktivieren..."
+
+#~ msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
+#~ msgstr ""
+#~ "Nepomuk ist ausgeschaltet. Sie können es im KDE-Kontrollzentrum aktivieren"
+
+#~ msgid "VIDEO"
+#~ msgstr "VIDEO"
+
+#~ msgid "PHOTO"
+#~ msgstr "FOTO"
+
+#~ msgid "DOCUMENTS"
+#~ msgstr "DOKUMENTE"
+
+#~ msgid "D"
+#~ msgstr "T"
+
+#~ msgid "M"
+#~ msgstr "M"

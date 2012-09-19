@@ -10,7 +10,7 @@ add_definitions(-DQT_PLUGIN)
 add_definitions(-DQT_NO_DEBUG)
 add_definitions(-DQT_SHARED)
 
-find_package(QJSON REQUIRED)
+find_library(QJSON qjson)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/timeframe/social ${CMAKE_CURRENT_SOURCE_DIR}/../timeframelib ${QT_QDECLARATIVE_INCLUDE_DIR})
 
@@ -22,6 +22,6 @@ file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 qt4_wrap_cpp(MOC_OUT ${HEADERS})
 
 add_library(facebook-timeframe-plugin SHARED ${HEADERS} ${SOURCES} ${QML} ${MOC_OUT} ${QRC_SOURCES})
-target_link_libraries(facebook-timeframe-plugin ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES} ${QT_WEBKIT_LIBRARIES} ${QJSON_LIBRARIES} timeframe)
+target_link_libraries(facebook-timeframe-plugin ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES} ${QT_WEBKIT_LIBRARIES} ${QJSON} timeframe)
 
 install(TARGETS facebook-timeframe-plugin DESTINATION "${_timeframe_plugins_install_path}")

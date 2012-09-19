@@ -65,7 +65,7 @@ Request *RequestManager::like(const QString &id)
     return request;
 }
 
-Request *RequestManager::dislike(const QString &id)
+Request *RequestManager::unlike(const QString &id)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Delete, this);
     QUrl url = QLatin1String("https://graph.facebook.com/") + id + QLatin1String("/likes");
