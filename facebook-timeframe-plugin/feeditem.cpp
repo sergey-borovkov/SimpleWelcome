@@ -2,6 +2,7 @@
 
 #include <QtCore/QDate>
 #include <QtCore/QDebug>
+#include <QtCore/QUrl>
 
 #include <qjson/parser.h>
 
@@ -64,7 +65,7 @@ void FeedItem::fillFromMap(const QVariantMap &map)
     } else
         m_data.insert(Text, message);
 
-    m_data.insert( ImageUrl, map.value( "picture" ).toString() );
+    m_data.insert( ImageUrl, QUrl::fromPercentEncoding( map.value("picture").toByteArray() ) );
     if ( message.isEmpty() ) {
         m_data.insert( Text, map.value( "story" ).toString() );
     }
