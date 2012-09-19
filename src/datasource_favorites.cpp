@@ -18,9 +18,14 @@ DataSource_Favorites::DataSource_Favorites(QObject *parent)
     }
 
     QSet<AppItem> set = QSet<AppItem>::fromList(list);
-    favoritesList = set.toList();
-    qSort(favoritesList.begin(), favoritesList.end());
-    favoritesList = favoritesList.mid(0, qMin(favoritesList.size(), 14)); // Limiting favorites item count to two rows (14 items)
+    QList<AppItem> uniqueList = set.toList();
+
+    for (int i = 0; i < list.size() && favoritesList.size() < 14; i++)  // Limiting favorites item count to two rows (14 items)
+        if (set.contains(list[i]))
+        {
+            set.remove(list[i]);
+            favoritesList.append(list[i]);
+        }
 }
 
 int DataSource_Favorites::getItemCount()
