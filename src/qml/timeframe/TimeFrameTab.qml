@@ -490,10 +490,11 @@ Item {
             } else if (timeFrameTab.state === "socialGallery")
             {
                 index = socialGalleryView.indexAt(socialGalleryView.x + socialGalleryView.width/2 + socialGalleryView.contentX,
-                                                  socialGalleryView.y + socialGalleryView.height/2 + socialGalleryView.contentY)
-                date = socialDayModel.getDateOfIndex(index)
+                                            socialGalleryView.y + socialGalleryView.height/2 + socialGalleryView.contentY)
+                date = socialDayModel.getDateOfIndex(index)                                
             }
-
+            if (index === -1)
+                return
 
             timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
 
