@@ -18,7 +18,7 @@ public:
     };
 
     explicit ActivitySource(QObject *parent = 0);
-    virtual ActivitySet *getActivitySet(int limit, const QDate &beginDate, const QDate &endDate) = 0;
+
 public slots:
     virtual void startSearch(const QDate &beginDate, ActivitySource::Direction direction) = 0;
     virtual void setLimit(int limit) = 0;

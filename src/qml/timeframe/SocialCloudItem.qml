@@ -33,7 +33,7 @@ Item{
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width
         height: parent.height
-
+/*
         BorderImage {
             id: shadowBorder
             anchors.fill: parent
@@ -42,24 +42,34 @@ Item{
             source: "images/shadow2.png"
             smooth: true
         }
+        */
         Rectangle
         {
-            anchors.centerIn: parent
             id: background
-            //property string pluginName : "VKontakte"
+            anchors.centerIn: parent            
             //color: "#aa5f5f5f"
-            color: "transparent"
-            border.color: "#5f5f5f"
-            border.width: 0
-            //radius: 10
+            color: "#172634"
+            border.color: "#687584"
+            border.width: 1
+            radius: 10
             clip: true
             width: parent.width
             height: parent.height
+            Rectangle{
+                id: backgroundShadow
+                anchors.fill: parent
+                color: "black"
+                z: -1
+                radius: 12
+                anchors.bottomMargin: -10
+            }
+
             //Column{
             //  width: parent.width
             Rectangle {
                 id: topLine
-                border.color: "#335f5f5f"
+                //border.color: "#335f5f5f"
+                color: "transparent"
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.left: parent.left

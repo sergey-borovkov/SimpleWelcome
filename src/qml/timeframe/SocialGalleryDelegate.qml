@@ -6,7 +6,7 @@ Item {
 
     id: socialGalleryItem
     height: parent.height
-    width: flow.childrenRect.width + 15    
+    width: flow.childrenRect.width + 20
 
     Text {
         id: dateLabel
@@ -18,6 +18,7 @@ Item {
         color: "white"
         horizontalAlignment: Text.AlignHCenter
     }
+    /*
     Rectangle {
         id: gridBorder
         border.color: "black"
@@ -29,7 +30,7 @@ Item {
         height: parent.height + 10
         z: -1
     }
-
+    */
     AnimatedImage {
         id: waitIndicator
         source: "images/ajax-loader.gif"
