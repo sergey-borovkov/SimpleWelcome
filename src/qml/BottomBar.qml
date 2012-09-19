@@ -6,7 +6,7 @@ Item {
 
     anchors.bottom: parent.bottom
     width: parent.width
-    height: 80
+    height: 50
     signal wheelScroll(int delta)
 
     // Scroll using mouse wheel
