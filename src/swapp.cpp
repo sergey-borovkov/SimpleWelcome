@@ -137,7 +137,7 @@ SWApp::SWApp()
 {
     qDebug() << "constructor";
 
-    // TODO: doc
+    // First of all, we have to register type to make it available from QML
     qmlRegisterType<WheelArea>("Private", 0, 1, "WheelArea");
 
     m_globalAction = new KAction(this);
