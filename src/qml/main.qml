@@ -63,8 +63,11 @@ Item {
 
     Rectangle {
         anchors.fill: parent
+//        color: "black"
+//        opacity: 0.7
         color: "#263C50"
         opacity: 0.9
+
     }
     VisualItemModel {
         id: tabListModel

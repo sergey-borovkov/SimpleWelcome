@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import Private 0.1
 
 Item {
     //anchors.fill: parent
@@ -210,9 +211,10 @@ Item {
             gridsListView.currentIndex = 0
         }
 
-        function showGroup(groupData, iconBottom)
+        function showGroup(groupData, iconCoords)
         {
-            popupFrame.y = iconBottom + 10
+            popupFrame.arrowX = iconCoords.x
+            popupFrame.y = iconCoords.y
             if (popupFrame.state == "CLOSED")
             {
                 popupFrame.state = "OPEN"
@@ -241,6 +243,24 @@ Item {
             NumberAnimation { properties: "opacity"; duration: 400 }
         }
 
+    }
+
+    // Scroll using mouse wheel
+    WheelArea {
+        id: wheelArea
+        anchors.fill: parent
+
+        onScrollVert: _scroll(delta)
+        onScrollHorz: _scroll(delta)
+
+        function _scroll(delta) {
+            // See Qt documentation of QGraphicsSceneWheelEvent
+            // Most mice report delta = 120
+            var pages_delta = Math.round(delta / 120)
+            if (pages_delta === 0)
+                pages_delta = (delta > 0 ? 1 : -1)
+            gridsListView.currentIndex = ((gridsListView.currentIndex + gridsListView.count + pages_delta) % gridsListView.count)
+        }
     }
 
 
@@ -280,6 +300,14 @@ Item {
     }
 
     Rectangle {
+        anchors.top: parent.top
+        anchors.topMargin: -15
+        width: parent.width
+        height: parent.height + 28
+
+        color: Qt.rgba(0, 0, 0, 0.6)
+        opacity: popupFrame.state == "OPEN"
+
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
@@ -288,10 +316,6 @@ Item {
                 popupFrame.state = "CLOSED"
             }
         }
-
-        anchors.fill: parent
-        color: Qt.rgba(0, 0, 0, 0.5)
-        opacity: popupFrame.state == "OPEN"
 
         Behavior on opacity {
             NumberAnimation { duration: 200; /*easing.type: Easing.OutQuint*/ }
@@ -302,7 +326,6 @@ Item {
         id: popupFrame
         //anchors.top: parent.bottom
         width: parent.width
-        clip: true
         z: 1
 
         state: "CLOSED"
@@ -319,7 +342,7 @@ Item {
                 name: "OPEN"
                 PropertyChanges {
                     target: popupFrame
-                    height: 420//childrenRect.height
+                    height: childrenRect.height
                 }
             }
         ]
