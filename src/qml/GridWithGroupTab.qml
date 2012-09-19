@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import Private 0.1
 
 Item {
     //anchors.fill: parent
@@ -242,6 +243,24 @@ Item {
             NumberAnimation { properties: "opacity"; duration: 400 }
         }
 
+    }
+
+    // Scroll using mouse wheel
+    WheelArea {
+        id: wheelArea
+        anchors.fill: parent
+
+        onScrollVert: _scroll(delta)
+        onScrollHorz: _scroll(delta)
+
+        function _scroll(delta) {
+            // See Qt documentation of QGraphicsSceneWheelEvent
+            // Most mice report delta = 120
+            var pages_delta = Math.round(delta / 120)
+            if (pages_delta === 0)
+                pages_delta = (delta > 0 ? 1 : -1)
+            gridsListView.currentIndex = ((gridsListView.currentIndex + gridsListView.count + pages_delta) % gridsListView.count)
+        }
     }
 
 

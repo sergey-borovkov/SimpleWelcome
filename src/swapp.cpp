@@ -24,12 +24,15 @@
 
 #include "swapp.h"
 
+#include "wheelarea.h"
+
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
 #include <QDesktopWidget>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
+#include <QtDeclarative/QtDeclarative>
 #include <KServiceGroup>
 
 #include "generaliconprovider.h"
@@ -133,6 +136,10 @@ SWApp::SWApp()
     : KUniqueApplication()
 {
     qDebug() << "constructor";
+
+    // TODO: doc
+    qmlRegisterType<WheelArea>("Private", 0, 1, "WheelArea");
+
     m_globalAction = new KAction(this);
 
     m_viewer = new QmlApplicationViewer();

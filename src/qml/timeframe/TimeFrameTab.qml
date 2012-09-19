@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import Private 0.1
 
 Item {
     id: timeFrameTab
@@ -257,6 +258,12 @@ Item {
                 timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center)
             }
         }
+
+        WheelArea {
+            anchors.fill: parent
+            onScrollVert: _processScroll(delta, timeLine)
+            onScrollHorz: _processScroll(delta, timeLine)
+        }
     }
     Timer {
         id: searchTimer
@@ -295,6 +302,12 @@ Item {
             timeFrameTab.__month = date.getMonth()
             timeFrameTab.day = date.getDay()
         }
+
+        WheelArea {
+            anchors.fill: parent
+            onScrollVert: _processScroll(delta, socialTimeLine)
+            onScrollHorz: _processScroll(delta, socialTimeLine)
+        }
     }
 
     TimeScale {
@@ -303,6 +316,12 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         height: 80
         width: parent.width - 100
+
+        WheelArea {
+            anchors.fill: parent
+            onScrollVert: _processScroll(delta, timeScale.list)
+            onScrollHorz: _processScroll(delta, timeScale.list)
+        }
     }
 
     ToolButton {
@@ -411,6 +430,12 @@ Item {
         delegate: GalleryDelegate { }
         orientation: ListView.Horizontal
         boundsBehavior : Flickable.StopAtBounds
+
+        WheelArea {
+            anchors.fill: parent
+            onScrollVert: _processScroll(delta, galleryView)
+            onScrollHorz: _processScroll(delta, galleryView)
+        }
     }
 
     ListView {
@@ -431,13 +456,20 @@ Item {
         orientation: ListView.Horizontal
         boundsBehavior : Flickable.StopAtBounds
 
+        WheelArea {
+            anchors.fill: parent
+            onScrollVert: _processScroll(delta, socialGalleryView)
+            onScrollHorz: _processScroll(delta, socialGalleryView)
+        }
     }
 
     /*Timer starts wnen user starts dragging gallery or timeline*/
     Timer {
         id: flickableTimer
         interval: 100; running: false; repeat: true
-        onTriggered: {
+        onTriggered: updateTimeScale()
+
+        function updateTimeScale() {
             var index = 0
             var date = new Date()
             if ((timeFrameTab.state === "") || (timeFrameTab.state === "timeLineSearch"))
@@ -537,6 +569,32 @@ Item {
         anchors.fill: parent
     }
 
+    // Functions
+    /**
+     * Processes scroll using mouse wheel
+     * @param delta A delta
+     * @param listView An instance of ListView which will be updated
+    */
+    function _processScroll(delta, listView) {
+        // See Qt documentation of QGraphicsSceneWheelEvent
+        // Most mice report delta = 120
+        var index_delta = Math.round(delta / 120)
+        if (index_delta === 0)
+            index_delta = (delta > 0 ? 1 : -1)
+        var index = listView.indexAt(listView.contentX, listView.contentY);
+        if (index < 0)
+            return
+        index += index_delta;
+        if (index < 0)
+            listView.positionViewAtBeginning()
+        else if (index >= listView.count)
+            listView.positionViewAtEnd()
+        else
+            listView.positionViewAtIndex(index, ListView.Beginning)
+        flickableTimer.updateTimeScale()
+    }
+
+    // States
     state: ""
     states: [
 
