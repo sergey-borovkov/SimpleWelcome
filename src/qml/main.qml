@@ -12,17 +12,7 @@ Item {
 
     property bool isCompleted: false
 
-    onWidthChanged: {
-        if (isCompleted)
-        {
-            console.log("resize to " + width + "x" + height)
-            searchTab.tab.updateGridsContent()
-            welcomeTab.tab.updateGridsContent()
-            appsTab.tab.updateGridsContent() // FIX LATER
-        }
-    }
-
-    onHeightChanged: {
+    function onWindowSizeChanged(inWidth, inHeight) {
         if (isCompleted)
         {
             console.log("resize to " + width + "x" + height)
@@ -43,6 +33,7 @@ Item {
         isCompleted = true
         console.log("completed with: " + width + "x" + height + "")
         mainWindow.windowHid.connect(onWindowHid)
+        mainWindow.windowSizeChanged.connect(onWindowSizeChanged)
         bottomBar.wheelScroll.connect(tabListView.onWheelScroll)
     }
 
