@@ -8,7 +8,9 @@ Rectangle {
     id: cloudRect
     color: "transparent"
     radius: 10
-
+    ItemRectangle{
+        anchors.fill: parent
+    }
     Image{
         id: image
         anchors.centerIn: parent
