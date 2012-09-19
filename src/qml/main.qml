@@ -115,6 +115,11 @@ Item {
         KeyNavigation.backtab: tabListView
     }
 
+    /*Rectangle{
+        color: Qt.rgba(0, 0, 0, 0.3)
+        anchors.fill: tabListView
+    }*/
+
     ListView {
         id: tabListView
 
@@ -124,7 +129,6 @@ Item {
         interactive: false
 
         anchors.top: topBar.bottom
-        anchors.topMargin: 16
         width: parent.width
         height: parent.height - topBar.height - bottomBar.height
 

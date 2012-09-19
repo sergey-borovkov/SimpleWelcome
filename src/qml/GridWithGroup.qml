@@ -17,7 +17,7 @@ Column {
 
     signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
-    signal showPopupGroup(variant groupData, variant iconCoords)
+    signal showPopupGroup(variant groupData, string groupTitle, variant iconCoords)
 
     // constants
     property int textToGridSpacing: constants.textToGridSpacing
@@ -155,9 +155,9 @@ Column {
                 var realIndex = model.get(newIndex).id
                 if (model.get(newIndex).stack !== undefined)
                 {
-                    //console.log("Group at: " + newIndex)
+                    console.log("onItemClicked::showPopupGroup from: " + newIndex)
                     var iconCoords = mapToItem(groupTab, currentItem.x + currentItem.width / 2 - 8, currentItem.y + currentItem.height)
-                    showPopupGroup(model.get(newIndex).stack, iconCoords)
+                    showPopupGroup(model.get(newIndex).stack, model.get(newIndex).caption, iconCoords)
                     return
                 }
                 if (groupName == i18n_Recent_Applications || groupName == i18n_Recent_Documents)

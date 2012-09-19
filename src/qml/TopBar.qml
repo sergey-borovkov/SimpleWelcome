@@ -166,6 +166,7 @@ FocusScope {
     Image {
         source: "image://generalicon/asset/lines_up.png"
         anchors.top: parent.bottom
+        anchors.topMargin: -1
         width: parent.width
         height: 8
     }

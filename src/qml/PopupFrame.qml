@@ -6,6 +6,7 @@ FocusScope {
 
     property alias gridGroup: appsGrid
     property alias arrowX: arrow.x
+    property alias groupTitle: appsGrid.groupName
     //property bool open: false
 
     Item {
@@ -48,7 +49,6 @@ FocusScope {
                 anchors.top: parent.top
                 anchors.topMargin: 32
 
-                groupName: "Popup group"
                 draggable: true
                 //groupNameVisible:
             }
