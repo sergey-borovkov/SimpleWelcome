@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import Private 0.1
 
 Item {
     id: tabBar
@@ -6,6 +7,16 @@ Item {
     anchors.bottom: parent.bottom
     width: parent.width
     height: 80
+    signal wheelScroll(int delta)
+
+    // Scroll using mouse wheel
+    WheelArea {
+        id: wheelArea
+        anchors.fill: parent
+
+        onScrollVert: wheelScroll(delta)
+        onScrollHorz: wheelScroll(delta)
+    }
 
     Item {
         width: 45
