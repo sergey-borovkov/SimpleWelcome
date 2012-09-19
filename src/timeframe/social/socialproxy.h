@@ -30,13 +30,14 @@ public:
 
     PluginModel *pluginModel();
 
+    Q_INVOKABLE int authorizedPluginCount() const;
+    Q_INVOKABLE QString authorizedPluginName(int i) const;
 
 public slots:
     void likeItem(const QString &id, const QString &pluginName);
     void dislikeItem(const QString &id, const QString &pluginName);
     void commentItem(const QString &message, const QString &parentId, const QString &pluginName);
-    void authorized();
-    void deauthorized();
+
     bool anyPluginsEnabled();
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
@@ -45,12 +46,19 @@ public slots:
       // temporary solution to get plugin names in QML
     // this functionality should perphaps be made available
     // to  QML via models
-    int authorizedPluginCount() const;
-    QString authorizedPluginName(int i) const;
-
 private slots:
     void likeSuccess(PluginRequestReply *);
     void commentSuccess(PluginRequestReply *);
+
+    /**
+     * @brief Slot called on social network deauthorization
+     */
+    void deauthorized();
+
+    /**
+     * @brief Slot called on social network authorization
+     */
+    void authorized();
 
 signals:
     void pluginAuthorized();
@@ -91,7 +99,7 @@ private:
     PluginModel *m_pluginModel;
     SocialDayModel *m_socialModel;
     QSet<QString> m_idSet;
-    QSet<QString> m_enabledPlugins;    
+    QSet<QString> m_enabledPlugins;
     QString m_cachedComment;
 };
 
