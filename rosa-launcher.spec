@@ -17,6 +17,7 @@ ROSA Desktop Application Launcher
 %files
 %defattr(-,root,root)
 %_kde_libdir/kde4/plasma_applet_rosastarter.so
+%_kde_libdir/libtimeframe.so
 %_kde_datadir/kde4/services/plasma-applet-rosastarter.desktop
 %_kde_bindir/rosa-launcher
 %_kde_datadir/rosa-launcher/*
