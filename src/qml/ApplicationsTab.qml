@@ -4,7 +4,7 @@ FocusScope {
     id: applicationsTab
     width: parent.width
 
-    property variant grid: groupTab.tabListView.currentItem.activeGridGroup.gridView
+    property variant grid: groupTab.tabListView.activeGridView
     property alias tab: groupTab
 
     GridWithGroupTab {
