@@ -82,24 +82,24 @@ Item{
     function createConnection()
     {
         var newObject = Qt.createQmlObject('import QtQuick 1.0;  Connections {target: model; onGotThumbnail: \
-            {cloudRect1.image.source = "image://preview/" + model.url(0) + "%" + Math.random( 10 ); \
-             cloudRect2.image.source = "image://preview/" + model.url(1) + "%" + Math.random( 10 ); \
-             cloudRect3.image.source = "image://preview/" + model.url(2) + "%" + Math.random( 10 ); \
-             cloudRect4.image.source = "image://preview/" + model.url(3) + "%" + Math.random( 10 ); \
-             cloudRect5.image.source = "image://preview/" + model.url(4) + "%" + Math.random( 10 ); \
-             cloudRect6.image.source = "image://preview/" + model.url(5) + "%" + Math.random( 10 ); \
+            {cloudRect1.image.source = "image://preview/" + model.url(0) + "/rounded" +"%" + Math.random( 10 ); \
+             cloudRect2.image.source = "image://preview/" + model.url(1) + "/rounded" + "%" + Math.random( 10 ); \
+             cloudRect3.image.source = "image://preview/" + model.url(2) + "/rounded" + "%" + Math.random( 10 ); \
+             cloudRect4.image.source = "image://preview/" + model.url(3) + "/rounded" + "%" + Math.random( 10 ); \
+             cloudRect5.image.source = "image://preview/" + model.url(4) + "/rounded" + "%" + Math.random( 10 ); \
+             cloudRect6.image.source = "image://preview/" + model.url(5) + "/rounded" + "%" + Math.random( 10 ); \
              }}', cloudSix);
-        cloudRect1.image.source = "image://preview/" + model.url(0) + "%" + Math.random( 10 )
+        cloudRect1.image.source = "image://preview/" + model.url(0) + "/rounded" +"%" + Math.random( 10 )
         cloudRect1.url = model.url(0)
-        cloudRect2.image.source = "image://preview/" + model.url(1) + "%" + Math.random( 10 )
+        cloudRect2.image.source = "image://preview/" + model.url(1) + "/rounded" + "%" + Math.random( 10 )
         cloudRect2.url = model.url(1)
-        cloudRect3.image.source = "image://preview/" + model.url(2) + "%" + Math.random( 10 )
+        cloudRect3.image.source = "image://preview/" + model.url(2) + "/rounded" + "%" + Math.random( 10 )
         cloudRect3.url = model.url(2)
-        cloudRect4.image.source = "image://preview/" + model.url(3) + "%" + Math.random( 10 )
+        cloudRect4.image.source = "image://preview/" + model.url(3) + "/rounded" + "%" + Math.random( 10 )
         cloudRect4.url = model.url(3)
-        cloudRect5.image.source = "image://preview/" + model.url(4) + "%" + Math.random( 10 )
+        cloudRect5.image.source = "image://preview/" + model.url(4) + "/rounded" + "%" + Math.random( 10 )
         cloudRect5.url = model.url(4)
-        cloudRect6.image.source = "image://preview/" + model.url(5) + "%" + Math.random( 10 )
+        cloudRect6.image.source = "image://preview/" + model.url(5) + "/rounded" + "%" + Math.random( 10 )
         cloudRect6.url = model.url(5)
     }
 }

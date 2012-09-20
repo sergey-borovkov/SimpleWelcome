@@ -24,6 +24,9 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QDebug>
+#include <QPainter>
+#include <QImage>
+#include <QDeclarativeImageProvider>
 
 PreviewProvider::PreviewProvider() :
     QDeclarativeImageProvider(Pixmap)
@@ -34,13 +37,43 @@ PreviewProvider::PreviewProvider() :
 QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
     QString str = id.left(id.lastIndexOf('%'));
-    QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(str);
-
+    bool rounded = false;
+    QString round = str.right(8);
+    if (round == "/rounded"){
+        rounded = true;
+        str.chop(8);
+    }
+    QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(str);    
     if(requestedSize.isValid())
         pixmap = pixmap.scaled(requestedSize);
     if(size)
         *size = pixmap.size();
-
+    if (rounded)
+        return QPixmap::fromImage( getRoundedImage(pixmap.toImage(), 10));
     return pixmap;
+
 }
 
+
+
+QImage PreviewProvider::getRoundedImage(QImage image, int radius)
+{
+    QImage out(image.width(), image.height(), QImage::Format_ARGB32);
+    out.fill(Qt::transparent);
+
+    QBrush brush(image);
+
+    QPen pen;
+    pen.setColor(Qt::transparent);
+    pen.setJoinStyle(Qt::RoundJoin);
+    pen.setWidth(0);
+
+    QPainter painter(&out);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+
+    painter.setBrush(brush);
+    painter.setPen(pen);
+    painter.drawRoundedRect(0, 0, image.width(), image.height(), radius, radius ,Qt::RelativeSize);
+
+    return out;
+}
