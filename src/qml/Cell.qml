@@ -94,12 +94,6 @@ Item {
 
         states: [
             State {
-                name: "cellActive";
-                when: cell.activeFocus && gridMouseArea.dndSrcId != id && stackCellOpenedId !== id
-                PropertyChanges { target: cellIcon; /*scale: 1.2*/ }
-            },
-
-            State {
                 name: "gridInDrag"
                 when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id
             },
@@ -107,15 +101,13 @@ Item {
             State {
                 name: "cellInDrag"
                 when: gridMouseArea.dndSrcId === id
-                //PropertyChanges { target: wrapper; parent: 0 }
+
                 PropertyChanges {
                     target: wrapper;
-                    //parent: 0;
                     x: gridMouseArea.mouseX - wrapper.width/2;
                     y: gridMouseArea.mouseY - wrapper.height/2;
                     z: 10
                 }
-                /*PropertyChanges { target: cellIcon; scale: 1.2 }*/
             },
 
             State {
@@ -133,7 +125,7 @@ Item {
             NumberAnimation { properties: "scale"; duration: 200 }
             NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
             ParentAnimation {
-                via: tabRoot
+                via: tabWrapper
                 NumberAnimation { duration: 200 }
             }
         }
