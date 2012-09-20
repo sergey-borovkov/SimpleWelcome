@@ -80,10 +80,11 @@ Column {
 
         function appendItemToModel(itemData)
         {
+            itemData.stack = undefined
             model.append(itemData)
 
             // UNREM THIS TO ENABLE AUTO-STACKING
-            /**/if (!groupNameVisible)
+            /**/if (!groupNameVisible) // workaround to apply this to apps tab only
             {
                 appendItemToModel.lastItem = model.get(model.count - 1)
                 if (appendItemToModel.lastItem && appendItemToModel.lastLetter != appendItemToModel.lastItem.caption.charAt(0).toLowerCase())
