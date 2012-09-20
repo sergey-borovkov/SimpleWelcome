@@ -32,7 +32,7 @@ QVariant PluginItem::data(int role) const
     return m_module->icon();
 }
 
-bool PluginItem::setData(const QVariant &value, int role)
+bool PluginItem::setData(int role, const QVariant &value)
 {
     return true;
 }

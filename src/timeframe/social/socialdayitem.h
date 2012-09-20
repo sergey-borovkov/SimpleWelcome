@@ -6,12 +6,12 @@
 #include <QSortFilterProxyModel>
 #include <QObject>
 
+#include <listitem.h>
+
+class CommentItem;
 class SocialItemModel;
 class SocialItem;
 class SocialItemFilterModel;
-class GenericCommentItem;
-
-#include "../timeframelib/listitem.h"
 
 class SocialItemFilterModel : public QSortFilterProxyModel
 {
@@ -57,7 +57,7 @@ public:
 
     virtual QString id() const;
     virtual QVariant data(int role) const;
-    virtual bool setData(const QVariant &value, int role);
+    virtual bool setData(int role, const QVariant &value);
 
     QDate date();
     int   count();
@@ -85,7 +85,7 @@ public slots:
     void setDate(const QDate&);
     void addSocialItem(SocialItem* item);
     void likeItem(QString eventId);
-    void addCommentToItem(GenericCommentItem*, QString);
+    void addCommentToItem(CommentItem *, QString);
 
 private:
     QString m_types;

@@ -2,9 +2,9 @@
 #define FEEDITEM_H
 
 #include <socialitem.h>
+#include <listmodel.h>
+#include <commentitem.h>
 #include <QtCore/QMap>
-
-#include "../timeframelib/listmodel.h"
 
 class FeedItem : public SocialItem
 {
@@ -14,7 +14,7 @@ public:
     virtual Type type() const;
     virtual QString id() const;
     virtual QVariant data(int role) const;
-    virtual bool setData(const QVariant &value, int role);
+    virtual bool setData(int role, const QVariant &value);
     virtual QDate date() const;
 
 private:
@@ -27,19 +27,6 @@ private:
     QString m_selfId;
 };
 
-class FacebookCommentItem : public CommentItem
-{
-public:
-    FacebookCommentItem(const QVariantMap &map);
-    virtual QString id() const;
-    virtual QVariant data(int role) const;
-    virtual bool setData(const QVariant &value, int role);
-
-private:
-    void fillFromMap(const QVariantMap &map);
-
-    QMap<int, QVariant> m_data;
-};
-
+void fillCommentFromMap(CommentItem *item, const QVariantMap &map);
 
 #endif // FEEDITEM_H
