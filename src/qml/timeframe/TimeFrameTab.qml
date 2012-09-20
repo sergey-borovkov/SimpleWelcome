@@ -230,7 +230,8 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         width: parent.width
-
+        anchors.bottomMargin: 10
+        anchors.topMargin: 10
 
         delegate: TimeLineDelegate {}
         model: localDayModel
@@ -283,6 +284,8 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 10
+        anchors.topMargin: 10
 
         delegate: SocialCloudDelegate {}
         model: socialDayModel
