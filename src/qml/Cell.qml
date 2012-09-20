@@ -95,7 +95,7 @@ Item {
         states: [
             State {
                 name: "cellActive";
-                when: cell.activeFocus && gridMouseArea.dndSrcId != id
+                when: cell.activeFocus && gridMouseArea.dndSrcId != id && stackCellOpenedId !== id
                 PropertyChanges { target: cellIcon; /*scale: 1.2*/ }
             },
 
@@ -116,12 +116,26 @@ Item {
                     z: 10
                 }
                 /*PropertyChanges { target: cellIcon; scale: 1.2 }*/
+            },
+
+            State {
+                name: "cellOpenedStack"
+                when: stackCellOpenedId === id && stack !== undefined
+
+                ParentChange {
+                    target: wrapper
+                    parent: tabRoot
+                }
             }
         ]
 
         transitions: Transition {
             NumberAnimation { properties: "scale"; duration: 200 }
             NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
+            ParentAnimation {
+                via: tabRoot
+                NumberAnimation { duration: 200 }
+            }
         }
 
         Item { // Necessary for correct highlight height
