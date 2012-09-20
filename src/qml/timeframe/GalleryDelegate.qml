@@ -52,15 +52,16 @@ Item {
         flow: GridView.TopToBottom
         interactive: false
         delegate: Column {
-            Rectangle {
+            //Rectangle {
+            ItemRectangle{
                 id: imageBackground
-                color: "black"
-                border.color: "#687584"
-                border.width: 1
-                radius: 8
+                //color: "black"
+                //border.color: "#687584"
+                //border.width: 1
+                //radius: 8
                 width: itemGrid.cellWidth - 20
                 height: itemGrid.cellHeight -40
-                clip: true
+                //clip: true
                 Image {
                     id: image
                     anchors.centerIn: parent
