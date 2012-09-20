@@ -10,7 +10,6 @@ Item {
     property bool isForceOnOneScreen: false
     property alias tabListView: gridsListView
     property string isPopupOpened: popupFrame.state === "OPEN"
-    property string openedPopupStackName: popupFrame.gridGroup
     property int stackCellOpenedId: -1
 
     function updateGridsContent()
@@ -28,6 +27,7 @@ Item {
         ListView {
             id: gridsListView
 
+            property variant activeGridView: currentItem ? currentItem.activeGridGroup.gridView : undefined
 
             anchors.top: parent.top
             anchors.topMargin: 16
