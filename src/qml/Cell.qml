@@ -103,9 +103,9 @@ Item {
                 when: gridMouseArea.dndSrcId === id
 
                 PropertyChanges {
-                    target: wrapper;
-                    x: gridMouseArea.mouseX - wrapper.width/2;
-                    y: gridMouseArea.mouseY - wrapper.height/2;
+                    target: wrapper
+                    x: gridMouseArea.mouseX - wrapper.width/2
+                    y: gridMouseArea.mouseY - wrapper.height/2
                     z: 10
                 }
             },
@@ -121,14 +121,21 @@ Item {
             }
         ]
 
-        transitions: Transition {
-            NumberAnimation { properties: "scale"; duration: 200 }
-            NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
-            ParentAnimation {
-                via: tabWrapper
-                NumberAnimation { duration: 200 }
+        transitions: [
+            Transition {
+                from: ""
+                to: "cellInDrag"
+                reversible: true
+                NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
+            },
+            Transition {
+                from: "cellOpenedStack"
+                ParentAnimation {
+                    via: tabRoot
+                    NumberAnimation { duration: 200 }
+                }
             }
-        }
+        ]
 
         Item { // Necessary for correct highlight height
             height: cellIcon.anchors.topMargin + cellIcon.height + cellText.anchors.topMargin + cellText.height + cellIcon.anchors.topMargin/2
