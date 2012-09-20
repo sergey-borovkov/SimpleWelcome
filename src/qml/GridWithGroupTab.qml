@@ -9,6 +9,9 @@ Item {
     property variant groups
     property bool isForceOnOneScreen: false
     property alias tabListView: gridsListView
+    property string isPopupOpened: popupFrame.state === "OPEN"
+    property string openedPopupStackName: popupFrame.gridGroup
+    property int stackCellOpenedId: -1
 
     function updateGridsContent()
     {
@@ -224,22 +227,28 @@ Item {
                 gridsListView.currentIndex = 0
             }
 
-            function showGroup(groupData, groupTitle, iconCoords)
+            function hideGroup()
+            {
+                popupFrame.state = "CLOSED"
+                stackCellOpenedId = -1
+            }
+
+            function showGroup(item, iconCoords)
             {
                 if (popupFrame.state == "CLOSED")
                 {
                     popupFrame.arrowX = iconCoords.x
                     popupFrame.y = iconCoords.y
-                    popupFrame.groupTitle = groupTitle
+                    popupFrame.groupTitle = item.caption
 
                     popupFrame.gridGroup.gridView.model.clear()
-                    popupFrame.gridGroup.startIndex = groupData[0].id
-                    popupFrame.gridGroup.endIndex = groupData[0].id + groupData.length - 1
+                    popupFrame.gridGroup.startIndex = item.stack[0].id
+                    popupFrame.gridGroup.endIndex = item.stack[0].id + item.stack.length - 1
 
                     //for (var groupData in groupDataArray)
                     //console.log("DATQA :" + groupData.length)
-                    for (var i = 0; i < groupData.length; i++)
-                        popupFrame.gridGroup.gridView.newItemData(groupData[i].imagePath, groupData[i].caption, groupData[i].id)
+                    for (var i = 0; i < item.stack.length; i++)
+                        popupFrame.gridGroup.gridView.newItemData(item.stack[i].imagePath, item.stack[i].caption, item.stack[i].id)
 
                     /*
 
@@ -247,10 +256,12 @@ Item {
                 dataSource.resetContent.connect(resetContent)
                 dataSource.getContent()*/
 
+                    stackCellOpenedId = item.id
+
                     popupFrame.state = "OPEN"
                 }
                 else
-                    popupFrame.state = "CLOSED"
+                    hideGroup()
             }
 
             transitions: Transition {
@@ -327,9 +338,7 @@ Item {
                 anchors.fill: parent
                 hoverEnabled: true
 
-                onClicked: {
-                    popupFrame.state = "CLOSED"
-                }
+                onClicked: gridsListView.hideGroup()
             }
 
             Behavior on opacity {
