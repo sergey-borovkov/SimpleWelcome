@@ -30,6 +30,13 @@ public:
     virtual Request *queryUserId() = 0;
     virtual Request *queryImage(const QString &id) = 0;
     virtual Request *postComment(const QString &message, const QString &parentId) = 0;
+
+    /**
+     * @brief Query comments to post. You need to connect to SocialRequestManager
+     *        newComments(QList<CommentItem *>) signal to get result
+     * @param id of parent post
+     * @return pointer to request
+     */
     virtual Request *queryComments(const QString &postId) = 0;
     virtual Request *like(const QString &id) = 0;
     virtual Request *dislike(const QString &id) = 0;

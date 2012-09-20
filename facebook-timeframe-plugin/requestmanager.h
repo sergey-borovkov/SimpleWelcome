@@ -3,9 +3,15 @@
 
 #include <socialplugin.h>
 
+#include <QtCore/QUrl>
+#include <QtCore/QMap>
+
 class OAuth2Authorizer;
 class FeedItem;
+class CommentItem;
 class QNetworkAccessManager;
+
+const QString openGraphUrl = QLatin1String("https://graph.facebook.com/");
 
 class RequestManager : public QObject, public ISocialRequestManager
 {
@@ -27,15 +33,23 @@ public:
 private slots:
     void feedReply(QByteArray feedReply);
     void idReply(QByteArray reply);
+    void commentReply(QByteArray reply);
 
 signals:
     void authorizationComplete();
     void newSocialItems(QList<SocialItem *> items);
     void userId(QString id);
+    void newComments(QString postId, QList<CommentItem *> items);
 
 private:
+    QUrl constructUrl(const QString &id, const QString &type) const;
+
     OAuth2Authorizer *m_authorizer;
     QString m_selfId;
+
+    // we return comments only when they are fully downloaded
+    // so we need to keed partial results between calls somewhere
+    QMap<QString, QList<CommentItem *> >m_comments;
 };
 
 #endif // REQUESTMANAGER_H

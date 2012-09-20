@@ -53,7 +53,7 @@ public:
         roles.insert(Audio, "audio");
         roles.insert(Like, "like");
         roles.insert(Likes, "likes");
-        roles.insert(LikeUrl, "likeUrl");        
+        roles.insert(LikeUrl, "likeUrl");
         roles.insert(CommentCount, "commentCount");
         roles.insert(Comments, "comments");
         roles.insert(Count, "count");
@@ -63,38 +63,5 @@ public:
         return roles;
     }
 };
-
-class CommentItem : public ListItem
-{
-public:
-    enum Role {
-        From = Qt::UserRole + 1,
-        FromId,
-        Message,
-        CreatedTime,
-        LikeCount,
-        Id
-    };
-
-    virtual ~CommentItem() {}
-    virtual QString id() const = 0;
-    virtual QVariant data(int role) const = 0;
-
-    static const QHash<int, QByteArray> roleNames() {
-        QHash<int, QByteArray> roles;
-        roles.insert(From, "from" );
-        roles.insert(FromId, "fromId" );
-        roles.insert(Message, "messageText" );
-        roles.insert(CreatedTime, "createdTime" );
-        roles.insert(LikeCount, "likeCount" );
-        roles.insert(Id, "id" );
-
-        return roles;
-    }
-};
-
-Q_DECLARE_METATYPE( CommentItem * )
-
-Q_DECLARE_METATYPE(QList<CommentItem *>)
 
 #endif // SOCIALITEM_H
