@@ -18,7 +18,6 @@ Item {
     }
 
     Item {
-        id: tabWrapper
         width: parent.width
         height: parent.height + popupFrame.slideHeight
         anchors.top: parent.top

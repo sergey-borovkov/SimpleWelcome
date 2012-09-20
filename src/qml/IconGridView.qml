@@ -290,8 +290,13 @@ GridView {
                     dndSrc = index
                     dndSrcId = model.get(dndSrc).id
                     dndDestId = dndSrcId
-                    console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
+                    //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
                     dndStateChanged(true)
+
+                    //console.log("NOW----------------")
+                    //for (var i = 0; i < model.count; i++)
+                    //    console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
+                    //console.log("END----------------")
                 }
             }
 
@@ -303,35 +308,29 @@ GridView {
 
                 if (typeof dataSource.itemDragged !== "undefined" && dndDestId != -1)
                 {
-                    console.log("dndDestId: " + dndDestId)
+                    //console.log("dndDestId: " + dndDestId)
                     dataSource.itemDragged(dndSrcId, dndDestId)
 
                     //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
-                    model.get(dndDest).id = dndDestId
-                    console.log("For dragged item we set src id: " + dndDestId)
+                    model.set(dndDest, {"id": dndDestId})
+                    //console.log("For dragged item we set src id: " + dndDestId)
                     if (dndDest < dndSrc)
                     {
                         for (var i = dndDest + 1; i <= dndSrc; i++)
-                            model.get(i).id++
+                            model.set(i, {"id": model.get(i).id + 1})
                     }
                     else
                     {
                         for (var i = dndSrc; i < dndDest; i++)
-                            model.get(i).id--
+                            model.set(i, {"id": model.get(i).id - 1})
                     }
                 }
-
-//                console.log("NOW----------------")
-//                for (var i = 0; i < model.count; i++)
-//                    console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
-//                console.log("END----------------")
             }
             dndSrcId = -1
             dndSrc = -1
             dndDest = -1
             dndDestId = -1
-
-            console.log("DND SRC ID NO LONGER VALID: " + dndSrcId)
+            //console.log("DND SRC ID NO LONGER VALID: " + dndSrcId)
         }
 
         onClicked: {
