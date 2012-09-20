@@ -6,6 +6,8 @@
 #include "socialitem.h"
 #include "socialproxy.h"
 
+#include <commentitem.h>
+
 SocialItemModel::SocialItemModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)
 {
@@ -35,8 +37,8 @@ void SocialItemModel::addSocialItem(SocialItem *item)
 }
 
 void SocialItemModel::like(QString id)
-{    
-    for (int i = 0; i < rowCount(); i++) {        
+{
+    for (int i = 0; i < rowCount(); i++) {
         if (data(index(i,0),SocialItem::Id).toString() == id) {
             int likesCount = data(index(i,0),SocialItem::Likes).toInt();
             int liked = data(index(i,0),SocialItem::Like).toInt();
@@ -57,7 +59,7 @@ void SocialItemModel::like(QString id)
     }
 }
 
-void SocialItemModel::addComment(GenericCommentItem *item, QString id)
+void SocialItemModel::addComment(CommentItem *item, QString id)
 {
     for (int i = 0; i < rowCount(); i++) {
         if (data(index(i,0),SocialItem::Id).toString() == id) {

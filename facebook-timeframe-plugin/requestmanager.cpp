@@ -16,25 +16,20 @@ Request *RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
     Q_UNUSED(beginDate)
     Q_UNUSED(endDate)
 
-    QUrl url(QLatin1String("https://graph.facebook.com/me/feed"));
-    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-
+    QUrl url = constructUrl(QLatin1String("me"), QLatin1String("feed"));
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
-
     request->setUrl(url);
+
     return request;
 }
 
 
 Request *RequestManager::queryUserId()
 {
-    QUrl url(QLatin1String("https://graph.facebook.com/me"));
-    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(idReply(QByteArray)));
-    request->setUrl(url);
+    request->setUrl(constructUrl(QLatin1String("me"), ""));
     return request;
 }
 
@@ -48,8 +43,7 @@ Request *RequestManager::queryImage(const QString &id)
 Request *RequestManager::postComment(const QString &message, const QString &parentId)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
-    QUrl url = QLatin1String("https://graph.facebook.com/") + parentId + QLatin1String("/comments");
-    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
+    QUrl url = constructUrl(parentId, QLatin1String("comments"));
     url.addQueryItem("message", message);
     request->setUrl(url);
 
@@ -59,27 +53,27 @@ Request *RequestManager::postComment(const QString &message, const QString &pare
 Request *RequestManager::like(const QString &id)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
-    QUrl url = QLatin1String("https://graph.facebook.com/") + id + QLatin1String("/likes");
-    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-    request->setUrl(url);
+    request->setUrl(constructUrl(id, QLatin1String("likes")));
     return request;
 }
 
 Request *RequestManager::dislike(const QString &id)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Delete, this);
-    QUrl url = QLatin1String("https://graph.facebook.com/") + id + QLatin1String("/likes");
-    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-    request->setUrl(url);
+    request->setUrl(constructUrl(id, QLatin1String("likes")));
     return request;
 }
 
 Request *RequestManager::queryComments(const QString &postId)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
-    QUrl url = QLatin1String("https://graph.facebook.com/") + postId + QLatin1String("/comments");
-    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
-    request->setUrl(url);
+    request->setUrl(constructUrl(postId, QLatin1String("comments")));
+
+    // remember id so that slot can know it
+    request->setProperty("postId", postId);
+
+    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(commentReply(QByteArray)));
+
     return request;
 }
 
@@ -133,6 +127,40 @@ void RequestManager::feedReply(QByteArray reply)
     }
 }
 
+void RequestManager::commentReply(QByteArray reply)
+{
+    QJson::Parser parser;
+    QVariantMap result = parser.parse(reply).toMap();
+    if(result.contains(QLatin1String("error"))) {
+        return;
+    }
+
+    QList<CommentItem *> comments;
+    QVariantList list = result.value(QLatin1String("data")).toList();
+    foreach(QVariant item, list) {
+        QVariantMap map = item.toMap();
+        CommentItem *item = new CommentItem();
+        fillCommentFromMap(item, map);
+        comments.append(item);
+    }
+
+    QString id = sender()->property("postId").toString();
+    QList<CommentItem *> cachedComments = m_comments.value(id);
+    cachedComments.append(comments);
+
+    QVariantMap paging = result.value(QLatin1String("paging")).toMap();
+    if(paging.contains("next")) {
+        m_comments.insert(id, cachedComments);
+        FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
+        connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
+        request->setUrl(paging.value("next").toUrl());
+        request->start();
+    } else {
+        m_comments.remove(id);
+        emit newComments(id, cachedComments);
+    }
+}
+
 void RequestManager::idReply(QByteArray reply)
 {
     QJson::Parser parser;
@@ -142,4 +170,11 @@ void RequestManager::idReply(QByteArray reply)
         return;
     }
     m_selfId = result.value(QLatin1String("id")).toString();
+}
+
+QUrl RequestManager::constructUrl(const QString &id, const QString &type) const
+{
+    QUrl url = openGraphUrl + id + "/" + type;
+    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
+    return url;
 }

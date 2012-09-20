@@ -103,18 +103,4 @@ private:
     QString m_cachedComment;
 };
 
-class GenericCommentItem : public CommentItem
-{
-public:
-    GenericCommentItem(const QString& message, const QString& id);
-    virtual QString id() const;
-    virtual QVariant data(int role) const;
-    virtual bool setData(const QVariant&,int);
-
-private:
-    QMap<int, QVariant> m_data;
-};
-
-Q_DECLARE_METATYPE (GenericCommentItem *)
-
 #endif // SOCIALPROXY_H

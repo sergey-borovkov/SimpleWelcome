@@ -11,7 +11,7 @@
 
 class SocialDayItem;
 class SocialItem;
-class GenericCommentItem;
+class CommentItem;
 
 class SocialDayFilterModel : public QSortFilterProxyModel
 {
@@ -47,7 +47,7 @@ public slots:
     void newSocialItems(QList<SocialItem*> list);
     QObject* itemsModel(QDate date) const;
     void likeItem(QString eventId);
-    void addCommentToItem(GenericCommentItem*, QString);
+    void addCommentToItem(CommentItem *, QString);
 
 private slots:
     void handleItemChange();

@@ -42,7 +42,7 @@ int SocialItemFilterModel::commentsCount(int row)
 
 QObject *SocialItemFilterModel::comments(int row)
 {
-    QVariant v = data(index(row, 0), SocialItem::Comments);    
+    QVariant v = data(index(row, 0), SocialItem::Comments);
     ListModel * commentsModel = qvariant_cast<ListModel* >(v);
     commentsModel->setParent(sourceModel());
     return commentsModel;
@@ -54,7 +54,7 @@ QString SocialItemFilterModel::pluginName(int row)
 }
 
 void SocialItemFilterModel::update()
-{    
+{
     emit updateData();
 }
 
@@ -87,7 +87,7 @@ QVariant SocialDayItem::data(int role) const
     return QVariant();
 }
 
-bool SocialDayItem::setData(const QVariant &value, int role)
+bool SocialDayItem::setData(int role, const QVariant &value)
 {
     return true;
 }
@@ -114,7 +114,7 @@ void SocialDayItem::likeItem(QString eventId)
     m_model->update();
 }
 
-void SocialDayItem::addCommentToItem(GenericCommentItem *item, QString id)
+void SocialDayItem::addCommentToItem(CommentItem *item, QString id)
 {
     m_itemModel->addComment(item, id);
     m_model->update();
