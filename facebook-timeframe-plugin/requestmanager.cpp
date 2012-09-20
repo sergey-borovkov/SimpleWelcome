@@ -152,7 +152,8 @@ void RequestManager::commentReply(QByteArray reply)
     if(paging.contains("next")) {
         m_comments.insert(id, cachedComments);
         FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
-        connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
+        request->setProperty("postId", id);
+        connect(request, SIGNAL(replyReady(QByteArray)), SLOT(commentReply(QByteArray)));
         request->setUrl(paging.value("next").toUrl());
         request->start();
     } else {
