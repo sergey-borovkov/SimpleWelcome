@@ -48,14 +48,23 @@ Item{
             id: background
             anchors.centerIn: parent            
             //color: "#aa5f5f5f"
-            color: "#172634"
-            border.color: "#687584"
-            border.width: 1
+            //color: "#172634"
+            //border.color: "#687584"
+            color: "transparent"
+            border.width: 0
             radius: 10
             clip: true
             width: parent.width
             height: parent.height
-            Rectangle{
+            ItemRectangle{
+                id: backgroundItem
+                anchors.fill: parent
+                anchors.bottomMargin: 26
+                z:-1
+            }
+
+
+            /*Rectangle{
                 id: backgroundShadow
                 anchors.fill: parent
                 color: "black"
@@ -63,7 +72,7 @@ Item{
                 radius: 12
                 anchors.bottomMargin: -10
             }
-
+            */
             //Column{
             //  width: parent.width
             Rectangle {
@@ -157,7 +166,8 @@ Item{
             }
             Rectangle {
                 id: bottomLine
-                color: "#335f5f5f"
+                //color: "#335f5f5f"
+                color: "transparent"
                 anchors.bottom: commentsListView.top
                 anchors.right: parent.right
                 anchors.left: parent.left
@@ -252,7 +262,7 @@ Item{
                     }
                 }
                 Image {
-                    id: likeIcon
+                    id: iconPlugin
                     anchors.left: parent.left
                     anchors.leftMargin: 10
                     anchors.verticalCenter: parent.verticalCenter
@@ -260,24 +270,12 @@ Item{
                     height: 16
                     fillMode: Image.PreserveAspectFit
                     smooth: true
-                    source: "images/thumb-up.png"
-                }
-
-                Image {
-                    id: iconPlugin
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 16
-                    height: 16
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
                     //source: "image://plugin/" + pluginName
                 }
-
                 Image {
                     id: commentIcon
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.right:  parent.right
+                    anchors.right:  likeIcon.left
                     anchors.rightMargin: 10
                     width: 16
                     height: 16
@@ -285,6 +283,19 @@ Item{
                     smooth: true
                     source: "images/comment.png"
                 }
+                Image {
+                    id: likeIcon
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.rightMargin: 10
+                    width: 16
+                    height: 16
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
+                    source: "images/thumb-up.png"
+                }
+
+
             }
 
             ListView {

@@ -26,9 +26,9 @@ Item{
     function createConnection()
     {
         var newObject = Qt.createQmlObject('import QtQuick 1.0;  Connections {target: model; onGotThumbnail: \
-                        {cloudRect1.image.source = "image://preview/" + model.url(0) + "%" + Math.random( 10 )}}',
+                        {cloudRect1.image.source = "image://preview/" + model.url(0) + "/rounded" +"%" + Math.random( 10 )}}',
                                            cloudOne);
-        cloudRect1.image.source = "image://preview/" + model.url(0) + "%" + Math.random( 10 )
+        cloudRect1.image.source = "image://preview/" + model.url(0) + "/rounded" +"%" + Math.random( 10 )
         cloudRect1.url = model.url(0)
     }
 }
