@@ -5,7 +5,9 @@
 #include "pluginitem.h"
 #include "pluginmodel.h"
 #include "pluginrequestreply.h"
-#include "../timeframelib/listmodel.h"
+
+#include <listmodel.h>
+#include <commentitem.h>
 
 #include <QtGui/QWidget>
 #include <QtCore/QDebug>
@@ -139,7 +141,13 @@ void SocialProxy::likeSuccess(PluginRequestReply* reply)
 
 void SocialProxy::commentSuccess(PluginRequestReply* reply)
 {
-    GenericCommentItem* item = new GenericCommentItem(m_cachedComment,reply->id());
+    CommentItem* item = new CommentItem();
+    item->setData(CommentItem::Message, m_cachedComment);
+    item->setData(CommentItem::Id, reply->id());
+    //TODO: set user id
+    item->setData(CommentItem::From, "User");
+    item->setData(CommentItem::FromId, "111");
+    item->setData(CommentItem::CreatedTime, QDateTime::currentDateTime());
     m_socialModel->addCommentToItem(item, reply->sourceId());
 }
 
@@ -210,33 +218,6 @@ ISocialPlugin *SocialProxy::pluginFromName(const QString &pluginName)
         }
     }
     return plugin;
-}
-
-
-GenericCommentItem::GenericCommentItem(const QString &message, const QString &id)
-{
-    m_data.insert(Message, message);
-    m_data.insert(Id, id);
-    /*TO-DO : insert prorer self id*/
-    m_data.insert(From, "User");
-    m_data.insert(FromId, "111");
-
-    m_data.insert(CreatedTime, QDateTime::currentDateTime());
-}
-
-QString GenericCommentItem::id() const
-{
-    return data(Id).toString();
-}
-
-QVariant GenericCommentItem::data(int role) const
-{
-    return m_data.value(role);
-}
-
-bool GenericCommentItem::setData(const QVariant &, int)
-{
-    return true;
 }
 
 

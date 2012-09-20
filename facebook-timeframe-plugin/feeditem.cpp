@@ -38,10 +38,8 @@ QVariant FeedItem::data(int role) const
         return m_data.value(role);
 }
 
-#include <QDebug>
-
-bool FeedItem::setData(const QVariant &value, int role)
-{    
+bool FeedItem::setData(int role, const QVariant &value)
+{
     m_data[role] = value;
     return true;
 }
@@ -81,14 +79,15 @@ void FeedItem::fillFromMap(const QVariantMap &map)
         if(comments.value("count").toInt() > 0)  {
             QVariantList commentsList = comments.value("data").toList();
             foreach(QVariant v, commentsList) {
-                FacebookCommentItem *item = new FacebookCommentItem(v.toMap());
+                CommentItem *item = new CommentItem();
+                fillCommentFromMap(item, v.toMap());
                 m_comments.append(item);
             }
             QList<ListItem *> t;
             foreach(CommentItem *item, m_comments)
                 t.append(item);
             m_commentsModel->appendRows(t);
-        }        
+        }
     }
 
     if(map.contains("likes")) {
@@ -116,36 +115,15 @@ void FeedItem::fillFromMap(const QVariantMap &map)
     m_data.insert(PluginName, pluginName());
 }
 
-
-FacebookCommentItem::FacebookCommentItem(const QVariantMap &map)
+void fillCommentFromMap(CommentItem *item, const QVariantMap &map)
 {
-    fillFromMap(map);
-}
-
-QString FacebookCommentItem::id() const
-{
-    return data(Id).toString();
-}
-
-QVariant FacebookCommentItem::data(int role) const
-{
-    return m_data.value(role);
-}
-
-bool FacebookCommentItem::setData(const QVariant &value, int role)
-{
-    return false;
-}
-
-void FacebookCommentItem::fillFromMap(const QVariantMap &map)
-{
-    m_data.insert(Id, map.value("id"));
-    m_data.insert(Message, map.value("message"));
-    m_data.insert(CreatedTime, map.value("created_time"));
+    item->setData(CommentItem::Id, map.value("id"));
+    item->setData(CommentItem::Message, map.value("message"));
+    item->setData(CommentItem::CreatedTime, map.value("created_time"));
     if(map.contains("from")) {
         QVariantMap fromMap = map.value("from").toMap();
-        m_data.insert(FromId, fromMap.value("id"));
-        m_data.insert(From, fromMap.value("name"));
+        item->setData(CommentItem::FromId, fromMap.value("id"));
+        item->setData(CommentItem::From, fromMap.value("name"));
     }
 }
 

@@ -23,7 +23,7 @@ public:
     virtual ~PluginItem() {}
     virtual QString id() const;
     virtual QVariant data(int role) const;
-    virtual bool setData(const QVariant &value, int role);
+    virtual bool setData(int role, const QVariant &value);
 
     ISocialPlugin *plugin();
     static const QHash<int, QByteArray> roleNames() {
