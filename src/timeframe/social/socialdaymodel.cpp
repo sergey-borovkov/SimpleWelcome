@@ -132,7 +132,7 @@ void SocialDayModel::likeItem(QString eventId)
     }
 }
 
-void SocialDayModel::addCommentToItem(GenericCommentItem *commentItem, QString eventId)
+void SocialDayModel::addCommentToItem(CommentItem *commentItem, QString eventId)
 {
     QDate date = m_idHash.value(eventId);
     foreach (SocialDayItem * item, m_items) {

@@ -52,10 +52,10 @@ public:
      */
     Q_INVOKABLE void commentItem(const QString &message, const QString &parentId, const QString &pluginName);
 
+    Q_INVOKABLE int authorizedPluginCount() const;
+    Q_INVOKABLE QString authorizedPluginName(int i) const;
 
 public slots:
-    void authorized();
-    void deauthorized();
     bool anyPluginsEnabled();
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
@@ -64,12 +64,19 @@ public slots:
       // temporary solution to get plugin names in QML
     // this functionality should perphaps be made available
     // to  QML via models
-    int authorizedPluginCount() const;
-    QString authorizedPluginName(int i) const;
-
 private slots:
     void likeSuccess(PluginRequestReply *);
     void commentSuccess(PluginRequestReply *);
+
+    /**
+     * @brief Slot called on social network deauthorization
+     */
+    void deauthorized();
+
+    /**
+     * @brief Slot called on social network authorization
+     */
+    void authorized();
 
 signals:
     void pluginAuthorized();
@@ -113,19 +120,5 @@ private:
     QSet<QString> m_enabledPlugins;
     QString m_cachedComment;
 };
-
-class GenericCommentItem : public CommentItem
-{
-public:
-    GenericCommentItem(const QString& message, const QString& id);
-    virtual QString id() const;
-    virtual QVariant data(int role) const;
-    virtual bool setData(const QVariant&,int);
-
-private:
-    QMap<int, QVariant> m_data;
-};
-
-Q_DECLARE_METATYPE (GenericCommentItem *)
 
 #endif // SOCIALPROXY_H
