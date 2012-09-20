@@ -23,7 +23,7 @@ QVariant ListModel::data(const QModelIndex &index, int role) const
 bool ListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
       ListItem *item = m_items.at(index.row());
-      bool result = item->setData(value, role);
+      bool result = item->setData(role, value);
       if (result){
           emit dataChanged(index, index);
       }
