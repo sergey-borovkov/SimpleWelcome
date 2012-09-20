@@ -585,7 +585,7 @@ Item {
         var index = listView.indexAt(listView.contentX, listView.contentY);
         if (index < 0)
             return
-        index += index_delta;
+        index -= index_delta;
         if (index < 0)
             listView.positionViewAtBeginning()
         else if (index >= listView.count)
