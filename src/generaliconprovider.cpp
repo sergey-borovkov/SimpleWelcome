@@ -54,8 +54,6 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
 
     if (iconType == "stacked")
     {
-        const int outlineWidth = constants->iconSize() / 19;
-
         //qDebug() << iconName;
         QStringList icons = iconName.split("|");
 
@@ -66,9 +64,13 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
         p.begin(&pix);
         p.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
 
-        p.setPen(QPen(Qt::gray, outlineWidth));
-        p.setBrush(QBrush(QColor(64, 64, 64, 128)));
-        p.drawRoundedRect(outlineWidth, outlineWidth, pix.width() - outlineWidth*2, pix.height() - outlineWidth*2, outlineWidth*2, outlineWidth*2);
+
+        // Outline
+        const int outlineWidth = 4;//constants->iconSize() / 19;
+//        p.setPen(QPen(Qt::gray, outlineWidth));
+//        p.setBrush(QBrush(QColor(64, 64, 64, 128)));
+//        p.drawRoundedRect(outlineWidth, outlineWidth, pix.width() - outlineWidth*2, pix.height() - outlineWidth*2, outlineWidth*2, outlineWidth*2);
+
         QSize subIconSize = (pix.size() - QSize(outlineWidth*4, outlineWidth*4)) / 2;
         for (int i = 0; i < qMin(4, icons.size()); i++)
         {

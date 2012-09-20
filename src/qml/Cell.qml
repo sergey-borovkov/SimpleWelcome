@@ -17,6 +17,23 @@ Item {
         width: cellWidth
         height: childrenRect.height
 
+        BorderImage {
+            anchors.left: cellIcon.left
+            anchors.top: cellIcon.top
+            width: cellIcon.width + 5
+            height: cellIcon.height + 4
+            source: "image://generalicon/asset/stacked_icon_bg.png"
+            border.left: 11
+            border.top: 11
+            border.right: 16
+            border.bottom: 15
+            visible: {
+                if (stack !== undefined)
+                    return true
+                return false
+            }
+        }
+
         Image {
             id: cellIcon
             source: imagePath
