@@ -269,8 +269,10 @@ GridView {
                 var index = getItemUnderCursor(true)
                 if (dndSrcId != -1 && index != -1 && index != dndDest)
                 {
-                    dndDestId = model.get(index).id
+                    dndDestId = index // This could had broken dnd-dndId connection but fixed bug
+                    //console.log("New DND_DEST_ID: " + dndDestId)
                     model.move(dndDest, index, 1)
+                    //console.log("Moved " + dndDest + " to " + index + " when " + model.get(index).id)
                     dndDest = index
                 }
             }
@@ -293,10 +295,10 @@ GridView {
                     //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
                     dndStateChanged(true)
 
-                    //console.log("NOW----------------")
-                    //for (var i = 0; i < model.count; i++)
-                    //    console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
-                    //console.log("END----------------")
+//                    console.log("NOW----------------")
+//                    for (var i = 0; i < model.count; i++)
+//                        console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
+//                    console.log("END----------------")
                 }
             }
 
