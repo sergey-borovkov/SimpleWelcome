@@ -139,9 +139,9 @@ void RequestManager::commentReply(QByteArray reply)
     QVariantList list = result.value(QLatin1String("data")).toList();
     foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
-        CommentItem *item = new CommentItem();
-        fillCommentFromMap(item, map);
-        comments.append(item);
+        CommentItem *commentItem = new CommentItem();
+        fillCommentFromMap(commentItem, map);
+        comments.append(commentItem);
     }
 
     QString id = sender()->property("postId").toString();
