@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import Effects 1.0
 
 Item {
     id: cell
@@ -43,6 +44,13 @@ Item {
             anchors.topMargin: constants.iconSize / 5 //20
             anchors.horizontalCenter: parent.horizontalCenter
 
+            /*effect: DropShadow {
+                    blurRadius: 50
+                    color: Qt.rgba(0, 0, 0, 0.3)
+                    xOffset: 0.5
+                    yOffset: 0.5
+                }*/
+
             smooth: true
         }
 
@@ -67,6 +75,12 @@ Item {
             anchors.topMargin: constants.iconSize / 5 //24
             anchors.horizontalCenter: parent.horizontalCenter
 
+            /*effect: DropShadow {
+                    blurRadius: 3
+                    color: Qt.rgba(0, 0, 0, 1)
+                    xOffset: 0.3
+                    yOffset: 0.7
+                }*/
             style: Text.Sunken
             styleColor: "#000"
             color: "#eee"

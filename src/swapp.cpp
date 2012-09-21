@@ -69,6 +69,7 @@
 #include <KRun>
 #include <KConfigGroup>
 #include <KAction>
+#include <QGraphicsDropShadowEffect>
 
 #include <klocalizedstring.h>
 
@@ -213,6 +214,8 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("i18n_OCT", i18n("OCT"));
     m_viewer->rootContext()->setContextProperty("i18n_NOV", i18n("NOV"));
     m_viewer->rootContext()->setContextProperty("i18n_DEC", i18n("DEC"));
+
+    qmlRegisterType<QGraphicsDropShadowEffect>("Effects", 1, 0, "DropShadow");
 
     QList<QPair<QString, QString> > runners = searchDataSource->getRunnersNames();
     for (int i = 0; i < runners.size(); i++)
