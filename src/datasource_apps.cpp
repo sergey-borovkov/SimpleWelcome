@@ -144,7 +144,7 @@ void DataSource_Apps::itemDragged(int fromIndex, int toIndex)
         {
             for (int i = 0; i < userAppsOrder.size(); i++)
             {
-                qDebug() << i << ": " << userAppsOrder[i].second << " index is examining for (" << toIndex << ";" << fromIndex;
+                //qDebug() << i << ": " << userAppsOrder[i].second << " index is examining for (" << toIndex << ";" << fromIndex;
                 if (userAppsOrder[i].second >= toIndex && userAppsOrder[i].second < fromIndex)
                     userAppsOrder[i].second++;
             }

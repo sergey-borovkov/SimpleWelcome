@@ -302,18 +302,21 @@ GridView {
 
         }
         onReleased: {
-            if (dndSrcId != -1)
+            var dndSrcIdSaved = dndSrcId
+            dndSrcId = -1
+
+            if (dndSrcIdSaved != -1)
             {
                 dndStateChanged(false)
 
                 if (typeof dataSource.itemDragged !== "undefined" && dndDestId != -1)
                 {
                     //console.log("dndDestId: " + dndDestId)
-                    dataSource.itemDragged(dndSrcId, dndDestId)
+                    dataSource.itemDragged(dndSrcIdSaved, dndDestId)
 
-                    //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
+                    console.log("dndSrc, dndSrcIdStaged, dndDest, dndDestId: " + dndSrc + " " + dndSrcIdSaved + " " + dndDest + " " + dndDestId)
                     model.set(dndDest, {"id": dndDestId})
-                    //console.log("For dragged item we set src id: " + dndDestId)
+                    console.log("For dragged item we set src id: " + dndDestId)
                     if (dndDest < dndSrc)
                     {
                         for (var i = dndDest + 1; i <= dndSrc; i++)
@@ -326,11 +329,6 @@ GridView {
                     }
                 }
             }
-            dndSrcId = -1
-            dndSrc = -1
-            dndDest = -1
-            dndDestId = -1
-            //console.log("DND SRC ID NO LONGER VALID: " + dndSrcId)
         }
 
         onClicked: {
