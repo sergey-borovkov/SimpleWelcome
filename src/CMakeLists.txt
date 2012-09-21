@@ -19,6 +19,7 @@ add_custom_target(build-qml ALL
 kde4_add_executable(rosa-launcher ${HEADERS} ${SOURCES} ${QML} ${QRC_SOURCES})
 #add_dependencies(rosa-launcher build-assets build-qml)
 
+find_package(Nepomuk REQUIRED)
 
 target_link_libraries(rosa-launcher
                         ${KDE4_KDEUI_LIBS}
