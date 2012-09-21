@@ -29,8 +29,8 @@
 
 
 #include <Plasma/RunnerManager>
-#include <Plasma/QueryMatch>
-#include <KDesktopFile>
+#include <KDE/Plasma/QueryMatch>
+#include <KDE/KDesktopFile>
 #include <QStringList>
 #include <QFile>
 #include <KRecentDocument>
@@ -78,6 +78,31 @@ int DataSource_Search::getItemCount(QString group)
             count++;
 
     return count;
+}
+
+QString DataSource_Search::itemUrlDnd(int id, QString group)
+{
+    if (id < 0)
+        return QString();
+
+    for (int i = 0, sz = matches.size(); i < sz; i++) {
+        if (matches[i].group == group) {
+            if (i + id < sz) {
+                Plasma::QueryMatch& match = *matches[i + id].plasmaMatch;
+                QString value = match.data().toString().toUtf8();
+                if (KDesktopFile::isDesktopFile(value)) {
+                    KDesktopFile file(value);
+                    QString url = file.readUrl();
+                    if (!url.isEmpty())
+                        return url;
+                }
+                return value;
+            }
+            break;
+        }
+    }
+
+    return QString();
 }
 
 QList<QPair<QString, QString> > DataSource_Search::getRunnersNames()

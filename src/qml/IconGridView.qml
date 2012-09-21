@@ -8,6 +8,7 @@ GridView {
     property int startIndex
     property int endIndex
     property bool draggable: false
+    property bool enabledSystemDnD: false  // set true to enable system Drag&Drop
 
     property alias dndSrcId: gridMouseArea.dndSrcId
 
@@ -264,10 +265,30 @@ GridView {
                         grid.currentIndex = newCurrentIndex
                 }
             }
-            else
+            else if (dndSrcId != -1)
             {
+                // activate system DnD if icons isn't group
+                if (enabledSystemDnD && (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height) &&
+                        model.get(dndDest).stack === undefined) {
+                    var url = dataSource.itemUrlDnd(dndSrcId, model.get(dndSrc).group)
+                    if (url) {
+                        // Return dragged icon to home position & disable internal DnD
+                        model.move(dndDest, dndSrc, 1)
+                        var imagePath = model.get(dndSrc).imagePath
+                        dndStateChanged(false)
+                        dndSrcId = -1
+                        dndSrc = -1
+                        dndDest = -1
+                        dndDestId = -1
+                        // start system DnD
+                        mainWindow.activateDragAndDrop(url, imagePath, constants.iconSize)
+                        return
+                    }
+                }
+
                 var index = getItemUnderCursor(true)
-                if (dndSrcId != -1 && index != -1 && index != dndDest)
+
+                if (index != -1 && index != dndDest)
                 {
                     dndDestId = index // This could had broken dnd-dndId connection but fixed bug
                     //console.log("New DND_DEST_ID: " + dndDestId)
@@ -301,6 +322,18 @@ GridView {
 //                    console.log("END----------------")
                 }
             }
+            else if (enabledSystemDnD)
+            {
+                var icon_index = getItemUnderCursor(true)
+                if (icon_index != -1 && pressedOnIndex == icon_index && model.get(icon_index).stack === undefined) {
+                    var url = dataSource.itemUrlDnd(model.get(icon_index).id, model.get(icon_index).group)
+                    if (url) {
+                        var imagePath = model.get(icon_index).imagePath
+                        // start system DnD
+                        mainWindow.activateDragAndDrop(url, imagePath, constants.iconSize)
+                    }
+                }
+            }
 
         }
         onReleased: {
@@ -316,9 +349,8 @@ GridView {
                     //console.log("dndDestId: " + dndDestId)
                     dataSource.itemDragged(dndSrcIdSaved, dndDestId)
 
-                    console.log("dndSrc, dndSrcIdStaged, dndDest, dndDestId: " + dndSrc + " " + dndSrcIdSaved + " " + dndDest + " " + dndDestId)
                     model.set(dndDest, {"id": dndDestId})
-                    console.log("For dragged item we set src id: " + dndDestId)
+
                     if (dndDest < dndSrc)
                     {
                         for (var i = dndDest + 1; i <= dndSrc; i++)

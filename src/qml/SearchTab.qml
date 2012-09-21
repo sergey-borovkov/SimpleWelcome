@@ -12,15 +12,18 @@ FocusScope {
         groups: [
             {
                 groupName: i18n_shell,//"Command Line",
-                dataSource: searchGridModel
+                dataSource: searchGridModel,
+                enabledSystemDnD: true
             },
             {
                 groupName: i18n_recentdocuments, //"Recent Documents",
-                dataSource: searchGridModel
+                dataSource: searchGridModel,
+                enabledSystemDnD: true
             },
             {
                 groupName: i18n_services, //"Applications",
-                dataSource: searchGridModel
+                dataSource: searchGridModel,
+                enabledSystemDnD: true
             },
         ]
     }

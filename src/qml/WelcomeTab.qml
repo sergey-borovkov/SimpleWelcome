@@ -13,16 +13,19 @@ FocusScope {
             {
                 groupName: i18n_Recent_Applications,
                 dataSource: dataSource_RecentApps,
-                draggable: true
+                draggable: true,
+                enabledSystemDnD: true
             },
             {
                 groupName: i18n_Favorites,
                 dataSource: dataSource_Favorites,
-                draggable: true
+                draggable: true,
+                enabledSystemDnD: true
             },
             {
                 groupName: i18n_Recent_Documents,
-                dataSource: dataSource_Documents
+                dataSource: dataSource_Documents,
+                enabledSystemDnD: true
             },
         ]
 

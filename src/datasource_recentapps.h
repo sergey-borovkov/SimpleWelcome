@@ -11,6 +11,7 @@ public:
     explicit DataSource_RecentApps(QObject* parent = 0);
     ~DataSource_RecentApps();
     Q_INVOKABLE virtual int getItemCount();
+    Q_INVOKABLE QString itemUrlDnd(int id);
     void addRecentApp(QString desktopFile);
 
 signals:

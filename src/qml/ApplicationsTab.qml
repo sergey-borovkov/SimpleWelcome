@@ -14,6 +14,7 @@ FocusScope {
                 groupName: "Ololo",
                 dataSource: dataSource_Apps,
                 draggable: true,
+                enabledSystemDnD: true,
                 groupNameVisible: false
             }
         ]
