@@ -168,9 +168,9 @@ Column {
 
                     for (var i = 0; i < model.count; i++)
                         if (model.get(i).id < realIndex)
-                            model.get(i).id++
+                            model.set(i, {"id": model.get(i).id + 1})
                         else if (model.get(i).id == realIndex)
-                            model.get(i).id = 0
+                            model.set(i, {"id": 0})
 
                     dndSrcId = -1
                     gridView.currentIndex = 0
