@@ -29,11 +29,32 @@
 
 
 #include <Plasma/RunnerManager>
-#include <Plasma/QueryMatch>
-#include <KDesktopFile>
+#include <KDE/Plasma/QueryMatch>
+#include <KDE/KDesktopFile>
+#include <KDE/KStandardDirs>
 #include <QStringList>
 #include <QFile>
+#include <QtCore/QDir>
 #include <KRecentDocument>
+
+
+namespace
+{
+
+static QString _FindFullPathToDesktopFile(const QString &desktop_file)
+{
+    QString path = KStandardDirs::locate("xdgdata-apps", desktop_file);
+    if (path.isEmpty())
+        path = KStandardDirs::locate("apps", desktop_file);
+    if (path.isEmpty())
+        path = KStandardDirs::locate("services", desktop_file);
+    if (path.isEmpty())
+        path = KStandardDirs::locate("servicetypes", desktop_file);
+    return path;
+}
+
+} // namespace
+
 
 DataSource_Search::DataSource_Search(QObject *parent, DataSource_RecentApps *inRecentApps)
     : DataSource(parent), recentApps(inRecentApps)
@@ -78,6 +99,53 @@ int DataSource_Search::getItemCount(QString group)
             count++;
 
     return count;
+}
+
+QString DataSource_Search::itemUrlDnd(int id, QString group)
+{
+    if (id < 0)
+        return QString();
+
+    for (int i = 0, sz = matches.size(); i < sz; i++) {
+        if (matches[i].group == group) {
+            if (i + id < sz) {
+                Plasma::QueryMatch& match = *matches[i + id].plasmaMatch;
+                QString runner_id = match.runner()->id();
+                QString value = match.data().toString().toUtf8();
+
+                if (runner_id == QString::fromAscii("recentdocuments")) {
+                    // RecentDocuments runner give us path to temporary desktop file
+                    // we should extract path to recent document (file) and return it
+                    if (KDesktopFile::isDesktopFile(value)) {
+                        KDesktopFile file(value);
+                        QString url = file.readUrl();
+                        if (!url.isEmpty())
+                            return url;
+                    }
+                    return value;
+                }
+
+                if (KDesktopFile::isDesktopFile(value)) {
+                    if (QDir::isAbsolutePath(value))
+                        return value;
+                    // try to find absolute path
+                    QString path = _FindFullPathToDesktopFile(value);
+                    // Workaround: kde4-name.desktop may be kde4/name.desktop in a real world
+                    if (path.isEmpty() && value.startsWith(QString::fromAscii("kde4-"))) {
+                        value[4] = QChar::fromAscii('/');
+                        path = _FindFullPathToDesktopFile(value);
+                    }
+
+                    if (!path.isEmpty())
+                        return path;
+                }
+                return value;
+            }
+            break;
+        }
+    }
+
+    return QString();
 }
 
 QList<QPair<QString, QString> > DataSource_Search::getRunnersNames()

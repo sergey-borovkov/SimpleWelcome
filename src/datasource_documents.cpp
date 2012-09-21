@@ -1,6 +1,6 @@
 #include "datasource_documents.h"
 #include <KRecentDocument>
-#include <KDesktopFile>
+#include <KDE/KDesktopFile>
 #include <QStringList>
 #include <QFile>
 #include <KFilePlacesModel>
@@ -39,6 +39,15 @@ DataSource_Documents::DataSource_Documents(QObject* parent)
 int DataSource_Documents::getItemCount()
 {
     return docsList.count();
+}
+
+QString DataSource_Documents::itemUrlDnd(int id)
+{
+    if (id >= 0 && id < docsList.count()) {
+        KDesktopFile file(docsList[id].desktopEntry);
+        return file.readUrl();
+    }
+    return QString();
 }
 
 void DataSource_Documents::getContent()

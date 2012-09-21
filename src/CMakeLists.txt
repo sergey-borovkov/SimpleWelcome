@@ -1,6 +1,3 @@
-find_package(KDE4 REQUIRED)
-include(KDE4Defaults)
-
 find_package(Qt4 REQUIRED QtCore QtGui QtDeclarative)
 include(${QT_USE_FILE})
 qt4_automoc(${qtproject_SRCS})
@@ -19,11 +16,22 @@ add_custom_target(build-qml ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/qml" "${CMAKE_BINARY_DIR}/${_qml_install_path}"
     COMMENT "Building/copying the QML files"
 )
-
 kde4_add_executable(rosa-launcher ${HEADERS} ${SOURCES} ${QML} ${QRC_SOURCES})
 #add_dependencies(rosa-launcher build-assets build-qml)
 
-target_link_libraries(rosa-launcher ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KFILE_LIBS} ${QT_LIBRARIES} ${QT_QDECLARATIVE_LIBRARIES} ${NEPOMUK_LIBRARIES} ${NEPOMUK_QUERY_LIBRARIES} timeframe)
+find_package(Nepomuk REQUIRED)
+
+target_link_libraries(rosa-launcher
+                        ${KDE4_KDEUI_LIBS}
+                        ${KDE4_PLASMA_LIBS}
+                        ${KDE4_KIO_LIBS}
+                        ${KDE4_KFILE_LIBS}
+                        ${QT_LIBRARIES}
+                        ${QT_QDECLARATIVE_LIBRARIES}
+                        ${NEPOMUK_LIBRARIES}
+                        ${NEPOMUK_QUERY_LIBRARIES}
+                        ${SOPRANO_LIBRARIES}
+                        timeframe)
 
 add_custom_command(TARGET rosa-launcher POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E create_symlink "${_bin_dir_name}/${PROJECT_NAME}" "${CMAKE_BINARY_DIR}/${PROJECT_NAME}"

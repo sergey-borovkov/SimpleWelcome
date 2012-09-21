@@ -2,7 +2,7 @@
 
 #include <QString>
 #include <QDebug>
-#include <QStringList>
+#include <QtCore/QStringList>
 #include <QApplication>
 #include <QHash>
 

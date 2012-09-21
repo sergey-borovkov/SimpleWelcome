@@ -33,6 +33,13 @@ int DataSource_Favorites::getItemCount()
     return favoritesList.count();
 }
 
+QString DataSource_Favorites::itemUrlDnd(int id)
+{
+    if (id >= 0 && id < favoritesList.count())
+        return favoritesList[id].desktopEntry;
+    return QString();
+}
+
 
 void DataSource_Favorites::getContent()
 {
