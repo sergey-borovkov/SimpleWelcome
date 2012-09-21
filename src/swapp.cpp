@@ -107,7 +107,7 @@ int SWApp::newInstance()
                 m_viewer->setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
                 m_viewer->show();
                 //m_viewer->showFullScreen();
-                //m_viewer->move(/*896*/0, 0);
+                m_viewer->move(/*896*/0, 0);
             }
             else
                 m_viewer->close();

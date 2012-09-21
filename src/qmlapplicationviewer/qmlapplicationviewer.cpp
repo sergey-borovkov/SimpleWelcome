@@ -13,9 +13,12 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
+#include <QtCore/QMimeData>
+#include <QtGui/QDrag>
 #include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeImageProvider>
 
 #include <QResizeEvent>
 
@@ -183,4 +186,31 @@ void QmlApplicationViewer::closeEvent(QCloseEvent *event)
         hide();
         emit windowHid();
     }
+}
+
+void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, int image_size)
+{
+    QDeclarativeEngine *eng = engine();
+
+    QMimeData *mime = new QMimeData;
+    QList<QUrl> urls;
+    urls.append(QUrl::fromLocalFile(url));
+    mime->setUrls(urls);
+    QDrag *drag = new QDrag(this);
+    drag->setMimeData(mime);
+
+    if (eng ) {
+        image_path.remove(QString::fromLatin1("image://"));
+        // grep name of image provider
+        QString provider_name = image_path.section(QChar::fromAscii('/'), 0, 0);
+        QString image_id = image_path.section(QChar::fromAscii('/'), 1);
+        QDeclarativeImageProvider *provider = eng->imageProvider(provider_name);
+        if (provider && provider->imageType() == QDeclarativeImageProvider::Pixmap) {
+            QSize size;
+            QPixmap pixmap = provider->requestPixmap(image_id, &size, QSize(image_size, image_size));
+            drag->setPixmap(pixmap);
+        }
+    }
+
+    drag->exec(Qt::CopyAction | Qt::MoveAction | Qt::LinkAction, Qt::CopyAction);
 }

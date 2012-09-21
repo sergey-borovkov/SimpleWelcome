@@ -14,6 +14,8 @@ public:
     ~DataSource_Apps();
     Q_INVOKABLE virtual int getItemCount();
 
+    Q_INVOKABLE QString itemUrlDnd(int id);
+
 signals:
     void newItemData(QString iconPath, QString name, int id);
     void resetContent();

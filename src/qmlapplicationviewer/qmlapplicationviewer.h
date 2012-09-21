@@ -49,6 +49,8 @@ public:
     virtual void resizeEvent(QResizeEvent *event);
     virtual void closeEvent(QCloseEvent *event);
 
+    Q_INVOKABLE void activateDragAndDrop(QString url, QString image_path, int image_size);
+
 signals:
     void windowSizeChanged(int newWidth, int newHeight);
     void windowHid();

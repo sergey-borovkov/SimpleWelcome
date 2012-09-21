@@ -5,6 +5,7 @@ Column {
     property alias groupName: groupLabel.text
     property alias dataSource: iconGridView.dataSource
     property alias draggable: iconGridView.draggable
+    property alias enabledSystemDnD: iconGridView.enabledSystemDnD
     property alias groupNameVisible: groupLabel.visible
 
     property alias prevGridGroup: iconGridView.prevGrid
