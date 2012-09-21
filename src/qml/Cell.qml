@@ -116,7 +116,7 @@ Item {
 
                 ParentChange {
                     target: wrapper
-                    parent: tabRoot
+                    parent: tabWrapper
                 }
             }
         ]
@@ -131,7 +131,7 @@ Item {
             Transition {
                 from: "cellOpenedStack"
                 ParentAnimation {
-                    via: tabRoot
+                    via: tabWrapper
                     NumberAnimation { duration: 200 }
                 }
             }
