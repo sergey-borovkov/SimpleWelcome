@@ -94,6 +94,13 @@ int DataSource_Apps::getItemCount()
 }
 
 
+QString DataSource_Apps::itemUrlDnd(int id)
+{
+    if (id < 0 || id >= appsList.count())
+        return QString();
+    return appsList[id].desktopEntry;
+}
+
 void DataSource_Apps::saveData()
 {
     QStringList out;

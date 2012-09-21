@@ -20,4 +20,4 @@ add_library(timeframe SHARED ${HEADERS} ${SOURCES} ${MOC_OUT})
 target_link_libraries(timeframe ${QT_LIBRARIES} )
 
 
-install(TARGETS timeframe DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
+#install(TARGETS timeframe DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})

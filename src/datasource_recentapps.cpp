@@ -23,6 +23,13 @@ int DataSource_RecentApps::getItemCount()
     return recentAppsList.count();
 }
 
+QString DataSource_RecentApps::itemUrlDnd(int id)
+{
+    if (id >= 0 && id < recentAppsList.count())
+        return recentAppsList[id].desktopEntry;
+    return QString();
+}
+
 void DataSource_RecentApps::saveData()
 {
     QStringList desktopFiles;
