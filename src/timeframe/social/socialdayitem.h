@@ -86,6 +86,7 @@ public slots:
     void addSocialItem(SocialItem* item);
     void likeItem(QString eventId);
     void addCommentToItem(CommentItem *, QString);
+    void addComments(QString id, QList<CommentItem*> list);
 
 private:
     QString m_types;
