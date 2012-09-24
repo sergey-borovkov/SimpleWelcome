@@ -209,11 +209,9 @@ Item{
                         onExited: likesText.font.bold = false                        
                         onClicked: {
                             if (likeItem.state === "") {
-                                console.log("add like to item, item id: " + id)
                                 socialProxy.likeItem(id, pluginName);
                             } else {
-                                console.log("dislike item, item id: " + id)
-                                socialProxy.dislikeItem(id, pluginName);
+                                socialProxy.unlikeItem(id, pluginName);
                             }
                         }
                     }
