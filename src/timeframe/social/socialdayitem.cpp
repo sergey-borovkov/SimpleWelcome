@@ -120,6 +120,11 @@ void SocialDayItem::addCommentToItem(CommentItem *item, QString id)
     m_model->update();
 }
 
+void SocialDayItem::addComments(QString id, QList<CommentItem *> list)
+{
+    m_itemModel->addComments(id, list);
+}
+
 QDate SocialDayItem::date()
 {
     return m_date;

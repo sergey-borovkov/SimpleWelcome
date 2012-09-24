@@ -48,6 +48,7 @@ public slots:
     QObject* itemsModel(QDate date) const;
     void likeItem(QString eventId);
     void addCommentToItem(CommentItem *, QString);
+    void addComments(QString id, QList<CommentItem*> list);
 
 private slots:
     void handleItemChange();

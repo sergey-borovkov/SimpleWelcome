@@ -74,3 +74,23 @@ void SocialItemModel::addComment(CommentItem *item, QString id)
         }
     }
 }
+
+void SocialItemModel::addComments(QString id, QList<CommentItem *> list)
+{
+    for (int i = 0; i < rowCount(); i++) {
+        if (data(index(i,0),SocialItem::Id).toString() == id) {
+            QVariant v = data(index(i, 0), SocialItem::Comments);
+            ListModel * commentsModel = qvariant_cast<ListModel* >(v);
+            QString firstPostId = commentsModel->data(index(0,0),CommentItem::Id).toString();
+            for (int j = 0; j < list.size(); j++) {
+                CommentItem* item = list.at(j);
+                if (item->id() == firstPostId) {
+                    break;
+                }
+                commentsModel->insertRow(j, item);
+            }
+            emit dataChanged(index(i, 0),index(i, 0));
+        }
+    }
+
+}

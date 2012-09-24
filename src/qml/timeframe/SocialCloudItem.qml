@@ -20,6 +20,7 @@ Item{
     BorderImage {
         id: innerShadow
         anchors.fill: parent
+        anchors.bottomMargin: 26
         border { left: 23; top: 23; right: 23; bottom: 23 }
         source: "images/inner-shadow.png"
         smooth: true
@@ -97,6 +98,65 @@ Item{
                     source: iconPlugin.source
                 }
                 Item {
+                    id: likesCountArea
+                    anchors.left: topPluginIcon.right
+                    anchors.top: parent.top
+                    anchors.topMargin: 3
+                    anchors.leftMargin: 5
+                    width: 30
+                    height: 14
+                    Image {
+                        id: smallLikeIcon
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 12
+                        height: 12
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        source: "images/thumb-up.png"
+                    }
+                    Text {
+                        anchors.left: smallLikeIcon.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 5
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                        text: likes
+                        color: "grey"
+                        font.pointSize: 8
+                    }
+                }
+                Item {
+                    id: commentsCountArea
+                    anchors.left: likesCountArea.right
+                    anchors.leftMargin: 5
+                    anchors.top: parent.top
+                    anchors.topMargin: 3
+                    width: 30
+                    height: 14
+                    Image {
+                        id: smallCommentIcon
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 12
+                        height: 12
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        source: "images/comment.png"
+                    }
+                    Text {
+                        anchors.left: smallCommentIcon.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.leftMargin: 5
+                        text: comments
+                        color: "grey"
+                        font.pointSize: 8
+                    }
+                }
+
+                Item {
                     id: detailsOffArea
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
@@ -115,7 +175,7 @@ Item{
                     MouseArea{
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: {
+                        onClicked: {                            
                             modal.parent = cloudRect
                             cloudRect.state = ""
                         }
@@ -172,7 +232,7 @@ Item{
                 anchors.right: parent.right
                 anchors.left: parent.left
                 height: 26
-
+/*
                 Text {
                     id: likesCount
                     anchors.left: parent.left
@@ -185,9 +245,12 @@ Item{
                     color: "grey"
                     visible: false
                 }
+                */
                 Item {
                     id: likeItem
-                    anchors.centerIn: parent
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: 30
                     height: parent.height
                     width: 30
                     visible: false
@@ -226,11 +289,11 @@ Item{
                     ]
                 }
                 Item {
-                    id: commentsCount
+                    id: commentsShowArea
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right:  parent.right
-                    anchors.rightMargin: 10
-                    width: 100
+                    anchors.rightMargin: 30
+                    width: 120
                     height: parent.height
                     visible: false
 
@@ -239,7 +302,8 @@ Item{
                         wrapMode: Text.WordWrap
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
-                        text: i18n_Comments + comments
+                        //text: i18n_Comments + comments
+                        text: "Show comments"
                         color: "grey"
 
                     }
@@ -248,6 +312,7 @@ Item{
                         onClicked: {
                             if (cloudRect.state === "details") {
                                 //Set source on comments loader
+                                socialProxy.getAllComments(id, pluginName)
                                 commentsEdit.source = "CommentsEditBox.qml"
                                 commentsEdit.item.edit.color = "grey"
                                 commentsEdit.item.edit.text = i18n_Write_Comment
@@ -259,8 +324,28 @@ Item{
                                 cloudRect.state = "details"
                             }
                         }
+                    }                    
+                }
+                /*
+                Item {
+                    id: getAllCommentsArea
+                    anchors.centerIn: parent
+                    width: 100
+                    height: parent.height
+                    Text{
+                        anchors.centerIn: parent
+                        text: "Show all"
+                        color: "grey"
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            console.log("Show all area clicked")
+
+                        }
                     }
                 }
+                */
                 Image {
                     id: iconPlugin
                     anchors.left: parent.left
@@ -296,7 +381,7 @@ Item{
                 }
 
 
-            }
+            }            
 
             ListView {
                 id: commentsListView
@@ -337,7 +422,7 @@ Item{
                         elide: Text.ElideRight
                     }
                 }
-            }
+            }            
             Loader {
                 id: commentsEdit
                 height: 0
@@ -422,9 +507,9 @@ Item{
 
             PropertyChanges { target: socialMessage; color: "black" }
 
-            PropertyChanges { target: likesCount; visible: true }
+            //PropertyChanges { target: likesCount; visible: true }
 
-            PropertyChanges { target: commentsCount; visible: true }
+            PropertyChanges { target: commentsShowArea; visible: true }
 
             PropertyChanges { target: likeIcon; visible: false }
 
@@ -441,12 +526,12 @@ Item{
         State {
             name: "comments" ; extend: "details"
 
-            PropertyChanges { target: socialCloudItem; height: 300 + 60 * (commentsListView.model.rowCount() + 1) }
+            PropertyChanges { target: socialCloudItem; height: 300 + commentsViewHeight() + 60 }
 
             PropertyChanges {
                 target: commentsListView
                 visible: true
-                height: 60 * commentsListView.model.rowCount()
+                height: commentsViewHeight()
             }
 
             PropertyChanges { target: commentsEdit; height: 60; visible: true }
@@ -475,6 +560,13 @@ Item{
         }
         console.log("true")
         return true
+    }
+
+    function commentsViewHeight() {
+        if (comments < 3)
+            return comments * 60
+        else
+            return 180
     }
 }
 

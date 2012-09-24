@@ -5,6 +5,7 @@ Rectangle {
     property alias edit: edit
     property alias userPhoto: userPhoto
     color: "#EDEFF4"
+    radius: 10
     signal send(string comment)
     clip: true
     Image {

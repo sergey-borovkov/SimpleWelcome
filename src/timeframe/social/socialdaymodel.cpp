@@ -143,6 +143,17 @@ void SocialDayModel::addCommentToItem(CommentItem *commentItem, QString eventId)
     }
 }
 
+void SocialDayModel::addComments(QString id, QList<CommentItem *> list)
+{
+    QDate date = m_idHash.value(id);
+    foreach (SocialDayItem * item, m_items) {
+        if (item->date() == date) {
+            item->addComments(id, list);
+            break;
+        }
+    }
+}
+
 void SocialDayModel::handleItemChange()
 {
     SocialDayItem* item = static_cast<SocialDayItem*>(sender());
