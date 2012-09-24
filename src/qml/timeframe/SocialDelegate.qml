@@ -67,7 +67,7 @@ Item{
                         height: 32
                         fillMode: Image.PreserveAspectFit
                         smooth: true
-                        source: "image://plugin/" + pluginName
+                        source: "image://plugin/" + pluginName + "/small"
                     }
                     Text {
                         id: dt

@@ -6,11 +6,11 @@ Item{
     property variant model
     property int like: 0
     property int likes: 0
-    property int comments: 0
+    property int commentCount: 0
     property string message: ""
     property string picture: ""
     property string pluginName: ""
-    property alias pluginIcon : iconPlugin
+    property alias iconPlugin : iconPlugin
     property alias commentsView : commentsListView
     MouseArea {
         id: modal
@@ -19,13 +19,10 @@ Item{
 
     BorderImage {
         id: innerShadow
-        anchors.fill: parent
-        anchors.bottomMargin: 26
+        anchors.fill: parent        
         border { left: 23; top: 23; right: 23; bottom: 23 }
-        source: "images/inner-shadow.png"
-        smooth: true
-        //visible: false
-        opacity: 0
+        source: "images/shadow-inverse.png"
+        smooth: true        
     }
 
     Item {
@@ -44,76 +41,50 @@ Item{
             smooth: true
         }
         */
-        Rectangle
+        ItemRectangle
         {
-            id: background
-            anchors.centerIn: parent            
-            //color: "#aa5f5f5f"
-            //color: "#172634"
-            //border.color: "#687584"
-            color: "transparent"
-            border.width: 0
-            radius: 10
-            clip: true
+            id: mainRect
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
             height: parent.height
-            ItemRectangle{
-                id: backgroundItem
-                anchors.fill: parent
-                anchors.bottomMargin: 26
-                z:-1
-            }
 
-
-            /*Rectangle{
-                id: backgroundShadow
-                anchors.fill: parent
-                color: "black"
-                z: -1
-                radius: 12
-                anchors.bottomMargin: -10
-            }
-            */
-            //Column{
-            //  width: parent.width
             Rectangle {
                 id: topLine
-                //border.color: "#335f5f5f"
                 color: "transparent"
                 anchors.top: parent.top
                 anchors.right: parent.right
                 anchors.left: parent.left
-                height: 0
-                visible: false
+                height: 26
 
                 Image {
-                    id: topPluginIcon
-                    anchors.verticalCenter: parent.verticalCenter
+                    id: iconPlugin
+                    anchors.top: parent.top
                     anchors.left: parent.left
-                    anchors.leftMargin: 5
-                    width: 20
-                    height: 20
+                    anchors.leftMargin: 10
+                    width: 22
+                    height: 22
                     fillMode: Image.PreserveAspectFit
                     smooth: true
-                    source: iconPlugin.source
+                    //source: iconPlugin.source
                 }
                 Item {
                     id: likesCountArea
-                    anchors.left: topPluginIcon.right
+                    anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.topMargin: 3
                     anchors.leftMargin: 5
-                    width: 30
-                    height: 14
+                    width: 40
+                    height: 22
                     Image {
                         id: smallLikeIcon
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
-                        width: 12
-                        height: 12
+                        width: 22
+                        height: 22
                         fillMode: Image.PreserveAspectFit
                         smooth: true
-                        source: "images/thumb-up.png"
+                        source: "images/like.png"
                     }
                     Text {
                         anchors.left: smallLikeIcon.right
@@ -122,24 +93,23 @@ Item{
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                         text: likes
-                        color: "grey"
-                        font.pointSize: 8
+                        color: "white"                        
                     }
                 }
                 Item {
                     id: commentsCountArea
-                    anchors.left: likesCountArea.right
-                    anchors.leftMargin: 5
+                    anchors.right: likesCountArea.left
+                    anchors.rightMargin: 5
                     anchors.top: parent.top
                     anchors.topMargin: 3
-                    width: 30
-                    height: 14
+                    width: 40
+                    height: 22
                     Image {
                         id: smallCommentIcon
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
-                        width: 12
-                        height: 12
+                        width: 22
+                        height: 22
                         fillMode: Image.PreserveAspectFit
                         smooth: true
                         source: "images/comment.png"
@@ -150,9 +120,8 @@ Item{
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                         anchors.leftMargin: 5
-                        text: comments
-                        color: "grey"
-                        font.pointSize: 8
+                        text: commentCount
+                        color: "white"                        
                     }
                 }
 
@@ -161,16 +130,17 @@ Item{
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.right: parent.right
                     anchors.rightMargin: 5
-                    width: 20
-                    height: 20
+                    width: 12
+                    height: 12
+                    visible: false
                     Image{
                         id: closeIcon
                         anchors.centerIn: parent
                         fillMode: Image.PreserveAspectFit
                         smooth: true
-                        source: "images/window-close.png"
-                        width: 16
-                        height: 16
+                        source: "images/x.png"
+                        width: 8
+                        height: 8
                     }
                     MouseArea{
                         anchors.fill: parent
@@ -180,12 +150,12 @@ Item{
                             cloudRect.state = ""
                         }
                         onEntered: {
-                            closeIcon.width = 18
-                            closeIcon.height = 18
+                            closeIcon.width = 10
+                            closeIcon.height = 10
                         }
                         onExited:{
-                            closeIcon.width = 16
-                            closeIcon.height = 16
+                            closeIcon.width = 8
+                            closeIcon.height = 8
                         }
 
                     }
@@ -225,32 +195,74 @@ Item{
                 }
             }
             Rectangle {
-                id: bottomLine
-                //color: "#335f5f5f"
+                id: bottomLine                
                 color: "transparent"
-                anchors.bottom: commentsListView.top
+                anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.left: parent.left
                 height: 26
-/*
-                Text {
-                    id: likesCount
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 10
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignRight
-                    verticalAlignment: Text.AlignVCenter
-                    text: i18n_Likes + likes
-                    color: "grey"
-                    visible: false
-                }
-                */
                 Item {
-                    id: likeItem
-                    anchors.left: parent.left
+                    id: bottomCommentsCountArea
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 30
+                    anchors.left: parent.left
+                    anchors.leftMargin: 5
+                    width: 40
+                    height: 22
+                    visible: false
+                    Image {
+                        id: bottomCommentIcon
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 22
+                        height: 22
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        source: "images/comment.png"
+                    }
+                    Text {
+                        anchors.left: bottomCommentIcon.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.leftMargin: 5
+                        text: commentCount
+                        color: "white"
+                    }
+                }
+                Item {
+                    id: bottomLikesCountArea
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: bottomCommentsCountArea.right
+                    anchors.leftMargin: 5
+                    width: 40
+                    height: 22
+                    visible: false
+                    Image {
+                        id: bottomLikeIcon
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 22
+                        height: 22
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        source: "images/like.png"
+                    }
+                    Text {
+                        anchors.left: bottomLikeIcon.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: 5
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                        text: likes
+                        color: "white"
+                    }
+                }
+
+                Item {
+                    id: likeItemArea
+                    anchors.right:  parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.rightMargin: 30
                     height: parent.height
                     width: 30
                     visible: false
@@ -262,7 +274,7 @@ Item{
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         text: i18n_Like
-                        color: "grey"
+                        color: "white"
                     }
                     MouseArea{
                         id: likeSendArea
@@ -290,102 +302,68 @@ Item{
                 }
                 Item {
                     id: commentsShowArea
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right:  parent.right
-                    anchors.rightMargin: 30
-                    width: 120
+                    anchors.centerIn: parent
+                    width: 140
                     height: parent.height
                     visible: false
-
+                    Image {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        source: "images/arrow.png"
+                    }
                     Text {
+                        id: commensShowAreaText
                         anchors.fill: parent
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
                         wrapMode: Text.WordWrap
-                        horizontalAlignment: Text.AlignRight
+                        horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
-                        //text: i18n_Comments + comments
-                        text: "Show comments"
-                        color: "grey"
-
+                        color: "white"
+                        text: (cloudRect.state === "comments") ? "Hide comments" : "Show comments"
+                    }
+                    Image {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.right: parent.right
+                        source: "images/arrow.png"
                     }
                     MouseArea{
                         anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: commensShowAreaText.font.bold = true
+                        onExited: commensShowAreaText.font.bold = false
                         onClicked: {
-                            if (cloudRect.state === "details") {
+                            if (cloudRect.state === "details") {                                
                                 //Set source on comments loader
                                 socialProxy.getAllComments(id, pluginName)
                                 commentsEdit.source = "CommentsEditBox.qml"
                                 commentsEdit.item.edit.color = "grey"
-                                commentsEdit.item.edit.text = i18n_Write_Comment
+                                commentsEdit.item.edit.text = i18n_Write_Comment                                
                                 cloudRect.state = "comments"
                             }
                             else if (cloudRect.state === "comments")
                             {
-                                commentsEdit.source = ""
+                                commentsEdit.source = ""                                
                                 cloudRect.state = "details"
                             }
                         }
-                    }                    
-                }
-                /*
-                Item {
-                    id: getAllCommentsArea
-                    anchors.centerIn: parent
-                    width: 100
-                    height: parent.height
-                    Text{
-                        anchors.centerIn: parent
-                        text: "Show all"
-                        color: "grey"
                     }
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            console.log("Show all area clicked")
-
-                        }
-                    }
-                }
-                */
-                Image {
-                    id: iconPlugin
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 16
-                    height: 16
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                    //source: "image://plugin/" + pluginName
-                }
-                Image {
-                    id: commentIcon
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right:  likeIcon.left
-                    anchors.rightMargin: 10
-                    width: 16
-                    height: 16
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                    source: "images/comment.png"
-                }
-                Image {
-                    id: likeIcon
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.rightMargin: 10
-                    width: 16
-                    height: 16
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                    source: "images/thumb-up.png"
-                }
-
-
-            }            
-
+                }                
+            }                     
+        }
+        ItemRectangle {
+            id: commentsRect
+            height: 0
+            anchors.top: mainRect.bottom
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors { leftMargin: 30; topMargin: -10; rightMargin: 30; bottomMargin: 8}
+            z: -1
             ListView {
                 id: commentsListView
-                //anchors.top : bottomLine.bottom
+                anchors.top : parent.top
+                anchors.topMargin: 10
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: commentsEdit.top
@@ -410,6 +388,7 @@ Item{
                         anchors.top: parent.top
                         anchors.leftMargin: 10
                         text: from
+                        color: "white"
                     }
                     Text {
                         id: textField;
@@ -419,16 +398,19 @@ Item{
                         anchors.bottom: parent.bottom
                         anchors.leftMargin: 10
                         text: messageText
+                        color: "white"
                         elide: Text.ElideRight
                     }
                 }
-            }            
+            }
             Loader {
                 id: commentsEdit
                 height: 0
                 anchors.bottom: parent.bottom
-                anchors.right: parent.right
                 anchors.left: parent.left
+                anchors.leftMargin: 1
+                anchors.rightMargin: 1
+                anchors.right: parent.right
                 visible: false
             }
             Connections {
@@ -438,9 +420,7 @@ Item{
                     socialProxy.commentItem(comment, id, pluginName)
                 }
             }
-
         }
-
 
         MouseArea
         {
@@ -495,38 +475,31 @@ Item{
                 anchors.horizontalCenter: bodyItem.horizontalCenter
                 anchors.bottom: bodyItem.bottom
             }*/
-            PropertyChanges {
-                target: topLine
-                height: 26
-                visible: true
-            }
 
             PropertyChanges { target: socialMessage; text: message }
 
-            PropertyChanges { target: background; color: "white" }
+            PropertyChanges { target: likesCountArea; visible: false }
 
-            PropertyChanges { target: socialMessage; color: "black" }
+            PropertyChanges { target: commentsCountArea; visible: false }
 
-            //PropertyChanges { target: likesCount; visible: true }
+            PropertyChanges { target: bottomLikesCountArea; visible: true }
+
+            PropertyChanges { target: bottomCommentsCountArea; visible: true }
+
+            PropertyChanges { target: detailsOffArea; visible: true }
 
             PropertyChanges { target: commentsShowArea; visible: true }
 
-            PropertyChanges { target: likeIcon; visible: false }
+            PropertyChanges { target: detailsOnArea; enabled: false }            
 
-            PropertyChanges { target: iconPlugin; visible: false }
-
-            PropertyChanges { target: commentIcon; visible: false }
-
-            PropertyChanges { target: detailsOnArea; enabled: false }
-
-            PropertyChanges { target: innerShadow; opacity: 1 }
-
-            PropertyChanges { target: likeItem; visible: true}
+            PropertyChanges { target: likeItemArea; visible: true}
         },
         State {
             name: "comments" ; extend: "details"
 
             PropertyChanges { target: socialCloudItem; height: 300 + commentsViewHeight() + 60 }
+            PropertyChanges { target: mainRect; height: 300 }
+            PropertyChanges { target: commentsRect; height: commentsViewHeight() + 60 }
 
             PropertyChanges {
                 target: commentsListView
@@ -563,8 +536,8 @@ Item{
     }
 
     function commentsViewHeight() {
-        if (comments < 3)
-            return comments * 60
+        if (commentCount < 3)
+            return commentCount * 60
         else
             return 180
     }
