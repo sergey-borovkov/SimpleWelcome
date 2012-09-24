@@ -80,7 +80,7 @@ void SocialItemModel::addComments(QString id, QList<CommentItem *> list)
     for (int i = 0; i < rowCount(); i++) {
         if (data(index(i,0),SocialItem::Id).toString() == id) {
             QVariant v = data(index(i, 0), SocialItem::Comments);
-            ListModel * commentsModel = qvariant_cast<ListModel* >(v);
+            ListModel * commentsModel = qvariant_cast<ListModel* >(v);            
             QString firstPostId = commentsModel->data(index(0,0),CommentItem::Id).toString();
             for (int j = 0; j < list.size(); j++) {
                 CommentItem* item = list.at(j);

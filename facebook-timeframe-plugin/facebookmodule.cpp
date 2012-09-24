@@ -27,7 +27,8 @@ FacebookModule::FacebookModule()
     if(!accessToken.isEmpty())
         m_authorizer->setAccessToken(accessToken);
 
-    m_pixmap.load(":/images/facebook.png");
+    m_pixmap.load(":/images/fb.png");
+    m_smallPixmap.load(":/images/fb-small.png");
 }
 
 FacebookModule::~FacebookModule()
@@ -50,6 +51,11 @@ QString FacebookModule::name() const
 QPixmap FacebookModule::icon() const
 {
     return m_pixmap;
+}
+
+QPixmap FacebookModule::smallIcon() const
+{
+    return m_smallPixmap;
 }
 
 QWidget *FacebookModule::authenticationWidget()
