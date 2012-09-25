@@ -67,7 +67,7 @@ Item{
                         height: 32
                         fillMode: Image.PreserveAspectFit
                         smooth: true
-                        source: "image://plugin/" + pluginName
+                        source: "image://plugin/" + pluginName + "/small"
                     }
                     Text {
                         id: dt
@@ -186,9 +186,11 @@ Item{
                         onClicked: {
                             if (galleryRect.state === "details") {
                                 //Set source on comments loader
+                                socialProxy.getAllComments(id, pluginName)
                                 commentsEdit.source = "CommentsEditBox.qml"
                                 commentsEdit.item.edit.color = "grey"
                                 commentsEdit.item.edit.text = i18n_Write_Comment
+                                commentsEdit.item.userPhoto.source = socialProxy.selfPictureUrl()//"images/user.png"
                                 galleryRect.state = "comments"
                             }
                             else if (galleryRect.state === "comments") {
@@ -278,6 +280,7 @@ Item{
                 height: 0
                 visible: false
                 model: repeater.model.comments(index)
+                property string parentId: id
                 delegate: Item {
                     width: 200; height: 60
                     Image  {
@@ -287,8 +290,12 @@ Item{
                         fillMode: Image.PreserveAspectFit
                         width: 55
                         anchors.rightMargin: 5
-                        source: "images/user.png"
+                        source: fromPictureUrl
+                        Component.onCompleted: {
+                            socialProxy.getUserPicture(fromId, commentsListView.parentId, pluginName);
+                        }
                     }
+
                     Text {
                         id: nameField;
                         anchors.left: userPhoto.right
@@ -397,14 +404,14 @@ Item{
         State {
             name: "comments" ; extend: "details"
 
-            PropertyChanges { target: galleryItem; height: 300 + 60 * ( commentsListView.model.rowCount() + 1) }
+            PropertyChanges { target: galleryItem; height: 300 + 60 + commentsViewHeight()  }
 
             PropertyChanges { target: shadowRect; height: galleryItem.height }
 
             PropertyChanges {
                 target: commentsListView
                 visible: true
-                height: 60 * commentsListView.model.rowCount()
+                height: commentsViewHeight()
             }
 
             PropertyChanges {
@@ -423,4 +430,11 @@ Item{
             }
         }
     ]
+
+    function commentsViewHeight() {
+        if (commentCount < 3)
+            return commentCount * 60
+        else
+            return 180
+    }
 }

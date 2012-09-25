@@ -95,10 +95,10 @@ Item{
         setProperties(rect3, 2)        
         setProperties(rect4, 3)        
         Qt.createQmlObject('import QtQuick 1.1;  Connections {target: model;  onUpdateData: { \
-            rect1.likes = model.likesCount(0); rect1.comments = model.commentsCount(0); rect1.like = model.like(0); \
-            rect2.likes = model.likesCount(1); rect2.comments = model.commentsCount(1); rect2.like = model.like(1); \
-            rect3.likes = model.likesCount(2); rect3.comments = model.commentsCount(2); rect3.like = model.like(2); \
-            rect4.likes = model.likesCount(3); rect4.comments = model.commentsCount(3); rect3.like = model.like(3) \
+            rect1.likes = model.likesCount(0); rect1.commentCount = model.commentsCount(0); rect1.like = model.like(0); \
+            rect2.likes = model.likesCount(1); rect2.commentCount = model.commentsCount(1); rect2.like = model.like(1); \
+            rect3.likes = model.likesCount(2); rect3.commentCount = model.commentsCount(2); rect3.like = model.like(2); \
+            rect4.likes = model.likesCount(3); rect4.commentCount = model.commentsCount(3); rect3.like = model.like(3) \
          } }',cloudFour);
     }
 
@@ -109,9 +109,9 @@ Item{
         item.picture = model.imageUrl(index)
         item.like = model.like(index)
         item.likes = model.likesCount(index)
-        item.comments = model.commentsCount(index)
+        item.commentCount = model.commentsCount(index)
         item.pluginName = model.pluginName(index)
-        item.pluginIcon.source =  "image://plugin/" + item.pluginName
+        item.iconPlugin.source =  "image://plugin/" + item.pluginName + "/small"
         item.commentsView.model = model.comments(index)
     }
 }

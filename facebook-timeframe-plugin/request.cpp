@@ -3,6 +3,8 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <qjson/parser.h>
 
+#include <QtCore/QDebug>
+
 QNetworkAccessManager *FacebookRequest::manager = 0;
 
 FacebookRequest::FacebookRequest(RequestType type, QObject *parent) :
@@ -23,6 +25,7 @@ void FacebookRequest::start()
     if(m_url.isEmpty())
         return;
     QNetworkReply *reply = 0;
+
     QNetworkRequest request(m_url);
 
     switch(m_requestType)

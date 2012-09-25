@@ -26,7 +26,7 @@ int DataSource_RecentApps::getItemCount()
 QString DataSource_RecentApps::itemUrlDnd(int id)
 {
     if (id >= 0 && id < recentAppsList.count())
-        return recentAppsList[id].desktopEntry;
+        return QString::fromAscii("file://") + recentAppsList[id].desktopEntry;
     return QString();
 }
 

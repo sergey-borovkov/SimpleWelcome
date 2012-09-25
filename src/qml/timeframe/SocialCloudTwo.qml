@@ -57,8 +57,8 @@ Item{
         setProperties(rect1, 0)
         setProperties(rect2, 1)
         Qt.createQmlObject('import QtQuick 1.1;  Connections {target: model;  onUpdateData: { \
-            rect1.likes = model.likesCount(0); rect1.comments = model.commentsCount(0); rect1.like = model.like(0); \
-            rect2.likes = model.likesCount(1); rect2.comments = model.commentsCount(1); rect2.like = model.like(1) \
+            rect1.likes = model.likesCount(0); rect1.commentCount = model.commentsCount(0); rect1.like = model.like(0); \
+            rect2.likes = model.likesCount(1); rect2.commentCount = model.commentsCount(1); rect2.like = model.like(1) \
          } }',cloudTwo);
     }
 
@@ -69,9 +69,9 @@ Item{
         item.picture = model.imageUrl(index)
         item.like = model.like(index)
         item.likes = model.likesCount(index)
-        item.comments = model.commentsCount(index)
+        item.commentCount = model.commentsCount(index)
         item.pluginName = model.pluginName(index)
-        item.pluginIcon.source =  "image://plugin/" + item.pluginName
+        item.iconPlugin.source =  "image://plugin/" + item.pluginName + "/small"
         item.commentsView.model = model.comments(index)
     }
 }

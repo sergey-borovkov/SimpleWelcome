@@ -86,6 +86,8 @@ public slots:
     void addSocialItem(SocialItem* item);
     void likeItem(QString eventId);
     void addCommentToItem(CommentItem *, QString);
+    void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &id);
+    void addComments(QString id, QList<CommentItem*> list);
 
 private:
     QString m_types;
@@ -93,6 +95,8 @@ private:
     int         m_count;
     SocialItemModel         *m_itemModel;
     SocialItemFilterModel   *m_model;
+
+    friend class SocialDayModel;
 };
 
 #endif // SOCIALDAYITEM_H
