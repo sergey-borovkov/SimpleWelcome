@@ -98,7 +98,7 @@ QString DataSource_Apps::itemUrlDnd(int id)
 {
     if (id < 0 || id >= appsList.count())
         return QString();
-    return appsList[id].desktopEntry;
+    return QString::fromAscii("file://") + appsList[id].desktopEntry;
 }
 
 void DataSource_Apps::saveData()
