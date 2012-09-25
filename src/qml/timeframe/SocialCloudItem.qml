@@ -19,10 +19,10 @@ Item{
 
     BorderImage {
         id: innerShadow
-        anchors.fill: parent        
+        anchors.fill: parent
         border { left: 23; top: 23; right: 23; bottom: 23 }
         source: "images/shadow-inverse.png"
-        smooth: true        
+        smooth: true
     }
 
     Item {
@@ -31,16 +31,7 @@ Item{
         anchors.verticalCenter: parent.verticalCenter
         width: parent.width
         height: parent.height
-/*
-        BorderImage {
-            id: shadowBorder
-            anchors.fill: parent
-            anchors { leftMargin: -23; topMargin: -23; rightMargin: -23; bottomMargin: -23 }
-            border { left: 23; top: 23; right: 23; bottom: 23 }
-            source: "images/shadow2.png"
-            smooth: true
-        }
-        */
+
         ItemRectangle
         {
             id: mainRect
@@ -93,7 +84,7 @@ Item{
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                         text: likes
-                        color: "white"                        
+                        color: "white"
                     }
                 }
                 Item {
@@ -121,7 +112,7 @@ Item{
                         verticalAlignment: Text.AlignVCenter
                         anchors.leftMargin: 5
                         text: commentCount
-                        color: "white"                        
+                        color: "white"
                     }
                 }
 
@@ -145,7 +136,7 @@ Item{
                     MouseArea{
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: {                            
+                        onClicked: {
                             modal.parent = cloudRect
                             cloudRect.state = ""
                         }
@@ -195,7 +186,7 @@ Item{
                 }
             }
             Rectangle {
-                id: bottomLine                
+                id: bottomLine
                 color: "transparent"
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
@@ -281,7 +272,7 @@ Item{
                         anchors.fill: parent
                         hoverEnabled: true
                         onEntered: likesText.font.bold = true
-                        onExited: likesText.font.bold = false                        
+                        onExited: likesText.font.bold = false
                         onClicked: {
                             if (likeItem.state === "") {
                                 console.log("add like to item, item id: " + id)
@@ -333,23 +324,23 @@ Item{
                         onEntered: commensShowAreaText.font.bold = true
                         onExited: commensShowAreaText.font.bold = false
                         onClicked: {
-                            if (cloudRect.state === "details") {                                
+                            if (cloudRect.state === "details") {
                                 //Set source on comments loader
-                                socialProxy.getAllComments(id, pluginName)
                                 commentsEdit.source = "CommentsEditBox.qml"
                                 commentsEdit.item.edit.color = "grey"
-                                commentsEdit.item.edit.text = i18n_Write_Comment                                
+                                commentsEdit.item.edit.text = i18n_Write_Comment
+                                commentsView.positionViewAtEnd()
                                 cloudRect.state = "comments"
                             }
                             else if (cloudRect.state === "comments")
                             {
-                                commentsEdit.source = ""                                
+                                commentsEdit.source = ""
                                 cloudRect.state = "details"
                             }
                         }
                     }
-                }                
-            }                     
+                }
+            }
         }
         ItemRectangle {
             id: commentsRect
@@ -363,10 +354,10 @@ Item{
             ListView {
                 id: commentsListView
                 anchors.top : parent.top
-                anchors.topMargin: 10
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: commentsEdit.top
+                anchors { topMargin: 15; leftMargin: 3; rightMargin: 3; bottomMargin: 5}
                 clip: true
                 visible: false
                 snapMode:  ListView.SnapToItem
@@ -402,7 +393,14 @@ Item{
                         elide: Text.ElideRight
                     }
                 }
+                ScrollBar{
+                    id: scrollBar
+                    flickable: commentsListView
+                    vertical: true
+                    hideScrollBarsWhenStopped: false
+                }
             }
+
             Loader {
                 id: commentsEdit
                 height: 0
@@ -431,6 +429,8 @@ Item{
                 if (cloudRect.state === "") {
                     cloudRect.state = "details"
                     modal.parent = timeFrameTab;
+                    //Query all comments
+                    socialProxy.getAllComments(id, pluginName)
                 }
                 else {
                     modal.parent = socialCloudItem
@@ -461,20 +461,7 @@ Item{
                 y: timeFrameTab.height/2 - socialCloudItem.height/2
                 width: 400
                 height: 300
-            }/*
-            AnchorChanges {
-                target: socialMessage
-                anchors.verticalCenter: undefined
-                anchors.top: bodyItem.top
-                anchors.horizontalCenter: bodyItem.horizontalCenter
             }
-            AnchorChanges {
-                target: socialImage
-                anchors.verticalCenter: undefined
-                anchors.top: socialMessage.bottom
-                anchors.horizontalCenter: bodyItem.horizontalCenter
-                anchors.bottom: bodyItem.bottom
-            }*/
 
             PropertyChanges { target: socialMessage; text: message }
 
@@ -490,7 +477,7 @@ Item{
 
             PropertyChanges { target: commentsShowArea; visible: true }
 
-            PropertyChanges { target: detailsOnArea; enabled: false }            
+            PropertyChanges { target: detailsOnArea; enabled: false }
 
             PropertyChanges { target: likeItemArea; visible: true}
         },
