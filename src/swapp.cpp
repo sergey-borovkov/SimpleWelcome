@@ -156,7 +156,6 @@ SWApp::SWApp()
     UserInfoProvider *userInfoProvider = new UserInfoProvider(this);
     m_viewer->rootContext()->setContextProperty("userInfoProvider", userInfoProvider);
 
-
     DataSource_RecentApps *recentAppsDataSource = new DataSource_RecentApps(this);
     m_viewer->rootContext()->setContextProperty("dataSource_RecentApps", recentAppsDataSource);
     connect(recentAppsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
@@ -279,6 +278,8 @@ void SWApp::initTimeframeSocialMode()
     TimeScaleItem* item = new TimeScaleItem();
     TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
+
+    connect(m_manager, SIGNAL(removeType(QString)), timeScaleModel, SLOT(removeItems(QString)));
 
     qmlRegisterUncreatableType<PluginRequestReply>("Widgets", 1, 0, "PluginRequestReply", "This class should be created in cpp"); // it's not supposed to be in widgets, should move later
 

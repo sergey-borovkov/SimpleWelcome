@@ -17,8 +17,6 @@ public:
     explicit SocialItemModel(QHash<int, QByteArray> roles, QObject *parent = 0);
     ~SocialItemModel();
 
-signals:
-
 public slots:
     void addSocialItem(SocialItem* item);
     void like(QString id);

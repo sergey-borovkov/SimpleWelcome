@@ -1,6 +1,6 @@
 #include "timescalemodel.h"
 
-#include <QtCore/QDebug>
+#include <QtCore/QStringList>
 #include <QtCore/QModelIndex>
 #include <QtCore/QRegExp>
 
@@ -156,6 +156,24 @@ void TimeScaleModel:: newItem(int year, int month, QString type)
         TimeScaleItem* item = new TimeScaleItem(year, month, type, this);
         appendRow(item);
     }
+}
+
+void TimeScaleModel::removeItems(const QString &type)
+{
+    for(int i = 0; i < rowCount(); i++) {
+        QStringList types = data(index(i), TimeScaleItem::TypesRole).toString().split(";");
+        int index = types.indexOf(type);
+        if(index != -1 && types.size() == 1) {
+            beginRemoveRows(QModelIndex(), i, i);
+            delete m_list.takeAt(i);
+            endRemoveRows();
+            i--;
+        } else if(index != -1){
+            types.removeAt(index);
+            m_list[index]->setType(types.join(";"));
+        }
+    }
+
 }
 
 QVariant TimeScaleModel::data(const QModelIndex &index, int role) const
