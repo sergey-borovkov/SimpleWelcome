@@ -234,7 +234,8 @@ void SocialProxy::authorized()
     ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
     m_enabledPlugins.insert(plugin->name());
 
-    plugin->requestManager()->queryWall(QDate(), QDate());
+    Request *request = plugin->requestManager()->queryWall(QDate(), QDate());
+    request->start();
 
     if(plugin->authenticationWidget())
         plugin->authenticationWidget()->hide();
