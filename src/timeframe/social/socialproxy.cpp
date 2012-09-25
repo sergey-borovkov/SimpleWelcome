@@ -26,9 +26,13 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
         if((object = dynamic_cast<QObject *>(plugin->requestManager())) != 0) {
             // perphaps need to make it work via PluginRequestReply later
             connect(object, SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
+
             connect(object, SIGNAL(gotUserImage(QString, QString)), SLOT(onGotUserImage(QString, QString)));
             connect(object, SIGNAL(selfId(QString)), SLOT(onSelfId(QString)));
             connect(object, SIGNAL(selfName(QString)), SLOT(onSelfName(QString)));
+
+            connect(object, SIGNAL(newComments(QString, QList<CommentItem *>)), SLOT(newComments(QString,QList<CommentItem*>)));
+
         }
         if((object = dynamic_cast<QObject *>(plugin)) != 0) {
             connect(object, SIGNAL(authorized()), SLOT(authorized()));
@@ -77,7 +81,7 @@ void SocialProxy::unlikeItem(const QString &id, const QString &pluginName)
     PluginRequestReply* reply = dislike(id, pluginName);
     connect(reply,SIGNAL(success(PluginRequestReply*)),this, SLOT(likeSuccess(PluginRequestReply*)));
     /*TO-DO: process error replies*/
-    connect(reply,SIGNAL(finished()),reply,SLOT(deleteLater()));
+
 }
 
 void SocialProxy::commentItem(const QString &message, const QString &parentId, const QString &pluginName)
@@ -170,6 +174,14 @@ QString SocialProxy::selfPictureUrl()
         return QString("images/user.png");
     }
     return m_selfPictureUrl;
+}
+
+void SocialProxy::getAllComments(const QString &id, const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    Request *request = plugin->requestManager()->queryComments(id);
+    PluginRequestReply *reply = new PluginRequestReply(request, id, this);
+    request->start();
 }
 
 void SocialProxy::likeSuccess(PluginRequestReply* reply)
@@ -275,6 +287,11 @@ void SocialProxy::onSelfId(QString id)
 void SocialProxy::onSelfName(QString name)
 {
     m_selfName = name;
+}
+
+void SocialProxy::newComments(QString postId, QList<CommentItem *> items)
+{
+    m_socialModel->addComments(postId, items);
 }
 
 void SocialProxy::setSocialModel(SocialDayModel *model)

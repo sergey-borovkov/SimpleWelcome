@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>images/facebook.png</file>
+        <file>images/fb.png</file>
+        <file>images/fb-shadow.png</file>
+        <file>images/fb-small.png</file>
     </qresource>
 </RCC>
