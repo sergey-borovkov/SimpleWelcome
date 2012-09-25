@@ -350,6 +350,20 @@ Item{
             anchors.right: parent.right
             anchors { leftMargin: 30; topMargin: -10; rightMargin: 30; bottomMargin: 8}
             z: -1
+            /*
+            CommentsListView {
+                id: commentsListView
+                parentId: id
+                pluginName: pluginName
+                anchors.top : parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: commentsEdit.top
+                anchors { topMargin: 15; leftMargin: 3; rightMargin: 3; bottomMargin: 5}
+                visible: false
+            }
+*/
+
             ListView {
                 id: commentsListView
                 anchors.top : parent.top
@@ -487,9 +501,9 @@ Item{
         State {
             name: "comments" ; extend: "details"
 
-            PropertyChanges { target: socialCloudItem; height: 300 + commentsViewHeight() + 60 }
+            PropertyChanges { target: socialCloudItem; height: 300 + commentsViewHeight() + 60 + 10}
             PropertyChanges { target: mainRect; height: 300 }
-            PropertyChanges { target: commentsRect; height: commentsViewHeight() + 60 }
+            PropertyChanges { target: commentsRect; height: commentsViewHeight() + 60 + 10}
 
             PropertyChanges {
                 target: commentsListView
