@@ -18,19 +18,7 @@ Item {
         color: "white"
         horizontalAlignment: Text.AlignHCenter
     }
-    /*
-    Rectangle {
-        id: gridBorder
-        border.color: "black"
-        color: "transparent"
-        border.width: 2
-        anchors.top: dateLabel.bottom
-        anchors.left: dateLabel.left
-        width: parent.width + 10
-        height: parent.height + 10
-        z: -1
-    }
-    */
+
     AnimatedImage {
         id: waitIndicator
         source: "images/ajax-loader.gif"
@@ -59,7 +47,7 @@ Item {
             Repeater {
                 id: repeater
                 model: socialDayModel.itemsModel(date)
-                SocialDelegate { }
+                SocialGalleryItem { }
             }            
         }
     }
