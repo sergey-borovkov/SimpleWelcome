@@ -15,6 +15,7 @@ public:
     enum Role {
         From = Qt::UserRole + 1,
         FromId,
+        FromPictureUrl,
         Message,
         CreatedTime,
         LikeCount,
@@ -31,6 +32,7 @@ public:
         QHash<int, QByteArray> roles;
         roles.insert(From, "from" );
         roles.insert(FromId, "fromId" );
+        roles.insert(FromPictureUrl, "fromPictureUrl" );
         roles.insert(Message, "messageText" );
         roles.insert(CreatedTime, "createdTime" );
         roles.insert(LikeCount, "likeCount" );

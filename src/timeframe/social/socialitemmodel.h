@@ -23,6 +23,7 @@ public slots:
     void addSocialItem(SocialItem* item);
     void like(QString id);
     void addComment(CommentItem* item, QString id);
+    void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &id);
 
 private:
     QSet<QString> m_idSet;

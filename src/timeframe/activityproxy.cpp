@@ -4,7 +4,7 @@
 #include "nepomuksource.h"
 #include "previewgenerator.h"
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 ActivityProxy::ActivityProxy(QObject *parent) :
     QObject(parent),

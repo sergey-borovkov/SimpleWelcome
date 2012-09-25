@@ -1,7 +1,8 @@
 #include "socialdayitem.h"
 #include "socialitemmodel.h"
 #include "socialitem.h"
-#include "../timeframelib/listmodel.h"
+
+#include "QtCore/QDebug"
 
 SocialItemFilterModel::SocialItemFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
@@ -120,6 +121,12 @@ void SocialDayItem::addCommentToItem(CommentItem *item, QString id)
     m_model->update();
 }
 
+void SocialDayItem::updateUserImage(const QString &userId, const QString &userImageUrl, const QString &id)
+{
+    m_itemModel->updateUserImage(userId, userImageUrl, id);
+    m_model->update();
+}
+
 QDate SocialDayItem::date()
 {
     return m_date;
@@ -145,5 +152,3 @@ void SocialDayItem::setSocialFilter(const QRegExp& filter)
     m_model->setFilterRegExp(filter);
     emit dataChanged();
 }
-
-
