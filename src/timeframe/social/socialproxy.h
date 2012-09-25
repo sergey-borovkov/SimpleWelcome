@@ -15,6 +15,7 @@ class ISocialPlugin;
 class ListModel;
 class PluginModel;
 class SocialItem;
+class CommentItem;
 class SocialDayModel;
 class PluginRequestReply;
 
@@ -60,13 +61,22 @@ public:
     Q_INVOKABLE QString selfId() const { return m_selfId; }
     Q_INVOKABLE QString selfPictureUrl();
 
+    /**
+     * @brief Request all comments of item
+     * @param id of item
+     * @param plugin name
+     */
+    Q_INVOKABLE void getAllComments(const QString &id, const QString &pluginName);
+
 public slots:
     bool anyPluginsEnabled();
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
+
     void onGotUserImage(QString, QString);
     void onSelfId(QString);
     void onSelfName(QString);
+    void newComments(QString postId, QList<CommentItem *> items);
     void startSearch();
 
       // temporary solution to get plugin names in QML
@@ -76,6 +86,7 @@ private slots:
     void likeSuccess(PluginRequestReply *);
     void commentSuccess(PluginRequestReply *);
     void getPictureSuccess(PluginRequestReply *);
+
 
     /**
      * @brief Slot called on social network deauthorization
@@ -112,6 +123,8 @@ private:
 
 
     PluginRequestReply *dislike(const QString &id, const QString &pluginName);
+
+    PluginRequestReply *getComments(const QString &id, const QString &pluginName);
 
     /**
      * @brief postComment

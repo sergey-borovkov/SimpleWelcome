@@ -24,6 +24,7 @@ public slots:
     void like(QString id);
     void addComment(CommentItem* item, QString id);
     void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &id);
+    void addComments(QString id, QList<CommentItem*> list);
 
 private:
     QSet<QString> m_idSet;

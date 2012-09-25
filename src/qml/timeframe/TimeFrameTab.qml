@@ -361,30 +361,24 @@ Item {
         Qt.quit()
     }
 
-    Button {
-        id: stateChangeButton
-        width: 50
-        height: 30
+    Item {
+        id: galleryButton
         anchors.bottom: separator.top
         anchors.bottomMargin: 5
         anchors.left: parent.left
         anchors.leftMargin: 20
-        border.color: "black"
-
-        ButtonText {
-            id: stateChangeButtonText
-            anchors.left: parent.left
-        }
-
+        width: 100
+        height: 32
         Image {
-            id: buttonImage
-            anchors.centerIn: parent
-            source: "images/gallery_normal.png"
+            id: galleryButtonImage
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            source: "images/gallery.png"
         }
-
         MouseArea {
-            id: stateTestButtonMouseArea
+            id: galleryButtonMouseArea
             anchors.fill: parent
+            hoverEnabled: true
             onClicked: {
                 if ( timeFrameTab.state === "" ) {
                     timeFrameTab.state = "gallery"
@@ -397,15 +391,24 @@ Item {
                     timeFrameTab.state = ""
                     timeLine.currentIndex = index
                     timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Contain)
-
                 }
                 else if ( timeFrameTab.state === "social" ) {
                     timeFrameTab.state = "socialGallery"
                 }
-                else timeFrameTab.state = "social"
+                else {
+                    timeFrameTab.state = "social"
+                }
             }
         }
+        states: [
+            State {
+                name: "gallery"; when: ((timeFrameTab.state === "socialGallery") || (timeFrameTab.state === "gallery"))
+                PropertyChanges {  target: galleryButtonImage;  source: "images/back.png" }
+            }
+        ]
+
     }
+
     Component {
         id: highlight
         Rectangle {
@@ -493,8 +496,8 @@ Item {
             } else if (timeFrameTab.state === "socialGallery")
             {
                 index = socialGalleryView.indexAt(socialGalleryView.x + socialGalleryView.width/2 + socialGalleryView.contentX,
-                                            socialGalleryView.y + socialGalleryView.height/2 + socialGalleryView.contentY)
-                date = socialDayModel.getDateOfIndex(index)                                
+                                                  socialGalleryView.y + socialGalleryView.height/2 + socialGalleryView.contentY)
+                date = socialDayModel.getDateOfIndex(index)
             }
             if (index === -1)
                 return
@@ -620,14 +623,6 @@ Item {
                 target: galleryView
                 visible : true
             }
-            PropertyChanges {
-                target: stateChangeButtonText
-                text : "<--"
-            }
-            PropertyChanges {
-                target: buttonImage
-                visible : false
-            }
         },
         State {
             name: "gallerySearch"; extend: "gallery"
@@ -697,15 +692,6 @@ Item {
                 target: socialGalleryView
                 opacity: 1
             }
-            PropertyChanges {
-                target: stateChangeButtonText
-                text : "<--"
-            }
-            PropertyChanges {
-                target: buttonImage
-                visible : false
-            }
-
         },
         State {
             name: "socialAuthorization"; extend: "social"
@@ -725,7 +711,7 @@ Item {
                 opacity: 0
             }
             PropertyChanges {
-                target: stateChangeButton
+                target: galleryButton
                 visible: false
                 opacity: 0
             }

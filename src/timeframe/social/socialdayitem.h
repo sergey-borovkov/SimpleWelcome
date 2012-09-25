@@ -87,6 +87,7 @@ public slots:
     void likeItem(QString eventId);
     void addCommentToItem(CommentItem *, QString);
     void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &id);
+    void addComments(QString id, QList<CommentItem*> list);
 
 private:
     QString m_types;
