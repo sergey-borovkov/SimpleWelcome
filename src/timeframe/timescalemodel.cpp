@@ -139,19 +139,20 @@ TimeScaleModel::~TimeScaleModel()
     clear();
 }
 
-void TimeScaleModel:: newItem(int year, int month, QString type)
+void TimeScaleModel::newItem(int year, int month, QString type)
 {
     QPair <int, int> pair;
     pair.first = year;
     pair.second = month;
+    TimeScaleItem* item = 0;
     if(m_dates.contains(pair)) { // add new type to existing item
-        TimeScaleItem* item = find(year, month);
-        if(!item)
-            return;
-        if(!item->types().contains(type)) {
+        item = find(year, month);
+        if(item && !item->types().contains(type)) {
             item->addType(type);
         }
-    } else { //add new item
+    }
+
+    if(!item) { //add new item
         m_dates.insert(pair);
         TimeScaleItem* item = new TimeScaleItem(year, month, type, this);
         appendRow(item);
@@ -162,15 +163,19 @@ void TimeScaleModel::removeItems(const QString &type)
 {
     for(int i = 0; i < rowCount(); i++) {
         QStringList types = data(index(i), TimeScaleItem::TypesRole).toString().split(";");
-        int index = types.indexOf(type);
-        if(index != -1 && types.size() == 1) {
+        int ind = types.indexOf(type);
+        if(ind != -1 && types.size() == 1) {
             beginRemoveRows(QModelIndex(), i, i);
             delete m_list.takeAt(i);
+            QPair <int, int> pair;
+            pair.first = data(index(i), TimeScaleItem::YearRole).toInt();
+            pair.second = data(index(i), TimeScaleItem::MonthRole).toInt();
+            m_dates.remove(pair);
             endRemoveRows();
             i--;
-        } else if(index != -1){
-            types.removeAt(index);
-            m_list[index]->setType(types.join(";"));
+        } else if(ind != -1){
+            types.removeAt(ind);
+            m_list[ind]->setType(types.join(";"));
         }
     }
 

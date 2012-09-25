@@ -169,8 +169,13 @@ void SocialDayModel::removeItems(const QString &type)
     for(int i = 0; i < m_items.size(); i++) {
         SocialItemModel *model = m_items[i]->m_itemModel;
         for(int j = 0; j < model->rowCount(); j++) {
-            if(static_cast<SocialItem *>(model->itemAt(j))->pluginName() == type) {
+            SocialItem *item = static_cast<SocialItem *>(model->itemAt(j));
+            QString uniqueId = item->pluginName() + item->id();
+
+            if(item->pluginName() == type) {
                 model->removeRow(j);
+                m_idSet.remove(uniqueId);
+                m_idHash.remove(uniqueId);
                 j--;
             }
         }
