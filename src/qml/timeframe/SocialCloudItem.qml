@@ -241,6 +241,7 @@ Item{
                                 commentsEdit.source = "CommentsEditBox.qml"
                                 commentsEdit.item.edit.color = "grey"
                                 commentsEdit.item.edit.text = i18n_Write_Comment
+                                commentsEdit.item.userPhoto.source = socialProxy.selfPictureUrl()//"images/user.png"
                                 cloudRect.state = "comments"
                             }
                             else if (cloudRect.state === "comments")
@@ -296,6 +297,7 @@ Item{
                 clip: true
                 visible: false
                 snapMode:  ListView.SnapToItem
+                property string parentId: id
                 delegate: Item {
                     width: 200; height: 60
                     Image
@@ -306,7 +308,10 @@ Item{
                         fillMode: Image.PreserveAspectFit
                         width: 55
                         anchors.rightMargin: 5
-                        source: "images/user.png"
+                        source: fromPictureUrl
+                        Component.onCompleted: {
+                            socialProxy.getUserPicture(fromId, commentsListView.parentId, pluginName);
+                        }
                     }
                     Text {
                         id: nameField;

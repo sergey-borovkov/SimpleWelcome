@@ -14,7 +14,6 @@ Rectangle {
         fillMode: Image.PreserveAspectFit
         width: 55        
         anchors.rightMargin: 5
-        source: "images/user.png"
     }
 
     Rectangle {

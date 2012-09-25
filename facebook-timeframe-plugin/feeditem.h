@@ -4,7 +4,9 @@
 #include <socialitem.h>
 #include <listmodel.h>
 #include <commentitem.h>
+
 #include <QtCore/QMap>
+
 
 class FeedItem : public SocialItem
 {

@@ -23,7 +23,7 @@
 #include "previewgenerator.h"
 
 #include <QtCore/QAbstractItemModel>
-#include <QDebug>
+#include <QtCore/QDebug>
 
 PreviewProvider::PreviewProvider() :
     QDeclarativeImageProvider(Pixmap)
