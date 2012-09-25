@@ -164,6 +164,26 @@ void SocialDayModel::addComments(QString id, QList<CommentItem *> list)
     }
 }
 
+void SocialDayModel::removeItems(const QString &type)
+{
+    for(int i = 0; i < m_items.size(); i++) {
+        SocialItemModel *model = m_items[i]->m_itemModel;
+        for(int j = 0; j < model->rowCount(); j++) {
+            if(static_cast<SocialItem *>(model->itemAt(j))->pluginName() == type) {
+                model->removeRow(j);
+                j--;
+            }
+        }
+
+        if(!model->rowCount()) {
+            beginRemoveRows(QModelIndex(), i, i);
+            delete m_items.takeAt(i);
+            endRemoveRows();
+            i--;
+        }
+    }
+}
+
 void SocialDayModel::handleItemChange()
 {
     SocialDayItem* item = static_cast<SocialDayItem*>(sender());

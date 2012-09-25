@@ -84,6 +84,29 @@ void SocialProxy::unlikeItem(const QString &id, const QString &pluginName)
 
 }
 
+void SocialProxy::logout(const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    if(plugin->authorized()) {
+        plugin->requestManager()->logout();
+        m_socialModel->removeItems(pluginName);
+        emit removeType(pluginName);
+    }
+}
+
+void SocialProxy::login(const QString &pluginName)
+{
+    // add this plugin to list of enabled plugins
+    // should move after logout
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    QSettings settings("ROSA", "Timeframe");
+    settings.setValue(plugin->name(), 1);
+
+    QWidget *w = plugin->authenticationWidget();
+    if(w)
+        w->show();
+}
+
 void SocialProxy::commentItem(const QString &message, const QString &parentId, const QString &pluginName)
 {
     PluginRequestReply* reply = postComment(message, parentId, pluginName);
@@ -91,7 +114,6 @@ void SocialProxy::commentItem(const QString &message, const QString &parentId, c
     connect(reply,SIGNAL(success(PluginRequestReply*)),this, SLOT(commentSuccess(PluginRequestReply*)));
     connect(reply,SIGNAL(finished()),reply,SLOT(deleteLater()));
 }
-
 void SocialProxy::getUserPicture(const QString &id, const QString &parentId, const QString &pluginName)
 {
     PluginRequestReply* reply = userPicture(id, parentId, pluginName);
@@ -208,6 +230,7 @@ void SocialProxy::getPictureSuccess(PluginRequestReply* reply)
 
 void SocialProxy::authorized()
 {
+    qDebug() << "Plugin authorized";
     ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
     m_enabledPlugins.insert(plugin->name());
 

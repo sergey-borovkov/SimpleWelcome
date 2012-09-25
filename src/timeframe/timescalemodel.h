@@ -72,6 +72,11 @@ public:
 public slots:
     void newItem(int year, int month, QString type);
 
+    /**
+     * @brief Update type fields when one of plugins logs out
+     * @param type
+     */
+    void removeItems(const QString &type);
 
 private slots:
     void handleItemChange();
