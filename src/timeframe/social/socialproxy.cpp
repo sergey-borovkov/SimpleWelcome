@@ -230,7 +230,6 @@ void SocialProxy::getPictureSuccess(PluginRequestReply* reply)
 
 void SocialProxy::authorized()
 {
-    qDebug() << "Plugin authorized";
     ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
     m_enabledPlugins.insert(plugin->name());
 
