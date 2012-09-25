@@ -82,7 +82,6 @@ private slots:
     void handleItemChange();
 
 private:
-    QSet <QPair <int, int> > m_dates;
     TimeScaleItem* m_prototype;
     QList<TimeScaleItem*> m_list;
 

@@ -141,19 +141,12 @@ TimeScaleModel::~TimeScaleModel()
 
 void TimeScaleModel::newItem(int year, int month, QString type)
 {
-    QPair <int, int> pair;
-    pair.first = year;
-    pair.second = month;
     TimeScaleItem* item = 0;
-    if(m_dates.contains(pair)) { // add new type to existing item
-        item = find(year, month);
-        if(item && !item->types().contains(type)) {
+    if((item = find(year, month))) { // add new type to existing item
+        if(!item->types().contains(type)) {
             item->addType(type);
         }
-    }
-
-    if(!item) { //add new item
-        m_dates.insert(pair);
+    } else { //add new item
         TimeScaleItem* item = new TimeScaleItem(year, month, type, this);
         appendRow(item);
     }
@@ -167,10 +160,6 @@ void TimeScaleModel::removeItems(const QString &type)
         if(ind != -1 && types.size() == 1) {
             beginRemoveRows(QModelIndex(), i, i);
             delete m_list.takeAt(i);
-            QPair <int, int> pair;
-            pair.first = data(index(i), TimeScaleItem::YearRole).toInt();
-            pair.second = data(index(i), TimeScaleItem::MonthRole).toInt();
-            m_dates.remove(pair);
             endRemoveRows();
             i--;
         } else if(ind != -1){
