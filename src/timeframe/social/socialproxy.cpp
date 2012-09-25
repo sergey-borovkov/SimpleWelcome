@@ -268,17 +268,10 @@ void SocialProxy::newItems(QList<SocialItem *> items)
 {
     if(!m_socialModel)
         return;
-    QList<SocialItem *> list;
-    foreach(SocialItem * item, items) {
-        QString strId = QString("%1-%2").arg(item->pluginName()).arg(item->id());
-        if(m_idSet.contains(strId))
-            continue;
-        m_idSet.insert(strId);
-
-        list.append(item);
+    foreach (SocialItem *item, items) {
         emit newMonth(item->date().year(), item->date().month(), item->pluginName());
     }
-    m_socialModel->newSocialItems(list);
+    m_socialModel->newSocialItems(items);
 }
 
 void SocialProxy::onGotUserImage(QString userId, QString userImageUrl)
