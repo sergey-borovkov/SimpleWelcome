@@ -1,7 +1,7 @@
 #!/bin/sh
 
 NAME=rosa-launcher
-VER=2.0.4
+VER=2.0.0
 DIR_NAME=$NAME-$VER
 
 #git archive -o $DIR_NAME.tar.gz HEAD
