@@ -42,6 +42,7 @@ public:
     QVariant data(int role) const;
     QHash<int, QByteArray> roleNames() const;
     void addType(QString type);
+    void setType(QString types);
 signals:
     void dataChanged();
 private:
@@ -70,6 +71,7 @@ public:
 
 public slots:
     void newItem(int year, int month, QString type);
+
 
 private slots:
     void handleItemChange();

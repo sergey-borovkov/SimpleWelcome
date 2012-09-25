@@ -121,6 +121,12 @@ void TimeScaleItem::addType(QString type)
     }
 }
 
+void TimeScaleItem::setType(QString types)
+{
+    m_type = types;
+    emit dataChanged();
+}
+
 TimeScaleModel::TimeScaleModel(TimeScaleItem* prototype, QObject *parent) :
     QAbstractListModel(parent), m_prototype(prototype)
 {
