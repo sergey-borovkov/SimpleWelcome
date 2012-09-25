@@ -1,6 +1,6 @@
 project (timeframelib)
 
-#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${_timeframe_plugins_install_path}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${_timeframe_plugins_install_path}")
 
 find_package (Qt4 REQUIRED QtCore)
 include(${QT_USE_FILE})
@@ -20,4 +20,4 @@ add_library(timeframe SHARED ${HEADERS} ${SOURCES} ${MOC_OUT})
 target_link_libraries(timeframe ${QT_LIBRARIES} )
 
 
-#install(TARGETS timeframe DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS timeframe DESTINATION ${INSTALL_TARGETS_DEFAULT_ARGS})
