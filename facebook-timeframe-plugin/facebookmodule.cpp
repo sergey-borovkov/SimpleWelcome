@@ -14,9 +14,6 @@ FacebookModule::FacebookModule()
     QSettings settings("ROSA", "facebook-timeframe-plugin");
     QString accessToken = settings.value("accessToken").toString();
 
-    m_authorizationView = new QWebView;
-    m_authorizationView->resize(800, 700);
-
     m_requestManager = new RequestManager;
     m_requestManager->setAuthorizer(m_authorizer);
 
@@ -60,17 +57,21 @@ QPixmap FacebookModule::smallIcon() const
 
 QWidget *FacebookModule::authenticationWidget()
 {
+    m_authorizationView = new QWebView;
+    m_authorizationView->resize(800, 700);
+
     m_authorizationView->setUrl(QUrl("https://www.facebook.com/dialog/oauth?client_id=148453655273563&redirect_uri=http://www.facebook.com/connect/login_success.html&response_type=token&scope=publish_stream,read_stream"));
     connect(m_authorizationView, SIGNAL(urlChanged(QUrl)),
             m_authorizer, SLOT(urlChanged(QUrl)));
+    connect(this, SIGNAL(authorized()), m_authorizationView, SLOT(hide()));
 
     return m_authorizationView;
 }
 
 void FacebookModule::onAcessTokenChanged()
 {
-    if(m_authorizer->isAuthorized())
-        m_authorizationView->hide();
+/*    if(m_authorizer->isAuthorized())
+        m_authorizationView->hide(); */
 }
 
 Q_EXPORT_PLUGIN2(facebook-timeframe-plugin, FacebookModule)
