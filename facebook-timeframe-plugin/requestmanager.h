@@ -29,23 +29,28 @@ public:
     void setAuthorizer(OAuth2Authorizer *authorizer);
     virtual Request *logout();
 
-
 private slots:
     void feedReply(QByteArray feedReply);
     void idReply(QByteArray reply);
     void commentReply(QByteArray reply);
+    void imageReply(QByteArray reply);
 
 signals:
     void authorizationComplete();
     void newSocialItems(QList<SocialItem *> items);
-    void userId(QString id);
+    void selfId(QString id);
+    void selfName(QString name);
     void newComments(QString postId, QList<CommentItem *> items);
+    void gotUserImage(QString id, QString url);
 
 private:
     QUrl constructUrl(const QString &id, const QString &type) const;
 
     OAuth2Authorizer *m_authorizer;
     QString m_selfId;
+    QString m_selfName;
+    QString m_userImageUrl;
+    QString m_userId;
 
     // we return comments only when they are fully downloaded
     // so we need to keed partial results between calls somewhere

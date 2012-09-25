@@ -1,12 +1,11 @@
 #include "socialitemmodel.h"
 
-#include <QDate>
-#include <QDebug>
-
 #include "socialitem.h"
 #include "socialproxy.h"
-
 #include <commentitem.h>
+
+#include <QtCore/QDate>
+#include <QtCore/QDebug>
 
 SocialItemModel::SocialItemModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)
@@ -71,6 +70,23 @@ void SocialItemModel::addComment(CommentItem *item, QString id)
             if (!result)
                 qDebug() << " error on set comments count";
             emit dataChanged(index(i, 0),index(i, 0));
+        }
+    }
+}
+
+void SocialItemModel::updateUserImage(const QString &userId, const QString &userImageUrl, const QString &id)
+{
+    for (int i = 0; i < rowCount(); i++) {
+        if (data(index(i,0),SocialItem::Id).toString() == id) {
+
+            QVariant v = data(index(i, 0), SocialItem::Comments);
+            ListModel * commentsModel = qvariant_cast<ListModel* >(v);
+
+            for (int j = 0; j < commentsModel->rowCount(); j++) {
+                if (commentsModel->data(commentsModel->index(j,0),CommentItem::FromId).toString() == userId) {
+                    commentsModel->setData(commentsModel->index(j, 0), QVariant(userImageUrl), CommentItem::FromPictureUrl);
+                }
+            }
         }
     }
 }

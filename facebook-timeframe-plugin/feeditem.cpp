@@ -7,7 +7,6 @@
 #include <qjson/parser.h>
 
 
-
 FeedItem::FeedItem(const QVariantMap &map, QString selfId) :
     m_selfId(selfId)
 {

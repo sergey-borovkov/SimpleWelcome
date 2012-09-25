@@ -52,13 +52,21 @@ public:
      */
     Q_INVOKABLE void commentItem(const QString &message, const QString &parentId, const QString &pluginName);
 
+    Q_INVOKABLE void getUserPicture(const QString &id, const QString &parentId, const QString &pluginName);
+
     Q_INVOKABLE int authorizedPluginCount() const;
     Q_INVOKABLE QString authorizedPluginName(int i) const;
+
+    Q_INVOKABLE QString selfId() const { return m_selfId; }
+    Q_INVOKABLE QString selfPictureUrl();
 
 public slots:
     bool anyPluginsEnabled();
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
+    void onGotUserImage(QString, QString);
+    void onSelfId(QString);
+    void onSelfName(QString);
     void startSearch();
 
       // temporary solution to get plugin names in QML
@@ -67,6 +75,7 @@ public slots:
 private slots:
     void likeSuccess(PluginRequestReply *);
     void commentSuccess(PluginRequestReply *);
+    void getPictureSuccess(PluginRequestReply *);
 
     /**
      * @brief Slot called on social network deauthorization
@@ -113,12 +122,24 @@ private:
      */
     PluginRequestReply *postComment(const QString &message, const QString &parentId, const QString &pluginName);
 
+    PluginRequestReply *userPicture(const QString &id, const QString &parentId, const QString &pluginName);
+
+    PluginRequestReply *selfPicture(const QString &parentId, const QString &pluginName);
+
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;
     SocialDayModel *m_socialModel;
     QSet<QString> m_idSet;
     QSet<QString> m_enabledPlugins;
+
     QString m_cachedComment;
+    QString m_cachedUserImageUrl;
+    QString m_cachedUserId;
+
+    // User info
+    QString m_selfId;
+    QString m_selfName;
+    QString m_selfPictureUrl;
 };
 
 #endif // SOCIALPROXY_H
