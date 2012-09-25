@@ -4,7 +4,8 @@ Rectangle {
     id: commentBox
     property alias edit: edit
     property alias userPhoto: userPhoto
-    color: "#EDEFF4"
+    color: "#172634"
+    radius: 10
     signal send(string comment)
     clip: true
     Image {
@@ -14,7 +15,6 @@ Rectangle {
         fillMode: Image.PreserveAspectFit
         width: 55        
         anchors.rightMargin: 5
-        source: "images/user.png"
     }
 
     Rectangle {

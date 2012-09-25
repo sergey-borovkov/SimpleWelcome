@@ -127,7 +127,7 @@ QString DataSource_Search::itemUrlDnd(int id, QString group)
 
                 if (KDesktopFile::isDesktopFile(value)) {
                     if (QDir::isAbsolutePath(value))
-                        return value;
+                        return QString::fromAscii("file://") + value;
                     // try to find absolute path
                     QString path = _FindFullPathToDesktopFile(value);
                     // Workaround: kde4-name.desktop may be kde4/name.desktop in a real world
@@ -137,7 +137,7 @@ QString DataSource_Search::itemUrlDnd(int id, QString group)
                     }
 
                     if (!path.isEmpty())
-                        return path;
+                        return QString::fromAscii("file://") + path;
                 }
                 return value;
             }

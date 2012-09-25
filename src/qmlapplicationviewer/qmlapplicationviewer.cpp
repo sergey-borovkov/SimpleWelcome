@@ -194,7 +194,7 @@ void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, 
 
     QMimeData *mime = new QMimeData;
     QList<QUrl> urls;
-    urls.append(QUrl::fromLocalFile(url));
+    urls.append(QUrl(url));
     mime->setUrls(urls);
     QDrag *drag = new QDrag(this);
     drag->setMimeData(mime);

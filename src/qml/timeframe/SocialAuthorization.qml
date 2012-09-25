@@ -29,7 +29,12 @@ ListView {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    pluginModel.logout(index)
+                    if(authorized) {
+                        socialProxy.logout(name)
+                    }
+                    else {
+                        socialProxy.login(name)
+                    }
                 }
             }
         }

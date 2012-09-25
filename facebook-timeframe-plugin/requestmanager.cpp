@@ -5,6 +5,7 @@
 
 #include <qjson/parser.h>
 #include <QtCore/QStringList>
+#include <QtCore/QDebug>
 
 RequestManager::RequestManager(QObject *parent)
     : QObject(parent), m_authorizer(0)
@@ -24,7 +25,6 @@ Request *RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
     return request;
 }
 
-
 Request *RequestManager::queryUserId()
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
@@ -35,8 +35,15 @@ Request *RequestManager::queryUserId()
 
 Request *RequestManager::queryImage(const QString &id)
 {
-    Q_UNUSED(id)
+    //    Q_UNUSED(id)
+    m_userId = id;
+    QUrl url = openGraphUrl + id;
+    url.addQueryItem(QLatin1String("fields"), QLatin1String("picture"));
+    url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
+
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
+    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(imageReply(QByteArray)));
+    request->setUrl(url);
     return request;
 }
 
@@ -171,6 +178,39 @@ void RequestManager::idReply(QByteArray reply)
         return;
     }
     m_selfId = result.value(QLatin1String("id")).toString();
+    emit selfId(m_selfId);
+
+    m_selfName = result.value(QLatin1String("name")).toString();
+    emit selfName(m_selfName);
+}
+
+void RequestManager::imageReply(QByteArray reply)
+{
+    QJson::Parser parser;
+    QVariantMap result = parser.parse(reply).toMap();
+
+    if(result.contains(QLatin1String("error"))) {
+        m_authorizer->logout();
+        return;
+    }
+
+    m_userImageUrl = "";
+
+    if(result.contains(QLatin1String("picture"))) {
+        QVariantMap map = result.value(QLatin1String("picture")).toMap();
+        if(map.contains("data")) {
+            map = map.value("data").toMap();
+            if(map.contains("url")) {
+                m_userImageUrl = map.value(QLatin1String("url")).toString();
+                emit gotUserImage(m_userId, m_userImageUrl);
+            }
+        }
+        else {
+            m_userImageUrl = result.value(QLatin1String("picture")).toString();
+            m_userId = result.value(QLatin1String("id")).toString();
+            emit gotUserImage(m_userId, m_userImageUrl);
+        }
+    }
 }
 
 QUrl RequestManager::constructUrl(const QString &id, const QString &type) const

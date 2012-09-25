@@ -42,6 +42,7 @@ public:
     QVariant data(int role) const;
     QHash<int, QByteArray> roleNames() const;
     void addType(QString type);
+    void setType(QString types);
 signals:
     void dataChanged();
 private:
@@ -71,11 +72,16 @@ public:
 public slots:
     void newItem(int year, int month, QString type);
 
+    /**
+     * @brief Update type fields when one of plugins logs out
+     * @param type
+     */
+    void removeItems(const QString &type);
+
 private slots:
     void handleItemChange();
 
 private:
-    QSet <QPair <int, int> > m_dates;
     TimeScaleItem* m_prototype;
     QList<TimeScaleItem*> m_list;
 

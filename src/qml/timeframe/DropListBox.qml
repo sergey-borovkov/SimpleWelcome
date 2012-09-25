@@ -140,10 +140,9 @@ Item {
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.top: parent.top
-        height: parent.height * ( dropboxListSelection.count + 1 )
-
+        height: (dropboxListBody.enabled * dropboxListBody.height) + parent.height
         hoverEnabled: true
-        onExited: { dropboxListBody.hide() }
+        onExited: dropboxListBody.hide()
     }
 
     states: State {

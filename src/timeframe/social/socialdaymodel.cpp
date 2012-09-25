@@ -4,9 +4,9 @@
 #include "socialitemmodel.h"
 #include "socialproxy.h"
 
-#include <QVariant>
-#include <QRegExp>
-#include <QDebug>
+#include <QtCore/QVariant>
+#include <QtCore/QRegExp>
+#include <QtCore/QDebug>
 
 SocialDayFilterModel::SocialDayFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
@@ -143,6 +143,52 @@ void SocialDayModel::addCommentToItem(CommentItem *commentItem, QString eventId)
     }
 }
 
+void SocialDayModel::updateUserImage(const QString &userId, const QString &userImageUrl, const QString &eventId)
+{
+    QDate date = m_idHash.value(eventId);
+    foreach (SocialDayItem * item, m_items) {
+        if (item->date() == date) {
+            item->updateUserImage(userId, userImageUrl, eventId);
+            break;
+        }
+    }
+}
+void SocialDayModel::addComments(QString id, QList<CommentItem *> list)
+{
+    QDate date = m_idHash.value(id);
+    foreach (SocialDayItem * item, m_items) {
+        if (item->date() == date) {
+            item->addComments(id, list);
+            break;
+        }
+    }
+}
+
+void SocialDayModel::removeItems(const QString &type)
+{
+    for(int i = 0; i < m_items.size(); i++) {
+        SocialItemModel *model = m_items[i]->m_itemModel;
+        for(int j = 0; j < model->rowCount(); j++) {
+            SocialItem *item = static_cast<SocialItem *>(model->itemAt(j));
+            QString uniqueId = item->pluginName() + item->id();
+
+            if(item->pluginName() == type) {
+                model->removeRow(j);
+                m_idSet.remove(uniqueId);
+                m_idHash.remove(uniqueId);
+                j--;
+            }
+        }
+
+        if(!model->rowCount()) {
+            beginRemoveRows(QModelIndex(), i, i);
+            delete m_items.takeAt(i);
+            endRemoveRows();
+            i--;
+        }
+    }
+}
+
 void SocialDayModel::handleItemChange()
 {
     SocialDayItem* item = static_cast<SocialDayItem*>(sender());
@@ -160,8 +206,6 @@ QModelIndex SocialDayModel::indexFromItem(const SocialDayItem *item) const
 
     return QModelIndex();
 }
-
-
 
 void SocialDayModel::newSocialItems(QList < SocialItem * > list)
 {

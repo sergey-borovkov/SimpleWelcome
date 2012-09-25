@@ -1,8 +1,8 @@
 #include "timescalemodel.h"
 
-#include <QDebug>
-#include <QModelIndex>
-#include <QRegExp>
+#include <QtCore/QStringList>
+#include <QtCore/QModelIndex>
+#include <QtCore/QRegExp>
 
 TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
     QSortFilterProxyModel(parent)
@@ -121,6 +121,12 @@ void TimeScaleItem::addType(QString type)
     }
 }
 
+void TimeScaleItem::setType(QString types)
+{
+    m_type = types;
+    emit dataChanged();
+}
+
 TimeScaleModel::TimeScaleModel(TimeScaleItem* prototype, QObject *parent) :
     QAbstractListModel(parent), m_prototype(prototype)
 {
@@ -133,23 +139,35 @@ TimeScaleModel::~TimeScaleModel()
     clear();
 }
 
-void TimeScaleModel:: newItem(int year, int month, QString type)
+void TimeScaleModel::newItem(int year, int month, QString type)
 {
-    QPair <int, int> pair;
-    pair.first = year;
-    pair.second = month;
-    if(m_dates.contains(pair)) { // add new type to existing item
-        TimeScaleItem* item = find(year, month);
-        if(!item)
-            return;
+    TimeScaleItem* item = 0;
+    if((item = find(year, month))) { // add new type to existing item
         if(!item->types().contains(type)) {
             item->addType(type);
         }
     } else { //add new item
-        m_dates.insert(pair);
         TimeScaleItem* item = new TimeScaleItem(year, month, type, this);
         appendRow(item);
     }
+}
+
+void TimeScaleModel::removeItems(const QString &type)
+{
+    for(int i = 0; i < rowCount(); i++) {
+        QStringList types = data(index(i), TimeScaleItem::TypesRole).toString().split(";");
+        int ind = types.indexOf(type);
+        if(ind != -1 && types.size() == 1) {
+            beginRemoveRows(QModelIndex(), i, i);
+            delete m_list.takeAt(i);
+            endRemoveRows();
+            i--;
+        } else if(ind != -1){
+            types.removeAt(ind);
+            m_list[ind]->setType(types.join(";"));
+        }
+    }
+
 }
 
 QVariant TimeScaleModel::data(const QModelIndex &index, int role) const
