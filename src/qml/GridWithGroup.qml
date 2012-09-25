@@ -85,7 +85,7 @@ Column {
             model.append(itemData)
 
             // UNREM THIS TO ENABLE AUTO-STACKING
-            /**/if (!groupNameVisible) // workaround to apply this to apps tab only
+            /*/if (!groupNameVisible) // workaround to apply this to apps tab only
             {
                 appendItemToModel.lastItem = model.get(model.count - 1)
                 if (appendItemToModel.lastItem && appendItemToModel.lastLetter != appendItemToModel.lastItem.caption.charAt(0).toLowerCase())
@@ -128,25 +128,31 @@ Column {
 
         function newItemData(iconPath, name, itemId, advParam)
         {
-            if ((startIndex <= itemId && itemId <= endIndex &&
-                     count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
+            if (startIndex === endIndex && endIndex === -1)
             {
-                if (typeof advParam == 'boolean') // New item from RecentApps, advParam is pinned state of icon
-                {
-                    appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: advParam })
-                }
-                else if (typeof advParam == 'string') // New item from search, advParam is group
-                {
-                    if (advParam == groupName)
-                    {
-                        //console.log("Added " + name + " : " + itemId + " in [" + startIndex + "-" + endIndex + "] of " + count)
-                        appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined, group: groupName })
-                    }
-                }
-                else
-                    appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
+                for (var i = 0; i < model.count; i++)
+                    if (model.get(i).id === itemId)
+                        return
             }
+            else if (!(startIndex <= itemId && itemId <= endIndex &&
+                       count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
+                return
 
+
+            if (typeof advParam == 'boolean') // New item from RecentApps, advParam is pinned state of icon
+            {
+                appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: advParam })
+            }
+            else if (typeof advParam == 'string') // New item from search, advParam is group
+            {
+                if (advParam == groupName)
+                {
+                    //console.log("Added " + name + " : " + itemId + " in [" + startIndex + "-" + endIndex + "] of " + count)
+                    appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined, group: groupName })
+                }
+            }
+            else
+                appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
             //console.log("--- Added [" + startIndex + " to " + endIndex + "] with id: " + itemId)
         }
 
@@ -157,7 +163,7 @@ Column {
                 var realIndex = model.get(newIndex).id
                 if (model.get(newIndex).stack !== undefined)
                 {
-                    console.log("onItemClicked::showPopupGroup from: " + newIndex)
+                    //console.log("onItemClicked::showPopupGroup from: " + newIndex)
                     var iconCoords = mapToItem(groupTab, currentItem.x + currentItem.width / 2 - 8, currentItem.y + currentItem.height)
                     showPopupGroup(model.get(newIndex), iconCoords)
                     return

@@ -243,13 +243,15 @@ Item {
                     popupFrame.groupTitle = item.caption
 
                     popupFrame.gridGroup.gridView.model.clear()
-                    popupFrame.gridGroup.startIndex = item.stack[0].id
-                    popupFrame.gridGroup.endIndex = item.stack[0].id + item.stack.length - 1
+                    popupFrame.gridGroup.startIndex = -1
+                    popupFrame.gridGroup.endIndex = -1
 
-                    //for (var groupData in groupDataArray)
-                    //console.log("DATQA :" + groupData.length)
+                    //console.log("stacked group we are opening has length:" + item.stack.length)
                     for (var i = 0; i < item.stack.length; i++)
+                    {
+                        //console.log("N" + i + ": " + item.stack[i].caption + " [" + item.stack[i].id + "]")
                         popupFrame.gridGroup.gridView.newItemData(item.stack[i].imagePath, item.stack[i].caption, item.stack[i].id)
+                    }
 
                     /*
 
