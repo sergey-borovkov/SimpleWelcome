@@ -16,6 +16,7 @@ class SocialItemModel : public ListModel
 public:
     explicit SocialItemModel(QHash<int, QByteArray> roles, QObject *parent = 0);
     ~SocialItemModel();
+    bool removeRow(int row, const QModelIndex &parent = QModelIndex());
 
 public slots:
     void addSocialItem(SocialItem* item);

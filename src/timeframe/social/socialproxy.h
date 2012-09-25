@@ -158,7 +158,6 @@ private:
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;
     SocialDayModel *m_socialModel;
-    QSet<QString> m_idSet;
     QSet<QString> m_enabledPlugins;
 
     QString m_cachedComment;

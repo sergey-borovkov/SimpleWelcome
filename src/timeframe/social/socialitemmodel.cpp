@@ -16,6 +16,14 @@ SocialItemModel::~SocialItemModel()
 {
 }
 
+bool SocialItemModel::removeRow(int row, const QModelIndex &parent)
+{
+    SocialItem *item = static_cast<SocialItem*>(itemAt(row));
+    QString id = QString("%1-%2").arg(item->pluginName()).arg(item->id());
+    m_idSet.remove(id);
+    return ListModel::removeRow(row, parent);
+}
+
 /*
  * add social item to model
  */
@@ -24,7 +32,6 @@ void SocialItemModel::addSocialItem(SocialItem *item)
     if(!item) {
         return;
     }
-
     /* Check duplicates */
     QString strId = QString("%1-%2").arg(item->pluginName()).arg(item->id());
     if(m_idSet.contains(strId)) {
