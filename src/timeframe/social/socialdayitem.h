@@ -26,15 +26,14 @@ signals:
     void updateData();
 
 public slots:
-
-    QString id(int row);
-    QString imageUrl(int row);
-    QString text(int row);
-    int likesCount(int row);
+    QString id(int row) const;
+    QString imageUrl(int row) const;
+    QString text(int row) const;
+    int likesCount(int row) const;
     int like(int row);
-    int commentsCount(int row);
-    QObject *comments(int row);
-    QString pluginName(int row);
+    int commentsCount(int row) const;
+    QObject *comments(int row) const;
+    QString pluginName(int row) const;
     void update();
 };
 
@@ -93,8 +92,8 @@ private:
     QString m_types;
     QDate       m_date;
     int         m_count;
-    SocialItemModel         *m_itemModel;
-    SocialItemFilterModel   *m_model;
+    SocialItemModel *m_itemModel;
+    SocialItemFilterModel *m_model;
 
     friend class SocialDayModel;
 };

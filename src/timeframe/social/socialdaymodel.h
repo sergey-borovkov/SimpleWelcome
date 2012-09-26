@@ -33,15 +33,9 @@ class SocialDayModel : public ListModel
 public:
 
     explicit SocialDayModel(QHash<int, QByteArray> roles, QObject *parent = 0);
-    ~SocialDayModel();
-
-    QVariant data(const QModelIndex &index, int role) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role);
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     void appendRows(const QList<SocialDayItem*> &items);
     void insertRow(int row, SocialDayItem* item);
-    QModelIndex indexFromItem(const SocialDayItem *item) const;
 
 public slots:
     void newSocialItems(QList<SocialItem*> list);
@@ -56,7 +50,8 @@ private slots:
     void handleItemChange();
 
 private:
-    QList<SocialDayItem *> m_items;
+    SocialDayItem *findItemByDate(const QDate &date) const;
+
     QHash<QString, QDate> m_idHash;
     QSet<QString> m_idSet;
 };
