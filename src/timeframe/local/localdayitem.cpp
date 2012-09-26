@@ -1,8 +1,9 @@
+#include "activityset.h"
+#include "itemmodel.h"
 #include "localdayitem.h"
 #include "localdaymodel.h"
-#include "itemmodel.h"
-#include "activityset.h"
-#include <QVariant>
+
+#include <QtCore/QVariant>
 
 TimeFrameFilterModel::TimeFrameFilterModel(QObject * parent) :
     QSortFilterProxyModel(parent)

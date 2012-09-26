@@ -1,10 +1,10 @@
 #ifndef GALLERYLISTER_H
 #define GALLERYLISTER_H
 
-#include <QObject>
-#include <QDate>
-
 #include "nepomuksource.h"
+
+#include <QtCore/QDate>
+#include <QtCore/QObject>
 
 class Activity;
 class LocalDayModel;

@@ -1,6 +1,7 @@
-#include "itemmodel.h"
 #include "activityset.h"
-#include <QDate>
+#include "itemmodel.h"
+
+#include <QtCore/QDate>
 
 ItemModel::ItemModel(QObject *parent) :
     QAbstractListModel(parent)

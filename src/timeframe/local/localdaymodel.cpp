@@ -1,12 +1,12 @@
-#include "localdaymodel.h"
-#include "activityset.h"
-#include "localdayitem.h"
 #include "activityproxy.h"
+#include "activityset.h"
 #include "itemmodel.h"
+#include "localdayitem.h"
+#include "localdaymodel.h"
 
-#include <QVariant>
-#include <QRegExp>
-#include <QSortFilterProxyModel>
+#include <QtCore/QRegExp>
+#include <QtCore/QVariant>
+#include <QtGui//QSortFilterProxyModel>
 
 
 TimeFrameDayFilterModel::TimeFrameDayFilterModel(QObject *parent) :
