@@ -108,13 +108,18 @@ Item {
 
         states: [
             State {
+                name: "hidden"
+                when: hidden == true
+            },
+
+            State {
                 name: "gridInDrag"
-                when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id
+                when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id && !hidden
             },
 
             State {
                 name: "cellInDrag"
-                when: gridMouseArea.dndSrcId === id
+                when: gridMouseArea.dndSrcId === id && !hidden
 
                 PropertyChanges {
                     target: wrapper
@@ -126,7 +131,7 @@ Item {
 
             State {
                 name: "cellOpenedStack"
-                when: stackCellOpenedId === id && stack !== undefined
+                when: stackCellOpenedId === id && stack !== undefined && !hidden
 
                 ParentChange {
                     target: wrapper
@@ -148,7 +153,12 @@ Item {
                     via: tabWrapper
                     NumberAnimation { duration: 200 }
                 }
+            },
+            Transition {
+                to: "hidden"
+                NumberAnimation { target: wrapper; property: "scale"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
             }
+
         ]
 
         Item { // Necessary for correct highlight height

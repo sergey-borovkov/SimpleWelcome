@@ -378,6 +378,7 @@ GridView {
                             {
                                 gridMouseArea.dndDestId = count - 1
                                 model.move(gridMouseArea.dndDest, gridMouseArea.dndDestId, 1)
+                                currentIndex = gridMouseArea.draggedItemStackedAt
                                 gridMouseArea.dndDest = count - 1
                             }
 
@@ -514,31 +515,44 @@ GridView {
         }
         onReleased: {
             var dndSrcIdSaved = dndSrcId
-            dndSrcId = -1
 
-            /*if (dndSrcIdSaved != -1)
+            if (gridMouseArea.draggedItemStackedAt !== undefined)
             {
+                //model.remove(dndDest)
+                console.log("UPPED")
+                model.setProperty(dndDest, "hidden", true)
+
+                dndSrcId = -1
                 dndStateChanged(false)
+            }
+            else
+            {
+                dndSrcId = -1
 
-                if (typeof dataSource.itemDragged !== "undefined" && dndDestId != -1)
+                if (dndSrcIdSaved != -1)
                 {
-                    //console.log("dndDestId: " + dndDestId)
-                    dataSource.itemDragged(dndSrcIdSaved, dndDestId)
+                    dndStateChanged(false)
 
-                    model.set(dndDest, {"id": dndDestId})
+                    if (typeof dataSource.itemDragged !== "undefined" && dndDestId != -1)
+                    {
+                        //console.log("dndDestId: " + dndDestId)
+                        dataSource.itemDragged(dndSrcIdSaved, dndDestId)
 
-                    if (dndDest < dndSrc)
-                    {
-                        for (var i = dndDest + 1; i <= dndSrc; i++)
-                            model.set(i, {"id": model.get(i).id + 1})
-                    }
-                    else
-                    {
-                        for (var i = dndSrc; i < dndDest; i++)
-                            model.set(i, {"id": model.get(i).id - 1})
+                        model.set(dndDest, {"id": dndDestId})
+
+                        if (dndDest < dndSrc)
+                        {
+                            for (var i = dndDest + 1; i <= dndSrc; i++)
+                                model.set(i, {"id": model.get(i).id + 1})
+                        }
+                        else
+                        {
+                            for (var i = dndSrc; i < dndDest; i++)
+                                model.set(i, {"id": model.get(i).id - 1})
+                        }
                     }
                 }
-            }*/
+            }
         }
 
         onClicked: {
