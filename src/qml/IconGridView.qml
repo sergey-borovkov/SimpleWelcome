@@ -383,7 +383,7 @@ GridView {
 
                         }
                     }
-                    /*else if (!isAimingOnStacking) // Hit outer part of item. Using for repositioning
+                    else if (!isAimingOnStacking) // Hit outer part of item. Using for repositioning
                     {
                         console.log("MOVING")
 
@@ -391,7 +391,7 @@ GridView {
                         model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
                         gridMouseArea.dndDest = indexWaitingOn
                         currentIndex = gridMouseArea.dndDest
-                    }*/
+                    }
 
                     itemWaitingOn = undefined
                 }
