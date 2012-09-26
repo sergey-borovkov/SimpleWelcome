@@ -104,7 +104,7 @@ GridView {
             stackArray.push(newObj)
         }
         else {
-            //console.log("STACKING AGAIN")
+            console.log("STACKING AGAIN")
             for (var i in stackArray) // Checking if item is already present in stack
                 if (stackArray[i].id === itemDragging.id)
                 {
@@ -114,13 +114,13 @@ GridView {
         }
         stackArray.push(itemDragging)
 
-        model.setProperty(indexStackingTo, "imagePath", "image://generalicon/stacked/" + itemDragging.imagePath.slice(28) + "|" + itemStackingTo.imagePath.slice(28))
+        model.setProperty(indexStackingTo, "imagePath", "image://generalicon/stacked/" + itemStackingTo.imagePath.slice(28) + "|" + itemDragging.imagePath.slice(28))
         model.setProperty(indexStackingTo, "stack", stackArray)
         return true
     }
 
     function unstackItemInItem(indexUnstackingFrom, indexDragging) {
-        //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
+        //console.log("----------------- UNSTACKING " + indexDragging + " from " + indexUnstackingFrom)
 
         var itemDragging = model.get(indexDragging)
         //console.log(gridMouseArea.dndDest + " with " + itemDragging)
@@ -144,7 +144,10 @@ GridView {
             model.set(indexUnstackingFrom, innerItem)
         }
         else {
-            model.setProperty(indexUnstackingFrom, "imagePath", "image://generalicon/stacked/" + itemDragging.imagePath.slice(28) + "|" + itemUnstackingFrom.imagePath.slice(28))
+            //console.log("WAS: " + itemUnstackingFrom.imagePath)
+            //console.log("TRUNCATING: " + itemDragging.imagePath)
+            //console.log("NOEW: " + itemUnstackingFrom.imagePath.substring(0, itemUnstackingFrom.imagePath.length - (itemDragging.imagePath.length - 28 + 1)))
+            model.setProperty(indexUnstackingFrom, "imagePath", itemUnstackingFrom.imagePath.substring(0, itemUnstackingFrom.imagePath.length - (itemDragging.imagePath.length - 28 + 1)))
             model.setProperty(indexUnstackingFrom, "stack", stackArray)
         }
         return true
