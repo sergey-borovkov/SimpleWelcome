@@ -1,11 +1,12 @@
 #ifndef LOCALDAYMODEL_H
 #define LOCALDAYMODEL_H
 
-#include <QAbstractListModel>
-#include <QSortFilterProxyModel>
-#include <QObject>
-#include "localdayitem.h"
 #include "itemmodel.h"
+#include "localdayitem.h"
+
+#include <QtCore/QAbstractListModel>
+#include <QtCore/QObject>
+#include <QtGui//QSortFilterProxyModel>
 
 class ItemModel;
 class Activity;

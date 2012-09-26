@@ -45,14 +45,14 @@
 #include "datasource_documents.h"
 #include "datasource_search.h"
 
-#include "timeframe/activityset.h"
-#include "timeframe/localdaymodel.h"
 #include "timeframe/timescalemodel.h"
-#include "timeframe/itemmodel.h"
-#include "timeframe/activityproxy.h"
-#include "timeframe/nepomuksource.h"
-#include "timeframe/previewgenerator.h"
-#include "timeframe/previewprovider.h"
+#include "timeframe/local/activityset.h"
+#include "timeframe/local/localdaymodel.h"
+#include "timeframe/local/itemmodel.h"
+#include "timeframe/local/activityproxy.h"
+#include "timeframe/local/nepomuksource.h"
+#include "timeframe/local/previewgenerator.h"
+#include "timeframe/local/previewprovider.h"
 #include "timeframe/social/pluginloader.h"
 #include "timeframe/social/socialproxy.h"
 #include "timeframe/social/pluginimageprovider.h"
@@ -62,7 +62,8 @@
 #include "timeframe/social/socialdayitem.h"
 #include "timeframe/social/pluginrequestreply.h"
 
-
+#include <listitem.h>
+ 
 #include "config.h"
 #include <KCmdLineArgs>
 #include <KRun>

@@ -1,7 +1,7 @@
 #include "activitysource.h"
 #include "activityset.h"
 
-#include <QDate>
+#include <QtCore/QDate>
 
 
 ActivitySource::ActivitySource(QObject *parent) :

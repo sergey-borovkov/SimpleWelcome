@@ -19,15 +19,15 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "previewgenerator.h"
 #include "localdaymodel.h"
+#include "previewgenerator.h"
 
-#include <QtCore/QStringList>
+#include <QtCore/QFileInfo>
 #include <QtCore/QRect>
+#include <QtCore/QStringList>
+#include <QtCore/QtDebug>
 #include <QtGui/QLabel>
 #include <QtGui/QPainter>
-#include <QtCore/QtDebug>
-#include <QtCore/QFileInfo>
 
 #include <kfile.h>
 #include <kicon.h>

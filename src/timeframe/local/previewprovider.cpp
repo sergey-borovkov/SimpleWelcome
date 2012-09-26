@@ -24,9 +24,9 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QDebug>
-#include <QtGui/QPainter>
-#include <QtGui/QImage>
 #include <QtDeclarative/QDeclarativeImageProvider>
+#include <QtGui/QImage>
+#include <QtGui/QPainter>
 
 PreviewProvider::PreviewProvider() :
     QDeclarativeImageProvider(Pixmap)

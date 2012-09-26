@@ -1,10 +1,10 @@
 #ifndef ACTIVITYEVENT_H
 #define ACTIVITYEVENT_H
 
-#include <QObject>
-#include <QDate>
-#include <QList>
-#include <QMetaType>
+#include <QtCore/QDate>
+#include <QtCore/QList>
+#include <QtCore/QMetaType>
+#include <QtCore/QObject>
 
 class Activity : public QObject
 {

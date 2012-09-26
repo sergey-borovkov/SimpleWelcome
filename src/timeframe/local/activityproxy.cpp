@@ -1,10 +1,8 @@
 #include "activityproxy.h"
-#include "localdaymodel.h"
 #include "activityset.h"
+#include "localdaymodel.h"
 #include "nepomuksource.h"
 #include "previewgenerator.h"
-
-#include <QtCore/QDebug>
 
 ActivityProxy::ActivityProxy(QObject *parent) :
     QObject(parent),

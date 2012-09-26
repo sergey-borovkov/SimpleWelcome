@@ -1,16 +1,16 @@
-#include "nepomuksource.h"
 #include "activityset.h"
+#include "nepomuksource.h"
 
+#include <Nepomuk/Query/FileQuery>
 #include <Nepomuk/Query/OrTerm>
 #include <Nepomuk/Query/QueryServiceClient>
 #include <Nepomuk/Query/ResourceTypeTerm>
 #include <Nepomuk/Query/Result>
-#include <Nepomuk/Query/FileQuery>
-#include <Nepomuk/Vocabulary/NIE>
 #include <Nepomuk/Vocabulary/NFO>
+#include <Nepomuk/Vocabulary/NIE>
 
-#include <QDate>
-#include <QTimer>
+#include <QtCore/QDate>
+#include <QtCore/QTimer>
 
 NepomukSource::NepomukSource(QObject *parent) :
     ActivitySource(parent), m_searchClient(0), m_timer(0), m_limit(0)
