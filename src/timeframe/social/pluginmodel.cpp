@@ -20,28 +20,6 @@ void PluginModel::appendRows(const QList<ListItem *> &items)
     ListModel::appendRows(items);
 }
 
-void PluginModel::logout(int row)
-{
-    QVariant v = data(index(row), PluginItem::Item);
-    PluginItem *item = v.value<PluginItem *>();
-
-    if(item) {
-        ISocialPlugin *plugin = item->plugin();
-        if(plugin->authorized())
-            plugin->requestManager()->logout();
-        else {
-            // add this plugin to list of enabled plugins
-            // should move after logout
-            QSettings settings("ROSA", "Timeframe");
-            settings.setValue(plugin->name(), 1);
-
-            QWidget *w = plugin->authenticationWidget();
-            if(w)
-                w->show();
-        }
-    }
-}
-
 void PluginModel::itemChanged()
 {
     PluginItem *item = static_cast<PluginItem *>(sender());

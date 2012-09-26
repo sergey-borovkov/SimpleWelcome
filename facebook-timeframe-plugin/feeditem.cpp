@@ -119,6 +119,7 @@ void fillCommentFromMap(CommentItem *item, const QVariantMap &map)
     item->setData(CommentItem::Id, map.value("id"));
     item->setData(CommentItem::Message, map.value("message"));
     item->setData(CommentItem::CreatedTime, map.value("created_time"));
+    item->setData(CommentItem::Type, "Facebook");
     if(map.contains("from")) {
         QVariantMap fromMap = map.value("from").toMap();
         item->setData(CommentItem::FromId, fromMap.value("id"));

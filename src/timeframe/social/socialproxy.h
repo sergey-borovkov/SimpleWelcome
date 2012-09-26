@@ -46,6 +46,18 @@ public:
     Q_INVOKABLE void unlikeItem(const QString &id, const QString &pluginName);
 
     /**
+     * @brief logout from social network and remove it's data from models
+     * @param pluginName
+     */
+    Q_INVOKABLE void logout(const QString &pluginName);
+
+    /**
+     * @brief login in social network
+     * @param pluginName
+     */
+    Q_INVOKABLE void login(const QString &pluginName);
+
+    /**
      * @brief Comment item
      * @param message
      * @param post id
@@ -57,9 +69,12 @@ public:
 
     Q_INVOKABLE int authorizedPluginCount() const;
     Q_INVOKABLE QString authorizedPluginName(int i) const;
+    Q_INVOKABLE bool anyPluginsEnabled();
 
     Q_INVOKABLE QString selfId() const { return m_selfId; }
     Q_INVOKABLE QString selfPictureUrl();
+
+    void getSelfUserPicture(const QString &pluginName);
 
     /**
      * @brief Request all comments of item
@@ -69,24 +84,19 @@ public:
     Q_INVOKABLE void getAllComments(const QString &id, const QString &pluginName);
 
 public slots:
-    bool anyPluginsEnabled();
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
 
-    void onGotUserImage(QString, QString);
     void onSelfId(QString);
     void onSelfName(QString);
     void newComments(QString postId, QList<CommentItem *> items);
     void startSearch();
 
-      // temporary solution to get plugin names in QML
-    // this functionality should perphaps be made available
-    // to  QML via models
 private slots:
     void likeSuccess(PluginRequestReply *);
     void commentSuccess(PluginRequestReply *);
     void getPictureSuccess(PluginRequestReply *);
-
+    void getSelfPictureSuccess(PluginRequestReply*);
 
     /**
      * @brief Slot called on social network deauthorization
@@ -101,6 +111,13 @@ private slots:
 signals:
     void pluginAuthorized();
     void pluginDeauthorized();
+
+    /**
+     * @brief This signal is for interacting with timescale model. Perphaps later it should
+     *        be replace by a more proper solution
+     * @param type
+     */
+    void removeType(QString type);
     void newMonth(int, int, QString);
 
 private:
@@ -137,17 +154,14 @@ private:
 
     PluginRequestReply *userPicture(const QString &id, const QString &parentId, const QString &pluginName);
 
-    PluginRequestReply *selfPicture(const QString &parentId, const QString &pluginName);
+    PluginRequestReply *selfPicture(const QString &pluginName);
 
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;
     SocialDayModel *m_socialModel;
-    QSet<QString> m_idSet;
     QSet<QString> m_enabledPlugins;
 
     QString m_cachedComment;
-    QString m_cachedUserImageUrl;
-    QString m_cachedUserId;
 
     // User info
     QString m_selfId;

@@ -95,6 +95,8 @@ private:
     int         m_count;
     SocialItemModel         *m_itemModel;
     SocialItemFilterModel   *m_model;
+
+    friend class SocialDayModel;
 };
 
 #endif // SOCIALDAYITEM_H
