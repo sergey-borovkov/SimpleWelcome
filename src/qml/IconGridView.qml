@@ -357,17 +357,18 @@ GridView {
                 {
                     var item = itemWaitingOn
                     var isHitInnerIcon = gridMouseArea.mouseX > item.x && gridMouseArea.mouseX < item.x + constants.cellWidth
+                    var isDragginStack = model.get(gridMouseArea.dndDest).stack !== undefined
 
                     //var pointsDistance = Math.sqrt(Math.pow(gridMouseArea.mouseX - xWaiting, 2) + Math.pow(gridMouseArea.mouseY - yWaiting, 2))
                     //console.log("distance: " + pointsDistance)
 
-                    if (gridMouseArea.draggedItemStackedAt !== undefined && (gridMouseArea.draggedItemStackedAt !== indexWaitingOn || !isHitInnerIcon))
+                    if (gridMouseArea.draggedItemStackedAt !== undefined && (gridMouseArea.draggedItemStackedAt !== indexWaitingOn || !isHitInnerIcon) && !isDragginStack)
                     { // Unstacking if item we are above is not the one we stacked to
                         console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
                         grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
                         gridMouseArea.draggedItemStackedAt = undefined
                     }
-                    else if (isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest) //&& pointsDistance <= 3)
+                    else if (isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest && !isDragginStack) //&& pointsDistance <= 3)
                     { // Hit central part of item. Using for stacking
                         if (isAimingOnStacking)
                         {
@@ -519,11 +520,20 @@ GridView {
         onReleased: {
             var dndSrcIdSaved = dndSrcId
 
-            if (gridMouseArea.draggedItemStackedAt !== undefined)
+            if (gridMouseArea.draggedItemStackedAt !== undefined && model.get(gridMouseArea.dndDest).stack === undefined)
             {
                 //model.remove(dndDest)
-                console.log("UPPED")
+                console.log("STACK UPPED")
                 model.setProperty(dndDest, "hidden", true)
+                //model.setProperty(gridMouseArea.draggedItemStackedAt, "id", 100500)
+
+                if (dndDest < gridMouseArea.draggedItemStackedAt)
+                {
+                    gridMouseArea.dndDestId = count - 1
+                    model.move(gridMouseArea.dndDest, gridMouseArea.dndDestId, 1)
+                    //currentIndex = gridMouseArea.draggedItemStackedAt
+                    gridMouseArea.dndDest = count - 1
+                }
 
                 dndSrcId = -1
                 dndStateChanged(false)
