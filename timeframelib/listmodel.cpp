@@ -63,9 +63,14 @@ void ListModel::handleItemChange()
 ListItem * ListModel::find(const QString &id) const
 {
     foreach(ListItem * item, m_items)
-    if(item->id() == id)
-        return item;
+        if(item->id() == id)
+            return item;
     return 0;
+}
+
+ListItem *ListModel::itemAt(int row) const
+{
+    return m_items[row];
 }
 
 QModelIndex ListModel::indexFromItem(const ListItem *item) const

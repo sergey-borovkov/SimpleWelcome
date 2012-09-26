@@ -156,7 +156,6 @@ SWApp::SWApp()
     UserInfoProvider *userInfoProvider = new UserInfoProvider(this);
     m_viewer->rootContext()->setContextProperty("userInfoProvider", userInfoProvider);
 
-
     DataSource_RecentApps *recentAppsDataSource = new DataSource_RecentApps(this);
     m_viewer->rootContext()->setContextProperty("dataSource_RecentApps", recentAppsDataSource);
     connect(recentAppsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
@@ -196,11 +195,11 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("i18n_Local", i18n("Local"));
     m_viewer->rootContext()->setContextProperty("i18n_Write_Comment", i18n("Write comment..."));
     m_viewer->rootContext()->setContextProperty("i18n_Audio", i18n("Audio: "));
-    m_viewer->rootContext()->setContextProperty("i18n_Comments", i18n("Comments: "));
-    m_viewer->rootContext()->setContextProperty("i18n_Likes", i18n("Likes: "));
     m_viewer->rootContext()->setContextProperty("i18n_Like", i18n("Like"));
     m_viewer->rootContext()->setContextProperty("i18n_Unlike", i18n("Unlike"));
     m_viewer->rootContext()->setContextProperty("i18n_Social_networkong_sites", i18n("Social networking sites"));
+    m_viewer->rootContext()->setContextProperty("i18n_Show_Comments", i18n("Show comments"));
+    m_viewer->rootContext()->setContextProperty("i18n_Hide_Comments", i18n("Hide comments"));
 
     m_viewer->rootContext()->setContextProperty("i18n_JAN", i18n("JAN"));
     m_viewer->rootContext()->setContextProperty("i18n_FEB", i18n("FEB"));
@@ -279,6 +278,8 @@ void SWApp::initTimeframeSocialMode()
     TimeScaleItem* item = new TimeScaleItem();
     TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
+
+    connect(m_manager, SIGNAL(removeType(QString)), timeScaleModel, SLOT(removeItems(QString)));
 
     qmlRegisterUncreatableType<PluginRequestReply>("Widgets", 1, 0, "PluginRequestReply", "This class should be created in cpp"); // it's not supposed to be in widgets, should move later
 

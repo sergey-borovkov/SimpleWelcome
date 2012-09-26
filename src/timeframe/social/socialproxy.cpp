@@ -26,11 +26,8 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
         if((object = dynamic_cast<QObject *>(plugin->requestManager())) != 0) {
             // perphaps need to make it work via PluginRequestReply later
             connect(object, SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
-
-            connect(object, SIGNAL(gotUserImage(QString, QString)), SLOT(onGotUserImage(QString, QString)));
             connect(object, SIGNAL(selfId(QString)), SLOT(onSelfId(QString)));
             connect(object, SIGNAL(selfName(QString)), SLOT(onSelfName(QString)));
-
             connect(object, SIGNAL(newComments(QString, QList<CommentItem *>)), SLOT(newComments(QString,QList<CommentItem*>)));
 
         }
@@ -82,6 +79,29 @@ void SocialProxy::unlikeItem(const QString &id, const QString &pluginName)
     connect(reply,SIGNAL(success(PluginRequestReply*)),this, SLOT(likeSuccess(PluginRequestReply*)));
     /*TO-DO: process error replies*/
 
+}
+
+void SocialProxy::logout(const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    if(plugin->authorized()) {
+        plugin->requestManager()->logout();
+        m_socialModel->removeItems(pluginName);
+        emit removeType(pluginName);
+    }
+}
+
+void SocialProxy::login(const QString &pluginName)
+{
+    // add this plugin to list of enabled plugins
+    // should move after logout
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    QSettings settings("ROSA", "Timeframe");
+    settings.setValue(plugin->name(), 1);
+
+    QWidget *w = plugin->authenticationWidget();
+    if(w)
+        w->show();
 }
 
 void SocialProxy::commentItem(const QString &message, const QString &parentId, const QString &pluginName)
@@ -142,16 +162,8 @@ PluginRequestReply *SocialProxy::userPicture(const QString &id, const QString &p
     ISocialPlugin *plugin = pluginFromName(pluginName);
     Request *request = plugin->requestManager()->queryImage(id);
     PluginRequestReply *reply = new PluginRequestReply(request, parentId, this);
-    request->start();
-
-    return reply;
-}
-
-PluginRequestReply *SocialProxy::selfPicture( const QString &parentId, const QString &pluginName)
-{
-    ISocialPlugin *plugin = pluginFromName(pluginName);
-    Request *request = plugin->requestManager()->queryImage(m_selfId);
-    PluginRequestReply *reply = new PluginRequestReply(request, parentId, this);
+    QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
+    connect(obj, SIGNAL(gotUserImage(QString,QString)), reply, SLOT(gotUserPictureUrl(QString,QString)));
     request->start();
 
     return reply;
@@ -203,7 +215,12 @@ void SocialProxy::commentSuccess(PluginRequestReply* reply)
 
 void SocialProxy::getPictureSuccess(PluginRequestReply* reply)
 {
-    m_socialModel->updateUserImage(m_cachedUserId, m_cachedUserImageUrl, reply->sourceId());
+    m_socialModel->updateUserImage(reply->userId(), reply->userPictureUrl(), reply->sourceId());
+}
+
+void SocialProxy::getSelfPictureSuccess(PluginRequestReply* reply)
+{
+    m_selfPictureUrl = reply->userPictureUrl();
 }
 
 void SocialProxy::authorized()
@@ -211,7 +228,13 @@ void SocialProxy::authorized()
     ISocialPlugin *plugin = dynamic_cast<ISocialPlugin *>(sender());
     m_enabledPlugins.insert(plugin->name());
 
-    plugin->requestManager()->queryWall(QDate(), QDate());
+    // update self id
+    Request *requestId = plugin->requestManager()->queryUserId();
+    requestId->start();
+
+    // update wall
+    Request *request = plugin->requestManager()->queryWall(QDate(), QDate());
+    request->start();
 
     if(plugin->authenticationWidget())
         plugin->authenticationWidget()->hide();
@@ -245,41 +268,46 @@ void SocialProxy::newItems(QList<SocialItem *> items)
 {
     if(!m_socialModel)
         return;
-    QList<SocialItem *> list;
-    foreach(SocialItem * item, items) {
-        QString strId = QString("%1-%2").arg(item->pluginName()).arg(item->id());
-        if(m_idSet.contains(strId))
-            continue;
-        m_idSet.insert(strId);
-
-        list.append(item);
+    foreach (SocialItem *item, items) {
         emit newMonth(item->date().year(), item->date().month(), item->pluginName());
     }
-    m_socialModel->newSocialItems(list);
+    m_socialModel->newSocialItems(items);
 }
 
-void SocialProxy::onGotUserImage(QString userId, QString userImageUrl)
-{
-    m_cachedUserImageUrl = userImageUrl;
-    m_cachedUserId = userId;
 
-    if (userId == m_selfId && m_selfPictureUrl.isEmpty()) {
-        m_selfPictureUrl = userImageUrl;
-    }
+PluginRequestReply *SocialProxy::selfPicture(const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    Request *request = plugin->requestManager()->queryImage(m_selfId);
+    PluginRequestReply *reply = new PluginRequestReply(request, 0, this);
+    QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
+    connect(obj, SIGNAL(gotUserImage(QString,QString)), reply, SLOT(gotUserPictureUrl(QString,QString)));
+    request->start();
+
+    return reply;
+}
+
+void SocialProxy::getSelfUserPicture(const QString &pluginName)
+{
+    PluginRequestReply* reply = selfPicture(pluginName);
+    connect(reply,SIGNAL(success(PluginRequestReply*)),this, SLOT(getSelfPictureSuccess(PluginRequestReply*)));
+    /*TO-DO: process error replies*/
+    connect(reply,SIGNAL(finished()),reply,SLOT(deleteLater()));
 }
 
 void SocialProxy::onSelfId(QString id)
 {
     m_selfId = id;
 
-    // get self picture
+    ISocialRequestManager *manager = dynamic_cast<ISocialRequestManager *>(sender());
+
     QSettings settings("ROSA", "Timeframe");
 
+    // get self user avatar
     foreach(ISocialPlugin * plugin, m_plugins) {
         bool isEnabled = settings.value(plugin->name()).toBool();
-        if(isEnabled && plugin->authorized()) {
-            Request *requestPicture = plugin->requestManager()->queryImage(m_selfId);
-            requestPicture->start();
+        if(isEnabled && plugin->authorized() && manager && (plugin->requestManager() == manager)) {
+            getSelfUserPicture(plugin->name());
         }
     }
 }
@@ -292,6 +320,11 @@ void SocialProxy::onSelfName(QString name)
 void SocialProxy::newComments(QString postId, QList<CommentItem *> items)
 {
     m_socialModel->addComments(postId, items);
+
+    // get all avatars of users
+    foreach (CommentItem* item, items) {
+        getUserPicture(item->data(CommentItem::FromId).toString(), postId, item->data(CommentItem::Type).toString());
+    }
 }
 
 void SocialProxy::setSocialModel(SocialDayModel *model)

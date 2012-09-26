@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: SimpleWelcome\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-09-18 17:44+0400\n"
+"POT-Creation-Date: 2012-09-26 17:24+0400\n"
 "PO-Revision-Date: 2011-08-24 17:50+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (http://transifex.mandriva.com/projects/p/"
@@ -57,136 +57,137 @@ msgstr "Aleksey Yermakov"
 msgid "Silent run. Hide application window after start."
 msgstr "Stiller Lauf. Applikationsfenster nach Start verstecken."
 
-#: swapp.cpp:174
+#: swapp.cpp:181
 msgid "Welcome"
 msgstr "Willkommen"
 
-#: swapp.cpp:175
+#: swapp.cpp:182
 msgid "Applications"
 msgstr "Anwendungen"
 
-#: swapp.cpp:176
+#: swapp.cpp:183
 msgid "TimeFrame"
 msgstr "TimeFrame"
 
-#: swapp.cpp:178
+#: swapp.cpp:185
 msgid "Recent Applications"
 msgstr "Kürzlich verwendete Anwendungen"
 
-#: swapp.cpp:179
+#: swapp.cpp:186
 msgid "Places"
 msgstr "Orte"
 
-#: swapp.cpp:180
+#: swapp.cpp:187
 msgid "Recent Documents"
 msgstr "Kürzlich verwendete Dokumente"
 
-#: swapp.cpp:182
+#: swapp.cpp:189
 msgid "All"
 msgstr ""
 
-#: swapp.cpp:183
+#: swapp.cpp:190
 #, fuzzy
 msgid "Photo"
 msgstr "Fotos"
 
-#: swapp.cpp:184
+#: swapp.cpp:191
 msgid "Video"
 msgstr "VIDEO"
 
-#: swapp.cpp:185
+#: swapp.cpp:192
 msgid "Documents"
 msgstr "Dokumente"
 
-#: swapp.cpp:186
+#: swapp.cpp:193
 msgid "Manage networks"
 msgstr ""
 
-#: swapp.cpp:187
+#: swapp.cpp:194
 #, fuzzy
 msgid "My Local Documents"
 msgstr "Dokumente"
 
-#: swapp.cpp:188
+#: swapp.cpp:195
 msgid "Local"
 msgstr ""
 
-#: swapp.cpp:189
+#: swapp.cpp:196
 msgid "Write comment..."
 msgstr ""
 
-#: swapp.cpp:190
+#: swapp.cpp:197
 msgid "Audio: "
 msgstr ""
 
-#: swapp.cpp:191
-#, fuzzy
-msgid "Comments: "
-msgstr "Dokumente"
-
-#: swapp.cpp:192
-msgid "Likes: "
-msgstr ""
-
-#: swapp.cpp:193
+#: swapp.cpp:198
 msgid "Like"
 msgstr ""
 
-#: swapp.cpp:194
+#: swapp.cpp:199
 msgid "Unlike"
 msgstr ""
 
-#: swapp.cpp:195
+#: swapp.cpp:200
 msgid "Social networking sites"
 msgstr ""
 
-#: swapp.cpp:197
+#: swapp.cpp:201
+#, fuzzy
+msgid "Show comments"
+msgstr "Dokumente"
+
+#: swapp.cpp:202
+#, fuzzy
+msgid "Hide comments"
+msgstr "Dokumente"
+
+#: swapp.cpp:204
 msgid "JAN"
 msgstr "JAN"
 
-#: swapp.cpp:198
+#: swapp.cpp:205
 msgid "FEB"
 msgstr "FEB"
 
-#: swapp.cpp:199
+#: swapp.cpp:206
 msgid "MAR"
 msgstr "MÄR"
 
-#: swapp.cpp:200
+#: swapp.cpp:207
 msgid "APR"
 msgstr "APR"
 
-#: swapp.cpp:201
+#: swapp.cpp:208
 msgid "MAY"
 msgstr "MAI"
 
-#: swapp.cpp:202
+#: swapp.cpp:209
 #, fuzzy
 msgid "JUN"
 msgstr "JUN"
 
-#: swapp.cpp:203
+#: swapp.cpp:210
 #, fuzzy
 msgid "JUL"
 msgstr "JUL"
 
-#: swapp.cpp:204
+#: swapp.cpp:211
 msgid "AUG"
 msgstr "AUG"
 
-#: swapp.cpp:205
+#: swapp.cpp:212
 msgid "SEP"
 msgstr "SEP"
 
-#: swapp.cpp:206
+#: swapp.cpp:213
 msgid "OCT"
 msgstr "OKT"
 
-#: swapp.cpp:207
+#: swapp.cpp:214
 msgid "NOV"
 msgstr "NOV"
 
-#: swapp.cpp:208
+#: swapp.cpp:215
 msgid "DEC"
 msgstr "DEZ"
 

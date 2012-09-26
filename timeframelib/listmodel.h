@@ -26,6 +26,7 @@ public:
     void refreshRow(int row);
     ListItem* takeRow(int row);
     ListItem* find(const QString &id) const;
+    ListItem* itemAt(int row) const;
     QModelIndex indexFromItem(const ListItem* item) const;
     void clear();
     Qt::ItemFlags flags ( const QModelIndex & index ) const;
