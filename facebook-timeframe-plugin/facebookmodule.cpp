@@ -24,7 +24,7 @@ FacebookModule::FacebookModule()
     if(!accessToken.isEmpty())
         m_authorizer->setAccessToken(accessToken);
 
-    m_pixmap.load(":/images/fb.png");
+    m_pixmap.load(":/images/fb-shadow.png");
     m_smallPixmap.load(":/images/fb-small.png");
 }
 

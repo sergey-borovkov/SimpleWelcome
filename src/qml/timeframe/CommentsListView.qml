@@ -1,0 +1,55 @@
+import QtQuick 1.1
+
+ListView {
+    id: commentsListView
+    clip: true
+    snapMode:  ListView.SnapToItem
+    property string parentId: ""
+    property string pluginName: ""
+    delegate: Item {
+        width: 200; height: 60
+        Image
+        {
+            id: userPhoto
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            fillMode: Image.PreserveAspectFit
+            width: 55
+            anchors.rightMargin: 5
+            source: fromPictureUrl
+/*
+            Component.onCompleted: {
+                console.log(fromId);
+                console.log(parentId);
+                console.log(pluginName);
+                socialProxy.getUserPicture(fromId, parentId, pluginName);
+            }
+*/
+        }
+        Text {
+            id: nameField;
+            anchors.left: userPhoto.right
+            anchors.top: parent.top
+            anchors.leftMargin: 10
+            text: from
+            color: "white"
+        }
+        Text {
+            id: textField;
+            anchors.left: userPhoto.right
+            anchors.top: nameField.bottom
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 10
+            text: messageText
+            color: "white"
+            elide: Text.ElideRight
+        }
+    }
+    ScrollBar{
+        id: scrollBar
+        flickable: commentsListView
+        vertical: true
+        hideScrollBarsWhenStopped: false
+    }
+}
