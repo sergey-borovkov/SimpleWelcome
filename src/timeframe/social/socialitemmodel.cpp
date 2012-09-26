@@ -12,10 +12,6 @@ SocialItemModel::SocialItemModel(QHash<int, QByteArray> roles, QObject *parent)
 {
 }
 
-SocialItemModel::~SocialItemModel()
-{
-}
-
 bool SocialItemModel::removeRow(int row, const QModelIndex &parent)
 {
     SocialItem *item = static_cast<SocialItem*>(itemAt(row));
