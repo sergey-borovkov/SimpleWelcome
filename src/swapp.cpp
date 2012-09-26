@@ -279,8 +279,7 @@ void SWApp::initTimeframeSocialMode()
     m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
 
     TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
-    TimeScaleItem* item = new TimeScaleItem();
-    TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
+    TimeScaleModel* timeScaleModel = new TimeScaleModel(TimeScaleItem::roleNames(), this);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
 
     connect(m_manager, SIGNAL(removeType(QString)), timeScaleModel, SLOT(removeItems(QString)));

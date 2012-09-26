@@ -11,7 +11,6 @@ class ListItem;
 class TIMEFRAMELIB_EXPORT ListModel : public QAbstractListModel
 {
     Q_OBJECT
-
 public:
     explicit ListModel(QHash<int, QByteArray> roles, QObject* parent = 0);
     ~ListModel();
@@ -30,8 +29,6 @@ public:
     QModelIndex indexFromItem(const ListItem* item) const;
     void clear();
     Qt::ItemFlags flags ( const QModelIndex & index ) const;
-private slots:
-    void handleItemChange();
 
 private:
     QList<ListItem *> m_items;

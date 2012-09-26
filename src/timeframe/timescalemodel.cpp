@@ -74,8 +74,13 @@ TimeScaleItem::TimeScaleItem(int year, int month, QString type, QObject *parent)
 
 }
 
+QString TimeScaleItem::id() const
+{
+    return "";
+}
 
-QHash<int, QByteArray> TimeScaleItem::roleNames() const
+
+QHash<int, QByteArray> TimeScaleItem::roleNames()
 {
     QHash<int, QByteArray> names;
     names[YearRole]  = "year";
@@ -125,16 +130,9 @@ void TimeScaleItem::setType(QString types)
     emit dataChanged();
 }
 
-TimeScaleModel::TimeScaleModel(TimeScaleItem* prototype, QObject *parent) :
-    QAbstractListModel(parent), m_prototype(prototype)
+TimeScaleModel::TimeScaleModel(QHash<int, QByteArray> roles, QObject *parent) :
+    ListModel(roles, parent)
 {
-    setRoleNames(m_prototype->roleNames());
-}
-
-TimeScaleModel::~TimeScaleModel()
-{
-    delete m_prototype;
-    clear();
 }
 
 void TimeScaleModel::newItem(int year, int month, QString type)
@@ -146,6 +144,7 @@ void TimeScaleModel::newItem(int year, int month, QString type)
         }
     } else { //add new item
         TimeScaleItem* item = new TimeScaleItem(year, month, type, this);
+        connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
         appendRow(item);
     }
 }
@@ -156,51 +155,13 @@ void TimeScaleModel::removeItems(const QString &type)
         QStringList types = data(index(i), TimeScaleItem::TypesRole).toString().split(";");
         int ind = types.indexOf(type);
         if(ind != -1 && types.size() == 1) {
-            beginRemoveRows(QModelIndex(), i, i);
-            delete m_list.takeAt(i);
-            endRemoveRows();
+            removeRow(i);
             i--;
         } else if(ind != -1){
             types.removeAt(ind);
-            m_list[i]->setType(types.join(";"));
+            static_cast<TimeScaleItem *>(itemAt(i))->setType(types.join(";"));
         }
     }
-}
-
-QVariant TimeScaleModel::data(const QModelIndex &index, int role) const
-{
-    if(index.row() < 0 || index.row() >= m_list.size())
-        return QVariant();
-    return m_list.at(index.row())->data(role);
-}
-
-int TimeScaleModel::rowCount(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent)
-    return m_list.size();
-}
-
-void TimeScaleModel::appendRow(TimeScaleItem *item)
-{
-    appendRows(QList<TimeScaleItem*>() << item);
-}
-
-void TimeScaleModel::appendRows(const QList<TimeScaleItem *> &items)
-{
-    beginInsertRows(QModelIndex(), rowCount(), rowCount() + items.size() - 1);
-    foreach(TimeScaleItem * item, items) {
-        connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
-        m_list.append(item);
-    }
-    endInsertRows();
-}
-
-void TimeScaleModel::insertRow(int row, TimeScaleItem *item)
-{
-    beginInsertRows(QModelIndex(), row, row);
-    connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
-    m_list.insert(row, item);
-    endInsertRows();
 }
 
 void TimeScaleModel::handleItemChange()
@@ -213,54 +174,11 @@ void TimeScaleModel::handleItemChange()
 
 TimeScaleItem * TimeScaleModel::find(const int year, const int month)
 {
-    foreach(TimeScaleItem * item, m_list) {
+    int size = rowCount();
+    for(int i = 0; i < size; i++) {
+        TimeScaleItem *item = static_cast<TimeScaleItem *>(itemAt(i));
         if((item->year() == year) && (item->month() == month))
             return item;
     }
     return 0;
-}
-
-QModelIndex TimeScaleModel::indexFromItem(const TimeScaleItem *item) const
-{
-    Q_ASSERT(item);
-    for(int row = 0; row < m_list.size(); ++row) {
-        if(m_list.at(row) == item) return index(row);
-    }
-    return QModelIndex();
-}
-
-void TimeScaleModel::clear()
-{
-    qDeleteAll(m_list);
-    m_list.clear();
-}
-
-bool TimeScaleModel::removeRow(int row, const QModelIndex &parent)
-{
-    Q_UNUSED(parent);
-    if(row < 0 || row >= m_list.size()) return false;
-    beginRemoveRows(QModelIndex(), row, row);
-    delete m_list.takeAt(row);
-    endRemoveRows();
-    return true;
-}
-
-bool TimeScaleModel::removeRows(int row, int count, const QModelIndex &parent)
-{
-    Q_UNUSED(parent);
-    if(row < 0 || (row + count) >= m_list.size()) return false;
-    beginRemoveRows(QModelIndex(), row, row + count - 1);
-    for(int i = 0; i < count; ++i) {
-        delete m_list.takeAt(row);
-    }
-    endRemoveRows();
-    return true;
-}
-
-TimeScaleItem * TimeScaleModel::takeRow(int row)
-{
-    beginRemoveRows(QModelIndex(), row, row);
-    TimeScaleItem* item = m_list.takeAt(row);
-    endRemoveRows();
-    return item;
 }

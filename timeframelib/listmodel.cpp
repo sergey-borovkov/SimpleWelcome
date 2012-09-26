@@ -27,7 +27,6 @@ bool ListModel::setData(const QModelIndex &index, const QVariant &value, int rol
       if (result){
           emit dataChanged(index, index);
       }
-
       return result;
 }
 
@@ -54,10 +53,6 @@ void ListModel::insertRow(int row, ListItem *item)
     beginInsertRows(QModelIndex(), row, row);
     m_items.insert(row, item);
     endInsertRows();
-}
-
-void ListModel::handleItemChange()
-{
 }
 
 ListItem * ListModel::find(const QString &id) const
