@@ -1,15 +1,15 @@
 #ifndef SOCIALPROXY_H
 #define SOCIALPROXY_H
 
-#include <QtCore/QObject>
-#include <QtCore/QList>
-#include <QtCore/QSet>
-#include <QtCore/QMap>
-#include "socialitem.h"
-#include <QMetaType>
-
-
 #include "pluginrequestreply.h"
+#include "socialitem.h"
+
+#include <QMetaType>
+#include <QtCore/QList>
+#include <QtCore/QMap>
+#include <QtCore/QObject>
+#include <QtCore/QSet>
+
 
 class ISocialPlugin;
 class ListModel;

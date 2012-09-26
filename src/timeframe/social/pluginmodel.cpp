@@ -1,9 +1,9 @@
-#include "pluginmodel.h"
 #include "pluginitem.h"
+#include "pluginmodel.h"
 #include "socialplugin.h"
 
-#include <QtGui/QWidget>
 #include <QtCore/QSettings>
+#include <QtGui/QWidget>
 
 PluginModel::PluginModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)

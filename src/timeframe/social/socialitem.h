@@ -2,9 +2,10 @@
 #define SOCIALITEM_H
 
 #include <QtCore/QHash>
+#include <QtCore/QMetaType>
 #include <QtCore/QVariant>
-#include <QMetaType>
-#include "../timeframelib/listitem.h"
+
+#include <listitem.h>
 
 class SocialItem : public ListItem
 {

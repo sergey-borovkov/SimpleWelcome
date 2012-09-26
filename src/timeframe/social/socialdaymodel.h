@@ -1,11 +1,11 @@
 #ifndef SOCIALDAYMODEL_H
 #define SOCIALDAYMODEL_H
 
-#include <QSortFilterProxyModel>
-#include <QSet>
-#include <QHash>
-#include <QDate>
-#include <QObject>
+#include <QtCore/QDate>
+#include <QtCore/QHash>
+#include <QtCore/QObject>
+#include <QtCore/QSet>
+#include <QtGui//QSortFilterProxyModel>
 
 #include <listmodel.h>
 

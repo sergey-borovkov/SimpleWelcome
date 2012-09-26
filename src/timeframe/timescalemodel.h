@@ -1,11 +1,11 @@
 #ifndef TIMESCALEMODEL_H
 #define TIMESCALEMODEL_H
 
-#include <QAbstractListModel>
-#include <QSortFilterProxyModel>
-#include <QHash>
-#include <QSet>
-#include <QPair>
+#include <QtCore/QAbstractListModel>
+#include <QtCore/QHash>
+#include <QtCore/QPair>
+#include <QtCore/QSet>
+#include <QtGui/QSortFilterProxyModel>
 
 
 class ActivityProxy;

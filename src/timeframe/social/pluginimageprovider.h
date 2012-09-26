@@ -4,7 +4,6 @@
 #include "socialplugin.h"
 
 #include <QtDeclarative/QDeclarativeImageProvider>
-#include <QtCore/QDebug>
 
 class PluginImageProvider : public QDeclarativeImageProvider
 {

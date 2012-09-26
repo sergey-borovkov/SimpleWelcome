@@ -1,7 +1,7 @@
-#include "socialitemmodel.h"
-
 #include "socialitem.h"
+#include "socialitemmodel.h"
 #include "socialproxy.h"
+
 #include <commentitem.h>
 
 #include <QtCore/QDate>

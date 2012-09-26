@@ -2,8 +2,8 @@
 #define SOCIALPLUGIN_H
 
 #include <QtCore/QList>
-#include <QtGui/QPixmap>
 #include <QtCore/QtPlugin>
+#include <QtGui/QPixmap>
 
 class SocialItem;
 class QDate;

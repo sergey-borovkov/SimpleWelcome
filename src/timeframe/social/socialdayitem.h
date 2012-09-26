@@ -1,10 +1,10 @@
 #ifndef SOCIALDAYITEM_H
 #define SOCIALDAYITEM_H
 
-#include <QStringList>
-#include <QDate>
-#include <QSortFilterProxyModel>
-#include <QObject>
+#include <QtCore/QDate>
+#include <QtCore/QObject>
+#include <QtCore/QStringList>
+#include <QtGui//QSortFilterProxyModel>
 
 #include <listitem.h>
 

@@ -1,17 +1,17 @@
-#include "socialproxy.h"
-#include "socialitem.h"
-#include "socialplugin.h"
-#include "socialdaymodel.h"
 #include "pluginitem.h"
 #include "pluginmodel.h"
 #include "pluginrequestreply.h"
+#include "socialdaymodel.h"
+#include "socialitem.h"
+#include "socialplugin.h"
+#include "socialproxy.h"
 
-#include <listmodel.h>
 #include <commentitem.h>
+#include <listmodel.h>
 
-#include <QtGui/QWidget>
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
+#include <QtGui/QWidget>
 
 SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
     : QObject(parent)

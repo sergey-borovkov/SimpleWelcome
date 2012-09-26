@@ -4,7 +4,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVariant>
 
-#include "../timeframelib/listitem.h"
+#include <listitem.h>
 
 class ISocialPlugin;
 
