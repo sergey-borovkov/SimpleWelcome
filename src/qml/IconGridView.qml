@@ -353,11 +353,18 @@ GridView {
                 if (itemWaitingOn !== undefined)
                 {
                     var item = itemWaitingOn
+                    var isHitInnerIcon = gridMouseArea.mouseX > item.x && gridMouseArea.mouseX < item.x + constants.cellWidth
 
                     //var pointsDistance = Math.sqrt(Math.pow(gridMouseArea.mouseX - xWaiting, 2) + Math.pow(gridMouseArea.mouseY - yWaiting, 2))
                     //console.log("distance: " + pointsDistance)
 
-                    if (gridMouseArea.mouseX > item.x && gridMouseArea.mouseX < item.x + constants.cellWidth && indexWaitingOn != gridMouseArea.dndDest)// && pointsDistance <= 3)
+                    if (gridMouseArea.draggedItemStackedAt !== undefined && (gridMouseArea.draggedItemStackedAt !== indexWaitingOn || !isHitInnerIcon))
+                    { // Unstacking if item we are above is not the one we stacked to
+                        console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
+                        grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
+                        gridMouseArea.draggedItemStackedAt = undefined
+                    }
+                    else if (isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest) //&& pointsDistance <= 3)
                     { // Hit central part of item. Using for stacking
                         if (isAimingOnStacking)
                         {
@@ -376,25 +383,15 @@ GridView {
 
                         }
                     }
-                    else // Hit outer part of item. Using for repositioning
+                    /*else if (!isAimingOnStacking) // Hit outer part of item. Using for repositioning
                     {
-                        if (gridMouseArea.draggedItemStackedAt !== undefined)
-                        {
-                            console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
-                            grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
-                            gridMouseArea.draggedItemStackedAt = undefined
-                        }
+                        console.log("MOVING")
 
-                        if (!isAimingOnStacking)
-                        {
-                            console.log("MOVING")
-
-                            gridMouseArea.dndDestId = indexWaitingOn // This could had broken dnd-dndId connection but fixed bug
-                            model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
-                            gridMouseArea.dndDest = indexWaitingOn
-                            currentIndex = gridMouseArea.dndDest
-                        }
-                    }
+                        gridMouseArea.dndDestId = indexWaitingOn // This could had broken dnd-dndId connection but fixed bug
+                        model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
+                        gridMouseArea.dndDest = indexWaitingOn
+                        currentIndex = gridMouseArea.dndDest
+                    }*/
 
                     itemWaitingOn = undefined
                 }
