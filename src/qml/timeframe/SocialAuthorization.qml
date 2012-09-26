@@ -4,6 +4,7 @@ import ".."
 ListView {
     spacing: 15
     delegate: Item {
+        id: authorizationItem
         //width: Math.max(img.width,  ) + 10
         width: childrenRect.width
         height: img.height + button.height + 10
@@ -49,21 +50,10 @@ ListView {
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
-            onEntered: {
-                img.width = 134
-                img.height = 134
-                buttonText.font.bold = true
-                buttonImage.height = 24
-                buttonImage.width = 24
-            }
-            onExited: {
-                img.width = 128
-                img.height = 128
-                buttonText.font.bold = false
-                buttonImage.height = 22
-                buttonImage.width = 22
-            }
-
+            onEntered: authorizationItem.state = "hover"
+            onExited:  authorizationItem.state = ""
+            onPressed: authorizationItem.state = ""
+            onReleased: authorizationItem.state = "hover"
             onClicked: {
                 if(authorized) {
                     socialProxy.logout(name)
@@ -73,5 +63,17 @@ ListView {
                 }
             }
         }
+        states: [
+            State {
+                name: "hover"
+                PropertyChanges { target: img; width: 134; height: 134 }
+                PropertyChanges { target: buttonImage; width: 24; height: 24 }
+            }
+        ]
+        transitions: [
+            Transition {
+                NumberAnimation { properties: "width,height"; duration: 100}
+            }
+        ]
     }
 }

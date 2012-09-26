@@ -11,6 +11,7 @@ Item{
 
     MouseArea {
         id: modal
+        z: -1
         anchors.fill: parent
     }
 
@@ -154,6 +155,7 @@ Item{
                             hoverEnabled: true
                             onClicked: {
                                 modal.parent = galleryRect
+                                modal.z= -1
                                 galleryRect.state = ""
                             }
                             onEntered: {
@@ -461,6 +463,7 @@ Item{
                 //console.log("details on")
                 if (galleryRect.state === "") {
                     modal.parent = timeFrameTab;
+                    modal.z = 300
                     __notDetailed = false
                     __height = galleryItem.childrenRect.height
                     galleryRect.state = "details"
@@ -490,6 +493,8 @@ Item{
                 x: timeFrameTab.width/2 - galleryItem.width/2
                 y: timeFrameTab.height/2 - galleryItem.height/2
             }
+            PropertyChanges { target: galleryItem; z: 400}
+
             PropertyChanges { target: mainRect; width: 400; height: 300 }
 
             PropertyChanges { target: bottomLine; height: 26; visible: true }
