@@ -1,8 +1,8 @@
 #include "timescalemodel.h"
 
-#include <QtCore/QStringList>
 #include <QtCore/QModelIndex>
 #include <QtCore/QRegExp>
+#include <QtCore/QStringList>
 
 TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
     QSortFilterProxyModel(parent)

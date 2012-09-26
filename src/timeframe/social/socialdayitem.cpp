@@ -2,8 +2,6 @@
 #include "socialitemmodel.h"
 #include "socialitem.h"
 
-#include "QtCore/QDebug"
-
 SocialItemFilterModel::SocialItemFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
 {

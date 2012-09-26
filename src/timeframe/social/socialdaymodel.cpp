@@ -1,12 +1,11 @@
-#include "socialdaymodel.h"
 #include "socialdayitem.h"
+#include "socialdaymodel.h"
 #include "socialitem.h"
 #include "socialitemmodel.h"
 #include "socialproxy.h"
 
-#include <QtCore/QVariant>
 #include <QtCore/QRegExp>
-#include <QtCore/QDebug>
+#include <QtCore/QVariant>
 
 SocialDayFilterModel::SocialDayFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
