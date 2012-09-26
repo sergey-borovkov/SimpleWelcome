@@ -138,6 +138,7 @@ Item{
                         hoverEnabled: true
                         onClicked: {
                             modal.parent = cloudRect
+                            modal.z = -1
                             cloudRect.state = ""
                         }
                         onEntered: {
@@ -446,11 +447,13 @@ Item{
                 if (cloudRect.state === "") {
                     cloudRect.state = "details"
                     modal.parent = timeFrameTab;
+                    modal.z = 300
                     //Query all comments
                     socialProxy.getAllComments(id, pluginName)
                 }
                 else {
                     modal.parent = socialCloudItem
+                    modal.z = -1
                     cloudRect.state = ""
                 }
             }
@@ -479,6 +482,7 @@ Item{
                 width: 400
                 height: 300
             }
+            PropertyChanges { target: socialCloudItem; z: 400 }
 
             PropertyChanges { target: socialMessage; text: message }
 
