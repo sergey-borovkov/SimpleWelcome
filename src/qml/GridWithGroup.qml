@@ -70,18 +70,20 @@ Column {
         function updateSelection()
         {
             //parent.count = count // without this it is updated too late// TEST WHAT THE HELL NOW'S HAPPENING
-            if (highlightItem)
+            if (highlightItem && (updateSelection.countWas === undefined || updateSelection.countWas < count))
             {
                 highlightItem.animationDuration = 0
                 highlightItem.opacity = 0
                 highlightItem.animationDuration = 150
             }
             gridItemCountChanged()
+            updateSelection.countWas = count
         }
 
         function appendItemToModel(itemData)
         {
             itemData.stack = undefined
+            itemData.hidden = false
             model.append(itemData)
 
             // UNREM THIS TO ENABLE AUTO-STACKING
