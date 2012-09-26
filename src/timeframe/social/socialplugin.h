@@ -33,7 +33,7 @@ public:
 
     /**
      * @brief Query comments to post. You need to connect to SocialRequestManager
-     *        newComments(QList<CommentItem *>) signal to get result
+     *        newComments(QString parent, QList<CommentItem *>) signal to get result
      * @param id of parent post
      * @return pointer to request
      */
