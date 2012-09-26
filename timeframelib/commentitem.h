@@ -19,7 +19,8 @@ public:
         Message,
         CreatedTime,
         LikeCount,
-        Id
+        Id,
+        Type
     };
     ~CommentItem();
 
@@ -37,6 +38,7 @@ public:
         roles.insert(CreatedTime, "createdTime" );
         roles.insert(LikeCount, "likeCount" );
         roles.insert(Id, "id" );
+        roles.insert(Type, "pluginName" );
         return roles;
     }
 

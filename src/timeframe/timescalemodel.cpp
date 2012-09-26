@@ -69,7 +69,7 @@ int TimeScaleFilterModel::count()
 }
 
 TimeScaleItem::TimeScaleItem(int year, int month, QString type, QObject *parent):
-    QObject(parent) ,  m_year(year) , m_month(month) , m_type(type)
+    QObject(parent) ,  m_year(year) , m_month(month) , m_type(type + ";")
 {
 
 }
@@ -115,10 +115,8 @@ QString TimeScaleItem::types() const
 
 void TimeScaleItem::addType(QString type)
 {
-    if(!m_type.contains(type)) {
-        m_type += (type + ";");
-        emit dataChanged();
-    }
+    m_type += (type + ";");
+    emit dataChanged();
 }
 
 void TimeScaleItem::setType(QString types)
@@ -164,10 +162,9 @@ void TimeScaleModel::removeItems(const QString &type)
             i--;
         } else if(ind != -1){
             types.removeAt(ind);
-            m_list[ind]->setType(types.join(";"));
+            m_list[i]->setType(types.join(";"));
         }
     }
-
 }
 
 QVariant TimeScaleModel::data(const QModelIndex &index, int role) const

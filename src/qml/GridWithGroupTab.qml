@@ -279,7 +279,6 @@ Item {
             anchors.fill: parent
 
             onScrollVert: _scroll(delta)
-            onScrollHorz: _scroll(delta)
 
             function _scroll(delta) {
                 // See Qt documentation of QGraphicsSceneWheelEvent

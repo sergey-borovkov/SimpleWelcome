@@ -278,7 +278,6 @@ void SocialProxy::onGotUserImage(QString userId, QString userImageUrl)
 {
     m_cachedUserImageUrl = userImageUrl;
     m_cachedUserId = userId;
-
     if (userId == m_selfId && m_selfPictureUrl.isEmpty()) {
         m_selfPictureUrl = userImageUrl;
     }
@@ -308,6 +307,12 @@ void SocialProxy::onSelfName(QString name)
 void SocialProxy::newComments(QString postId, QList<CommentItem *> items)
 {
     m_socialModel->addComments(postId, items);
+    /*
+    foreach (CommentItem* item, items) {
+        qDebug() << item->id() << postId << item->data(CommentItem::Type).toString();
+        getUserPicture(item->id(), postId, item->data(CommentItem::Type).toString());
+    }
+    */
 }
 
 void SocialProxy::setSocialModel(SocialDayModel *model)
