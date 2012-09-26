@@ -98,7 +98,7 @@ Item{
             rect1.likes = model.likesCount(0); rect1.commentCount = model.commentsCount(0); rect1.like = model.like(0); \
             rect2.likes = model.likesCount(1); rect2.commentCount = model.commentsCount(1); rect2.like = model.like(1); \
             rect3.likes = model.likesCount(2); rect3.commentCount = model.commentsCount(2); rect3.like = model.like(2); \
-            rect4.likes = model.likesCount(3); rect4.commentCount = model.commentsCount(3); rect3.like = model.like(3) \
+            rect4.likes = model.likesCount(3); rect4.commentCount = model.commentsCount(3); rect4.like = model.like(3) \
          } }',cloudFour);
     }
 

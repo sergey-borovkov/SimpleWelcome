@@ -275,7 +275,7 @@ Item{
                         onEntered: likesText.font.bold = true
                         onExited: likesText.font.bold = false
                         onClicked: {
-                            if (likeItem.state === "") {
+                            if (likeItemArea.state === "") {
                                 socialProxy.likeItem(id, pluginName);
                             } else {
                                 socialProxy.unlikeItem(id, pluginName);
