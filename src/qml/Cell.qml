@@ -121,11 +121,13 @@ Item {
                 name: "cellInDrag"
                 when: gridMouseArea.dndSrcId === id && !hidden
 
-                PropertyChanges {
+                ParentChange {
                     target: wrapper
-                    x: gridMouseArea.mouseX - wrapper.width/2
-                    y: gridMouseArea.mouseY - wrapper.height/2
-                    z: 10
+                    parent: tabRoot
+                    x: gridMouseArea.mapToItem(tabRoot, gridMouseArea.mouseX - wrapper.width/2, 0).x
+                    y: gridMouseArea.mapToItem(tabRoot, 0, gridMouseArea.mouseY - wrapper.height/2).y
+                    //x: gridMouseArea.mouseX - wrapper.width/2
+                    //y: gridMouseArea.mouseY - wrapper.height/2
                 }
             },
 
@@ -145,7 +147,10 @@ Item {
                 from: ""
                 to: "cellInDrag"
                 reversible: true
-                NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
+                ParentAnimation {
+                    via: tabRoot
+                    NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
+                }
             },
             Transition {
                 from: "cellOpenedStack"
