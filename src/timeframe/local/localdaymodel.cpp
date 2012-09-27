@@ -13,7 +13,7 @@ TimeFrameDayFilterModel::TimeFrameDayFilterModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
-    setFilterRole(LocalDayModel::TypesRole);
+    setFilterRole(LocalDayItem::TypesRole);
 }
 
 void TimeFrameDayFilterModel::setFilter(const QString &filter)
@@ -32,7 +32,7 @@ void TimeFrameDayFilterModel::setFilter(const QString &filter)
     if(model)
         model->setFilter(filterRegExp);
     for(int i = 0; i < rowCount(); i++) { //Set filter on nested models
-        QDate date = data(index(i, 0), LocalDayModel::CurrentDateRole).toDate();
+        QDate date = data(index(i, 0), LocalDayItem::CurrentDateRole).toDate();
         TimeFrameFilterModel * tModel = qobject_cast<TimeFrameFilterModel *> (itemsModel(date));
         if(tModel)
             tModel->setFilterRegExp(filterRegExp);
@@ -52,14 +52,14 @@ QDate TimeFrameDayFilterModel::getDateOfIndex(int listIndex)
 {
     if((listIndex >= rowCount()) || (listIndex < 0))
         return QDate();
-    return data(index(listIndex, 0), LocalDayModel::CurrentDateRole).toDate();
+    return data(index(listIndex, 0), LocalDayItem::CurrentDateRole).toDate();
 }
 
-int TimeFrameDayFilterModel::getIndexByDate(int year, int month,  bool direction)
+int TimeFrameDayFilterModel::getIndexByDate(int year, int month, bool direction)
 {
     Q_UNUSED(direction)
     for(int i = 0; i < rowCount(); i++) {
-        QDate date = data(index(i, 0), LocalDayModel::CurrentDateRole).toDate();
+        QDate date = data(index(i, 0), LocalDayItem::CurrentDateRole).toDate();
         if((date.year() == year) && (date.month() == month))
             return i;
     }
@@ -67,56 +67,31 @@ int TimeFrameDayFilterModel::getIndexByDate(int year, int month,  bool direction
 }
 
 
-LocalDayModel::LocalDayModel(QObject *parent) :
-    QAbstractListModel(parent),
+LocalDayModel::LocalDayModel(QHash<int, QByteArray> roles, QObject* parent) :
+    ListModel(roles, parent),
     m_lister(0)
-
 {
-    hash.insert(ItemsRole, "items");
-    hash.insert(CurrentDateRole, "date");
-    hash.insert(CountRole, "count");
-    hash.insert(TypesRole, "type");
-    hash.insert(ItemsCountRole, "size");
-    setRoleNames(hash);
 }
 
-LocalDayModel::~LocalDayModel()
-{
-    clear();
-}
 
 QVariant LocalDayModel::data(const QModelIndex &index, int role) const
 {
     if(!index.isValid()) {
         return QVariant();
     }
-    if(role == CurrentDateRole) {
-        return m_items.value(index.row())->getDate();
-    } else if(role == ItemsRole) {
-        return 0;
-    } else if(role == CountRole) {
-        return m_items.size();
-    } else if(role == TypesRole) {
-        return m_items.at(index.row())->types();
-    } else if(role == ItemsCountRole) {
-        return m_items[index.row()]->getCount();
+    if(role == LocalDayItem::CountRole) {
+        return rowCount();
     }
-    return QVariant();
-}
 
-int LocalDayModel::rowCount(const QModelIndex &parent) const
-{
-    if(parent.isValid())
-        return 0;
-    else
-        return m_items.size();
+    return ListModel::data(index, role);
 }
 
 QObject* LocalDayModel::itemsModel(QDate date) const
 {
-    for(int i = 0; i < m_items.size(); i++) {
-        if(date == m_items.value(i)->getDate())
-            return m_items.value(i)->model();
+    for(int i = 0; i < rowCount(); i++) {
+        LocalDayItem *item = static_cast<LocalDayItem *>(itemAt(i));
+        if(date == item->getDate())
+            return item->model();
     }
     return 0;
 }
@@ -134,39 +109,39 @@ void LocalDayModel::newActivities(QList<Activity*> list)
 {
     for(int i = 0; i < list.size() ; i++) {
 
-        Activity* item = list.at(i);
-        if(m_urlHash.contains(item->getUrl()))
+        Activity* newItem = list.at(i);
+        if(m_urlHash.contains(newItem->getUrl()))
             continue;
-        m_urlHash.insert(item->getUrl(), item->getDate());
+        m_urlHash.insert(newItem->getUrl(), newItem->getDate());
 
-        //first check of null item, if we find one, edit him with new data
-        foreach(LocalDayItem * it, m_items) {
-            if((it->getDate().year() == item->getDate().year())
-                    && (it->getDate().month() == item->getDate().month())
+        //first check of null item, if we find one, edit it with new data
+        for(int j = 0; j < rowCount(); j++) {
+            LocalDayItem *it = static_cast<LocalDayItem *>(itemAt(j));
+            if((it->getDate().year() == newItem->getDate().year())
+                    && (it->getDate().month() == newItem->getDate().month())
                     && (it->getCount() == 0)
-              ) {
-                it->setDate(item->getDate());
-                it->addActivity(item);
-                QModelIndex index = indexFromItem(it);
-                if(index.isValid())
-                    dataChanged(index, index);
+                ) {
+                it->setDate(newItem->getDate());
+                it->addActivity(newItem);
                 continue;
             }
         }
 
         int j = 0;
         bool flag = false;
-        if(m_items.size() > 0) {
-            while(m_items.at(j)->getDate() <= item->getDate()) {
-                if(m_items.at(j)->getDate() == item->getDate()) {
-                    m_items.at(j)->addActivity(item);
+        if(rowCount() > 0) {
+            LocalDayItem *item = static_cast<LocalDayItem *>(itemAt(0));
+            while(item->getDate() <= newItem->getDate()) {
+                if(item->getDate() == newItem->getDate()) {
+                    item->addActivity(newItem);
                     flag = true;
                     break;
                 }
                 j++;
-                if(j == m_items.size()) {
+                if(j == rowCount()) {
                     break;
                 }
+                item = static_cast<LocalDayItem *>(itemAt(j));
             }
         }
 
@@ -174,8 +149,8 @@ void LocalDayModel::newActivities(QList<Activity*> list)
             continue;
         }
 
-        LocalDayItem * gallItem = new LocalDayItem(item->getDate(), this);
-        gallItem->addActivity(item);
+        LocalDayItem * gallItem = new LocalDayItem(newItem->getDate(), this);
+        gallItem->addActivity(newItem);
         insertRow(j, gallItem);
     }
 }
@@ -184,19 +159,23 @@ void LocalDayModel::newActivities(QList<Activity*> list)
 void LocalDayModel::newMonth(int year, int month)
 {
     QDate date(year, month, 1);
-    foreach(LocalDayItem * item, m_items) {
+    for(int i = 0; i < rowCount(); i++) {
+        LocalDayItem *item = static_cast<LocalDayItem *>(itemAt(i));
         if((item->getDate().year() == year) && (item->getDate().month() == month)) {
             return;
         }
     }
+
     int j = 0;
     LocalDayItem * gallItem = new LocalDayItem(date, this);
-    if(m_items.size() > 0) {
-        while(m_items.at(j)->getDate() <= gallItem->getDate()) {
+    if(rowCount() > 0) {
+        LocalDayItem *item = static_cast<LocalDayItem *>(itemAt(0));
+        while(item->getDate() <= gallItem->getDate()) {
             j++;
-            if(j == m_items.size()) {
+            if(j == rowCount()) {
                 break;
             }
+            item = static_cast<LocalDayItem *>(itemAt(j));
         }
     }
 
@@ -208,18 +187,20 @@ bool LocalDayModel::removeNullItem(int year, int month)
 {
     QDate date(year, month, 1);
     int j = 0;
-    if(m_items.size() > 0) {
-        while(m_items.at(j)->getDate() <= date) {
-            if(m_items.at(j)->getDate() == date) {
-                if(m_items.at(j)->model()->rowCount(QModelIndex()) == 0) {
-                    removeRow(j, QModelIndex());
+    if(rowCount() > 0) {
+        LocalDayItem *item = static_cast<LocalDayItem *>(itemAt(0));
+        while(item->getDate() <= date) {
+            if(item->getDate() == date) {
+                if(item->model()->rowCount(QModelIndex()) == 0) {
+                    removeRow(j);
                     return true;
                 }
             }
             j++;
-            if(j == m_items.size()) {
+            if(j == rowCount()) {
                 break;
             }
+            item = static_cast<LocalDayItem *>(itemAt(j));
         }
     }
     return false;
@@ -233,20 +214,18 @@ void LocalDayModel::appendRow(LocalDayItem *item)
 
 void LocalDayModel::appendRows(const QList<LocalDayItem *> &items)
 {
-    beginInsertRows(QModelIndex(), rowCount(), rowCount() + items.size() - 1);
+    QList<ListItem *> list;
     foreach(LocalDayItem * item, items) {
         connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
-        m_items.append(item);
+        list += item;
     }
-    endInsertRows();
+    ListModel::appendRows(list);
 }
 
 void LocalDayModel::insertRow(int row, LocalDayItem *item)
 {
-    beginInsertRows(QModelIndex(), row, row);
     connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
-    m_items.insert(row, item);
-    endInsertRows();
+    ListModel::insertRow(row, item);
 }
 
 void LocalDayModel::handleItemChange()
@@ -259,25 +238,14 @@ void LocalDayModel::handleItemChange()
 
 LocalDayItem * LocalDayModel::find(const QDate &date) const
 {
-    foreach(LocalDayItem * item, m_items) {
-        if(item->getDate() == date) return item;
+    const int size = rowCount();
+    for(int i = 0; i < size; i++) {
+        LocalDayItem *item = static_cast<LocalDayItem *>(itemAt(i));
+        if(item->getDate() == date)
+            return item;
     }
+
     return 0;
-}
-
-QModelIndex LocalDayModel::indexFromItem(const LocalDayItem *item) const
-{
-    Q_ASSERT(item);
-    for(int row = 0; row < m_items.size(); ++row) {
-        if(m_items.at(row) == item) return index(row);
-    }
-    return QModelIndex();
-}
-
-void LocalDayModel::clear()
-{
-    qDeleteAll(m_items);
-    m_items.clear();
 }
 
 void LocalDayModel::setFilter(QRegExp regexp)
@@ -290,35 +258,14 @@ QRegExp LocalDayModel::filter() const
     return m_filter;
 }
 
-bool LocalDayModel::removeRow(int row, const QModelIndex &parent)
-{
-    Q_UNUSED(parent);
-    if(row < 0 || row >= m_items.size()) return false;
-    beginRemoveRows(QModelIndex(), row, row);
-    /*delete*/ m_items.takeAt(row);
-    endRemoveRows();
-    return true;
-}
-
-bool LocalDayModel::removeRows(int row, int count, const QModelIndex &parent)
-{
-    Q_UNUSED(parent);
-    if(row < 0 || (row + count) >= m_items.size()) return false;
-    beginRemoveRows(QModelIndex(), row, row + count - 1);
-    for(int i = 0; i < count; ++i) {
-        m_items.takeAt(row)->deleteLater();
-    }
-    endRemoveRows();
-    return true;
-}
-
 int LocalDayModel::getIndexByDate(int year, int month,  bool direction)
 {
     Q_UNUSED(direction)
 
     LocalDayItem* ptr = 0;
 
-    foreach(LocalDayItem * item, m_items) {
+    for(int i = 0; i < rowCount(); i++) {
+        LocalDayItem *item = static_cast<LocalDayItem *>(itemAt(i));
         if((item->getDate().year() == year) && (item->getDate().month() == month)) {
             ptr = item;
             break;
@@ -332,11 +279,10 @@ int LocalDayModel::getIndexByDate(int year, int month,  bool direction)
 
 QDate LocalDayModel::getDateOfIndex(int listIndex)
 {
-    if(listIndex >= m_items.size() || listIndex < 0)
+    if(listIndex >= rowCount() || listIndex < 0)
         return QDate();
-    LocalDayItem* item = m_items.at(listIndex);
-    QDate date = item->getDate();
-    return date;
+    LocalDayItem *item = static_cast<LocalDayItem *>(itemAt(listIndex));
+    return item->getDate();
 }
 
 void LocalDayModel::imageReady(QString url)

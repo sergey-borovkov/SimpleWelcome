@@ -42,6 +42,31 @@ LocalDayItem::~LocalDayItem()
 {
 }
 
+QString LocalDayItem::id() const
+{
+    return "";
+}
+
+QVariant LocalDayItem::data(int role) const
+{
+    if(role == CurrentDateRole) {
+        return getDate();
+    } else if(role == ItemsRole) {
+        return 0;
+    } else if(role == TypesRole) {
+        return types();
+    } else if(role == ItemsCountRole) {
+        return getCount();
+    }
+    return QVariant();
+}
+
+bool LocalDayItem::setData(int role, const QVariant &value)
+{
+    Q_UNUSED(role)
+    Q_UNUSED(value)
+    return false;
+}
 
 void LocalDayItem::setDate(const QDate &d)
 {
@@ -59,12 +84,12 @@ void LocalDayItem::addActivity(Activity* item)
     emit dataChanged();
 }
 
-QDate LocalDayItem::getDate()
+QDate LocalDayItem::getDate() const
 {
     return m_date;
 }
 
-int LocalDayItem::getCount()
+int LocalDayItem::getCount() const
 {
     return m_model->rowCount(QModelIndex());
 }
@@ -78,6 +103,17 @@ void LocalDayItem::thumbnailReady(QString url)
 {
     m_itemModel->thumbnailReady(url);
 
+}
+
+QHash<int, QByteArray> LocalDayItem::roleNames()
+{
+    QHash<int, QByteArray> hash;
+    hash.insert(ItemsRole, "items");
+    hash.insert(CurrentDateRole, "date");
+    hash.insert(CountRole, "count");
+    hash.insert(TypesRole, "type");
+    hash.insert(ItemsCountRole, "size");
+    return hash;
 }
 
 QString LocalDayItem::types() const

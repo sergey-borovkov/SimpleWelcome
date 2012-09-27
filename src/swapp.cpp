@@ -249,7 +249,7 @@ void SWApp::initTimeframeLocalMode()
     m_proxy = new ActivityProxy;
     m_proxy->addNepomukSource(m_source);
 
-    LocalDayModel* model = new LocalDayModel;
+    LocalDayModel* model = new LocalDayModel(LocalDayItem::roleNames(), this);
     TimeFrameDayFilterModel* proxymodel = new TimeFrameDayFilterModel(this);
     model->setLister(m_proxy);
     proxymodel->setSourceModel(model);
