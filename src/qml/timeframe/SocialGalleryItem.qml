@@ -358,7 +358,7 @@ Item{
                                 commentsEdit.item.edit.color = "grey"
                                 commentsEdit.item.edit.text = i18n_Write_Comment
                                 commentsEdit.item.userPhoto.source = socialProxy.selfPictureUrl()
-                                commentsListView.positionViewAtEnd()
+                                commentsListView.view.positionViewAtEnd()
                                 galleryRect.state = "comments"
                             }
                             else if (galleryRect.state === "comments")
@@ -380,59 +380,16 @@ Item{
             anchors.right: parent.right
             anchors { leftMargin: 30; topMargin: -10; rightMargin: 30; bottomMargin: 8}
             z: -1
-            ListView {
+
+            CommentsListView {
                 id: commentsListView
                 anchors.top : parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: commentsEdit.top
                 anchors { topMargin: 15; leftMargin: 3; rightMargin: 3; bottomMargin: 5}
-                clip: true
                 visible: false
-                snapMode:  ListView.SnapToItem
                 model: repeater.model.comments(index)
-                property string parentId: id
-                delegate: Item {
-                    width: 200; height: 60
-                    Image
-                    {
-                        id: userPhoto
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        fillMode: Image.PreserveAspectFit
-                        width: 55
-                        anchors.rightMargin: 5
-                        source: fromPictureUrl
-//                        Component.onCompleted: {
-//                            socialProxy.getUserPicture(fromId, commentsListView.parentId, pluginName);
-//                        }
-                    }
-                    Text {
-                        id: nameField;
-                        anchors.left: userPhoto.right
-                        anchors.top: parent.top
-                        anchors.leftMargin: 10
-                        text: from
-                        color: "white"
-                    }
-                    Text {
-                        id: textField;
-                        anchors.left: userPhoto.right
-                        anchors.top: nameField.bottom
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-                        anchors.leftMargin: 10
-                        text: messageText
-                        color: "white"
-                        elide: Text.ElideRight
-                    }
-                }
-                ScrollBar{
-                    id: scrollBar
-                    flickable: commentsListView
-                    vertical: true
-                    hideScrollBarsWhenStopped: false
-                }                
             }
 
             Loader {
@@ -440,8 +397,8 @@ Item{
                 height: 0
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.rightMargin: 1
+                anchors.leftMargin: 3
+                anchors.rightMargin: 3
                 anchors.right: parent.right
                 visible: false
             }
