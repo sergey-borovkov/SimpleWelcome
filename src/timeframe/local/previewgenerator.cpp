@@ -25,7 +25,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QRect>
 #include <QtCore/QStringList>
-#include <QtCore/QtDebug>
 #include <QtGui/QLabel>
 #include <QtGui/QPainter>
 

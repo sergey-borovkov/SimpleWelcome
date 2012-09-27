@@ -61,7 +61,6 @@ public slots:
     QString getType(int i);
     QDate getDate();
 
-
 private:
     QList<Activity *> activities;
     QDate date;
