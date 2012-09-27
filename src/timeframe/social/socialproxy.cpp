@@ -188,12 +188,13 @@ QString SocialProxy::selfPictureUrl()
     return m_selfPictureUrl;
 }
 
-void SocialProxy::getAllComments(const QString &id, const QString &pluginName)
+PluginRequestReply *SocialProxy::getAllComments(const QString &id, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
     Request *request = plugin->requestManager()->queryComments(id);
     PluginRequestReply *reply = new PluginRequestReply(request, id, this);
     request->start();
+    return reply;
 }
 
 void SocialProxy::likeSuccess(PluginRequestReply* reply)
