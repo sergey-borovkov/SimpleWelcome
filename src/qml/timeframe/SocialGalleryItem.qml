@@ -281,9 +281,9 @@ Item{
                     id: likeItem
                     anchors.right:  parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.rightMargin: 30
+                    anchors.rightMargin: 10
                     height: parent.height
-                    width: 30
+                    width: 100
                     visible: false
                     state: (like == 1)? "liked" : ""
                     Text {
@@ -331,7 +331,7 @@ Item{
                         source: "images/arrow.png"
                     }
                     Text {
-                        id: commensShowAreaText
+                        id: commentsShowAreaText
                         anchors.fill: parent
                         anchors.leftMargin: 10
                         anchors.rightMargin: 10
@@ -339,7 +339,7 @@ Item{
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         color: "white"
-                        text: (galleryRect.state === "comments") ? "Hide comments" : "Show comments"
+                        text: (galleryRect.state === "comments") ? i18n_Hide_Comments : i18n_Show_Comments
                     }
                     Image {
                         anchors.verticalCenter: parent.verticalCenter
@@ -349,8 +349,8 @@ Item{
                     MouseArea{
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: commensShowAreaText.font.bold = true
-                        onExited: commensShowAreaText.font.bold = false
+                        onEntered: commentsShowAreaText.font.bold = true
+                        onExited: commentsShowAreaText.font.bold = false
                         onClicked: {
                             if (galleryRect.state === "details") {
                                 //Set source on comments loader
@@ -358,7 +358,7 @@ Item{
                                 commentsEdit.item.edit.color = "grey"
                                 commentsEdit.item.edit.text = i18n_Write_Comment
                                 commentsEdit.item.userPhoto.source = socialProxy.selfPictureUrl()
-                                commentsListView.positionViewAtEnd()
+                                commentsListView.view.positionViewAtEnd()
                                 galleryRect.state = "comments"
                             }
                             else if (galleryRect.state === "comments")
@@ -380,59 +380,16 @@ Item{
             anchors.right: parent.right
             anchors { leftMargin: 30; topMargin: -10; rightMargin: 30; bottomMargin: 8}
             z: -1
-            ListView {
+
+            CommentsListView {
                 id: commentsListView
                 anchors.top : parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: commentsEdit.top
                 anchors { topMargin: 15; leftMargin: 3; rightMargin: 3; bottomMargin: 5}
-                clip: true
                 visible: false
-                snapMode:  ListView.SnapToItem
                 model: repeater.model.comments(index)
-                property string parentId: id
-                delegate: Item {
-                    width: 200; height: 60
-                    Image
-                    {
-                        id: userPhoto
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        fillMode: Image.PreserveAspectFit
-                        width: 55
-                        anchors.rightMargin: 5
-                        source: fromPictureUrl
-                        Component.onCompleted: {
-                            socialProxy.getUserPicture(fromId, commentsListView.parentId, pluginName);
-                        }
-                    }
-                    Text {
-                        id: nameField;
-                        anchors.left: userPhoto.right
-                        anchors.top: parent.top
-                        anchors.leftMargin: 10
-                        text: from
-                        color: "white"
-                    }
-                    Text {
-                        id: textField;
-                        anchors.left: userPhoto.right
-                        anchors.top: nameField.bottom
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-                        anchors.leftMargin: 10
-                        text: messageText
-                        color: "white"
-                        elide: Text.ElideRight
-                    }
-                }
-                ScrollBar{
-                    id: scrollBar
-                    flickable: commentsListView
-                    vertical: true
-                    hideScrollBarsWhenStopped: false
-                }                
             }
 
             Loader {
@@ -440,8 +397,8 @@ Item{
                 height: 0
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.rightMargin: 1
+                anchors.leftMargin: 3
+                anchors.rightMargin: 3
                 anchors.right: parent.right
                 visible: false
             }
@@ -497,7 +454,7 @@ Item{
 
             PropertyChanges { target: mainRect; width: 400; height: 300 }
 
-            PropertyChanges { target: bottomLine; height: 26; visible: true }
+            PropertyChanges { target: bottomLine; height: Math.max( 26, commentsShowAreaText.paintedHeight ); visible: true }
 
             PropertyChanges {
                 target: galleryRect;

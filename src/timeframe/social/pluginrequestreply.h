@@ -44,6 +44,9 @@ public:
 
     QString sourceId();
 
+    Q_INVOKABLE QString userPictureUrl() const;
+    Q_INVOKABLE QString userId() const;
+
 signals:
     void success (PluginRequestReply*);
     void failure (PluginRequestReply*);
@@ -52,12 +55,17 @@ signals:
 private slots:
     void requestSuccess();
     void newItemId(QString id);
+    void gotUserPictureUrl(QString id, QString url);
     void error(QString error);
 
 private:
     QString m_sourceId;
     QString m_id;
     QString m_errorString;
+
+    QString m_userId;
+    QString m_userPictureUrl;
+
     bool m_finished;
 };
 

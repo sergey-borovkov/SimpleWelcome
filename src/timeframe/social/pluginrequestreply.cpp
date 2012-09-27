@@ -10,6 +10,7 @@ PluginRequestReply::PluginRequestReply(Request *request, const QString &sourceId
     if(r != 0) {
         connect(r, SIGNAL(success()), SLOT(requestSuccess()));
         connect(r, SIGNAL(newItemId(QString)), SLOT(newItemId(QString)));
+        connect(r, SIGNAL(gotUserPictureUrl(QString, QString)), SLOT(gotUserPictureUrl(QString, QString)));
         connect(r, SIGNAL(error(QString)), SLOT(error(QString)));
     }
 }
@@ -34,9 +35,25 @@ QString PluginRequestReply::sourceId()
     return m_sourceId;
 }
 
+QString PluginRequestReply::userPictureUrl() const
+{
+    return m_userPictureUrl;
+}
+
+QString PluginRequestReply::userId() const
+{
+    return m_userId;
+}
+
 void PluginRequestReply::newItemId(QString id)
 {
     m_id = id;
+}
+
+void PluginRequestReply::gotUserPictureUrl(QString id, QString url)
+{
+    m_userId = id;
+    m_userPictureUrl = url;
 }
 
 void PluginRequestReply::error(QString error)
