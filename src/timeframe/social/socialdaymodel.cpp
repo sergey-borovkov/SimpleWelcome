@@ -41,6 +41,7 @@ QObject* SocialDayFilterModel::itemsModel(QDate date) const
 
 int SocialDayFilterModel::getIndexByDate(int year, int month,  bool direction)
 {
+    Q_UNUSED(direction)
     for(int i = 0; i < rowCount(); i++) {
         QDate date = data(index(i, 0), SocialDayItem::DateRole).toDate();
         if((date.year() == year) && (date.month() == month))

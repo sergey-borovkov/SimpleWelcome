@@ -13,7 +13,7 @@
 #include <QtCore/QTimer>
 
 NepomukSource::NepomukSource(QObject *parent) :
-    ActivitySource(parent), m_searchClient(0), m_timer(0), m_limit(0)
+    ActivitySource(parent), m_searchClient(0), m_limit(0), m_timer(0)
 {
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
@@ -22,7 +22,7 @@ NepomukSource::~NepomukSource()
 {
     if(m_searchClient)
         m_searchClient->close();
-    delete m_searchClient;    
+    delete m_searchClient;
 }
 
 Nepomuk::Query::FileQuery NepomukSource::createQuery()
@@ -45,7 +45,7 @@ Nepomuk::Query::FileQuery NepomukSource::createQuery()
 
 void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
 {
-    Q_UNUSED(direction)    
+    Q_UNUSED(direction)
     if(m_searchQueue.size() == 0) {
         m_searchQueue.append(beginDate);
         startSearchFromQueue();
@@ -97,7 +97,7 @@ void NepomukSource::setLimit(int limit)
 
 
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
-{    
+{
     QList<Activity *> activities;
     for(int i = 0; i < list.size(); i++) {
         Nepomuk::Query::Result result = list.at(i);
