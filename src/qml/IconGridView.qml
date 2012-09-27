@@ -9,6 +9,7 @@ GridView {
     property int endIndex
     property bool draggable: false
     property bool enabledSystemDnD: false  // set true to enable system Drag&Drop
+    property bool stackable: false // set true to enable icons stacking while Drag&Dropping
 
     property alias dndSrcId: gridMouseArea.dndSrcId
 
@@ -331,7 +332,7 @@ GridView {
 
         Timer {
             id: mouseHoverTimer
-            interval: 300
+            interval: stackable ? 300 : 0
             property variant itemWaitingOn: undefined
             property variant indexWaitingOn: undefined
             property bool isAimingOnStacking
@@ -364,13 +365,13 @@ GridView {
                     //var pointsDistance = Math.sqrt(Math.pow(gridMouseArea.mouseX - xWaiting, 2) + Math.pow(gridMouseArea.mouseY - yWaiting, 2))
                     //console.log("distance: " + pointsDistance)
 
-                    if (gridMouseArea.draggedItemStackedAt !== undefined && (gridMouseArea.draggedItemStackedAt !== indexWaitingOn || !isHitInnerIcon) && !isDragginStack)
+                    if (stackable && gridMouseArea.draggedItemStackedAt !== undefined && (gridMouseArea.draggedItemStackedAt !== indexWaitingOn || !isHitInnerIcon) && !isDragginStack)
                     { // Unstacking if item we are above is not the one we stacked to
                         console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
                         grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
                         gridMouseArea.draggedItemStackedAt = undefined
                     }
-                    else if (isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest && !isDragginStack) //&& pointsDistance <= 3)
+                    else if (stackable && isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest && !isDragginStack) //&& pointsDistance <= 3)
                     { // Hit central part of item. Using for stacking
                         if (isAimingOnStacking)
                         {
@@ -391,7 +392,7 @@ GridView {
                             }
                         }
                     }
-                    else if (!isAimingOnStacking) // Hit outer part of item. Using for repositioning
+                    else if (!isAimingOnStacking || !stackable || isDragginStack) // Hit outer part of item. Using for repositioning
                     {
                         console.log("MOVING")
 
@@ -456,30 +457,6 @@ GridView {
                 mouseHoverTimer.indexWaitingOn = index
                 mouseHoverTimer.calculateExpectations(mouseX, mouseY)
                 mouseHoverTimer.start()
-
-                //console.log("x: " + curColumn + "| Mouse: " + mouseX)
-                //console.log("c: " + curIndex + "| Mouse: " + mouseY)
-
-                /*var itemUnderCursor = getItemUnderCursor(true)
-                var index = itemUnderCursor.index
-                var item = itemUnderCursor.item
-                //console.log("ITEM: " + itemUnderCursor)
-
-                //if (item)
-
-                if (index != -1 && index != dndDest)
-                {
-
-                    if (mouseX > item.x + item.width / 3 && mouseX < item.x + item.width - item.width / 3) // We entered corner of other item, starting timer
-                    {
-                        mouseHoverTimer.itemWaitingOn = item
-                        mouseHoverTimer.indexWaitingOn = index
-                        mouseHoverTimer.start()
-                    }
-                    else
-                    {
-                    }
-                }*/
             }
         }
 

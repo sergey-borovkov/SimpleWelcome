@@ -19,7 +19,7 @@ FocusScope {
             {
                 groupName: i18n_Favorites,
                 dataSource: dataSource_Favorites,
-                draggable: true,
+                //draggable: true,
                 enabledSystemDnD: true
             },
             {

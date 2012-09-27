@@ -117,7 +117,7 @@ Item {
                 if (gridsListView.currentItem)
                 {
                     gridsListView.currentItem.activeGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
-                    if (gridsListView.currentItem.activeGridGroup.gridView.draggable)
+                    if (gridsListView.currentItem.activeGridGroup.gridView.stackable)
                         gridsListView.currentItem.activeGridGroup.showPopupGroup.connect(showGroup)
                 }
             }
@@ -338,7 +338,6 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                hoverEnabled: true
 
                 onClicked: gridsListView.hideGroup()
             }

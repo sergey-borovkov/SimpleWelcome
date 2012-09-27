@@ -15,7 +15,8 @@ FocusScope {
                 dataSource: dataSource_Apps,
                 draggable: true,
                 enabledSystemDnD: true,
-                groupNameVisible: false
+                groupNameVisible: false,
+                stackable: true
             }
         ]
     }
