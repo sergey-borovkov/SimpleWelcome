@@ -49,8 +49,6 @@ private:
     OAuth2Authorizer *m_authorizer;
     QString m_selfId;
     QString m_selfName;
-    QString m_userImageUrl;
-    QString m_userId;
 
     // we return comments only when they are fully downloaded
     // so we need to keed partial results between calls somewhere

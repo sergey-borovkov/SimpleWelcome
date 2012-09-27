@@ -14,7 +14,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         fillMode: Image.PreserveAspectFit
         width: 55        
-        anchors.rightMargin: 5
+        anchors.leftMargin: 5
     }
 
     Rectangle {

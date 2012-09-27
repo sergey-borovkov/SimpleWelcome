@@ -1,8 +1,8 @@
-project (timeframelib)
+project(timeframelib)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${_timeframe_plugins_install_path}")
 
-find_package (Qt4 REQUIRED QtCore)
+find_package(Qt4 REQUIRED QtCore)
 include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})

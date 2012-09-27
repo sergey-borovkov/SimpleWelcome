@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: SimpleWelcome\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-09-18 17:44+0400\n"
+"POT-Creation-Date: 2012-09-27 10:47+0400\n"
 "PO-Revision-Date: 2011-08-10 11:21+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,131 +56,139 @@ msgstr ""
 msgid "Silent run. Hide application window after start."
 msgstr ""
 
-#: swapp.cpp:174
+#: swapp.cpp:181
 msgid "Welcome"
 msgstr ""
 
-#: swapp.cpp:175
+#: swapp.cpp:182
 msgid "Applications"
 msgstr ""
 
-#: swapp.cpp:176
+#: swapp.cpp:183
 msgid "TimeFrame"
 msgstr ""
 
-#: swapp.cpp:178
+#: swapp.cpp:185
 msgid "Recent Applications"
 msgstr ""
 
-#: swapp.cpp:179
+#: swapp.cpp:186
 msgid "Places"
 msgstr ""
 
-#: swapp.cpp:180
+#: swapp.cpp:187
 msgid "Recent Documents"
 msgstr ""
 
-#: swapp.cpp:182
+#: swapp.cpp:189
 msgid "All"
 msgstr ""
 
-#: swapp.cpp:183
+#: swapp.cpp:190
 msgid "Photo"
 msgstr ""
 
-#: swapp.cpp:184
+#: swapp.cpp:191
 msgid "Video"
 msgstr ""
 
-#: swapp.cpp:185
+#: swapp.cpp:192
 msgid "Documents"
 msgstr ""
 
-#: swapp.cpp:186
+#: swapp.cpp:193
 msgid "Manage networks"
 msgstr ""
 
-#: swapp.cpp:187
+#: swapp.cpp:194
 msgid "My Local Documents"
 msgstr ""
 
-#: swapp.cpp:188
+#: swapp.cpp:195
 msgid "Local"
 msgstr ""
 
-#: swapp.cpp:189
+#: swapp.cpp:196
 msgid "Write comment..."
 msgstr ""
 
-#: swapp.cpp:190
+#: swapp.cpp:197
 msgid "Audio: "
 msgstr ""
 
-#: swapp.cpp:191
-msgid "Comments: "
-msgstr ""
-
-#: swapp.cpp:192
-msgid "Likes: "
-msgstr ""
-
-#: swapp.cpp:193
+#: swapp.cpp:198
 msgid "Like"
 msgstr ""
 
-#: swapp.cpp:194
+#: swapp.cpp:199
 msgid "Unlike"
 msgstr ""
 
-#: swapp.cpp:195
+#: swapp.cpp:200
 msgid "Social networking sites"
 msgstr ""
 
-#: swapp.cpp:197
-msgid "JAN"
-msgstr ""
-
-#: swapp.cpp:198
-msgid "FEB"
-msgstr ""
-
-#: swapp.cpp:199
-msgid "MAR"
-msgstr ""
-
-#: swapp.cpp:200
-msgid "APR"
-msgstr ""
-
 #: swapp.cpp:201
-msgid "MAY"
+msgid "Show comments"
 msgstr ""
 
 #: swapp.cpp:202
-msgid "JUN"
+msgid "Hide comments"
 msgstr ""
 
 #: swapp.cpp:203
-msgid "JUL"
+msgid "Login"
 msgstr ""
 
 #: swapp.cpp:204
-msgid "AUG"
-msgstr ""
-
-#: swapp.cpp:205
-msgid "SEP"
+msgid "Logout"
 msgstr ""
 
 #: swapp.cpp:206
-msgid "OCT"
+msgid "JAN"
 msgstr ""
 
 #: swapp.cpp:207
-msgid "NOV"
+msgid "FEB"
 msgstr ""
 
 #: swapp.cpp:208
+msgid "MAR"
+msgstr ""
+
+#: swapp.cpp:209
+msgid "APR"
+msgstr ""
+
+#: swapp.cpp:210
+msgid "MAY"
+msgstr ""
+
+#: swapp.cpp:211
+msgid "JUN"
+msgstr ""
+
+#: swapp.cpp:212
+msgid "JUL"
+msgstr ""
+
+#: swapp.cpp:213
+msgid "AUG"
+msgstr ""
+
+#: swapp.cpp:214
+msgid "SEP"
+msgstr ""
+
+#: swapp.cpp:215
+msgid "OCT"
+msgstr ""
+
+#: swapp.cpp:216
+msgid "NOV"
+msgstr ""
+
+#: swapp.cpp:217
 msgid "DEC"
 msgstr ""
 

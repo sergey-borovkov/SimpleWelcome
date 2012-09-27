@@ -192,7 +192,7 @@ Item{
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.left: parent.left
-                height: 26
+                height: 10
                 Item {
                     id: bottomCommentsCountArea
                     anchors.verticalCenter: parent.verticalCenter
@@ -254,9 +254,9 @@ Item{
                     id: likeItemArea
                     anchors.right:  parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.rightMargin: 30
+                    anchors.rightMargin: 10
                     height: parent.height
-                    width: 30
+                    width: 100
                     visible: false
                     state: (like == 1)? "liked" : ""
                     Text {
@@ -275,7 +275,7 @@ Item{
                         onEntered: likesText.font.bold = true
                         onExited: likesText.font.bold = false
                         onClicked: {
-                            if (likeItem.state === "") {
+                            if (likeItemArea.state === "") {
                                 socialProxy.likeItem(id, pluginName);
                             } else {
                                 socialProxy.unlikeItem(id, pluginName);
@@ -302,7 +302,7 @@ Item{
                         source: "images/arrow.png"
                     }
                     Text {
-                        id: commensShowAreaText
+                        id: commentsShowAreaText
                         anchors.fill: parent
                         anchors.leftMargin: 10
                         anchors.rightMargin: 10
@@ -310,7 +310,7 @@ Item{
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         color: "white"
-                        text: (cloudRect.state === "comments") ? "Hide comments" : "Show comments"
+                        text: (cloudRect.state === "comments") ? i18n_Hide_Comments : i18n_Show_Comments
                     }
                     Image {
                         anchors.verticalCenter: parent.verticalCenter
@@ -320,8 +320,8 @@ Item{
                     MouseArea{
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: commensShowAreaText.font.bold = true
-                        onExited: commensShowAreaText.font.bold = false
+                        onEntered: commentsShowAreaText.font.bold = true
+                        onExited: commentsShowAreaText.font.bold = false
                         onClicked: {
                             if (cloudRect.state === "details") {
                                 //Set source on comments loader
@@ -329,7 +329,7 @@ Item{
                                 commentsEdit.item.edit.color = "grey"
                                 commentsEdit.item.edit.text = i18n_Write_Comment
                                 commentsEdit.item.userPhoto.source = socialProxy.selfPictureUrl()
-                                commentsView.positionViewAtEnd()
+                                commentsListView.view.positionViewAtEnd()
                                 cloudRect.state = "comments"
                             }
                             else if (cloudRect.state === "comments")
@@ -351,72 +351,15 @@ Item{
             anchors.right: parent.right
             anchors { leftMargin: 30; topMargin: -10; rightMargin: 30; bottomMargin: 8}
             z: -1
-            /*
+
             CommentsListView {
                 id: commentsListView
-                parentId: id
-                pluginName: pluginName
                 anchors.top : parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: commentsEdit.top
                 anchors { topMargin: 15; leftMargin: 3; rightMargin: 3; bottomMargin: 5}
                 visible: false
-            }
-*/
-
-            ListView {
-                id: commentsListView
-                anchors.top : parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: commentsEdit.top
-                anchors { topMargin: 15; leftMargin: 3; rightMargin: 3; bottomMargin: 5}
-                clip: true
-                visible: false
-                snapMode:  ListView.SnapToItem
-                property string parentId: id
-                delegate: Item {
-                    width: 200; height: 60
-                    Image
-                    {
-                        id: userPhoto
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        fillMode: Image.PreserveAspectFit
-                        width: 55
-                        anchors.rightMargin: 5
-                        source: fromPictureUrl
-                        Component.onCompleted: {
-                            socialProxy.getUserPicture(fromId, commentsListView.parentId, pluginName);
-                        }
-                    }
-                    Text {
-                        id: nameField;
-                        anchors.left: userPhoto.right
-                        anchors.top: parent.top
-                        anchors.leftMargin: 10
-                        text: from
-                        color: "white"
-                    }
-                    Text {
-                        id: textField;
-                        anchors.left: userPhoto.right
-                        anchors.top: nameField.bottom
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
-                        anchors.leftMargin: 10
-                        text: messageText
-                        color: "white"
-                        elide: Text.ElideRight
-                    }
-                }
-                ScrollBar{
-                    id: scrollBar
-                    flickable: commentsListView
-                    vertical: true
-                    hideScrollBarsWhenStopped: false
-                }
             }
 
             Loader {
@@ -424,8 +367,9 @@ Item{
                 height: 0
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.rightMargin: 1
+                anchors.leftMargin: 2
+                anchors.rightMargin: 2
+                anchors.bottomMargin: 2
                 anchors.right: parent.right
                 visible: false
             }
@@ -501,6 +445,9 @@ Item{
             PropertyChanges { target: detailsOnArea; enabled: false }
 
             PropertyChanges { target: likeItemArea; visible: true}
+
+            PropertyChanges { target: bottomLine; height: Math.max( 26, commentsShowAreaText.paintedHeight ); visible: true }
+
         },
         State {
             name: "comments" ; extend: "details"
