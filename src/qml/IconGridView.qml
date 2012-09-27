@@ -82,6 +82,16 @@ GridView {
         return curIndex
     }
 
+    function copyObjectByValue(obj) {
+        // Copying object by value
+        var newObj = new Object
+        for (var s in (obj)) {
+            //console.log("copying " + itemStackingTo[s])
+            newObj[s] = (obj)[s]
+        }
+        return newObj
+    }
+
     function stackItemInItem(indexStackingTo, indexDragging) {
         //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
 
@@ -93,15 +103,7 @@ GridView {
         if (stackArray === undefined) {
             //console.log("FIRST TIME STACKING")
             stackArray = []
-
-            // Copying object by value
-            var newObj = new Object
-            for (var s in itemStackingTo) {
-                //console.log("copying " + itemStackingTo[s])
-                newObj[s] = itemStackingTo[s]
-            }
-
-            stackArray.push(newObj)
+            stackArray.push(copyObjectByValue(itemStackingTo))
         }
         else {
             console.log("STACKING AGAIN")
@@ -112,7 +114,7 @@ GridView {
                     return false
                 }
         }
-        stackArray.push(itemDragging)
+        stackArray.push(copyObjectByValue(itemDragging))
 
         model.setProperty(indexStackingTo, "imagePath", "image://generalicon/stacked/" + itemStackingTo.imagePath.slice(28) + "|" + itemDragging.imagePath.slice(28))
         model.setProperty(indexStackingTo, "stack", stackArray)
@@ -375,17 +377,18 @@ GridView {
                             console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
                             var res = grid.stackItemInItem(indexWaitingOn, gridMouseArea.dndDest)
                             if (res)
+                            {
                                 gridMouseArea.draggedItemStackedAt = indexWaitingOn
 
-                            //console.log("set " + indexWaitingOn + " with " + model.get(indexWaitingOn).stack.length + " at real pos " + model.get(indexWaitingOn).id)
-                            if (gridMouseArea.dndDest > indexWaitingOn)
-                            {
-                                gridMouseArea.dndDestId = count - 1
-                                model.move(gridMouseArea.dndDest, gridMouseArea.dndDestId, 1)
-                                currentIndex = gridMouseArea.draggedItemStackedAt
-                                gridMouseArea.dndDest = count - 1
+                                //console.log("set " + indexWaitingOn + " with " + model.get(indexWaitingOn).stack.length + " at real pos " + model.get(indexWaitingOn).id)
+                                if (gridMouseArea.dndDest > indexWaitingOn)
+                                {
+                                    gridMouseArea.dndDestId = count - 1
+                                    model.move(gridMouseArea.dndDest, gridMouseArea.dndDestId, 1)
+                                    currentIndex = gridMouseArea.draggedItemStackedAt
+                                    gridMouseArea.dndDest = count - 1
+                                }
                             }
-
                         }
                     }
                     else if (!isAimingOnStacking) // Hit outer part of item. Using for repositioning
@@ -523,8 +526,6 @@ GridView {
             if (gridMouseArea.draggedItemStackedAt !== undefined && model.get(gridMouseArea.dndDest).stack === undefined)
             {
                 console.log("STACK UPPED")
-                model.setProperty(dndDest, "hidden", true)
-                //model.setProperty(gridMouseArea.draggedItemStackedAt, "id", 100500)
 
                 if (dndDest < gridMouseArea.draggedItemStackedAt)
                 {
@@ -535,10 +536,9 @@ GridView {
                 }
 
                 model.remove(dndDest)
-                dndSrcId = -1
-                dndStateChanged(false)
 
-                gridMouseArea.draggedItemStackedAt = undefined
+                //dndSrcId = -1; - this is intentionally commented out 'cause it's done in delegate's remove animation
+                dndStateChanged(false)
             }
             else
             {
@@ -568,6 +568,28 @@ GridView {
                     }
                 }
             }
+
+            gridMouseArea.draggedItemStackedAt = undefined
+
+
+            // Duplicates detection. Remove later when sure no duplication occurs
+            var Set = function() {}
+            Set.prototype.add = function(o) { this[o] = o; }
+            Set.prototype.remove = function(o) { delete this[o]; }
+            var ids = new Set
+            for (var j = 0; j < model.count; j++)
+            {
+                if (model.get(j).id in ids)
+                    console.log("!!!!!!!!!!!!!!!!!!!!! DUPLICATE ID DETECTED!!!!: " + model.get(j).id + " - " + model.get(j).caption + " | " + (model.get(j).stack === undefined) + "; count: " + j + " | TAKEN BY: " + ids[model.get(j).id].caption)
+                else
+                {
+                    ids.add(model.get(j).id)
+                    ids[model.get(j).id].caption = model.get(j).caption
+                }
+            }
+
+            //    console.log(model.get(j).caption + " | " + model.get(i).id + " | " + i)
+
         }
 
         onClicked: {

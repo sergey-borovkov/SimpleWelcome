@@ -10,6 +10,13 @@ Item {
     width: cellWidth
     height: wrapper.height//140
 
+    GridView.onRemove: SequentialAnimation {
+                 PropertyAction { target: cell; property: "GridView.delayRemove"; value: true }
+                 NumberAnimation { target: wrapper; property: "scale"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
+                 PropertyAction { target: gridMouseArea; property: "dndSrcId"; value: -1 }
+                 PropertyAction { target: cell; property: "GridView.delayRemove"; value: false }
+             }
+
     Item {
         id: wrapper
         parent: gridMouseArea
@@ -108,18 +115,13 @@ Item {
 
         states: [
             State {
-                name: "hidden"
-                when: hidden == true
-            },
-
-            State {
                 name: "gridInDrag"
-                when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id && !hidden
+                when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id
             },
 
             State {
                 name: "cellInDrag"
-                when: gridMouseArea.dndSrcId === id && !hidden
+                when: gridMouseArea.dndSrcId === id
 
                 ParentChange {
                     target: wrapper
@@ -133,7 +135,7 @@ Item {
 
             State {
                 name: "cellOpenedStack"
-                when: stackCellOpenedId === id && stack !== undefined && !hidden
+                when: stackCellOpenedId === id && stack !== undefined
 
                 ParentChange {
                     target: wrapper
@@ -158,12 +160,7 @@ Item {
                     via: tabWrapper
                     NumberAnimation { duration: 200 }
                 }
-            },
-            Transition {
-                to: "hidden"
-                NumberAnimation { target: wrapper; property: "scale"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
             }
-
         ]
 
         Item { // Necessary for correct highlight height

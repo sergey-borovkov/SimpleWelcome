@@ -83,7 +83,6 @@ Column {
         function appendItemToModel(itemData)
         {
             itemData.stack = undefined
-            itemData.hidden = false
             model.append(itemData)
 
             // UNREM THIS TO ENABLE AUTO-STACKING
