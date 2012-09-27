@@ -30,39 +30,24 @@ public:
     explicit NepomukSource(QObject *parent = 0);
     ~NepomukSource();
 
-    // this function is thread safe    
 signals:
     void newEntries(const QList<Nepomuk::Query::Result>&);
-    //void newTSEntries(int year, int month);
-    //void monthFinished(QDate date);
     void resultCount(int);
 
 public slots:
     virtual void startSearch(const QDate &beginDate, ActivitySource::Direction direction);
     virtual void setLimit(int limit);
     void processEntry(const QList<Nepomuk::Query::Result> &list);
-    //void processTSEntry(const QList<Nepomuk::Query::Result> &list);
 
 private slots:
     void listingFinished();
-    //void listingTSFinished();
     void error(QString str);
     void startSearchFromQueue();
 
 private:
     Nepomuk::Query::FileQuery createQuery();
-   // Nepomuk::Query::FileQuery createTimeScaleQuery(const QDate &beginDate);
-
-    //ActivitySet *createActivitySet(const QList<Nepomuk::Query::Result> &result);
-    //void fillTimeScaleModel(const QDate &beginDate);
-
-    //QString resolveType(QString path, QList<QUrl> typesList);
-
-    Nepomuk::Query::QueryServiceClient* m_searchClient;    
+    Nepomuk::Query::QueryServiceClient* m_searchClient;
     QDate queryDate;
-    //QDate m_timeScaleDate;
-    //bool m_tsSearch;
-    //ActivitySet *set;
     Direction direction;
     Mode m_mode;
     int m_limit;

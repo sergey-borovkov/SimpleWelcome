@@ -38,13 +38,13 @@ public:
     void insertRow(int row, SocialDayItem* item);
 
 public slots:
-    void newSocialItems(QList<SocialItem*> list);
     QObject* itemsModel(QDate date) const;
-    void likeItem(QString eventId);
-    void addCommentToItem(CommentItem *, QString);
-    void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &eventId);
     void addComments(QString id, QList<CommentItem*> list);
+    void addCommentToItem(CommentItem *, QString);
+    void likeItem(QString eventId);
+    void newSocialItems(QList<SocialItem*> list);
     void removeItems(const QString &type);
+    void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &eventId);
 
 private slots:
     void handleItemChange();

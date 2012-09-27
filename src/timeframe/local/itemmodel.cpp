@@ -57,8 +57,8 @@ void ItemModel::addActivityItem(Activity *item)
     /* Check duplicates*/
     if(m_urlSet.contains(item->getUrl()))
         return;
+
     int ind = m_items.size();
-    //qDebug() << ind;
     beginInsertRows(QModelIndex(), ind , ind);
     m_items.append(item);
     m_urlSet.insert(item->getUrl());
