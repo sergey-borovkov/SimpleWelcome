@@ -81,7 +81,7 @@ public:
      * @param id of item
      * @param plugin name
      */
-    Q_INVOKABLE void getAllComments(const QString &id, const QString &pluginName);
+    Q_INVOKABLE PluginRequestReply *getAllComments(const QString &id, const QString &pluginName);
 
 public slots:
     void newItem(SocialItem *item);
