@@ -8,6 +8,8 @@
 
 class ListItem;
 
+#pragma GCC diagnostic ignored "-Woverloaded-virtual"
+
 class TIMEFRAMELIB_EXPORT ListModel : public QAbstractListModel
 {
     Q_OBJECT
