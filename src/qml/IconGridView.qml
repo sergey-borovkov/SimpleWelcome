@@ -353,7 +353,7 @@ GridView {
             }
 
             onTriggered: {
-                if (itemWaitingOn !== undefined)
+                if (itemWaitingOn !== undefined && model.get(gridMouseArea.dndDest) !== undefined)
                 {
                     var item = itemWaitingOn
                     var isHitInnerIcon = gridMouseArea.mouseX > item.x && gridMouseArea.mouseX < item.x + constants.cellWidth
