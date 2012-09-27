@@ -522,7 +522,6 @@ GridView {
 
             if (gridMouseArea.draggedItemStackedAt !== undefined && model.get(gridMouseArea.dndDest).stack === undefined)
             {
-                //model.remove(dndDest)
                 console.log("STACK UPPED")
                 model.setProperty(dndDest, "hidden", true)
                 //model.setProperty(gridMouseArea.draggedItemStackedAt, "id", 100500)
@@ -535,8 +534,11 @@ GridView {
                     gridMouseArea.dndDest = count - 1
                 }
 
+                model.remove(dndDest)
                 dndSrcId = -1
                 dndStateChanged(false)
+
+                gridMouseArea.draggedItemStackedAt = undefined
             }
             else
             {
