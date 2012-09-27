@@ -28,6 +28,7 @@ signals:
     void replyReady(QByteArray);
     void success();
     void newItemId(QString);
+    void gotUserPictureUrl(QString, QString);
     void error(QString);
 
 private slots:

@@ -192,7 +192,7 @@ Item{
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.left: parent.left
-                height: 26
+                height: 0
                 Item {
                     id: bottomCommentsCountArea
                     anchors.verticalCenter: parent.verticalCenter
@@ -254,9 +254,9 @@ Item{
                     id: likeItemArea
                     anchors.right:  parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.rightMargin: 30
+                    anchors.rightMargin: 10
                     height: parent.height
-                    width: 30
+                    width: 100
                     visible: false
                     state: (like == 1)? "liked" : ""
                     Text {
@@ -302,7 +302,7 @@ Item{
                         source: "images/arrow.png"
                     }
                     Text {
-                        id: commensShowAreaText
+                        id: commentsShowAreaText
                         anchors.fill: parent
                         anchors.leftMargin: 10
                         anchors.rightMargin: 10
@@ -310,7 +310,7 @@ Item{
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         color: "white"
-                        text: (cloudRect.state === "comments") ? "Hide comments" : "Show comments"
+                        text: (cloudRect.state === "comments") ? i18n_Hide_Comments : i18n_Show_Comments
                     }
                     Image {
                         anchors.verticalCenter: parent.verticalCenter
@@ -320,8 +320,8 @@ Item{
                     MouseArea{
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: commensShowAreaText.font.bold = true
-                        onExited: commensShowAreaText.font.bold = false
+                        onEntered: commentsShowAreaText.font.bold = true
+                        onExited: commentsShowAreaText.font.bold = false
                         onClicked: {
                             if (cloudRect.state === "details") {
                                 //Set source on comments loader
@@ -387,9 +387,9 @@ Item{
                         width: 55
                         anchors.rightMargin: 5
                         source: fromPictureUrl
-                        Component.onCompleted: {
-                            socialProxy.getUserPicture(fromId, commentsListView.parentId, pluginName);
-                        }
+//                        Component.onCompleted: {
+//                            socialProxy.getUserPicture(fromId, commentsListView.parentId, pluginName);
+//                        }
                     }
                     Text {
                         id: nameField;
@@ -501,6 +501,9 @@ Item{
             PropertyChanges { target: detailsOnArea; enabled: false }
 
             PropertyChanges { target: likeItemArea; visible: true}
+
+            PropertyChanges { target: bottomLine; height: Math.max( 26, commentsShowAreaText.paintedHeight ); visible: true }
+
         },
         State {
             name: "comments" ; extend: "details"

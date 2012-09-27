@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-09-18 17:44+0400\n"
+"POT-Creation-Date: 2012-09-27 10:47+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,131 +56,139 @@ msgstr ""
 msgid "Silent run. Hide application window after start."
 msgstr ""
 
-#: swapp.cpp:174
+#: swapp.cpp:181
 msgid "Welcome"
 msgstr "Приветствие"
 
-#: swapp.cpp:175
+#: swapp.cpp:182
 msgid "Applications"
 msgstr "Приложения"
 
-#: swapp.cpp:176
+#: swapp.cpp:183
 msgid "TimeFrame"
 msgstr ""
 
-#: swapp.cpp:178
+#: swapp.cpp:185
 msgid "Recent Applications"
 msgstr "Недавние приложения"
 
-#: swapp.cpp:179
+#: swapp.cpp:186
 msgid "Places"
 msgstr "Точки входа"
 
-#: swapp.cpp:180
+#: swapp.cpp:187
 msgid "Recent Documents"
 msgstr "Недавние документы"
 
-#: swapp.cpp:182
+#: swapp.cpp:189
 msgid "All"
 msgstr "Все"
 
-#: swapp.cpp:183
+#: swapp.cpp:190
 msgid "Photo"
 msgstr "Фото"
 
-#: swapp.cpp:184
+#: swapp.cpp:191
 msgid "Video"
 msgstr "Видео"
 
-#: swapp.cpp:185
+#: swapp.cpp:192
 msgid "Documents"
 msgstr "Документы"
 
-#: swapp.cpp:186
+#: swapp.cpp:193
 msgid "Manage networks"
 msgstr "Управление сетями"
 
-#: swapp.cpp:187
+#: swapp.cpp:194
 msgid "My Local Documents"
 msgstr "Мои локальные документы"
 
-#: swapp.cpp:188
+#: swapp.cpp:195
 msgid "Local"
 msgstr ""
 
-#: swapp.cpp:189
+#: swapp.cpp:196
 msgid "Write comment..."
 msgstr "Написать комментарий..."
 
-#: swapp.cpp:190
+#: swapp.cpp:197
 msgid "Audio: "
 msgstr "Аудио: "
 
-#: swapp.cpp:191
-msgid "Comments: "
-msgstr "Комментарии: "
-
-#: swapp.cpp:192
-msgid "Likes: "
-msgstr "Нравится: "
-
-#: swapp.cpp:193
+#: swapp.cpp:198
 msgid "Like"
 msgstr "Мне нравится"
 
-#: swapp.cpp:194
+#: swapp.cpp:199
 msgid "Unlike"
 msgstr "Больше не нравится"
 
-#: swapp.cpp:195
+#: swapp.cpp:200
 msgid "Social networking sites"
 msgstr "Социальные сети"
 
-#: swapp.cpp:197
+#: swapp.cpp:201
+msgid "Show comments"
+msgstr "Показать комментарии"
+
+#: swapp.cpp:202
+msgid "Hide comments"
+msgstr "Скрыть комментарии"
+
+#: swapp.cpp:203
+msgid "Login"
+msgstr "Вход"
+
+#: swapp.cpp:204
+msgid "Logout"
+msgstr "Выход"
+
+#: swapp.cpp:206
 msgid "JAN"
 msgstr "Янв"
 
-#: swapp.cpp:198
+#: swapp.cpp:207
 msgid "FEB"
 msgstr "Фев"
 
-#: swapp.cpp:199
+#: swapp.cpp:208
 msgid "MAR"
 msgstr "Март"
 
-#: swapp.cpp:200
+#: swapp.cpp:209
 msgid "APR"
 msgstr "Апр"
 
-#: swapp.cpp:201
+#: swapp.cpp:210
 msgid "MAY"
 msgstr "Май"
 
-#: swapp.cpp:202
+#: swapp.cpp:211
 msgid "JUN"
 msgstr "Июнь"
 
-#: swapp.cpp:203
+#: swapp.cpp:212
 msgid "JUL"
 msgstr "Июль"
 
-#: swapp.cpp:204
+#: swapp.cpp:213
 msgid "AUG"
 msgstr "Авг"
 
-#: swapp.cpp:205
+#: swapp.cpp:214
 msgid "SEP"
 msgstr "Сен"
 
-#: swapp.cpp:206
+#: swapp.cpp:215
 msgid "OCT"
 msgstr "Окт"
 
-#: swapp.cpp:207
+#: swapp.cpp:216
 msgid "NOV"
 msgstr "Нояб"
 
-#: swapp.cpp:208
+#: swapp.cpp:217
 msgid "DEC"
 msgstr "Дек"
 
@@ -193,6 +201,12 @@ msgstr "Юлия Минеева"
 msgctxt "julia.mineeva@osinit.ru"
 msgid "julia.mineeva@osinit.ru"
 msgstr ""
+
+#~ msgid "Comments: "
+#~ msgstr "Комментарии: "
+
+#~ msgid "Likes: "
+#~ msgstr "Нравится: "
 
 #~ msgid ""
 #~ "%1\n"

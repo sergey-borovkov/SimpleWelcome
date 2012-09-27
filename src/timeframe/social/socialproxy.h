@@ -74,6 +74,8 @@ public:
     Q_INVOKABLE QString selfId() const { return m_selfId; }
     Q_INVOKABLE QString selfPictureUrl();
 
+    void getSelfUserPicture(const QString &pluginName);
+
     /**
      * @brief Request all comments of item
      * @param id of item
@@ -85,7 +87,6 @@ public slots:
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
 
-    void onGotUserImage(QString, QString);
     void onSelfId(QString);
     void onSelfName(QString);
     void newComments(QString postId, QList<CommentItem *> items);
@@ -95,7 +96,7 @@ private slots:
     void likeSuccess(PluginRequestReply *);
     void commentSuccess(PluginRequestReply *);
     void getPictureSuccess(PluginRequestReply *);
-
+    void getSelfPictureSuccess(PluginRequestReply*);
 
     /**
      * @brief Slot called on social network deauthorization
@@ -153,7 +154,7 @@ private:
 
     PluginRequestReply *userPicture(const QString &id, const QString &parentId, const QString &pluginName);
 
-    PluginRequestReply *selfPicture(const QString &parentId, const QString &pluginName);
+    PluginRequestReply *selfPicture(const QString &pluginName);
 
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;
@@ -161,8 +162,6 @@ private:
     QSet<QString> m_enabledPlugins;
 
     QString m_cachedComment;
-    QString m_cachedUserImageUrl;
-    QString m_cachedUserId;
 
     // User info
     QString m_selfId;
