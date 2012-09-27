@@ -3,8 +3,8 @@
 
 PluginRequestReply::PluginRequestReply(Request *request, const QString &sourceId, QObject *parent) :
     QObject(parent),
-    m_finished(false),
-    m_sourceId(sourceId)
+    m_sourceId(sourceId),
+    m_finished(false)
 {
     QObject *r = dynamic_cast<QObject *>(request);
     if(r != 0) {
@@ -65,7 +65,7 @@ void PluginRequestReply::error(QString error)
 }
 void PluginRequestReply::requestSuccess()
 {
-    m_finished = true;   
+    m_finished = true;
     emit success(this);
     emit finished();
 }

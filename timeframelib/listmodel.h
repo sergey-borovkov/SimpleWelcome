@@ -19,11 +19,11 @@ public:
     Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role);
-    void appendRow(ListItem* item);
+    virtual void appendRow(ListItem* item);
     virtual void appendRows(const QList<ListItem*> &items);
-    void insertRow(int row, ListItem* item);
-    bool removeRow(int row, const QModelIndex &parent = QModelIndex());
-    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    virtual void insertRow(int row, ListItem* item);
+    virtual bool removeRow(int row, const QModelIndex &parent = QModelIndex());
+    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
     void refreshRow(int row);
     ListItem* takeRow(int row);
     ListItem* find(const QString &id) const;

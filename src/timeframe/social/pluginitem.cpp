@@ -34,7 +34,9 @@ QVariant PluginItem::data(int role) const
 
 bool PluginItem::setData(int role, const QVariant &value)
 {
-    return true;
+    Q_UNUSED(role)
+    Q_UNUSED(value)
+    return false;
 }
 
 ISocialPlugin *PluginItem::plugin()
