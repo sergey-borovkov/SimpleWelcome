@@ -50,6 +50,12 @@ FocusScope {
                 anchors.topMargin: 32
 
                 draggable: true
+                dragOutTopMargin: 72 // FIXME: stupid hardcode for now
+                dragOutBottomMargin: 33 // FIXME: stupid hardcode for now
+
+                property bool isPopupGroup: true
+                dataSource: dataSource_Apps
+
                 //groupNameVisible:
             }
         }

@@ -10,6 +10,13 @@ Item {
     width: cellWidth
     height: wrapper.height//140
 
+    GridView.onRemove: SequentialAnimation {
+                 PropertyAction { target: cell; property: "GridView.delayRemove"; value: true }
+                 NumberAnimation { target: wrapper; property: "scale"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
+                 PropertyAction { target: gridMouseArea; property: "dndSrcId"; value: -1 }
+                 PropertyAction { target: cell; property: "GridView.delayRemove"; value: false }
+             }
+
     Item {
         id: wrapper
         parent: gridMouseArea
@@ -116,11 +123,13 @@ Item {
                 name: "cellInDrag"
                 when: gridMouseArea.dndSrcId === id
 
-                PropertyChanges {
+                ParentChange {
                     target: wrapper
-                    x: gridMouseArea.mouseX - wrapper.width/2
-                    y: gridMouseArea.mouseY - wrapper.height/2
-                    z: 10
+                    parent: tabRoot
+                    x: gridMouseArea.mapToItem(tabRoot, gridMouseArea.mouseX - wrapper.width/2, 0).x
+                    y: gridMouseArea.mapToItem(tabRoot, 0, gridMouseArea.mouseY - wrapper.height/2).y
+                    //x: gridMouseArea.mouseX - wrapper.width/2
+                    //y: gridMouseArea.mouseY - wrapper.height/2
                 }
             },
 
@@ -140,7 +149,10 @@ Item {
                 from: ""
                 to: "cellInDrag"
                 reversible: true
-                NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
+                ParentAnimation {
+                    via: tabRoot
+                    NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
+                }
             },
             Transition {
                 from: "cellOpenedStack"

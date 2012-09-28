@@ -24,6 +24,19 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: -popupFrame.slideHeight
 
+        Component.onCompleted: {
+            popupFrame.gridGroup.gridView.draggedOut.connect(draggedOut)
+        }
+
+        function draggedOut(item) {
+            gridsListView.hideGroup()
+            //console.log(item.caption + " GOTTTTT")
+            gridsListView.activeGridView.newItemData(item.imagePath, item.caption, item.id)
+            gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
+            gridsListView.activeGridView.startDragging(gridsListView.activeGridView.count - 1)
+
+        }
+
         ListView {
             id: gridsListView
 
@@ -103,7 +116,6 @@ Item {
 
             function insertGrid(groupData, isOnNewTab)
             {
-                var newGridGroup
                 if (isOnNewTab)
                 {
                     gridsListModel.append( { defaultGroup: groupData } )
@@ -114,17 +126,23 @@ Item {
                     gridsListView.currentItem.addGridGroup(groupData)
                 }
 
+                var newGridGroup = gridsListView.currentItem.activeGridGroup
                 if (gridsListView.currentItem)
                 {
-                    gridsListView.currentItem.activeGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
-                    if (gridsListView.currentItem.activeGridGroup.gridView.draggable)
-                        gridsListView.currentItem.activeGridGroup.showPopupGroup.connect(showGroup)
+                    newGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
+                    if (newGridGroup.gridView.stackable)
+                        newGridGroup.showPopupGroup.connect(showGroup)
                 }
             }
 
 
             function createTabsFromGroups()
             {
+                //if (groups !== undefined)
+                    //console.log("----------------------------------- createTabsFromGroups " + groups[0].groupName)
+                //else
+                    //console.log("----------------------------------- createTabsFromGroups ")
+
                 // Constants. Used hack to retrieve them from C++, no way to do it straightforward AFAIK
                 var spacing = constants.gridWithGroupsSpacing, // spacing between GridWithGroups
                         columns = constants.gridColumns,
@@ -207,6 +225,19 @@ Item {
                         }
                     }
                 }
+
+                var currentView = gridsListView.currentIndex
+                for (i = 0; i < gridsListView.count; i++) {
+                    gridsListView.currentIndex = i
+
+                    var childs = gridsListView.currentItem.children
+                    for (var j = 0; j < childs.length; j++)
+                        if ('count' in childs[j])
+                        {
+                            childs[j].loadStacks()
+                        }
+                }
+                gridsListView.currentIndex = currentView
             }
 
             Component.onCompleted: {
@@ -234,7 +265,7 @@ Item {
                 stackCellOpenedId = -1
             }
 
-            function showGroup(item, iconCoords)
+            function showGroup(index, item, iconCoords)
             {
                 if (popupFrame.state == "CLOSED")
                 {
@@ -243,13 +274,16 @@ Item {
                     popupFrame.groupTitle = item.caption
 
                     popupFrame.gridGroup.gridView.model.clear()
-                    popupFrame.gridGroup.startIndex = item.stack[0].id
-                    popupFrame.gridGroup.endIndex = item.stack[0].id + item.stack.length - 1
+                    popupFrame.gridGroup.startIndex = -1
+                    popupFrame.gridGroup.endIndex = -1
+                    popupFrame.stackedIconIndex = index
 
-                    //for (var groupData in groupDataArray)
-                    //console.log("DATQA :" + groupData.length)
+                    //console.log("stacked group we are opening has length:" + item.stack.length)
                     for (var i = 0; i < item.stack.length; i++)
+                    {
+                        //console.log("N" + i + ": " + item.stack[i].caption + " [" + item.stack[i].id + "]")
                         popupFrame.gridGroup.gridView.newItemData(item.stack[i].imagePath, item.stack[i].caption, item.stack[i].id)
+                    }
 
                     /*
 
@@ -336,7 +370,6 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                hoverEnabled: true
 
                 onClicked: gridsListView.hideGroup()
             }
@@ -351,6 +384,7 @@ Item {
             id: popupFrame
 
             property int slideHeight: 0
+            property int stackedIconIndex: -1
 
             //anchors.top: parent.bottom
             width: parent.width

@@ -9,11 +9,16 @@ GridView {
     property int endIndex
     property bool draggable: false
     property bool enabledSystemDnD: false  // set true to enable system Drag&Drop
+    property bool stackable: false // set true to enable icons stacking while Drag&Dropping
 
     property alias dndSrcId: gridMouseArea.dndSrcId
+    property int dragOutTopMargin: -1
+    property int dragOutBottomMargin: -1
 
     signal dndStateChanged(bool isDrag)
     signal selectionChangedByKeyboard(variant newCurrentItem)
+    signal draggedOut(variant item)
+    signal itemStackingChanged()
 
     // constants
     property int columns: constants.gridColumns
@@ -63,7 +68,7 @@ GridView {
     model: appsModel
 
     function newItemData(iconPath, name, itemId) {
-        appsModel.append( { imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
+        appsModel.append( { imagePath: iconPath, caption: name, id: itemId, pinned: undefined, stack: undefined })
     }
 
     function resetContent() {
@@ -73,6 +78,133 @@ GridView {
 
     function onItemClicked(newIndex) {
         dataSource.itemClicked(newIndex == -1 ? newIndex : appsModel.get(newIndex).id)
+    }
+
+    function getCellIndex(inX, inY) {
+        var curRow = Math.round((inY - (constants.cellHeight/2)) / cellHeight)
+        var curColumn = Math.max(0, Math.min(columns - 1, Math.round((inX - (constants.cellWidth/2)) / cellWidth)))
+        var curIndex = Math.max(0, Math.min(count - 1, curRow * columns + curColumn))
+        return curIndex
+    }
+
+    function copyObjectByValue(obj) {
+        // Copying object by value
+        var newObj = new Object
+        for (var s in (obj)) {
+            //console.log("copying " + itemStackingTo[s])
+            newObj[s] = (obj)[s]
+        }
+        return newObj
+    }
+
+    function stackItemInItem(indexStackingTo, indexDragging) {
+        //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
+
+        var itemDragging = model.get(indexDragging)
+        //console.log(gridMouseArea.dndDest + " with " + itemDragging)
+        var itemStackingTo = model.get(indexStackingTo)
+
+        var stackArray = itemStackingTo.stack
+        if (stackArray === undefined) {
+            //console.log("FIRST TIME STACKING")
+            stackArray = []
+            stackArray.push(copyObjectByValue(itemStackingTo))
+        }
+        else {
+            //console.log("STACKING AGAIN")
+            for (var i in stackArray) // Checking if item is already present in stack
+                if (stackArray[i].id === itemDragging.id)
+                {
+                    //console.log("Duplicate ignored")
+                    return false
+                }
+        }
+        stackArray.push(copyObjectByValue(itemDragging))
+
+        model.setProperty(indexStackingTo, "imagePath", "image://generalicon/stacked/" + itemStackingTo.imagePath.slice(28) + "|" + itemDragging.imagePath.slice(28))
+        model.setProperty(indexStackingTo, "stack", stackArray)
+
+        itemStackingChanged()
+        return true
+    }
+
+    function unstackItemInItem(indexUnstackingFrom, indexDragging) {
+        //console.log("----------------- UNSTACKING " + indexDragging + " from " + indexUnstackingFrom)
+
+        var itemDragging = model.get(indexDragging)
+        //console.log(gridMouseArea.dndDest + " with " + itemDragging)
+        var itemUnstackingFrom = model.get(indexUnstackingFrom)
+
+        var stackArray = itemUnstackingFrom.stack
+        if (stackArray === undefined)
+            return false
+
+        var stackIcon = "image://generalicon/stacked/"
+
+        var removeIndex = -1
+        for (var i in stackArray) // If desired item occured - remove it. Otherwise recalculate stack icon
+        {
+            if (stackArray[i].id === itemDragging.id)
+            {
+                //console.log("Removing " +  stackArray[i].id + " - " + stackArray[i].caption + ", its == " + itemDragging.id + " - " + itemDragging.caption)
+                removeIndex = i
+            }
+            else
+            {
+                //console.log("Skipping " + stackArray[i].id + " - " + stackArray[i].caption)
+                stackIcon += stackArray[i].imagePath.slice(28) + "|"
+            }
+        }
+        if (removeIndex != -1)
+            stackArray.splice(removeIndex, 1)
+        stackIcon = stackIcon.substring(0, stackIcon.length - 1)
+
+        //console.log("REAL ICON PATH:" + stackIcon + " | items left: " + stackArray.length)
+
+        if (stackArray.length === 1) {
+            //console.log("LAST ELEMENT LEFT")
+            var innerItem = stackArray[0]
+            model.setProperty(indexUnstackingFrom, "stack", undefined)
+            model.set(indexUnstackingFrom, innerItem)
+        }
+        else {
+            //console.log("WAS: " + itemUnstackingFrom.imagePath)
+            //console.log("TRUNCATING: " + itemDragging.imagePath)
+            //console.log("NOEW: " + itemUnstackingFrom.imagePath.substring(0, itemUnstackingFrom.imagePath.length - (itemDragging.imagePath.length - 28 + 1)))
+            model.setProperty(indexUnstackingFrom, "imagePath", stackIcon)//itemUnstackingFrom.imagePath.substring(0, itemUnstackingFrom.imagePath.length - (itemDragging.imagePath.length - 28 + 1)))
+            model.setProperty(indexUnstackingFrom, "stack", stackArray)
+        }
+
+        // Fixing stacked item ID to match it's first element
+        if (removeIndex == 0)
+        {
+            console.log("Fixing stacked item ID: indexUnstackingFrom: " + indexUnstackingFrom + " to " + stackArray[0].id)
+            model.setProperty(indexUnstackingFrom, "id", stackArray[0].id)
+            model.setProperty(indexUnstackingFrom, "caption", stackArray[0].caption)
+        }
+        itemStackingChanged()
+        return true
+    }
+
+    function startDragging(index) {
+        if (index != -1)
+        {
+            gridMouseArea.dndDest = index
+            gridMouseArea.dndSrc = index
+            gridMouseArea.dndSrcId = model.get(gridMouseArea.dndSrc).id
+            gridMouseArea.dndDestId = gridMouseArea.dndSrcId
+            //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
+            dndStateChanged(true)
+
+            if (highlightItem)
+                highlightItem.opacity = 1
+
+//                    console.log("NOW----------------")
+//                    for (var i = 0; i < model.count; i++)
+//                        console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
+//                    console.log("END----------------")
+        }
+
     }
 
     Component.onCompleted: {
@@ -221,6 +353,7 @@ GridView {
         property int dndDest: -1
         property int dndDestId: -1
         property int pressedOnIndex
+        property variant draggedItemStackedAt
 
         function getItemUnderCursor(isForceRecheck)
         {
@@ -228,7 +361,8 @@ GridView {
             var mouseXReal = mouseX + grid.contentX, mouseYReal = mouseY + grid.contentY
             var wasContentX = grid.contentX, wasContentY = grid.contentY
             var indexUnderMouse = grid.indexAt(mouseXReal, mouseYReal)
-            var result = -1
+            var result = new Array()
+            result.index = -1// = {"index": -1}
 
             if (indexUnderMouse != -1 && (grid.currentIndex != indexUnderMouse || isForceRecheck))
             {
@@ -237,7 +371,8 @@ GridView {
                 if (grid.currentItem && grid.currentItem.x < mouseXReal && grid.currentItem.y < mouseYReal &&
                       grid.currentItem.x + grid.currentItem.width > mouseXReal && grid.currentItem.y + grid.currentItem.height > mouseYReal)
                 {
-                    result = indexUnderMouse
+                    result.index = indexUnderMouse
+                    result.item = grid.currentItem
                 }
                 grid.currentIndex = wasCurrentIndex
                 grid.contentX = wasContentX
@@ -246,12 +381,89 @@ GridView {
             return result
         }
 
+        Timer {
+            id: mouseHoverTimer
+            interval: stackable ? 300 : 0
+            property variant itemWaitingOn: undefined
+            property variant indexWaitingOn: undefined
+            property bool isAimingOnStacking
+            property real xWaiting
+            property real yWaiting
+
+            function calculateExpectations(mouseX, mouseY) {
+                if (itemWaitingOn !== undefined)
+                {
+                    var item = itemWaitingOn
+
+                    if (mouseX > item.x && mouseX < item.x + constants.cellWidth) // We entered corner of other item, starting timer
+                        isAimingOnStacking = true
+                    else
+                        isAimingOnStacking = false
+
+                    xWaiting = mouseX
+                    yWaiting = mouseY
+                }
+
+            }
+
+            onTriggered: {
+                if (itemWaitingOn !== undefined && model.get(gridMouseArea.dndDest) !== undefined)
+                {
+                    var item = itemWaitingOn
+                    var isHitInnerIcon = gridMouseArea.mouseX > item.x && gridMouseArea.mouseX < item.x + constants.cellWidth
+                    var isDragginStack = model.get(gridMouseArea.dndDest).stack !== undefined
+
+                    //var pointsDistance = Math.sqrt(Math.pow(gridMouseArea.mouseX - xWaiting, 2) + Math.pow(gridMouseArea.mouseY - yWaiting, 2))
+                    //console.log("distance: " + pointsDistance)
+
+                    if (stackable && gridMouseArea.draggedItemStackedAt !== undefined && (gridMouseArea.draggedItemStackedAt !== indexWaitingOn || !isHitInnerIcon) && !isDragginStack)
+                    { // Unstacking if item we are above is not the one we stacked to
+                        //console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
+                        grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
+                        gridMouseArea.draggedItemStackedAt = undefined
+                    }
+                    else if (stackable && isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest && !isDragginStack) //&& pointsDistance <= 3)
+                    { // Hit central part of item. Using for stacking
+                        if (isAimingOnStacking)
+                        {
+                            //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
+                            var res = grid.stackItemInItem(indexWaitingOn, gridMouseArea.dndDest)
+                            if (res)
+                            {
+                                gridMouseArea.draggedItemStackedAt = indexWaitingOn
+
+                                //console.log("set " + indexWaitingOn + " with " + model.get(indexWaitingOn).stack.length + " at real pos " + model.get(indexWaitingOn).id)
+                                if (gridMouseArea.dndDest > indexWaitingOn)
+                                {
+                                    gridMouseArea.dndDestId = count - 1
+                                    model.move(gridMouseArea.dndDest, gridMouseArea.dndDestId, 1)
+                                    currentIndex = gridMouseArea.draggedItemStackedAt
+                                    gridMouseArea.dndDest = count - 1
+                                }
+                            }
+                        }
+                    }
+                    else if (!isAimingOnStacking || !stackable || isDragginStack) // Hit outer part of item. Using for repositioning
+                    {
+                        //console.log("MOVING")
+
+                        gridMouseArea.dndDestId = indexWaitingOn // This could had broken dnd-dndId connection but fixed bug
+                        model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
+                        gridMouseArea.dndDest = indexWaitingOn
+                        currentIndex = gridMouseArea.dndDest
+                    }
+
+                    itemWaitingOn = undefined
+                }
+            }
+        }
+
 
         onMousePositionChanged: {
             if (!grid.moving && dndSrcId == -1)
             {
                 // Optimize later to lesser use of getItemUnderCursor(true)
-                var newCurrentIndex = getItemUnderCursor(!grid.activeFocus)
+                var newCurrentIndex = getItemUnderCursor(!grid.activeFocus).index
                 if (newCurrentIndex != -1 && (newCurrentIndex != currentIndex || !grid.activeFocus))
                 {
                     if (!grid.activeFocus)
@@ -287,45 +499,45 @@ GridView {
                     }
                 }
 
-                var index = getItemUnderCursor(true)
-
-                if (index != -1 && index != dndDest)
+                if (mouseY < -dragOutTopMargin || mouseY > grid.height + dragOutBottomMargin)
                 {
-                    dndDestId = index // This could had broken dnd-dndId connection but fixed bug
-                    //console.log("New DND_DEST_ID: " + dndDestId)
-                    model.move(dndDest, index, 1)
-                    //console.log("Moved " + dndDest + " to " + index + " when " + model.get(index).id)
-                    dndDest = index
+                    if (groupRoot !== undefined && groupRoot.isPopupGroup !== undefined && groupRoot.isPopupGroup)
+                    {
+                        console.log("OUT")
+                        draggedOut(model.get(gridMouseArea.dndDest))
+                        // onReleased():
+                        dndSrcId = -1
+                        dndStateChanged(false)
+                    }
                 }
+
+                var index = grid.getCellIndex(mouseX, mouseY)
+                var wasCurrent = grid.currentIndex
+                grid.currentIndex = index
+                var item = grid.currentItem
+                grid.currentIndex = wasCurrent
+
+                mouseHoverTimer.itemWaitingOn = item
+                mouseHoverTimer.indexWaitingOn = index
+                mouseHoverTimer.calculateExpectations(mouseX, mouseY)
+                mouseHoverTimer.start()
             }
         }
 
         onPressed: {
-            pressedOnIndex = getItemUnderCursor(true)
+            pressedOnIndex = getItemUnderCursor(true).index
         }
 
         onPressAndHold: {
             if (draggable)
             {
-                var index = getItemUnderCursor(true)
-                if (index != -1 && pressedOnIndex == index)
-                {
-                    dndDest = index
-                    dndSrc = index
-                    dndSrcId = model.get(dndSrc).id
-                    dndDestId = dndSrcId
-                    //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
-                    dndStateChanged(true)
-
-//                    console.log("NOW----------------")
-//                    for (var i = 0; i < model.count; i++)
-//                        console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
-//                    console.log("END----------------")
-                }
+                var index = getItemUnderCursor(true).index
+                if (pressedOnIndex == index)
+                    grid.startDragging(index)
             }
             else if (enabledSystemDnD)
             {
-                var icon_index = getItemUnderCursor(true)
+                var icon_index = getItemUnderCursor(true).index
                 if (icon_index != -1 && pressedOnIndex == icon_index && model.get(icon_index).stack === undefined) {
                     var url = dataSource.itemUrlDnd(model.get(icon_index).id, model.get(icon_index).group)
                     if (url) {
@@ -340,37 +552,81 @@ GridView {
         }
         onReleased: {
             var dndSrcIdSaved = dndSrcId
-            dndSrcId = -1
 
-            if (dndSrcIdSaved != -1)
+            if (gridMouseArea.draggedItemStackedAt !== undefined && model.get(gridMouseArea.dndDest).stack === undefined)
             {
-                dndStateChanged(false)
+                //console.log("STACK UPPED")
 
-                if (typeof dataSource.itemDragged !== "undefined" && dndDestId != -1)
+                if (dndDest < gridMouseArea.draggedItemStackedAt)
                 {
-                    //console.log("dndDestId: " + dndDestId)
-                    dataSource.itemDragged(dndSrcIdSaved, dndDestId)
+                    gridMouseArea.dndDestId = count - 1
+                    model.move(gridMouseArea.dndDest, gridMouseArea.dndDestId, 1)
+                    //currentIndex = gridMouseArea.draggedItemStackedAt
+                    gridMouseArea.dndDest = count - 1
+                }
 
-                    model.set(dndDest, {"id": dndDestId})
+                model.remove(dndDest)
 
-                    if (dndDest < dndSrc)
+                //dndSrcId = -1; - this is intentionally commented out 'cause it's done in delegate's remove animation
+                dndStateChanged(false)
+            }
+            else
+            {
+                dndSrcId = -1
+
+                if (dndSrcIdSaved != -1)
+                {
+                    dndStateChanged(false)
+
+                    if (typeof dataSource.itemDragged !== "undefined" && dndDestId != -1)
                     {
-                        for (var i = dndDest + 1; i <= dndSrc; i++)
-                            model.set(i, {"id": model.get(i).id + 1})
-                    }
-                    else
-                    {
-                        for (var i = dndSrc; i < dndDest; i++)
-                            model.set(i, {"id": model.get(i).id - 1})
+                        //console.log("dndDestId: " + dndDestId)
+                        // FIXME: FIX THIS!!!!!!!!!!!!!!!!!
+                        /*dataSource.itemDragged(dndSrcIdSaved, dndDestId)
+
+                        model.set(dndDest, {"id": dndDestId})
+
+                        if (dndDest < dndSrc)
+                        {
+                            for (var i = dndDest + 1; i <= dndSrc; i++)
+                                model.set(i, {"id": model.get(i).id + 1})
+                        }
+                        else
+                        {
+                            for (var i = dndSrc; i < dndDest; i++)
+                                model.set(i, {"id": model.get(i).id - 1})
+                        }*/
                     }
                 }
             }
+
+            gridMouseArea.draggedItemStackedAt = undefined
+
+
+            // Duplicates detection. Remove later when sure no duplication occurs
+            var Set = function() {}
+            Set.prototype.add = function(o) { this[o] = o; }
+            Set.prototype.remove = function(o) { delete this[o]; }
+            var ids = new Set
+            for (var j = 0; j < model.count; j++)
+            {
+                if (model.get(j).id in ids)
+                    console.log("!!!!!!!!!!!!!!!!!!!!! DUPLICATE ID DETECTED!!!!: " + model.get(j).id + " - " + model.get(j).caption + " | " + (model.get(j).stack === undefined) + "; count: " + j + " | TAKEN BY: " + ids[model.get(j).id].caption)
+                else
+                {
+                    ids.add(model.get(j).id)
+                    ids[model.get(j).id].caption = model.get(j).caption
+                }
+            }
+
+            //    console.log(model.get(j).caption + " | " + model.get(i).id + " | " + i)
+
         }
 
         onClicked: {
             if (!grid.moving)
             {
-                var indexClicked = getItemUnderCursor(true)
+                var indexClicked = getItemUnderCursor(true).index
                 model.itemClicked(indexClicked)
             }
         }
