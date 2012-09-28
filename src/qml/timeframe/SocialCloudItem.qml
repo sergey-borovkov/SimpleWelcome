@@ -418,6 +418,27 @@ Item{
                 anchors.verticalCenter : undefined
             }
 
+            AnchorChanges {
+                target: socialImage
+                anchors.left : undefined
+                anchors.right : undefined
+                anchors.horizontalCenter : bodyItem.horizontalCenter
+                anchors.top : bodyItem.top
+                anchors.bottom : undefined
+                anchors.verticalCenter : undefined
+            }
+
+            AnchorChanges {
+                target: socialMessage
+                anchors.left : undefined
+                anchors.right : undefined
+                anchors.horizontalCenter : bodyItem.horizontalCenter
+                anchors.top : socialImage.bottom
+                anchors.bottom : undefined
+                anchors.verticalCenter : undefined
+            }
+
+
             ParentChange {
                 target: socialCloudItem
                 parent: timeFrameTab
@@ -469,7 +490,7 @@ Item{
     transitions: [
         Transition {
             ColorAnimation { property: "color"; duration: 300 }
-            //AnchorAnimation { duration: 300 }
+            AnchorAnimation { duration: 300 }
             ParentAnimation {
                 via: foreground
                 NumberAnimation { properties: "x,y,width,height,opacity,z"; duration: 300 }
