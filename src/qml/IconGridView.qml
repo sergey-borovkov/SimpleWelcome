@@ -111,7 +111,7 @@ GridView {
             stackArray.push(copyObjectByValue(itemStackingTo))
         }
         else {
-            console.log("STACKING AGAIN")
+            //console.log("STACKING AGAIN")
             for (var i in stackArray) // Checking if item is already present in stack
                 if (stackArray[i].id === itemDragging.id)
                 {
@@ -146,12 +146,12 @@ GridView {
         {
             if (stackArray[i].id === itemDragging.id)
             {
-                console.log("Removing " +  stackArray[i].id + " - " + stackArray[i].caption + ", its == " + itemDragging.id + " - " + itemDragging.caption)
+                //console.log("Removing " +  stackArray[i].id + " - " + stackArray[i].caption + ", its == " + itemDragging.id + " - " + itemDragging.caption)
                 removeIndex = i
             }
             else
             {
-                console.log("Skipping " + stackArray[i].id + " - " + stackArray[i].caption)
+                //console.log("Skipping " + stackArray[i].id + " - " + stackArray[i].caption)
                 stackIcon += stackArray[i].imagePath.slice(28) + "|"
             }
         }
@@ -159,7 +159,7 @@ GridView {
             stackArray.splice(removeIndex, 1)
         stackIcon = stackIcon.substring(0, stackIcon.length - 1)
 
-        console.log("REAL ICON PATH:" + stackIcon + " | items left: " + stackArray.length)
+        //console.log("REAL ICON PATH:" + stackIcon + " | items left: " + stackArray.length)
 
         if (stackArray.length === 1) {
             //console.log("LAST ELEMENT LEFT")
@@ -418,7 +418,7 @@ GridView {
 
                     if (stackable && gridMouseArea.draggedItemStackedAt !== undefined && (gridMouseArea.draggedItemStackedAt !== indexWaitingOn || !isHitInnerIcon) && !isDragginStack)
                     { // Unstacking if item we are above is not the one we stacked to
-                        console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
+                        //console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
                         grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
                         gridMouseArea.draggedItemStackedAt = undefined
                     }
@@ -426,7 +426,7 @@ GridView {
                     { // Hit central part of item. Using for stacking
                         if (isAimingOnStacking)
                         {
-                            console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
+                            //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
                             var res = grid.stackItemInItem(indexWaitingOn, gridMouseArea.dndDest)
                             if (res)
                             {
@@ -555,7 +555,7 @@ GridView {
 
             if (gridMouseArea.draggedItemStackedAt !== undefined && model.get(gridMouseArea.dndDest).stack === undefined)
             {
-                console.log("STACK UPPED")
+                //console.log("STACK UPPED")
 
                 if (dndDest < gridMouseArea.draggedItemStackedAt)
                 {

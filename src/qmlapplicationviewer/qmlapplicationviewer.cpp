@@ -219,7 +219,7 @@ void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, 
 
 void QmlApplicationViewer::saveSetting(QString groupName, QVariantList setting)
 {
-    qDebug() << "WE ARE HERE WE ARE SAVING" << groupName;
+    //qDebug() << "WE ARE HERE WE ARE SAVING" << groupName;
 
     KConfigGroup configGroup(KGlobal::config(), "Stacks");
     configGroup.deleteGroup();
@@ -229,7 +229,7 @@ void QmlApplicationViewer::saveSetting(QString groupName, QVariantList setting)
         QVariantMap map;
         if (!strcmp(variant.typeName(), "QVariantMap"))
         {
-            qDebug() << "REALLY QVariantMap";
+            //qDebug() << "REALLY QVariantMap";
             map = variant.value<QVariantMap>();
             //qDebug() << map["caption"].toString();
             //qDebug() << map["imagePath"].toString();

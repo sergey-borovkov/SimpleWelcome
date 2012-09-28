@@ -48,7 +48,7 @@ Column {
             for (var captionStackingTo in res) {
 
                 var captionsList = res[captionStackingTo].split(",")
-                console.log("Object item:", captionStackingTo, "=", captionsList)
+                //console.log("Object item:", captionStackingTo, "=", captionsList)
 
                 var model = iconGridView.model
                 var indexStackingTo = -1
@@ -64,7 +64,7 @@ Column {
                 for (var captionToStackIndex in captionsList) {
                     var captionToStack = captionsList[captionToStackIndex]
                     if (captionToStack !== captionStackingTo) {
-                        console.log("NEED TO STACK: " + captionToStack)
+                        //console.log("NEED TO STACK: " + captionToStack)
 
                         var indexToStack = -1
                         for (var i = 0; i < model.count; i++)
@@ -98,7 +98,7 @@ Column {
             if (stack !== undefined)
             {
                 setting.push(iconGridView.copyObjectByValue(item))
-                console.log(stack.length + "; at " + i)
+                //console.log(stack.length + "; at " + i)
             }
         }
 
@@ -201,7 +201,7 @@ Column {
 
         function newItemData(iconPath, name, itemId, advParam)
         {
-            console.log("= " + name)
+            //console.log("= " + name)
             if (startIndex === endIndex && endIndex === -1)
             {
                 for (var i = 0; i < model.count; i++)
