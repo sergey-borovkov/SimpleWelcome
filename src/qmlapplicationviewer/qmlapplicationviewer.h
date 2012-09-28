@@ -52,6 +52,7 @@ public:
 
     Q_INVOKABLE void activateDragAndDrop(QString url, QString image_path, int image_size);
     Q_INVOKABLE void saveSetting(QString groupName, QVariantList setting);
+    Q_INVOKABLE QVariantMap loadSetting(QString groupName);
 
 signals:
     void windowSizeChanged(int newWidth, int newHeight);

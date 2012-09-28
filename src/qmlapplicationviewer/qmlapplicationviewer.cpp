@@ -221,7 +221,7 @@ void QmlApplicationViewer::saveSetting(QString groupName, QVariantList setting)
 {
     qDebug() << "WE ARE HERE WE ARE SAVING" << groupName;
 
-    KConfigGroup configGroup(KGlobal::config(), "Stacks"); // FIXME: not to depend on locale
+    KConfigGroup configGroup(KGlobal::config(), "Stacks");
     configGroup.deleteGroup();
 
     foreach (QVariant variant, setting)
@@ -250,4 +250,17 @@ void QmlApplicationViewer::saveSetting(QString groupName, QVariantList setting)
     }
 
     configGroup.sync();
+}
+
+QVariantMap QmlApplicationViewer::loadSetting(QString groupName)
+{
+    QVariantMap list;
+
+    KConfigGroup configGroup(KGlobal::config(), "Stacks");
+    QMap<QString, QString > map = configGroup.entryMap();
+
+    foreach (QString key, map.keys())
+        list[key] = map[key];
+
+    return list;
 }
