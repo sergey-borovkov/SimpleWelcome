@@ -281,6 +281,7 @@ GridView {
                         dndDest = -1
                         dndDestId = -1
                         // start system DnD
+                        mainWindow.close()
                         mainWindow.activateDragAndDrop(url, imagePath, constants.iconSize)
                         return
                     }
@@ -330,6 +331,7 @@ GridView {
                     if (url) {
                         var imagePath = model.get(icon_index).imagePath
                         // start system DnD
+                        mainWindow.close()
                         mainWindow.activateDragAndDrop(url, imagePath, constants.iconSize)
                     }
                 }
