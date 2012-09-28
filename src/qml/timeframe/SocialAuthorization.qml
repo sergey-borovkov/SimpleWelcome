@@ -52,7 +52,7 @@ PathView {
                     anchors.left: buttonImage.right
                     anchors.leftMargin: 5
                     anchors.right: parent.right
-                    text: authorized ? i18n_Login : i18n_Logout
+                    text: authorized ? i18n_Logout : i18n_Login
                     color: "white"
                     font.pointSize: 12
                 }
