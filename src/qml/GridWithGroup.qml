@@ -36,6 +36,26 @@ Column {
 
     Component.onCompleted: {
         iconGridView.selectionChangedByKeyboard.connect(gridCurrentItemChanged)
+        iconGridView.itemStackingChanged.connect(gridStackingChanged)
+    }
+
+    // Used to save stacking
+    function gridStackingChanged() {
+        var model = iconGridView.model
+
+        var setting = []
+        for (var i = 0; i < model.count; i++)
+        {
+            var item = model.get(i)
+            var stack = item.stack
+            if (stack !== undefined)
+            {
+                setting.push(iconGridView.copyObjectByValue(item))
+                console.log(stack.length + "; at " + i)
+            }
+        }
+
+        mainWindow.saveSetting(groupName, setting)
     }
 
     Text {
