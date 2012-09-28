@@ -30,7 +30,7 @@ Item {
 
         function draggedOut(item) {
             gridsListView.hideGroup()
-            console.log(item.caption + " GOTTTTT")
+            //console.log(item.caption + " GOTTTTT")
             gridsListView.activeGridView.newItemData(item.imagePath, item.caption, item.id)
             gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
             gridsListView.activeGridView.startDragging(gridsListView.activeGridView.count - 1)
@@ -138,10 +138,10 @@ Item {
 
             function createTabsFromGroups()
             {
-                if (groups !== undefined)
-                    console.log("----------------------------------- createTabsFromGroups " + groups[0].groupName)
-                else
-                    console.log("----------------------------------- createTabsFromGroups ")
+                //if (groups !== undefined)
+                    //console.log("----------------------------------- createTabsFromGroups " + groups[0].groupName)
+                //else
+                    //console.log("----------------------------------- createTabsFromGroups ")
 
                 // Constants. Used hack to retrieve them from C++, no way to do it straightforward AFAIK
                 var spacing = constants.gridWithGroupsSpacing, // spacing between GridWithGroups
