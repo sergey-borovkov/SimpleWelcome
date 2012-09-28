@@ -65,7 +65,7 @@ DataSource_Search::DataSource_Search(QObject *parent, DataSource_RecentApps *inR
     activeRunners << "shell"
                   << "recentdocuments"
                   << "services";
-
+    m_runnerManager->setAllowedRunners(activeRunners);
     connect(m_runnerManager, SIGNAL(matchesChanged(const QList<Plasma::QueryMatch> &)), this, SLOT(newSearchMatches(const QList<Plasma::QueryMatch> &)));
     connect(m_runnerManager, SIGNAL(queryFinished()), SLOT(test2()));
 }
@@ -158,7 +158,7 @@ QList<QPair<QString, QString> > DataSource_Search::getRunnersNames()
     QList<QPair<QString, QString> > out;
     foreach (QString allowedRunner, m_runnerManager->allowedRunners()) {
         out << qMakePair(allowedRunner, m_runnerManager->runnerName(allowedRunner));
-        qDebug() << "NAME:" << out.last().first << out.last().second;
+        //qDebug() << "NAME:" << out.last().first << out.last().second;
     }
 
     return out;
@@ -248,7 +248,7 @@ void DataSource_Search::newSearchMatches(const QList<Plasma::QueryMatch> &newMat
         matches.last().group = newMatches.at(i).runner()->name();
         matches.last().plasmaMatch = new Plasma::QueryMatch(newMatches.at(i));
         //emit newItemData(QString("image://generalicon/search/%1").arg(matches.last().name), matches.last().name, matches.size() - 1, matches.last().group);
-        qDebug() << "FOUND" << matches.last().name << "FROM" << matches.last().group;
+        //qDebug() << "FOUND" << matches.last().name << "FROM" << matches.last().group;
     }
     emit resetContent();
 }
