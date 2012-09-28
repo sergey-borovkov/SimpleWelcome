@@ -54,6 +54,8 @@ FocusScope {
                 dragOutBottomMargin: 33 // FIXME: stupid hardcode for now
 
                 property bool isPopupGroup: true
+                dataSource: dataSource_Apps
+
                 //groupNameVisible:
             }
         }
