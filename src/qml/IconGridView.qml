@@ -12,9 +12,12 @@ GridView {
     property bool stackable: false // set true to enable icons stacking while Drag&Dropping
 
     property alias dndSrcId: gridMouseArea.dndSrcId
+    property int dragOutTopMargin: -1
+    property int dragOutBottomMargin: -1
 
     signal dndStateChanged(bool isDrag)
     signal selectionChangedByKeyboard(variant newCurrentItem)
+    signal draggedOut(variant item)
 
     // constants
     property int columns: constants.gridColumns
@@ -134,15 +137,30 @@ GridView {
             return false
 
         var stackIcon = "image://generalicon/stacked/"
-        for (var i in stackArray) // Checking if item is already present in stack
+
+        var removeIndex = -1
+        for (var i in stackArray) // If desired item occured - remove it. Otherwise recalculate stack icon
+        {
             if (stackArray[i].id === itemDragging.id)
-                stackArray.splice(i)
+            {
+                console.log("Removing " +  stackArray[i].id + " - " + stackArray[i].caption + ", its == " + itemDragging.id + " - " + itemDragging.caption)
+                removeIndex = i
+            }
             else
+            {
+                console.log("Skipping " + stackArray[i].id + " - " + stackArray[i].caption)
                 stackIcon += stackArray[i].imagePath.slice(28) + "|"
+            }
+        }
+        if (removeIndex != -1)
+            stackArray.splice(removeIndex, 1)
+        stackIcon = stackIcon.substring(0, stackIcon.length - 1)
+
+        console.log("REAL ICON PATH:" + stackIcon + " | items left: " + stackArray.length)
 
         if (stackArray.length === 1) {
             //console.log("LAST ELEMENT LEFT")
-            var innerItem = itemUnstackingFrom.stack[0]
+            var innerItem = stackArray[0]
             model.setProperty(indexUnstackingFrom, "stack", undefined)
             model.set(indexUnstackingFrom, innerItem)
         }
@@ -150,10 +168,38 @@ GridView {
             //console.log("WAS: " + itemUnstackingFrom.imagePath)
             //console.log("TRUNCATING: " + itemDragging.imagePath)
             //console.log("NOEW: " + itemUnstackingFrom.imagePath.substring(0, itemUnstackingFrom.imagePath.length - (itemDragging.imagePath.length - 28 + 1)))
-            model.setProperty(indexUnstackingFrom, "imagePath", itemUnstackingFrom.imagePath.substring(0, itemUnstackingFrom.imagePath.length - (itemDragging.imagePath.length - 28 + 1)))
+            model.setProperty(indexUnstackingFrom, "imagePath", stackIcon)//itemUnstackingFrom.imagePath.substring(0, itemUnstackingFrom.imagePath.length - (itemDragging.imagePath.length - 28 + 1)))
             model.setProperty(indexUnstackingFrom, "stack", stackArray)
         }
+
+        // Fixing stacked item ID to match it's first element
+        if (removeIndex == 0)
+        {
+            console.log("Fixing stacked item ID: indexUnstackingFrom: " + indexUnstackingFrom + " to " + stackArray[0].id)
+            model.setProperty(indexUnstackingFrom, "id", stackArray[0].id)
+        }
         return true
+    }
+
+    function startDragging(index) {
+        if (index != -1)
+        {
+            gridMouseArea.dndDest = index
+            gridMouseArea.dndSrc = index
+            gridMouseArea.dndSrcId = model.get(gridMouseArea.dndSrc).id
+            gridMouseArea.dndDestId = gridMouseArea.dndSrcId
+            //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
+            dndStateChanged(true)
+
+            if (highlightItem)
+                highlightItem.opacity = 1
+
+//                    console.log("NOW----------------")
+//                    for (var i = 0; i < model.count; i++)
+//                        console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
+//                    console.log("END----------------")
+        }
+
     }
 
     Component.onCompleted: {
@@ -394,7 +440,7 @@ GridView {
                     }
                     else if (!isAimingOnStacking || !stackable || isDragginStack) // Hit outer part of item. Using for repositioning
                     {
-                        console.log("MOVING")
+                        //console.log("MOVING")
 
                         gridMouseArea.dndDestId = indexWaitingOn // This could had broken dnd-dndId connection but fixed bug
                         model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
@@ -447,6 +493,18 @@ GridView {
                     }
                 }
 
+                if (mouseY < -dragOutTopMargin || mouseY > grid.height + dragOutBottomMargin)
+                {
+                    if (groupRoot !== undefined && groupRoot.isPopupGroup !== undefined && groupRoot.isPopupGroup)
+                    {
+                        console.log("OUT")
+                        draggedOut(model.get(gridMouseArea.dndDest))
+                        // onReleased():
+                        dndSrcId = -1
+                        dndStateChanged(false)
+                    }
+                }
+
                 var index = grid.getCellIndex(mouseX, mouseY)
                 var wasCurrent = grid.currentIndex
                 grid.currentIndex = index
@@ -468,20 +526,8 @@ GridView {
             if (draggable)
             {
                 var index = getItemUnderCursor(true).index
-                if (index != -1 && pressedOnIndex == index)
-                {
-                    dndDest = index
-                    dndSrc = index
-                    dndSrcId = model.get(dndSrc).id
-                    dndDestId = dndSrcId
-                    //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
-                    dndStateChanged(true)
-
-//                    console.log("NOW----------------")
-//                    for (var i = 0; i < model.count; i++)
-//                        console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
-//                    console.log("END----------------")
-                }
+                if (pressedOnIndex == index)
+                    grid.startDragging(index)
             }
             else if (enabledSystemDnD)
             {
@@ -528,7 +574,8 @@ GridView {
                     if (typeof dataSource.itemDragged !== "undefined" && dndDestId != -1)
                     {
                         //console.log("dndDestId: " + dndDestId)
-                        dataSource.itemDragged(dndSrcIdSaved, dndDestId)
+                        // FIXME: FIX THIS!!!!!!!!!!!!!!!!!
+                        /*dataSource.itemDragged(dndSrcIdSaved, dndDestId)
 
                         model.set(dndDest, {"id": dndDestId})
 
@@ -541,7 +588,7 @@ GridView {
                         {
                             for (var i = dndSrc; i < dndDest; i++)
                                 model.set(i, {"id": model.get(i).id - 1})
-                        }
+                        }*/
                     }
                 }
             }

@@ -24,6 +24,19 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: -popupFrame.slideHeight
 
+        Component.onCompleted: {
+            popupFrame.gridGroup.gridView.draggedOut.connect(draggedOut)
+        }
+
+        function draggedOut(item) {
+            gridsListView.hideGroup()
+            console.log(item.caption + " GOTTTTT")
+            gridsListView.activeGridView.newItemData(item.imagePath, item.caption, item.id)
+            gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
+            gridsListView.activeGridView.startDragging(gridsListView.activeGridView.count - 1)
+
+        }
+
         ListView {
             id: gridsListView
 
@@ -234,7 +247,7 @@ Item {
                 stackCellOpenedId = -1
             }
 
-            function showGroup(item, iconCoords)
+            function showGroup(index, item, iconCoords)
             {
                 if (popupFrame.state == "CLOSED")
                 {
@@ -245,6 +258,7 @@ Item {
                     popupFrame.gridGroup.gridView.model.clear()
                     popupFrame.gridGroup.startIndex = -1
                     popupFrame.gridGroup.endIndex = -1
+                    popupFrame.stackedIconIndex = index
 
                     //console.log("stacked group we are opening has length:" + item.stack.length)
                     for (var i = 0; i < item.stack.length; i++)
@@ -352,6 +366,7 @@ Item {
             id: popupFrame
 
             property int slideHeight: 0
+            property int stackedIconIndex: -1
 
             //anchors.top: parent.bottom
             width: parent.width

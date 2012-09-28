@@ -1,6 +1,7 @@
 import QtQuick 1.1
 
 Column {
+    id: groupRoot
     // Dict-defined properties
     property alias groupName: groupLabel.text
     property alias dataSource: iconGridView.dataSource
@@ -17,9 +18,12 @@ Column {
     property alias count: iconGridView.count
     property alias gridView: iconGridView
 
+    property alias dragOutTopMargin: iconGridView.dragOutTopMargin
+    property alias dragOutBottomMargin: iconGridView.dragOutBottomMargin
+
     signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
-    signal showPopupGroup(variant stackItemData, variant iconCoords)
+    signal showPopupGroup(int index, variant stackItemData, variant iconCoords)
 
     // constants
     property int textToGridSpacing: constants.textToGridSpacing
@@ -167,7 +171,7 @@ Column {
                 {
                     //console.log("onItemClicked::showPopupGroup from: " + newIndex)
                     var iconCoords = mapToItem(groupTab, currentItem.x + currentItem.width / 2 - 8, currentItem.y + currentItem.height)
-                    showPopupGroup(model.get(newIndex), iconCoords)
+                    showPopupGroup(newIndex, model.get(newIndex), iconCoords)
                     return
                 }
                 if (groupName == i18n_Recent_Applications || groupName == i18n_Recent_Documents)
