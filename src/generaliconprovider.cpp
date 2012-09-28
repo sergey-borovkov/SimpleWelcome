@@ -74,7 +74,7 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
         QSize subIconSize = (pix.size() - QSize(outlineWidth*4, outlineWidth*4)) / 2;
         for (int i = 0; i < qMin(4, icons.size()); i++)
         {
-            KIcon subIcon = KIcon(icons[i]);
+            KIcon subIcon = KIcon(icons[icons.size() - i - 1]);
             QPixmap subPixmap = subIcon.pixmap(subIconSize);
 
             int x = i & 1 ? (pix.width() / 2 - subIconSize.width()) : pix.width()/2;

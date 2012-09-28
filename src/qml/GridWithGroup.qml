@@ -1,12 +1,14 @@
 import QtQuick 1.1
 
 Column {
+    id: groupRoot
     // Dict-defined properties
     property alias groupName: groupLabel.text
     property alias dataSource: iconGridView.dataSource
     property alias draggable: iconGridView.draggable
     property alias enabledSystemDnD: iconGridView.enabledSystemDnD
     property alias groupNameVisible: groupLabel.visible
+    property alias stackable: iconGridView.stackable
 
     property alias prevGridGroup: iconGridView.prevGrid
     property alias nextGridGroup: iconGridView.nextGrid
@@ -16,9 +18,12 @@ Column {
     property alias count: iconGridView.count
     property alias gridView: iconGridView
 
+    property alias dragOutTopMargin: iconGridView.dragOutTopMargin
+    property alias dragOutBottomMargin: iconGridView.dragOutBottomMargin
+
     signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
-    signal showPopupGroup(variant stackItemData, variant iconCoords)
+    signal showPopupGroup(int index, variant stackItemData, variant iconCoords)
 
     // constants
     property int textToGridSpacing: constants.textToGridSpacing
@@ -31,6 +36,73 @@ Column {
 
     Component.onCompleted: {
         iconGridView.selectionChangedByKeyboard.connect(gridCurrentItemChanged)
+        iconGridView.itemStackingChanged.connect(gridStackingChanged)
+    }
+
+    function loadStacks() {
+        if (groupName == "Ololo")
+        {
+            var res = mainWindow.loadSetting("ololo")
+            //console.log("LOADING STACKS")
+
+            for (var captionStackingTo in res) {
+
+                var captionsList = res[captionStackingTo].split(",")
+                //console.log("Object item:", captionStackingTo, "=", captionsList)
+
+                var model = iconGridView.model
+                var indexStackingTo = -1
+                for (var i = 0; i < model.count; i++)
+                    if (model.get(i).caption === captionStackingTo) {
+                        indexStackingTo = i
+                        break
+                    }
+
+                if (indexStackingTo == -1)
+                    continue
+
+                for (var captionToStackIndex in captionsList) {
+                    var captionToStack = captionsList[captionToStackIndex]
+                    if (captionToStack !== captionStackingTo) {
+                        //console.log("NEED TO STACK: " + captionToStack)
+
+                        var indexToStack = -1
+                        for (var i = 0; i < model.count; i++)
+                            if (model.get(i).caption === captionToStack) {
+                                indexToStack = i
+                                break
+                            }
+
+                        if (indexToStack != -1) {
+                            iconGridView.stackItemInItem(indexStackingTo, indexToStack)
+                            iconGridView.model.remove(indexToStack)
+                        }
+                    }
+                }
+
+            }
+
+            //console.log("LOADING STACKS FINISHED ---------------- " + iconGridView.count)
+        }
+    }
+
+    // Used to save stacking
+    function gridStackingChanged() {
+        var model = iconGridView.model
+
+        var setting = []
+        for (var i = 0; i < model.count; i++)
+        {
+            var item = model.get(i)
+            var stack = item.stack
+            if (stack !== undefined)
+            {
+                setting.push(iconGridView.copyObjectByValue(item))
+                //console.log(stack.length + "; at " + i)
+            }
+        }
+
+        mainWindow.saveSetting(groupName, setting)
     }
 
     Text {
@@ -70,13 +142,14 @@ Column {
         function updateSelection()
         {
             //parent.count = count // without this it is updated too late// TEST WHAT THE HELL NOW'S HAPPENING
-            if (highlightItem)
+            if (highlightItem && (updateSelection.countWas === undefined || updateSelection.countWas < count))
             {
                 highlightItem.animationDuration = 0
                 highlightItem.opacity = 0
                 highlightItem.animationDuration = 150
             }
             gridItemCountChanged()
+            updateSelection.countWas = count
         }
 
         function appendItemToModel(itemData)
@@ -85,7 +158,7 @@ Column {
             model.append(itemData)
 
             // UNREM THIS TO ENABLE AUTO-STACKING
-            /**/if (!groupNameVisible) // workaround to apply this to apps tab only
+            /*/if (!groupNameVisible) // workaround to apply this to apps tab only
             {
                 appendItemToModel.lastItem = model.get(model.count - 1)
                 if (appendItemToModel.lastItem && appendItemToModel.lastLetter != appendItemToModel.lastItem.caption.charAt(0).toLowerCase())
@@ -128,25 +201,32 @@ Column {
 
         function newItemData(iconPath, name, itemId, advParam)
         {
-            if ((startIndex <= itemId && itemId <= endIndex &&
-                     count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
+            //console.log("= " + name)
+            if (startIndex === endIndex && endIndex === -1)
             {
-                if (typeof advParam == 'boolean') // New item from RecentApps, advParam is pinned state of icon
-                {
-                    appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: advParam })
-                }
-                else if (typeof advParam == 'string') // New item from search, advParam is group
-                {
-                    if (advParam == groupName)
-                    {
-                        //console.log("Added " + name + " : " + itemId + " in [" + startIndex + "-" + endIndex + "] of " + count)
-                        appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined, group: groupName })
-                    }
-                }
-                else
-                    appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
+                for (var i = 0; i < model.count; i++)
+                    if (model.get(i).id === itemId)
+                        return
             }
+            else if (!(startIndex <= itemId && itemId <= endIndex &&
+                       count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
+                return
 
+
+            if (typeof advParam == 'boolean') // New item from RecentApps, advParam is pinned state of icon
+            {
+                appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: advParam })
+            }
+            else if (typeof advParam == 'string') // New item from search, advParam is group
+            {
+                if (advParam == groupName)
+                {
+                    //console.log("Added " + name + " : " + itemId + " in [" + startIndex + "-" + endIndex + "] of " + count)
+                    appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined, group: groupName })
+                }
+            }
+            else
+                appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
             //console.log("--- Added [" + startIndex + " to " + endIndex + "] with id: " + itemId)
         }
 
@@ -157,9 +237,9 @@ Column {
                 var realIndex = model.get(newIndex).id
                 if (model.get(newIndex).stack !== undefined)
                 {
-                    console.log("onItemClicked::showPopupGroup from: " + newIndex)
+                    //console.log("onItemClicked::showPopupGroup from: " + newIndex)
                     var iconCoords = mapToItem(groupTab, currentItem.x + currentItem.width / 2 - 8, currentItem.y + currentItem.height)
-                    showPopupGroup(model.get(newIndex), iconCoords)
+                    showPopupGroup(newIndex, model.get(newIndex), iconCoords)
                     return
                 }
                 if (groupName == i18n_Recent_Applications || groupName == i18n_Recent_Documents)

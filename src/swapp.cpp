@@ -95,7 +95,8 @@ int SWApp::newInstance()
 
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
-    if(!args->isSet("silent"))
+    static bool isFirst = true;
+    if(!args->isSet("silent") || !isFirst)
     {
         qDebug() << "Silent not set";
         if (m_viewer)
@@ -104,15 +105,16 @@ int SWApp::newInstance()
             {
                 qDebug() << "Showing fullscreen";
 
-//                m_viewer->setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
-                m_viewer->show();
+                //m_viewer->setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
+                //m_viewer->show();
                 m_viewer->showFullScreen();
-                m_viewer->move(/*896*/0, 0);
+                //m_viewer->move(/*896*/0, 0);
             }
             else
                 m_viewer->close();
         }
     }
+    isFirst = false;
 
     return 0;
 }
@@ -128,7 +130,7 @@ void SWApp::loadShortcut()
 
     connect(m_globalAction, SIGNAL(triggered(bool)), SLOT(newInstance()));
     m_globalAction->setObjectName("Activate A ROSA Launcher Widget");
-    m_globalAction->setGlobalShortcut(m_globalShortcut, KAction::ActiveShortcut | KAction::DefaultShortcut, KAction::Autoloading);
+    m_globalAction->setGlobalShortcut(m_globalShortcut, KAction::ActiveShortcut, KAction::NoAutoloading);
     qDebug() << m_globalShortcut.toString() << " is " << m_globalAction->isGlobalShortcutEnabled();
 }
 

@@ -65,7 +65,7 @@ DataSource_Search::DataSource_Search(QObject *parent, DataSource_RecentApps *inR
     activeRunners << "shell"
                   << "recentdocuments"
                   << "services";
-
+    m_runnerManager->setAllowedRunners(activeRunners);
     connect(m_runnerManager, SIGNAL(matchesChanged(const QList<Plasma::QueryMatch> &)), this, SLOT(newSearchMatches(const QList<Plasma::QueryMatch> &)));
     connect(m_runnerManager, SIGNAL(queryFinished()), SLOT(test2()));
 }
@@ -150,9 +150,16 @@ QString DataSource_Search::itemUrlDnd(int id, QString group)
 
 QList<QPair<QString, QString> > DataSource_Search::getRunnersNames()
 {
+    QStringList activeRunners;
+    activeRunners << "shell"
+                  << "recentdocuments"
+                  << "services";
+
     QList<QPair<QString, QString> > out;
-    foreach (QString allowedRunner, m_runnerManager->allowedRunners())
+    foreach (QString allowedRunner, m_runnerManager->allowedRunners()) {
         out << qMakePair(allowedRunner, m_runnerManager->runnerName(allowedRunner));
+        //qDebug() << "NAME:" << out.last().first << out.last().second;
+    }
 
     return out;
 }

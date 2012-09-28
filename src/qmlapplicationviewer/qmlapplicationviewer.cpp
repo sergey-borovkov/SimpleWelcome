@@ -214,3 +214,53 @@ void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, 
 
     drag->exec(Qt::CopyAction | Qt::MoveAction | Qt::LinkAction, Qt::CopyAction);
 }
+
+#include <KConfigGroup>
+
+void QmlApplicationViewer::saveSetting(QString groupName, QVariantList setting)
+{
+    //qDebug() << "WE ARE HERE WE ARE SAVING" << groupName;
+
+    KConfigGroup configGroup(KGlobal::config(), "Stacks");
+    configGroup.deleteGroup();
+
+    foreach (QVariant variant, setting)
+    {
+        QVariantMap map;
+        if (!strcmp(variant.typeName(), "QVariantMap"))
+        {
+            //qDebug() << "REALLY QVariantMap";
+            map = variant.value<QVariantMap>();
+            //qDebug() << map["caption"].toString();
+            //qDebug() << map["imagePath"].toString();
+            //qDebug() << map["stack"];
+
+
+            QStringList stackList;
+            QVariantList stack = map["stack"].toList();
+            foreach (QVariant item, stack)
+            {
+                QVariantMap properties = item.toMap();
+                stackList.append(properties["caption"].toString());
+            }
+
+            configGroup.writeEntry(map["caption"].toString(), stackList);
+            //qDebug() << "SIZE" << map["stack"].toList().size();
+        }
+    }
+
+    configGroup.sync();
+}
+
+QVariantMap QmlApplicationViewer::loadSetting(QString groupName)
+{
+    QVariantMap list;
+
+    KConfigGroup configGroup(KGlobal::config(), "Stacks");
+    QMap<QString, QString > map = configGroup.entryMap();
+
+    foreach (QString key, map.keys())
+        list[key] = map[key];
+
+    return list;
+}
