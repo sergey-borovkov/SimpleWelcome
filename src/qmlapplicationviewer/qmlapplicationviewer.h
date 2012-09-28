@@ -12,6 +12,7 @@
 #define QMLAPPLICATIONVIEWER_H
 
 #include <QtDeclarative/QDeclarativeView>
+#include <QVariantList>
 
 class QResizeEvent;
 
@@ -50,6 +51,7 @@ public:
     virtual void closeEvent(QCloseEvent *event);
 
     Q_INVOKABLE void activateDragAndDrop(QString url, QString image_path, int image_size);
+    Q_INVOKABLE void saveSetting(QString groupName, QVariantList setting);
 
 signals:
     void windowSizeChanged(int newWidth, int newHeight);

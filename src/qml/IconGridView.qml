@@ -18,6 +18,7 @@ GridView {
     signal dndStateChanged(bool isDrag)
     signal selectionChangedByKeyboard(variant newCurrentItem)
     signal draggedOut(variant item)
+    signal itemStackingChanged()
 
     // constants
     property int columns: constants.gridColumns
@@ -122,6 +123,8 @@ GridView {
 
         model.setProperty(indexStackingTo, "imagePath", "image://generalicon/stacked/" + itemStackingTo.imagePath.slice(28) + "|" + itemDragging.imagePath.slice(28))
         model.setProperty(indexStackingTo, "stack", stackArray)
+
+        itemStackingChanged()
         return true
     }
 
@@ -177,7 +180,9 @@ GridView {
         {
             console.log("Fixing stacked item ID: indexUnstackingFrom: " + indexUnstackingFrom + " to " + stackArray[0].id)
             model.setProperty(indexUnstackingFrom, "id", stackArray[0].id)
+            model.setProperty(indexUnstackingFrom, "caption", stackArray[0].caption)
         }
+        itemStackingChanged()
         return true
     }
 
