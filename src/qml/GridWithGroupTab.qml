@@ -116,7 +116,6 @@ Item {
 
             function insertGrid(groupData, isOnNewTab)
             {
-                var newGridGroup
                 if (isOnNewTab)
                 {
                     gridsListModel.append( { defaultGroup: groupData } )
@@ -127,17 +126,23 @@ Item {
                     gridsListView.currentItem.addGridGroup(groupData)
                 }
 
+                var newGridGroup = gridsListView.currentItem.activeGridGroup
                 if (gridsListView.currentItem)
                 {
-                    gridsListView.currentItem.activeGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
-                    if (gridsListView.currentItem.activeGridGroup.gridView.stackable)
-                        gridsListView.currentItem.activeGridGroup.showPopupGroup.connect(showGroup)
+                    newGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
+                    if (newGridGroup.gridView.stackable)
+                        newGridGroup.showPopupGroup.connect(showGroup)
                 }
             }
 
 
             function createTabsFromGroups()
             {
+                if (groups !== undefined)
+                    console.log("----------------------------------- createTabsFromGroups " + groups[0].groupName)
+                else
+                    console.log("----------------------------------- createTabsFromGroups ")
+
                 // Constants. Used hack to retrieve them from C++, no way to do it straightforward AFAIK
                 var spacing = constants.gridWithGroupsSpacing, // spacing between GridWithGroups
                         columns = constants.gridColumns,
@@ -220,6 +225,19 @@ Item {
                         }
                     }
                 }
+
+                var currentView = gridsListView.currentIndex
+                for (i = 0; i < gridsListView.count; i++) {
+                    gridsListView.currentIndex = i
+
+                    var childs = gridsListView.currentItem.children
+                    for (var j = 0; j < childs.length; j++)
+                        if ('count' in childs[j])
+                        {
+                            childs[j].loadStacks()
+                        }
+                }
+                gridsListView.currentIndex = currentView
             }
 
             Component.onCompleted: {

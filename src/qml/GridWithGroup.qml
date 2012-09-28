@@ -39,6 +39,53 @@ Column {
         iconGridView.itemStackingChanged.connect(gridStackingChanged)
     }
 
+    function loadStacks() {
+        if (groupName == "Ololo")
+        {
+            var res = mainWindow.loadSetting("ololo")
+            //console.log("LOADING STACKS")
+
+            for (var captionStackingTo in res) {
+
+                var captionsList = res[captionStackingTo].split(",")
+                console.log("Object item:", captionStackingTo, "=", captionsList)
+
+                var model = iconGridView.model
+                var indexStackingTo = -1
+                for (var i = 0; i < model.count; i++)
+                    if (model.get(i).caption === captionStackingTo) {
+                        indexStackingTo = i
+                        break
+                    }
+
+                if (indexStackingTo == -1)
+                    continue
+
+                for (var captionToStackIndex in captionsList) {
+                    var captionToStack = captionsList[captionToStackIndex]
+                    if (captionToStack !== captionStackingTo) {
+                        console.log("NEED TO STACK: " + captionToStack)
+
+                        var indexToStack = -1
+                        for (var i = 0; i < model.count; i++)
+                            if (model.get(i).caption === captionToStack) {
+                                indexToStack = i
+                                break
+                            }
+
+                        if (indexToStack != -1) {
+                            iconGridView.stackItemInItem(indexStackingTo, indexToStack)
+                            iconGridView.model.remove(indexToStack)
+                        }
+                    }
+                }
+
+            }
+
+            //console.log("LOADING STACKS FINISHED ---------------- " + iconGridView.count)
+        }
+    }
+
     // Used to save stacking
     function gridStackingChanged() {
         var model = iconGridView.model
@@ -154,6 +201,7 @@ Column {
 
         function newItemData(iconPath, name, itemId, advParam)
         {
+            console.log("= " + name)
             if (startIndex === endIndex && endIndex === -1)
             {
                 for (var i = 0; i < model.count; i++)
