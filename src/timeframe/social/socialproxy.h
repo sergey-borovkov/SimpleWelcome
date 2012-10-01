@@ -110,9 +110,12 @@ private slots:
      */
     void authorized();
 
+    void searchComplete();
+
 signals:
     void pluginAuthorized();
     void pluginDeauthorized();
+    void searchFinished();
 
     /**
      * @brief This signal is for interacting with timescale model. Perphaps later it should
@@ -169,6 +172,8 @@ private:
     QString m_selfId;
     QString m_selfName;
     QString m_selfPictureUrl;
+
+    int m_searchInProgressCount;
 };
 
 #endif // SOCIALPROXY_H

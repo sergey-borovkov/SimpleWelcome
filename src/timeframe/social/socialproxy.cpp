@@ -250,6 +250,9 @@ void SocialProxy::authorized()
 void SocialProxy::searchComplete()
 {
     m_searchInProgressCount--;
+    if(!m_searchInProgressCount) {
+        emit searchFinished();
+    }
 }
 
 void SocialProxy::deauthorized()
