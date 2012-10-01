@@ -7,7 +7,7 @@ PluginRequestReply::PluginRequestReply(Request *request, const QString &sourceId
     m_finished(false)
 {
     QObject *r = dynamic_cast<QObject *>(request);
-    if(r != 0) {
+    if (r != 0) {
         connect(r, SIGNAL(success()), SLOT(requestSuccess()));
         connect(r, SIGNAL(newItemId(QString)), SLOT(newItemId(QString)));
         connect(r, SIGNAL(gotUserPictureUrl(QString, QString)), SLOT(gotUserPictureUrl(QString, QString)));

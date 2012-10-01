@@ -21,7 +21,7 @@ FacebookModule::FacebookModule()
     connect(m_authorizer, SIGNAL(authorized()), SIGNAL(authorized()));
     connect(m_authorizer, SIGNAL(deauthorized()), SIGNAL(deauthorized()));
 
-    if(!accessToken.isEmpty())
+    if (!accessToken.isEmpty())
         m_authorizer->setAccessToken(accessToken);
 
     m_pixmap.load(":/images/fb-shadow.png");
@@ -70,8 +70,8 @@ QWidget *FacebookModule::authenticationWidget()
 
 void FacebookModule::onAcessTokenChanged()
 {
-/*    if(m_authorizer->isAuthorized())
-        m_authorizationView->hide(); */
+    /*    if(m_authorizer->isAuthorized())
+            m_authorizationView->hide(); */
 }
 
 Q_EXPORT_PLUGIN2(facebook-timeframe-plugin, FacebookModule)

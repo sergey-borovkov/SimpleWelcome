@@ -52,8 +52,7 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     QString iconName = name.section('/', 1, -1, QString::SectionSkipEmpty);
     //qDebug() << "ICON SIZE:" << constants->iconSize() << " for " << iconName;
 
-    if (iconType == "stacked")
-    {
+    if (iconType == "stacked") {
         //qDebug() << iconName;
         QStringList icons = iconName.split("|");
 
@@ -71,34 +70,32 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
 //        p.setBrush(QBrush(QColor(64, 64, 64, 128)));
 //        p.drawRoundedRect(outlineWidth, outlineWidth, pix.width() - outlineWidth*2, pix.height() - outlineWidth*2, outlineWidth*2, outlineWidth*2);
 
-        QSize subIconSize = (pix.size() - QSize(outlineWidth*4, outlineWidth*4)) / 2;
-        for (int i = 0; i < qMin(4, icons.size()); i++)
-        {
+        QSize subIconSize = (pix.size() - QSize(outlineWidth * 4, outlineWidth * 4)) / 2;
+        for (int i = 0; i < qMin(4, icons.size()); i++) {
             KIcon subIcon = KIcon(icons[icons.size() - i - 1]);
             QPixmap subPixmap = subIcon.pixmap(subIconSize);
 
-            int x = i & 1 ? (pix.width() / 2 - subIconSize.width()) : pix.width()/2;
-            int y = i / 2 ? (pix.height() / 2 - subIconSize.height()) : pix.height()/2;
+            int x = i & 1 ? (pix.width() / 2 - subIconSize.width()) : pix.width() / 2;
+            int y = i / 2 ? (pix.height() / 2 - subIconSize.height()) : pix.height() / 2;
             p.drawPixmap(x, y, subPixmap);
         }
         p.end();
 
 
         icon = KIcon(pix);
-    }
-    else if(iconType == "appicon")
+    } else if (iconType == "appicon")
         icon = KIcon(iconName);
-    else if(iconType == "search") {
-        if(m_searchGridModel)
+    else if (iconType == "search") {
+        if (m_searchGridModel)
             icon = KIcon(m_searchGridModel->getMatchIcon(iconName));
-    } else if(iconType == "asset") {
+    } else if (iconType == "asset") {
         iconPixmap.load(m_pathToAssets + iconName);
 
         // TODO: Fill size struct
 
         return iconPixmap;
-    } else if(iconType == "general") {
-        if(iconName == "usericon" && m_userInfoProvider != NULL)
+    } else if (iconType == "general") {
+        if (iconName == "usericon" && m_userInfoProvider != NULL)
             icon = KIcon(m_userInfoProvider->getIconPath());
         else
             return iconPixmap;

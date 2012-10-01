@@ -67,8 +67,7 @@ int main(int argc, char *argv[])
     options.add("silent", ki18n("Silent run. Hide application window after start."));
     KCmdLineArgs::addCmdLineOptions(options);
 
-    if (!KUniqueApplication::start())
-    {
+    if (!KUniqueApplication::start()) {
         qDebug() << "SimpleWelcome2 is already running!";
         return 0;
     }

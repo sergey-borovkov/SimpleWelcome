@@ -7,7 +7,7 @@ DataSource_Favorites::DataSource_Favorites(QObject *parent)
     KFilePlacesModel *places = new KFilePlacesModel();
 
     QList<AppItem> list;
-    for(int i = 0; i < places->rowCount(); i++) {
+    for (int i = 0; i < places->rowCount(); i++) {
         KBookmark bm = places->bookmarkForIndex(places->index(i, 0));
         AppItem newItem;
         newItem.caption = bm.fullText();
@@ -21,8 +21,7 @@ DataSource_Favorites::DataSource_Favorites(QObject *parent)
     QList<AppItem> uniqueList = set.toList();
 
     for (int i = 0; i < list.size() && favoritesList.size() < 14; i++)  // Limiting favorites item count to two rows (14 items)
-        if (set.contains(list[i]))
-        {
+        if (set.contains(list[i])) {
             set.remove(list[i]);
             favoritesList.append(list[i]);
         }
@@ -43,7 +42,7 @@ QString DataSource_Favorites::itemUrlDnd(int id)
 
 void DataSource_Favorites::getContent()
 {
-    for(int i = 0; i < favoritesList.count(); i++) {
+    for (int i = 0; i < favoritesList.count(); i++) {
         emit newItemData(QString("image://generalicon/appicon/%1").arg(favoritesList[i].icon), favoritesList[i].caption, i);
     }
 }

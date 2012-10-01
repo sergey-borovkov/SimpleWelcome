@@ -16,21 +16,21 @@ public:
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) {
         QString s = id;
         bool isSmall = false;
-        if (s.right(6) == "/small"){
+        if (s.right(6) == "/small") {
             s.chop(6);
             isSmall = true;
         }
         foreach(ISocialPlugin * plugin, m_plugins) {
-            if(plugin->name() == s) {
+            if (plugin->name() == s) {
                 QPixmap p;
                 if (isSmall) {
                     p = plugin->smallIcon();
                 } else {
                     p = plugin->icon();
                 }
-                if(requestedSize.isValid()) {
+                if (requestedSize.isValid()) {
                     p = p.scaled(*size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-                    if(size)
+                    if (size)
                         *size = p.size();
                 }
                 return p;

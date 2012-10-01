@@ -13,7 +13,8 @@ class QDate;
  *        All subclasses of this class in social plugins should emit success()
  *        and error(QString errorString) signals when appropriate.
  */
-class Request {
+class Request
+{
 public:
     virtual ~Request() {}
     /**

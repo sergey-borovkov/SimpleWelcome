@@ -23,20 +23,20 @@ ItemModel::~ItemModel()
 
 QVariant ItemModel::data(const QModelIndex &index, int role) const
 {
-    if(!index.isValid()) {
+    if (!index.isValid()) {
         return QVariant();
     }
-    if(role == CurrentDateRole) {
+    if (role == CurrentDateRole) {
         return m_items.value(index.row())->getDate();
-    } else if(role == ActivitiesRole) {
+    } else if (role == ActivitiesRole) {
         QVariant v;
         v.setValue(m_items[index.row()]);
         return v;
-    } else if(role == CountRole) {
+    } else if (role == CountRole) {
         return m_items.size();
-    } else if(role == UrlRole) {
+    } else if (role == UrlRole) {
         return m_items[index.row()]->getUrl();
-    } else if(role == TypeRole) {
+    } else if (role == TypeRole) {
         return m_items[index.row()]->getType();
     }
     return QVariant();
@@ -44,7 +44,7 @@ QVariant ItemModel::data(const QModelIndex &index, int role) const
 
 int ItemModel::rowCount(const QModelIndex &parent) const
 {
-    if(parent.isValid())
+    if (parent.isValid())
         return 0;
     else
         return m_items.size();
@@ -52,10 +52,10 @@ int ItemModel::rowCount(const QModelIndex &parent) const
 
 void ItemModel::addActivityItem(Activity *item)
 {
-    if(!item)
+    if (!item)
         return;
     /* Check duplicates*/
-    if(m_urlSet.contains(item->getUrl()))
+    if (m_urlSet.contains(item->getUrl()))
         return;
 
     int ind = m_items.size();
@@ -68,8 +68,8 @@ void ItemModel::addActivityItem(Activity *item)
 void ItemModel::thumbnailReady(QString url)
 {
     int row;
-    for(row = 0; row < m_items.size(); ++row) {
-        if(m_items.at(row)->getUrl() == url)
+    for (row = 0; row < m_items.size(); ++row) {
+        if (m_items.at(row)->getUrl() == url)
             break;
     }
     dataChanged(index(row), index(row));
@@ -78,7 +78,7 @@ void ItemModel::thumbnailReady(QString url)
 
 QString ItemModel::url(int row)
 {
-    if(row > m_items.size() - 1)
+    if (row > m_items.size() - 1)
         return QString();
     return m_items.at(row)->getUrl();
 }

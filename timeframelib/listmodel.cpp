@@ -15,19 +15,19 @@ int ListModel::rowCount(const QModelIndex &parent) const
 
 QVariant ListModel::data(const QModelIndex &index, int role) const
 {
-    if(index.row() < 0 || index.row() >= m_items.size())
+    if (index.row() < 0 || index.row() >= m_items.size())
         return QVariant();
     return m_items.at(index.row())->data(role);
 }
 
 bool ListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-      ListItem *item = m_items.at(index.row());
-      bool result = item->setData(role, value);
-      if (result){
-          emit dataChanged(index, index);
-      }
-      return result;
+    ListItem *item = m_items.at(index.row());
+    bool result = item->setData(role, value);
+    if (result) {
+        emit dataChanged(index, index);
+    }
+    return result;
 }
 
 ListModel::~ListModel()
@@ -44,7 +44,7 @@ void ListModel::appendRows(const QList<ListItem *> &items)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount() + items.size() - 1);
     foreach(ListItem * item, items)
-        m_items.append(item);
+    m_items.append(item);
     endInsertRows();
 }
 
@@ -58,8 +58,8 @@ void ListModel::insertRow(int row, ListItem *item)
 ListItem * ListModel::find(const QString &id) const
 {
     foreach(ListItem * item, m_items)
-        if(item->id() == id)
-            return item;
+    if (item->id() == id)
+        return item;
     return 0;
 }
 
@@ -71,8 +71,8 @@ ListItem *ListModel::itemAt(int row) const
 QModelIndex ListModel::indexFromItem(const ListItem *item) const
 {
     Q_ASSERT(item);
-    for(int row = 0; row < m_items.size(); ++row)
-        if(m_items.at(row) == item)
+    for (int row = 0; row < m_items.size(); ++row)
+        if (m_items.at(row) == item)
             return index(row);
 
     return QModelIndex();
@@ -94,7 +94,7 @@ Qt::ItemFlags ListModel::flags(const QModelIndex &index) const
 bool ListModel::removeRow(int row, const QModelIndex &parent)
 {
     Q_UNUSED(parent);
-    if(row < 0 || row >= m_items.size())
+    if (row < 0 || row >= m_items.size())
         return false;
     beginRemoveRows(QModelIndex(), row, row);
     delete m_items.takeAt(row);
@@ -105,10 +105,10 @@ bool ListModel::removeRow(int row, const QModelIndex &parent)
 bool ListModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     Q_UNUSED(parent);
-    if(row < 0 || (row + count) >= m_items.size())
+    if (row < 0 || (row + count) >= m_items.size())
         return false;
     beginRemoveRows(QModelIndex(), row, row + count - 1);
-    for(int i = 0; i < count; ++i)
+    for (int i = 0; i < count; ++i)
         delete m_items.takeAt(row);
     endRemoveRows();
     return true;

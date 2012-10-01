@@ -14,7 +14,7 @@ OAuth2Authorizer::OAuth2Authorizer(QObject *parent) :
 
 void OAuth2Authorizer::setAccessToken(const QString &accessToken)
 {
-    if(accessToken != m_accessToken) {
+    if (accessToken != m_accessToken) {
         m_accessToken = accessToken;
 
         QSettings settings("ROSA", "vkontakte-timeframe-plugin");
@@ -35,7 +35,7 @@ bool OAuth2Authorizer::isAuthorized() const
 
 void OAuth2Authorizer::urlChanged(const QUrl &url)
 {
-    if(!url.isEmpty() && url.toString().startsWith(redirectUrl)) {
+    if (!url.isEmpty() && url.toString().startsWith(redirectUrl)) {
         QString accessToken = url.encodedFragment();        // Get the URL fragment part
         accessToken = accessToken.split("&").first();         // Remove the "expires_in" part.
         accessToken = accessToken.split("=").at(1);             // Split by "access_token=..." and take latter part

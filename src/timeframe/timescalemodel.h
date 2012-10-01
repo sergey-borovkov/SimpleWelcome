@@ -38,8 +38,7 @@ public:
 public:
     explicit TimeScaleItem(int year, int month, QString type, QObject* parent = 0);
     QString id() const;
-    bool setData(int role, const QVariant &value)
-    {
+    bool setData(int role, const QVariant &value) {
         Q_UNUSED(role)
         Q_UNUSED(value)
         return false;

@@ -63,7 +63,7 @@
 #include "timeframe/social/pluginrequestreply.h"
 
 #include <listitem.h>
- 
+
 #include "config.h"
 #include <KCmdLineArgs>
 #include <KRun>
@@ -75,7 +75,7 @@
 
 SWApp* SWApp::self()
 {
-    if(!kapp) {
+    if (!kapp) {
         return new SWApp();
     }
 
@@ -97,21 +97,17 @@ int SWApp::newInstance()
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
     static bool isFirst = true;
-    if(!args->isSet("silent") || !isFirst)
-    {
+    if (!args->isSet("silent") || !isFirst) {
         qDebug() << "Silent not set";
-        if (m_viewer)
-        {
-            if (!m_viewer->isVisible())
-            {
+        if (m_viewer) {
+            if (!m_viewer->isVisible()) {
                 qDebug() << "Showing fullscreen";
 
                 //m_viewer->setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
                 //m_viewer->show();
                 m_viewer->showFullScreen();
                 //m_viewer->move(/*896*/0, 0);
-            }
-            else
+            } else
                 m_viewer->close();
         }
     }
@@ -234,7 +230,7 @@ SWApp::SWApp()
     initTimeframeLocalMode();
     initTimeframeSocialMode();
 
-    m_viewer->setMainQmlFile( pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml") ); // Qt converts path to native automatically
+    m_viewer->setMainQmlFile(pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml"));   // Qt converts path to native automatically
 
     setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
 }
@@ -337,7 +333,7 @@ int QMLConstants::cellWidth()
            viewer->updatableHeight() >= 850 ? 110 :
            viewer->updatableHeight() >= 800 ? 110 :
            viewer->updatableHeight() >= 750 ? 100 :
-                                              70;
+           70;
 }
 
 int QMLConstants::cellHeight()
@@ -349,7 +345,7 @@ int QMLConstants::cellHeight()
            viewer->updatableHeight() >= 850 ? 120 :
            viewer->updatableHeight() >= 800 ? 110 :
            viewer->updatableHeight() >= 750 ? 100 :
-                                              80;
+           80;
 }
 
 int QMLConstants::iconTextSize()

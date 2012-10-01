@@ -45,7 +45,7 @@ void PreviewGenerator::setPreview(const KFileItem &item, const QPixmap &pixmap)
 {
     QPixmap pict = pixmap;
 
-    if(item.mimetype().startsWith("video/")) {
+    if (item.mimetype().startsWith("video/")) {
         QPainter p(&pict);
         QPixmap scaledPixmap = videoPixmap.scaled(pict.width() / 2, pict.height() / 2,  Qt::KeepAspectRatio, Qt::SmoothTransformation);
         p.drawPixmap(pict.width() / 2 - scaledPixmap.width() / 2, pict.height() / 2 - scaledPixmap.height() / 2 ,  scaledPixmap);
@@ -64,7 +64,7 @@ void PreviewGenerator::setNullIcon(const KFileItem &item)
 
 QPixmap PreviewGenerator::getPreviewPixmap(QString filePath)
 {
-    if(previews.contains(filePath))
+    if (previews.contains(filePath))
         return previews[filePath];
     else
         return defaultPreview;
@@ -72,7 +72,7 @@ QPixmap PreviewGenerator::getPreviewPixmap(QString filePath)
 
 PreviewGenerator * PreviewGenerator::instance()
 {
-    if(!m_instance)
+    if (!m_instance)
         m_instance = new PreviewGenerator;
     return m_instance;
 }
@@ -80,9 +80,9 @@ PreviewGenerator * PreviewGenerator::instance()
 void PreviewGenerator::start(const QStringList& list)
 {
     m_fileList.clear();
-    for(int i = 0; i < list.size(); i++) {
+    for (int i = 0; i < list.size(); i++) {
         KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, list[i], false);
-        if(m_files.contains(list[i]))
+        if (m_files.contains(list[i]))
             continue;
 
         m_fileList.append(fileItem);
@@ -105,7 +105,7 @@ void PreviewGenerator::setModel(LocalDayModel* model)
 
 void PreviewGenerator::notifyModel(const QString& filePath)
 {
-    if(m_model) {
+    if (m_model) {
         m_model->imageReady(filePath);
     }
 }
