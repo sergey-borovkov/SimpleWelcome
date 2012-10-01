@@ -18,6 +18,7 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
     , m_plugins(plugins)
     , m_pluginModel(new PluginModel(PluginItem::roleNames(), this))
     , m_socialModel(0)
+    , m_searchInProgressCount(0)
 {
     QSettings settings("ROSA", "Timeframe");
 
@@ -44,6 +45,7 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
             Request *requestId = plugin->requestManager()->queryUserId();
             requestId->start();
             Request *request = plugin->requestManager()->queryWall(QDate(), QDate());
+            m_searchInProgressCount++;
             request->start();
             m_enabledPlugins.insert(plugin->name());
         }
@@ -123,8 +125,10 @@ void SocialProxy::getUserPicture(const QString &id, const QString &parentId, con
 void SocialProxy::startSearch()
 {
     foreach(ISocialPlugin * plugin, m_plugins) {
-        if (m_enabledPlugins.contains(plugin->name()))
+        if (m_enabledPlugins.contains(plugin->name())) {
             plugin->requestManager()->queryWall(QDate(), QDate());
+            m_searchInProgressCount++;
+        }
     }
 }
 
@@ -241,6 +245,11 @@ void SocialProxy::authorized()
         plugin->authenticationWidget()->hide();
 
     emit pluginAuthorized();
+}
+
+void SocialProxy::searchComplete()
+{
+    m_searchInProgressCount--;
 }
 
 void SocialProxy::deauthorized()
