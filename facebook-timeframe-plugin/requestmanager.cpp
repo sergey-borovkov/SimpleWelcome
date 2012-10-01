@@ -129,6 +129,8 @@ void RequestManager::feedReply(QByteArray reply)
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
         request->setUrl(paging.value("next").toUrl());
         request->start();
+    } else {
+        emit searchComplete();
     }
 }
 
