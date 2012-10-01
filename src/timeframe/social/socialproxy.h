@@ -71,7 +71,9 @@ public:
     Q_INVOKABLE QString authorizedPluginName(int i) const;
     Q_INVOKABLE bool anyPluginsEnabled();
 
-    Q_INVOKABLE QString selfId() const { return m_selfId; }
+    Q_INVOKABLE QString selfId() const {
+        return m_selfId;
+    }
     Q_INVOKABLE QString selfPictureUrl();
 
     void getSelfUserPicture(const QString &pluginName);

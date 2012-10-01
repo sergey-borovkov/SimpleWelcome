@@ -24,7 +24,7 @@ QString FeedItem::id() const
 
 QVariant FeedItem::data(int role) const
 {
-    if(role == Id)
+    if (role == Id)
         return m_id;
     else
         return m_data.value(role);
@@ -33,7 +33,7 @@ QVariant FeedItem::data(int role) const
 bool FeedItem::setData(const QVariant &value, int role)
 {
     if (role < 0 || role >= roleNames().size())
-             return false;
+        return false;
     m_data[role] = value.toString();
     return true;
 }
@@ -47,16 +47,16 @@ QDate FeedItem::date() const
 void FeedItem::fillFromMap(QVariantMap map)
 {
     // http://vk.com/developers.php?oid=-1&p=%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5_%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D0%BE%D0%B2_API
-    if(map.contains("id")) {
+    if (map.contains("id")) {
         m_id = map.value("id").toString();
     }
 
-    if ( map.contains( "text") ) {
-        QString message = map.value( "text" ).toString();
-        m_data.insert( Text, message );
+    if (map.contains("text")) {
+        QString message = map.value("text").toString();
+        m_data.insert(Text, message);
     }
 
-    if(map.contains("date")) {
+    if (map.contains("date")) {
         uint t  = map.value("date").toUInt();
         QDateTime dt;
         dt.setTime_t(t);
@@ -64,40 +64,40 @@ void FeedItem::fillFromMap(QVariantMap map)
         m_data.insert(Date, date.toString("d MM yyyy"));
     }
 
-    if(map.contains("attachments")) {
+    if (map.contains("attachments")) {
         QVariantList attachmentList = map[ "attachments" ].toList();
 
         foreach(QVariant item, attachmentList) {
             QVariantMap map = item.toMap();
 
-            if(map.contains("type")) {
+            if (map.contains("type")) {
                 QString typeAttachment = map.value("type").toString();
 
-                if(typeAttachment == "photo") {
+                if (typeAttachment == "photo") {
                     QVariantMap photoMap = map[ "photo" ].toMap();
-                    if ( photoMap.contains( "src" ) )
-                        m_data.insert( ImageUrl, photoMap.value( "src" ).toString() );
+                    if (photoMap.contains("src"))
+                        m_data.insert(ImageUrl, photoMap.value("src").toString());
                 }
 
-                if(typeAttachment == "audio") {
+                if (typeAttachment == "audio") {
                     QVariantMap audioMap = map[ "audio" ].toMap();
 
-                    if(audioMap.contains("title"))
+                    if (audioMap.contains("title"))
                         m_data.insert(Audio, audioMap.value("performer").toString() + " - " + audioMap.value("title").toString());
                 }
             }
         }
     }
 
-    if(map.contains("likes")) {
+    if (map.contains("likes")) {
         QVariantMap likesMap = map[ "likes" ].toMap();
-        if(likesMap.contains("count"))
+        if (likesMap.contains("count"))
             m_data.insert(Likes, likesMap.value("count").toString());
     }
 
-    if(map.contains("comments")) {
+    if (map.contains("comments")) {
         QVariantMap commentsMap = map[ "comments" ].toMap();
-        if(commentsMap.contains("count"))
+        if (commentsMap.contains("count"))
             m_data.insert(CommentCount, commentsMap.value("count").toString());
     }
 

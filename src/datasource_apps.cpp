@@ -9,7 +9,7 @@ AppItemList GetFlatList(QString group)
 
     KServiceGroup::Ptr root = KServiceGroup::group(group);
 
-    if(!root || !root->isValid())
+    if (!root || !root->isValid())
         return out;
 
     const KServiceGroup::List list = root->entries(true /* sorted */,
@@ -17,13 +17,13 @@ AppItemList GetFlatList(QString group)
                                      false /* allow separators */,
                                      true /* sort by generic name */);
 
-    for(KServiceGroup::List::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
+    for (KServiceGroup::List::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
         const KSycocaEntry::Ptr p = (*it);
 
-        if(p->isType(KST_KService)) {
+        if (p->isType(KST_KService)) {
             const KService::Ptr service = KService::Ptr::staticCast(p);
 
-            if(service->noDisplay())
+            if (service->noDisplay())
                 continue;
 
             AppItem newItem;
@@ -31,10 +31,10 @@ AppItemList GetFlatList(QString group)
             newItem.caption = service->name();
             newItem.desktopEntry = service->entryPath();
             out.append(newItem);
-        } else if(p->isType(KST_KServiceGroup)) {
+        } else if (p->isType(KST_KServiceGroup)) {
             const KServiceGroup::Ptr serviceGroup = KServiceGroup::Ptr::staticCast(p);
 
-            if(serviceGroup->noDisplay() || serviceGroup->childCount() == 0)
+            if (serviceGroup->noDisplay() || serviceGroup->childCount() == 0)
                 continue;
 
             //if (serviceGroup->relPath().indexOf("/") != serviceGroup->relPath().size() - 1)
@@ -47,9 +47,7 @@ AppItemList GetFlatList(QString group)
                 newItem.relPath = serviceGroup->relPath();
                 out.append(newItem);
             }*/
-        }
-        else
-        {
+        } else {
             qDebug() << "KServiceGroup: Unexpected object in list!";
             continue;
         }
@@ -67,11 +65,9 @@ DataSource_Apps::DataSource_Apps(QObject *parent, DataSource_RecentApps *inRecen
 {
     KConfigGroup configGroup(KGlobal::config(), "General");
     QStringList appsOrderList = configGroup.readEntry("User applications order", QStringList());
-    for (int i = 0; i < appsOrderList.size(); i++)
-    {
+    for (int i = 0; i < appsOrderList.size(); i++) {
         int indexOfSpace = appsOrderList[i].indexOf(" ");
-        if (indexOfSpace != -1)
-        {
+        if (indexOfSpace != -1) {
             int index = appsOrderList[i].left(indexOfSpace).toInt();
             QString caption = appsOrderList[i].right(appsOrderList[i].size() - indexOfSpace - 1);
             userAppsOrder.append(qMakePair(caption, index));
@@ -114,7 +110,7 @@ void DataSource_Apps::saveData()
 
 void DataSource_Apps::getContent()
 {
-    for(int i = 0; i < appsList.size(); i++)
+    for (int i = 0; i < appsList.size(); i++)
         emit newItemData(QString("image://generalicon/appicon/%1").arg(appsList[i].icon), appsList[i].caption, i);
 }
 
@@ -126,8 +122,7 @@ void DataSource_Apps::itemDragged(int fromIndex, int toIndex)
 //        qDebug() << appsList[i].caption;
 
     int userAppIndex = -1;
-    for (int i = 0; i < userAppsOrder.size(); i++)
-    {
+    for (int i = 0; i < userAppsOrder.size(); i++) {
         if (userAppsOrder[i].first == appsList[fromIndex].caption)
             userAppIndex = i;
     }
@@ -145,20 +140,15 @@ void DataSource_Apps::itemDragged(int fromIndex, int toIndex)
 
 
 
-    if (userAppIndex != -1)
-    {
-        if (toIndex < fromIndex)
-        {
-            for (int i = 0; i < userAppsOrder.size(); i++)
-            {
+    if (userAppIndex != -1) {
+        if (toIndex < fromIndex) {
+            for (int i = 0; i < userAppsOrder.size(); i++) {
                 //qDebug() << i << ": " << userAppsOrder[i].second << " index is examining for (" << toIndex << ";" << fromIndex;
                 if (userAppsOrder[i].second >= toIndex && userAppsOrder[i].second < fromIndex)
                     userAppsOrder[i].second++;
             }
-        }
-        else
-            for (int i = 0; i < userAppsOrder.size(); i++)
-            {
+        } else
+            for (int i = 0; i < userAppsOrder.size(); i++) {
                 if (userAppsOrder[i].second > fromIndex && userAppsOrder[i].second <= toIndex)
                     userAppsOrder[i].second--;
             }
@@ -185,10 +175,8 @@ void DataSource_Apps::updateItems()
 
     qSort(appsList);
 
-    for (int i = 0; i < userAppsOrder.size(); i++)
-    {
-        for (int j = 0; j < appsList.size(); j++)
-        {
+    for (int i = 0; i < userAppsOrder.size(); i++) {
+        for (int j = 0; j < appsList.size(); j++) {
             if (userAppsOrder[i].first == appsList[j].caption)
                 appsList.move(j, qBound(0, userAppsOrder[i].second, appsList.size() - 1));
         }
@@ -197,24 +185,24 @@ void DataSource_Apps::updateItems()
 
 void DataSource_Apps::itemClicked(int newIndex)
 {
-    if(currentGroup == "" && newIndex == -1)
+    if (currentGroup == "" && newIndex == -1)
         return;
 
-    if(newIndex != -1) {
+    if (newIndex != -1) {
         AppItem clickedItem = appsList[newIndex];
-        if(clickedItem.relPath.isEmpty()) {
+        if (clickedItem.relPath.isEmpty()) {
             recentApps->addRecentApp(clickedItem.desktopEntry);
             emit runDesktopFile(clickedItem.desktopEntry);
             return;
         }
     }
 
-    if(newIndex == -1)
+    if (newIndex == -1)
         currentGroup = "";
     else
         currentGroup = appsList[newIndex].relPath;
 
-    if(prevCurrentGroup != currentGroup)
+    if (prevCurrentGroup != currentGroup)
         updateItems();
 
     emit resetContent();

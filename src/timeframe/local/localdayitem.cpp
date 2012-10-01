@@ -13,7 +13,7 @@ TimeFrameFilterModel::TimeFrameFilterModel(QObject * parent) :
 
 void TimeFrameFilterModel::setSourceModel(ItemModel * sourceModel)
 {
-    if(sourceModel) {
+    if (sourceModel) {
         QSortFilterProxyModel::setSourceModel(sourceModel);
         connect(sourceModel, SIGNAL(gotThumbnail()), this, SIGNAL(gotThumbnail()));
     }
@@ -34,7 +34,7 @@ LocalDayItem::LocalDayItem(const QDate &date, QObject *parent) :
     m_model->setFilterRole(ItemModel::TypeRole);
 
     LocalDayModel *model = qobject_cast<LocalDayModel *>(parent);
-    if(model)
+    if (model)
         m_model->setFilterRegExp(model->filter());
 }
 
@@ -49,13 +49,13 @@ QString LocalDayItem::id() const
 
 QVariant LocalDayItem::data(int role) const
 {
-    if(role == CurrentDateRole) {
+    if (role == CurrentDateRole) {
         return getDate();
-    } else if(role == ItemsRole) {
+    } else if (role == ItemsRole) {
         return 0;
-    } else if(role == TypesRole) {
+    } else if (role == TypesRole) {
         return types();
-    } else if(role == ItemsCountRole) {
+    } else if (role == ItemsCountRole) {
         return getCount();
     }
     return QVariant();
@@ -76,7 +76,7 @@ void LocalDayItem::setDate(const QDate &d)
 
 void LocalDayItem::addActivity(Activity* item)
 {
-    if(!m_types.contains(item->getType())) {
+    if (!m_types.contains(item->getType())) {
         m_types += (';' + item->getType());
     }
 

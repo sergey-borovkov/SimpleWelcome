@@ -39,17 +39,17 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
     QString str = id.left(id.lastIndexOf('%'));
     bool rounded = false;
     QString round = str.right(8);
-    if (round == "/rounded"){
+    if (round == "/rounded") {
         rounded = true;
         str.chop(8);
     }
-    QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(str);    
-    if(requestedSize.isValid())
+    QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(str);
+    if (requestedSize.isValid())
         pixmap = pixmap.scaled(requestedSize);
-    if(size)
+    if (size)
         *size = pixmap.size();
     if (rounded)
-        return QPixmap::fromImage( getRoundedImage(pixmap.toImage(), 10));
+        return QPixmap::fromImage(getRoundedImage(pixmap.toImage(), 10));
     return pixmap;
 
 }
@@ -73,7 +73,7 @@ QImage PreviewProvider::getRoundedImage(QImage image, int radius)
 
     painter.setBrush(brush);
     painter.setPen(pen);
-    painter.drawRoundedRect(0, 0, image.width(), image.height(), radius, radius ,Qt::RelativeSize);
+    painter.drawRoundedRect(0, 0, image.width(), image.height(), radius, radius , Qt::RelativeSize);
 
     return out;
 }

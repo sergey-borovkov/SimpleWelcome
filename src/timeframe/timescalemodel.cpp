@@ -19,19 +19,19 @@ TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
 void TimeScaleFilterModel::setFilter(const QString &filter)
 {
     QRegExp filterRegExp;
-    if(filter == "Local")
+    if (filter == "Local")
         filterRegExp = QRegExp("Image|Video|Doc");
-    else if(filter == "Photo")
+    else if (filter == "Photo")
         filterRegExp = QRegExp("Image");
-    else if(filter == "Video")
+    else if (filter == "Video")
         filterRegExp = QRegExp("Video");
-    else if(filter == "Documents")
+    else if (filter == "Documents")
         filterRegExp = QRegExp("Document");
-    else if(filter == "Social")
+    else if (filter == "Social")
         filterRegExp = QRegExp("VKontakte|Facebook|Twitter");
-    else if(filter == "VKontakte")
+    else if (filter == "VKontakte")
         filterRegExp = QRegExp("VKontakte");
-    else if(filter == "Facebook")
+    else if (filter == "Facebook")
         filterRegExp = QRegExp("Facebook");
 
     setFilterRegExp(filterRegExp);
@@ -41,14 +41,14 @@ bool TimeScaleFilterModel::lessThan(const QModelIndex & left, const QModelIndex 
 {
     int leftYear = sourceModel()->data(left, TimeScaleItem::YearRole).toInt();
     int rightYear = sourceModel()->data(right, TimeScaleItem::YearRole).toInt();
-    if(leftYear < rightYear)
+    if (leftYear < rightYear)
         return true;
-    else if(leftYear > rightYear) {
+    else if (leftYear > rightYear) {
         return false;
     } else {
         int leftMonth = sourceModel()->data(left, TimeScaleItem::MonthRole).toInt();
         int rightMonth = sourceModel()->data(right, TimeScaleItem::MonthRole).toInt();
-        if(leftMonth < rightMonth)
+        if (leftMonth < rightMonth)
             return true;
     }
     return false;
@@ -91,7 +91,7 @@ QHash<int, QByteArray> TimeScaleItem::roleNames()
 
 QVariant TimeScaleItem::data(int role) const
 {
-    switch(role) {
+    switch (role) {
     case YearRole:
         return year();
     case MonthRole:
@@ -138,8 +138,8 @@ TimeScaleModel::TimeScaleModel(QHash<int, QByteArray> roles, QObject *parent) :
 void TimeScaleModel::newItem(int year, int month, QString type)
 {
     TimeScaleItem* item = 0;
-    if((item = find(year, month))) { // add new type to existing item
-        if(!item->types().contains(type)) {
+    if ((item = find(year, month))) { // add new type to existing item
+        if (!item->types().contains(type)) {
             item->addType(type);
         }
     } else { //add new item
@@ -151,13 +151,13 @@ void TimeScaleModel::newItem(int year, int month, QString type)
 
 void TimeScaleModel::removeItems(const QString &type)
 {
-    for(int i = 0; i < rowCount(); i++) {
+    for (int i = 0; i < rowCount(); i++) {
         QStringList types = data(index(i), TimeScaleItem::TypesRole).toString().split(";");
         int ind = types.indexOf(type);
-        if(ind != -1 && types.size() == 1) {
+        if (ind != -1 && types.size() == 1) {
             removeRow(i);
             i--;
-        } else if(ind != -1){
+        } else if (ind != -1) {
             types.removeAt(ind);
             static_cast<TimeScaleItem *>(itemAt(i))->setType(types.join(";"));
         }
@@ -168,16 +168,16 @@ void TimeScaleModel::handleItemChange()
 {
     TimeScaleItem* item = static_cast<TimeScaleItem*>(sender());
     QModelIndex index = indexFromItem(item);
-    if(index.isValid())
+    if (index.isValid())
         emit dataChanged(index, index);
 }
 
 TimeScaleItem * TimeScaleModel::find(const int year, const int month)
 {
     int size = rowCount();
-    for(int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         TimeScaleItem *item = static_cast<TimeScaleItem *>(itemAt(i));
-        if((item->year() == year) && (item->month() == month))
+        if ((item->year() == year) && (item->month() == month))
             return item;
     }
     return 0;

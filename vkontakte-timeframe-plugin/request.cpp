@@ -21,14 +21,14 @@ void VkRequest::start()
 {
     QUrl requestUrl;
 
-    if(m_type == WallPosts) {
+    if (m_type == WallPosts) {
         requestUrl = wallUrl;
         requestUrl.addQueryItem(QLatin1String("offset"), QString("%1").arg(m_offset));
         requestUrl.addQueryItem(QLatin1String("count"), "100");
         requestUrl.addQueryItem(QLatin1String("filter"), "all");
 
         requestUrl.addQueryItem(QLatin1String("access_token"), m_accessToken);
-    } else if(m_type == Logout) {
+    } else if (m_type == Logout) {
         requestUrl = logoutUrl;
     }
 

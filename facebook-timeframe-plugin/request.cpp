@@ -11,7 +11,7 @@ FacebookRequest::FacebookRequest(RequestType type, QObject *parent) :
     QObject(parent), m_requestType(type)
 {
     // this is never deleted
-    if(!manager)
+    if (!manager)
         manager = new QNetworkAccessManager();
 }
 
@@ -22,14 +22,13 @@ void FacebookRequest::setUrl(const QUrl &url)
 
 void FacebookRequest::start()
 {
-    if(m_url.isEmpty())
+    if (m_url.isEmpty())
         return;
     QNetworkReply *reply = 0;
 
     QNetworkRequest request(m_url);
 
-    switch(m_requestType)
-    {
+    switch (m_requestType) {
     case Get:
         reply = manager->get(request);
         connect(reply, SIGNAL(finished()), SLOT(replyFinished()));
@@ -71,7 +70,7 @@ void FacebookRequest::postFinished()
     QVariantMap result = parser.parse(answer).toMap();
 
     QString id =  result.value("id").toString();
-    if(!id.isEmpty())
+    if (!id.isEmpty())
         emit newItemId(id);
     emit success();
 }

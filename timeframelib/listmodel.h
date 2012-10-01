@@ -30,14 +30,14 @@ public:
     ListItem* itemAt(int row) const;
     QModelIndex indexFromItem(const ListItem* item) const;
     void clear();
-    Qt::ItemFlags flags ( const QModelIndex & index ) const;
+    Qt::ItemFlags flags(const QModelIndex & index) const;
 
 private:
     QList<ListItem *> m_items;
     QHash<int, QByteArray> m_roles;
 };
 
-Q_DECLARE_METATYPE( ListModel* )
+Q_DECLARE_METATYPE(ListModel*)
 
 #endif // LISTMODEL_H
 

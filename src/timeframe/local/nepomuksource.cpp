@@ -20,7 +20,7 @@ NepomukSource::NepomukSource(QObject *parent) :
 
 NepomukSource::~NepomukSource()
 {
-    if(m_searchClient)
+    if (m_searchClient)
         m_searchClient->close();
     delete m_searchClient;
 }
@@ -46,7 +46,7 @@ Nepomuk::Query::FileQuery NepomukSource::createQuery()
 void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
 {
     Q_UNUSED(direction)
-    if(m_searchQueue.size() == 0) {
+    if (m_searchQueue.size() == 0) {
         m_searchQueue.append(beginDate);
         startSearchFromQueue();
     } else
@@ -55,8 +55,8 @@ void NepomukSource::startSearch(const QDate &beginDate, Direction direction)
 
 void NepomukSource::startSearchFromQueue()
 {
-    if(m_timer) {
-        if(m_timer->isActive()) {
+    if (m_timer) {
+        if (m_timer->isActive()) {
             emit finishedListing();
             return;
         }
@@ -65,7 +65,7 @@ void NepomukSource::startSearchFromQueue()
     m_mode = Normal;
     this->direction = NepomukSource::Right;
 
-    if(m_searchClient) {
+    if (m_searchClient) {
         m_searchClient->close();
         m_searchClient->deleteLater();
     }
@@ -83,7 +83,7 @@ void NepomukSource::startSearchFromQueue()
     query.setLimit(m_limit);
 
     m_searchClient->query(query);
-    if(!m_timer) {
+    if (!m_timer) {
         m_timer = new QTimer(this);
     }
     m_timer->start(1000 * 60 * 10); //One query in ten minutes
@@ -99,21 +99,21 @@ void NepomukSource::setLimit(int limit)
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
     QList<Activity *> activities;
-    for(int i = 0; i < list.size(); i++) {
+    for (int i = 0; i < list.size(); i++) {
         Nepomuk::Query::Result result = list.at(i);
         QDate creationDate;
         QUrl fileurl;
         QString mimeType;
 
-        if(result[Nepomuk::Vocabulary::NIE::lastModified()].isLiteral()) {
+        if (result[Nepomuk::Vocabulary::NIE::lastModified()].isLiteral()) {
             creationDate = result[Nepomuk::Vocabulary::NIE::lastModified()].literal().toDate();
         } else
             continue;
-        if(result[Nepomuk::Vocabulary::NIE::url()].isValid()) {
+        if (result[Nepomuk::Vocabulary::NIE::url()].isValid()) {
             fileurl = result[Nepomuk::Vocabulary::NIE::url()].toString();
         } else
             continue;
-        if(result[Nepomuk::Vocabulary::NIE::mimeType()].isLiteral()) {
+        if (result[Nepomuk::Vocabulary::NIE::mimeType()].isLiteral()) {
             mimeType = result[Nepomuk::Vocabulary::NIE::mimeType()].literal().toString();
         } else
             continue;
@@ -121,7 +121,7 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
         QString type;
         QString path = fileurl.path();
 
-        if(path.contains(".svg"))
+        if (path.contains(".svg"))
             type = "Image";
         else if (mimeType.contains("video"))
             type = "Video";
@@ -132,7 +132,7 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 
         activities.append(new Activity(path, type, creationDate));
     }
-    if(activities.size())
+    if (activities.size())
         emit newActivities(activities);
 }
 

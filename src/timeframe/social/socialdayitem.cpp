@@ -73,12 +73,11 @@ SocialDayItem::~SocialDayItem()
 
 QVariant SocialDayItem::data(int role) const
 {
-    if(role == DateRole) {
+    if (role == DateRole) {
         return QVariant(m_date);
-    } else if(role == ItemsCountRole) {
+    } else if (role == ItemsCountRole) {
         return QVariant(m_model->rowCount(QModelIndex()));
-    }
-    else if(role == ItemsTypes) {
+    } else if (role == ItemsTypes) {
         return QVariant(types());
     }
 
@@ -105,7 +104,7 @@ void SocialDayItem::setDate(const QDate &d)
 
 void SocialDayItem::addSocialItem(SocialItem* item)
 {
-    if(!m_types.contains(item->pluginName())) {
+    if (!m_types.contains(item->pluginName())) {
         m_types += (item->pluginName() + ";");
     }
     m_itemModel->addSocialItem(item);
