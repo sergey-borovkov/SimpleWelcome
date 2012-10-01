@@ -37,6 +37,7 @@ private slots:
 
 signals:
     void authorizationComplete();
+    void searchComplete();
     void newSocialItems(QList<SocialItem *> items);
     void selfId(QString id);
     void selfName(QString name);
