@@ -16,6 +16,7 @@ Item {
     property int __month: new Date().getMonth()
     property int day: new Date().getDate()
     property bool __isSearching: false              //New search in process
+    property bool isSocialSearching: true
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
 
@@ -80,6 +81,28 @@ Item {
             }
         }
     }
+
+    Connections {
+        target: socialProxy
+        onSearchStarted: {
+            isSocialSearching = true
+            if (timeFrameTab.state === "social") {
+                timeFrameTab.state = "socialSearching"
+            }
+        }
+    }
+
+    Connections {
+        target: socialProxy
+        onSearchFinished: {
+            isSocialSearching = false
+            if (timeFrameTab.state === "socialSerching") {
+                timeFrameTab.state = "social"
+            }
+        }
+    }
+
+
 
     //On search finished
     Connections {
@@ -172,15 +195,26 @@ Item {
             }
 
             onSelectedIndexChanged: {
-                timeFrameTab.state = ( selectedText === "Manage networks" ) ? "socialAuthorization"
-                                                                            : (inGallery ? "socialGallery" : "social")
-                socialProxy.startSearch()
+                if (selectedText === "Manage networks")
+                     timeFrameTab.state = "socialAuthorization"
+                else if (isSocialSearching)
+                    timeFrameTab.state = "socialSerching"
+                else if (inGallery)
+                    timeFrameTab.state = "socialGallery"
+                else
+                    timeFrameTab.state = "social"
+
+                //socialProxy.startSearch()
+                //isSocialSearching = true
                 name = ( selectedText === "All" ) ? i18n_Social_networkong_sites : getMenuItemText(selectedText)
                 setSocialFilter()
             }
             onClicked: {
                 if (timeFrameTab.state != "socialAuthorization" && socialProxy.anyPluginsEnabled()) {
-                    timeFrameTab.state =  inGallery ? "socialGallery" : "social"
+                    if (isSocialSearching)
+                        timeFrameTab.state = "socialSerching"
+                    else
+                        timeFrameTab.state =  inGallery ? "socialGallery" : "social"
                     setSocialFilter()
                 }
                 else
@@ -609,56 +643,42 @@ Item {
                 anchors.bottom:  timeFrameTab.bottom
             }
 
-            PropertyChanges {
-                target: timeLine
-                visible : false
-            }
-            PropertyChanges {
-                target: galleryView
-                visible : true
-            }
+            PropertyChanges { target: timeLine;  visible : false }
+
+            PropertyChanges { target: galleryView; visible : true }
+
         },
         State {
             name: "gallerySearch"; extend: "gallery"
-            PropertyChanges {
-                target: waitIndicator
-                visible: true
-            }
-            PropertyChanges {
-                target: galleryView
-                opacity: 0
-            }
+
+            PropertyChanges { target: waitIndicator; visible: true }
+
+            PropertyChanges { target: galleryView; opacity: 0 }
         },
         State {
             name: "timeLineSearch"; extend: ""
+
             PropertyChanges {
                 target: waitIndicator
                 visible: true
             }
-            PropertyChanges {
-                target: timeLine
-                opacity: 0
-            }
+
+            PropertyChanges { target: timeLine; opacity: 0 }
         },
         State {
             name: "social"
+
             PropertyChanges {
                 target: timeLine
                 visible: false
                 opacity: 0
             }
-            PropertyChanges {
-                target: socialTimeLine
-                visible: true
-            }
-            PropertyChanges {
-                target: socialNetworks
-                state: "current"
-            }
-            PropertyChanges {
-                target: localDocs
-                state: ""
-            }
+
+            PropertyChanges { target: socialTimeLine; visible: true }
+
+            PropertyChanges { target: socialNetworks; state: "current" }
+
+            PropertyChanges { target: localDocs; state: "" }
         },
 
         State {
@@ -670,10 +690,7 @@ Item {
                 opacity:0
             }
 
-            PropertyChanges {
-                target: socialGalleryView
-                visible: true
-            }
+            PropertyChanges { target: socialGalleryView; visible: true }
 
             AnchorChanges {
                 target: timeScale
@@ -682,10 +699,7 @@ Item {
                 anchors.bottom:  timeFrameTab.bottom
             }
 
-            PropertyChanges {
-                target: socialGalleryView
-                opacity: 1
-            }
+            PropertyChanges { target: socialGalleryView; opacity: 1 }
         },
         State {
             name: "socialAuthorization"; extend: "social"
@@ -695,10 +709,8 @@ Item {
                 visible: false
                 opacity: 0
             }
-            PropertyChanges {
-                target: authorizationView
-                visible: true
-            }
+            PropertyChanges { target: authorizationView; visible: true }
+
             PropertyChanges {
                 target: timeScale
                 visible: false
@@ -709,6 +721,19 @@ Item {
                 visible: false
                 opacity: 0
             }
+        },
+        State {
+            name: "socialSerching"; extend: "social"
+
+            PropertyChanges {
+                target: socialTimeLine
+                visible: false
+                opacity: 0
+            }
+
+            PropertyChanges { target: waitIndicator; visible: true }
+
+            PropertyChanges { target: galleryButton; visible: false }
         }
     ]
 }
