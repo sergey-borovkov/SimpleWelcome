@@ -30,6 +30,7 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
             connect(object, SIGNAL(selfId(QString)), SLOT(onSelfId(QString)));
             connect(object, SIGNAL(selfName(QString)), SLOT(onSelfName(QString)));
             connect(object, SIGNAL(newComments(QString, QList<CommentItem *>)), SLOT(newComments(QString, QList<CommentItem*>)));
+            connect(object, SIGNAL(searchComplete()), SLOT(searchComplete()));
 
         }
         if ((object = dynamic_cast<QObject *>(plugin)) != 0) {
@@ -239,12 +240,14 @@ void SocialProxy::authorized()
 
     // update wall
     Request *request = plugin->requestManager()->queryWall(QDate(), QDate());
+    m_searchInProgressCount++;
     request->start();
 
     if (plugin->authenticationWidget())
         plugin->authenticationWidget()->hide();
 
     emit pluginAuthorized();
+    emit searchStarted();
 }
 
 void SocialProxy::searchComplete()
