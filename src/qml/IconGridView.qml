@@ -39,6 +39,7 @@ GridView {
     highlight: Item {
         id: gridSelection
         property int animationDuration: 150
+        opacity: myActiveFocus ? 1 : 0
 
         BorderImage {
             border.left: 5
@@ -66,6 +67,7 @@ GridView {
     }
 
     model: appsModel
+
 
     function newItemData(iconPath, name, itemId) {
         appsModel.append( { imagePath: iconPath, caption: name, id: itemId, pinned: undefined, stack: undefined })
@@ -196,9 +198,6 @@ GridView {
             //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
             dndStateChanged(true)
 
-            if (highlightItem)
-                highlightItem.opacity = 1
-
 //                    console.log("NOW----------------")
 //                    for (var i = 0; i < model.count; i++)
 //                        console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
@@ -219,52 +218,31 @@ GridView {
     }
 
 
-    onActiveFocusChanged: {
-        if (highlightItem) // we are not empty and we have selection rectangle
-        {
-            if (!activeFocus)
-                highlightItem.opacity = 0
-            else
-                highlightItem.opacity = 1
-        }
+    function selectOtherGrid(gridWorkingWith, newCurrentIndex) {
+        gridWorkingWith.highlightMoveDuration = 1
+        gridWorkingWith.currentIndex = newCurrentIndex
+        gridWorkingWith.forceMyFocus()
+        gridWorkingWith.highlightMoveDuration = highlightMoveDurationConst
+        return gridWorkingWith.currentItem
     }
 
-    //Keys.forwardTo: topBar
-    Keys.onPressed: {
+    function processKeyboard(key) {
         var newCurrentItem
-        switch (event.key)
+        switch (key)
         {
         case Qt.Key_Left:
             if (currentIndex == 0 && prevGrid)
-            {
-                prevGrid.highlightMoveDuration = 1
-                prevGrid.currentIndex = prevGrid.count - 1
-                prevGrid.forceActiveFocus()
-                prevGrid.highlightMoveDuration = highlightMoveDurationConst
-                newCurrentItem = prevGrid.currentItem
-            }
+                newCurrentItem = selectOtherGrid(prevGrid, prevGrid.count - 1)
 
             if (!interactive)
-            {
                 moveCurrentIndexLeft()
-                event.accepted = true
-            }
             break
         case Qt.Key_Right:
             if (currentIndex == count - 1 && nextGrid)
-            {
-                nextGrid.highlightMoveDuration = 1
-                nextGrid.currentIndex = 0
-                nextGrid.forceActiveFocus()
-                nextGrid.highlightMoveDuration = highlightMoveDurationConst
-                newCurrentItem = nextGrid.currentItem
-            }
+                newCurrentItem = selectOtherGrid(nextGrid, 0)
 
             if (!interactive)
-            {
                 moveCurrentIndexRight()
-                event.accepted = true
-            }
             break
         case Qt.Key_Up:
             if (currentIndex < columns && prevGrid)
@@ -272,34 +250,20 @@ GridView {
                 var roundCount = Math.floor((prevGrid.count) / columns) * columns
                 var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGrid.count - roundCount)))
 
-                prevGrid.highlightMoveDuration = 1
-                prevGrid.currentIndex = newCur
-                prevGrid.forceActiveFocus()
-                prevGrid.highlightMoveDuration = highlightMoveDurationConst
-                newCurrentItem = prevGrid.currentItem
+                newCurrentItem = selectOtherGrid(prevGrid, newCur)
             }
 
             if (!interactive)
-            {
                 moveCurrentIndexUp()
-                event.accepted = true
-            }
             break
         case Qt.Key_Down:
             if (currentIndex >= count - columns && nextGrid)
             {
-                nextGrid.highlightMoveDuration = 1
-                nextGrid.currentIndex = currentIndex % columns
-                nextGrid.forceActiveFocus()
-                nextGrid.highlightMoveDuration = highlightMoveDurationConst
-                newCurrentItem = nextGrid.currentItem
+                newCurrentItem = selectOtherGrid(nextGrid, currentIndex % columns)
             }
 
             if (!interactive)
-            {
                 moveCurrentIndexDown()
-                event.accepted = true
-            }
             break
 
         case Qt.Key_Return:
@@ -315,9 +279,13 @@ GridView {
             break
         }
 
-        if (event.key == Qt.Key_Left || event.key == Qt.Key_Right ||
-            event.key == Qt.Key_Up || event.key == Qt.Key_Down)
+        if (key == Qt.Key_Left || key == Qt.Key_Right ||
+            key == Qt.Key_Up || key == Qt.Key_Down)
             selectionChangedByKeyboard(newCurrentItem == null ? currentItem : newCurrentItem)
+    }
+
+    Keys.onPressed: {
+        processKeyboard(event.key)
     }
 
 
@@ -463,14 +431,14 @@ GridView {
             if (!grid.moving && dndSrcId == -1)
             {
                 // Optimize later to lesser use of getItemUnderCursor(true)
-                var newCurrentIndex = getItemUnderCursor(!grid.activeFocus).index
+                var newCurrentIndex = getItemUnderCursor(!grid.myActiveFocus).index
                 if (newCurrentIndex != -1 && (newCurrentIndex != currentIndex || !grid.activeFocus))
                 {
-                    if (!grid.activeFocus)
+                    if (!grid.myActiveFocus)
                     {
                         grid.highlightMoveDuration = 1
                         grid.currentIndex = newCurrentIndex
-                        grid.forceActiveFocus()
+                        grid.forceMyFocus()
                         grid.highlightMoveDuration = highlightMoveDurationConst
                     }
                     else
