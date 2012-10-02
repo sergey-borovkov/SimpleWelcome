@@ -1,8 +1,7 @@
 #ifndef ACTIVITYSOURCE_H
 #define ACTIVITYSOURCE_H
 
-#include <QObject>
-
+#include <QtCore/QObject>
 #include <QtCore/QDate>
 
 class ActivitySet;

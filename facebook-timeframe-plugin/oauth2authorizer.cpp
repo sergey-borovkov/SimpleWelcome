@@ -16,20 +16,20 @@ OAuth2Authorizer::OAuth2Authorizer(QObject *parent) :
 
 void OAuth2Authorizer::setAccessToken(const QString &accessToken)
 {
-    if(accessToken != m_accessToken) {
+    if (accessToken != m_accessToken) {
         m_accessToken = accessToken;
         QSettings settings("ROSA", "facebook-timeframe-plugin");
         settings.setValue("accessToken", accessToken);
         emit accessTokenChanged(m_accessToken);
 
-        if(!accessToken.isEmpty())
+        if (!accessToken.isEmpty())
             emit authorized();
     }
 }
 
 void OAuth2Authorizer::logout()
 {
-    if(!accessToken().isEmpty()) {
+    if (!accessToken().isEmpty()) {
         setAccessToken("");
         emit deauthorized();
     }
@@ -47,7 +47,7 @@ QString OAuth2Authorizer::accessToken() const
 
 void OAuth2Authorizer::urlChanged(const QUrl &url)
 {
-    if(!url.isEmpty() && (url.toString().startsWith(redirectUrl) || url.toString().startsWith(redirectUrl1))) {
+    if (!url.isEmpty() && (url.toString().startsWith(redirectUrl) || url.toString().startsWith(redirectUrl1))) {
         QString accessToken = url.encodedFragment();        // Get the URL fragment part
         accessToken = accessToken.split("&").first();       // Remove the "expires_in" part.
         accessToken = accessToken.split("=").at(1);         // Split by "access_token=..." and take latter part

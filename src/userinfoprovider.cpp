@@ -38,7 +38,7 @@ QString UserInfoProvider::getUserName()
 {
     QString username = m_userInfo.fullName();
 
-    if(username.isEmpty())
+    if (username.isEmpty())
         username = m_userInfo.loginName();
 
     return username;

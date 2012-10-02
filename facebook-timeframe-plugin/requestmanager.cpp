@@ -86,7 +86,7 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 {
     m_authorizer = authorizer;
 
-    if(m_authorizer->isAuthorized())
+    if (m_authorizer->isAuthorized())
         emit authorizationComplete();
     else
         connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SIGNAL(authorizationComplete()));
@@ -108,7 +108,7 @@ void RequestManager::feedReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-    if(result.contains(QLatin1String("error"))) {
+    if (result.contains(QLatin1String("error"))) {
         m_authorizer->logout();
         return;
     }
@@ -124,11 +124,13 @@ void RequestManager::feedReply(QByteArray reply)
     emit newSocialItems(feedItems);
 
     QVariantMap paging = result.value(QLatin1String("paging")).toMap();
-    if(paging.contains("next")) {
+    if (paging.contains("next")) {
         FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
         request->setUrl(paging.value("next").toUrl());
         request->start();
+    } else {
+        emit searchComplete();
     }
 }
 
@@ -136,7 +138,7 @@ void RequestManager::commentReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-    if(result.contains(QLatin1String("error"))) {
+    if (result.contains(QLatin1String("error"))) {
         return;
     }
 
@@ -154,7 +156,7 @@ void RequestManager::commentReply(QByteArray reply)
     cachedComments.append(comments);
 
     QVariantMap paging = result.value(QLatin1String("paging")).toMap();
-    if(paging.contains("next")) {
+    if (paging.contains("next")) {
         m_comments.insert(id, cachedComments);
         FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
         request->setProperty("postId", id);
@@ -171,7 +173,7 @@ void RequestManager::idReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-    if(result.contains(QLatin1String("error"))) {
+    if (result.contains(QLatin1String("error"))) {
         m_authorizer->logout();
         return;
     }
@@ -189,24 +191,23 @@ void RequestManager::imageReply(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
 
-    if(result.contains(QLatin1String("error"))) {
+    if (result.contains(QLatin1String("error"))) {
         m_authorizer->logout();
         return;
     }
 
     QString userId, userImageUrl;
 
-    if(result.contains(QLatin1String("picture"))) {
+    if (result.contains(QLatin1String("picture"))) {
         userId = result.value(QLatin1String("id")).toString();
         QVariantMap map = result.value(QLatin1String("picture")).toMap();
-        if(map.contains("data")) {
+        if (map.contains("data")) {
             map = map.value("data").toMap();
-            if(map.contains("url")) {
+            if (map.contains("url")) {
                 userImageUrl = map.value(QLatin1String("url")).toString();
                 emit gotUserImage(userId, userImageUrl);
             }
-        }
-        else {
+        } else {
             userImageUrl = result.value(QLatin1String("picture")).toString();
             userId = result.value(QLatin1String("id")).toString();
             emit gotUserImage(userId, userImageUrl);

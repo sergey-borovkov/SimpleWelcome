@@ -48,8 +48,8 @@ public:
     Q_INVOKABLE QString userId() const;
 
 signals:
-    void success (PluginRequestReply*);
-    void failure (PluginRequestReply*);
+    void success(PluginRequestReply*);
+    void failure(PluginRequestReply*);
     void finished();
 
 private slots:

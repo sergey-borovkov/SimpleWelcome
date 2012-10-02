@@ -55,7 +55,7 @@ void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
 {
     m_authorizer = authorizer;
 
-    if(m_authorizer->isAuthorized())
+    if (m_authorizer->isAuthorized())
         emit authorizationComplete();
     else
         connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SIGNAL(authorizationComplete()));
@@ -76,27 +76,27 @@ void RequestManager::reply(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
 
-    if(result.contains("error")) {
+    if (result.contains("error")) {
         m_authorizer->logout();
         return;
     }
 
     int itemCount = 0;
     QVariantList list = result.value("response").toList();
-    if(list.size() > 1) {
+    if (list.size() > 1) {
         itemCount = list.at(0).toInt();
         // delete first item from list because first item is a count of messages in the wall
         list.takeFirst();
     }
 
     int cycles = 0;
-    if(itemCount >= 100) {
+    if (itemCount >= 100) {
         cycles = itemCount / 100;
     }
 
     // need repeat query
-    if(cycles) {
-        for(int i = 0; i < cycles; i++) {
+    if (cycles) {
+        for (int i = 0; i < cycles; i++) {
             VkRequest *request = new VkRequest(m_authorizer->accessToken(), VkRequest::WallPosts, this, 100 *(i + 1));
             connect(request, SIGNAL(replyReady(QByteArray)), SLOT(replyQueryWall(QByteArray)));
             request->start();
@@ -120,13 +120,13 @@ void RequestManager::replyQueryWall(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
 
-    if(result.contains("error")) {
+    if (result.contains("error")) {
         m_authorizer->logout();
         return;
     }
 
     QVariantList list = result.value("response").toList();
-    if(list.size() > 1) {
+    if (list.size() > 1) {
         list.takeFirst();
     }
 

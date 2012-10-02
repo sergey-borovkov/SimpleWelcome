@@ -1,11 +1,13 @@
 #ifndef LOCALDAYMODEL_H
 #define LOCALDAYMODEL_H
 
-#include <QAbstractListModel>
-#include <QSortFilterProxyModel>
-#include <QObject>
-#include "localdayitem.h"
 #include "itemmodel.h"
+#include "localdayitem.h"
+
+#include <QtCore/QObject>
+#include <QtGui//QSortFilterProxyModel>
+
+#include <listmodel.h>
 
 class ItemModel;
 class Activity;
@@ -23,34 +25,20 @@ public slots:
     QDate getDateOfIndex(int listIndex);
 };
 
-class LocalDayModel : public QAbstractListModel
+class LocalDayModel : public ListModel
 {
     Q_OBJECT
 public:
-
-    enum {
-        CurrentDateRole = Qt::UserRole + 1,
-        ItemsRole,
-        CountRole,
-        TypesRole,
-        ItemsCountRole
-    };
-    explicit LocalDayModel(QObject *parent = 0);
-    ~LocalDayModel();
+    explicit LocalDayModel(QHash<int, QByteArray> roles, QObject *parent = 0);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
     void appendRow(LocalDayItem* item);
     void appendRows(const QList<LocalDayItem*> &items);
     void insertRow(int row, LocalDayItem *item);
-    bool removeRow(int row, const QModelIndex &parent);
-    bool removeRows(int row, int count, const QModelIndex &parent);
     void setLister(ActivityProxy* lister);
-    QModelIndex indexFromItem(const LocalDayItem *item) const;
     LocalDayItem * find(const QDate &date) const;
-    void clear();
 
-    void setFilter(QRegExp regexp);
     QRegExp filter() const;
+    void setFilter(QRegExp regexp);
 
 public slots:
     void newActivities(QList <Activity*> list);
@@ -67,8 +55,6 @@ private slots:
     void handleItemChange();
 
 private:
-    QList <LocalDayItem *> m_items;
-    QHash<int, QByteArray> hash;
     QHash<QString, QDate> m_urlHash;
     ActivityProxy* m_lister;
     QRegExp m_filter;

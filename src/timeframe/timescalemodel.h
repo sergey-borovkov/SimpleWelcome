@@ -1,12 +1,14 @@
 #ifndef TIMESCALEMODEL_H
 #define TIMESCALEMODEL_H
 
-#include <QAbstractListModel>
-#include <QSortFilterProxyModel>
-#include <QHash>
-#include <QSet>
-#include <QPair>
+#include <QtCore/QAbstractListModel>
+#include <QtCore/QHash>
+#include <QtCore/QPair>
+#include <QtCore/QSet>
+#include <QtGui/QSortFilterProxyModel>
 
+#include <listmodel.h>
+#include <listitem.h>
 
 class ActivityProxy;
 
@@ -24,7 +26,7 @@ public slots:
     int count();
 };
 
-class TimeScaleItem : public QObject
+class TimeScaleItem : public QObject, public ListItem
 {
     Q_OBJECT
 public:
@@ -34,13 +36,19 @@ public:
         TypesRole
     };
 public:
-    TimeScaleItem(QObject *parent = 0): QObject(parent) {}
     explicit TimeScaleItem(int year, int month, QString type, QObject* parent = 0);
+    QString id() const;
+    bool setData(int role, const QVariant &value) {
+        Q_UNUSED(role)
+        Q_UNUSED(value)
+        return false;
+    }
     int year() const;
     int month() const;
     QString types() const;
     QVariant data(int role) const;
-    QHash<int, QByteArray> roleNames() const;
+    static QHash<int, QByteArray> roleNames();
+
     void addType(QString type);
     void setType(QString types);
 signals:
@@ -51,24 +59,12 @@ private:
     QString m_type;
 };
 
-class TimeScaleModel : public QAbstractListModel
+class TimeScaleModel : public ListModel
 {
     Q_OBJECT
 public:
-    explicit TimeScaleModel(TimeScaleItem* prototype, QObject* parent = 0);
-    ~TimeScaleModel();
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    void appendRow(TimeScaleItem* item);
-    void appendRows(const QList<TimeScaleItem*> &items);
-    void insertRow(int row, TimeScaleItem* item);
-    bool removeRow(int row, const QModelIndex &parent = QModelIndex());
-    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
-    TimeScaleItem* takeRow(int row);
+    explicit TimeScaleModel(QHash<int, QByteArray> roles, QObject *parent = 0);
     TimeScaleItem* find(const int year, const int month);
-    QModelIndex indexFromItem(const TimeScaleItem* item) const;
-    void clear();
-
 public slots:
     void newItem(int year, int month, QString type);
 
@@ -80,11 +76,6 @@ public slots:
 
 private slots:
     void handleItemChange();
-
-private:
-    TimeScaleItem* m_prototype;
-    QList<TimeScaleItem*> m_list;
-
 };
 
 #endif // ACTIVITYMODEL_H

@@ -1,15 +1,15 @@
 #ifndef SOCIALPROXY_H
 #define SOCIALPROXY_H
 
-#include <QtCore/QObject>
-#include <QtCore/QList>
-#include <QtCore/QSet>
-#include <QtCore/QMap>
-#include "socialitem.h"
-#include <QMetaType>
-
-
 #include "pluginrequestreply.h"
+#include "socialitem.h"
+
+#include <QMetaType>
+#include <QtCore/QList>
+#include <QtCore/QMap>
+#include <QtCore/QObject>
+#include <QtCore/QSet>
+
 
 class ISocialPlugin;
 class ListModel;
@@ -71,7 +71,9 @@ public:
     Q_INVOKABLE QString authorizedPluginName(int i) const;
     Q_INVOKABLE bool anyPluginsEnabled();
 
-    Q_INVOKABLE QString selfId() const { return m_selfId; }
+    Q_INVOKABLE QString selfId() const {
+        return m_selfId;
+    }
     Q_INVOKABLE QString selfPictureUrl();
 
     void getSelfUserPicture(const QString &pluginName);
@@ -81,7 +83,7 @@ public:
      * @param id of item
      * @param plugin name
      */
-    Q_INVOKABLE void getAllComments(const QString &id, const QString &pluginName);
+    Q_INVOKABLE PluginRequestReply *getAllComments(const QString &id, const QString &pluginName);
 
 public slots:
     void newItem(SocialItem *item);
@@ -108,9 +110,12 @@ private slots:
      */
     void authorized();
 
+    void searchComplete();
+
 signals:
     void pluginAuthorized();
     void pluginDeauthorized();
+    void searchFinished();
 
     /**
      * @brief This signal is for interacting with timescale model. Perphaps later it should
@@ -167,6 +172,8 @@ private:
     QString m_selfId;
     QString m_selfName;
     QString m_selfPictureUrl;
+
+    int m_searchInProgressCount;
 };
 
 #endif // SOCIALPROXY_H

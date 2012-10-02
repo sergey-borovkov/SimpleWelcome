@@ -31,14 +31,14 @@ public:
 
     static const QHash<int, QByteArray> roleNames() {
         QHash<int, QByteArray> roles;
-        roles.insert(From, "from" );
-        roles.insert(FromId, "fromId" );
-        roles.insert(FromPictureUrl, "fromPictureUrl" );
-        roles.insert(Message, "messageText" );
-        roles.insert(CreatedTime, "createdTime" );
-        roles.insert(LikeCount, "likeCount" );
-        roles.insert(Id, "id" );
-        roles.insert(Type, "pluginName" );
+        roles.insert(From, "from");
+        roles.insert(FromId, "fromId");
+        roles.insert(FromPictureUrl, "fromPictureUrl");
+        roles.insert(Message, "messageText");
+        roles.insert(CreatedTime, "createdTime");
+        roles.insert(LikeCount, "likeCount");
+        roles.insert(Id, "id");
+        roles.insert(Type, "pluginName");
         return roles;
     }
 
@@ -46,7 +46,7 @@ private:
     QMap<int, QVariant> m_data;
 };
 
-Q_DECLARE_METATYPE( CommentItem * )
+Q_DECLARE_METATYPE(CommentItem *)
 Q_DECLARE_METATYPE(QList<CommentItem *>)
 
 #endif

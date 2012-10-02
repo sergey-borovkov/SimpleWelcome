@@ -16,7 +16,7 @@ VkontakteModule::VkontakteModule()
     QSettings settings("ROSA", "vkontakte-timeframe-plugin");
     QString accessToken = settings.value("accessToken").toString();
 
-    if(!accessToken.isEmpty()) {
+    if (!accessToken.isEmpty()) {
         m_authorizer->setAccessToken(accessToken);
         emit authorized();
     }
@@ -57,7 +57,7 @@ QPixmap VkontakteModule::icon() const
 
 QWidget *VkontakteModule::authenticationWidget()
 {
-    if(!m_authorizer->isAuthorized()) {
+    if (!m_authorizer->isAuthorized()) {
         m_authorizationView->setUrl(QUrl("http://oauth.vk.com/authorize?client_id=2944872&"
                                          "scope=wall&"
                                          "redirect_uri=http://oauth.vk.com/blank.html&"
@@ -72,7 +72,7 @@ QWidget *VkontakteModule::authenticationWidget()
 
 void VkontakteModule::onAcessTokenChanged()
 {
-    if(m_authorizer->isAuthorized()) {
+    if (m_authorizer->isAuthorized()) {
         m_authorizationView->hide();
         emit authorized();
     } else {

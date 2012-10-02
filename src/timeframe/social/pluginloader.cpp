@@ -13,7 +13,7 @@ QList<ISocialPlugin*> PluginLoader::loadPlugins(QString dir_path)
     foreach(QString fileName, modulesDir.entryList(QDir::AllEntries)) {
         QPluginLoader loader(modulesDir.absoluteFilePath(fileName));
         QObject *libObject = loader.instance();
-        if(ISocialPlugin *lib = qobject_cast<ISocialPlugin*>(libObject))
+        if (ISocialPlugin *lib = qobject_cast<ISocialPlugin*>(libObject))
             plugins << lib;
     }
 

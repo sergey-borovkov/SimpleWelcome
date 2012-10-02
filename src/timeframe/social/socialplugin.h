@@ -2,8 +2,8 @@
 #define SOCIALPLUGIN_H
 
 #include <QtCore/QList>
-#include <QtGui/QPixmap>
 #include <QtCore/QtPlugin>
+#include <QtGui/QPixmap>
 
 class SocialItem;
 class QDate;
@@ -13,7 +13,8 @@ class QDate;
  *        All subclasses of this class in social plugins should emit success()
  *        and error(QString errorString) signals when appropriate.
  */
-class Request {
+class Request
+{
 public:
     virtual ~Request() {}
     /**
@@ -33,7 +34,7 @@ public:
 
     /**
      * @brief Query comments to post. You need to connect to SocialRequestManager
-     *        newComments(QList<CommentItem *>) signal to get result
+     *        newComments(QString parent, QList<CommentItem *>) signal to get result
      * @param id of parent post
      * @return pointer to request
      */

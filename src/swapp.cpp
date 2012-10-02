@@ -45,14 +45,14 @@
 #include "datasource_documents.h"
 #include "datasource_search.h"
 
-#include "timeframe/activityset.h"
-#include "timeframe/localdaymodel.h"
 #include "timeframe/timescalemodel.h"
-#include "timeframe/itemmodel.h"
-#include "timeframe/activityproxy.h"
-#include "timeframe/nepomuksource.h"
-#include "timeframe/previewgenerator.h"
-#include "timeframe/previewprovider.h"
+#include "timeframe/local/activityset.h"
+#include "timeframe/local/localdaymodel.h"
+#include "timeframe/local/itemmodel.h"
+#include "timeframe/local/activityproxy.h"
+#include "timeframe/local/nepomuksource.h"
+#include "timeframe/local/previewgenerator.h"
+#include "timeframe/local/previewprovider.h"
 #include "timeframe/social/pluginloader.h"
 #include "timeframe/social/socialproxy.h"
 #include "timeframe/social/pluginimageprovider.h"
@@ -62,6 +62,7 @@
 #include "timeframe/social/socialdayitem.h"
 #include "timeframe/social/pluginrequestreply.h"
 
+#include <listitem.h>
 
 #include "config.h"
 #include <KCmdLineArgs>
@@ -74,7 +75,7 @@
 
 SWApp* SWApp::self()
 {
-    if(!kapp) {
+    if (!kapp) {
         return new SWApp();
     }
 
@@ -96,21 +97,17 @@ int SWApp::newInstance()
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
     static bool isFirst = true;
-    if(!args->isSet("silent") || !isFirst)
-    {
+    if (!args->isSet("silent") || !isFirst) {
         qDebug() << "Silent not set";
-        if (m_viewer)
-        {
-            if (!m_viewer->isVisible())
-            {
+        if (m_viewer) {
+            if (!m_viewer->isVisible()) {
                 qDebug() << "Showing fullscreen";
 
                 //m_viewer->setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
                 //m_viewer->show();
                 m_viewer->showFullScreen();
                 //m_viewer->move(/*896*/0, 0);
-            }
-            else
+            } else
                 m_viewer->close();
         }
     }
@@ -233,7 +230,7 @@ SWApp::SWApp()
     initTimeframeLocalMode();
     initTimeframeSocialMode();
 
-    m_viewer->setMainQmlFile( pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml") ); // Qt converts path to native automatically
+    m_viewer->setMainQmlFile(pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml"));   // Qt converts path to native automatically
 
     setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
 }
@@ -248,7 +245,7 @@ void SWApp::initTimeframeLocalMode()
     m_proxy = new ActivityProxy;
     m_proxy->addNepomukSource(m_source);
 
-    LocalDayModel* model = new LocalDayModel;
+    LocalDayModel* model = new LocalDayModel(LocalDayItem::roleNames(), this);
     TimeFrameDayFilterModel* proxymodel = new TimeFrameDayFilterModel(this);
     model->setLister(m_proxy);
     proxymodel->setSourceModel(model);
@@ -278,8 +275,7 @@ void SWApp::initTimeframeSocialMode()
     m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
 
     TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
-    TimeScaleItem* item = new TimeScaleItem();
-    TimeScaleModel* timeScaleModel = new TimeScaleModel(item);
+    TimeScaleModel* timeScaleModel = new TimeScaleModel(TimeScaleItem::roleNames(), this);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
 
     connect(m_manager, SIGNAL(removeType(QString)), timeScaleModel, SLOT(removeItems(QString)));
@@ -337,7 +333,7 @@ int QMLConstants::cellWidth()
            viewer->updatableHeight() >= 850 ? 110 :
            viewer->updatableHeight() >= 800 ? 110 :
            viewer->updatableHeight() >= 750 ? 100 :
-                                              70;
+           70;
 }
 
 int QMLConstants::cellHeight()
@@ -349,7 +345,7 @@ int QMLConstants::cellHeight()
            viewer->updatableHeight() >= 850 ? 120 :
            viewer->updatableHeight() >= 800 ? 110 :
            viewer->updatableHeight() >= 750 ? 100 :
-                                              80;
+           80;
 }
 
 int QMLConstants::iconTextSize()

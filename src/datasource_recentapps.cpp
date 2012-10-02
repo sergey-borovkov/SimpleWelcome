@@ -33,7 +33,7 @@ QString DataSource_RecentApps::itemUrlDnd(int id)
 void DataSource_RecentApps::saveData()
 {
     QStringList desktopFiles;
-    for(int i = 0; i < recentAppsList.size(); i++)
+    for (int i = 0; i < recentAppsList.size(); i++)
         desktopFiles.prepend(recentAppsList[i].desktopEntry);
 
     KConfigGroup configGroup(KGlobal::config(), "General");
@@ -43,31 +43,31 @@ void DataSource_RecentApps::saveData()
 
 void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
 {
-    if(!KDesktopFile::isDesktopFile(desktopFilePath))
+    if (!KDesktopFile::isDesktopFile(desktopFilePath))
         return;
 
     bool isFound = false;
 
-    for(int i = 0; i < recentAppsList.size(); i++) {
-        if(recentAppsList[i].desktopEntry == desktopFilePath) {
+    for (int i = 0; i < recentAppsList.size(); i++) {
+        if (recentAppsList[i].desktopEntry == desktopFilePath) {
             recentAppsList.move(i, 0);
             isFound = true;
             break;
         }
     }
 
-    if(!isFound) {
+    if (!isFound) {
         KDesktopFile desktopFile(desktopFilePath);
         AppItem newItem;
 
         newItem.caption = desktopFile.readName();
         newItem.icon = desktopFile.readIcon();
         newItem.desktopEntry = desktopFilePath;
-        if(!newItem.caption.isEmpty())
+        if (!newItem.caption.isEmpty())
             recentAppsList.prepend(newItem);
     }
 
-    if(recentAppsList.size() > 7)
+    if (recentAppsList.size() > 7)
         recentAppsList.removeAt(7);
 
     saveData();
@@ -76,8 +76,7 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
 
 void DataSource_RecentApps::itemClicked(int newIndex)
 {
-    if (newIndex != -1)
-    {
+    if (newIndex != -1) {
         recentAppsList.move(newIndex, 0);
         saveData();
         emit runDesktopFile(recentAppsList[0].desktopEntry);

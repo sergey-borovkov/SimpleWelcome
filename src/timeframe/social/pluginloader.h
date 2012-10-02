@@ -1,8 +1,8 @@
 #ifndef PLUGINLOADER_H
 #define PLUGINLOADER_H
 
-#include <QtCore/QString>
 #include <QtCore/QList>
+#include <QtCore/QString>
 
 class ISocialPlugin;
 
