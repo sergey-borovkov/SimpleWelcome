@@ -88,7 +88,7 @@ void SocialProxy::logout(const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
     if (plugin->authorized()) {
-      //  plugin->requestManager()->logout();
+        plugin->requestManager()->logout();
         emit removeType(pluginName);
         m_socialModel->removeItems(pluginName);
     }
