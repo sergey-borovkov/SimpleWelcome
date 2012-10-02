@@ -117,8 +117,7 @@ void SocialDayModel::addComments(QString id, QList<CommentItem *> list)
 
 void SocialDayModel::removeItems(const QString &type)
 {
-    int size = rowCount();
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < rowCount(); i++) {
         SocialItemModel *model = static_cast<SocialDayItem *>(itemAt(i))->m_itemModel;
         for (int j = 0; j < model->rowCount(); j++) {
             SocialItem *item = static_cast<SocialItem *>(model->itemAt(j));
