@@ -22,9 +22,6 @@
 
 #pragma once
 
-#ifndef __SIMPLEWELCOME__WHEELAREA_H
-#define __SIMPLEWELCOME__WHEELAREA_H
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Includes
 #include <QtDeclarative/QDeclarativeItem>
@@ -55,5 +52,3 @@ signals:
     // Signal is emmitted as user scrolls left or right
     void scrollHorz(int delta);
 };
-
-#endif // __SIMPLEWELCOME__WHEELAREA_H

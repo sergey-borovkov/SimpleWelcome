@@ -11,7 +11,7 @@ QString CommentItem::id() const
 
 QVariant CommentItem::data(int role) const
 {
-    if(role == CommentItem::FromPictureUrl) {
+    if (role == CommentItem::FromPictureUrl) {
         if (m_data.value(role).toString().isEmpty())
             return QVariant("images/user.png");
     }

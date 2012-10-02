@@ -84,5 +84,3 @@ void Activity::setDate(QDate date)
 {
     this->date = date;
 }
-
-

@@ -55,9 +55,9 @@ void ROSA_Starter::init()
 
     m_iconSize = 48;
 
-    if(formFactor() == Plasma::Vertical)
+    if (formFactor() == Plasma::Vertical)
         m_iconSize = topLevelWidget()->size().width();
-    else if(formFactor() == Plasma::Horizontal)
+    else if (formFactor() == Plasma::Horizontal)
         m_iconSize = topLevelWidget()->size().height();
 
     resize(m_iconSize, m_iconSize);
@@ -82,7 +82,7 @@ void ROSA_Starter::buttonClicked()
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
     QDBusInterface interface("org.kde.ROSA_Launcher", "/MainApplication", "org.kde.KUniqueApplication", sessionBus, this);
 
-    if(interface.isValid()) // if SW is launched
+    if (interface.isValid()) // if SW is launched
         interface.call("newInstance");
     else
         QProcess::execute("rosa-launcher");

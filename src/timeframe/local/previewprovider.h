@@ -34,7 +34,7 @@ class PreviewGenerator;
 class PreviewProvider : public QObject, public QDeclarativeImageProvider
 {
 public:
-    PreviewProvider();    
+    PreviewProvider();
     QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize);
 private:
     QImage getRoundedImage(QImage image, int radius);

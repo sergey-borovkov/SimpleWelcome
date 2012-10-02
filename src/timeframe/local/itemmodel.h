@@ -1,9 +1,9 @@
 #ifndef ITEMMODEL_H
 #define ITEMMODEL_H
 
-#include <QAbstractListModel>
-#include <QMetaType>
-#include <QSet>
+#include <QtCore/QAbstractListModel>
+#include <QtCore/QMetaType>
+#include <QtCore/QSet>
 
 class Activity;
 

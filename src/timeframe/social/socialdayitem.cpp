@@ -2,8 +2,6 @@
 #include "socialitemmodel.h"
 #include "socialitem.h"
 
-#include "QtCore/QDebug"
-
 SocialItemFilterModel::SocialItemFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
 {
@@ -11,22 +9,22 @@ SocialItemFilterModel::SocialItemFilterModel(QObject * parent)
     setFilterRole(SocialItem::PluginName);
 }
 
-QString SocialItemFilterModel::id(int row)
+QString SocialItemFilterModel::id(int row) const
 {
     return data(index(row, 0), SocialItem::Id).toString();
 }
 
-QString SocialItemFilterModel::imageUrl(int row)
+QString SocialItemFilterModel::imageUrl(int row) const
 {
     return data(index(row, 0), SocialItem::ImageUrl).toString();
 }
 
-QString SocialItemFilterModel::text(int row)
+QString SocialItemFilterModel::text(int row) const
 {
     return data(index(row, 0), SocialItem::Text).toString();
 }
 
-int SocialItemFilterModel::likesCount(int row)
+int SocialItemFilterModel::likesCount(int row) const
 {
     return data(index(row, 0), SocialItem::Likes).toInt();
 }
@@ -36,12 +34,12 @@ int SocialItemFilterModel::like(int row)
     return data(index(row, 0), SocialItem::Like).toInt();
 }
 
-int SocialItemFilterModel::commentsCount(int row)
+int SocialItemFilterModel::commentsCount(int row) const
 {
     return data(index(row, 0), SocialItem::CommentCount).toInt();
 }
 
-QObject *SocialItemFilterModel::comments(int row)
+QObject *SocialItemFilterModel::comments(int row) const
 {
     QVariant v = data(index(row, 0), SocialItem::Comments);
     ListModel * commentsModel = qvariant_cast<ListModel* >(v);
@@ -49,7 +47,7 @@ QObject *SocialItemFilterModel::comments(int row)
     return commentsModel;
 }
 
-QString SocialItemFilterModel::pluginName(int row)
+QString SocialItemFilterModel::pluginName(int row) const
 {
     return data(index(row, 0), SocialItem::PluginName).toString();
 }
@@ -73,26 +71,30 @@ SocialDayItem::~SocialDayItem()
 {
 }
 
-QString SocialDayItem::id() const
-{
-    return QString();
-}
-
 QVariant SocialDayItem::data(int role) const
 {
-    if(role == DateRole) {
+    if (role == DateRole) {
         return QVariant(m_date);
-    } else if(role == ItemsCountRole) {
+    } else if (role == ItemsCountRole) {
         return QVariant(m_model->rowCount(QModelIndex()));
+    } else if (role == ItemsTypes) {
+        return QVariant(types());
     }
+
     return QVariant();
 }
 
 bool SocialDayItem::setData(int role, const QVariant &value)
 {
-    return true;
+    Q_UNUSED(role)
+    Q_UNUSED(value)
+    return false;
 }
 
+QString SocialDayItem::id() const
+{
+    return QString();
+}
 
 void SocialDayItem::setDate(const QDate &d)
 {
@@ -102,7 +104,7 @@ void SocialDayItem::setDate(const QDate &d)
 
 void SocialDayItem::addSocialItem(SocialItem* item)
 {
-    if(!m_types.contains(item->pluginName())) {
+    if (!m_types.contains(item->pluginName())) {
         m_types += (item->pluginName() + ";");
     }
     m_itemModel->addSocialItem(item);

@@ -22,12 +22,11 @@
 #ifndef PREVIEWGENERATOR_H
 #define PREVIEWGENERATOR_H
 
-#include <QtCore/QObject>
+#include <QDeclarativeEngine>
 #include <QtCore/QHash>
+#include <QtCore/QObject>
 #include <QtCore/QPair>
 #include <QtCore/QSet>
-#include <QDeclarativeEngine>
-
 
 #include <kio/previewjob.h>
 #include <kfileitem.h>

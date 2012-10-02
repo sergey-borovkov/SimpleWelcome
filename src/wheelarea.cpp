@@ -42,12 +42,12 @@ void WheelArea::wheelEvent(QGraphicsSceneWheelEvent *event)
         return;
     switch (event->orientation()) {
     case Qt::Vertical:
-        if ( this->receivers(SIGNAL(scrollVert(int))) == 0 )
+        if (this->receivers(SIGNAL(scrollVert(int))) == 0)
             break;
         emit scrollVert(event->delta());
         return;
     case Qt::Horizontal:
-        if ( this->receivers(SIGNAL(scrollHorz(int))) == 0 )
+        if (this->receivers(SIGNAL(scrollHorz(int))) == 0)
             break;
         emit scrollHorz(event->delta());
         return;

@@ -1,12 +1,11 @@
-#include "socialdaymodel.h"
 #include "socialdayitem.h"
+#include "socialdaymodel.h"
 #include "socialitem.h"
 #include "socialitemmodel.h"
 #include "socialproxy.h"
 
-#include <QtCore/QVariant>
 #include <QtCore/QRegExp>
-#include <QtCore/QDebug>
+#include <QtCore/QVariant>
 
 SocialDayFilterModel::SocialDayFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
@@ -18,16 +17,16 @@ SocialDayFilterModel::SocialDayFilterModel(QObject * parent)
 void SocialDayFilterModel::setFilter(const QString &filter)
 {
     QRegExp filterRegExp;
-    if(filter == "Social")
+    if (filter == "Social")
         filterRegExp = QRegExp("Facebook|VKontakte|Twitter");
     else
         filterRegExp = QRegExp(filter);
     setFilterRegExp(filterRegExp);
 
-    for(int i = 0; i < rowCount(); i++) { //Set filter on nested models
+    for (int i = 0; i < rowCount(); i++) { //Set filter on nested models
         QDate date = data(index(i, 0), SocialDayItem::DateRole).toDate();
         SocialItemFilterModel * sModel = qobject_cast<SocialItemFilterModel *> (itemsModel(date));
-        if(sModel)
+        if (sModel)
             sModel->setFilterRegExp(filterRegExp);
     }
 }
@@ -35,16 +34,17 @@ void SocialDayFilterModel::setFilter(const QString &filter)
 QObject* SocialDayFilterModel::itemsModel(QDate date) const
 {
     SocialDayModel* model = qobject_cast<SocialDayModel*>(sourceModel());
-    if(model)
+    if (model)
         return model->itemsModel(date);
     return 0;
 }
 
 int SocialDayFilterModel::getIndexByDate(int year, int month,  bool direction)
 {
-    for(int i = 0; i < rowCount(); i++) {
+    Q_UNUSED(direction)
+    for (int i = 0; i < rowCount(); i++) {
         QDate date = data(index(i, 0), SocialDayItem::DateRole).toDate();
-        if((date.year() == year) && (date.month() == month))
+        if ((date.year() == year) && (date.month() == month))
             return i;
     }
     return -1;
@@ -52,7 +52,7 @@ int SocialDayFilterModel::getIndexByDate(int year, int month,  bool direction)
 
 QDate SocialDayFilterModel::getDateOfIndex(int listIndex)
 {
-    if((listIndex >= rowCount()) || (listIndex < 0))
+    if ((listIndex >= rowCount()) || (listIndex < 0))
         return QDate();
     return data(index(listIndex, 0), SocialDayItem::DateRole).toDate();
 }
@@ -62,128 +62,75 @@ SocialDayModel::SocialDayModel(QHash<int, QByteArray> roles, QObject *parent)
 {
 }
 
-SocialDayModel::~SocialDayModel()
-{
-    clear();
-}
-
-QVariant SocialDayModel::data(const QModelIndex &index, int role) const
-{
-    if(!index.isValid()) {
-        return QVariant();
-    }
-    if(role == SocialDayItem::DateRole) {
-        return m_items.value(index.row())->date();
-    }
-    if(role == SocialDayItem::ItemsCountRole) {
-        return m_items.value(index.row())->count();
-    }
-    if(role == SocialDayItem::ItemsTypes) {
-        return m_items.value(index.row())->types();
-    }
-    return QVariant();
-}
-
-bool SocialDayModel::setData(const QModelIndex &index, const QVariant &value, int role)
-{
-    return true;
-}
-
-int SocialDayModel::rowCount(const QModelIndex &parent) const
-{
-    return m_items.size();
-}
-
 void SocialDayModel::appendRows(const QList<SocialDayItem *> &items)
 {
-    beginInsertRows(QModelIndex(), rowCount(), rowCount() + items.size() - 1);
+    QList<ListItem *> list;
     foreach(SocialDayItem * item, items) {
         connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
-        m_items.append(item);
+        list.append(item);
     }
-    endInsertRows();
+    ListModel::appendRows(list);
 }
 
 void SocialDayModel::insertRow(int row, SocialDayItem *item)
 {
-    beginInsertRows(QModelIndex(), row, row);
-    m_items.insert(row, item);
+    ListModel::insertRow(row, item);
     connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
-    endInsertRows();
 }
 
 QObject* SocialDayModel::itemsModel(QDate date) const
 {
-    for(int i = 0; i < m_items.size(); i++) {
-        if(date == m_items.value(i)->date())
-            return m_items.value(i)->model();
-    }
-    return 0;
+    SocialDayItem *item = findItemByDate(date);
+    return item ? item->model() : 0;
 }
 
 void SocialDayModel::likeItem(QString eventId)
 {
     QDate date = m_idHash.value(eventId);
-    foreach (SocialDayItem * item, m_items) {
-        if (item->date() == date) {
-            item->likeItem(eventId);
-            break;
-        }
-    }
+    SocialDayItem *item = findItemByDate(date);
+    if (item)
+        item->likeItem(eventId);
 }
 
 void SocialDayModel::addCommentToItem(CommentItem *commentItem, QString eventId)
 {
     QDate date = m_idHash.value(eventId);
-    foreach (SocialDayItem * item, m_items) {
-        if (item->date() == date) {
-            item->addCommentToItem(commentItem,eventId);
-            break;
-        }
-    }
+    SocialDayItem *item = findItemByDate(date);
+    if (item)
+        item->addCommentToItem(commentItem, eventId);
 }
 
 void SocialDayModel::updateUserImage(const QString &userId, const QString &userImageUrl, const QString &eventId)
 {
     QDate date = m_idHash.value(eventId);
-    foreach (SocialDayItem * item, m_items) {
-        if (item->date() == date) {
-            item->updateUserImage(userId, userImageUrl, eventId);
-            break;
-        }
-    }
+    SocialDayItem *item = findItemByDate(date);
+    if (item)
+        item->updateUserImage(userId, userImageUrl, eventId);
 }
 void SocialDayModel::addComments(QString id, QList<CommentItem *> list)
 {
     QDate date = m_idHash.value(id);
-    foreach (SocialDayItem * item, m_items) {
-        if (item->date() == date) {
-            item->addComments(id, list);
-            break;
-        }
-    }
+    SocialDayItem *item = findItemByDate(date);
+    if (item)
+        item->addComments(id, list);
 }
 
 void SocialDayModel::removeItems(const QString &type)
 {
-    for(int i = 0; i < m_items.size(); i++) {
-        SocialItemModel *model = m_items[i]->m_itemModel;
-        for(int j = 0; j < model->rowCount(); j++) {
+    for (int i = 0; i < rowCount(); i++) {
+        SocialItemModel *model = static_cast<SocialDayItem *>(itemAt(i))->m_itemModel;
+        for (int j = 0; j < model->rowCount(); j++) {
             SocialItem *item = static_cast<SocialItem *>(model->itemAt(j));
             QString uniqueId = item->pluginName() + item->id();
-
-            if(item->pluginName() == type) {
+            if (item->pluginName() == type) {
                 model->removeRow(j);
                 m_idSet.remove(uniqueId);
                 m_idHash.remove(uniqueId);
                 j--;
             }
         }
-
-        if(!model->rowCount()) {
-            beginRemoveRows(QModelIndex(), i, i);
-            delete m_items.takeAt(i);
-            endRemoveRows();
+        if (!model->rowCount()) {
+            removeRow(i);
             i--;
         }
     }
@@ -193,52 +140,55 @@ void SocialDayModel::handleItemChange()
 {
     SocialDayItem* item = static_cast<SocialDayItem*>(sender());
     QModelIndex index = indexFromItem(item);
-    if(index.isValid())
+    if (index.isValid())
         emit dataChanged(index, index);
 }
 
-QModelIndex SocialDayModel::indexFromItem(const SocialDayItem *item) const
+SocialDayItem *SocialDayModel::findItemByDate(const QDate &date) const
 {
-    Q_ASSERT(item);
-    for(int row = 0; row < m_items.size(); ++row)
-        if(m_items.at(row) == item)
-            return index(row);
-
-    return QModelIndex();
+    int size = rowCount();
+    for (int i = 0; i < size; i++) {
+        SocialDayItem *item = static_cast<SocialDayItem *>(itemAt(i));
+        if (date == item->date())
+            return item;
+    }
+    return 0;
 }
 
 void SocialDayModel::newSocialItems(QList < SocialItem * > list)
 {
-    for(int i = 0; i < list.size() ; i++) {
-
-        SocialItem* item = list.at(i);
-        QString uniqueId = item->pluginName() + item->id();
-        if(m_idSet.contains(uniqueId))
+    for (int i = 0; i < list.size() ; i++) {
+        SocialItem* newItem = list.at(i);
+        QString uniqueId = newItem->pluginName() + newItem->id();
+        if (m_idSet.contains(uniqueId))
             continue;
         m_idSet.insert(uniqueId);
-        m_idHash.insert(item->id(), item->date());
+        m_idHash.insert(newItem->id(), newItem->date());
+
         int j = 0;
         bool flag = false;
-        if(m_items.size() > 0) {
-            while(m_items.at(j)->date() <= item->date()) {
-                if(m_items.at(j)->date() == item->date()) {
-                    m_items.at(j)->addSocialItem(item);
+        if (rowCount() > 0) {
+            SocialDayItem *item = static_cast<SocialDayItem *>(itemAt(j));
+            while (item->date() <= newItem->date()) {
+                if (item->date() == newItem->date()) {
+                    item->addSocialItem(newItem);
                     flag = true;
                     break;
                 }
                 j++;
-                if(j == m_items.size()) {
+                if (j == rowCount()) {
                     break;
                 }
+                item = static_cast<SocialDayItem *>(itemAt(j));
             }
         }
 
-        if(flag) {
+        if (flag) {
             continue;
         }
 
-        SocialDayItem * socialDayItem = new SocialDayItem(item->date());
-        socialDayItem->addSocialItem(item);
+        SocialDayItem * socialDayItem = new SocialDayItem(newItem->date());
+        socialDayItem->addSocialItem(newItem);
         insertRow(j, socialDayItem);
     }
 }

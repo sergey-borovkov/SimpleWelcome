@@ -94,8 +94,8 @@ KService::Ptr serviceForUrl(const KUrl & url)
 int DataSource_Search::getItemCount(QString group)
 {
     int count = 0;
-    for(int i = 0; i < matches.size(); i++)
-        if(matches[i].group == group)
+    for (int i = 0; i < matches.size(); i++)
+        if (matches[i].group == group)
             count++;
 
     return count;
@@ -156,7 +156,7 @@ QList<QPair<QString, QString> > DataSource_Search::getRunnersNames()
                   << "services";
 
     QList<QPair<QString, QString> > out;
-    foreach (QString allowedRunner, m_runnerManager->allowedRunners()) {
+    foreach(QString allowedRunner, m_runnerManager->allowedRunners()) {
         out << qMakePair(allowedRunner, m_runnerManager->runnerName(allowedRunner));
         //qDebug() << "NAME:" << out.last().first << out.last().second;
     }
@@ -183,8 +183,8 @@ QString DataSource_Search::getSearchQuery()
 
 QIcon DataSource_Search::getMatchIcon(const QString &name)
 {
-    for(int i = 0; i < matches.size(); i++)
-        if(matches[i].name == name)
+    for (int i = 0; i < matches.size(); i++)
+        if (matches[i].name == name)
             return matches[i].plasmaMatch->icon();
 
     return QIcon();
@@ -195,12 +195,9 @@ void DataSource_Search::itemClicked(int newIndex, QString group)
     if (newIndex == -1)
         return;
 
-    for (int i = 0; i < matches.size(); i++)
-    {
-        if (matches[i].group == group)
-        {
-            if (i + newIndex < matches.size())
-            {
+    for (int i = 0; i < matches.size(); i++) {
+        if (matches[i].group == group) {
+            if (i + newIndex < matches.size()) {
                 Plasma::QueryMatch& match = *matches[i + newIndex].plasmaMatch;
                 QString url = QString("krunner://") + match.runner()->id() + "/" + match.id();
 
@@ -224,8 +221,8 @@ void DataSource_Search::itemClicked(int newIndex, QString group)
 void DataSource_Search::getContent()
 {
     QString group;
-    for(int i = 0, counter = 0; i < matches.size(); i++) {
-        if(group != matches[i].group) {
+    for (int i = 0, counter = 0; i < matches.size(); i++) {
+        if (group != matches[i].group) {
             group = matches[i].group;
             counter = 0;
         }
@@ -241,8 +238,7 @@ void DataSource_Search::test2()
 
 void DataSource_Search::newSearchMatches(const QList<Plasma::QueryMatch> &newMatches)
 {
-    for (int i = 0; i < newMatches.size(); i++)
-    {
+    for (int i = 0; i < newMatches.size(); i++) {
         matches.append(MatchResults());
         matches.last().name = newMatches.at(i).text();
         matches.last().group = newMatches.at(i).runner()->name();
@@ -261,7 +257,7 @@ void DataSource_Search::launchSearch(const QString &text)
 
     matches.clear();
 
-    if(text.size() > 0)
+    if (text.size() > 0)
         m_runnerManager->launchQuery(text);
     else {
         m_runnerManager->reset();

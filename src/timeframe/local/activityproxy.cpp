@@ -1,10 +1,8 @@
 #include "activityproxy.h"
-#include "localdaymodel.h"
 #include "activityset.h"
+#include "localdaymodel.h"
 #include "nepomuksource.h"
 #include "previewgenerator.h"
-
-#include <QtCore/QDebug>
 
 ActivityProxy::ActivityProxy(QObject *parent) :
     QObject(parent),
@@ -24,10 +22,10 @@ void ActivityProxy::addNepomukSource(NepomukSource *source)
 void ActivityProxy::startSearch(QDate date, int direction)
 {
     QDate d = date;
-    if(!m_source)
+    if (!m_source)
         return;
     ActivitySource::Direction dir;
-    if(direction) {
+    if (direction) {
         dir = ActivitySource::Right;
         d.setDate(d.year(), d.month(), 1);
 
@@ -60,21 +58,21 @@ void ActivityProxy::newData(QList<Activity *> list)
 
 void ActivityProxy::setModel(LocalDayModel* model)
 {
-    if(m_model)
+    if (m_model)
         m_model = model;
 }
 
 
 int ActivityProxy::getIndexByDate(int year, int month,  bool direction)
 {
-    if(m_model)
+    if (m_model)
         return m_model->getIndexByDate(year, month, direction);
     return -1;
 }
 
 QDate ActivityProxy::getDateOfIndex(int listIndex)
 {
-    if(m_model)
+    if (m_model)
         return m_model->getDateOfIndex(listIndex);
     return QDate();
 }
