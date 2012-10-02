@@ -116,6 +116,7 @@ signals:
     void pluginAuthorized();
     void pluginDeauthorized();
     void searchFinished();
+    void searchStarted();
 
     /**
      * @brief This signal is for interacting with timescale model. Perphaps later it should
