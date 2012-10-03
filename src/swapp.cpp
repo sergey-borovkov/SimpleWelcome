@@ -100,14 +100,9 @@ int SWApp::newInstance()
     if (!args->isSet("silent") || !isFirst) {
         qDebug() << "Silent not set";
         if (m_viewer) {
-            if (!m_viewer->isVisible()) {
-                qDebug() << "Showing fullscreen";
-
-                //m_viewer->setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
-                //m_viewer->show();
-                m_viewer->showFullScreen();
-                //m_viewer->move(/*896*/0, 0);
-            } else
+            if (!m_viewer->isVisible())
+                m_viewer->restore();
+            else
                 m_viewer->close();
         }
     }
@@ -151,6 +146,8 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("mainWindow", m_viewer);
     m_viewer->rootContext()->setContextProperty("sessionProvider", new SessionProvider(this));
 
+    QMLConstants *constants = new QMLConstants(this, m_viewer);
+
     UserInfoProvider *userInfoProvider = new UserInfoProvider(this);
     m_viewer->rootContext()->setContextProperty("userInfoProvider", userInfoProvider);
 
@@ -166,15 +163,15 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("dataSource_Favorites", favoritesDataSource);
     connect(favoritesDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
 
-    DataSource_Documents *docsDataSource = new DataSource_Documents(this);
+    DataSource_Documents *docsDataSource = new DataSource_Documents(this, constants);
     m_viewer->rootContext()->setContextProperty("dataSource_Documents", docsDataSource);
     connect(docsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
+    connect(m_viewer, SIGNAL(windowShown()), docsDataSource, SLOT(updateContent()));
 
     DataSource_Search *searchDataSource = new DataSource_Search(this, recentAppsDataSource);
     m_viewer->rootContext()->setContextProperty("searchGridModel", searchDataSource);
     connect(searchDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
 
-    QMLConstants *constants = new QMLConstants(this, m_viewer);
     m_viewer->rootContext()->setContextProperty("constants", constants);
     m_viewer->rootContext()->setContextProperty("i18n_Welcome", i18n("Welcome"));
     m_viewer->rootContext()->setContextProperty("i18n_Applications", i18n("Applications"));
@@ -222,7 +219,8 @@ SWApp::SWApp()
 
     m_generalIconProvider = new GeneralIconProvider(pathToRoot() + QString::fromLatin1("/" SW_ASSETS_PATH "/"), constants);
     m_generalIconProvider->setUserInfoProvider(userInfoProvider);
-    m_generalIconProvider->setSearchGridModel(searchDataSource);
+    m_generalIconProvider->setSearchDataSource(searchDataSource);
+    m_generalIconProvider->setDocumentsDataSource(docsDataSource);
     m_viewer->engine()->addImageProvider(QLatin1String("generalicon"), m_generalIconProvider);
 
     loadShortcut();
@@ -314,9 +312,9 @@ void SWApp::runDesktopFile(QString desktopFile)
 void SWApp::globalActionTriggered()
 {
     if (m_viewer->isHidden())
-        m_viewer->showFullScreen();
+        m_viewer->restore();
     else
-        m_viewer->hide();
+        m_viewer->close();
 }
 
 QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
