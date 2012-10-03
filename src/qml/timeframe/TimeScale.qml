@@ -88,8 +88,8 @@ Item {
         id: highlight
 
         Row {
-            x: timeScaleList.currentItem.x-3
-            y: timeScaleList.currentItem.y
+            x: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.x-3
+            y: (timeScaleList.currentIndex === -1)? 0 :timeScaleList.currentItem.y
             width: timeScaleList.width/10 + 6  //siz
             height: 80
             Repeater {
