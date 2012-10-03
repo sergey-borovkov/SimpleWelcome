@@ -7,12 +7,12 @@ Item {
     Component{
         id: commentsDelegate
         Item {
-            width: 200; height: 60
+            width: 354; height: ((textField.paintedHeight + nameField.paintedHeight) > userPhoto.height) ? textField.paintedHeight + nameField.paintedHeight : 55
             Image
             {
                 id: userPhoto
                 anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.top
                 fillMode: Image.PreserveAspectFit
                 width: 55
                 anchors.rightMargin: 5
@@ -30,12 +30,11 @@ Item {
                 id: textField;
                 anchors.left: userPhoto.right
                 anchors.top: nameField.bottom
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
+                width: parent.width - userPhoto.width - 40
                 anchors.leftMargin: 10
                 text: messageText
                 color: "white"
-                elide: Text.ElideRight
+                wrapMode: Text.Wrap
             }
         }
     }
@@ -44,7 +43,7 @@ Item {
         id: commentsListView
         anchors.fill: parent
         clip: true
-        snapMode:  ListView.SnapToItem
+       // snapMode:  ListView.SnapToItem
         property string parentId: ""
         property string pluginName: ""
         delegate: commentsDelegate

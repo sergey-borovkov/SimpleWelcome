@@ -12,6 +12,9 @@
 #include <QtCore/QDate>
 #include <QtCore/QTimer>
 
+using namespace Nepomuk::Vocabulary;
+using namespace Nepomuk::Query;
+
 NepomukSource::NepomukSource(QObject *parent) :
     ActivitySource(parent), m_searchClient(0), m_limit(0), m_timer(0)
 {
@@ -23,22 +26,23 @@ NepomukSource::~NepomukSource()
     if (m_searchClient)
         m_searchClient->close();
     delete m_searchClient;
+    qDeleteAll(m_activities);
+    m_activities.clear();
 }
 
 Nepomuk::Query::FileQuery NepomukSource::createQuery()
 {
-
-    Nepomuk::Query::ResourceTypeTerm image = Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Image());
-    Nepomuk::Query::ResourceTypeTerm video = Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Video());
-    Nepomuk::Query::ResourceTypeTerm document = Nepomuk::Query::ResourceTypeTerm(Nepomuk::Vocabulary::NFO::Document());
+    ResourceTypeTerm image = ResourceTypeTerm(NFO::Image());
+    ResourceTypeTerm video = ResourceTypeTerm(NFO::Video());
+    ResourceTypeTerm document = ResourceTypeTerm(NFO::Document());
 
     Nepomuk::Query::OrTerm orTerm(video, image, document);
 
     Nepomuk::Query::FileQuery query(orTerm);
 
-    query.addRequestProperty(Nepomuk::Query::Query::RequestProperty(Nepomuk::Vocabulary::NIE::lastModified()));
-    query.addRequestProperty(Nepomuk::Query::Query::RequestProperty(Nepomuk::Vocabulary::NIE::url()));
-    query.addRequestProperty(Nepomuk::Query::Query::RequestProperty(Nepomuk::Vocabulary::NIE::mimeType()));
+    query.addRequestProperty(Query::RequestProperty(NIE::lastModified()));
+    query.addRequestProperty(Query::RequestProperty(NIE::url()));
+    query.addRequestProperty(Query::RequestProperty(NIE::mimeType()));
 
     return query;
 }
@@ -70,7 +74,7 @@ void NepomukSource::startSearchFromQueue()
         m_searchClient->deleteLater();
     }
 
-    m_searchClient = new Nepomuk::Query::QueryServiceClient();
+    m_searchClient = new QueryServiceClient();
 
     connect(m_searchClient, SIGNAL(newEntries(const QList<Nepomuk::Query::Result>&)), SLOT(processEntry(const QList<Nepomuk::Query::Result> &)));
     connect(m_searchClient, SIGNAL(finishedListing()), SLOT(listingFinished()));
@@ -98,23 +102,22 @@ void NepomukSource::setLimit(int limit)
 
 void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
 {
-    QList<Activity *> activities;
     for (int i = 0; i < list.size(); i++) {
-        Nepomuk::Query::Result result = list.at(i);
+        Result result = list.at(i);
         QDate creationDate;
         QUrl fileurl;
         QString mimeType;
 
-        if (result[Nepomuk::Vocabulary::NIE::lastModified()].isLiteral()) {
-            creationDate = result[Nepomuk::Vocabulary::NIE::lastModified()].literal().toDate();
+        if (result[NIE::lastModified()].isLiteral()) {
+            creationDate = result[NIE::lastModified()].literal().toDate();
         } else
             continue;
-        if (result[Nepomuk::Vocabulary::NIE::url()].isValid()) {
-            fileurl = result[Nepomuk::Vocabulary::NIE::url()].toString();
+        if (result[NIE::url()].isValid()) {
+            fileurl = result[NIE::url()].toString();
         } else
             continue;
-        if (result[Nepomuk::Vocabulary::NIE::mimeType()].isLiteral()) {
-            mimeType = result[Nepomuk::Vocabulary::NIE::mimeType()].literal().toString();
+        if (result[NIE::mimeType()].isLiteral()) {
+            mimeType = result[NIE::mimeType()].literal().toString();
         } else
             continue;
 
@@ -130,10 +133,8 @@ void NepomukSource::processEntry(const QList<Nepomuk::Query::Result> &list)
         else
             type = "Document";
 
-        activities.append(new Activity(path, type, creationDate));
+       m_activities.append(new Activity(path, type, creationDate));
     }
-    if (activities.size())
-        emit newActivities(activities);
 }
 
 void NepomukSource::error(QString str)
@@ -143,6 +144,8 @@ void NepomukSource::error(QString str)
 
 void NepomukSource::listingFinished()
 {
-
+    emit newActivities(m_activities);
+    m_activities.clear();
+    emit searchFinished();
 }
 

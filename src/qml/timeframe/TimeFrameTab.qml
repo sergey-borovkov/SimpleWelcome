@@ -15,7 +15,7 @@ Item {
     property int __year: new Date().getFullYear()   //Current year
     property int __month: new Date().getMonth()
     property int day: new Date().getDate()
-    property bool __isSearching: false              //New search in process
+    property bool __isLocalSearching: true              //New search in process
     property bool isSocialSearching: true
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
@@ -47,7 +47,7 @@ Item {
         var d = new Date(__year, __month, day )
         //activityProxy.startSearch(d, direction)
         activityProxy.startSearch(d, true)
-        __isSearching = true
+        //__isSearching = true
         //searchLabel.visible = true
         // if (timeFrameTab.state ==="gallery" )
         //   timeFrameTab.state = "gallerySearch"
@@ -78,6 +78,8 @@ Item {
             if (tabListView.currentIndex === 3) {
                 currentDateChanged()
                 tabListView.interactive = false
+                if ((__isLocalSearching) && (timeFrameTab.state ===""))
+                    timeFrameTab.state = "timeLineSearch"
             }
         }
     }
@@ -104,11 +106,14 @@ Item {
 
 
 
-    //On search finished
+    //On local search finished
     Connections {
         target: activityProxy
         onFinished: {
-            __isSearching = false
+            console.log("local search finsihed")
+            __isLocalSearching = false
+            if (timeFrameTab.state === "timeLineSearch")
+                timeFrameTab.state = ""
         }
     }
 
@@ -285,14 +290,14 @@ Item {
             timeFrameTab.day = date.getDay()
         }
 
-        onCountChanged:
-        {
-            if(timeFrameTab.state == "") {
-                timeFrameTab.state = "timeLineSearch"
-                searchTimer.restart()
-                timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center)
-            }
-        }
+//        onCountChanged:
+//        {
+//            if(timeFrameTab.state == "") {
+//                timeFrameTab.state = "timeLineSearch"
+//                searchTimer.restart()
+//                timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center)
+//            }
+//        }
 
         WheelArea {
             anchors.fill: parent
@@ -300,17 +305,17 @@ Item {
             onScrollHorz: _processScroll(delta, timeLine)
         }
     }
-    Timer {
-        id: searchTimer
-        interval: 1000;
-        onTriggered: {
-            if ( (timeFrameTab.state === "social") || (timeFrameTab.state === "socialGallery") )
-                return
-            timeLine.currentIndex = timeFrameTab.getTimeLineIndex()
-            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
-            timeFrameTab.state = ""
-        }
-    }
+//    Timer {
+//        id: searchTimer
+//        interval: 1000;
+//        onTriggered: {
+//            if ( (timeFrameTab.state === "social") || (timeFrameTab.state === "socialGallery") )
+//                return
+//            timeLine.currentIndex = timeFrameTab.getTimeLineIndex()
+//            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
+//            timeFrameTab.state = ""
+//        }
+//    }
     ListView {
         id: socialTimeLine
 
@@ -658,12 +663,15 @@ Item {
         State {
             name: "timeLineSearch"; extend: ""
 
-            PropertyChanges {
-                target: waitIndicator
-                visible: true
-            }
+            PropertyChanges { target: waitIndicator; visible: true }
 
             PropertyChanges { target: timeLine; opacity: 0 }
+
+            PropertyChanges {
+                target: galleryButton
+                visible: false
+                opacity: 0
+            }
         },
         State {
             name: "social"
