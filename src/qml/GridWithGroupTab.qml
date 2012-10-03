@@ -17,6 +17,11 @@ Item {
         gridsListView.updateGridsContent()
     }
 
+    function processKeyboard(key) {
+        if (gridsListView.currentItem)
+            gridsListView.currentItem.processKeyboard(key)
+    }
+
     Item {
         id: tabWrapper
         width: parent.width

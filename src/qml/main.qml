@@ -101,9 +101,6 @@ Item {
 
     TopBar {
         id: topBar
-
-        KeyNavigation.tab: tabListView
-        KeyNavigation.backtab: tabListView
     }
 
     /*Rectangle{
@@ -134,9 +131,16 @@ Item {
         highlightRangeMode: ListView.StrictlyEnforceRange
 
         currentIndex: 1
+
+        function processKeyboard(key) {
+            if (currentItem)
+                currentItem.tab.processKeyboard(key)
+
+        }
+
         onCurrentIndexChanged: {
             if (currentItem && currentItem.grid)
-                currentItem.grid.forceActiveFocus()
+                currentItem.grid.forceMyFocus()
             topBar.forceActiveFocus()
         }
 

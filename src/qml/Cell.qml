@@ -102,14 +102,6 @@ Item {
             horizontalAlignment: Text.AlignHCenter
         }
 
-        /*states: [
-            State {
-            name: "active";
-            when: cell.activeFocus
-            PropertyChanges { target: cellIcon; scale: 1.2 }
-        },
-        */
-
         Behavior on x { enabled: wrapper.state == "gridInDrag"; NumberAnimation { duration: 150; easing.type: Easing.InOutQuad } }
         Behavior on y { enabled: wrapper.state == "gridInDrag"; NumberAnimation { duration: 150; easing.type: Easing.InOutQuad } }
 

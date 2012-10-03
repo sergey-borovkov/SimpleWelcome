@@ -20,10 +20,14 @@ Column {
 
     property alias dragOutTopMargin: iconGridView.dragOutTopMargin
     property alias dragOutBottomMargin: iconGridView.dragOutBottomMargin
+    property alias myActiveFocus: iconGridView.myActiveFocus
 
     signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
     signal showPopupGroup(int index, variant stackItemData, variant iconCoords)
+    signal gridMyFocusChanged(int containerIndex)
+
+    property int containerIndex: 0
 
     // constants
     property int textToGridSpacing: constants.textToGridSpacing
@@ -37,6 +41,7 @@ Column {
     Component.onCompleted: {
         iconGridView.selectionChangedByKeyboard.connect(gridCurrentItemChanged)
         iconGridView.itemStackingChanged.connect(gridStackingChanged)
+        iconGridView.myActiveFocusChanged.connect(gridMyFocusChanged)
     }
 
     function loadStacks() {
@@ -136,21 +141,10 @@ Column {
 
         width: parent.width
         height: Math.ceil(count / columns) * gridCellHeight
-
         interactive: false
 
-        function updateSelection()
-        {
-            //parent.count = count // without this it is updated too late// TEST WHAT THE HELL NOW'S HAPPENING
-            if (highlightItem && (updateSelection.countWas === undefined || updateSelection.countWas < count))
-            {
-                highlightItem.animationDuration = 0
-                highlightItem.opacity = 0
-                highlightItem.animationDuration = 150
-            }
-            gridItemCountChanged()
-            updateSelection.countWas = count
-        }
+        property bool myActiveFocus: false
+        signal myActiveFocusChanged(int containerIndex)
 
         function appendItemToModel(itemData)
         {
@@ -263,15 +257,15 @@ Column {
                 dataSource.itemClicked(realIndex, model.get(newIndex).group)
         }
 
+        function forceMyFocus() {
+            myActiveFocus = true
+            myActiveFocusChanged(containerIndex)
+            //console.log("myActiveFocusChanged to " + containerIndex)
+        }
 
         Component.onCompleted: {
             if ('group' in model)
                 model.group = groupName
-            updateSelection()
-        }
-
-        onCountChanged: {
-            updateSelection()
         }
     }
 }
