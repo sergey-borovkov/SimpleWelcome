@@ -13,13 +13,14 @@ public:
     QString icon;
     QString desktopEntry;
     QString relPath;
+    QString destination;
 
     bool operator <(const AppItem &other) const {
         return caption.compare(other.caption, Qt::CaseInsensitive) < 0;
     }
 
     bool operator ==(AppItem &other) const {
-        return other.caption == caption && other.desktopEntry == desktopEntry && other.icon == icon && other.relPath == relPath;
+        return other.caption == caption && other.desktopEntry == desktopEntry && other.icon == icon && other.relPath == relPath && other.destination == destination;
     }
 };
 

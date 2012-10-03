@@ -212,11 +212,21 @@ GridView {
         {
             dataSource.newItemData.connect(newItemData)
             dataSource.resetContent.connect(resetContent)
+            if (dataSource.updateItemData !== undefined)
+                dataSource.updateItemData.connect(updateItemContent)
+
             dataSource.getContent()
         }
         appsModel.itemClicked.connect(onItemClicked)
     }
 
+    function updateItemContent(id, field, data) {
+        for (var i = 0; i < model.count; i++)
+            if (model.get(i).id === id) {
+                model.setProperty(i, field, data)
+                break
+            }
+    }
 
     function selectOtherGrid(gridWorkingWith, newCurrentIndex) {
         gridWorkingWith.highlightMoveDuration = 1
