@@ -9,6 +9,7 @@ Column {
     property variant nextGridGroup: activeGridGroup.nextGridGroup
 
     signal gridCurrentItemChanged(variant newCurrentItem)
+    property int currentIndex: -1
 
     // constants
     property int gridContainersSpacing: constants.gridWithGroupsSpacing
@@ -50,7 +51,7 @@ Column {
         if (visibleGrids.length)
         {
             activeGridGroup = children[visibleGrids[0]]
-            activeGridGroup.gridView.forceActiveFocus()
+            activeGridGroup.gridView.forceMyFocus()
             topBar.forceActiveFocus()
         }
     }
@@ -60,30 +61,52 @@ Column {
         var prevGridGroup = activeGridGroup
         var groupComponent = Qt.createComponent("GridWithGroup.qml");
         //console.log("ADDING GRID WITH GROUP OF " + groupData)
+
+        groupData['containerIndex'] = children.length
+
         var groupObject = groupComponent.createObject(gridsContainer, groupData);
         activeGridGroup = groupObject
 
-//        if (prevGridGroup)
-//        {
-//            activeGridGroup.prevGridGroup = prevGridGroup.gridView
-//            activeGridGroup.nextGridGroup = prevGridGroup.gridView
-//            prevGridGroup.prevGridGroup = activeGridGroup.gridView
-//            prevGridGroup.nextGridGroup = activeGridGroup.gridView
-//        }
+        activeGridGroup.gridItemCountChanged.connect(gridsConnectionChanged)
+        activeGridGroup.gridCurrentItemChanged.connect(gridCurrentItemChanged)
+        activeGridGroup.gridMyFocusChanged.connect(gridMyFocusChanged)
 
         gridsConnectionChanged()
     }
 
-    Component.onCompleted: {
+    function gridMyFocusChanged(index) {
+        if (index !== -1)
+            currentIndex = index
+
         for (var i = 0; i < children.length; i++)
-        {
-            if ('gridItemCountChanged' in children[i])
-                children[i].gridItemCountChanged.connect(gridsConnectionChanged)
+            if ('gridView' in children[i]) {
+                if (children[i].containerIndex === index) {
+                    children[i].myActiveFocus = true
+                    //console.log("CHANGED IN " + children[i].groupName + " TO true")
+                }
+                else {
+                    children[i].myActiveFocus = false
+                    //console.log("CHANGED IN " + children[i].groupName + " TO false")
+                }
+            }
+    }
 
-            if ('gridCurrentItemChanged' in children[i])
-                children[i].gridCurrentItemChanged.connect(gridCurrentItemChanged)
-        }
+    function getActiveItem() {
+        if (currentIndex != -1)
+            for (var i = 0; i < children.length; i++)
+                if ('gridView' in children[i] && children[i].containerIndex == currentIndex)
+                    return children[i]
+        return undefined
+    }
 
+    function processKeyboard(key) {
+        var activeItem = getActiveItem()
+        if (activeItem !== undefined)
+            activeItem.gridView.processKeyboard(key)
+    }
+
+
+    Component.onCompleted: {
         if (defaultGroupData !== undefined)
         {
             //console.log("Constructing GridWithGroupContainer for: " + group.group + "; ds: " + group.dataSource + "; start: " + group.startIndex + "; " + group.endIndex)

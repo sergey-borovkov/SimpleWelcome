@@ -9,7 +9,7 @@ FocusScope {
     width: parent.width
     height: 80
     focus: true
-    Keys.forwardTo: searchInput
+    Keys.forwardTo: [searchInputFilter, searchInput]
 
     Item {
         id: userIconItem
@@ -65,7 +65,6 @@ FocusScope {
 
     Item {
         id: searchField
-        //color: "white"
         x: Math.max(parent.width/2 - width/2, userNameItem.x + userNameItem.width + 30)
         width: Math.max(40, Math.min(600, sessionButtons.x - (userNameItem.x + userNameItem.width) - 30*2))
         height: 26
@@ -73,7 +72,6 @@ FocusScope {
         visible: tabListView.currentIndex !== 3
 
         anchors.verticalCenter: parent.verticalCenter
-        //anchors.horizontalCenter: parent.horizontalCenter
 
         BorderImage {
             border.left: 10
@@ -84,34 +82,36 @@ FocusScope {
             source: "image://generalicon/asset/textfield_border_bg.png"
         }
 
+        Item {
+            id: searchInputFilter
+
+            Keys.onPressed: {
+                if (event.key == Qt.Key_Left ||
+                        event.key == Qt.Key_Right ||
+                        event.key == Qt.Key_Up ||
+                        event.key == Qt.Key_Down ||
+                        event.key == Qt.Key_Return ||
+                        event.key == Qt.Key_Enter)
+                {
+                    event.accepted = true
+                    tabListView.processKeyboard(event.key)
+                }
+            }
+        }
+
         TextInput {
-            //anchors.horizontalCenter: parent.horizontalCenter
             id: searchInput
             width: parent.width - 20
             anchors.top: parent.top
             anchors.topMargin: 5
             anchors.horizontalCenter: parent.horizontalCenter
             selectByMouse: true
-            focus: true
-            //color: "white"
+            activeFocusOnPress: false
+            cursorVisible: true
             font.family: "Bitstream Vera Sans"
+            //color: "white"
             //font.italic: true
             //font.pixelSize: 12
-
-            /*Keys.onPressed: {
-                event.accepted = false
-                if (event.key == Qt.Key_Left || event.key == Qt.Key_Right || event.key == Qt.Key_Up || event.key == Qt.Key_Down)
-                {
-                    console.log("REJECTED")
-                    // This is available in all editors.
-                    event.accepted = false
-                }
-                else
-                {
-                    console.log("ACCEPTED")
-                    event.accepted = true
-                }
-            }*/
         }
         Binding {
             target: searchGridModel
