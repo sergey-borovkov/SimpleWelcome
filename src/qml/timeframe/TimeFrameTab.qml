@@ -104,16 +104,20 @@ Item {
         }
     }
 
-
-
     //On local search finished
     Connections {
         target: activityProxy
         onFinished: {
-            console.log("local search finsihed")
             __isLocalSearching = false
-            if (timeFrameTab.state === "timeLineSearch")
+            if (timeFrameTab.state === "timeLineSearch"){
+                //Set views on current date
+                timeScale.list.currentIndex = timeScale.list.count -1
+                timeLine.currentIndex = timeLine.count -1
+                timeLine.positionViewAtEnd()
+                galleryView.positionViewAtEnd()
+
                 timeFrameTab.state = ""
+            }
         }
     }
 
@@ -168,14 +172,25 @@ Item {
                     timeScaleModel.setFilter(selectedText)
                     localDayModel.setFilter(selectedText)
                 }
+                //TODO: force views to update
+                //                timeScale.list.currentIndex = -1
+                //                timeScale.list.model = undefined
+                //                timeScale.list.model = timeScaleModel
+                //                timeLine.model = undefined
+                //                timeLine.model = localDayModel
+                //                galleryView.model = undefined
+                //                galleryView.model = localDayModel
+                //                timeScale.list.currentIndex = timeScale.list.count -1
             }
             onSelectedIndexChanged: {
                 name = ( selectedText === "All" ) ? i18n_My_Local_Documents : getMenuItemText(selectedText)
                 setLocalFilter()
             }
             onClicked: {
-                timeFrameTab.state = inGallery ? "gallery" : ""
-                setLocalFilter()
+                if ((timeFrameTab.state != "") && (timeFrameTab.state != "gallery")) {
+                    timeFrameTab.state = inGallery ? "gallery" : ""
+                    setLocalFilter()
+                }
             }
         }
 
@@ -201,7 +216,7 @@ Item {
 
             onSelectedIndexChanged: {
                 if (selectedText === "Manage networks")
-                     timeFrameTab.state = "socialAuthorization"
+                    timeFrameTab.state = "socialAuthorization"
                 else if (isSocialSearching)
                     timeFrameTab.state = "socialSerching"
                 else if (inGallery)
@@ -290,32 +305,13 @@ Item {
             timeFrameTab.day = date.getDay()
         }
 
-//        onCountChanged:
-//        {
-//            if(timeFrameTab.state == "") {
-//                timeFrameTab.state = "timeLineSearch"
-//                searchTimer.restart()
-//                timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center)
-//            }
-//        }
-
         WheelArea {
             anchors.fill: parent
             onScrollVert: _processScroll(delta, timeLine)
             onScrollHorz: _processScroll(delta, timeLine)
         }
     }
-//    Timer {
-//        id: searchTimer
-//        interval: 1000;
-//        onTriggered: {
-//            if ( (timeFrameTab.state === "social") || (timeFrameTab.state === "socialGallery") )
-//                return
-//            timeLine.currentIndex = timeFrameTab.getTimeLineIndex()
-//            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
-//            timeFrameTab.state = ""
-//        }
-//    }
+
     ListView {
         id: socialTimeLine
 
