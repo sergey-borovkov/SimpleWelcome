@@ -32,6 +32,7 @@ public:
 
 signals:
     void newEntries(const QList<Nepomuk::Query::Result>&);
+    void searchFinished();
     void resultCount(int);
 
 public slots:
@@ -47,6 +48,7 @@ private slots:
 private:
     Nepomuk::Query::FileQuery createQuery();
     Nepomuk::Query::QueryServiceClient* m_searchClient;
+    QList <Activity* > m_activities;
     QDate queryDate;
     Direction direction;
     Mode m_mode;
