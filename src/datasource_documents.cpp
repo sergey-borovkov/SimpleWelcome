@@ -24,15 +24,22 @@ int DataSource_Documents::getItemCount()
 QString DataSource_Documents::itemUrlDnd(int id)
 {
     if (id >= 0 && id < docsList.count()) {
-        KDesktopFile file(docsList[id].desktopEntry);
-        return file.readUrl();
+        return docsList[id].destination;
     }
     return QString();
 }
 
 QIcon DataSource_Documents::getIcon(QString destination)
 {
-    return m_pixmaps.contains(destination) ? m_pixmaps[destination] : QIcon();
+    destination = KUrl(destination).url();
+    if (m_pixmaps.contains(destination))
+        return  m_pixmaps[destination];
+    else {
+        qDebug() << destination;
+        qDebug() << "IMAGE NOT FOUND! A BUG";
+        qDebug() << m_pixmaps.keys();
+    }
+    return QIcon();
 }
 
 void DataSource_Documents::getContent()
@@ -73,7 +80,7 @@ void DataSource_Documents::updateContent()
         newItem.caption = desktopFile.readName();
         newItem.icon = desktopFile.readIcon();
         newItem.desktopEntry = desktopFile.fileName();
-        newItem.destination = desktopFile.readUrl();
+        newItem.destination = KUrl(desktopFile.readUrl()).url();
 
         if (!newItem.caption.isEmpty())
             newDocsList.append(newItem);

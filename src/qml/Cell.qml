@@ -45,8 +45,8 @@ Item {
         Image {
             id: cellIcon
             source: imagePath
-            /*width: constants.iconSize
-            height: constants.iconSize*/
+            width: constants.iconSize
+            height: constants.iconSize
             anchors.top: parent.top
             anchors.topMargin: constants.iconSize / 5 //20
             anchors.horizontalCenter: parent.horizontalCenter
