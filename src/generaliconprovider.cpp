@@ -48,8 +48,8 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     KIcon icon;
     QPixmap iconPixmap;
 
-    QString iconType = name.section('/', 0, 0, QString::SectionSkipEmpty);
-    QString iconName = name.section('/', 1, -1, QString::SectionSkipEmpty);
+    QString iconType = name.section('/', 0, 0);
+    QString iconName = name.section('/', 1, -1);
     //qDebug() << "ICON SIZE:" << constants->iconSize() << " for " << iconName;
 
     if (iconType == "stacked") {
