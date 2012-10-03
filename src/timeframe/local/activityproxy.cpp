@@ -15,7 +15,7 @@ void ActivityProxy::addNepomukSource(NepomukSource *source)
 {
     m_source = source;
     connect(source, SIGNAL(newActivities(QList<Activity*>)), this, SLOT(newData(QList<Activity*>)));
-    connect(source, SIGNAL(finishedListing()), SIGNAL(finished()));
+    connect(source, SIGNAL(searchFinished()), SIGNAL(finished()));
     connect(source, SIGNAL(resultCount(int)), this, SLOT(resultCount(int)));
 }
 
