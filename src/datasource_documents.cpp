@@ -24,7 +24,8 @@ int DataSource_Documents::getItemCount()
 QString DataSource_Documents::itemUrlDnd(int id)
 {
     if (id >= 0 && id < docsList.count()) {
-        return docsList[id].destination;
+        KDesktopFile file(docsList[id].desktopEntry);
+        return file.readUrl();
     }
     return QString();
 }
