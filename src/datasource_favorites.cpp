@@ -43,7 +43,11 @@ QString DataSource_Favorites::itemUrlDnd(int id)
 void DataSource_Favorites::getContent()
 {
     for (int i = 0; i < favoritesList.count(); i++) {
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(favoritesList[i].icon), favoritesList[i].caption, i);
+        QVariantMap map;
+        map["imagePath"] = QString("image://generalicon/appicon/%1").arg(favoritesList[i].icon);
+        map["caption"] = favoritesList[i].caption;
+        map["id"] = i;
+        emit newItemData(map);
     }
 }
 

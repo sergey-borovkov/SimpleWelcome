@@ -221,13 +221,18 @@ void DataSource_Search::itemClicked(int newIndex, QString group)
 void DataSource_Search::getContent()
 {
     QString group;
-    for (int i = 0, counter = 0; i < matches.size(); i++) {
+    for (int i = 0, counter = 0; i < matches.size(); i++, counter++) {
         if (group != matches[i].group) {
             group = matches[i].group;
             counter = 0;
         }
-        emit newItemData(QString("image://generalicon/search/%1").arg(matches[i].name), matches[i].name, counter, matches[i].group);
-        counter++;
+
+        QVariantMap map;
+        map["imagePath"] = QString("image://generalicon/search/%1").arg(matches[i].name);
+        map["caption"] = matches[i].name;
+        map["id"] = counter;
+        map["searchGroup"] = matches[i].group;
+        emit newItemData(map);
     }
 }
 

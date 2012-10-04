@@ -47,10 +47,16 @@ void DataSource_Documents::getContent()
 {
     for (int i = 0; i < docsList.size(); i++)
     {
+        QVariantMap map;
+        map["caption"] = docsList[i].caption;
+        map["id"] = i;
+
         if (m_pixmaps.contains(docsList[i].destination))
-            emit newItemData(QString("image://generalicon/docicon/%1").arg(docsList[i].destination), docsList[i].caption, i);
+            map["imagePath"] = QString("image://generalicon/docicon/%1").arg(docsList[i].destination);
         else
-            emit newItemData(QString("image://generalicon/appicon/%1").arg(docsList[i].icon), docsList[i].caption, i);
+            map["imagePath"] = QString("image://generalicon/appicon/%1").arg(docsList[i].icon);
+
+        emit newItemData(map);
     }
 }
 

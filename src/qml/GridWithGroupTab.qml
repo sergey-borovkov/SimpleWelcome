@@ -36,7 +36,7 @@ Item {
         function draggedOut(item) {
             gridsListView.hideGroup()
             //console.log(item.caption + " GOTTTTT")
-            gridsListView.activeGridView.newItemData(item.imagePath, item.caption, item.id)
+            gridsListView.activeGridView.newItemData(item)
             gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
             gridsListView.activeGridView.startDragging(gridsListView.activeGridView.count - 1)
 
@@ -79,24 +79,9 @@ Item {
                 }
             }
 
-            /*onCurrentIndexChanged: {
-        if (currentItem && currentItem.grid)
-            currentItem.grid.forceActiveFocus()
-        topBar.forceActiveFocus()
-    }
-
-    function currentTabIndexChanged(newCurrentIndex) {
-        tabListView.currentIndex = newCurrentIndex
-    }
-
-    Component.onCompleted: {
-        searchGridModel.currentTabIndexChanged.connect(currentTabIndexChanged)
-
-        gridsContainer.gridCurrentItemChanged.connect(gridsSelectionChanged)
-    }*/
-
             function gridsSelectionChanged(obj) // Used to be used for vertical scrolling
             {
+                console.log("CALLED!!!!!!!!!!!!")
                 if (moving)
                     return
 
@@ -287,14 +272,8 @@ Item {
                     for (var i = 0; i < item.stack.length; i++)
                     {
                         //console.log("N" + i + ": " + item.stack[i].caption + " [" + item.stack[i].id + "]")
-                        popupFrame.gridGroup.gridView.newItemData(item.stack[i].imagePath, item.stack[i].caption, item.stack[i].id)
+                        popupFrame.gridGroup.gridView.newItemData(item.stack[i])
                     }
-
-                    /*
-
-                dataSource.newItemData.connect(newItemData)
-                dataSource.resetContent.connect(resetContent)
-                dataSource.getContent()*/
 
                     stackCellOpenedId = item.id
 

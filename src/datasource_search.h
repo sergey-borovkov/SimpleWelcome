@@ -50,7 +50,7 @@ public slots:
     virtual void test2();
 
 signals:
-    void newItemData(QString iconPath, QString name, int id, QString group);
+    void newItemData(QVariantMap itemData);
     void resetContent();
     void runDesktopFile(QString desktopFile);
 
