@@ -12,7 +12,6 @@
 #include <Soprano/Model>
 #include <Soprano/QueryResultIterator>
 
-#include <QtGui/QApplication>
 #include <QtCore/QDate>
 #include <QtCore/QTimer>
 
@@ -27,8 +26,16 @@ NepomukSource::NepomukSource(QObject *parent) :
 
 void NepomukSource::startSearch(const QDate &beginDate, int direction)
 {
-    Q_UNUSED(beginDate)
     Q_UNUSED(direction)
+    if (m_searchQueue.size() == 0) {
+        m_searchQueue.append(beginDate);
+        startSearchFromQueue();
+    } else
+        m_searchQueue.append(beginDate);
+}
+
+void NepomukSource::startSearchFromQueue()
+{
     if (m_timer) {
         if (m_timer->isActive()) {
             emit finishedListing();
@@ -62,9 +69,8 @@ void NepomukSource::startSearch(const QDate &beginDate, int direction)
             emit newActivities(activities);
             activities.clear();
         }
-        Activity *activity = new Activity(path, type ,it["lastModified"].literal().toDate());
-        activity->moveToThread(QApplication::instance()->thread());
-        activities.append(activity);
+
+        activities.append(new Activity(path, type ,it["lastModified"].literal().toDate()));
     }
 
     if(!activities.isEmpty()) {
@@ -77,8 +83,8 @@ void NepomukSource::startSearch(const QDate &beginDate, int direction)
     }
     m_timer->start(1000 * 60 * 10); //One query in ten minutes
     emit searchFinished();
-
 }
+
 
 void NepomukSource::setLimit(int limit)
 {
