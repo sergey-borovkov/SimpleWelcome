@@ -30,6 +30,7 @@ AppItemList GetFlatList(QString group)
             newItem.icon = service->icon();
             newItem.caption = service->name();
             newItem.desktopEntry = service->entryPath();
+            newItem.group = group;
             out.append(newItem);
         } else if (p->isType(KST_KServiceGroup)) {
             const KServiceGroup::Ptr serviceGroup = KServiceGroup::Ptr::staticCast(p);
@@ -110,8 +111,14 @@ void DataSource_Apps::saveData()
 
 void DataSource_Apps::getContent()
 {
-    for (int i = 0; i < appsList.size(); i++)
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(appsList[i].icon), appsList[i].caption, i);
+    for (int i = 0; i < appsList.size(); i++) {
+        QVariantMap map;
+        map["imagePath"] = QString("image://generalicon/appicon/%1").arg(appsList[i].icon);
+        map["caption"] = appsList[i].caption;
+        map["id"] = i;
+        map["group"] = appsList[i].group;
+        emit newItemData(map);
+    }
 }
 
 void DataSource_Apps::itemDragged(int fromIndex, int toIndex)

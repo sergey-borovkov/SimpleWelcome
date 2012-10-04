@@ -193,34 +193,25 @@ Column {
             } /**/
         }
 
-        function newItemData(iconPath, name, itemId, advParam)
+        function newItemData(itemData)
         {
-            //console.log("= " + name)
             if (startIndex === endIndex && endIndex === -1)
             {
                 for (var i = 0; i < model.count; i++)
-                    if (model.get(i).id === itemId)
+                    if (model.get(i).id === itemData.id)
                         return
             }
-            else if (!(startIndex <= itemId && itemId <= endIndex &&
+            else if (!(startIndex <= itemData.id && itemData.id <= endIndex &&
                        count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
                 return
 
+            // This is needed for delegate to not blaming unknown variable
+            if (itemData.pinned === undefined)
+                itemData.pinned = undefined
 
-            if (typeof advParam == 'boolean') // New item from RecentApps, advParam is pinned state of icon
-            {
-                appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: advParam })
-            }
-            else if (typeof advParam == 'string') // New item from search, advParam is group
-            {
-                if (advParam == groupName)
-                {
-                    //console.log("Added " + name + " : " + itemId + " in [" + startIndex + "-" + endIndex + "] of " + count)
-                    appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined, group: groupName })
-                }
-            }
-            else
-                appendItemToModel({ imagePath: iconPath, caption: name, id: itemId, pinned: undefined })
+            if (itemData.searchGroup === undefined || itemData.searchGroup === groupName) // Adding only from matching search groups if it's from search
+                appendItemToModel(itemData)
+
             //console.log("--- Added [" + startIndex + " to " + endIndex + "] with id: " + itemId)
         }
 

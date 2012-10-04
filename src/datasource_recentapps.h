@@ -15,7 +15,7 @@ public:
     void addRecentApp(QString desktopFile);
 
 signals:
-    void newItemData(QString iconPath, QString name, int id, bool isPinned) const;
+    void newItemData(QVariantMap itemData) const;
     void resetContent();
     void runDesktopFile(QString desktopFile);
 

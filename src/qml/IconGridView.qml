@@ -68,11 +68,6 @@ GridView {
 
     model: appsModel
 
-
-    function newItemData(iconPath, name, itemId) {
-        appsModel.append( { imagePath: iconPath, caption: name, id: itemId, pinned: undefined, stack: undefined })
-    }
-
     function resetContent() {
         if(typeof model !== 'undefined')
             model.clear()

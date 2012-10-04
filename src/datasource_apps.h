@@ -17,7 +17,7 @@ public:
     Q_INVOKABLE QString itemUrlDnd(int id);
 
 signals:
-    void newItemData(QString iconPath, QString name, int id);
+    void newItemData(QVariantMap itemData);
     void resetContent();
     void runDesktopFile(QString desktopFile);
 

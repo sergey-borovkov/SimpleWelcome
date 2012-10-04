@@ -18,7 +18,7 @@ public:
     QIcon getIcon(QString destination);
 
 signals:
-    void newItemData(QString iconPath, QString name, int id);
+    void newItemData(QVariantMap itemData);
     void resetContent();
     void runDesktopFile(QString desktopFile);
     void updateItemData(int id, QString field, QString data);
