@@ -25,21 +25,22 @@
 #include "generaliconprovider.h"
 #include "userinfoprovider.h"
 #include "datasource_search.h"
+#include "datasource_documents.h"
 #include "swapp.h"
 
 #include <KDebug>
 #include <KIcon>
 
 #include <QPainter>
+#include <KIO/PreviewJob>
 
 GeneralIconProvider::GeneralIconProvider(QString path_to_assets, QMLConstants *inConstants)
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
       m_userInfoProvider(NULL),
-      m_searchGridModel(NULL),
+      m_searchDataSource(NULL),
       constants(inConstants),
       m_pathToAssets(path_to_assets)
 {
-
 }
 
 QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, const QSize &requestedSize)
@@ -48,8 +49,8 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     KIcon icon;
     QPixmap iconPixmap;
 
-    QString iconType = name.section('/', 0, 0, QString::SectionSkipEmpty);
-    QString iconName = name.section('/', 1, -1, QString::SectionSkipEmpty);
+    QString iconType = name.section('/', 0, 0);
+    QString iconName = name.section('/', 1, -1);
     //qDebug() << "ICON SIZE:" << constants->iconSize() << " for " << iconName;
 
     if (iconType == "stacked") {
@@ -83,23 +84,31 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
 
 
         icon = KIcon(pix);
-    } else if (iconType == "appicon")
+    }
+    else if (iconType == "appicon")
         icon = KIcon(iconName);
+    else if (iconType == "docicon") {
+        if (m_documentsDataSource)
+            icon = KIcon(m_documentsDataSource->getIcon(iconName));
+    }
     else if (iconType == "search") {
-        if (m_searchGridModel)
-            icon = KIcon(m_searchGridModel->getMatchIcon(iconName));
-    } else if (iconType == "asset") {
+        if (m_searchDataSource)
+            icon = KIcon(m_searchDataSource->getMatchIcon(iconName));
+    }
+    else if (iconType == "asset") {
         iconPixmap.load(m_pathToAssets + iconName);
 
         // TODO: Fill size struct
 
         return iconPixmap;
-    } else if (iconType == "general") {
+    }
+    else if (iconType == "general") {
         if (iconName == "usericon" && m_userInfoProvider != NULL)
             icon = KIcon(m_userInfoProvider->getIconPath());
         else
             return iconPixmap;
-    } else {
+    }
+    else {
         return iconPixmap;
     }
 

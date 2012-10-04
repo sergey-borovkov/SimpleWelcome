@@ -4,9 +4,56 @@
 #include <QStringList>
 #include <QFile>
 #include <KFilePlacesModel>
+#include <KIO/PreviewJob>
+#include "swapp.h"
+#include <QPainter>
 
-DataSource_Documents::DataSource_Documents(QObject* parent)
-    : DataSource(parent)
+DataSource_Documents::DataSource_Documents(QObject* parent, QMLConstants *inConstants)
+    : DataSource(parent),
+      m_previewJobPlugins(KIO::PreviewJob::availablePlugins()),
+      constants(inConstants)
+{
+    updateContent();
+}
+
+int DataSource_Documents::getItemCount()
+{
+    return docsList.count();
+}
+
+QString DataSource_Documents::itemUrlDnd(int id)
+{
+    if (id >= 0 && id < docsList.count()) {
+        return docsList[id].destination;
+    }
+    return QString();
+}
+
+QIcon DataSource_Documents::getIcon(QString destination)
+{
+    destination = KUrl(destination).url();
+    if (m_pixmaps.contains(destination))
+        return  m_pixmaps[destination];
+    else {
+        qDebug() << destination;
+        qDebug() << "IMAGE NOT FOUND! A BUG";
+        qDebug() << m_pixmaps.keys();
+    }
+    return QIcon();
+}
+
+void DataSource_Documents::getContent()
+{
+    for (int i = 0; i < docsList.size(); i++)
+    {
+        if (m_pixmaps.contains(docsList[i].destination))
+            emit newItemData(QString("image://generalicon/docicon/%1").arg(docsList[i].destination), docsList[i].caption, i);
+        else
+            emit newItemData(QString("image://generalicon/appicon/%1").arg(docsList[i].icon), docsList[i].caption, i);
+    }
+}
+
+void DataSource_Documents::updateContent()
 {
     // Fix someday, ugly solution
     KFilePlacesModel *places = new KFilePlacesModel();
@@ -15,7 +62,10 @@ DataSource_Documents::DataSource_Documents(QObject* parent)
         favoritesList.append(places->index(i, 0).data(KFilePlacesModel::UrlRole).toString());
 
     QStringList recentDocsList = KRecentDocument::recentDocuments();
-    for (int i = 0; i < recentDocsList.size() && docsList.count() < 7; i++) {
+    KFileItemList previewRequestList;
+
+    QList<AppItem> newDocsList;
+    for (int i = 0; i < recentDocsList.size() && newDocsList.count() < 7; i++) {
         if (!QFile::exists(recentDocsList[i]) || !KDesktopFile::isDesktopFile(recentDocsList[i]))
             continue;
 
@@ -30,29 +80,65 @@ DataSource_Documents::DataSource_Documents(QObject* parent)
         newItem.caption = desktopFile.readName();
         newItem.icon = desktopFile.readIcon();
         newItem.desktopEntry = desktopFile.fileName();
+        newItem.destination = KUrl(desktopFile.readUrl()).url();
+
         if (!newItem.caption.isEmpty())
-            docsList.append(newItem);
+            newDocsList.append(newItem);
+
+        if (!m_pixmaps.contains(newItem.destination)) {
+            KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, newItem.destination, false);
+            previewRequestList.append(fileItem);
+        }
+    }
+
+    if (newDocsList != docsList) {
+        docsList = newDocsList;
+        createDocumentsPreviews(previewRequestList);
+        emit resetContent();
+        qDebug() << "Documents content update";
     }
 }
 
-int DataSource_Documents::getItemCount()
+void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap &pixmap)
 {
-    return docsList.count();
-}
+    int iconSize = constants->iconSize();
+    //qDebug() << item.url().url();
+    QPixmap pix(iconSize, iconSize);
+    pix.fill(Qt::transparent);
+    QPainter p(&pix);
+    QBrush brush(pixmap);
+    QPen pen;
 
-QString DataSource_Documents::itemUrlDnd(int id)
-{
-    if (id >= 0 && id < docsList.count()) {
-        KDesktopFile file(docsList[id].desktopEntry);
-        return file.readUrl();
+    pen.setColor(Qt::transparent);
+    pen.setJoinStyle(Qt::RoundJoin);
+    pen.setWidth(0);
+
+    p.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    p.setBrush(brush);
+    p.setPen(pen);
+    p.translate((iconSize - pixmap.width())/2, (iconSize - pixmap.height())/2);
+    p.drawRoundedRect(0, 0, pixmap.width(), pixmap.height(), 7, 7, Qt::AbsoluteSize);
+
+    m_pixmaps[item.url().url()] = pix;
+    for (int i = 0; i < docsList.size(); i++) {
+        if (docsList[i].destination == item.url().url())
+            emit updateItemData(i, "imagePath", QString("image://generalicon/docicon/%1").arg(docsList[i].destination));
     }
-    return QString();
+    //emit resetContent();
 }
 
-void DataSource_Documents::getContent()
+void DataSource_Documents::previewFailed(const KFileItem &/*item*/)
 {
-    for (int i = 0; i < docsList.size(); i++)
-        emit newItemData(QString("image://generalicon/appicon/%1").arg(docsList[i].icon), docsList[i].caption, i);
+    //qDebug() << "Preview failed" << item.url();
+}
+
+void DataSource_Documents::createDocumentsPreviews(KFileItemList list)
+{
+    KIO::PreviewJob *job = KIO::filePreview( list, constants->iconSize(), 0, 0, 0, true, false, &m_previewJobPlugins );
+    job->setIgnoreMaximumSize();
+    job->setAutoDelete(true);
+    connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(resultPreviewJob(KFileItem,QPixmap)));
+    connect(job, SIGNAL(failed(const KFileItem&)), SLOT(previewFailed(const KFileItem &)));
 }
 
 void DataSource_Documents::itemClicked(int newIndex)

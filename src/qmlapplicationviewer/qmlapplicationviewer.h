@@ -57,6 +57,10 @@ public:
 signals:
     void windowSizeChanged(int newWidth, int newHeight);
     void windowHid();
+    void windowShown();
+
+public slots:
+    void restore();
 
 private:
     class QmlApplicationViewerPrivate *m_d;
