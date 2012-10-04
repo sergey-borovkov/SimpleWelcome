@@ -28,30 +28,19 @@ public:
     };
 
     explicit NepomukSource(QObject *parent = 0);
-    ~NepomukSource();
 
 signals:
-    void newEntries(const QList<Nepomuk::Query::Result>&);
     void searchFinished();
     void resultCount(int);
 
 public slots:
-    virtual void startSearch(const QDate &beginDate, ActivitySource::Direction direction);
+    virtual void startSearch(const QDate &beginDate, int direction);
     virtual void setLimit(int limit);
-    void processEntry(const QList<Nepomuk::Query::Result> &list);
 
-private slots:
-    void listingFinished();
-    void error(QString str);
     void startSearchFromQueue();
 
 private:
-    Nepomuk::Query::FileQuery createQuery();
-    Nepomuk::Query::QueryServiceClient* m_searchClient;
-    QList <Activity* > m_activities;
-    QDate queryDate;
     Direction direction;
-    Mode m_mode;
     int m_limit;
     QList<QDate> m_searchQueue;
     QTimer* m_timer;

@@ -17,6 +17,7 @@ void ActivityProxy::addNepomukSource(NepomukSource *source)
     connect(source, SIGNAL(newActivities(QList<Activity*>)), this, SLOT(newData(QList<Activity*>)));
     connect(source, SIGNAL(searchFinished()), SIGNAL(finished()));
     connect(source, SIGNAL(resultCount(int)), this, SLOT(resultCount(int)));
+    connect(this, SIGNAL(search(QDate,int)), source, SLOT(startSearch(QDate,int)));
 }
 
 void ActivityProxy::startSearch(QDate date, int direction)
@@ -35,7 +36,7 @@ void ActivityProxy::startSearch(QDate date, int direction)
     }
 
     m_source->setLimit(0);
-    m_source->startSearch(d, dir);
+    emit search(d, dir);
 }
 
 void ActivityProxy::resultCount(int count)

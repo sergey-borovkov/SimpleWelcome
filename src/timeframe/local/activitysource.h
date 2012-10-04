@@ -19,7 +19,7 @@ public:
     explicit ActivitySource(QObject *parent = 0);
 
 public slots:
-    virtual void startSearch(const QDate &beginDate, ActivitySource::Direction direction) = 0;
+    virtual void startSearch(const QDate &beginDate, int direction) = 0;
     virtual void setLimit(int limit) = 0;
 
 signals:
