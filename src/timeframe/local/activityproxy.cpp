@@ -49,6 +49,7 @@ void ActivityProxy::newData(QList<Activity *> list)
     // start generating previews
     QStringList urls;
     foreach(Activity * item, list) {
+        item->setParent(this);
         urls.append(item->getUrl());
         emit newMonth(item->getDate().year() , item->getDate().month(), item->getType());  //fill timeScaleModel
     }

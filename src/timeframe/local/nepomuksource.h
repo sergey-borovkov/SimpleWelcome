@@ -37,8 +37,6 @@ public slots:
     virtual void startSearch(const QDate &beginDate, int direction);
     virtual void setLimit(int limit);
 
-    void startSearchFromQueue();
-
 private:
     Direction direction;
     int m_limit;
