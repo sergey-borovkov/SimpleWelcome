@@ -15,5 +15,6 @@ public slots:
 signals:
     //void newItemData(QString iconPath, QString name, int id) const;
     void resetContent();
+    void updateItemData(int id, QString field, QString data);
     void runDesktopFile(QString desktopFile);
 };

@@ -186,6 +186,16 @@ void QmlApplicationViewer::closeEvent(QCloseEvent *event)
     }
 }
 
+void QmlApplicationViewer::restore()
+{
+    emit windowShown();
+
+    //setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
+    //show();
+    showFullScreen();
+    //move(/*896*/0, 0);
+}
+
 void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, int image_size)
 {
     QDeclarativeEngine *eng = engine();
