@@ -6,6 +6,7 @@
 #include <QtCore/QUrl>
 
 const QString OAuth2Authorizer::redirectUrl = "http://oauth.vk.com/blank.html";
+const QString OAuth2Authorizer::redirectUrl1 = "https://oauth.vk.com/blank.html";
 
 OAuth2Authorizer::OAuth2Authorizer(QObject *parent) :
     QObject(parent)
@@ -16,16 +17,21 @@ void OAuth2Authorizer::setAccessToken(const QString &accessToken)
 {
     if (accessToken != m_accessToken) {
         m_accessToken = accessToken;
-
         QSettings settings("ROSA", "vkontakte-timeframe-plugin");
         settings.setValue("accessToken", accessToken);
         emit accessTokenChanged(m_accessToken);
+
+        if (!accessToken.isEmpty())
+            emit authorized();
     }
 }
 
-QString OAuth2Authorizer::accessToken() const
+void OAuth2Authorizer::logout()
 {
-    return m_accessToken;
+    if (!accessToken().isEmpty()) {
+        setAccessToken("");
+        emit deauthorized();
+    }
 }
 
 bool OAuth2Authorizer::isAuthorized() const
@@ -33,19 +39,18 @@ bool OAuth2Authorizer::isAuthorized() const
     return !accessToken().isEmpty();
 }
 
+QString OAuth2Authorizer::accessToken() const
+{
+    return m_accessToken;
+}
+
 void OAuth2Authorizer::urlChanged(const QUrl &url)
 {
-    if (!url.isEmpty() && url.toString().startsWith(redirectUrl)) {
+    if (!url.isEmpty() && (url.toString().startsWith(redirectUrl) || url.toString().startsWith(redirectUrl1))) {
         QString accessToken = url.encodedFragment();        // Get the URL fragment part
-        accessToken = accessToken.split("&").first();         // Remove the "expires_in" part.
-        accessToken = accessToken.split("=").at(1);             // Split by "access_token=..." and take latter part
+        accessToken = accessToken.split("&").first();       // Remove the "expires_in" part.
+        accessToken = accessToken.split("=").at(1);         // Split by "access_token=..." and take latter part
         setAccessToken(accessToken);
     }
 }
 
-void OAuth2Authorizer::logout()
-{
-    qDebug() << "logout...";
-    setAccessToken("");
-    emit deauthorized();
-}

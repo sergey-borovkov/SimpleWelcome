@@ -67,7 +67,8 @@ void SocialItemModel::addComment(CommentItem *item, QString id)
         if (data(index(i, 0), SocialItem::Id).toString() == id) {
             QVariant v = data(index(i, 0), SocialItem::Comments);
             ListModel * commentsModel = qvariant_cast<ListModel* >(v);
-            commentsModel->appendRow(item);
+            if(commentsModel)
+                commentsModel->appendRow(item);
             int commentCount = data(index(i, 0), SocialItem::CommentCount).toInt();
             bool result = setData(index(i, 0), ++commentCount, SocialItem::CommentCount);
             if (!result)
@@ -84,12 +85,29 @@ void SocialItemModel::updateUserImage(const QString &userId, const QString &user
 
             QVariant v = data(index(i, 0), SocialItem::Comments);
             ListModel * commentsModel = qvariant_cast<ListModel* >(v);
-
-            for (int j = 0; j < commentsModel->rowCount(); j++) {
-                if (commentsModel->data(commentsModel->index(j, 0), CommentItem::FromId).toString() == userId) {
-                    commentsModel->setData(commentsModel->index(j, 0), QVariant(userImageUrl), CommentItem::FromPictureUrl);
+            if(commentsModel)
+                for (int j = 0; j < commentsModel->rowCount(); j++) {
+                    if (commentsModel->data(commentsModel->index(j, 0), CommentItem::FromId).toString() == userId) {
+                        commentsModel->setData(commentsModel->index(j, 0), QVariant(userImageUrl), CommentItem::FromPictureUrl);
+                    }
                 }
-            }
+        }
+    }
+}
+
+void SocialItemModel::updateUserName(const QString &userId, const QString &userName, const QString &id)
+{
+    for (int i = 0; i < rowCount(); i++) {
+        if (data(index(i, 0), SocialItem::Id).toString() == id) {
+
+            QVariant v = data(index(i, 0), SocialItem::Comments);
+            ListModel * commentsModel = qvariant_cast<ListModel* >(v);
+            if(commentsModel)
+                for (int j = 0; j < commentsModel->rowCount(); j++) {
+                    if (commentsModel->data(commentsModel->index(j, 0), CommentItem::FromId).toString() == userId) {
+                        commentsModel->setData(commentsModel->index(j, 0), QVariant(userName), CommentItem::From);
+                    }
+                }
         }
     }
 }
@@ -100,15 +118,26 @@ void SocialItemModel::addComments(QString id, QList<CommentItem *> list)
         if (data(index(i, 0), SocialItem::Id).toString() == id) {
             QVariant v = data(index(i, 0), SocialItem::Comments);
             ListModel * commentsModel = qvariant_cast<ListModel* >(v);
-            QString firstPostId = commentsModel->data(index(0, 0), CommentItem::Id).toString();
-            for (int j = 0; j < list.size(); j++) {
-                CommentItem* item = list.at(j);
-                if (item->id() == firstPostId) {
-                    break;
+            if(commentsModel) {
+                QString firstPostId = commentsModel->data(index(0, 0), CommentItem::Id).toString();
+                for (int j = 0; j < list.size(); j++) {
+                    CommentItem* item = list.at(j);
+                    if (item->id() == firstPostId) {
+                        break;
+                    }
+                    commentsModel->insertRow(j, item);
                 }
-                commentsModel->insertRow(j, item);
+                emit dataChanged(index(i, 0), index(i, 0));
             }
-            emit dataChanged(index(i, 0), index(i, 0));
+        }
+    }
+}
+
+void SocialItemModel::setSelfLiked(QString id)
+{
+    for (int i = 0; i < rowCount(); i++) {
+        if (data(index(i, 0), SocialItem::Id).toString() == id) {
+            setData(index(i, 0), SocialItem::Liked, SocialItem::Like);
         }
     }
 }

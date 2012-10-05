@@ -60,13 +60,14 @@ QPixmap FacebookModule::smallIcon() const
 QWidget *FacebookModule::authenticationWidget()
 {
     m_authorizationView = new QWebView;
+    m_authorizationView->setWindowModality(Qt::ApplicationModal);
     m_authorizationView->window()->setWindowTitle(name());
     m_authorizationView->page()->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     m_authorizationView->window()->setWindowIcon(QPixmap(":/images/fb.png"));
     m_authorizationView->setUrl(QUrl("https://www.facebook.com/dialog/oauth?client_id=148453655273563&redirect_uri=http://www.facebook.com/connect/login_success.html&response_type=token&scope=publish_stream,read_stream"));
+    m_authorizationView->resize(1024,640);
     connect(m_authorizationView, SIGNAL(urlChanged(QUrl)), m_authorizer, SLOT(urlChanged(QUrl)));
     connect(this, SIGNAL(authorized()), m_authorizationView, SLOT(hide()));
-    m_authorizationView->resize(1024,640);
 
     return m_authorizationView;
 }

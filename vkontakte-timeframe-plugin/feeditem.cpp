@@ -3,9 +3,19 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
+#include <QtCore/QRegExp>
+#include <QtCore/QStringList>
 #include <QVariant>
 #include <QMap>
 #include <qjson/parser.h>
+
+
+FeedItem::FeedItem(const QVariantMap &map, QString selfId)
+    : m_selfId(selfId)
+{
+    m_commentsModel = new ListModel(CommentItem::roleNames());
+    fillFromMap(map);
+}
 
 QString FeedItem::pluginName() const
 {
@@ -30,14 +40,11 @@ QVariant FeedItem::data(int role) const
         return m_data.value(role);
 }
 
-bool FeedItem::setData(const QVariant &value, int role)
+bool FeedItem::setData(int role, const QVariant &value)
 {
-    if (role < 0 || role >= roleNames().size())
-        return false;
-    m_data[role] = value.toString();
+    m_data[role] = value;
     return true;
 }
-
 
 QDate FeedItem::date() const
 {
@@ -51,10 +58,18 @@ void FeedItem::fillFromMap(QVariantMap map)
         m_id = map.value("id").toString();
     }
 
+    QString message;
     if (map.contains("text")) {
-        QString message = map.value("text").toString();
-        m_data.insert(Text, message);
+        message = map.value("text").toString();
     }
+
+    // if user posts a link
+    bool isLink = message.startsWith("http://");
+    if (isLink) {
+        m_data.insert(Text, QString("<a href=%1>%2</a>").arg(message).arg(message));
+    } else
+        m_data.insert(Text, message);
+
 
     if (map.contains("date")) {
         uint t  = map.value("date").toUInt();
@@ -64,6 +79,7 @@ void FeedItem::fillFromMap(QVariantMap map)
         m_data.insert(Date, date.toString("d MM yyyy"));
     }
 
+    m_data.insert(ImageUrl, QUrl(""));
     if (map.contains("attachments")) {
         QVariantList attachmentList = map[ "attachments" ].toList();
 
@@ -76,7 +92,7 @@ void FeedItem::fillFromMap(QVariantMap map)
                 if (typeAttachment == "photo") {
                     QVariantMap photoMap = map[ "photo" ].toMap();
                     if (photoMap.contains("src"))
-                        m_data.insert(ImageUrl, photoMap.value("src").toString());
+                        m_data.insert(ImageUrl, QUrl::fromPercentEncoding(photoMap.value("src").toByteArray()));
                 }
 
                 if (typeAttachment == "audio") {
@@ -91,15 +107,53 @@ void FeedItem::fillFromMap(QVariantMap map)
 
     if (map.contains("likes")) {
         QVariantMap likesMap = map[ "likes" ].toMap();
-        if (likesMap.contains("count"))
+        if (likesMap.contains("count")) {
             m_data.insert(Likes, likesMap.value("count").toString());
+        }
     }
+    else
+        m_data.insert(Likes, 0);
+    m_data.insert(Like, SocialItem::NotLiked);
 
     if (map.contains("comments")) {
         QVariantMap commentsMap = map[ "comments" ].toMap();
         if (commentsMap.contains("count"))
             m_data.insert(CommentCount, commentsMap.value("count").toString());
     }
+    else
+        m_data.insert(CommentCount, 0);
 
+    QVariant var;
+    var.setValue(m_commentsModel);
+    m_data.insert(Comments, var);
     m_data.insert(PluginName, pluginName());
+}
+
+void fillCommentFromMap(CommentItem *item, const QVariantMap &map)
+{
+    uint t  = map.value("date").toUInt();
+    QDateTime dt;
+    dt.setTime_t(t);
+    QDate date = dt.date();
+
+    if (map.contains("reply_to_uid") && map.contains("reply_to_cid")) {
+        QString s, str = map.value("text").toString();
+        QRegExp rx("\\[(id\\d+)\\|(\\S*)\\]");
+        int pos = rx.indexIn(str);
+        if (pos != (-1)) {
+//            s = rx.cap(1); // user id
+            s = rx.cap(2); // user name
+        }
+        str = s + str.remove(rx.cap(0));
+        item->setData(CommentItem::Message, str);
+    }
+    else {
+        item->setData(CommentItem::Message, map.value("text"));
+    }
+
+    item->setData(CommentItem::Id, map.value("cid"));
+    item->setData(CommentItem::CreatedTime, date.toString("d MM yyyy"));
+    item->setData(CommentItem::FromId, map.value("uid"));
+    item->setData(CommentItem::Type, "VKontakte");
+    item->setData(CommentItem::From, "");
 }

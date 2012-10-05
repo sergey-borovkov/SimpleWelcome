@@ -20,6 +20,7 @@ public:
     virtual ISocialRequestManager* requestManager();
     QString name() const;
     QPixmap icon() const;
+    QPixmap smallIcon() const;
 
     QWidget *authenticationWidget();
     bool authorized() const {
@@ -38,6 +39,8 @@ private:
     RequestManager *m_requestManager;
     OAuth2Authorizer *m_authorizer;
     QPixmap m_pixmap;
+    QPixmap m_smallPixmap;
+
 };
 
 #endif

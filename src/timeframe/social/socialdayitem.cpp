@@ -2,6 +2,8 @@
 #include "socialitemmodel.h"
 #include "socialitem.h"
 
+#include <QtCore/QDebug>
+
 SocialItemFilterModel::SocialItemFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
 {
@@ -131,9 +133,21 @@ void SocialDayItem::updateUserImage(const QString &userId, const QString &userIm
     m_model->update();
 }
 
+void SocialDayItem::updateUserName(const QString &userId, const QString &userName, const QString &id)
+{
+    m_itemModel->updateUserName(userId, userName, id);
+    m_model->update();
+}
+
 void SocialDayItem::addComments(QString id, QList<CommentItem *> list)
 {
     m_itemModel->addComments(id, list);
+}
+
+void SocialDayItem::setSelfLiked(QString id)
+{
+    m_itemModel->setSelfLiked(id);
+    m_model->update();
 }
 
 QDate SocialDayItem::date()
