@@ -3,6 +3,7 @@
 #include "socialplugin.h"
 
 #include <QtCore/QSettings>
+#include <QtCore/QDebug>
 #include <QtGui/QWidget>
 
 PluginModel::PluginModel(QHash<int, QByteArray> roles, QObject *parent)

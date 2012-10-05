@@ -22,6 +22,7 @@ public:
     virtual Request *queryUserId();
     virtual Request *queryImage(const QString &id);
     virtual Request *queryComments(const QString &postId);
+    virtual Request *queryLikes(const QString &postId);
     virtual Request *postComment(const QString &message, const QString &parentId);
     virtual Request *like(const QString &id);
     virtual Request *unlike(const QString &id);
@@ -41,8 +42,10 @@ signals:
     void newSocialItems(QList<SocialItem *> items);
     void selfId(QString id);
     void selfName(QString name);
+    void selfLiked(QString postId);
     void newComments(QString postId, QList<CommentItem *> items);
     void gotUserImage(QString id, QString url);
+    void gotUserName(QString postId, QString name);
 
 private:
     QUrl constructUrl(const QString &id, const QString &type) const;

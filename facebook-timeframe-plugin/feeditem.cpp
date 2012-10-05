@@ -7,8 +7,8 @@
 #include <qjson/parser.h>
 
 
-FeedItem::FeedItem(const QVariantMap &map, QString selfId) :
-    m_selfId(selfId)
+FeedItem::FeedItem(const QVariantMap &map, QString selfId)
+    : m_selfId(selfId)
 {
     m_commentsModel = new ListModel(CommentItem::roleNames());
     fillFromMap(map);

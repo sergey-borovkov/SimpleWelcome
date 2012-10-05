@@ -31,6 +31,7 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
             connect(object, SIGNAL(selfName(QString)), SLOT(onSelfName(QString)));
             connect(object, SIGNAL(newComments(QString, QList<CommentItem *>)), SLOT(newComments(QString, QList<CommentItem*>)));
             connect(object, SIGNAL(searchComplete()), SLOT(searchComplete()));
+            connect(object, SIGNAL(selfLiked(QString)), SLOT(onSelfLiked(QString)));
 
         }
         if ((object = dynamic_cast<QObject *>(plugin)) != 0) {
@@ -81,7 +82,6 @@ void SocialProxy::unlikeItem(const QString &id, const QString &pluginName)
     PluginRequestReply* reply = dislike(id, pluginName);
     connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(likeSuccess(PluginRequestReply*)));
     /*TO-DO: process error replies*/
-
 }
 
 void SocialProxy::logout(const QString &pluginName)
@@ -169,6 +169,7 @@ PluginRequestReply *SocialProxy::userPicture(const QString &id, const QString &p
     PluginRequestReply *reply = new PluginRequestReply(request, parentId, this);
     QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
     connect(obj, SIGNAL(gotUserImage(QString, QString)), reply, SLOT(gotUserPictureUrl(QString, QString)));
+    connect(obj, SIGNAL(gotUserName(QString, QString)), reply, SLOT(gotUserName(QString, QString)));
     request->start();
 
     return reply;
@@ -202,6 +203,18 @@ PluginRequestReply *SocialProxy::getAllComments(const QString &id, const QString
     return reply;
 }
 
+PluginRequestReply *SocialProxy::getAllLikes(const QString &id, const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    Request *request = plugin->requestManager()->queryLikes(id);
+    if (request == 0)
+        return 0;
+    PluginRequestReply *reply = new PluginRequestReply(request, id, this);
+    request->start();
+    return reply;
+}
+
+
 void SocialProxy::likeSuccess(PluginRequestReply* reply)
 {
     m_socialModel->likeItem(reply->sourceId());
@@ -222,6 +235,9 @@ void SocialProxy::commentSuccess(PluginRequestReply* reply)
 void SocialProxy::getPictureSuccess(PluginRequestReply* reply)
 {
     m_socialModel->updateUserImage(reply->userId(), reply->userPictureUrl(), reply->sourceId());
+    if (!reply->userName().isEmpty()) {
+        m_socialModel->updateUserName(reply->userId(), reply->userName(), reply->sourceId());
+    }
 }
 
 void SocialProxy::getSelfPictureSuccess(PluginRequestReply* reply)
@@ -290,7 +306,6 @@ void SocialProxy::newItems(QList<SocialItem *> items)
     m_socialModel->newSocialItems(items);
 }
 
-
 PluginRequestReply *SocialProxy::selfPicture(const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
@@ -341,6 +356,11 @@ void SocialProxy::newComments(QString postId, QList<CommentItem *> items)
     foreach(CommentItem * item, items) {
         getUserPicture(item->data(CommentItem::FromId).toString(), postId, item->data(CommentItem::Type).toString());
     }
+}
+
+void SocialProxy::onSelfLiked(QString postId)
+{
+    m_socialModel->setSelfLiked(postId);
 }
 
 void SocialProxy::setSocialModel(SocialDayModel *model)

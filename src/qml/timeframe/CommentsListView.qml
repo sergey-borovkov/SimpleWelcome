@@ -24,7 +24,7 @@ Item {
                 anchors.top: parent.top
                 anchors.leftMargin: 10
                 text: from
-                color: "white"
+                color: "grey"
             }
             Text {
                 id: textField;

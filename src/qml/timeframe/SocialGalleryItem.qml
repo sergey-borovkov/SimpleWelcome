@@ -425,6 +425,7 @@ Item{
                     __height = galleryItem.childrenRect.height
                     galleryRect.state = "details"
                     socialProxy.getAllComments(id, pluginName)
+                    socialProxy.getAllLikes(id, pluginName)
                 }
             }
         }

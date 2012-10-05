@@ -8,7 +8,8 @@
 #include <QtCore/QDebug>
 
 RequestManager::RequestManager(QObject *parent)
-    : QObject(parent), m_authorizer(0)
+    : QObject(parent)
+    , m_authorizer(0)
 {
 }
 
@@ -80,6 +81,12 @@ Request *RequestManager::queryComments(const QString &postId)
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(commentReply(QByteArray)));
 
     return request;
+}
+
+Request *RequestManager::queryLikes(const QString &postId)
+{
+    Q_UNUSED(postId)
+    return 0;
 }
 
 void RequestManager::setAuthorizer(OAuth2Authorizer *authorizer)
