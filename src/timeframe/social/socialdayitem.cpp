@@ -43,7 +43,8 @@ QObject *SocialItemFilterModel::comments(int row) const
 {
     QVariant v = data(index(row, 0), SocialItem::Comments);
     ListModel * commentsModel = qvariant_cast<ListModel* >(v);
-    commentsModel->setParent(sourceModel());
+    if(commentsModel)
+        commentsModel->setParent(sourceModel());
     return commentsModel;
 }
 
