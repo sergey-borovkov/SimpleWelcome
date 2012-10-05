@@ -6,7 +6,7 @@ find_package(Qt4 REQUIRED QtCore)
 include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
-add_definitions(-DQT_NO_DEBUG)
+#add_definitions(-DQT_NO_DEBUG)
 add_definitions(-DQT_SHARED)
 add_definitions(-DTIMEFRAMELIB_LIBRARY)
 

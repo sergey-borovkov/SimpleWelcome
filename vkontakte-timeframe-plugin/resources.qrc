@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>images/vkontakte.png</file>
+        <file>images/vk.png</file>
+        <file>images/vk-shadow.png</file>
+        <file>images/vk-small.png</file>
     </qresource>
 </RCC>

@@ -48,7 +48,7 @@ add_custom_target(build-assets ALL
 
 add_subdirectory(timeframelib)
 add_subdirectory(facebook-timeframe-plugin)
-#add_subdirectory(vkontakte-timeframe-plugin)
+add_subdirectory(vkontakte-timeframe-plugin)
 add_subdirectory(rosa-starter)
 add_subdirectory(src)
 

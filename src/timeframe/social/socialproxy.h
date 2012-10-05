@@ -85,12 +85,15 @@ public:
      */
     Q_INVOKABLE PluginRequestReply *getAllComments(const QString &id, const QString &pluginName);
 
+    Q_INVOKABLE PluginRequestReply *getAllLikes(const QString &id, const QString &pluginName);
+
 public slots:
     void newItem(SocialItem *item);
     void newItems(QList<SocialItem *> items);
 
     void onSelfId(QString);
     void onSelfName(QString);
+    void onSelfLiked(QString);
     void newComments(QString postId, QList<CommentItem *> items);
     void startSearch();
 

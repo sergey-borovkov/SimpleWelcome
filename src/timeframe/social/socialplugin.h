@@ -39,8 +39,11 @@ public:
      * @return pointer to request
      */
     virtual Request *queryComments(const QString &postId) = 0;
+
+    virtual Request *queryLikes(const QString &postId) = 0;
     virtual Request *like(const QString &id) = 0;
     virtual Request *unlike(const QString &id) = 0;
+
     virtual Request *logout() = 0;
 };
 

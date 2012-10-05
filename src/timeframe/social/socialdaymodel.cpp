@@ -6,6 +6,7 @@
 
 #include <QtCore/QRegExp>
 #include <QtCore/QVariant>
+#include <QtCore/QDebug>
 
 SocialDayFilterModel::SocialDayFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
@@ -107,6 +108,15 @@ void SocialDayModel::updateUserImage(const QString &userId, const QString &userI
     if (item)
         item->updateUserImage(userId, userImageUrl, eventId);
 }
+
+void SocialDayModel::updateUserName(const QString &userId, const QString &userName, const QString &eventId)
+{
+    QDate date = m_idHash.value(eventId);
+    SocialDayItem *item = findItemByDate(date);
+    if (item)
+        item->updateUserName(userId, userName, eventId);
+}
+
 void SocialDayModel::addComments(QString id, QList<CommentItem *> list)
 {
     QDate date = m_idHash.value(id);
@@ -115,10 +125,18 @@ void SocialDayModel::addComments(QString id, QList<CommentItem *> list)
         item->addComments(id, list);
 }
 
+void SocialDayModel::setSelfLiked(QString id)
+{
+    QDate date = m_idHash.value(id);
+    SocialDayItem *item = findItemByDate(date);
+    if (item)
+        item->setSelfLiked(id);
+}
+
+
 void SocialDayModel::removeItems(const QString &type)
 {
-    int size = rowCount();
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < rowCount(); i++) {
         SocialItemModel *model = static_cast<SocialDayItem *>(itemAt(i))->m_itemModel;
         for (int j = 0; j < model->rowCount(); j++) {
             SocialItem *item = static_cast<SocialItem *>(model->itemAt(j));
@@ -190,6 +208,7 @@ void SocialDayModel::newSocialItems(QList < SocialItem * > list)
 
         SocialDayItem * socialDayItem = new SocialDayItem(newItem->date());
         socialDayItem->addSocialItem(newItem);
+
         insertRow(j, socialDayItem);
     }
 }

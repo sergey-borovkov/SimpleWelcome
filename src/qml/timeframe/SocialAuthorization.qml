@@ -2,15 +2,21 @@ import QtQuick 1.1
 import ".."
 
 PathView {
+    id: pathView
     anchors.fill: parent
     path: Path {
-        startX: 0
+        startX: (parent.width - 128 * pathView.count)/2
         startY: height/2
+        PathLine {
+            x: (parent.width - 128 * pathView.count)/2 + 128 * pathView.count
+            y: height/2
+        }
     }
 
     delegate: Item {
+        width: authorizationItem.width
+        height: authorizationItem.height
 
-        anchors.fill: parent
         Item {
             id: authorizationItem
             //width: Math.max(img.width,  ) + 10
