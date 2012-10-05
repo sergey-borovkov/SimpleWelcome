@@ -1,49 +1,85 @@
 #include "request.h"
 
-#include <qjson/parser.h>
-#include <QtCore/QDebug>
-#include <QtCore/QUrl>
 #include <QtNetwork/QNetworkAccessManager>
+#include <qjson/parser.h>
 
-const QString VkRequest::wallUrl = QLatin1String("https://api.vk.com/method/wall.get");
-const QString VkRequest::logoutUrl = QLatin1String("http://oauth.vk.com/oauth/logout");
-// response http://oauth.vk.com/oauth/authorize?&_hash=0&success=1
+#include <QtCore/QDebug>
 
-VkRequest::VkRequest(const QString &accessToken, RequestType type, QObject *parent, int offset)
+QNetworkAccessManager *VkRequest::manager = 0;
+
+VkRequest::VkRequest(RequestType type, QObject *parent)
     : QObject(parent)
-    , m_accessToken(accessToken)
-    , m_type(type)
-    , m_offset(offset)
+    , m_requestType(type)
 {
+    // this is never deleted
+    if (!manager)
+        manager = new QNetworkAccessManager();
+}
+
+void VkRequest::setUrl(const QUrl &url)
+{
+    m_url = url;
 }
 
 void VkRequest::start()
 {
-    QUrl requestUrl;
+    if (m_url.isEmpty())
+        return;
+    QNetworkReply *reply = 0;
 
-    if (m_type == WallPosts) {
-        requestUrl = wallUrl;
-        requestUrl.addQueryItem(QLatin1String("offset"), QString("%1").arg(m_offset));
-        requestUrl.addQueryItem(QLatin1String("count"), "100");
-        requestUrl.addQueryItem(QLatin1String("filter"), "all");
+    QNetworkRequest request(m_url);
 
-        requestUrl.addQueryItem(QLatin1String("access_token"), m_accessToken);
-    } else if (m_type == Logout) {
-        requestUrl = logoutUrl;
+    switch (m_requestType) {
+    case Get:
+        reply = manager->get(request);
+        connect(reply, SIGNAL(finished()), SLOT(replyFinished()));
+        connect(reply, SIGNAL(finished()), SIGNAL(success()));
+        break;
+    case Post:
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "text/plain");
+        reply = manager->post(request, QByteArray());
+        connect(reply, SIGNAL(finished()), SLOT(postFinished()));
+        break;
+    case Delete:
+        reply = manager->deleteResource(request);
+        connect(reply, SIGNAL(finished()), SLOT(replyFinished()));
+        connect(reply, SIGNAL(finished()), SIGNAL(success()));
+        break;
+
+    default:
+        qWarning("VkRequest::start() -- Invalid argument");
+        return;
     }
 
-    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply*)), SLOT(replyFinished(QNetworkReply*)));
-    manager->get(QNetworkRequest(requestUrl));
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
 }
 
-void VkRequest::replyFinished(QNetworkReply *reply)
+void VkRequest::replyFinished()
 {
-    QByteArray a = reply->readAll();
-    emit replyReady(a);
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    QByteArray answer = reply->readAll();
+    emit replyReady(answer);
     reply->deleteLater();
 }
 
-void VkRequest::networkError(QNetworkReply::NetworkError)
+void VkRequest::postFinished()
 {
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    QByteArray answer = reply->readAll();
+    QJson::Parser parser;
+
+    QVariantMap result = parser.parse(answer).toMap();
+
+    QString id =  result.value("id").toString();
+    if (!id.isEmpty())
+        emit newItemId(id);
+    emit success();
+}
+
+void VkRequest::error(QNetworkReply::NetworkError error)
+{
+    Q_UNUSED(error)
+    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+    emit reply->errorString();
+    reply->deleteLater();
 }

@@ -392,8 +392,9 @@ Item{
                     cloudRect.state = "details"
                     modal.parent = timeFrameTab;
                     modal.z = 300
-                    //Query all comments
+                    //Query all comments and likes
                     socialProxy.getAllComments(id, pluginName)
+                    socialProxy.getAllLikes(id, pluginName)
                 }
                 else {
                     modal.parent = socialCloudItem
@@ -501,13 +502,11 @@ Item{
 
     function textVisible()
     {
-        console.log(picture)
         if (picture === "")
         {
             socialMessage.text = ""
             return false
         }
-        console.log("true")
         return true
     }
 

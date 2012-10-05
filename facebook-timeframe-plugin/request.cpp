@@ -7,8 +7,9 @@
 
 QNetworkAccessManager *FacebookRequest::manager = 0;
 
-FacebookRequest::FacebookRequest(RequestType type, QObject *parent) :
-    QObject(parent), m_requestType(type)
+FacebookRequest::FacebookRequest(RequestType type, QObject *parent)
+    :QObject(parent)
+    , m_requestType(type)
 {
     // this is never deleted
     if (!manager)

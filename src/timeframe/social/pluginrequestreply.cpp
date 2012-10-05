@@ -45,6 +45,11 @@ QString PluginRequestReply::userId() const
     return m_userId;
 }
 
+QString PluginRequestReply::userName() const
+{
+    return m_userName;
+}
+
 void PluginRequestReply::newItemId(QString id)
 {
     m_id = id;
@@ -54,6 +59,12 @@ void PluginRequestReply::gotUserPictureUrl(QString id, QString url)
 {
     m_userId = id;
     m_userPictureUrl = url;
+}
+
+void PluginRequestReply::gotUserName(QString id, QString name)
+{
+    m_userId = id;
+    m_userName = name;
 }
 
 void PluginRequestReply::error(QString error)

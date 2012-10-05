@@ -46,6 +46,7 @@ public:
 
     Q_INVOKABLE QString userPictureUrl() const;
     Q_INVOKABLE QString userId() const;
+    Q_INVOKABLE QString userName() const;
 
 signals:
     void success(PluginRequestReply*);
@@ -56,6 +57,7 @@ private slots:
     void requestSuccess();
     void newItemId(QString id);
     void gotUserPictureUrl(QString id, QString url);
+    void gotUserName(QString id, QString name);
     void error(QString error);
 
 private:
@@ -65,6 +67,7 @@ private:
 
     QString m_userId;
     QString m_userPictureUrl;
+    QString m_userName;
 
     bool m_finished;
 };
