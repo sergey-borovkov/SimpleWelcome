@@ -10,12 +10,10 @@ Item {
     width: cellWidth
     height: wrapper.height//140
 
-    GridView.onRemove: SequentialAnimation {
-                 PropertyAction { target: cell; property: "GridView.delayRemove"; value: true }
-                 NumberAnimation { target: wrapper; property: "scale"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
-                 PropertyAction { target: gridMouseArea; property: "dndSrcId"; value: -1 }
-                 PropertyAction { target: cell; property: "GridView.delayRemove"; value: false }
-             }
+    GridView.onRemove: {
+        cell.GridView.delayRemove = true
+        wrapper.state = "REMOVING"
+    }
 
     Item {
         id: wrapper
@@ -133,7 +131,12 @@ Item {
                     target: wrapper
                     parent: tabWrapper
                 }
+            },
+
+            State {
+                name: "REMOVING"
             }
+
         ]
 
         transitions: [
@@ -152,6 +155,17 @@ Item {
                     via: tabWrapper
                     NumberAnimation { duration: 200 }
                 }
+            },
+            Transition {
+                from: "cellInDrag"
+                to: "REMOVING"
+
+                SequentialAnimation {
+                                 NumberAnimation { target: wrapper; property: "scale"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
+                                 PropertyAction { target: gridMouseArea; property: "dndSrcId"; value: -1 }
+                                 PropertyAction { target: cell; property: "GridView.delayRemove"; value: false }
+                             }
+
             }
         ]
 
