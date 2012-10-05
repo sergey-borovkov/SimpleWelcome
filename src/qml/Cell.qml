@@ -11,7 +11,6 @@ Item {
     height: wrapper.height//140
 
     GridView.onRemove: {
-        cell.GridView.delayRemove = true
         wrapper.state = "REMOVING"
     }
 
@@ -135,6 +134,11 @@ Item {
 
             State {
                 name: "REMOVING"
+
+                ParentChange {
+                    target: wrapper
+                    parent: tabRoot
+                }
             }
 
         ]
@@ -161,6 +165,7 @@ Item {
                 to: "REMOVING"
 
                 SequentialAnimation {
+                                 PropertyAction { target: cell; property: "GridView.delayRemove"; value: true }
                                  NumberAnimation { target: wrapper; property: "scale"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
                                  PropertyAction { target: gridMouseArea; property: "dndSrcId"; value: -1 }
                                  PropertyAction { target: cell; property: "GridView.delayRemove"; value: false }
