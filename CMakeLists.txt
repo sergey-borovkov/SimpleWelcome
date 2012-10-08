@@ -40,6 +40,12 @@ include_directories(${CMAKE_BINARY_DIR})
 find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
 
+find_package(Qt4 REQUIRED QtCore QtGui QtWebkit QtNetwork)
+include(${QT_USE_FILE})
+
+add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+include_directories(${KDE4_INCLUDES})
+
 # Special target for assets
 add_custom_target(build-assets ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_BINARY_DIR}/${_assets_install_path}"

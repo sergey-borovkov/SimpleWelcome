@@ -1,11 +1,9 @@
-find_package(Qt4 REQUIRED QtCore QtGui QtDeclarative)
-include(${QT_USE_FILE})
 qt4_automoc(${qtproject_SRCS})
-add_definitions(${QT_DEFINITIONS})
+
 set(RESOURCES timeframe/resources.qrc)
 qt4_add_resources(QRC_SOURCES ${RESOURCES})
 
-include_directories(${KDE4_INCLUDES} ${QT_QDECLARATIVE_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../timeframelib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../timeframelib)
 
 file(GLOB HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/qmlapplicationviewer/*.h ${CMAKE_CURRENT_SOURCE_DIR}/timeframe/*.h ${CMAKE_CURRENT_SOURCE_DIR}/timeframe/social/*.h ${CMAKE_CURRENT_SOURCE_DIR}/timeframe/local/*.h)
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/qmlapplicationviewer/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/timeframe/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/timeframe/social/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/timeframe/local/*.cpp)
@@ -17,17 +15,16 @@ add_custom_target(build-qml ALL
     COMMENT "Building/copying the QML files"
 )
 kde4_add_executable(rosa-launcher ${HEADERS} ${SOURCES} ${QML} ${QRC_SOURCES})
-#add_dependencies(rosa-launcher build-assets build-qml)
 
 find_package(Nepomuk REQUIRED)
+
+SET(QT_USE_QDECLARATIVE TRUE)
 
 target_link_libraries(rosa-launcher
                         ${KDE4_KDEUI_LIBS}
                         ${KDE4_PLASMA_LIBS}
                         ${KDE4_KIO_LIBS}
                         ${KDE4_KFILE_LIBS}
-                        ${QT_LIBRARIES}
-                        ${QT_QDECLARATIVE_LIBRARIES}
                         ${NEPOMUK_LIBRARIES}
                         ${NEPOMUK_QUERY_LIBRARIES}
                         ${SOPRANO_LIBRARIES}
