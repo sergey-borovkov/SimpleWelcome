@@ -23,7 +23,6 @@ GridView {
     // constants
     property int columns: constants.gridColumns
     property int highlightMoveDurationConst: 150
-    property int gridCellHeight: constants.cellHeight
 
     property int cellHorizontalSpacing: Math.max(0, (parent.width - constants.cellWidth * columns) / (columns + 1))
 
@@ -32,7 +31,7 @@ GridView {
         leftMargin: cellHorizontalSpacing
     }
     cellWidth: (width - cellHorizontalSpacing) / columns - 1
-    cellHeight: gridCellHeight
+    cellHeight: constants.cellHeight
 
     delegate: Cell {}
 
@@ -78,7 +77,7 @@ GridView {
     }
 
     function getCellIndex(inX, inY) {
-        var curRow = Math.round((inY - (constants.cellHeight/2)) / cellHeight)
+        var curRow = Math.round((inY - (cellHeight/2)) / cellHeight)
         var curColumn = Math.max(0, Math.min(columns - 1, Math.round((inX - (constants.cellWidth/2)) / cellWidth)))
         var curIndex = Math.max(0, Math.min(count - 1, curRow * columns + curColumn))
         return curIndex

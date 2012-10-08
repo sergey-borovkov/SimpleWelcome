@@ -261,7 +261,7 @@ QVariantMap QmlApplicationViewer::loadSetting(QString groupName)
 {
     QVariantMap list;
 
-    KConfigGroup configGroup(KGlobal::config(), "Stacks");
+    KConfigGroup configGroup(KGlobal::config(), groupName);
     QMap<QString, QString > map = configGroup.entryMap();
 
     foreach(QString key, map.keys())

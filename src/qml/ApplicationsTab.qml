@@ -11,12 +11,13 @@ FocusScope {
         id: groupTab
         groups: [
             {
-                groupName: "Ololo",
+                groupName: "Applications",
                 dataSource: dataSource_Apps,
                 draggable: true,
                 enabledSystemDnD: true,
                 groupNameVisible: false,
-                stackable: true
+                stackable: true,
+                groupCellHeight: tabListView.height / 5 - 1
             }
         ]
     }

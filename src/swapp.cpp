@@ -336,14 +336,15 @@ int QMLConstants::cellWidth()
 
 int QMLConstants::cellHeight()
 {
-    //return (viewer->updatableHeight() - 80 /*topBar*/ - 80 /*bottomBar*/ - 80 - (textToGridSpacing() + groupTextHeight())*3 - gridWithGroupsSpacing()*2) / 4 - 1;
-    return viewer->updatableHeight() >= 1080 ? 180 :
+    //return (viewer->updatableHeight() - 80 /*topBar*/ - 80 /*bottomBar*/ - (textToGridSpacing() + groupTextHeight())*3 - gridWithGroupsSpacing()*2) / 4 - 1;
+    return viewer->updatableHeight() >= 1080 ? 170 :
            viewer->updatableHeight() >= 1024 ? 165 :
            viewer->updatableHeight() >= 900 ? 130 :
            viewer->updatableHeight() >= 850 ? 120 :
            viewer->updatableHeight() >= 800 ? 110 :
            viewer->updatableHeight() >= 750 ? 100 :
            80;
+    //return (viewer->updatableHeight() - 162) / 5 - 1;
 }
 
 int QMLConstants::iconTextSize()

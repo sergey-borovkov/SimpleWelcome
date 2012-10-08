@@ -50,7 +50,7 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 16
             width: parent.width
-            height: parent.height - 32
+            height: parent.height - 50
 
             snapMode: ListView.SnapOneItem
             orientation: ListView.Horizontal
@@ -115,13 +115,13 @@ Item {
 
                 // Constants. Used hack to retrieve them from C++, no way to do it straightforward AFAIK
                 var spacing = constants.gridWithGroupsSpacing, // spacing between GridWithGroups
-                        columns = constants.gridColumns,
-                        cellRealHeight = constants.cellHeight
+                        columns = constants.gridColumns
 
                 var availableHeight = 0
                 //console.log("Starting to split " + availableHeight + "px to grids")
                 for (var i = 0; i < groups.length; i++) // Iterating by grids
                 {
+                    var cellRealHeight = groups[i].groupCellHeight !== undefined ? groups[i].groupCellHeight : constants.cellHeight
                     //console.log(i + " - NEW ITERATION!!!!!!!!! with " + groups[i].groupName)
                     var textHeight = (groups[i].groupNameVisible !== undefined && groups[i].groupNameVisible === false ? 0 : constants.groupTextHeight + constants.textToGridSpacing),
                             itemCount = groups[i].dataSource.getItemCount(groups[i].groupName),
@@ -146,14 +146,6 @@ Item {
                         //console.log(i + " - " + groups[i].groupName + " is going to be split or created new tab or both")
                         var rowsLeftToFit = Math.ceil(itemCount / columns)
                         var lastNotInsertedItem = 0
-
-                        if (rowsLeftToFit <= 0) // REMOVE THIS
-                        {
-                            //console.log(i + " - " + "Empty group. Left: " + availableHeight)
-                            insertGrid(currentGroup, true)
-                            availableHeight = gridsListView.height - textHeight - spacing
-                            //console.log(i + " - " + "Current: " + gridsListView.currentIndex)
-                        }
 
                         while (rowsLeftToFit > 0)
                         {
@@ -290,7 +282,7 @@ Item {
             width: childrenRect.width
             height: 30
             anchors {
-                bottom: gridsListView.bottom;
+                top: gridsListView.bottom;
                 horizontalCenter: gridsListView.horizontalCenter
             }
             spacing: 20
