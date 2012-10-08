@@ -70,8 +70,6 @@ QPixmap PreviewGenerator::getPreviewPixmap(QString filePath)
 
 PreviewGenerator * PreviewGenerator::instance()
 {
-    static QMutex m;
-    QMutexLocker locker(&m);
     if (!m_instance)
         m_instance = new PreviewGenerator;
     return m_instance;
