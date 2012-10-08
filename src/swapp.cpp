@@ -278,13 +278,12 @@ void SWApp::initTimeframeSocialMode()
 
     connect(m_manager, SIGNAL(removeType(QString)), timeScaleModel, SLOT(removeItems(QString)));
 
-    qmlRegisterUncreatableType<PluginRequestReply>("Widgets", 1, 0, "PluginRequestReply", "This class should be created in cpp"); // it's not supposed to be in widgets, should move later
-
     m_viewer->rootContext()->setContextProperty("socialProxy", m_manager);
     m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
     m_viewer->rootContext()->setContextProperty("socialDayModel", socialProxyModel);
     m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
     m_viewer->rootContext()->setContextProperty("timeScaleModel", timeScaleFilterModel);
+    m_viewer->rootContext()->setContextProperty("previewGenerator", PreviewGenerator::instance());
 
     connect(m_proxy, SIGNAL(newMonth(int, int, QString)), timeScaleModel, SLOT(newItem(int, int, QString)));
     connect(m_manager, SIGNAL(newMonth(int, int, QString)), timeScaleModel, SLOT(newItem(int, int, QString)));
