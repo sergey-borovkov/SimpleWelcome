@@ -45,7 +45,7 @@ void NepomukSource::startSearchFromQueue()
 
     this->direction = NepomukSource::Right;
 
-    QString sparqlQuery("select ?url ?lastModified ?mimeType where { ?r nie:url ?url . ?r nie:lastModified ?lastModified . ?r nie:mimeType ?mimeType . { ?r a nfo:Document .} UNION { ?r a nfo:Image . } }");
+    QString sparqlQuery("select ?url ?lastModified ?mimeType where { ?r nie:url ?url . ?r nie:lastModified ?lastModified . ?r nie:mimeType ?mimeType . { ?r a nfo:Document .} UNION { ?r a nfo:Image . } UNION { ?r a nfo:Video . }}");
     Soprano::Model* model = Nepomuk::ResourceManager::instance()->mainModel();
     Soprano::QueryResultIterator it = model->executeQuery( sparqlQuery, Soprano::Query::QueryLanguageSparql );
 
