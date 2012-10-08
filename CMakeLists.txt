@@ -40,7 +40,7 @@ include_directories(${CMAKE_BINARY_DIR})
 find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
 
-find_package(Qt4 REQUIRED QtCore QtGui QtWebkit QtNetwork)
+find_package(Qt4 REQUIRED QtCore QtGui QtWebkit QtNetwork QtDeclarative)
 include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})

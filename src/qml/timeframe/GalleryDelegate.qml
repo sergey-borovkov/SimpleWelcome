@@ -90,10 +90,8 @@ Item {
         }
     }
 
-    function getDelegateWidth( count ){
-        if (count === 0)
-        {
-            //galleryLister.startSearch(date,1)   //Start new search if null item becomes visible
+    function getDelegateWidth( count ) {
+        if (count === 0) {
             count++
         }
         var x = Math.ceil(count /3)

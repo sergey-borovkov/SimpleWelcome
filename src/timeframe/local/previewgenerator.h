@@ -56,7 +56,7 @@ private:
     explicit PreviewGenerator(QObject *parent = 0);
     LocalDayModel * m_model;
 
-    QHash<QString, QPixmap> previews;
+    QHash<QString, QPixmap> m_previews;
     QSet<QString> m_files;
     QPixmap defaultPreview;
 
