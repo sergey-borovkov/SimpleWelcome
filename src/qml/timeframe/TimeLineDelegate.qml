@@ -11,7 +11,7 @@ Item {
     Item {
         id: cloudBorder
         y: (index%2 === 1)? parent.height/2 + timeScale.height/2 : 0
-        x: -100        
+        x: -100
         width: parent.width + 200
         height: parent.height/2 - timeScale.height/2
         Loader {
@@ -19,9 +19,11 @@ Item {
             anchors.fill: parent
             source: getSourceComponent(size)
             onLoaded: {
-                   cloud.item.cloudDate = date
-                   cloud.item.model = localDayModel.itemsModel(date)
-                   cloud.item.createConnection()
+                cloud.item.cloudDate = date
+                cloud.item.model = localDayModel.itemsModel(date)
+                cloud.item.createConnection()
+
+
             }
         }
     }
@@ -30,7 +32,6 @@ Item {
     {
         if (count === 0)
         {
-            //galleryLister.startSearch(date,1)   //Start new search if null item becomes visible
             return "CloudNull.qml"
         }
         else if (count === 1)

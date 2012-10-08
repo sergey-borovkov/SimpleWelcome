@@ -45,12 +45,7 @@ Item {
     function currentDateChanged()
     {
         var d = new Date(__year, __month, day )
-        //activityProxy.startSearch(d, direction)
-        activityProxy.startSearch(d, true)
-        //__isSearching = true
-        //searchLabel.visible = true
-        // if (timeFrameTab.state ==="gallery" )
-        //   timeFrameTab.state = "gallerySearch"
+        activityProxy.startSearch()
     }
 
     function getMenuItemText(id)
