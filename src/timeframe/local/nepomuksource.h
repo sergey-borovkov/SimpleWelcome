@@ -1,47 +1,23 @@
 #ifndef NEPOMUKSOURCE_H
 #define NEPOMUKSOURCE_H
 
-#include "activitysource.h"
-
-#include <Nepomuk/Query/Query>
-#include <Nepomuk/Query/Result>
-#include <Nepomuk/Query/FileQuery>
-
 #include <QDate>
 #include <QTimer>
 
-namespace Nepomuk
-{
-namespace Query
-{
-class QueryServiceClient;
-}
-}
+class Activity;
 
-class NepomukSource : public ActivitySource
+class NepomukSource : public QObject
 {
     Q_OBJECT
 public:
-    enum Mode {
-        Normal = 0,
-        Detailed
-    };
-
     explicit NepomukSource(QObject *parent = 0);
+
+public slots:
+    virtual void startSearch();
 
 signals:
     void searchFinished();
-    void resultCount(int);
-
-public slots:
-    virtual void startSearch(const QDate &beginDate, int direction);
-    virtual void setLimit(int limit);
-
-private:
-    Direction direction;
-    int m_limit;
-    QList<QDate> m_searchQueue;
-    QTimer* m_timer;
+    void newActivities(QList<Activity *>);
 };
 
 #endif // NEPOMUKSOURCE_H

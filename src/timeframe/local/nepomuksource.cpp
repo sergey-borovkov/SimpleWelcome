@@ -1,13 +1,6 @@
-#include "activityset.h"
 #include "nepomuksource.h"
+#include "activityset.h"
 
-#include <Nepomuk/Query/FileQuery>
-#include <Nepomuk/Query/OrTerm>
-#include <Nepomuk/Query/QueryServiceClient>
-#include <Nepomuk/Query/ResourceTypeTerm>
-#include <Nepomuk/Query/Result>
-#include <Nepomuk/Vocabulary/NFO>
-#include <Nepomuk/Vocabulary/NIE>
 #include <Nepomuk/ResourceManager>
 #include <Soprano/Model>
 #include <Soprano/QueryResultIterator>
@@ -16,28 +9,14 @@
 #include <QtCore/QDate>
 #include <QtCore/QTimer>
 
-using namespace Nepomuk::Vocabulary;
-using namespace Nepomuk::Query;
-
 NepomukSource::NepomukSource(QObject *parent) :
-    ActivitySource(parent), m_limit(0), m_timer(0)
+    QObject(parent)
 {
     qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
 }
 
-void NepomukSource::startSearch(const QDate &beginDate, int direction)
+void NepomukSource::startSearch()
 {
-    Q_UNUSED(beginDate)
-    Q_UNUSED(direction)
-    if (m_timer) {
-        if (m_timer->isActive()) {
-            emit finishedListing();
-            return;
-        }
-    }
-
-    this->direction = NepomukSource::Right;
-
     QString sparqlQuery("select ?url ?lastModified ?mimeType where { ?r nie:url ?url . ?r nie:lastModified ?lastModified . ?r nie:mimeType ?mimeType . { ?r a nfo:Document .} UNION { ?r a nfo:Image . } UNION { ?r a nfo:Video . }}");
     Soprano::Model* model = Nepomuk::ResourceManager::instance()->mainModel();
     Soprano::QueryResultIterator it = model->executeQuery( sparqlQuery, Soprano::Query::QueryLanguageSparql );
@@ -71,16 +50,5 @@ void NepomukSource::startSearch(const QDate &beginDate, int direction)
         emit newActivities(activities);
     }
 
-
-    if (!m_timer) {
-        m_timer = new QTimer(this);
-    }
-    m_timer->start(1000 * 60 * 10); //One query in ten minutes
     emit searchFinished();
-
-}
-
-void NepomukSource::setLimit(int limit)
-{
-    m_limit = limit;
 }
