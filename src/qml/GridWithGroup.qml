@@ -22,6 +22,8 @@ Column {
     property alias dragOutBottomMargin: iconGridView.dragOutBottomMargin
     property alias myActiveFocus: iconGridView.myActiveFocus
 
+    property int groupCellHeight: constants.cellHeight
+
     signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
     signal showPopupGroup(int index, variant stackItemData, variant iconCoords)
@@ -45,9 +47,9 @@ Column {
     }
 
     function loadStacks() {
-        if (groupName == "Ololo")
+        if (groupName == "Applications")
         {
-            var res = mainWindow.loadSetting("ololo")
+            var res = mainWindow.loadSetting("Stacks")
             //console.log("LOADING STACKS")
 
             for (var captionStackingTo in res) {
@@ -140,7 +142,8 @@ Column {
         id: iconGridView
 
         width: parent.width
-        height: Math.ceil(count / columns) * gridCellHeight
+        height: groupName == "Applications" ? gridsListView.height : Math.ceil(count / columns) * groupCellHeight
+        cellHeight: groupCellHeight
         interactive: false
 
         property bool myActiveFocus: false
