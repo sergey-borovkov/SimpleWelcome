@@ -26,7 +26,6 @@
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 #include <QtCore/QPair>
-#include <QtCore/QSet>
 
 #include <kio/previewjob.h>
 #include <kfileitem.h>
@@ -40,12 +39,11 @@ class PreviewGenerator : public QObject
 
 public:
     static PreviewGenerator *instance();
-    QPixmap getPreviewPixmap(QString filePath);
+    QPixmap previewPixmap(QString filePath) const;
     void setModel(LocalDayModel* model);
 
 public slots:
     void start(const QStringList& list);
-
 
 private slots:
     void setPreview(const KFileItem&, const QPixmap&);
@@ -57,7 +55,6 @@ private:
     LocalDayModel * m_model;
 
     QHash<QString, QPixmap> m_previews;
-    QSet<QString> m_files;
     QPixmap defaultPreview;
 
     static PreviewGenerator *m_instance;

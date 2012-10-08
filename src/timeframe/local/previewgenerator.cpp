@@ -63,11 +63,6 @@ void PreviewGenerator::setNullIcon(const KFileItem &item)
     setPreview(item, pixmap);
 }
 
-QPixmap PreviewGenerator::getPreviewPixmap(QString filePath)
-{
-    return m_previews.value(filePath, defaultPreview);
-}
-
 PreviewGenerator * PreviewGenerator::instance()
 {
     if (!m_instance)
@@ -75,19 +70,20 @@ PreviewGenerator * PreviewGenerator::instance()
     return m_instance;
 }
 
+QPixmap PreviewGenerator::previewPixmap(QString filePath) const
+{
+    return m_previews.value(filePath, defaultPreview);
+}
+
 void PreviewGenerator::start(const QStringList& list)
 {
     m_fileList.clear();
     for (int i = 0; i < list.size(); i++) {
-        KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, list[i], false);
-        if (m_files.contains(list[i]))
-            continue;
-
+        KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, list[i], true);
         m_fileList.append(fileItem);
-        m_files.insert(list[i]);
     }
 
-    m_job = KIO::filePreview(m_fileList, 512, 0 , 0, 0, true, true, &m_plugins);
+    m_job = KIO::filePreview(m_fileList, QSize(512, 512), &m_plugins);
     m_job->setIgnoreMaximumSize();
     m_job->setAutoDelete(true);
 

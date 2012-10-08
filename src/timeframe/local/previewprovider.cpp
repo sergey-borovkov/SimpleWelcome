@@ -43,7 +43,7 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
         rounded = true;
         str.chop(8);
     }
-    QPixmap pixmap = PreviewGenerator::instance()->getPreviewPixmap(str);
+    QPixmap pixmap = PreviewGenerator::instance()->previewPixmap(str);
     if (requestedSize.isValid())
         pixmap = pixmap.scaled(requestedSize);
     if (size)
