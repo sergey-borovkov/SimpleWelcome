@@ -22,11 +22,10 @@ signals:
     void newActivities(QList<Activity*>);
     void newMonth(int, int , QString type);
     void finished();
-    void search(QDate, int);
+    void search();
 
 public slots:
-    void startSearch(QDate date, int direction);
-    void resultCount(int);
+    void startSearch();
     int getIndexByDate(int year, int month,  bool direction);
     QDate getDateOfIndex(int listIndex);
 

@@ -50,7 +50,8 @@ void PreviewGenerator::setPreview(const KFileItem &item, const QPixmap &pixmap)
         QPixmap scaledPixmap = videoPixmap.scaled(pict.width() / 2, pict.height() / 2,  Qt::KeepAspectRatio, Qt::SmoothTransformation);
         p.drawPixmap(pict.width() / 2 - scaledPixmap.width() / 2, pict.height() / 2 - scaledPixmap.height() / 2 ,  scaledPixmap);
     }
-    previews.insert(item.localPath(), pict);
+
+    m_previews.insert(item.localPath(), pict);
 
     notifyModel(item.localPath());
 }
@@ -64,14 +65,13 @@ void PreviewGenerator::setNullIcon(const KFileItem &item)
 
 QPixmap PreviewGenerator::getPreviewPixmap(QString filePath)
 {
-    if (previews.contains(filePath))
-        return previews[filePath];
-    else
-        return defaultPreview;
+    return m_previews.value(filePath, defaultPreview);
 }
 
 PreviewGenerator * PreviewGenerator::instance()
 {
+    static QMutex m;
+    QMutexLocker locker(&m);
     if (!m_instance)
         m_instance = new PreviewGenerator;
     return m_instance;
