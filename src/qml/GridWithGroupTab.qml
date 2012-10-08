@@ -79,26 +79,6 @@ Item {
                 }
             }
 
-            function gridsSelectionChanged(obj) // Used to be used for vertical scrolling
-            {
-                console.log("CALLED!!!!!!!!!!!!")
-                if (moving)
-                    return
-
-                var itemHere = mapFromItem(obj, 0, 0)
-                var itemInContainer = mapToItem(gridsContainer, itemHere.x, itemHere.y)
-
-                if (itemInContainer.y + constants.cellHeight > height + contentY)
-                    contentY += itemHere.y - height + constants.cellHeight
-                else if(itemInContainer.y < contentY)
-                {
-                    if (itemInContainer.y < constants.cellHeight)
-                        contentY = 0
-                    else
-                        contentY += itemHere.y
-                }
-            }
-
             function dndStateChanged(isDrag)
             {
                 interactive = !isDrag
@@ -231,8 +211,6 @@ Item {
             }
 
             Component.onCompleted: {
-                //gridsContainer.gridCurrentItemChanged.connect(gridsSelectionChanged)
-
                 for (var i = 0; i < groups.length; i++)
                 {
                     groups[i].dataSource.resetContent.connect(updateGridsContent)

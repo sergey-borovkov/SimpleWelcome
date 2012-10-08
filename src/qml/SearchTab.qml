@@ -3,7 +3,7 @@ import QtQuick 1.1
 FocusScope {
     id: searchTab
     width: parent.width
-    anchors.topMargin: 16
+
     property variant grid: groupTab.tabListView.activeGridView
     property alias tab: groupTab
 

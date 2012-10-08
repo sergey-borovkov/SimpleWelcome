@@ -62,8 +62,6 @@ private:
     Plasma::RunnerManager *m_runnerManager;
 
     QVector<MatchResults> matches;
-    //QHash<QString, Plasma::QueryMatch*> m_matches;
-    QSet<QString> m_groups;
 
     DataSource_RecentApps *recentApps;
 };
