@@ -245,7 +245,7 @@ Column {
             if (newIndex == -1)
                 dataSource.itemClicked(-1)
             else
-                dataSource.itemClicked(realIndex, model.get(newIndex).group)
+                dataSource.itemClicked(realIndex, model.get(newIndex).searchGroup)
         }
 
         function forceMyFocus() {
