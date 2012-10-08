@@ -4,11 +4,15 @@ import ".."
 PathView {
     id: pathView
     anchors.fill: parent
+
+    property int itemCount: pathView.count
+    property int itemWidth: 140
+
     path: Path {
-        startX: (parent.width - 128 * pathView.count)/2
+        startX: (parent.width - itemWidth * (itemCount - 1))/2
         startY: height/2
         PathLine {
-            x: (parent.width - 128 * pathView.count)/2 + 128 * pathView.count
+            x: (parent.width + itemWidth * (itemCount + 1))/2
             y: height/2
         }
     }
