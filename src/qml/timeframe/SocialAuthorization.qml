@@ -17,6 +17,8 @@ PathView {
         }
     }
 
+    interactive: false
+
     delegate: Item {
         width: authorizationItem.width
         height: authorizationItem.height
@@ -37,6 +39,7 @@ PathView {
                 height: 128
                 source: "image://plugin/" + name
             }
+
             Item {
                 id: button
                 anchors.top: img.bottom

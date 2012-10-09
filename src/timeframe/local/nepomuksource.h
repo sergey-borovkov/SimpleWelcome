@@ -15,6 +15,9 @@ public:
 public slots:
     virtual void startSearch();
 
+    bool isNepomukInitialized();
+    void nepomukConfigure();
+
 signals:
     void searchFinished();
     void newActivities(QList<Activity *>);
