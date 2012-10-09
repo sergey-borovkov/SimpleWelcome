@@ -18,7 +18,10 @@ Item {
     }
 
     function processKeyboard(key) {
-        if (gridsListView.currentItem)
+        if (popupFrame.state == "OPEN") {
+            popupFrame.gridGroup.gridView.processKeyboard(key)
+        }
+        else if (gridsListView.currentItem)
             gridsListView.currentItem.processKeyboard(key)
     }
 
@@ -224,6 +227,8 @@ Item {
             {
                 popupFrame.state = "CLOSED"
                 stackCellOpenedId = -1
+                topBar.forceActiveFocus()
+                activeGridView.myActiveFocus = true
             }
 
             function showGroup(index, item, iconCoords)
@@ -245,10 +250,12 @@ Item {
                         //console.log("N" + i + ": " + item.stack[i].caption + " [" + item.stack[i].id + "]")
                         popupFrame.gridGroup.gridView.newItemData(item.stack[i])
                     }
+                    popupFrame.gridGroup.gridView.forceMyFocus()
 
                     stackCellOpenedId = item.id
 
                     popupFrame.state = "OPEN"
+                    activeGridView.myActiveFocus = false
                 }
                 else
                     hideGroup()
@@ -325,6 +332,8 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
+
+                hoverEnabled: true
 
                 onClicked: gridsListView.hideGroup()
             }

@@ -91,10 +91,21 @@ FocusScope {
                         event.key == Qt.Key_Up ||
                         event.key == Qt.Key_Down ||
                         event.key == Qt.Key_Return ||
-                        event.key == Qt.Key_Enter)
+                        event.key == Qt.Key_Enter ||
+                        event.key == Qt.Key_Tab)
                 {
                     event.accepted = true
                     tabListView.processKeyboard(event.key)
+                }
+                else if (!searchInput.text.length) {
+                    if (event.key == Qt.Key_Space) {
+                        event.accepted = true
+                        tabListView.currentTabIndexChanged((tabListView.currentIndex + tabListView.count) % tabListView.count + 1)
+                    }
+                    else if (event.key == Qt.Key_Backspace) {
+                        event.accepted = true
+                        tabListView.processKeyboard(event.key)
+                    }
                 }
             }
         }

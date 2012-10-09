@@ -27,6 +27,10 @@ Item {
             event.accepted = true;
             mainWindow.close();
         }
+        else if (event.key == Qt.Key_Space) {
+            event.accepted = true
+            tabListView.currentTabIndexChanged((tabListView.currentIndex + tabListView.count + 1) % tabListView.count + 1)
+        }
     }
 
     Component.onCompleted: {

@@ -278,7 +278,16 @@ GridView {
             break
 
         case Qt.Key_Backspace:
-            model.itemClicked(-1)
+            //model.itemClicked(-1)
+            if (isPopupGroup)
+                gridsListView.hideGroup()
+            break
+
+        case Qt.Key_Tab:
+            console.log("KEY TAB")
+            if (isPopupGroup) {
+                groupLabel.forceActiveFocus()
+            }
             break
         }
 
@@ -432,7 +441,7 @@ GridView {
             {
                 // Optimize later to lesser use of getItemUnderCursor(true)
                 var newCurrentIndex = getItemUnderCursor(!grid.myActiveFocus).index
-                if (newCurrentIndex != -1 && (newCurrentIndex != currentIndex || !grid.activeFocus))
+                if (newCurrentIndex != -1 && (newCurrentIndex != currentIndex || !grid.myActiveFocus))
                 {
                     if (!grid.myActiveFocus)
                     {
@@ -474,10 +483,10 @@ GridView {
 
                 if (mouseY < -dragOutTopMargin || mouseY > grid.height + dragOutBottomMargin)
                 {
-                    if (groupRoot !== undefined && groupRoot.isPopupGroup !== undefined && groupRoot.isPopupGroup)
+                    if (isPopupGroup)
                     {
                         console.log("OUT")
-                        draggedOut(model.get(gridMouseArea.dndDest))
+                        draggedOut(model.get(dndDest))
                         // onReleased():
                         dndSrcId = -1
                         dndStateChanged(false)
@@ -527,13 +536,13 @@ GridView {
             var dndSrcIdSaved = dndSrcId
 
             // Adding icon to stack
-            if (gridMouseArea.draggedItemStackedAt !== undefined && model.get(gridMouseArea.dndDest).stack === undefined) {
+            if (draggedItemStackedAt !== undefined && model.get(dndDest).stack === undefined) {
                 //console.log("STACK UPPED")
 
-                if (dndDest < gridMouseArea.draggedItemStackedAt) {
-                    model.move(gridMouseArea.dndDest, count - 1, 1)
-                    //currentIndex = gridMouseArea.draggedItemStackedAt
-                    gridMouseArea.dndDest = count - 1
+                if (dndDest < draggedItemStackedAt) {
+                    model.move(dndDest, count - 1, 1)
+                    //currentIndex = draggedItemStackedAt
+                    dndDest = count - 1
                 }
 
                 model.remove(dndDest)
@@ -546,7 +555,10 @@ GridView {
 
                 if (dndSrcIdSaved != -1) {
                     dndStateChanged(false)
+                    // MOVE ALL ITEMS TO -- IN (> dndSrcIdSaved && <= dndDest)
+                    console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest)
 
+                    // Sync icons order in C++ model to QML model. Used in Recent Apps
                     if (typeof dataSource.itemDragged !== "undefined" && dndDest != -1) {
                         //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
 
@@ -566,7 +578,7 @@ GridView {
                 }
             }
 
-            gridMouseArea.draggedItemStackedAt = undefined
+            draggedItemStackedAt = undefined
 
 
             // Duplicates detection. Remove later when sure no duplication occurs
