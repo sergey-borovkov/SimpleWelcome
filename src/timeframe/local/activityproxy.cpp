@@ -1,6 +1,6 @@
 #include "activityproxy.h"
 #include "activityset.h"
-#include "localdaymodel.h"
+#include "localcontentmodel.h"
 #include "nepomuksource.h"
 #include "previewgenerator.h"
 
@@ -40,7 +40,7 @@ void ActivityProxy::newData(QList<Activity *> list)
     emit newActivities(list);
 }
 
-void ActivityProxy::setModel(LocalDayModel* model)
+void ActivityProxy::setModel(LocalContentModel* model)
 {
     if (m_model)
         m_model = model;

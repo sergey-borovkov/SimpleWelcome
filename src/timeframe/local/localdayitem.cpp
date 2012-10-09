@@ -1,7 +1,7 @@
 #include "activityset.h"
 #include "itemmodel.h"
 #include "localdayitem.h"
-#include "localdaymodel.h"
+#include "localcontentmodel.h"
 
 #include <QtCore/QVariant>
 
@@ -18,7 +18,7 @@ void TimeFrameFilterModel::setSourceModel(ItemModel * sourceModel)
         connect(sourceModel, SIGNAL(gotThumbnail()), this, SIGNAL(gotThumbnail()));
     }
 }
-QString TimeFrameFilterModel::url(int row)
+QString TimeFrameFilterModel::url(int row) const
 {
     return data(index(row, 0), ItemModel::UrlRole).toString();
 }
@@ -33,7 +33,7 @@ LocalDayItem::LocalDayItem(const QDate &date, QObject *parent) :
     m_model->setDynamicSortFilter(true);
     m_model->setFilterRole(ItemModel::TypeRole);
 
-    LocalDayModel *model = qobject_cast<LocalDayModel *>(parent);
+    LocalContentModel *model = qobject_cast<LocalContentModel *>(parent);
     if (model)
         m_model->setFilterRegExp(model->filter());
 }

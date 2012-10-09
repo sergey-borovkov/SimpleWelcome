@@ -19,7 +19,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "localdaymodel.h"
+#include "localcontentmodel.h"
 #include "previewgenerator.h"
 
 #include <QtCore/QFileInfo>
@@ -91,7 +91,7 @@ void PreviewGenerator::start(const QStringList& list)
     connect(m_job, SIGNAL(failed(const KFileItem&)), SLOT(setNullIcon(const KFileItem &)));
 }
 
-void PreviewGenerator::setModel(LocalDayModel* model)
+void PreviewGenerator::setModel(LocalContentModel* model)
 {
     m_model = model;
 }
