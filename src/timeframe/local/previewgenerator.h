@@ -31,7 +31,8 @@
 #include <kfileitem.h>
 
 class FileModel;
-class LocalDayModel;
+class LocalContentModel;
+class TimeFrameFilterModel;
 
 class PreviewGenerator : public QObject
 {
@@ -40,7 +41,7 @@ class PreviewGenerator : public QObject
 public:
     static PreviewGenerator *instance();
     QPixmap previewPixmap(QString filePath) const;
-    void setModel(LocalDayModel* model);
+    void setModel(LocalContentModel* model);
 
 public slots:
     void start(const QStringList& list);
@@ -52,7 +53,7 @@ private slots:
 
 private:
     explicit PreviewGenerator(QObject *parent = 0);
-    LocalDayModel * m_model;
+    LocalContentModel * m_model;
 
     QHash<QString, QPixmap> m_previews;
     QPixmap defaultPreview;

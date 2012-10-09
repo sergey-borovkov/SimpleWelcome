@@ -7,7 +7,7 @@
 #include <QtCore/QObject>
 
 class Activity;
-class LocalDayModel;
+class LocalContentModel;
 
 class ActivityProxy : public QObject
 {
@@ -16,7 +16,7 @@ public:
     explicit ActivityProxy(QObject *parent = 0);
 
     void addNepomukSource(NepomukSource* source);
-    void setModel(LocalDayModel* model);
+    void setModel(LocalContentModel* model);
 
 signals:
     void newActivities(QList<Activity*>);
@@ -33,7 +33,7 @@ private slots:
     void newData(QList<Activity*>);
 
 private:
-    LocalDayModel* m_model;
+    LocalContentModel* m_model;
     NepomukSource* m_source;
 };
 

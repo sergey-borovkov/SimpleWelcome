@@ -1,8 +1,5 @@
-#ifndef LOCALDAYMODEL_H
-#define LOCALDAYMODEL_H
-
-#include "itemmodel.h"
-#include "localdayitem.h"
+#ifndef LOCALCONTENTMODEL_H
+#define LOCALCONTENTMODEL_H
 
 #include <QtCore/QObject>
 #include <QtGui//QSortFilterProxyModel>
@@ -12,24 +9,18 @@
 class ItemModel;
 class Activity;
 class ActivityProxy;
+class LocalDayItem;
 
-class TimeFrameDayFilterModel : public QSortFilterProxyModel
+/**
+ * @brief The LocalContentModel class stores local content
+ *        by date, where every item keeps all content for
+ *        certain day
+ */
+class LocalContentModel : public ListModel
 {
     Q_OBJECT
 public:
-    explicit TimeFrameDayFilterModel(QObject * parent = 0);
-public slots:
-    void setFilter(const QString &filter);
-    QObject* itemsModel(QDate date) const;
-    int getIndexByDate(int year, int month, bool direction);
-    QDate getDateOfIndex(int listIndex);
-};
-
-class LocalDayModel : public ListModel
-{
-    Q_OBJECT
-public:
-    explicit LocalDayModel(QHash<int, QByteArray> roles, QObject *parent = 0);
+    explicit LocalContentModel(QHash<int, QByteArray> roles, QObject *parent = 0);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     void appendRow(LocalDayItem* item);
     void appendRows(const QList<LocalDayItem*> &items);
@@ -60,4 +51,20 @@ private:
     QRegExp m_filter;
 };
 
-#endif // GALLERYMODEL_H
+/**
+ * @brief The LocalContentFilterModel class allows filtering
+ *        of LocalContentModel by content type - video/documents/images
+ *        or everthing togethere
+ */
+class LocalContentFilterModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    explicit LocalContentFilterModel(QObject * parent = 0);
+    Q_INVOKABLE void setFilter(const QString &filter);
+    Q_INVOKABLE QObject* itemsModel(QDate date) const;
+    Q_INVOKABLE int getIndexByDate(int year, int month, bool direction);
+    Q_INVOKABLE QDate getDateOfIndex(int listIndex);
+};
+
+#endif // LOCALCONTENTMODEL_H

@@ -20,16 +20,18 @@ class TimeFrameFilterModel : public QSortFilterProxyModel
 public:
     explicit TimeFrameFilterModel(QObject * parent = 0);
     void setSourceModel(ItemModel * sourceModel);
+    Q_INVOKABLE QString url(int row) const;
 
 signals:
     void gotThumbnail();
 
-public slots:
-    QString url(int row);
 
 };
 
 
+/**
+ * @brief The LocalDayItem class stores local content in one day
+ */
 class LocalDayItem : public QObject, public ListItem
 {
     Q_OBJECT
@@ -64,7 +66,6 @@ signals:
 public slots:
     void setDate(const QDate&);
     void addActivity(Activity* item);
-
 
 private:
     QString     m_types;

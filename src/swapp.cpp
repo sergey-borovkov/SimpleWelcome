@@ -47,7 +47,8 @@
 
 #include "timeframe/timescalemodel.h"
 #include "timeframe/local/activityset.h"
-#include "timeframe/local/localdaymodel.h"
+#include "timeframe/local/localdayitem.h"
+#include "timeframe/local/localcontentmodel.h"
 #include "timeframe/local/itemmodel.h"
 #include "timeframe/local/activityproxy.h"
 #include "timeframe/local/nepomuksource.h"
@@ -60,7 +61,6 @@
 #include "timeframe/social/pluginmodel.h"
 #include "timeframe/social/socialdaymodel.h"
 #include "timeframe/social/socialdayitem.h"
-#include "timeframe/social/pluginrequestreply.h"
 
 #include <listitem.h>
 
@@ -243,8 +243,8 @@ void SWApp::initTimeframeLocalMode()
     m_proxy = new ActivityProxy;
     m_proxy->addNepomukSource(m_source);
 
-    LocalDayModel* model = new LocalDayModel(LocalDayItem::roleNames(), this);
-    TimeFrameDayFilterModel* proxymodel = new TimeFrameDayFilterModel(this);
+    LocalContentModel* model = new LocalContentModel(LocalDayItem::roleNames(), this);
+    LocalContentFilterModel* proxymodel = new LocalContentFilterModel(this);
     model->setLister(m_proxy);
     proxymodel->setSourceModel(model);
     PreviewGenerator::instance()->setModel(model);
