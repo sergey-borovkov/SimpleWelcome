@@ -185,18 +185,20 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("i18n_Photo", i18n("Photo"));
     m_viewer->rootContext()->setContextProperty("i18n_Video", i18n("Video"));
     m_viewer->rootContext()->setContextProperty("i18n_Documents", i18n("Documents"));
-    m_viewer->rootContext()->setContextProperty("i18n_Manage_networks", i18n("Manage networks"));
+    m_viewer->rootContext()->setContextProperty("i18n_Manage_networks", i18n("Manage Networks"));
     m_viewer->rootContext()->setContextProperty("i18n_My_Local_Documents", i18n("My Local Documents"));
     m_viewer->rootContext()->setContextProperty("i18n_Local", i18n("Local"));
     m_viewer->rootContext()->setContextProperty("i18n_Write_Comment", i18n("Write comment..."));
     m_viewer->rootContext()->setContextProperty("i18n_Audio", i18n("Audio: "));
     m_viewer->rootContext()->setContextProperty("i18n_Like", i18n("Like"));
     m_viewer->rootContext()->setContextProperty("i18n_Unlike", i18n("Unlike"));
-    m_viewer->rootContext()->setContextProperty("i18n_Social_networkong_sites", i18n("Social networking sites"));
+    m_viewer->rootContext()->setContextProperty("i18n_Social_networkong_sites", i18n("Social Networking Sites"));
     m_viewer->rootContext()->setContextProperty("i18n_Show_Comments", i18n("Show comments"));
     m_viewer->rootContext()->setContextProperty("i18n_Hide_Comments", i18n("Hide comments"));
     m_viewer->rootContext()->setContextProperty("i18n_Login", i18n("Login"));
     m_viewer->rootContext()->setContextProperty("i18n_Logout", i18n("Logout"));
+    m_viewer->rootContext()->setContextProperty("i18n_Enable", i18n("Enable..."));
+    m_viewer->rootContext()->setContextProperty("i18n_Nepomuk_disabled", i18n("Nepomuk is disabled. You can enable it in the KDE Control Centre"));
 
     m_viewer->rootContext()->setContextProperty("i18n_JAN", i18n("JAN"));
     m_viewer->rootContext()->setContextProperty("i18n_FEB", i18n("FEB"));

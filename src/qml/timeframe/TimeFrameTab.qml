@@ -11,7 +11,6 @@ Item {
     //property ListView lv: timeLine
     //anchors.fill: parent
 
-
     property int __year: new Date().getFullYear()   //Current year
     property int __month: new Date().getMonth()
     property int day: new Date().getDate()
@@ -19,6 +18,15 @@ Item {
     property bool isSocialSearching: true
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
+
+    function checkNepomuk()
+    {
+        var isInit = nepomukSource.isNepomukInitialized()
+        if (!isInit)
+            timeFrameTab.state = "notNepomukInit"
+        else
+            timeFrameTab.state = ""
+    }
 
     function getTimeLineIndex() {
         var index = localDayModel.getIndexByDate(__year, __month+1, direction)
@@ -59,7 +67,7 @@ Item {
             txt =  i18n_Video
         if (id == "Documents")
             txt =  i18n_Documents
-        if (id == "Manage networks")
+        if (id == "Manage Networks")
             txt =  i18n_Manage_networks
         if (id == "Documents")
             txt =  i18n_Documents
@@ -71,7 +79,12 @@ Item {
         target:tabListView
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3) {
+
+                // check nepomuk
+                checkNepomuk()
+
                 currentDateChanged()
+
                 tabListView.interactive = false
                 if ((__isLocalSearching) && (timeFrameTab.state ===""))
                     timeFrameTab.state = "timeLineSearch"
@@ -93,7 +106,7 @@ Item {
         target: socialProxy
         onSearchFinished: {
             isSocialSearching = false
-            if (timeFrameTab.state === "socialSerching") {
+            if (timeFrameTab.state === "socialSearching") {
                 timeFrameTab.state = "social"
             }
         }
@@ -145,7 +158,7 @@ Item {
 
                 for(var i = 0; i < count; i++)
                     append({ "itemText": socialProxy.authorizedPluginName(i) })
-                append({ "itemText": "Manage networks"})
+                append({ "itemText": "Manage Networks"})
             }
         }
 
@@ -167,6 +180,9 @@ Item {
                     timeScaleModel.setFilter(selectedText)
                     localDayModel.setFilter(selectedText)
                 }
+
+                checkNepomuk()
+
                 //TODO: force views to update
                 //                timeScale.list.currentIndex = -1
                 //                timeScale.list.model = undefined
@@ -210,10 +226,10 @@ Item {
             }
 
             onSelectedIndexChanged: {
-                if (selectedText === "Manage networks")
+                if (selectedText === "Manage Networks")
                     timeFrameTab.state = "socialAuthorization"
                 else if (isSocialSearching)
-                    timeFrameTab.state = "socialSerching"
+                    timeFrameTab.state = "socialSearching"
                 else if (inGallery)
                     timeFrameTab.state = "socialGallery"
                 else
@@ -225,15 +241,19 @@ Item {
                 setSocialFilter()
             }
             onClicked: {
+                if (selectedText == "Manage Networks" )
+                    timeFrameTab.state = "socialAuthorization"
+
                 if (timeFrameTab.state != "socialAuthorization" && socialProxy.anyPluginsEnabled()) {
                     if (isSocialSearching)
-                        timeFrameTab.state = "socialSerching"
+                        timeFrameTab.state = "socialSearching"
                     else
                         timeFrameTab.state =  inGallery ? "socialGallery" : "social"
                     setSocialFilter()
                 }
                 else
                     timeFrameTab.state = "socialAuthorization"
+
             }
             Connections {
                 target: socialProxy
@@ -272,9 +292,45 @@ Item {
         return -1
     }
 
+    Item {
+        id: warningButton
+        visible: false
+        anchors.top: separator.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: parent.bottom
+        width: parent.width
+        anchors.bottomMargin: 10
+        anchors.topMargin: 10
+
+        Item {
+            anchors.centerIn: parent
+            Text {
+                id: messageInfo
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: warningTabButton.top
+                anchors.margins: 20
+                text: i18n_Nepomuk_disabled
+                color: "white"
+                font.pointSize: 12
+            }
+
+            PushButton {
+                anchors.centerIn: parent
+                id: warningTabButton
+                label: i18n_Enable
+                onButtonClick: {
+                    nepomukSource.nepomukConfigure()
+                    mainWindow.close()
+                }
+                buttonWidth: warningButton.width / 8
+            }
+        }
+    }
+
     ListView {
         id: timeLine
 
+        opacity: 1
         anchors.top: separator.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
@@ -630,6 +686,19 @@ Item {
     states: [
 
         State {
+            name: "notNepomukInit"; extend: ""
+            PropertyChanges { target: timeLine;  visible: false; opacity: 0 }
+
+            PropertyChanges { target: galleryView; visible: false }
+
+            PropertyChanges { target: warningButton; visible: true }
+
+            PropertyChanges { target: timeScale; visible: false }
+
+            PropertyChanges { target: galleryButton; visible: false }
+        },
+
+        State {
             name: "gallery"
 
             AnchorChanges {
@@ -639,7 +708,7 @@ Item {
                 anchors.bottom:  timeFrameTab.bottom
             }
 
-            PropertyChanges { target: timeLine;  visible : false }
+            PropertyChanges { target: timeLine;  visible : false; opacity: 0 }
 
             PropertyChanges { target: galleryView; visible : true }
 
@@ -656,24 +725,16 @@ Item {
 
             PropertyChanges { target: waitIndicator; visible: true }
 
-            PropertyChanges { target: timeLine; opacity: 0 }
+            PropertyChanges { target: timeLine; visible: false; opacity: 0 }
 
-            PropertyChanges {
-                target: galleryButton
-                visible: false
-                opacity: 0
-            }
+            PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
         },
         State {
             name: "social"
 
-            PropertyChanges {
-                target: timeLine
-                visible: false
-                opacity: 0
-            }
+            PropertyChanges { target: timeLine; visible: false; opacity: 0 }
 
-            PropertyChanges { target: socialTimeLine; visible: true }
+            PropertyChanges { target: socialTimeLine; visible: true; opacity: 1 }
 
             PropertyChanges { target: socialNetworks; state: "current" }
 
@@ -683,11 +744,7 @@ Item {
         State {
             name: "socialGallery"; extend: "social"
 
-            PropertyChanges {
-                target: socialTimeLine
-                visible: false
-                opacity:0
-            }
+            PropertyChanges { target: socialTimeLine; visible: false; opacity: 0 }
 
             PropertyChanges { target: socialGalleryView; visible: true }
 
@@ -703,32 +760,18 @@ Item {
         State {
             name: "socialAuthorization"; extend: "social"
 
-            PropertyChanges {
-                target: socialTimeLine
-                visible: false
-                opacity: 0
-            }
+            PropertyChanges { target: socialTimeLine; visible: false; opacity: 0 }
+
             PropertyChanges { target: authorizationView; visible: true }
 
-            PropertyChanges {
-                target: timeScale
-                visible: false
-                opacity: 0
-            }
-            PropertyChanges {
-                target: galleryButton
-                visible: false
-                opacity: 0
-            }
+            PropertyChanges { target: timeScale; visible: false; opacity: 0 }
+
+            PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
         },
         State {
-            name: "socialSerching"; extend: "social"
+            name: "socialSearching"; extend: "social"
 
-            PropertyChanges {
-                target: socialTimeLine
-                visible: false
-                opacity: 0
-            }
+            PropertyChanges { target: socialTimeLine; visible: false; opacity: 0; }
 
             PropertyChanges { target: waitIndicator; visible: true }
 
