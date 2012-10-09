@@ -19,10 +19,9 @@ Item {
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
 
-    function updateNepomukInfo()
+    function checkNepomuk()
     {
         var isInit = nepomukSource.isNepomukInitialized()
-        console.log("updateNepomukInfo:   NEPOMUK INIT IS " + isInit.toString())
         if (!isInit)
             timeFrameTab.state = "notNepomukInit"
         else
@@ -53,9 +52,6 @@ Item {
     //Start new serch
     function currentDateChanged()
     {
-        console.log("currentDateChanged():   " + day.toString() + "." + __month.toString() + "." + __year.toString() + "   !!!!!!!!!!!!!")
-        console.log("currentDateChanged():   state = " + state)
-
         var d = new Date(__year, __month, day )
         activityProxy.startSearch()
     }
@@ -84,10 +80,8 @@ Item {
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3) {
 
-                console.log("onCurrentIndexChanged():   !!!!!!!!!!!!!")
-
                 // check nepomuk
-                updateNepomukInfo()
+                checkNepomuk()
 
                 currentDateChanged()
 
@@ -112,7 +106,7 @@ Item {
         target: socialProxy
         onSearchFinished: {
             isSocialSearching = false
-            if (timeFrameTab.state === "socialSerching") {
+            if (timeFrameTab.state === "socialSearching") {
                 timeFrameTab.state = "social"
             }
         }
@@ -187,7 +181,7 @@ Item {
                     localDayModel.setFilter(selectedText)
                 }
 
-                updateNepomukInfo()
+                checkNepomuk()
 
                 //TODO: force views to update
                 //                timeScale.list.currentIndex = -1
@@ -235,7 +229,7 @@ Item {
                 if (selectedText === "Manage Networks")
                     timeFrameTab.state = "socialAuthorization"
                 else if (isSocialSearching)
-                    timeFrameTab.state = "socialSerching"
+                    timeFrameTab.state = "socialSearching"
                 else if (inGallery)
                     timeFrameTab.state = "socialGallery"
                 else
@@ -247,15 +241,19 @@ Item {
                 setSocialFilter()
             }
             onClicked: {
+                if (selectedText == "Manage Networks" )
+                    timeFrameTab.state = "socialAuthorization"
+
                 if (timeFrameTab.state != "socialAuthorization" && socialProxy.anyPluginsEnabled()) {
                     if (isSocialSearching)
-                        timeFrameTab.state = "socialSerching"
+                        timeFrameTab.state = "socialSearching"
                     else
                         timeFrameTab.state =  inGallery ? "socialGallery" : "social"
                     setSocialFilter()
                 }
                 else
                     timeFrameTab.state = "socialAuthorization"
+
             }
             Connections {
                 target: socialProxy
@@ -736,7 +734,7 @@ Item {
 
             PropertyChanges { target: timeLine; visible: false; opacity: 0 }
 
-            PropertyChanges { target: socialTimeLine; visible: true }
+            PropertyChanges { target: socialTimeLine; visible: true; opacity: 1 }
 
             PropertyChanges { target: socialNetworks; state: "current" }
 
@@ -771,7 +769,7 @@ Item {
             PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
         },
         State {
-            name: "socialSerching"; extend: "social"
+            name: "socialSearching"; extend: "social"
 
             PropertyChanges { target: socialTimeLine; visible: false; opacity: 0; }
 
