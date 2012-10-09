@@ -8,6 +8,10 @@
 #include <QtGui/QApplication>
 #include <QtCore/QDate>
 #include <QtCore/QTimer>
+#include <QtCore/QDebug>
+
+// KDE
+#include <ktoolinvocation.h>
 
 NepomukSource::NepomukSource(QObject *parent) :
     QObject(parent)
@@ -51,4 +55,17 @@ void NepomukSource::startSearch()
     }
 
     emit searchFinished();
+}
+
+bool NepomukSource::isNepomukInitialized()
+{
+    return Nepomuk::ResourceManager::instance()->initialized();
+}
+
+void NepomukSource::nepomukConfigure()
+{
+    qDebug() << "NepomukSource::nepomukConfigure";
+    QStringList args;
+    args << "kcm_nepomuk";
+    KToolInvocation::kdeinitExec("kcmshell4", args);
 }
