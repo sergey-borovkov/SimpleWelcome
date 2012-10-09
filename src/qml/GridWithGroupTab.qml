@@ -188,6 +188,7 @@ Item {
                     }
                 }
 
+                // Doing afterjob to load user icons positioning and stacks
                 var currentView = gridsListView.currentIndex
                 for (i = 0; i < gridsListView.count; i++) {
                     gridsListView.currentIndex = i

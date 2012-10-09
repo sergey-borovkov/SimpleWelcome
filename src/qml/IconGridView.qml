@@ -526,12 +526,11 @@ GridView {
         onReleased: {
             var dndSrcIdSaved = dndSrcId
 
-            if (gridMouseArea.draggedItemStackedAt !== undefined && model.get(gridMouseArea.dndDest).stack === undefined)
-            {
+            // Adding icon to stack
+            if (gridMouseArea.draggedItemStackedAt !== undefined && model.get(gridMouseArea.dndDest).stack === undefined) {
                 //console.log("STACK UPPED")
 
-                if (dndDest < gridMouseArea.draggedItemStackedAt)
-                {
+                if (dndDest < gridMouseArea.draggedItemStackedAt) {
                     model.move(gridMouseArea.dndDest, count - 1, 1)
                     //currentIndex = gridMouseArea.draggedItemStackedAt
                     gridMouseArea.dndDest = count - 1
@@ -542,33 +541,26 @@ GridView {
                 //dndSrcId = -1; - this is intentionally commented out 'cause it's done in delegate's remove animation
                 dndStateChanged(false)
             }
-            else
-            {
+            else {
                 dndSrcId = -1
 
-                if (dndSrcIdSaved != -1)
-                {
+                if (dndSrcIdSaved != -1) {
                     dndStateChanged(false)
 
-                    if (typeof dataSource.itemDragged !== "undefined" && dndDest != -1)
-                    {
-                        console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
-                        // FIXME: FIX THIS!!!!!!!!!!!!!!!!!
+                    if (typeof dataSource.itemDragged !== "undefined" && dndDest != -1) {
+                        //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
 
                         dataSource.itemDragged(dndSrcIdSaved, dndDest)
-
-                        model.set(dndDest, {"id": dndDest})
+                        model.setProperty(dndDest, "id", dndDest)
 
                         var i
-                        if (dndDest < dndSrc)
-                        {
+                        if (dndDest < dndSrc) {
                             for (i = dndDest + 1; i <= dndSrc; i++)
-                                model.set(i, {"id": model.get(i).id + 1})
+                                model.setProperty(i, "id", model.get(i).id + 1)
                         }
-                        else
-                        {
+                        else {
                             for (i = dndSrc; i < dndDest; i++)
-                                model.set(i, {"id": model.get(i).id - 1})
+                                model.setProperty(i, "id", model.get(i).id - 1)
                         }
                     }
                 }
