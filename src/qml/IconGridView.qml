@@ -188,8 +188,7 @@ GridView {
             gridMouseArea.dndDest = index
             gridMouseArea.dndSrc = index
             gridMouseArea.dndSrcId = model.get(gridMouseArea.dndSrc).id
-            gridMouseArea.dndDestId = gridMouseArea.dndSrcId
-            //console.log("dndSrc, dndSrcId, dndDest, dndDestId: " + dndSrc + " " + dndSrcId + " " + dndDest + " " + dndDestId)
+            //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
             dndStateChanged(true)
 
 //                    console.log("NOW----------------")
@@ -323,7 +322,6 @@ GridView {
         property int dndSrcId: -1
         property int dndSrc: -1
         property int dndDest: -1
-        property int dndDestId: -1
         property int pressedOnIndex
         property variant draggedItemStackedAt
 
@@ -407,8 +405,7 @@ GridView {
                                 //console.log("set " + indexWaitingOn + " with " + model.get(indexWaitingOn).stack.length + " at real pos " + model.get(indexWaitingOn).id)
                                 if (gridMouseArea.dndDest > indexWaitingOn)
                                 {
-                                    gridMouseArea.dndDestId = count - 1
-                                    model.move(gridMouseArea.dndDest, gridMouseArea.dndDestId, 1)
+                                    model.move(gridMouseArea.dndDest, count - 1, 1)
                                     currentIndex = gridMouseArea.draggedItemStackedAt
                                     gridMouseArea.dndDest = count - 1
                                 }
@@ -419,7 +416,6 @@ GridView {
                     {
                         //console.log("MOVING")
 
-                        gridMouseArea.dndDestId = indexWaitingOn // This could had broken dnd-dndId connection but fixed bug
                         model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
                         gridMouseArea.dndDest = indexWaitingOn
                         currentIndex = gridMouseArea.dndDest
@@ -469,7 +465,6 @@ GridView {
                         dndSrcId = -1
                         dndSrc = -1
                         dndDest = -1
-                        dndDestId = -1
                         // start system DnD
                         mainWindow.close()
                         mainWindow.activateDragAndDrop(url, imagePath, constants.iconSize)
@@ -537,8 +532,7 @@ GridView {
 
                 if (dndDest < gridMouseArea.draggedItemStackedAt)
                 {
-                    gridMouseArea.dndDestId = count - 1
-                    model.move(gridMouseArea.dndDest, gridMouseArea.dndDestId, 1)
+                    model.move(gridMouseArea.dndDest, count - 1, 1)
                     //currentIndex = gridMouseArea.draggedItemStackedAt
                     gridMouseArea.dndDest = count - 1
                 }
@@ -556,24 +550,26 @@ GridView {
                 {
                     dndStateChanged(false)
 
-                    if (typeof dataSource.itemDragged !== "undefined" && dndDestId != -1)
+                    if (typeof dataSource.itemDragged !== "undefined" && dndDest != -1)
                     {
-                        //console.log("dndDestId: " + dndDestId)
+                        console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
                         // FIXME: FIX THIS!!!!!!!!!!!!!!!!!
-                        /*dataSource.itemDragged(dndSrcIdSaved, dndDestId)
 
-                        model.set(dndDest, {"id": dndDestId})
+                        dataSource.itemDragged(dndSrcIdSaved, dndDest)
 
+                        model.set(dndDest, {"id": dndDest})
+
+                        var i
                         if (dndDest < dndSrc)
                         {
-                            for (var i = dndDest + 1; i <= dndSrc; i++)
+                            for (i = dndDest + 1; i <= dndSrc; i++)
                                 model.set(i, {"id": model.get(i).id + 1})
                         }
                         else
                         {
-                            for (var i = dndSrc; i < dndDest; i++)
+                            for (i = dndSrc; i < dndDest; i++)
                                 model.set(i, {"id": model.get(i).id - 1})
-                        }*/
+                        }
                     }
                 }
             }
