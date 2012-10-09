@@ -22,6 +22,7 @@ Column {
     property alias dragOutBottomMargin: iconGridView.dragOutBottomMargin
     property alias myActiveFocus: iconGridView.myActiveFocus
 
+    property bool isPopupGroup: false
     property int groupCellHeight: constants.cellHeight
 
     signal gridItemCountChanged
@@ -112,19 +113,40 @@ Column {
         mainWindow.saveSetting(groupName, setting)
     }
 
-    Text {
+    TextInput {
         id: groupLabel
         width: parent.width
-        height: groupLabel.text ? textHeight : 0
-        maximumLineCount: 1
+        height: groupLabel.text || isPopupGroup ? textHeight : 0
         anchors.left: parent.left
         anchors.leftMargin: 39//16
+        readOnly: !isPopupGroup
+        activeFocusOnPress: isPopupGroup
 
         font.family: "Bitstream Vera Sans"
         font.bold: true
         font.pixelSize: 14//18
         color: "#eee"
-        styleColor: "#000"
+        //styleColor: "#000"
+
+        onTextChanged: {
+            if (isPopupGroup && popupFrame.stackedIconIndex !== -1) {
+                gridsListView.activeGridView.model.setProperty(popupFrame.stackedIconIndex, "caption", groupName)
+            }
+        }
+
+        onActiveFocusChanged: {
+            if (activeFocus)
+                iconGridView.myActiveFocus = false
+        }
+
+        Keys.onReturnPressed: {
+            if (isPopupGroup)
+                gridsListView.hideGroup()
+        }
+        Keys.onTabPressed: {
+            iconGridView.myActiveFocus = true
+            event.accepted = false
+        }
 
         Image {
             source: "image://generalicon/asset/group_line.png"
@@ -228,6 +250,7 @@ Column {
                     //console.log("onItemClicked::showPopupGroup from: " + newIndex)
                     var iconCoords = mapToItem(groupTab, currentItem.x + currentItem.width / 2 - 8, currentItem.y + currentItem.height)
                     showPopupGroup(newIndex, model.get(newIndex), iconCoords)
+                    gridView.myActiveFocus = false
                     return
                 }
                 if (groupName == i18n_Recent_Applications || groupName == i18n_Recent_Documents)
