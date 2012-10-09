@@ -56,33 +56,10 @@ AppItemList GetFlatList(QString group)
     return out;
 }
 
-bool userAppsLessThan(const QPair<QString, int> &a, const QPair<QString, int> &b)
-{
-    return a.second < b.second;
-}
-
 DataSource_Apps::DataSource_Apps(QObject *parent, DataSource_RecentApps *inRecentApps)
     : DataSource(parent), prevCurrentGroup("-1"), recentApps(inRecentApps)
 {
-    KConfigGroup configGroup(KGlobal::config(), "General");
-    QStringList appsOrderList = configGroup.readEntry("User applications order", QStringList());
-    for (int i = 0; i < appsOrderList.size(); i++) {
-        int indexOfSpace = appsOrderList[i].indexOf(" ");
-        if (indexOfSpace != -1) {
-            int index = appsOrderList[i].left(indexOfSpace).toInt();
-            QString caption = appsOrderList[i].right(appsOrderList[i].size() - indexOfSpace - 1);
-            userAppsOrder.append(qMakePair(caption, index));
-        }
-    }
-
-    qSort(userAppsOrder.begin(), userAppsOrder.end(), userAppsLessThan);
-
     updateItems();
-}
-
-DataSource_Apps::~DataSource_Apps()
-{
-    saveData();
 }
 
 int DataSource_Apps::getItemCount()
@@ -98,17 +75,6 @@ QString DataSource_Apps::itemUrlDnd(int id)
     return QString::fromAscii("file://") + appsList[id].desktopEntry;
 }
 
-void DataSource_Apps::saveData()
-{
-    QStringList out;
-    for (int i = 0; i < userAppsOrder.size(); i++)
-        out.append(QString("%1 %2").arg(userAppsOrder[i].second).arg(userAppsOrder[i].first));
-
-    KConfigGroup configGroup(KGlobal::config(), "General");
-    configGroup.writeEntry("User applications order", out);
-    configGroup.sync();
-}
-
 void DataSource_Apps::getContent()
 {
     for (int i = 0; i < appsList.size(); i++) {
@@ -121,73 +87,12 @@ void DataSource_Apps::getContent()
     }
 }
 
-void DataSource_Apps::itemDragged(int fromIndex, int toIndex)
-{
-//    qDebug() << "Moving from to:" << fromIndex << toIndex;
-//    qDebug() << "WAS-------------------------";
-//    for (int i = 0; i < appsList.size(); i++)
-//        qDebug() << appsList[i].caption;
-
-    int userAppIndex = -1;
-    for (int i = 0; i < userAppsOrder.size(); i++) {
-        if (userAppsOrder[i].first == appsList[fromIndex].caption)
-            userAppIndex = i;
-    }
-
-    /*if (dndDest < dndSrc)
-    {
-        for (var i = dndDest + 1; i <= dndSrc; i++)
-            model.get(i).id++
-    }
-    else
-    {
-        for (var i = dndSrc; i < dndDest; i++)
-            model.get(i).id--
-    }*/
-
-
-
-    if (userAppIndex != -1) {
-        if (toIndex < fromIndex) {
-            for (int i = 0; i < userAppsOrder.size(); i++) {
-                //qDebug() << i << ": " << userAppsOrder[i].second << " index is examining for (" << toIndex << ";" << fromIndex;
-                if (userAppsOrder[i].second >= toIndex && userAppsOrder[i].second < fromIndex)
-                    userAppsOrder[i].second++;
-            }
-        } else
-            for (int i = 0; i < userAppsOrder.size(); i++) {
-                if (userAppsOrder[i].second > fromIndex && userAppsOrder[i].second <= toIndex)
-                    userAppsOrder[i].second--;
-            }
-    }
-    if (userAppIndex == -1)
-        userAppsOrder.append(qMakePair(appsList[fromIndex].caption, toIndex));
-    else
-        userAppsOrder[userAppIndex].second = toIndex;
-
-    appsList.move(fromIndex, toIndex);
-
-    saveData();
-
-//    qDebug() << "NOW-------------------------";
-//    for (int i = 0; i < appsList.size(); i++)
-//        qDebug() << appsList[i].caption;
-    //    qDebug() << "END-------------------------";
-}
-
 void DataSource_Apps::updateItems()
 {
     prevCurrentGroup = currentGroup;
     appsList = GetFlatList(currentGroup);
 
     qSort(appsList);
-
-    for (int i = 0; i < userAppsOrder.size(); i++) {
-        for (int j = 0; j < appsList.size(); j++) {
-            if (userAppsOrder[i].first == appsList[j].caption)
-                appsList.move(j, qBound(0, userAppsOrder[i].second, appsList.size() - 1));
-        }
-    }
 }
 
 void DataSource_Apps::itemClicked(int newIndex)
