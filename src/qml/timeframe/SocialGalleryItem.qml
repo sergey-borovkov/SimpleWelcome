@@ -11,8 +11,11 @@ Item{
 
     MouseArea {
         id: modal
-        z: -1
         anchors.fill: parent
+        enabled: false
+        onClicked:  {
+            galleryRect.state = ""
+        }
     }
 
     BorderImage {
@@ -415,7 +418,7 @@ Item{
             id: detailsOnArea
             anchors.fill: parent
             //anchors.bottomMargin: 20
-            z: 9999
+            z: -2
             onClicked: {
                 //console.log("details on")
                 if (galleryRect.state === "") {
@@ -466,9 +469,7 @@ Item{
             }
             PropertyChanges { target: galleryRect; z: 9000  }            
 
-            PropertyChanges { target: detailsOffArea; visible: true }
-
-            PropertyChanges { target: detailsOnArea; enabled: false }            
+            PropertyChanges { target: detailsOffArea; visible: true }            
 
             PropertyChanges { target: dateArea; visible: true }
 
@@ -479,6 +480,8 @@ Item{
             PropertyChanges { target: commentsCountArea; visible: false }
 
             PropertyChanges { target: commentsShowArea; visible: true }
+
+            PropertyChanges { target: modal; enabled: true }
 
         },
         State {

@@ -12,9 +12,14 @@ Item{
     property string pluginName: ""
     property alias iconPlugin : iconPlugin
     property alias commentsView : commentsListView
+
     MouseArea {
         id: modal
         anchors.fill: parent
+        onClicked:  {            
+            cloudRect.state = ""
+        }
+        enabled: false
     }
 
     BorderImage {
@@ -123,7 +128,7 @@ Item{
                     anchors.rightMargin: 5
                     width: 12
                     height: 12
-                    visible: false
+                    visible: false                    
                     Image{
                         id: closeIcon
                         anchors.centerIn: parent
@@ -258,7 +263,7 @@ Item{
                     height: parent.height
                     width: 100
                     visible: false
-                    state: (like == 1)? "liked" : ""
+                    state: (like == 1)? "liked" : ""                   
                     Text {
                         id: likesText
                         anchors.fill: parent
@@ -295,7 +300,7 @@ Item{
                     anchors.centerIn: parent
                     width: 140
                     height: parent.height
-                    visible: false
+                    visible: false                    
                     Image {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.left: parent.left
@@ -375,32 +380,25 @@ Item{
             }
             Connections {
                 target: commentsEdit.item
-                onSend: {
-                    console.log("comment sending via text edit: " +comment)
+                onSend: {                    
                     socialProxy.commentItem(comment, id, pluginName)
                 }
             }
         }
-
         MouseArea
         {
             id: detailsOnArea
             anchors.fill: parent
-            z: 9999
+            z:-2
             onClicked: {
                 if (cloudRect.state === "") {
-                    cloudRect.state = "details"
                     modal.parent = timeFrameTab;
                     modal.z = 300
+                    cloudRect.state = "details"
                     //Query all comments and likes
                     socialProxy.getAllComments(id, pluginName)
                     socialProxy.getAllLikes(id, pluginName)
-                }
-                else {
-                    modal.parent = socialCloudItem
-                    modal.z = -1
-                    cloudRect.state = ""
-                }
+                }                
             }
         }
     }
@@ -464,11 +462,11 @@ Item{
 
             PropertyChanges { target: commentsShowArea; visible: true }
 
-            PropertyChanges { target: detailsOnArea; enabled: false }
-
             PropertyChanges { target: likeItemArea; visible: true}
 
             PropertyChanges { target: bottomLine; height: Math.max( 26, commentsShowAreaText.paintedHeight ); visible: true }
+
+            PropertyChanges { target: modal; enabled: true }
 
         },
         State {
