@@ -457,7 +457,13 @@ GridView {
                     var url = dataSource.itemUrlDnd(dndSrcId, model.get(dndSrc).group)
                     if (url) {
                         // Return dragged icon to home position & disable internal DnD
+                        if (stackable && draggedItemStackedAt !== undefined) {
+                            // Unstacking before starting of system D&D
+                            grid.unstackItemInItem(draggedItemStackedAt, dndDest)
+                            draggedItemStackedAt = undefined
+                        }
                         model.move(dndDest, dndSrc, 1)
+
                         var imagePath = model.get(dndSrc).imagePath
                         dndStateChanged(false)
                         dndSrcId = -1
