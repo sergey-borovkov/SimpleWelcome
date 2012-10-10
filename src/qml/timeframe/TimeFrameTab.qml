@@ -692,7 +692,8 @@ Item {
         var index_delta = Math.round(delta / 120)
         if (index_delta === 0)
             index_delta = (delta > 0 ? 1 : -1)
-        var index = listView.indexAt(listView.contentX, listView.contentY);
+        // we have to pass point over list item otherwise indexAt() will return -1, so, we add small offset
+        var index = listView.indexAt(listView.contentX + 3, listView.contentY + 3);
         if (index < 0)
             return
         index -= index_delta;
