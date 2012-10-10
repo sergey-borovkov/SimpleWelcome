@@ -25,6 +25,9 @@ Item {
     }
 
     signal buttonClick()
+    signal buttonPress()
+    signal buttonRelease()
+
     onButtonClick: {
         //console.log(buttonLabel.text + " clicked")
     }
@@ -35,6 +38,8 @@ Item {
         anchors.fill: parent
 
         onClicked: buttonClick()
+        onPressed: buttonPress()
+        onReleased: buttonRelease()
         hoverEnabled: true
         //onEntered: parent.border.color = onHoverColor
         //onExited:  parent.border.color = borderColor

@@ -1,5 +1,6 @@
 import QtQuick 1.1
 import Private 0.1
+import ".."
 
 Item {
     id: timeFrameTab
@@ -314,15 +315,44 @@ Item {
                 font.pointSize: 12
             }
 
-            PushButton {
+            Item {
+                id: button
+
+                width: (parent.width-4) / 3
+                height: 27
+                visible: tabListView.currentIndex != 0
+                anchors.fill: warningTabButton
+                //z: -1
+
+                BorderImage {
+                    border.left: 6
+                    border.right: 7
+                    border.top: 0
+                    border.bottom: 0
+                    anchors.fill: parent
+                    anchors.rightMargin: -3
+                    source: "image://generalicon/asset/tab_button.png"
+                }
+
+                Behavior on x {
+                    NumberAnimation { duration: 200; }
+                }
+            }
+
+            TabButton {
                 anchors.centerIn: parent
                 id: warningTabButton
                 label: i18n_Enable
+                active: true
+
+                onButtonPress: active = false
+                onButtonRelease: active = true
+
                 onButtonClick: {
                     nepomukSource.nepomukConfigure()
                     mainWindow.close()
                 }
-                buttonWidth: warningButton.width / 8
+                //buttonWidth: warningButton.width / 8
             }
         }
     }
