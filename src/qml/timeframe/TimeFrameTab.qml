@@ -177,6 +177,7 @@ Item {
                     else
                         timeFrameTab.state = ""
                     socialFilterBox.state = ""
+                    setLocalFilter()
                 }
             }
 
@@ -227,6 +228,7 @@ Item {
                     } else
                         setSocialState()
                     localFilterBox.state = ""
+                    setSocialFilter()
                 }
             }
             onCurrentIndexChanged: {
