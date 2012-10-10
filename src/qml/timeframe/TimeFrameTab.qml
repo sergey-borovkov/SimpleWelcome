@@ -27,6 +27,8 @@ Item {
             timeFrameTab.state = "notNepomukInit"
         else
             timeFrameTab.state = ""
+
+        return isInit
     }
 
     function getTimeLineIndex() {
@@ -96,14 +98,45 @@ Item {
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3) {
 
+                //                __year = new Date().getFullYear()
+                //                __month = new Date().getMonth()
+                //                day = new Date().getDate()
+
+                console.log("onCurrentIndexChanged:   current date is " + day + "." + __month + "." + __year)
+
                 // check nepomuk
-                checkNepomuk()
+                var isInit = checkNepomuk()
+                console.log("onCurrentIndexChanged:   isInit=" + isInit)
+                //                if (isInit) {
 
                 currentDateChanged()
 
                 tabListView.interactive = false
                 if ((__isLocalSearching) && (timeFrameTab.state ===""))
                     timeFrameTab.state = "timeLineSearch"
+
+                // set init position of timescale and timeline
+                // ...
+
+
+
+                //                }
+                //                else {
+                //                    // reset local data
+                //                    // ...
+                //                }
+
+
+                //Set all views on current date
+                //                timeScale.list.currentIndex = timeScale.list.count - 1
+                //                timeLine.currentIndex = timeLine.count - 1
+                //                timeLine.positionViewAtEnd()
+                //                galleryView.positionViewAtEnd()
+
+                //                socialTimeLine.currentIndex = socialTimeLine.count - 1
+                //                socialTimeLine.positionViewAtEnd()
+                //                socialGalleryView.positionViewAtEnd()
+                //                flickableTimer.updateTimeScale()
             }
         }
     }
@@ -214,15 +247,19 @@ Item {
             }
         }
 
-
         DropFilterBox{
             id: socialFilterBox
             model: menuSocialItems
             name: i18n_Social_networkong_sites
             onStateChanged: {
                 if (socialFilterBox.state === "current") {
-                    setSocialState()
+                    if (socialFilterBox.view.count <= 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
+                        timeFrameTab.state = "socialAuthorization"
+                        socialFilterBox.view.currentIndex = 1
+                    } else
+                        setSocialState()
                     localFilterBox.state = ""
+                    setSocialFilter()
                 }
             }
             onCurrentIndexChanged: {
@@ -241,7 +278,7 @@ Item {
                     timeFrameTab.state = "social"
             }
             function setSocialFilter() {
-                if(view.currentIndex === 0) {             //selectedText = "All"
+                if(view.currentIndex === 0) { //selectedText = "All"
                     timeScaleModel.setFilter("Social")
                     socialDayModel.setFilter("Social")
                 }
