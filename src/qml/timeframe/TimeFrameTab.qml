@@ -221,7 +221,11 @@ Item {
             name: i18n_Social_networkong_sites
             onStateChanged: {
                 if (socialFilterBox.state === "current") {
-                    setSocialState()
+                    if (socialFilterBox.view.count <= 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
+                        timeFrameTab.state = "socialAuthorization"
+                        socialFilterBox.view.currentIndex = 1
+                    } else
+                        setSocialState()
                     localFilterBox.state = ""
                 }
             }
