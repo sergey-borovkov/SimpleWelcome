@@ -170,7 +170,9 @@ Item {
 
             onStateChanged: {
                 if (localFilterBox.state === "current") {
-                    if (inGallery)
+                    if (__isLocalSearching)
+                        timeFrameTab.state = "timeLineSearch"
+                    else if (inGallery)
                         timeFrameTab.state = "gallery"
                     else
                         timeFrameTab.state = ""
