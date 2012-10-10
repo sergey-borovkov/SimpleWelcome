@@ -23,7 +23,7 @@ signals:
 public slots:
     virtual void itemClicked(int newIndex);
     virtual void getContent();
-    void updateApps();
+    void updateItems(bool isResetContent = true);
 
 private:
     void saveData();
@@ -34,6 +34,4 @@ private:
 
     DataSource_RecentApps *recentApps;
     QList<QPair<QString, int> > userAppsOrder;
-
-    void updateItems();
 };
