@@ -3,6 +3,7 @@ import QtQuick 1.0
 Item {
 //    height: 200
     property alias color : rectangle.color
+    property alias radius : rectangle.radius
     //anchors { leftMargin: -6; topMargin: -6; rightMargin: -8; bottomMargin: -8 }
 
     Rectangle {

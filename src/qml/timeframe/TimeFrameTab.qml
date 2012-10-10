@@ -135,6 +135,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.margins: 16
+        height: 30
         spacing: 0
         z: 100
 
@@ -145,6 +146,39 @@ Item {
             ListElement{itemText: "Video"}
             ListElement{itemText: "Documents"}
         }
+
+        DropFilterBox{
+            id: localFilterBox
+            model: menuDocItems
+            name: i18n_My_Local_Documents
+            state: "current"
+
+            onStateChanged: {
+                if (localFilterBox.state === "current") {
+                    if (inGallery)
+                        timeFrameTab.state = "gallery"
+                    else
+                        timeFrameTab.state = ""
+                    socialFilterBox.state = ""
+                }
+            }
+
+            onCurrentIndexChanged: {
+                localFilterBox.setLocalFilter()
+            }
+
+            function setLocalFilter() {
+                if(view.currentIndex === 0) {             //selectedText = "All"
+                    timeScaleModel.setFilter("Local")
+                    localDayModel.setFilter("Local")
+                }
+                else {
+                    timeScaleModel.setFilter(selectedText)
+                    localDayModel.setFilter(selectedText)
+                }
+            }
+        }
+
 
         ListModel {
             id: menuSocialItems
@@ -163,70 +197,23 @@ Item {
             }
         }
 
-        DropListBox {
-            id: localDocs
-            width: 330
-            model: menuDocItems
-            name: i18n_My_Local_Documents
-            selectedText: name
-            state: "current"
 
-            function setLocalFilter()
-            {
-                if (name === i18n_My_Local_Documents) {
-                    timeScaleModel.setFilter("Local")
-                    localDayModel.setFilter("Local")
-                }
-                else {
-                    timeScaleModel.setFilter(selectedText)
-                    localDayModel.setFilter(selectedText)
-                }
-
-                checkNepomuk()
-
-                //TODO: force views to update
-                //                timeScale.list.currentIndex = -1
-                //                timeScale.list.model = undefined
-                //                timeScale.list.model = timeScaleModel
-                //                timeLine.model = undefined
-                //                timeLine.model = localDayModel
-                //                galleryView.model = undefined
-                //                galleryView.model = localDayModel
-                //                timeScale.list.currentIndex = timeScale.list.count -1
-            }
-            onSelectedIndexChanged: {
-                name = ( selectedText === "All" ) ? i18n_My_Local_Documents : getMenuItemText(selectedText)
-                setLocalFilter()
-            }
-            onClicked: {
-                if ((timeFrameTab.state != "") && (timeFrameTab.state != "gallery")) {
-                    timeFrameTab.state = inGallery ? "gallery" : ""
-                    setLocalFilter()
-                }
-            }
-        }
-
-        DropListBox {
-            id: socialNetworks
-            width: 260
+        DropFilterBox{
+            id: socialFilterBox
             model: menuSocialItems
             name: i18n_Social_networkong_sites
-            selectedText: name
-            property int __wasSearching: 0
-
-            function setSocialFilter()
-            {
-                if (name === i18n_Social_networkong_sites) {
-                    timeScaleModel.setFilter("Social")
-                    socialDayModel.setFilter("Social")
-                }
-                else {
-                    socialDayModel.setFilter(selectedText)
-                    timeScaleModel.setFilter(selectedText)
+            onStateChanged: {
+                if (socialFilterBox.state === "current") {
+                    setSocialState()
+                    localFilterBox.state = ""
                 }
             }
+            onCurrentIndexChanged: {
+                setSocialState()
+                setSocialFilter()
+            }
 
-            onSelectedIndexChanged: {
+            function setSocialState() {                
                 if (selectedText === "Manage Networks")
                     timeFrameTab.state = "socialAuthorization"
                 else if (isSocialSearching)
@@ -235,26 +222,16 @@ Item {
                     timeFrameTab.state = "socialGallery"
                 else
                     timeFrameTab.state = "social"
-
-                //socialProxy.startSearch()
-                //isSocialSearching = true
-                name = ( selectedText === "All" ) ? i18n_Social_networkong_sites : getMenuItemText(selectedText)
-                setSocialFilter()
             }
-            onClicked: {
-                if (selectedText == "Manage Networks" )
-                    timeFrameTab.state = "socialAuthorization"
-
-                if (timeFrameTab.state != "socialAuthorization" && socialProxy.anyPluginsEnabled()) {
-                    if (isSocialSearching)
-                        timeFrameTab.state = "socialSearching"
-                    else
-                        timeFrameTab.state =  inGallery ? "socialGallery" : "social"
-                    setSocialFilter()
+            function setSocialFilter() {
+                if(view.currentIndex === 0) {             //selectedText = "All"
+                    timeScaleModel.setFilter("Social")
+                    socialDayModel.setFilter("Social")
                 }
-                else
-                    timeFrameTab.state = "socialAuthorization"
-
+                else {
+                    socialDayModel.setFilter(selectedText)
+                    timeScaleModel.setFilter(selectedText)
+                }
             }
             Connections {
                 target: socialProxy
@@ -281,6 +258,7 @@ Item {
         height: 3
         color: "grey"
         radius: 1
+        visible: false
     }
 
     //get index of date in TimeScale
@@ -761,9 +739,9 @@ Item {
 
             PropertyChanges { target: socialTimeLine; visible: true; opacity: 1 }
 
-            PropertyChanges { target: socialNetworks; state: "current" }
+            //PropertyChanges { target: socialNetworks; state: "current" }
 
-            PropertyChanges { target: localDocs; state: "" }
+            //PropertyChanges { target: localDocs; state: "" }
         },
 
         State {
