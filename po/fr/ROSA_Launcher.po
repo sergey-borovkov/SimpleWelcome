@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: SimpleWelcome\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-10-09 15:52+0400\n"
+"POT-Creation-Date: 2012-10-10 14:56+0400\n"
 "PO-Revision-Date: 2011-06-17 12:06+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,9 +86,8 @@ msgid "All"
 msgstr ""
 
 #: swapp.cpp:185
-#, fuzzy
-msgid "Photo"
-msgstr "Photos"
+msgid "Images"
+msgstr ""
 
 #: swapp.cpp:186
 msgid "Video"
@@ -217,6 +216,10 @@ msgstr ""
 msgctxt "julia.mineeva@osinit.ru"
 msgid "julia.mineeva@osinit.ru"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Photo"
+#~ msgstr "Photos"
 
 #~ msgid ""
 #~ "%1\n"

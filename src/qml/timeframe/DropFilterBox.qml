@@ -2,7 +2,7 @@ import QtQuick 1.1
 
 Item {
     id: dropFilterBox
-    width: 260
+    width: 330
     height: 30    
 
     property alias model: filterListView.model
