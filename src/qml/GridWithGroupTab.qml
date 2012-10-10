@@ -229,6 +229,8 @@ Item {
                 stackCellOpenedId = -1
                 topBar.forceActiveFocus()
                 activeGridView.myActiveFocus = true
+                if (currentItem)
+                    currentItem.activeGridGroup.saveStacks()
             }
 
             function showGroup(index, item, iconCoords)
