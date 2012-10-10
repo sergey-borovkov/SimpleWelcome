@@ -316,13 +316,15 @@ Item {
             }
 
             Item {
-                id: button
+                id: warningTabButtonBg
 
                 width: (parent.width-4) / 3
                 height: 27
                 visible: tabListView.currentIndex != 0
                 anchors.fill: warningTabButton
                 //z: -1
+
+                property alias pressedAndHovered: warningTabButton.pressedAndHovered
 
                 BorderImage {
                     border.left: 6
@@ -331,7 +333,7 @@ Item {
                     border.bottom: 0
                     anchors.fill: parent
                     anchors.rightMargin: -3
-                    source: "image://generalicon/asset/tab_button.png"
+                    source: warningTabButtonBg.pressedAndHovered ? "image://generalicon/asset/tab_button_pressed.png" : "image://generalicon/asset/tab_button.png"
                 }
 
                 Behavior on x {
@@ -340,13 +342,11 @@ Item {
             }
 
             TabButton {
-                anchors.centerIn: parent
                 id: warningTabButton
+                anchors.centerIn: parent
                 label: i18n_Enable
+                pressable: true
                 active: true
-
-                onButtonPress: active = false
-                onButtonRelease: active = true
 
                 onButtonClick: {
                     nepomukSource.nepomukConfigure()
