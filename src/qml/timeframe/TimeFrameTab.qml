@@ -389,7 +389,6 @@ Item {
         WheelArea {
             anchors.fill: parent
             onScrollVert: _processScroll(delta, timeLine)
-            onScrollHorz: _processScroll(delta, timeLine)
         }
     }
 
@@ -425,7 +424,6 @@ Item {
         WheelArea {
             anchors.fill: parent
             onScrollVert: _processScroll(delta, socialTimeLine)
-            onScrollHorz: _processScroll(delta, socialTimeLine)
         }
     }
 
@@ -439,7 +437,6 @@ Item {
         WheelArea {
             anchors.fill: parent
             onScrollVert: _processScroll(delta, timeScale.list)
-            onScrollHorz: _processScroll(delta, timeScale.list)
         }
     }
 
@@ -556,7 +553,6 @@ Item {
         WheelArea {
             anchors.fill: parent
             onScrollVert: _processScroll(delta, galleryView)
-            onScrollHorz: _processScroll(delta, galleryView)
         }
     }
 
@@ -581,7 +577,6 @@ Item {
         WheelArea {
             anchors.fill: parent
             onScrollVert: _processScroll(delta, socialGalleryView)
-            onScrollHorz: _processScroll(delta, socialGalleryView)
         }
     }
 

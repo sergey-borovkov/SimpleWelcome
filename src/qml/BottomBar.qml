@@ -15,7 +15,6 @@ Item {
         anchors.fill: parent
 
         onScrollVert: wheelScroll(delta)
-        onScrollHorz: wheelScroll(delta)
     }
 
     Item {
