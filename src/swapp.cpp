@@ -158,6 +158,7 @@ SWApp::SWApp()
     DataSource_Apps *appsDataSource = new DataSource_Apps(this, recentAppsDataSource);
     m_viewer->rootContext()->setContextProperty("dataSource_Apps", appsDataSource);
     connect(appsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
+    connect(m_viewer, SIGNAL(windowShown()), appsDataSource, SLOT(updateItems()));
 
     DataSource_Favorites *favoritesDataSource = new DataSource_Favorites(this);
     m_viewer->rootContext()->setContextProperty("dataSource_Favorites", favoritesDataSource);
@@ -231,8 +232,6 @@ SWApp::SWApp()
     initTimeframeSocialMode();
 
     m_viewer->setMainQmlFile(pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml"));   // Qt converts path to native automatically
-
-    connect(m_viewer, SIGNAL(windowShown()), appsDataSource, SLOT(updateApps()));
 
     setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
 }
