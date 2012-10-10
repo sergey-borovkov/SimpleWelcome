@@ -87,6 +87,12 @@ void DataSource_Apps::getContent()
     }
 }
 
+void DataSource_Apps::updateApps()
+{
+    updateItems();
+    resetContent();
+}
+
 void DataSource_Apps::updateItems()
 {
     prevCurrentGroup = currentGroup;
