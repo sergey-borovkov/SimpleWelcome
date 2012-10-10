@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-10-09 15:52+0400\n"
+"POT-Creation-Date: 2012-10-10 14:56+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,9 +83,8 @@ msgid "All"
 msgstr ""
 
 #: swapp.cpp:185
-#, fuzzy
-msgid "Photo"
-msgstr "Bilder"
+msgid "Images"
+msgstr ""
 
 #: swapp.cpp:186
 msgid "Video"
@@ -214,6 +213,10 @@ msgstr ""
 msgctxt "julia.mineeva@osinit.ru"
 msgid "julia.mineeva@osinit.ru"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Photo"
+#~ msgstr "Bilder"
 
 #~ msgid "TYPE"
 #~ msgstr "TYP"

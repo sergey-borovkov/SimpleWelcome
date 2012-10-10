@@ -62,7 +62,7 @@ Item {
         var txt = id
         if (id == "All")
             txt =  i18n_All
-        if (id == "Photo")
+        if (id == "Images")
             txt =  i18n_Photo
         if (id == "Video")
             txt =  i18n_Video
@@ -142,7 +142,7 @@ Item {
         ListModel {
             id: menuDocItems
             ListElement{itemText: "All"}
-            ListElement{itemText: "Photo"}
+            ListElement{itemText: "Images"}
             ListElement{itemText: "Video"}
             ListElement{itemText: "Documents"}
         }
@@ -213,8 +213,8 @@ Item {
                 setSocialFilter()
             }
 
-            function setSocialState() {                
-                if (selectedText === "Manage Networks")
+            function setSocialState() {
+                if (socialFilterBox.view.currentIndex === socialFilterBox.view.count -1)
                     timeFrameTab.state = "socialAuthorization"
                 else if (isSocialSearching)
                     timeFrameTab.state = "socialSearching"

@@ -182,7 +182,7 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("i18n_Recent_Documents", i18n("Recent Documents"));
 
     m_viewer->rootContext()->setContextProperty("i18n_All", i18n("All"));
-    m_viewer->rootContext()->setContextProperty("i18n_Photo", i18n("Photo"));
+    m_viewer->rootContext()->setContextProperty("i18n_Photo", i18n("Images"));
     m_viewer->rootContext()->setContextProperty("i18n_Video", i18n("Video"));
     m_viewer->rootContext()->setContextProperty("i18n_Documents", i18n("Documents"));
     m_viewer->rootContext()->setContextProperty("i18n_Manage_networks", i18n("Manage Networks"));
