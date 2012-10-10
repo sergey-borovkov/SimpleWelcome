@@ -1,10 +1,10 @@
 #include "activityset.h"
-#include "itemmodel.h"
+#include "localdaymodel.h"
 
 #include <QtCore/QDate>
 
-ItemModel::ItemModel(QObject *parent) :
-    QAbstractListModel(parent)
+LocalDayModel::LocalDayModel(QDate date, QObject *parent) :
+    QAbstractListModel(parent), m_date(date)
 {
     m_hash.insert(ActivitiesRole, "activity");
     m_hash.insert(CurrentDateRole, "date");
@@ -14,14 +14,14 @@ ItemModel::ItemModel(QObject *parent) :
     setRoleNames(m_hash);
 }
 
-ItemModel::~ItemModel()
+LocalDayModel::~LocalDayModel()
 {
     qDeleteAll(m_items);
     m_items.clear();
 }
 
 
-QVariant ItemModel::data(const QModelIndex &index, int role) const
+QVariant LocalDayModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
@@ -42,7 +42,7 @@ QVariant ItemModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-int ItemModel::rowCount(const QModelIndex &parent) const
+int LocalDayModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
@@ -50,7 +50,7 @@ int ItemModel::rowCount(const QModelIndex &parent) const
         return m_items.size();
 }
 
-void ItemModel::addActivityItem(Activity *item)
+void LocalDayModel::addActivityItem(Activity *item)
 {
     if (!item)
         return;
@@ -65,7 +65,7 @@ void ItemModel::addActivityItem(Activity *item)
     endInsertRows();
 }
 
-void ItemModel::thumbnailReady(QString url)
+void LocalDayModel::thumbnailReady(const QString &url)
 {
     int row;
     for (row = 0; row < m_items.size(); ++row) {
@@ -76,9 +76,34 @@ void ItemModel::thumbnailReady(QString url)
     emit gotThumbnail();
 }
 
-QString ItemModel::url(int row)
+QString LocalDayModel::url(int row) const
 {
-    if (row > m_items.size() - 1)
-        return QString();
     return m_items.at(row)->getUrl();
+}
+
+QDate LocalDayModel::date() const
+{
+    return m_date;
+}
+
+void LocalDayModel::setDate(QDate date)
+{
+    m_date = date;
+}
+
+LocalDayFilterModel::LocalDayFilterModel(QObject * parent) :
+    QSortFilterProxyModel(parent)
+{
+}
+
+void LocalDayFilterModel::setSourceModel(LocalDayModel * sourceModel)
+{
+    if (sourceModel) {
+        QSortFilterProxyModel::setSourceModel(sourceModel);
+        connect(sourceModel, SIGNAL(gotThumbnail()), this, SIGNAL(gotThumbnail()));
+    }
+}
+QString LocalDayFilterModel::url(int row) const
+{
+    return data(index(row, 0), LocalDayModel::UrlRole).toString();
 }
