@@ -232,6 +232,8 @@ SWApp::SWApp()
 
     m_viewer->setMainQmlFile(pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml"));   // Qt converts path to native automatically
 
+    connect(m_viewer, SIGNAL(windowShown()), appsDataSource, SLOT(updateApps()));
+
     setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
 }
 

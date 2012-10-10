@@ -23,6 +23,7 @@ signals:
 public slots:
     virtual void itemClicked(int newIndex);
     virtual void getContent();
+    void updateApps();
 
 private:
     void saveData();
