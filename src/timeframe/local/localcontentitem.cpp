@@ -1,4 +1,4 @@
-#include "activityset.h"
+#include "activity.h"
 #include "localdaymodel.h"
 #include "localcontentitem.h"
 #include "localcontentmodel.h"
@@ -57,8 +57,8 @@ void LocalContentItem::setDate(const QDate &d)
 
 void LocalContentItem::addActivity(Activity* item)
 {
-    if (!m_types.contains(item->getType())) {
-        m_types += (';' + item->getType());
+    if (!m_types.contains(item->type())) {
+        m_types += (';' + item->type());
     }
 
     m_itemModel->addActivityItem(item);

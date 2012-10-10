@@ -1,5 +1,5 @@
 #include "activityproxy.h"
-#include "activityset.h"
+#include "activity.h"
 #include "localdaymodel.h"
 #include "localcontentitem.h"
 #include "localcontentmodel.h"
@@ -110,18 +110,18 @@ void LocalContentModel::newActivities(QList<Activity*> list)
     for (int i = 0; i < list.size() ; i++) {
 
         Activity* newItem = list.at(i);
-        if (m_urlHash.contains(newItem->getUrl()))
+        if (m_urlHash.contains(newItem->url()))
             continue;
-        m_urlHash.insert(newItem->getUrl(), newItem->getDate());
+        m_urlHash.insert(newItem->url(), newItem->date());
 
         //first check of null item, if we find one, edit it with new data
         for (int j = 0; j < rowCount(); j++) {
             LocalContentItem *it = static_cast<LocalContentItem *>(itemAt(j));
-            if ((it->getDate().year() == newItem->getDate().year())
-                    && (it->getDate().month() == newItem->getDate().month())
+            if ((it->getDate().year() == newItem->date().year())
+                    && (it->getDate().month() == newItem->date().month())
                     && (it->getCount() == 0)
                ) {
-                it->setDate(newItem->getDate());
+                it->setDate(newItem->date());
                 it->addActivity(newItem);
                 continue;
             }
@@ -131,8 +131,8 @@ void LocalContentModel::newActivities(QList<Activity*> list)
         bool flag = false;
         if (rowCount() > 0) {
             LocalContentItem *item = static_cast<LocalContentItem *>(itemAt(0));
-            while (item->getDate() <= newItem->getDate()) {
-                if (item->getDate() == newItem->getDate()) {
+            while (item->getDate() <= newItem->date()) {
+                if (item->getDate() == newItem->date()) {
                     item->addActivity(newItem);
                     flag = true;
                     break;
@@ -149,7 +149,7 @@ void LocalContentModel::newActivities(QList<Activity*> list)
             continue;
         }
 
-        LocalContentItem * gallItem = new LocalContentItem(newItem->getDate(), this);
+        LocalContentItem * gallItem = new LocalContentItem(newItem->date(), this);
         gallItem->addActivity(newItem);
         insertRow(j, gallItem);
     }

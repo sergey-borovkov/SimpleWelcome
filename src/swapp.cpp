@@ -46,7 +46,6 @@
 #include "datasource_search.h"
 
 #include "timeframe/timescalemodel.h"
-#include "timeframe/local/activityset.h"
 #include "timeframe/local/localcontentitem.h"
 #include "timeframe/local/localcontentmodel.h"
 #include "timeframe/local/localdaymodel.h"
