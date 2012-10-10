@@ -13,7 +13,7 @@ class ActivityProxy : public QObject
 {
     Q_OBJECT
 public:
-    explicit ActivityProxy(QObject *parent = 0);
+    explicit ActivityProxy(NepomukSource* source, QObject *parent = 0);
 
     void addNepomukSource(NepomukSource* source);
     void setModel(LocalContentModel* model);
@@ -34,7 +34,6 @@ private slots:
 
 private:
     LocalContentModel* m_model;
-    NepomukSource* m_source;
 };
 
 #endif // GALLERYLISTER_H

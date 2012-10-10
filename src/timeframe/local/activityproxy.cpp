@@ -4,16 +4,10 @@
 #include "nepomuksource.h"
 #include "previewgenerator.h"
 
-ActivityProxy::ActivityProxy(QObject *parent) :
+ActivityProxy::ActivityProxy(NepomukSource *source, QObject *parent) :
     QObject(parent),
-    m_model(0),
-    m_source(0)
+    m_model(0)
 {
-}
-
-void ActivityProxy::addNepomukSource(NepomukSource *source)
-{
-    m_source = source;
     connect(source, SIGNAL(newActivities(QList<Activity*>)), this, SLOT(newData(QList<Activity*>)));
     connect(source, SIGNAL(searchFinished()), SIGNAL(finished()));
     connect(this, SIGNAL(search()), source, SLOT(startSearch()));
@@ -21,8 +15,6 @@ void ActivityProxy::addNepomukSource(NepomukSource *source)
 
 void ActivityProxy::startSearch()
 {
-    if (!m_source)
-        return;
     emit search();
 }
 
@@ -31,7 +23,7 @@ void ActivityProxy::newData(QList<Activity *> list)
     // start generating previews
     QStringList urls;
     foreach(Activity * item, list) {
-        item->setParent(this);
+        //item->setParent(this);
         urls.append(item->getUrl());
         emit newMonth(item->getDate().year() , item->getDate().month(), item->getType());  //fill timeScaleModel
     }
@@ -45,7 +37,6 @@ void ActivityProxy::setModel(LocalContentModel* model)
     if (m_model)
         m_model = model;
 }
-
 
 int ActivityProxy::getIndexByDate(int year, int month,  bool direction)
 {
