@@ -6,10 +6,10 @@
 
 #include <listmodel.h>
 
-class ItemModel;
+class LocalDayModel;
 class Activity;
 class ActivityProxy;
-class LocalDayItem;
+class LocalContentItem;
 
 /**
  * @brief The LocalContentModel class stores local content
@@ -22,11 +22,11 @@ class LocalContentModel : public ListModel
 public:
     explicit LocalContentModel(QHash<int, QByteArray> roles, QObject *parent = 0);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    void appendRow(LocalDayItem* item);
-    void appendRows(const QList<LocalDayItem*> &items);
-    void insertRow(int row, LocalDayItem *item);
+    void appendRow(LocalContentItem* item);
+    void appendRows(const QList<LocalContentItem*> &items);
+    void insertRow(int row, LocalContentItem *item);
     void setLister(ActivityProxy* lister);
-    LocalDayItem * find(const QDate &date) const;
+    LocalContentItem * find(const QDate &date) const;
 
     QRegExp filter() const;
     void setFilter(QRegExp regexp);

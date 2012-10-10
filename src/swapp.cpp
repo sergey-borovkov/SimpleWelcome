@@ -47,9 +47,9 @@
 
 #include "timeframe/timescalemodel.h"
 #include "timeframe/local/activityset.h"
-#include "timeframe/local/localdayitem.h"
+#include "timeframe/local/localcontentitem.h"
 #include "timeframe/local/localcontentmodel.h"
-#include "timeframe/local/itemmodel.h"
+#include "timeframe/local/localdaymodel.h"
 #include "timeframe/local/activityproxy.h"
 #include "timeframe/local/nepomuksource.h"
 #include "timeframe/local/previewgenerator.h"
@@ -240,10 +240,9 @@ void SWApp::initTimeframeLocalMode()
     m_source->moveToThread(m_nepomukThread);
     m_nepomukThread->start(QThread::LowPriority);
 
-    m_proxy = new ActivityProxy;
-    m_proxy->addNepomukSource(m_source);
+    m_proxy = new ActivityProxy(m_source, this);
 
-    LocalContentModel* model = new LocalContentModel(LocalDayItem::roleNames(), this);
+    LocalContentModel* model = new LocalContentModel(LocalContentItem::roleNames(), this);
     LocalContentFilterModel* proxymodel = new LocalContentFilterModel(this);
     model->setLister(m_proxy);
     proxymodel->setSourceModel(model);
@@ -271,11 +270,10 @@ void SWApp::initTimeframeSocialMode()
     m_manager->setSocialModel(socialModel);
 
     m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
-
+    qmlRegisterInterface<LocalDayFilterModel>("LocalDayFilterModel");
     TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
     TimeScaleModel* timeScaleModel = new TimeScaleModel(TimeScaleItem::roleNames(), this);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
-
     connect(m_manager, SIGNAL(removeType(QString)), timeScaleModel, SLOT(removeItems(QString)));
 
     m_viewer->rootContext()->setContextProperty("socialProxy", m_manager);
