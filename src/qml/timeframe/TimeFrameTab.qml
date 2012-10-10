@@ -70,10 +70,25 @@ Item {
             txt =  i18n_Documents
         if (id == "Manage Networks")
             txt =  i18n_Manage_networks
-        if (id == "Documents")
-            txt =  i18n_Documents
         return txt
     }
+
+    function getMenuFilterText(str)
+    {
+        var txt = str
+        if (str === i18n_All)
+            txt = "ALL"
+        if (str === i18n_Photo)
+            txt = "Images"
+        if (str === i18n_Video)
+            txt = "Video"
+        if (str === i18n_Documents)
+            txt =  "Documents"
+        if (str === i18n_Manage_networks)
+            txt =  "Manage Networks"
+        return txt
+    }
+
 
     //Start initial search
     Connections {
@@ -173,8 +188,8 @@ Item {
                     localDayModel.setFilter("Local")
                 }
                 else {
-                    timeScaleModel.setFilter(selectedText)
-                    localDayModel.setFilter(selectedText)
+                    localDayModel.setFilter(getMenuFilterText(selectedText))
+                    timeScaleModel.setFilter(getMenuFilterText(selectedText))
                 }
             }
         }
@@ -229,8 +244,8 @@ Item {
                     socialDayModel.setFilter("Social")
                 }
                 else {
-                    socialDayModel.setFilter(selectedText)
-                    timeScaleModel.setFilter(selectedText)
+                    timeScaleModel.setFilter(getMenuFilterText(selectedText))
+                    socialDayModel.setFilter(getMenuFilterText(selectedText))
                 }
             }
             Connections {
