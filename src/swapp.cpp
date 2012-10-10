@@ -98,7 +98,6 @@ int SWApp::newInstance()
 
     static bool isFirst = true;
     if (!args->isSet("silent") || !isFirst) {
-        qDebug() << "Silent not set";
         if (m_viewer) {
             if (!m_viewer->isVisible())
                 m_viewer->restore();
@@ -106,8 +105,10 @@ int SWApp::newInstance()
                 m_viewer->close();
         }
     }
-    isFirst = false;
+    else if (!isFirst)
+        qDebug() << "Silent is set";
 
+    isFirst = false;
     return 0;
 }
 
@@ -123,14 +124,12 @@ void SWApp::loadShortcut()
     connect(m_globalAction, SIGNAL(triggered(bool)), SLOT(newInstance()));
     m_globalAction->setObjectName("Activate A ROSA Launcher Widget");
     m_globalAction->setGlobalShortcut(m_globalShortcut, KAction::ActiveShortcut, KAction::NoAutoloading);
-    qDebug() << m_globalShortcut.toString() << " is " << m_globalAction->isGlobalShortcutEnabled();
+    //qDebug() << m_globalShortcut.toString() << " is " << m_globalAction->isGlobalShortcutEnabled();
 }
 
 SWApp::SWApp()
     : KUniqueApplication()
 {
-    qDebug() << "constructor";
-
     // First of all, we have to register type to make it available from QML
     qmlRegisterType<WheelArea>("Private", 0, 1, "WheelArea");
 
