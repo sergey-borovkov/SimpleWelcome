@@ -1,5 +1,5 @@
 #include "activityproxy.h"
-#include "activityset.h"
+#include "activity.h"
 #include "localcontentmodel.h"
 #include "nepomuksource.h"
 #include "previewgenerator.h"
@@ -24,8 +24,8 @@ void ActivityProxy::newData(QList<Activity *> list)
     QStringList urls;
     foreach(Activity * item, list) {
         //item->setParent(this);
-        urls.append(item->getUrl());
-        emit newMonth(item->getDate().year() , item->getDate().month(), item->getType());  //fill timeScaleModel
+        urls.append(item->url());
+        emit newMonth(item->date().year() , item->date().month(), item->type());  //fill timeScaleModel
     }
     PreviewGenerator::instance()->start(urls);
     // send events to the model

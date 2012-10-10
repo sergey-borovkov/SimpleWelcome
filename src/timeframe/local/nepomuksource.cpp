@@ -1,5 +1,5 @@
 #include "nepomuksource.h"
-#include "activityset.h"
+#include "activity.h"
 
 #include <Nepomuk/ResourceManager>
 #include <Soprano/Model>
@@ -43,8 +43,8 @@ void NepomukSource::startSearch()
             activities.clear();
         }
 
-        Activity *activity = new Activity(path, type, lastModified);
-        activity->moveToThread(QApplication::instance()->thread());
+        Activity *activity = new Activity(path, type, lastModified, mimeType);
+//        activity->moveToThread(QApplication::instance()->thread());
         activities.append(activity);
     }
 

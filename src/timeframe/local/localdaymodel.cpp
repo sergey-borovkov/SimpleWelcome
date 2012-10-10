@@ -1,4 +1,4 @@
-#include "activityset.h"
+#include "activity.h"
 #include "localdaymodel.h"
 
 #include <QtCore/QDate>
@@ -27,7 +27,7 @@ QVariant LocalDayModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
     if (role == CurrentDateRole) {
-        return m_items.value(index.row())->getDate();
+        return m_items.value(index.row())->date();
     } else if (role == ActivitiesRole) {
         QVariant v;
         v.setValue(m_items[index.row()]);
@@ -35,9 +35,9 @@ QVariant LocalDayModel::data(const QModelIndex &index, int role) const
     } else if (role == CountRole) {
         return m_items.size();
     } else if (role == UrlRole) {
-        return m_items[index.row()]->getUrl();
+        return m_items[index.row()]->url();
     } else if (role == TypeRole) {
-        return m_items[index.row()]->getType();
+        return m_items[index.row()]->type();
     }
     return QVariant();
 }
@@ -55,13 +55,13 @@ void LocalDayModel::addActivityItem(Activity *item)
     if (!item)
         return;
     /* Check duplicates*/
-    if (m_urlSet.contains(item->getUrl()))
+    if (m_urlSet.contains(item->url()))
         return;
 
     int ind = m_items.size();
     beginInsertRows(QModelIndex(), ind , ind);
     m_items.append(item);
-    m_urlSet.insert(item->getUrl());
+    m_urlSet.insert(item->url());
     endInsertRows();
 }
 
@@ -69,7 +69,7 @@ void LocalDayModel::thumbnailReady(const QString &url)
 {
     int row;
     for (row = 0; row < m_items.size(); ++row) {
-        if (m_items.at(row)->getUrl() == url)
+        if (m_items.at(row)->url() == url)
             break;
     }
     dataChanged(index(row), index(row));
@@ -78,7 +78,7 @@ void LocalDayModel::thumbnailReady(const QString &url)
 
 QString LocalDayModel::url(int row) const
 {
-    return m_items.at(row)->getUrl();
+    return m_items.at(row)->url();
 }
 
 QDate LocalDayModel::date() const
