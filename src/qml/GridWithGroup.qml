@@ -43,7 +43,7 @@ Column {
 
     Component.onCompleted: {
         iconGridView.selectionChangedByKeyboard.connect(gridCurrentItemChanged)
-        iconGridView.itemStackingChanged.connect(gridStackingChanged)
+        iconGridView.itemStackingChanged.connect(saveStacks)
         iconGridView.myActiveFocusChanged.connect(gridMyFocusChanged)
     }
 
@@ -53,18 +53,21 @@ Column {
             var res = mainWindow.loadSetting("Stacks")
             //console.log("LOADING STACKS")
 
-            for (var captionStackingTo in res) {
+            for (var stackName in res) {
 
-                var captionsList = res[captionStackingTo].split(",")
+                var captionsList = res[stackName].split(",")
+                var captionStackingTo = captionsList[0]
                 //console.log("Object item:", captionStackingTo, "=", captionsList)
 
                 var model = iconGridView.model
                 var indexStackingTo = -1
-                for (var i = 0; i < model.count; i++)
+                for (var i = 0; i < model.count; i++) {
+                    //console.log("LOADING " + stackName + " checking with " + model.get(i).caption)
                     if (model.get(i).caption === captionStackingTo) {
                         indexStackingTo = i
                         break
                     }
+                }
 
                 if (indexStackingTo == -1)
                     continue
@@ -82,7 +85,9 @@ Column {
                             }
 
                         if (indexToStack != -1) {
-                            iconGridView.stackItemInItem(indexStackingTo, indexToStack)
+                            iconGridView.stackItemInItem(indexStackingTo, indexToStack, true)
+                            //console.log("SETTING " + indexStackingTo + " caption to " + stackName)
+                            iconGridView.model.setProperty(indexStackingTo, "caption", stackName)
                             iconGridView.model.remove(indexToStack)
                         }
                     }
@@ -95,8 +100,9 @@ Column {
     }
 
     // Used to save stacking
-    function gridStackingChanged() {
+    function saveStacks() {
         var model = iconGridView.model
+        //console.log("SAVING stacking")
 
         var setting = []
         for (var i = 0; i < model.count; i++)
@@ -110,7 +116,7 @@ Column {
             }
         }
 
-        mainWindow.saveSetting(groupName, setting)
+        mainWindow.saveSetting("Stacks", setting)
     }
 
     TextInput {
@@ -137,6 +143,11 @@ Column {
         onActiveFocusChanged: {
             if (activeFocus)
                 iconGridView.myActiveFocus = false
+        }
+
+        Keys.onEnterPressed: {
+            if (isPopupGroup)
+                gridsListView.hideGroup()
         }
 
         Keys.onReturnPressed: {
