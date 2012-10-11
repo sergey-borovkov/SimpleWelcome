@@ -14,8 +14,6 @@ class ActivityProxy : public QObject
     Q_OBJECT
 public:
     explicit ActivityProxy(NepomukSource* source, QObject *parent = 0);
-
-    void addNepomukSource(NepomukSource* source);
     void setModel(LocalContentModel* model);
 
 signals:
