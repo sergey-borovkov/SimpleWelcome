@@ -104,6 +104,16 @@ void PreviewGenerator::modelShown(QStringList paths, QObject *dayModel)
     foreach(QString path, paths) {
         KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
         fileList.append(fileItem);
+
+        QHash<QString, int>::iterator it = m_requestCount.find(path);
+        if(it != m_requestCount.end()) {
+            it.value()++;
+            continue;
+        }
+        else {
+            m_requestCount.insert(path, 1);
+        }
+
         m_urlsInModel.insert(path, filteredModel);
     }
 
@@ -120,6 +130,13 @@ void PreviewGenerator::modelHidden(QStringList paths, QObject *dayModel)
     LocalDayFilterModel *filteredModel = static_cast<LocalDayFilterModel *>(dayModel);
     Q_UNUSED(filteredModel)
     foreach(QString path, paths) {
-        m_urlsInModel.remove(path);
+        QHash<QString, int>::iterator it = m_requestCount.find(path);
+        if(it != m_requestCount.end() && it.value() > 1) {
+            it.value()--;
+        }
+        else {
+            m_urlsInModel.remove(path);
+            m_requestCount.erase(it);
+        }
     }
 }
