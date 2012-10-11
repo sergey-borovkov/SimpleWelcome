@@ -1,5 +1,5 @@
 #include "nepomuksource.h"
-#include "activityset.h"
+#include "activity.h"
 
 #include <Nepomuk/ResourceManager>
 #include <Soprano/Model>
@@ -30,6 +30,7 @@ void NepomukSource::startSearch()
     while(it.next()) {
         i++;
         QString path = it["url"].uri().toLocalFile();
+        QDate lastModified = it["lastModified"].literal().toDate();
         QString mimeType = it["mimeType"].toString();
         QString type;
         if (path.contains(".svg"))
@@ -45,8 +46,9 @@ void NepomukSource::startSearch()
             emit newActivities(activities);
             activities.clear();
         }
-        Activity *activity = new Activity(path, type ,it["lastModified"].literal().toDate());
-        activity->moveToThread(QApplication::instance()->thread());
+
+        Activity *activity = new Activity(path, type, lastModified, mimeType);
+//        activity->moveToThread(QApplication::instance()->thread());
         activities.append(activity);
     }
 

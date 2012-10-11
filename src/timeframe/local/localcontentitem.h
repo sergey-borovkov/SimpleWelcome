@@ -9,28 +9,14 @@
 
 #include <listitem.h>
 
-class ItemModel;
+class LocalDayModel;
+class LocalDayFilterModel;
 class Activity;
 
-#pragma GCC diagnostic ignored "-Woverloaded-virtual"
-
-class TimeFrameFilterModel : public QSortFilterProxyModel
-{
-    Q_OBJECT
-public:
-    explicit TimeFrameFilterModel(QObject * parent = 0);
-    void setSourceModel(ItemModel * sourceModel);
-
-signals:
-    void gotThumbnail();
-
-public slots:
-    QString url(int row);
-
-};
-
-
-class LocalDayItem : public QObject, public ListItem
+/**
+ * @brief The LocalContentItem class stores local content in one day
+ */
+class LocalContentItem : public QObject, public ListItem
 {
     Q_OBJECT
 public:
@@ -42,8 +28,8 @@ public:
         ItemsCountRole
     };
 
-    explicit LocalDayItem(const QDate &date, QObject *parent = 0);
-    ~LocalDayItem();
+    explicit LocalContentItem(const QDate &date, QObject *parent = 0);
+    ~LocalContentItem();
 
     QString id() const;
     virtual QVariant data(int role) const;
@@ -52,9 +38,8 @@ public:
     QDate getDate() const;
     int   getCount() const;
 
-    TimeFrameFilterModel * model();
+    LocalDayFilterModel * model();
     QString types() const;
-    void thumbnailReady(QString);
 
     static QHash<int, QByteArray> roleNames();
 
@@ -65,13 +50,11 @@ public slots:
     void setDate(const QDate&);
     void addActivity(Activity* item);
 
-
 private:
     QString     m_types;
-    QDate       m_date;
     int         m_count;
-    ItemModel*  m_itemModel;
-    TimeFrameFilterModel*  m_model;
+    LocalDayModel*  m_itemModel;
+    LocalDayFilterModel*  m_model;
 };
 
 #endif // GALLERYITEM_H
