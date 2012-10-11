@@ -151,7 +151,7 @@ Item {
         anchors.top: parent.top
         anchors.margins: 16
         height: 30
-        spacing: 0
+        spacing: 10
         z: 100
 
         ListModel {
