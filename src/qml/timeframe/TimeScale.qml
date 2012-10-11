@@ -53,7 +53,14 @@ Item {
             id: listItem
             width: timeScaleList.width/10
             height: 80
-
+            Image {
+                anchors.verticalCenter: parent.verticalCenter
+                id: scaleImage
+                source: "images/month1.png"
+                //fillMode: Image.PreserveAspectFit
+                width: parent.width
+            }
+/*
             Rectangle
             {
                 anchors.left: parent.left
@@ -73,6 +80,7 @@ Item {
                 height: 30
                 color: "grey"
             }
+            */
 
             Text {
                 color: "white"
@@ -87,27 +95,14 @@ Item {
     Component {
         id: highlight
 
-        Row {
+        Image {
+            id: highlightImage
             x: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.x-3
-            y: (timeScaleList.currentIndex === -1)? 0 :timeScaleList.currentItem.y
-            width: timeScaleList.width/10 + 6  //siz
-            height: 80
-            Repeater {
-                model: (timeScaleList.width/10+6)/12
+            y: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.y
+            width: timeScaleList.width/10  //siz
+            height: 32
 
-                Item {
-                    width: 12
-                    height: 18
-
-                    Rectangle {
-                        anchors.top: parent.top
-                        anchors.topMargin: 5
-                        anchors.left: parent.left
-                        width: 6; height: parent.height
-                        color: "grey"
-                    }
-                }
-            }
+            source: "images/active-full.png"
             Behavior on x { NumberAnimation{duration: 300 } }
         }
     }
@@ -143,6 +138,14 @@ Item {
         height: parent.height
         clip: true
         width: getListViewItemSize()*10+6
+
+        Image {
+            id: scaleBackground
+            source: "images/scale-full.png"
+            anchors.fill: parent
+            fillMode : Image.PreserveAspectFit
+            height: 32
+        }
 
         ListView {
             id: timeScaleList
@@ -212,7 +215,8 @@ Item {
                 NumberAnimation { duration: 300 }
             }
         }
-
+    }
+/*
         Rectangle {
             id: scale
             anchors.verticalCenter: parent.verticalCenter
@@ -221,4 +225,5 @@ Item {
             color: "grey"
         }
     }
+    */
 }
