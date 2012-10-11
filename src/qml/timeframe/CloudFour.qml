@@ -17,6 +17,7 @@ Item {
     Item {
         id: dateLabel
         anchors.top : parent.top
+        anchors.topMargin: 10
         anchors.left: parent.left
         anchors.right: cloudRect1.left
         anchors.rightMargin: margin

@@ -8,6 +8,7 @@ Item {
     Text {
         id: dateLabel
         anchors.top : parent.top
+        anchors.topMargin: 10
         anchors.left: parent.left
         width: 100
         height: labelHeight
