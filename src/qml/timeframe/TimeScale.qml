@@ -35,78 +35,56 @@ Item {
         }
         return "UND"
     }
-/*
-    Connections {
-        target: nepomukSource
-        onNewTSEntries: {
-            monthModel.append( { month: getMonthStr(month-1), year: year, monthNumber: month })
-        }
-    }
 
-    ListModel {
-        id: monthModel
-    }
-*/
     Component {
         id: monthDelegate
         Item {
             id: listItem
-            width: timeScaleList.width/10
+            width: 107
             height: 80
-
-            Rectangle
-            {
-                anchors.left: parent.left
-                anchors.leftMargin: -3
+            Image {
+                id: scaleImage
                 anchors.verticalCenter: parent.verticalCenter
-                width: 6
-                height: 30
-                color: "grey"
+                width: parent.width
+                source: "images/month1.png"                
+
             }
-
-            Rectangle {
-
-                anchors.right: parent.right
-                anchors.rightMargin: -3
-                anchors.verticalCenter: parent.verticalCenter
-                width: 6
-                height: 30
-                color: "grey"
-            }
-
             Text {
                 color: "white"
                 id: monthLabel
                 text: getMonthStr(month)// + ' ' + year
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 10
+                //anchors.bottomMargin: 1
+                font.pixelSize: 15
             }
         }
     }
     Component {
         id: highlight
-
-        Row {
-            x: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.x-3
-            y: (timeScaleList.currentIndex === -1)? 0 :timeScaleList.currentItem.y
-            width: timeScaleList.width/10 + 6  //siz
-            height: 80
-            Repeater {
-                model: (timeScaleList.width/10+6)/12
-
-                Item {
-                    width: 12
-                    height: 18
-
-                    Rectangle {
-                        anchors.top: parent.top
-                        anchors.topMargin: 5
-                        anchors.left: parent.left
-                        width: 6; height: parent.height
-                        color: "grey"
-                    }
-                }
+        Item{
+            width: 107
+            height: 32
+            x: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.x
+            y: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.y + timeScaleList.currentItem.height/2 - 16
+            Image {
+                id: activeLeft
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/active-left.png"
+            }
+            Image {
+                id: activeRight
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/active-right.png"
+            }
+            Image {
+                anchors.left: activeLeft.right
+                anchors.right: activeRight.left
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/active-center.png"
+                smooth: true
             }
             Behavior on x { NumberAnimation{duration: 300 } }
         }
@@ -130,10 +108,9 @@ Item {
         }
     }
 
-    function getListViewItemSize() {
-        var x = timeScale.width / 11//size of 1 element
-        var y = Math.ceil(x / 12)
-        return y * 12
+    function getListViewItemsCount() {
+        var y = Math.floor((timeScale.width - 100)/ 107)
+        return y
     }
 
     Item {
@@ -141,8 +118,32 @@ Item {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         height: parent.height
-        clip: true
-        width: getListViewItemSize()*10+6
+        clip: true    
+        width: getListViewItemsCount()*107
+
+        Item {
+            id: scaleBackground
+            anchors.fill: parent
+            Image {
+                id: scaleLeft
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/scale-left.png"
+            }
+            Image {
+                id: scaleRight
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/scale-right.png"
+            }
+            Image {
+                anchors.left: scaleLeft.right
+                anchors.right: scaleRight.left
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/scale-center.png"
+                smooth: true
+            }
+        }
 
         ListView {
             id: timeScaleList
@@ -206,14 +207,6 @@ Item {
             Behavior on contentX {
                 NumberAnimation { duration: 300 }
             }
-        }
-
-        Rectangle {
-            id: scale
-            anchors.verticalCenter: parent.verticalCenter
-            width: parent.width
-            height: 6
-            color: "grey"
         }
     }
 }

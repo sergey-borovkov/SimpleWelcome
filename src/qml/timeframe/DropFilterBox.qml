@@ -30,6 +30,17 @@ Item {
         width: parent.width
         height: 30
 
+        Rectangle {
+            id: border
+            anchors.fill: parent
+            anchors.bottomMargin: 2
+            radius: 4
+            border.color: "#172634"
+            color: "transparent"
+            border.width: 1
+        }
+
+
         ItemRectangle {
             id: background
             anchors.fill: parent

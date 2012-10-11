@@ -143,7 +143,7 @@ Item {
         anchors.top: parent.top
         anchors.margins: 16
         height: 30
-        spacing: 0
+        spacing: 10
         z: 100
 
         ListModel {
@@ -729,8 +729,9 @@ Item {
                 target: timeScale
                 anchors.verticalCenter: undefined
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom:  timeFrameTab.bottom
+                anchors.bottom:  timeFrameTab.bottom                                
             }
+            PropertyChanges { target: timeScale; anchors.bottomMargin: 20 }
 
             PropertyChanges { target: timeLine;  visible : false; opacity: 0 }
 
