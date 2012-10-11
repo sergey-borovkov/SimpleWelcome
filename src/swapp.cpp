@@ -245,7 +245,6 @@ void SWApp::initTimeframeLocalMode()
     LocalContentFilterModel* proxymodel = new LocalContentFilterModel(this);
     model->setLister(m_proxy);
     proxymodel->setSourceModel(model);
-    PreviewGenerator::instance()->setModel(model);
 
     QRect r = QDesktopWidget().screenGeometry(m_viewer);
 

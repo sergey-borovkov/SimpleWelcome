@@ -65,16 +65,21 @@ void LocalDayModel::addActivityItem(Activity *item)
     endInsertRows();
 }
 
-void LocalDayModel::thumbnailReady(const QString &url)
+/*void LocalDayModel::thumbnailReady(const QString &url)
 {
-    int row;
+    /*int row;
     for (row = 0; row < m_items.size(); ++row) {
-        if (m_items.at(row)->url() == url)
-            break;
+        if (m_items.at(row)->url() == url) {
+            m_items.at(row)->setUrl(url);
+           break;
+        }
     }
     dataChanged(index(row), index(row));
-    emit gotThumbnail();
-}
+
+    emit gotThumbnail(url);
+
+    //emit gotThumbnail();
+}*/
 
 QString LocalDayModel::url(int row) const
 {
@@ -91,6 +96,7 @@ void LocalDayModel::setDate(QDate date)
     m_date = date;
 }
 
+
 LocalDayFilterModel::LocalDayFilterModel(QObject * parent) :
     QSortFilterProxyModel(parent)
 {
@@ -100,10 +106,22 @@ void LocalDayFilterModel::setSourceModel(LocalDayModel * sourceModel)
 {
     if (sourceModel) {
         QSortFilterProxyModel::setSourceModel(sourceModel);
-        connect(sourceModel, SIGNAL(gotThumbnail()), this, SIGNAL(gotThumbnail()));
+        //connect(sourceModel, SIGNAL(gotThumbnail()), this, SIGNAL(gotThumbnail()));
     }
 }
+
+int LocalDayFilterModel::count() const
+{
+    return rowCount();
+}
+
 QString LocalDayFilterModel::url(int row) const
 {
     return data(index(row, 0), LocalDayModel::UrlRole).toString();
 }
+
+void LocalDayFilterModel::previewReady(const QString &url)
+{
+    emit gotThumbnail(url);
+}
+

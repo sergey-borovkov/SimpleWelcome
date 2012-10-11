@@ -40,7 +40,6 @@ public:
 
     LocalDayFilterModel * model();
     QString types() const;
-    void thumbnailReady(QString);
 
     static QHash<int, QByteArray> roleNames();
 

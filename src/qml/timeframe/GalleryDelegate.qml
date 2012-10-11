@@ -18,26 +18,15 @@ Item {
         text: (size === 0) ? Qt.formatDate( date , "MMM yyyy") : Qt.formatDate( date , "dd MMM yyyy")
         color: "white"
         horizontalAlignment: Text.AlignHCenter
-        //visible: (size === 0) ? false : true
     }
-    /*
-    Rectangle {
-        id: gridBorder
-        border.color: "black"
-        color: "transparent"
-        border.width: 2
-        anchors.top: dateLabel.bottom
-        anchors.left: dateLabel.left
-        width: parent.width + 10
-        height: parent.height + 10
-    }
-*/
+
     AnimatedImage {
         id: waitIndicator
         source: "images/ajax-loader.gif"
         anchors.centerIn: parent
         visible: (size === 0) ? true : false
     }
+
     GridView{
         id: itemGrid
         anchors.top: dateLabel.bottom
@@ -52,16 +41,10 @@ Item {
         flow: GridView.TopToBottom
         interactive: false
         delegate: Column {
-            //Rectangle {
             ItemRectangle{
                 id: imageBackground
-                //color: "black"
-                //border.color: "#687584"
-                //border.width: 1
-                //radius: 8
                 width: itemGrid.cellWidth - 20
                 height: itemGrid.cellHeight -40
-                //clip: true
                 Image {
                     id: image
                     anchors.centerIn: parent
@@ -72,6 +55,7 @@ Item {
                     smooth: true
                     asynchronous: true
                 }
+
                 MouseArea {
                     anchors.fill: parent
                     onClicked: Qt.openUrlExternally(url)

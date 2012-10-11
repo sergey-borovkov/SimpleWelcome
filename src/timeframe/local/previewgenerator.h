@@ -22,7 +22,8 @@
 #ifndef PREVIEWGENERATOR_H
 #define PREVIEWGENERATOR_H
 
-#include <QDeclarativeEngine>
+#include "localdaymodel.h"
+
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 #include <QtCore/QPair>
@@ -32,38 +33,45 @@
 
 class FileModel;
 class LocalContentModel;
-class TimeFrameFilterModel;
+class LocalDayFilterModel;
 
 class PreviewGenerator : public QObject
 {
     Q_OBJECT
-
 public:
     static PreviewGenerator *instance();
-    QPixmap previewPixmap(QString filePath) const;
-    void setModel(LocalContentModel* model);
+    QPixmap takePreviewPixmap(QString filePath);
 
-public slots:
-    void start(const QStringList& list);
+    /**
+     * @brief modelShown is called in QML after "cloud" is loaded. It generates
+     *        previews and notifies model when previews are generated
+     * @param dayModel
+     */
+    Q_INVOKABLE void modelShown(QObject *dayModel);
+
+    /**
+     * @brief modelHidden is in QML when cloud component gets destroyed. It removes
+     *        unused  images generated for model
+     * @param dayModel
+     */
+    Q_INVOKABLE void modelHidden(QObject *dayModel);
 
 private slots:
-    void setPreview(const KFileItem&, const QPixmap&);
-    void setNullIcon(const KFileItem &item);
-    void notifyModel(const QString& filePath);
+    void previewJobResult(const KFileItem&, const QPixmap&);
+    void previewJobFailed(const KFileItem &item);
 
 private:
-    explicit PreviewGenerator(QObject *parent = 0);
-    LocalContentModel * m_model;
+    explicit PreviewGenerator();
+    void notifyModelAboutPreview(const QString &url);
+
+    QHash<QString, LocalDayFilterModel *> m_urlsInModel;
 
     QHash<QString, QPixmap> m_previews;
     QPixmap defaultPreview;
 
     static PreviewGenerator *m_instance;
     QPixmap videoPixmap;
-
-    KIO::PreviewJob *m_job;
     QStringList m_plugins;
-    KFileItemList m_fileList;
 };
 
 #endif // PREVIEWGENERATOR_H

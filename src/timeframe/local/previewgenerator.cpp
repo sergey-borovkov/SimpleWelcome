@@ -33,18 +33,28 @@
 
 PreviewGenerator *PreviewGenerator::m_instance = 0;
 
-PreviewGenerator::PreviewGenerator(QObject *parent) :
-    QObject(parent), m_model(0), m_job(0)
+PreviewGenerator::PreviewGenerator()
 {
     defaultPreview.load(":/pla-empty-box.png");
     videoPixmap.load(":/play-empty.png");
     m_plugins = KIO::PreviewJob::availablePlugins();
 }
 
-void PreviewGenerator::setPreview(const KFileItem &item, const QPixmap &pixmap)
+void PreviewGenerator::notifyModelAboutPreview(const QString &url)
 {
-    QPixmap pict = pixmap;
+    QHash<QString, LocalDayFilterModel *>::iterator it = m_urlsInModel.find(url);
+    if(it != m_urlsInModel.end()) {
+        it.value()->previewReady(url);
+        m_urlsInModel.erase(it);
+    }
+}
 
+void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pixmap)
+{
+    if(m_urlsInModel.find(item.localPath()) == m_urlsInModel.end())
+        return;
+
+    QPixmap pict = pixmap;
     if (item.mimetype().startsWith("video/")) {
         QPainter p(&pict);
         QPixmap scaledPixmap = videoPixmap.scaled(pict.width() / 2, pict.height() / 2,  Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -52,15 +62,18 @@ void PreviewGenerator::setPreview(const KFileItem &item, const QPixmap &pixmap)
     }
 
     m_previews.insert(item.localPath(), pict);
-
-    notifyModel(item.localPath());
+    notifyModelAboutPreview(item.localPath());
 }
 
-void PreviewGenerator::setNullIcon(const KFileItem &item)
+void PreviewGenerator::previewJobFailed(const KFileItem &item)
 {
+    if(m_urlsInModel.find(item.localPath()) == m_urlsInModel.end())
+        return;
+
     KIcon icon(item.iconName(), 0, item.overlays());
     QPixmap pixmap = icon.pixmap(500);
-    setPreview(item, pixmap);
+    m_previews.insert(item.localPath(), pixmap);
+    notifyModelAboutPreview(item.localPath());
 }
 
 PreviewGenerator * PreviewGenerator::instance()
@@ -70,36 +83,48 @@ PreviewGenerator * PreviewGenerator::instance()
     return m_instance;
 }
 
-QPixmap PreviewGenerator::previewPixmap(QString filePath) const
+QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
 {
-    return m_previews.value(filePath, defaultPreview);
+    QHash<QString, QPixmap>::iterator it;
+    it = m_previews.find(filePath);
+    if(it != m_previews.end()) {
+        QPixmap pixmap = it.value();
+        m_previews.erase(it);
+        return pixmap;
+    }
+    else {
+        return defaultPreview;
+    }
 }
 
-void PreviewGenerator::start(const QStringList& list)
+void PreviewGenerator::modelShown(QObject *dayModel)
 {
-    m_fileList.clear();
-    for (int i = 0; i < list.size(); i++) {
-        KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, list[i], true);
-        m_fileList.append(fileItem);
+    LocalDayFilterModel *filteredModel = static_cast<LocalDayFilterModel *>(dayModel);
+    KFileItemList fileList;
+
+    // we can have up to 7 items in cloud
+    int l = qMin(filteredModel->rowCount(), 7);
+    for (int i = 0; i < l; i++) {
+        QString path = filteredModel->url(i);
+        KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
+        fileList.append(fileItem);
+        m_urlsInModel.insert(path, filteredModel);
     }
 
-    m_job = KIO::filePreview(m_fileList, QSize(512, 512), &m_plugins);
-    m_job->setIgnoreMaximumSize();
-    m_job->setAutoDelete(true);
+    KIO::PreviewJob *job = KIO::filePreview(fileList, QSize(512, 512), &m_plugins);
+    job->setIgnoreMaximumSize();
+    job->setAutoDelete(true);
 
-    connect(m_job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(setPreview(const KFileItem&, const QPixmap&)));
-    connect(m_job, SIGNAL(failed(const KFileItem&)), SLOT(setNullIcon(const KFileItem &)));
+    connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(previewJobResult(const KFileItem&, const QPixmap&)));
+    connect(job, SIGNAL(failed(const KFileItem&)), SLOT(previewJobFailed(const KFileItem &)));
 }
 
-void PreviewGenerator::setModel(LocalContentModel* model)
+void PreviewGenerator::modelHidden(QObject *dayModel)
 {
-    m_model = model;
-}
-
-
-void PreviewGenerator::notifyModel(const QString& filePath)
-{
-    if (m_model) {
-        m_model->imageReady(filePath);
+    LocalDayFilterModel *filteredModel = static_cast<LocalDayFilterModel *>(dayModel);
+    int l = qMin(filteredModel->rowCount(), 7);
+    for (int i = 0; i < l; i++) {
+        QString path = filteredModel->url(i);
+        m_urlsInModel.remove(path);
     }
 }
