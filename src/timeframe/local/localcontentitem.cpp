@@ -57,6 +57,9 @@ void LocalContentItem::setDate(const QDate &d)
 
 void LocalContentItem::addActivity(Activity* item)
 {
+    if(m_itemModel->rowCount(QModelIndex()) > 500)
+        return;
+
     if (!m_types.contains(item->type())) {
         m_types += (';' + item->type());
     }
