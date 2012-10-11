@@ -48,7 +48,6 @@ Item {
 
                 function gotThumbnail(newUrl)
                 {
-                    console.log("GotThumbnail " + newUrl + " vs " + url)
                     if(newUrl === url) {
                         image.source = image.source + "1"
                     }
