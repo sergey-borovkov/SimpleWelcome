@@ -19,14 +19,11 @@ Item {
     property bool isSocialSearching: true
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
+    property bool isNepomukWorking: false
 
     function checkNepomuk()
     {
-        var isInit = nepomukSource.isNepomukInitialized()
-        if (!isInit)
-            timeFrameTab.state = "notNepomukInit"
-        else
-            timeFrameTab.state = ""
+        return nepomukSource.isNepomukInitialized()
     }
 
     function getTimeLineIndex() {
@@ -54,7 +51,8 @@ Item {
     function currentDateChanged()
     {
         var d = new Date(__year, __month, day )
-        activityProxy.startSearch()
+        if (isNepomukWorking)
+            activityProxy.startSearch()
     }
 
     function getMenuItemText(id)
@@ -97,13 +95,17 @@ Item {
             if (tabListView.currentIndex === 3) {
 
                 // check nepomuk
-                checkNepomuk()
+                if (checkNepomuk()) {
+                    isNepomukWorking = true
+                    currentDateChanged()
 
-                currentDateChanged()
-
-                tabListView.interactive = false
-                if ((__isLocalSearching) && (timeFrameTab.state ===""))
-                    timeFrameTab.state = "timeLineSearch"
+                    tabListView.interactive = false
+                    if ((__isLocalSearching) && (timeFrameTab.state ===""))
+                        timeFrameTab.state = "timeLineSearch"
+                } else {
+                    isNepomukWorking = false
+                    timeFrameTab.state = "notNepomukInit"
+                }
             }
         }
     }
@@ -170,19 +172,25 @@ Item {
 
             onStateChanged: {
                 if (localFilterBox.state === "current") {
-                    if (__isLocalSearching)
-                        timeFrameTab.state = "timeLineSearch"
-                    else if (inGallery)
-                        timeFrameTab.state = "gallery"
-                    else
-                        timeFrameTab.state = ""
                     socialFilterBox.state = ""
+                    setLocalState()
                     setLocalFilter()
                 }
             }
 
             onCurrentIndexChanged: {
-                localFilterBox.setLocalFilter()
+                setLocalFilter()
+            }
+
+            function setLocalState() {
+                if (!isNepomukWorking)
+                    timeFrameTab.state = "notNepomukInit"
+                else if (__isLocalSearching)
+                    timeFrameTab.state = "timeLineSearch"
+                else if (inGallery)
+                    timeFrameTab.state = "gallery"
+                else
+                    timeFrameTab.state = ""
             }
 
             function setLocalFilter() {
@@ -720,7 +728,7 @@ Item {
 
             PropertyChanges { target: warningButton; visible: true }
 
-            PropertyChanges { target: timeScale; visible: false }
+            PropertyChanges { target: timeScale; visible: false; opacity: 0 }
 
             PropertyChanges { target: galleryButton; visible: false }
         },
