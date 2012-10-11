@@ -37,11 +37,11 @@ public:
     void setDate(QDate date);
 
 signals:
-    void gotThumbnail();
+    void gotThumbnail(QString url);
 
 public slots:
     void addActivityItem(Activity* item);
-    void thumbnailReady(const QString &url);
+    //void thumbnailReady(const QString &url);
 
 private:
     QHash<int, QByteArray> m_hash;
@@ -60,10 +60,14 @@ class LocalDayFilterModel : public QSortFilterProxyModel
 public:
     explicit LocalDayFilterModel(QObject * parent = 0);
     void setSourceModel(LocalDayModel * sourceModel);
+
+    // for QML
+    Q_INVOKABLE int count() const;
     Q_INVOKABLE QString url(int row) const;
+     void previewReady(const QString &url);
 
 signals:
-    void gotThumbnail();
+    void gotThumbnail(QString);
 };
 
 

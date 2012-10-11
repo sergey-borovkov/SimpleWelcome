@@ -1,11 +1,10 @@
 import QtQuick 1.0
 
-Item{
+Item {
     id: cloudFour
     property date cloudDate
     property variant model
     property int margin: 10
-
 
     CloudRect {
         id: cloudRect1
@@ -57,23 +56,5 @@ Item{
         anchors.bottom: parent.bottom
         anchors.left: cloudRect1.left
         width: cloudRect3.width
-    }
-
-    function createConnection()
-    {
-        var newObject = Qt.createQmlObject('import QtQuick 1.0;  Connections {target: model; onGotThumbnail: \
-            {cloudRect1.image.source = "image://preview/" + model.url(0) + "/rounded" +"%" + Math.random( 10 ); \
-             cloudRect2.image.source = "image://preview/" + model.url(1) + "/rounded" + "%" + Math.random( 10 ); \
-             cloudRect3.image.source = "image://preview/" + model.url(2) + "/rounded" + "%" + Math.random( 10 ); \
-             cloudRect4.image.source = "image://preview/" + model.url(3) + "/rounded" + "%" + Math.random( 10 ); \
-             }}', cloudFour);
-        cloudRect1.image.source = "image://preview/" + model.url(0) + "/rounded" +"%" + Math.random( 10 )
-        cloudRect1.url = model.url(0)
-        cloudRect2.image.source = "image://preview/" + model.url(1) + "/rounded" + "%" + Math.random( 10 )
-        cloudRect2.url = model.url(1)
-        cloudRect3.image.source = "image://preview/" + model.url(2) + "/rounded" + "%" + Math.random( 10 )
-        cloudRect3.url = model.url(2)
-        cloudRect4.image.source = "image://preview/" + model.url(3) + "/rounded" + "%" + Math.random( 10 )
-        cloudRect4.url = model.url(3)
     }
 }

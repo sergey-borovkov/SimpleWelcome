@@ -80,11 +80,6 @@ LocalDayFilterModel * LocalContentItem::model()
     return m_model;
 }
 
-void LocalContentItem::thumbnailReady(QString url)
-{
-    m_itemModel->thumbnailReady(url);
-}
-
 QHash<int, QByteArray> LocalContentItem::roleNames()
 {
     QHash<int, QByteArray> hash;

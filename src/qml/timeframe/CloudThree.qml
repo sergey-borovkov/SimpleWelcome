@@ -40,7 +40,7 @@ Item{
         anchors.left: cloudRect3.right
         anchors.leftMargin: margin
 
-        Text{
+        Text {
             id: dateLabel
             anchors.centerIn: parent
             width: 100
@@ -49,19 +49,5 @@ Item{
             color: "white"
             horizontalAlignment: Text.AlignHCenter
         }
-    }
-    function createConnection()
-    {
-        var newObject = Qt.createQmlObject('import QtQuick 1.0;  Connections {target: model; onGotThumbnail: \
-            {cloudRect1.image.source = "image://preview/" + model.url(0) + "/rounded" +"%" + Math.random( 10 ); \
-             cloudRect2.image.source = "image://preview/" + model.url(1) + "/rounded" + "%" + Math.random( 10 ); \
-             cloudRect3.image.source = "image://preview/" + model.url(2) + "/rounded" + "%" + Math.random( 10 ); \
-             }}', cloudThree);
-        cloudRect1.image.source = "image://preview/" + model.url(0) + "/rounded" +"%" + Math.random( 10 )
-        cloudRect1.url = model.url(0)
-        cloudRect2.image.source = "image://preview/" + model.url(1) + "/rounded" + "%" + Math.random( 10 )
-        cloudRect2.url = model.url(1)
-        cloudRect3.image.source = "image://preview/" + model.url(2) + "/rounded" + "%" + Math.random( 10 )
-        cloudRect3.url = model.url(2)
     }
 }

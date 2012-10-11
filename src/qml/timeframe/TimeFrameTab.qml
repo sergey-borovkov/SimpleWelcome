@@ -3,14 +3,7 @@ import Private 0.1
 
 Item {
     id: timeFrameTab
-
-    //width: parent.width
-    //height: 800
     clip: true
-    //anchors.topMargin: 16
-    //property ListView lv: timeLine
-    //anchors.fill: parent
-
 
     property int __year: new Date().getFullYear()   //Current year
     property int __month: new Date().getMonth()
@@ -41,13 +34,6 @@ Item {
         timeLine.incrementCurrentIndex()
     }
 
-    //Start new serch
-    function currentDateChanged()
-    {
-        var d = new Date(__year, __month, day )
-        activityProxy.startSearch()
-    }
-
     function getMenuItemText(id)
     {
         var txt = id
@@ -71,10 +57,14 @@ Item {
         target:tabListView
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3) {
-                currentDateChanged()
+                activityProxy.startSearch()
                 tabListView.interactive = false
-                if ((__isLocalSearching) && (timeFrameTab.state ===""))
+                if ((__isLocalSearching) && (timeFrameTab.state ==="")) {
+                    // to prevent items created and destroyed since
+                    // listview still exists and creates components
+                    timeLine.model = undefined
                     timeFrameTab.state = "timeLineSearch"
+                }
             }
         }
     }
@@ -104,9 +94,10 @@ Item {
         target: activityProxy
         onFinished: {
             __isLocalSearching = false
-            if (timeFrameTab.state === "timeLineSearch"){
+            if (timeFrameTab.state === "timeLineSearch") {
                 //Set views on current date
                 timeScale.list.currentIndex = timeScale.list.count -1
+                timeLine.model = localDayModel
                 timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
                 galleryView.positionViewAtEnd()
@@ -167,15 +158,7 @@ Item {
                     timeScaleModel.setFilter(selectedText)
                     localDayModel.setFilter(selectedText)
                 }
-                //TODO: force views to update
-                //                timeScale.list.currentIndex = -1
-                //                timeScale.list.model = undefined
-                //                timeScale.list.model = timeScaleModel
-                //                timeLine.model = undefined
-                //                timeLine.model = localDayModel
-                //                galleryView.model = undefined
-                //                galleryView.model = localDayModel
-                //                timeScale.list.currentIndex = timeScale.list.count -1
+
             }
             onSelectedIndexChanged: {
                 name = ( selectedText === "All" ) ? i18n_My_Local_Documents : getMenuItemText(selectedText)
@@ -219,8 +202,6 @@ Item {
                 else
                     timeFrameTab.state = "social"
 
-                //socialProxy.startSearch()
-                //isSocialSearching = true
                 name = ( selectedText === "All" ) ? i18n_Social_networkong_sites : getMenuItemText(selectedText)
                 setSocialFilter()
             }
@@ -283,7 +264,6 @@ Item {
         anchors.topMargin: 10
 
         delegate: TimeLineDelegate {}
-        model: localDayModel
         orientation: Qt.Horizontal
         highlightFollowsCurrentItem: true
         highlightRangeMode: ListView.StrictlyEnforceRange
@@ -462,7 +442,7 @@ Item {
         anchors.leftMargin: 20
         anchors.rightMargin: 20
         visible: false
-        model: localDayModel
+//        model: localDayModel
         delegate: GalleryDelegate { }
         orientation: ListView.Horizontal
         boundsBehavior : Flickable.StopAtBounds
@@ -655,6 +635,8 @@ Item {
             name: "timeLineSearch"; extend: ""
 
             PropertyChanges { target: waitIndicator; visible: true }
+
+            PropertyChanges { target: timeScale; visible: false }
 
             PropertyChanges { target: timeLine; opacity: 0 }
 

@@ -284,13 +284,3 @@ QDate LocalContentModel::getDateOfIndex(int listIndex)
     LocalContentItem *item = static_cast<LocalContentItem *>(itemAt(listIndex));
     return item->getDate();
 }
-
-void LocalContentModel::imageReady(QString url)
-{
-    if (m_urlHash.contains(url)) {
-        QDate date = m_urlHash[url];
-        LocalContentItem* item = find(date);
-        if (item)
-            item->thumbnailReady(url);
-    }
-}

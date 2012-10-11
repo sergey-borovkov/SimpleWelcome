@@ -20,15 +20,9 @@ void ActivityProxy::startSearch()
 
 void ActivityProxy::newData(QList<Activity *> list)
 {
-    // start generating previews
-    QStringList urls;
     foreach(Activity * item, list) {
-        //item->setParent(this);
-        urls.append(item->url());
         emit newMonth(item->date().year() , item->date().month(), item->type());  //fill timeScaleModel
     }
-    PreviewGenerator::instance()->start(urls);
-    // send events to the model
     emit newActivities(list);
 }
 
@@ -38,7 +32,7 @@ void ActivityProxy::setModel(LocalContentModel* model)
         m_model = model;
 }
 
-int ActivityProxy::getIndexByDate(int year, int month,  bool direction)
+int ActivityProxy::getIndexByDate(int year, int month, bool direction)
 {
     if (m_model)
         return m_model->getIndexByDate(year, month, direction);
