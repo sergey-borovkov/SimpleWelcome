@@ -35,74 +35,57 @@ Item {
         }
         return "UND"
     }
-/*
-    Connections {
-        target: nepomukSource
-        onNewTSEntries: {
-            monthModel.append( { month: getMonthStr(month-1), year: year, monthNumber: month })
-        }
-    }
 
-    ListModel {
-        id: monthModel
-    }
-*/
     Component {
         id: monthDelegate
         Item {
             id: listItem
-            width: timeScaleList.width/10
+            width: 107
             height: 80
             Image {
-                anchors.verticalCenter: parent.verticalCenter
                 id: scaleImage
-                source: "images/month1.png"
-                //fillMode: Image.PreserveAspectFit
+                anchors.verticalCenter: parent.verticalCenter
                 width: parent.width
-            }
-/*
-            Rectangle
-            {
-                anchors.left: parent.left
-                anchors.leftMargin: -3
-                anchors.verticalCenter: parent.verticalCenter
-                width: 6
-                height: 30
-                color: "grey"
-            }
+                source: "images/month1.png"                
 
-            Rectangle {
-
-                anchors.right: parent.right
-                anchors.rightMargin: -3
-                anchors.verticalCenter: parent.verticalCenter
-                width: 6
-                height: 30
-                color: "grey"
             }
-            */
-
             Text {
                 color: "white"
                 id: monthLabel
                 text: getMonthStr(month)// + ' ' + year
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 10
+                anchors.bottomMargin: 5
+                font.pointSize: 12
             }
         }
     }
     Component {
         id: highlight
-
-        Image {
-            id: highlightImage
-            x: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.x-3
-            y: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.y
-            width: timeScaleList.width/10  //siz
+        Item{
+            width: 107
             height: 32
-
-            source: "images/active-full.png"
+            x: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.x
+            y: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.y + timeScaleList.currentItem.height/2 - 16
+            Image {
+                id: activeLeft
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/active-left.png"
+            }
+            Image {
+                id: activeRight
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/active-right.png"
+            }
+            Image {
+                anchors.left: activeLeft.right
+                anchors.right: activeRight.left
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/active-center.png"
+                smooth: true
+            }
             Behavior on x { NumberAnimation{duration: 300 } }
         }
     }
@@ -125,10 +108,9 @@ Item {
         }
     }
 
-    function getListViewItemSize() {
-        var x = timeScale.width / 11//size of 1 element
-        var y = Math.ceil(x / 12)
-        return y * 12
+    function getListViewItemsCount() {
+        var y = Math.floor((timeScale.width - 100)/ 107)
+        return y
     }
 
     Item {
@@ -136,15 +118,31 @@ Item {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         height: parent.height
-        clip: true
-        width: getListViewItemSize()*10+6
+        clip: true    
+        width: getListViewItemsCount()*107
 
-        Image {
+        Item {
             id: scaleBackground
-            source: "images/scale-full.png"
             anchors.fill: parent
-            fillMode : Image.PreserveAspectFit
-            height: 32
+            Image {
+                id: scaleLeft
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/scale-left.png"
+            }
+            Image {
+                id: scaleRight
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/scale-right.png"
+            }
+            Image {
+                anchors.left: scaleLeft.right
+                anchors.right: scaleRight.left
+                anchors.verticalCenter: parent.verticalCenter
+                source: "images/scale-center.png"
+                smooth: true
+            }
         }
 
         ListView {
@@ -216,14 +214,4 @@ Item {
             }
         }
     }
-/*
-        Rectangle {
-            id: scale
-            anchors.verticalCenter: parent.verticalCenter
-            width: parent.width
-            height: 6
-            color: "grey"
-        }
-    }
-    */
 }
