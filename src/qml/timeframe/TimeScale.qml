@@ -55,8 +55,8 @@ Item {
                 text: getMonthStr(month)// + ' ' + year
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
-                font.pointSize: 12
+                //anchors.bottomMargin: 1
+                font.pixelSize: 15
             }
         }
     }
