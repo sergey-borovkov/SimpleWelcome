@@ -124,7 +124,7 @@ Item {
 
         Connections {
             target: timeScaleList
-            onCurrentIndexChanged: {                
+            onCurrentIndexChanged: {
                 yearLabel.text = timeScaleModel.getYear(timeScaleList.currentIndex)
             }
         }
@@ -176,17 +176,12 @@ Item {
                             timeFrameTab.direction = false // moving left
                         else
                             timeFrameTab.direction = true  // moving right
-                        //timeFrameTab.__year = monthModel.get(timeScale.list.currentIndex).year
                         timeFrameTab.__year = timeScaleModel.getYear(timeScaleList.currentIndex)
-                        //timeFrameTab.__month = monthModel.get(timeScale.list.currentIndex).monthNumber - 1
                         timeFrameTab.__month = timeScaleModel.getMonth(timeScaleList.currentIndex) - 1
-                        timeFrameTab.currentDateChanged()
-                        //scene.currentIndex = timeFrameTab.getTimeLineProperlyItem()
 
                         if ((timeFrameTab.state === "") || (timeFrameTab.state === "gallery"))
                         {
                             //set index on timeLine
-
                             timeLine.currentIndex = timeFrameTab.getTimeLineIndex()
                             timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
 

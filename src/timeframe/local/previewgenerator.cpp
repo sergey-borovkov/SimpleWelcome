@@ -97,15 +97,11 @@ QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
     }
 }
 
-void PreviewGenerator::modelShown(QObject *dayModel)
+void PreviewGenerator::modelShown(QStringList paths, QObject *dayModel)
 {
     LocalDayFilterModel *filteredModel = static_cast<LocalDayFilterModel *>(dayModel);
     KFileItemList fileList;
-
-    // we can have up to 7 items in cloud
-    int l = qMin(filteredModel->rowCount(), 7);
-    for (int i = 0; i < l; i++) {
-        QString path = filteredModel->url(i);
+    foreach(QString path, paths) {
         KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
         fileList.append(fileItem);
         m_urlsInModel.insert(path, filteredModel);
@@ -119,12 +115,11 @@ void PreviewGenerator::modelShown(QObject *dayModel)
     connect(job, SIGNAL(failed(const KFileItem&)), SLOT(previewJobFailed(const KFileItem &)));
 }
 
-void PreviewGenerator::modelHidden(QObject *dayModel)
+void PreviewGenerator::modelHidden(QStringList paths, QObject *dayModel)
 {
     LocalDayFilterModel *filteredModel = static_cast<LocalDayFilterModel *>(dayModel);
-    int l = qMin(filteredModel->rowCount(), 7);
-    for (int i = 0; i < l; i++) {
-        QString path = filteredModel->url(i);
+    Q_UNUSED(filteredModel)
+    foreach(QString path, paths) {
         m_urlsInModel.remove(path);
     }
 }
