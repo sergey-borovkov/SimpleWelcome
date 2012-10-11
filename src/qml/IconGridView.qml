@@ -93,7 +93,7 @@ GridView {
         return newObj
     }
 
-    function stackItemInItem(indexStackingTo, indexDragging) {
+    function stackItemInItem(indexStackingTo, indexDragging, notSaveChanges) {
         //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
 
         var itemDragging = model.get(indexDragging)
@@ -120,7 +120,8 @@ GridView {
         model.setProperty(indexStackingTo, "imagePath", "image://generalicon/stacked/" + itemStackingTo.imagePath.slice(28) + "|" + itemDragging.imagePath.slice(28))
         model.setProperty(indexStackingTo, "stack", stackArray)
 
-        itemStackingChanged()
+        if (notSaveChanges !== true)
+            itemStackingChanged()
         return true
     }
 

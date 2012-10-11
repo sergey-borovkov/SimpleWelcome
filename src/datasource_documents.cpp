@@ -102,7 +102,6 @@ void DataSource_Documents::updateContent()
         docsList = newDocsList;
         createDocumentsPreviews(previewRequestList);
         emit resetContent();
-        qDebug() << "Documents content update";
     }
 }
 
