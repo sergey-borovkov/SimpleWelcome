@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-10-10 14:56+0400\n"
+"POT-Creation-Date: 2012-10-11 17:42+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -156,51 +156,51 @@ msgstr ""
 
 #: swapp.cpp:203
 msgid "JAN"
-msgstr "Янв"
+msgstr "ЯНВ"
 
 #: swapp.cpp:204
 msgid "FEB"
-msgstr "Фев"
+msgstr "ФЕВ"
 
 #: swapp.cpp:205
 msgid "MAR"
-msgstr "Март"
+msgstr "МАРТ"
 
 #: swapp.cpp:206
 msgid "APR"
-msgstr "Апр"
+msgstr "АПР"
 
 #: swapp.cpp:207
 msgid "MAY"
-msgstr "Май"
+msgstr "МАЙ"
 
 #: swapp.cpp:208
 msgid "JUN"
-msgstr "Июнь"
+msgstr "ИЮНЬ"
 
 #: swapp.cpp:209
 msgid "JUL"
-msgstr "Июль"
+msgstr "ИЮЛЬ"
 
 #: swapp.cpp:210
 msgid "AUG"
-msgstr "Авг"
+msgstr "АВГ"
 
 #: swapp.cpp:211
 msgid "SEP"
-msgstr "Сен"
+msgstr "СЕН"
 
 #: swapp.cpp:212
 msgid "OCT"
-msgstr "Окт"
+msgstr "ОКТ"
 
 #: swapp.cpp:213
 msgid "NOV"
-msgstr "Нояб"
+msgstr "НOЯБ"
 
 #: swapp.cpp:214
 msgid "DEC"
-msgstr "Дек"
+msgstr "ДЕК"
 
 #: rc.cpp:1
 msgctxt "Julia Mineeva"

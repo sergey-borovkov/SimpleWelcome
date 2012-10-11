@@ -740,8 +740,9 @@ Item {
                 target: timeScale
                 anchors.verticalCenter: undefined
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom:  timeFrameTab.bottom
+                anchors.bottom:  timeFrameTab.bottom                                
             }
+            PropertyChanges { target: timeScale; anchors.bottomMargin: 20 }
 
             PropertyChanges { target: timeLine;  visible : false; opacity: 0 }
 
