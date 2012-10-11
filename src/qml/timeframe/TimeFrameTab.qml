@@ -19,7 +19,7 @@ Item {
     property bool isSocialSearching: true
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
-    property bool isNepomukWorking: false
+    property bool isNepomukWorking: true
 
     function checkNepomuk()
     {
