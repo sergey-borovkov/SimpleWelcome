@@ -46,9 +46,9 @@
 #include "datasource_search.h"
 
 #include "timeframe/timescalemodel.h"
-#include "timeframe/local/activityset.h"
+#include "timeframe/local/localcontentitem.h"
+#include "timeframe/local/localcontentmodel.h"
 #include "timeframe/local/localdaymodel.h"
-#include "timeframe/local/itemmodel.h"
 #include "timeframe/local/activityproxy.h"
 #include "timeframe/local/nepomuksource.h"
 #include "timeframe/local/previewgenerator.h"
@@ -60,7 +60,6 @@
 #include "timeframe/social/pluginmodel.h"
 #include "timeframe/social/socialdaymodel.h"
 #include "timeframe/social/socialdayitem.h"
-#include "timeframe/social/pluginrequestreply.h"
 
 #include <listitem.h>
 
@@ -242,14 +241,12 @@ void SWApp::initTimeframeLocalMode()
     m_source->moveToThread(m_nepomukThread);
     m_nepomukThread->start(QThread::LowPriority);
 
-    m_proxy = new ActivityProxy;
-    m_proxy->addNepomukSource(m_source);
+    m_proxy = new ActivityProxy(m_source, this);
 
-    LocalDayModel* model = new LocalDayModel(LocalDayItem::roleNames(), this);
-    TimeFrameDayFilterModel* proxymodel = new TimeFrameDayFilterModel(this);
+    LocalContentModel* model = new LocalContentModel(LocalContentItem::roleNames(), this);
+    LocalContentFilterModel* proxymodel = new LocalContentFilterModel(this);
     model->setLister(m_proxy);
     proxymodel->setSourceModel(model);
-    PreviewGenerator::instance()->setModel(model);
 
     QRect r = QDesktopWidget().screenGeometry(m_viewer);
 
@@ -273,20 +270,18 @@ void SWApp::initTimeframeSocialMode()
     m_manager->setSocialModel(socialModel);
 
     m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
-
+    qmlRegisterInterface<LocalDayFilterModel>("LocalDayFilterModel");
     TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
     TimeScaleModel* timeScaleModel = new TimeScaleModel(TimeScaleItem::roleNames(), this);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
-
     connect(m_manager, SIGNAL(removeType(QString)), timeScaleModel, SLOT(removeItems(QString)));
-
-    qmlRegisterUncreatableType<PluginRequestReply>("Widgets", 1, 0, "PluginRequestReply", "This class should be created in cpp"); // it's not supposed to be in widgets, should move later
 
     m_viewer->rootContext()->setContextProperty("socialProxy", m_manager);
     m_viewer->rootContext()->setContextProperty("socialModel", m_manager->socialModel());
     m_viewer->rootContext()->setContextProperty("socialDayModel", socialProxyModel);
     m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
     m_viewer->rootContext()->setContextProperty("timeScaleModel", timeScaleFilterModel);
+    m_viewer->rootContext()->setContextProperty("previewGenerator", PreviewGenerator::instance());
 
     connect(m_proxy, SIGNAL(newMonth(int, int, QString)), timeScaleModel, SLOT(newItem(int, int, QString)));
     connect(m_manager, SIGNAL(newMonth(int, int, QString)), timeScaleModel, SLOT(newItem(int, int, QString)));

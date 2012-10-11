@@ -1,63 +1,76 @@
-#ifndef LOCALDAYMODEL_H
-#define LOCALDAYMODEL_H
+#ifndef ITEMMODEL_H
+#define ITEMMODEL_H
 
-#include "itemmodel.h"
-#include "localdayitem.h"
+#include <QtCore/QAbstractListModel>
+#include <QtCore/QMetaType>
+#include <QtCore/QSet>
+#include <QtCore/QDate>
+#include <QtGui/QSortFilterProxyModel>
 
-#include <QtCore/QObject>
-#include <QtGui//QSortFilterProxyModel>
-
-#include <listmodel.h>
-
-class ItemModel;
 class Activity;
-class ActivityProxy;
 
-class TimeFrameDayFilterModel : public QSortFilterProxyModel
+#pragma GCC diagnostic ignored "-Woverloaded-virtual"
+
+/**
+ * @brief The LocalDayModel class stores day's local contents
+ *        and gives some helper members to be used from QML
+ *        side
+ */
+class LocalDayModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit TimeFrameDayFilterModel(QObject * parent = 0);
-public slots:
-    void setFilter(const QString &filter);
-    QObject* itemsModel(QDate date) const;
-    int getIndexByDate(int year, int month, bool direction);
-    QDate getDateOfIndex(int listIndex);
-};
-
-class LocalDayModel : public ListModel
-{
-    Q_OBJECT
-public:
-    explicit LocalDayModel(QHash<int, QByteArray> roles, QObject *parent = 0);
+    enum {
+        CurrentDateRole = Qt::UserRole + 1,
+        ActivitiesRole,
+        CountRole,
+        UrlRole,
+        TypeRole
+    };
+    explicit LocalDayModel(QDate date, QObject *parent = 0);
+    ~LocalDayModel();
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    void appendRow(LocalDayItem* item);
-    void appendRows(const QList<LocalDayItem*> &items);
-    void insertRow(int row, LocalDayItem *item);
-    void setLister(ActivityProxy* lister);
-    LocalDayItem * find(const QDate &date) const;
+    int rowCount(const QModelIndex &parent) const;
+    Q_INVOKABLE QString url(int row) const;
 
-    QRegExp filter() const;
-    void setFilter(QRegExp regexp);
+    QDate date() const;
+    void setDate(QDate date);
+
+signals:
+    void gotThumbnail(QString url);
 
 public slots:
-    void newActivities(QList <Activity*> list);
-    QObject* itemsModel(QDate date) const;
-    int getIndexByDate(int year, int month, bool direction);
-    QDate getDateOfIndex(int listIndex);
-    void imageReady(QString url);
-
-protected:
-    bool removeNullItem(int, int);
-
-private slots:
-    void newMonth(int, int);
-    void handleItemChange();
+    void addActivityItem(Activity* item);
+    //void thumbnailReady(const QString &url);
 
 private:
-    QHash<QString, QDate> m_urlHash;
-    ActivityProxy* m_lister;
-    QRegExp m_filter;
+    QHash<int, QByteArray> m_hash;
+    QList<Activity *> m_items;
+    QSet<QString> m_urlSet;
+    QDate m_date;
 };
 
-#endif // GALLERYMODEL_H
+/**
+ * @brief The LocalDayFilterModel class allows day's content
+ *        kept in LocalDayModel to be filtered
+ */
+class LocalDayFilterModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    explicit LocalDayFilterModel(QObject * parent = 0);
+    void setSourceModel(LocalDayModel * sourceModel);
+
+    // for QML
+    Q_INVOKABLE int count() const;
+    Q_INVOKABLE QString url(int row) const;
+     void previewReady(const QString &url);
+
+signals:
+    void gotThumbnail(QString);
+};
+
+
+Q_DECLARE_METATYPE(LocalDayModel *)
+
+#endif // ITEMMODEL_H

@@ -4,14 +4,7 @@ import ".."
 
 Item {
     id: timeFrameTab
-
-    //width: parent.width
-    //height: 800
     clip: true
-    //anchors.topMargin: 16
-    //property ListView lv: timeLine
-    //anchors.fill: parent
-
     property int __year: new Date().getFullYear()   //Current year
     property int __month: new Date().getMonth()
     property int day: new Date().getDate()
@@ -19,7 +12,7 @@ Item {
     property bool isSocialSearching: true
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
-    property bool isNepomukWorking: false
+    property bool isNepomukWorking: true
 
     function checkNepomuk()
     {
@@ -45,14 +38,6 @@ Item {
 
     function nextMonth() {
         timeLine.incrementCurrentIndex()
-    }
-
-    //Start new serch
-    function currentDateChanged()
-    {
-        var d = new Date(__year, __month, day )
-        if (isNepomukWorking)
-            activityProxy.startSearch()
     }
 
     function getMenuItemText(id)
@@ -93,15 +78,18 @@ Item {
         target:tabListView
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3) {
-
                 // check nepomuk
                 if (checkNepomuk()) {
                     isNepomukWorking = true
-                    currentDateChanged()
+                    activityProxy.startSearch()
 
                     tabListView.interactive = false
-                    if ((__isLocalSearching) && (timeFrameTab.state ===""))
+                    if ((__isLocalSearching) && (timeFrameTab.state ==="")) {
+                        // to prevent items created and destroyed since
+                        // listview still exists and creates components
+                        timeLine.model = undefined
                         timeFrameTab.state = "timeLineSearch"
+                    }
                 } else {
                     isNepomukWorking = false
                     timeFrameTab.state = "notNepomukInit"
@@ -109,6 +97,7 @@ Item {
             }
         }
     }
+
 
     Connections {
         target: socialProxy
@@ -135,9 +124,10 @@ Item {
         target: activityProxy
         onFinished: {
             __isLocalSearching = false
-            if (timeFrameTab.state === "timeLineSearch"){
+            if (timeFrameTab.state === "timeLineSearch") {
                 //Set views on current date
                 timeScale.list.currentIndex = timeScale.list.count -1
+                timeLine.model = localDayModel
                 timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
                 galleryView.positionViewAtEnd()
@@ -222,6 +212,7 @@ Item {
                 append({ "itemText": "Manage Networks"})
             }
         }
+
 
 
         DropFilterBox{
@@ -378,7 +369,6 @@ Item {
         anchors.topMargin: 10
 
         delegate: TimeLineDelegate {}
-        model: localDayModel
         orientation: Qt.Horizontal
         highlightFollowsCurrentItem: true
         highlightRangeMode: ListView.StrictlyEnforceRange
@@ -554,7 +544,6 @@ Item {
         anchors.leftMargin: 20
         anchors.rightMargin: 20
         visible: false
-        model: localDayModel
         delegate: GalleryDelegate { }
         orientation: ListView.Horizontal
         boundsBehavior : Flickable.StopAtBounds
@@ -745,8 +734,10 @@ Item {
 
             PropertyChanges { target: timeLine;  visible : false; opacity: 0 }
 
-            PropertyChanges { target: galleryView; visible : true }
+            PropertyChanges { target: galleryView; visible: true }
 
+            PropertyChanges { target: galleryView; model: localDayModel }
+            //PropertyChanges { target: galleryView; enabled: true }
         },
         State {
             name: "gallerySearch"; extend: "gallery"
@@ -759,6 +750,8 @@ Item {
             name: "timeLineSearch"; extend: ""
 
             PropertyChanges { target: waitIndicator; visible: true }
+
+            PropertyChanges { target: timeScale; visible: false }
 
             PropertyChanges { target: timeLine; visible: false; opacity: 0 }
 

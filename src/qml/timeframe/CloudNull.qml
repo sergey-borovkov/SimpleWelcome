@@ -26,30 +26,4 @@ Item{
             anchors.centerIn: parent
         }
     }
-    function createConnection()
-    {
-        return
-//        var newObject = Qt.createQmlObject('import QtQuick 1.0;  Connections {target: model; onGotThumbnail: \
-//                        {cloudRect1.image.source = "image://preview/" + model.url(0) + "/rounded" +"%" + Math.random( 10 )}}',
-//                                           cloudOne);
-//        cloudRect1.image.source = "image://preview/" + model.url(0) + "/rounded" +"%" + Math.random( 10 )
-//        cloudRect1.url = model.url(0)
-    }
-
-
-
-
-
-    /*
-    CloudRect
-    {
-        id: cloudRect1
-        anchors.top: dateLabel.bottom
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.left: parent.left
-    }
-
-
-    */
 }
