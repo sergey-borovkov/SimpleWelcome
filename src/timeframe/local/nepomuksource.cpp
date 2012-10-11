@@ -64,7 +64,6 @@ bool NepomukSource::isNepomukInitialized()
 
 void NepomukSource::nepomukConfigure()
 {
-    qDebug() << "NepomukSource::nepomukConfigure";
     QStringList args;
     args << "kcm_nepomuk";
     KToolInvocation::kdeinitExec("kcmshell4", args);

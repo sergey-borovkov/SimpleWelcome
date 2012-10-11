@@ -229,7 +229,7 @@ void QmlApplicationViewer::saveSetting(QString groupName, QVariantList setting)
 {
     //qDebug() << "WE ARE HERE WE ARE SAVING" << groupName;
 
-    KConfigGroup configGroup(KGlobal::config(), "Stacks");
+    KConfigGroup configGroup(KGlobal::config(), groupName);
     configGroup.deleteGroup();
 
     foreach(QVariant variant, setting) {

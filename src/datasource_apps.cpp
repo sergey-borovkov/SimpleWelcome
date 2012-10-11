@@ -59,7 +59,7 @@ AppItemList GetFlatList(QString group)
 DataSource_Apps::DataSource_Apps(QObject *parent, DataSource_RecentApps *inRecentApps)
     : DataSource(parent), prevCurrentGroup("-1"), recentApps(inRecentApps)
 {
-    updateItems();
+    updateItems(false);
 }
 
 int DataSource_Apps::getItemCount()
@@ -87,12 +87,19 @@ void DataSource_Apps::getContent()
     }
 }
 
-void DataSource_Apps::updateItems()
+void DataSource_Apps::updateItems(bool isResetContent/* = true*/)
 {
     prevCurrentGroup = currentGroup;
-    appsList = GetFlatList(currentGroup);
 
-    qSort(appsList);
+    AppItemList newList = GetFlatList(currentGroup);
+    qSort(newList);
+
+    if (newList != appsList) {
+        appsList = newList;
+
+        if (isResetContent)
+            emit resetContent();
+    }
 }
 
 void DataSource_Apps::itemClicked(int newIndex)
@@ -115,7 +122,7 @@ void DataSource_Apps::itemClicked(int newIndex)
         currentGroup = appsList[newIndex].relPath;
 
     if (prevCurrentGroup != currentGroup)
-        updateItems();
+        updateItems(false);
 
     emit resetContent();
 }

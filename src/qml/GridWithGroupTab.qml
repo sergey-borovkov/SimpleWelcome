@@ -103,6 +103,8 @@ Item {
                 if (gridsListView.currentItem)
                 {
                     newGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
+                    newGridGroup.gridView.itemStackingChanged.connect(saveStacks)
+
                     if (newGridGroup.gridView.stackable)
                         newGridGroup.showPopupGroup.connect(showGroup)
                 }
@@ -192,18 +194,91 @@ Item {
                 }
 
                 // Doing afterjob to load user icons positioning and stacks
-                var currentView = gridsListView.currentIndex
-                for (i = 0; i < gridsListView.count; i++) {
-                    gridsListView.currentIndex = i
+                forEachGridView(loadStacks, mainWindow.loadSetting("Stacks"))
+            }
+
+            function forEachGridView(processFunction, args) {
+                var currentIndexWas = gridsListView.currentIndex
+
+                for (var currentView = 0; currentView < gridsListView.count; currentView++) {
+                    gridsListView.currentIndex = currentView
 
                     var childs = gridsListView.currentItem.children
-                    for (var j = 0; j < childs.length; j++)
-                        if ('count' in childs[j])
+                    for (var child = 0; child < childs.length; child++)
+                        if ('count' in childs[child] && childs[child].groupName == "Applications") // Loading stacks only for Apps
                         {
-                            childs[j].loadStacks()
+                            processFunction(childs[child].gridView, args)
                         }
                 }
-                gridsListView.currentIndex = currentView
+                gridsListView.currentIndex = currentIndexWas
+            }
+
+            function loadStacks(iconGridView, savedStacks) {
+                //console.log("LOADING STACKS")
+
+                for (var stackName in savedStacks) {
+
+                    var captionsList = savedStacks[stackName].split(",")
+                    var captionStackingTo = captionsList[0]
+                    //console.log("Object item:", captionStackingTo, "=", captionsList)
+
+                    var model = iconGridView.model
+                    var indexStackingTo = -1
+                    for (var i = 0; i < model.count; i++) {
+                        //console.log("LOADING " + stackName + " checking with " + model.get(i).caption)
+                        if (model.get(i).caption === captionStackingTo) {
+                            indexStackingTo = i
+                            break
+                        }
+                    }
+
+                    if (indexStackingTo == -1)
+                        continue
+
+                    for (var captionToStackIndex in captionsList) {
+                        var captionToStack = captionsList[captionToStackIndex]
+                        if (captionToStack !== captionStackingTo) {
+                            //console.log("NEED TO STACK: " + captionToStack)
+
+                            var indexToStack = -1
+                            for (var j = 0; j < model.count; j++)
+                                if (model.get(j).caption === captionToStack) {
+                                    indexToStack = j
+                                    break
+                                }
+
+                            if (indexToStack != -1) {
+                                iconGridView.stackItemInItem(indexStackingTo, indexToStack, true)
+                                //console.log("SETTING " + indexStackingTo + " caption to " + stackName)
+                                model.setProperty(indexStackingTo, "caption", stackName)
+                                model.remove(indexToStack)
+                            }
+                        }
+                    }
+
+                }
+
+                //console.log("LOADING STACKS FINISHED ---------------- " + iconGridView.count)
+            }
+
+            function saveStacks() {
+                var setting = []
+
+                forEachGridView(function(iconGridView) {
+                    var model = iconGridView.model
+                    //console.log("SAVING stacking")
+
+                    for (var i = 0; i < model.count; i++) {
+                        var item = model.get(i)
+                        var stack = item.stack
+                        if (stack !== undefined) {
+                            setting.push(iconGridView.copyObjectByValue(item))
+                            //console.log(stack.length + "; at " + i)
+                        }
+                    }
+                })
+
+                mainWindow.saveSetting("Stacks", setting)
             }
 
             Component.onCompleted: {
@@ -229,6 +304,7 @@ Item {
                 stackCellOpenedId = -1
                 topBar.forceActiveFocus()
                 activeGridView.myActiveFocus = true
+                saveStacks()
             }
 
             function showGroup(index, item, iconCoords)

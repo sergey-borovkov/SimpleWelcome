@@ -43,74 +43,7 @@ Column {
 
     Component.onCompleted: {
         iconGridView.selectionChangedByKeyboard.connect(gridCurrentItemChanged)
-        iconGridView.itemStackingChanged.connect(gridStackingChanged)
         iconGridView.myActiveFocusChanged.connect(gridMyFocusChanged)
-    }
-
-    function loadStacks() {
-        if (groupName == "Applications")
-        {
-            var res = mainWindow.loadSetting("Stacks")
-            //console.log("LOADING STACKS")
-
-            for (var captionStackingTo in res) {
-
-                var captionsList = res[captionStackingTo].split(",")
-                //console.log("Object item:", captionStackingTo, "=", captionsList)
-
-                var model = iconGridView.model
-                var indexStackingTo = -1
-                for (var i = 0; i < model.count; i++)
-                    if (model.get(i).caption === captionStackingTo) {
-                        indexStackingTo = i
-                        break
-                    }
-
-                if (indexStackingTo == -1)
-                    continue
-
-                for (var captionToStackIndex in captionsList) {
-                    var captionToStack = captionsList[captionToStackIndex]
-                    if (captionToStack !== captionStackingTo) {
-                        //console.log("NEED TO STACK: " + captionToStack)
-
-                        var indexToStack = -1
-                        for (var i = 0; i < model.count; i++)
-                            if (model.get(i).caption === captionToStack) {
-                                indexToStack = i
-                                break
-                            }
-
-                        if (indexToStack != -1) {
-                            iconGridView.stackItemInItem(indexStackingTo, indexToStack)
-                            iconGridView.model.remove(indexToStack)
-                        }
-                    }
-                }
-
-            }
-
-            //console.log("LOADING STACKS FINISHED ---------------- " + iconGridView.count)
-        }
-    }
-
-    // Used to save stacking
-    function gridStackingChanged() {
-        var model = iconGridView.model
-
-        var setting = []
-        for (var i = 0; i < model.count; i++)
-        {
-            var item = model.get(i)
-            var stack = item.stack
-            if (stack !== undefined)
-            {
-                setting.push(iconGridView.copyObjectByValue(item))
-                //console.log(stack.length + "; at " + i)
-            }
-        }
-
-        mainWindow.saveSetting(groupName, setting)
     }
 
     TextInput {
@@ -137,6 +70,11 @@ Column {
         onActiveFocusChanged: {
             if (activeFocus)
                 iconGridView.myActiveFocus = false
+        }
+
+        Keys.onEnterPressed: {
+            if (isPopupGroup)
+                gridsListView.hideGroup()
         }
 
         Keys.onReturnPressed: {
