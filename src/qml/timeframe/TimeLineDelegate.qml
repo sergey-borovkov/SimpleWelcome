@@ -16,7 +16,12 @@ Item {
         height: parent.height/2 - timeScale.height/2
 
         Component.onDestruction: {
-            previewGenerator.modelHidden(localDayModel.itemsModel(date))
+            var paths = []
+            var m = localDayModel.itemsModel(date)
+            for(var i = 0; i < count; i++) {
+                paths.push(m.url(i))
+            }
+            previewGenerator.modelHidden(paths, m)
         }
 
         Loader {
@@ -26,6 +31,7 @@ Item {
             onLoaded: {
                 cloud.item.cloudDate = date
                 cloud.item.model = localDayModel.itemsModel(date)
+                var paths = []
                 var c = 0, model = cloud.item.model
                 // in CloudSeven.qml cloudrects are nested in another item element
                 var objects = (model.count() >= 7) ? cloud.item.children[0].children : cloud.item.children
@@ -35,10 +41,11 @@ Item {
                         objects[i].image.source = "image://preview/" + model.url(c) + "/rounded" +"%" + Math.random(10)
                         model.gotThumbnail.connect(objects[i].gotThumbnail)
                         objects[i].url = model.url(c)
+                        paths.push(model.url(c))
                         c++
                     }
                 }
-                previewGenerator.modelShown(model)
+                previewGenerator.modelShown(paths, model)
             }
         }
     }

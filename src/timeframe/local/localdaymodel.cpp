@@ -65,22 +65,6 @@ void LocalDayModel::addActivityItem(Activity *item)
     endInsertRows();
 }
 
-/*void LocalDayModel::thumbnailReady(const QString &url)
-{
-    /*int row;
-    for (row = 0; row < m_items.size(); ++row) {
-        if (m_items.at(row)->url() == url) {
-            m_items.at(row)->setUrl(url);
-           break;
-        }
-    }
-    dataChanged(index(row), index(row));
-
-    emit gotThumbnail(url);
-
-    //emit gotThumbnail();
-}*/
-
 QString LocalDayModel::url(int row) const
 {
     return m_items.at(row)->url();
@@ -106,7 +90,6 @@ void LocalDayFilterModel::setSourceModel(LocalDayModel * sourceModel)
 {
     if (sourceModel) {
         QSortFilterProxyModel::setSourceModel(sourceModel);
-        //connect(sourceModel, SIGNAL(gotThumbnail()), this, SIGNAL(gotThumbnail()));
     }
 }
 

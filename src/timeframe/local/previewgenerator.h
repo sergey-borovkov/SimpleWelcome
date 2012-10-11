@@ -47,14 +47,14 @@ public:
      *        previews and notifies model when previews are generated
      * @param dayModel
      */
-    Q_INVOKABLE void modelShown(QObject *dayModel);
+    Q_INVOKABLE void modelShown(QStringList paths, QObject *dayModel);
 
     /**
      * @brief modelHidden is in QML when cloud component gets destroyed. It removes
      *        unused  images generated for model
      * @param dayModel
      */
-    Q_INVOKABLE void modelHidden(QObject *dayModel);
+    Q_INVOKABLE void modelHidden(QStringList paths, QObject *dayModel);
 
 private slots:
     void previewJobResult(const KFileItem&, const QPixmap&);

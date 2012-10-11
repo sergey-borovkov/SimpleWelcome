@@ -442,7 +442,6 @@ Item {
         anchors.leftMargin: 20
         anchors.rightMargin: 20
         visible: false
-//        model: localDayModel
         delegate: GalleryDelegate { }
         orientation: ListView.Horizontal
         boundsBehavior : Flickable.StopAtBounds
@@ -619,10 +618,12 @@ Item {
                 anchors.bottom:  timeFrameTab.bottom
             }
 
-            PropertyChanges { target: timeLine;  visible : false }
+            PropertyChanges { target: timeLine;  visible: false }
 
-            PropertyChanges { target: galleryView; visible : true }
+            PropertyChanges { target: galleryView; visible: true }
 
+            PropertyChanges { target: galleryView; model: localDayModel }
+            //PropertyChanges { target: galleryView; enabled: true }
         },
         State {
             name: "gallerySearch"; extend: "gallery"
