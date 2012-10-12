@@ -65,7 +65,6 @@ private:
     void notifyModelAboutPreview(const QString &url);
 
     QHash<QString, LocalDayFilterModel *> m_urlsInModel;
-    QHash<QString, int> m_requestCount;
 
     QHash<QString, QPixmap> m_previews;
     QPixmap defaultPreview;
