@@ -21,7 +21,7 @@ void LocalContentFilterModel::setFilter(const QString &filter)
     QRegExp filterRegExp;
     if (filter == "Local")
         filterRegExp = QRegExp("Image|Video|Doc");
-    else if (filter == "Photo")
+    else if (filter == "Image")
         filterRegExp = QRegExp("Image");
     else if (filter == "Video")
         filterRegExp = QRegExp("Video");
