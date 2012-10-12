@@ -180,6 +180,7 @@ Item {
                         timeFrameTab.__year = timeScaleModel.getYear(timeScaleList.currentIndex)
                         //timeFrameTab.__month = monthModel.get(timeScale.list.currentIndex).monthNumber - 1
                         timeFrameTab.__month = timeScaleModel.getMonth(timeScaleList.currentIndex) - 1
+
                         timeFrameTab.currentDateChanged()
                         //scene.currentIndex = timeFrameTab.getTimeLineProperlyItem()
 

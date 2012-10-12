@@ -20,6 +20,7 @@ Item {
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
     property bool isNepomukWorking: false
+    property bool isReset: false
 
     function checkNepomuk()
     {
@@ -87,18 +88,46 @@ Item {
         return txt
     }
 
+    function resetTimeScale()
+    {
+        if (!isReset) {
+            isReset = true
+
+            state = ""
+
+             //Set views on current date
+
+            localFilterBox.state = "current"
+            localFilterBox.view.currentIndex = 0
+            localFilterBox.setLocalFilter()
+
+            socialFilterBox.state = ""
+            socialFilterBox.view.currentIndex = 0
+            socialFilterBox.setSocialFilter()
+
+            timeScale.list.currentIndex = timeScale.list.count - 1
+
+//            timeLine.currentIndex = timeLine.count - 1
+//            timeLine.positionViewAtEnd()
+//            galleryView.positionViewAtEnd()
+
+            socialTimeLine.currentIndex = socialTimeLine.count - 1
+            socialTimeLine.positionViewAtEnd()
+            socialGalleryView.positionViewAtEnd()
+
+        }
+    }
 
     //Start initial search
     Connections {
         target:tabListView
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3) {
+                var d = new Date();
+                var n = d.getFullYear();
 
-                //                __year = new Date().getFullYear()
-                //                __month = new Date().getMonth()
-                //                day = new Date().getDate()
-
-                console.log("onCurrentIndexChanged:   current date is " + day + "." + __month + "." + __year)
+                isReset = false
+                resetTimeScale()
 
                 // check nepomuk
                 if (checkNepomuk()) {
@@ -143,9 +172,9 @@ Item {
             __isLocalSearching = false
             if (timeFrameTab.state === "timeLineSearch"){
                 //Set views on current date
-                timeScale.list.currentIndex = timeScale.list.count -1
-                timeLine.currentIndex = timeLine.count -1
-                timeLine.positionViewAtEnd()
+                timeScale.list.currentIndex = timeScale.list.count - 1
+                timeLine.currentIndex = timeLine.count - 1
+                timeLine.positionViewAtBeginning()
                 galleryView.positionViewAtEnd()
 
                 timeFrameTab.state = ""
@@ -242,11 +271,13 @@ Item {
                         setSocialState()
                     localFilterBox.state = ""
                     setSocialFilter()
+                    resetTimeScale()
                 }
             }
             onCurrentIndexChanged: {
                 setSocialState()
                 setSocialFilter()
+                resetTimeScale()
             }
 
             function setSocialState() {

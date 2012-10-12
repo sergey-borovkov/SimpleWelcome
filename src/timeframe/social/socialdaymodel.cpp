@@ -6,7 +6,6 @@
 
 #include <QtCore/QRegExp>
 #include <QtCore/QVariant>
-#include <QtCore/QDebug>
 
 SocialDayFilterModel::SocialDayFilterModel(QObject * parent)
     : QSortFilterProxyModel(parent)
