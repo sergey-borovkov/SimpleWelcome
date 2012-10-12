@@ -675,8 +675,8 @@ Item {
     AnimatedImage {
         id: waitIndicator
         source: "images/ajax-loader.gif"
-        anchors.centerIn: parent
-        visible: false
+        anchors.centerIn: parent        
+        visible: false        
     }
 
     Connections {
@@ -844,6 +844,8 @@ Item {
             PropertyChanges { target: waitIndicator; visible: true }
 
             PropertyChanges { target: galleryButton; visible: false }
+
+            PropertyChanges { target: timeScale; visible: false }
         }
     ]
 }
