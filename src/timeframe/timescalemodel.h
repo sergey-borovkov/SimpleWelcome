@@ -5,6 +5,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QPair>
 #include <QtCore/QSet>
+#include <QtCore/QDate>
 #include <QtGui/QSortFilterProxyModel>
 
 #include <listmodel.h>
@@ -12,17 +13,19 @@
 
 class ActivityProxy;
 
+
 class TimeScaleFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
     explicit TimeScaleFilterModel(QObject * parent = 0);
 protected:
-    bool lessThan(const QModelIndex & left, const QModelIndex & right) const;
+//    bool lessThan(const QModelIndex & left, const QModelIndex & right) const;
 public slots:
     void setFilter(const QString &filter);
     int getYear(int ind);
     int getMonth(int ind);
+    int getDate(int ind);
     int count();
 };
 
@@ -33,6 +36,7 @@ public:
     enum Roles {
         YearRole = Qt::UserRole + 1,
         MonthRole,
+        DateRole,
         TypesRole
     };
 public:
@@ -45,6 +49,7 @@ public:
     }
     int year() const;
     int month() const;
+    QDate date() const;
     QString types() const;
     QVariant data(int role) const;
     static QHash<int, QByteArray> roleNames();
@@ -56,6 +61,7 @@ signals:
 private:
     int m_year;
     int m_month;
+    QDate m_date;
     QString m_type;
 };
 
@@ -65,6 +71,7 @@ class TimeScaleModel : public ListModel
 public:
     explicit TimeScaleModel(QHash<int, QByteArray> roles, QObject *parent = 0);
     TimeScaleItem* find(const int year, const int month);
+    TimeScaleItem* find(const QDate &year);
 public slots:
     void newItem(int year, int month, QString type);
 
