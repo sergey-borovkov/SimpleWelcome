@@ -83,22 +83,27 @@ Item {
              //Set views on current date
 
             localFilterBox.state = "current"
-            localFilterBox.view.currentIndex = 0
-            localFilterBox.setLocalFilter()
 
             socialFilterBox.state = ""
             socialFilterBox.view.currentIndex = 0
-            socialFilterBox.setSocialFilter()
 
-            timeScale.list.currentIndex = timeScale.list.count - 1
+            if (timeScale.list.count)
+                timeScale.list.currentIndex = timeScale.list.count - 1
 
-//            timeLine.currentIndex = timeLine.count - 1
-//            timeLine.positionViewAtEnd()
-//            galleryView.positionViewAtEnd()
+            if (!__isLocalSearching)
+            {
+                if (timeLine.count) {
+                    timeLine.currentIndex = timeLine.count - 1
+                    timeLine.positionViewAtEnd()
+                    galleryView.positionViewAtEnd()
+                }
+            }
 
-            socialTimeLine.currentIndex = socialTimeLine.count - 1
-            socialTimeLine.positionViewAtEnd()
-            socialGalleryView.positionViewAtEnd()
+            if (socialTimeLine.count) {
+                socialTimeLine.currentIndex = socialTimeLine.count - 1
+                socialTimeLine.positionViewAtEnd()
+                socialGalleryView.positionViewAtEnd()
+            }
 
         }
     }
@@ -166,6 +171,7 @@ Item {
                 timeLine.positionViewAtEnd()
 //                timeLine.positionViewAtBeginning()
                 galleryView.positionViewAtEnd()
+
 
                 timeFrameTab.state = ""
             }
@@ -261,13 +267,11 @@ Item {
                         setSocialState()
                     localFilterBox.state = ""
                     setSocialFilter()
-                    resetTimeScale()
                 }
             }
             onCurrentIndexChanged: {
                 setSocialState()
                 setSocialFilter()
-                resetTimeScale()
             }
 
             function setSocialState() {
