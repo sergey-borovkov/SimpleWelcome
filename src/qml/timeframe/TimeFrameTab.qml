@@ -13,6 +13,7 @@ Item {
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
     property bool isNepomukWorking: true
+    property bool isReset: false
 
     function checkNepomuk()
     {
@@ -72,12 +73,45 @@ Item {
         return txt
     }
 
+    function resetTimeScale()
+    {
+        if (!isReset) {
+            isReset = true
+
+            state = ""
+
+             //Set views on current date
+
+            localFilterBox.state = "current"
+            localFilterBox.view.currentIndex = 0
+            localFilterBox.setLocalFilter()
+
+            socialFilterBox.state = ""
+            socialFilterBox.view.currentIndex = 0
+            socialFilterBox.setSocialFilter()
+
+            timeScale.list.currentIndex = timeScale.list.count - 1
+
+//            timeLine.currentIndex = timeLine.count - 1
+//            timeLine.positionViewAtEnd()
+//            galleryView.positionViewAtEnd()
+
+            socialTimeLine.currentIndex = socialTimeLine.count - 1
+            socialTimeLine.positionViewAtEnd()
+            socialGalleryView.positionViewAtEnd()
+
+        }
+    }
 
     //Start initial search
     Connections {
         target:tabListView
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3) {
+
+                isReset = false
+                resetTimeScale()
+
                 // check nepomuk
                 if (checkNepomuk()) {
                     isNepomukWorking = true
@@ -130,6 +164,7 @@ Item {
                 timeLine.model = localDayModel
                 timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
+//                timeLine.positionViewAtBeginning()
                 galleryView.positionViewAtEnd()
 
                 timeFrameTab.state = ""
@@ -213,8 +248,6 @@ Item {
             }
         }
 
-
-
         DropFilterBox{
             id: socialFilterBox
             model: menuSocialItems
@@ -228,11 +261,13 @@ Item {
                         setSocialState()
                     localFilterBox.state = ""
                     setSocialFilter()
+                    resetTimeScale()
                 }
             }
             onCurrentIndexChanged: {
                 setSocialState()
                 setSocialFilter()
+                resetTimeScale()
             }
 
             function setSocialState() {
@@ -246,7 +281,7 @@ Item {
                     timeFrameTab.state = "social"
             }
             function setSocialFilter() {
-                if(view.currentIndex === 0) {             //selectedText = "All"
+                if(view.currentIndex === 0) { //selectedText = "All"
                     timeScaleModel.setFilter("Social")
                     socialDayModel.setFilter("Social")
                 }
