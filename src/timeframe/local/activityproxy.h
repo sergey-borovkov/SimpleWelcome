@@ -3,10 +3,10 @@
 
 #include "nepomuksource.h"
 
-#include <QtCore/QDate>
 #include <QtCore/QObject>
 
 class Activity;
+class QDate;
 class LocalContentModel;
 
 class ActivityProxy : public QObject

@@ -3,15 +3,14 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QMetaType>
-#include <QtCore/QStringList>
-#include <QtCore/QDate>
 #include <QtGui/QSortFilterProxyModel>
 
 #include <listitem.h>
 
+class Activity;
+class QDate;
 class LocalDayModel;
 class LocalDayFilterModel;
-class Activity;
 
 /**
  * @brief The LocalContentItem class stores local content in one day

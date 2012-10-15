@@ -1,8 +1,7 @@
 #ifndef NEPOMUKSOURCE_H
 #define NEPOMUKSOURCE_H
 
-#include <QDate>
-#include <QTimer>
+#include <QtCore/QObject>
 
 class Activity;
 

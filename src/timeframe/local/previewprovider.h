@@ -22,16 +22,9 @@
 #ifndef PREVIEWIMAGEPROVIDER_H
 #define PREVIEWIMAGEPROVIDER_H
 
-#include <QtDeclarative>
-#include <QtCore>
-#include <QtCore/QObject>
-#include <QtGui/QPixmap>
-#include <QMap>
+#include <QtDeclarative/QDeclarativeImageProvider>
 
-
-class PreviewGenerator;
-
-class PreviewProvider : public QObject, public QDeclarativeImageProvider
+class PreviewProvider : public QDeclarativeImageProvider
 {
 public:
     PreviewProvider();

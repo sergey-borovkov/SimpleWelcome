@@ -3,6 +3,7 @@
 #include "localcontentitem.h"
 #include "localcontentmodel.h"
 
+#include <QtCore/QDate>
 #include <QtCore/QVariant>
 
 LocalContentItem::LocalContentItem(const QDate &date, QObject *parent) :

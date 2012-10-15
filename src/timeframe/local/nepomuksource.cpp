@@ -1,17 +1,13 @@
 #include "nepomuksource.h"
 #include "activity.h"
 
+#include <KToolInvocation>
 #include <Nepomuk/ResourceManager>
 #include <Soprano/Model>
 #include <Soprano/QueryResultIterator>
 
-#include <QtGui/QApplication>
 #include <QtCore/QDate>
-#include <QtCore/QTimer>
-#include <QtCore/QDebug>
 
-// KDE
-#include <ktoolinvocation.h>
 
 NepomukSource::NepomukSource(QObject *parent) :
     QObject(parent)
@@ -48,7 +44,6 @@ void NepomukSource::startSearch()
         }
 
         Activity *activity = new Activity(path, type, lastModified, mimeType);
-//        activity->moveToThread(QApplication::instance()->thread());
         activities.append(activity);
     }
 
