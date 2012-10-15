@@ -91,7 +91,8 @@ void DataSource_RecentApps::getContent()
         map["caption"] = recentAppsList[i].caption;
         map["id"] = i;
         map["pinned"] = /*i < 4 ? true :*/ false;
-        emit newItemData(map);
+
+        emit newItemData(map, qmlGroupName);
     }
 }
 

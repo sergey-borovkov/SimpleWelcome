@@ -6,6 +6,7 @@
 class DataSource_Favorites : public DataSource
 {
     Q_OBJECT
+    Q_PROPERTY(QString qmlGroupName READ getQmlGroupName WRITE setQmlGroupName)
 
 public:
     explicit DataSource_Favorites(QObject* parent = 0);
@@ -13,7 +14,7 @@ public:
     Q_INVOKABLE QString itemUrlDnd(int id);
 
 signals:
-    void newItemData(QVariantMap itemData);
+    void newItemData(QVariantMap itemData, QString group);
     void resetContent();
     void runDesktopFile(QString desktopFile);
 

@@ -12,6 +12,8 @@ Item {
     property string isPopupOpened: popupFrame.state === "OPEN"
     property int stackCellOpenedId: -1
 
+    property variant dataSources: {"1" : "1"}
+
     function updateGridsContent()
     {
         gridsListView.updateGridsContent()
@@ -38,7 +40,7 @@ Item {
 
         function draggedOut(item) {
             gridsListView.hideGroup()
-            //console.log(item.caption + " GOTTTTT")
+            //console.log(item.caption + " GOT")
             gridsListView.activeGridView.newItemData(item)
             gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
             gridsListView.activeGridView.startDragging(gridsListView.activeGridView.count - 1)
@@ -113,10 +115,10 @@ Item {
 
             function createTabsFromGroups()
             {
-                //if (groups !== undefined)
-                    //console.log("----------------------------------- createTabsFromGroups " + groups[0].groupName)
-                //else
-                    //console.log("----------------------------------- createTabsFromGroups ")
+                if (groups !== undefined)
+                    console.log("----------------------------------- createTabsFromGroups " + groups[0].groupName)
+                else
+                    console.log("----------------------------------- createTabsFromGroups ")
 
                 // Constants. Used hack to retrieve them from C++, no way to do it straightforward AFAIK
                 var spacing = constants.gridWithGroupsSpacing, // spacing between GridWithGroups
@@ -194,26 +196,56 @@ Item {
                 }
 
                 // Doing afterjob to load user icons positioning and stacks
-                forEachGridView(loadStacks, mainWindow.loadSetting("Stacks"))
+                //forEachGridGroup("Apps", loadStacks, mainWindow.loadSetting("Stacks"))
             }
 
-            function forEachGridView(processFunction, args) {
+            function tabNewItemData(itemData, group) {
+                //console.log("New item " + group + " | " + itemData.caption)
+                forEachGridGroup(group, function(gridWithGroup, itemData) {
+                    //console.log("Adding item " + gridWithGroup.groupName + " | " + itemData.caption)
+                    if (gridWithGroup.gridView.count >= 5*7)
+                        return false
+
+                    gridWithGroup.gridView.newItemData(itemData)
+                    return true
+                }, itemData)
+            }
+
+            function forEachGridGroup(group, processFunction, args) {
+                //console.log("DDD " + group)
                 var currentIndexWas = gridsListView.currentIndex
 
+loop1:
                 for (var currentView = 0; currentView < gridsListView.count; currentView++) {
                     gridsListView.currentIndex = currentView
+                    //if (group == "Recent Applications")
+                    console.log("AAA " + ", currentView:" + currentView)
 
-                    var childs = gridsListView.currentItem.children
-                    for (var child = 0; child < childs.length; child++)
-                        if ('count' in childs[child] && childs[child].groupName == "Applications") // Loading stacks only for Apps
-                        {
-                            processFunction(childs[child].gridView, args)
+                    if (gridsListView.currentItem) {
+                        //if (group == "Recent Applications")
+                        //    console.log("BBB")
+                        var childs = gridsListView.currentItem.children
+loop2:
+                        for (var child = 0; child < childs.length; child++) {
+                            //console.log("CAME ACROSS:" + childs[child].groupName + " WHEN NEED " + group)
+                            if ('count' in childs[child] && childs[child].groupName === group)
+                            {
+                                var res = processFunction(childs[child], args)
+                                if (!res) {
+                                    console.log("LOOP BREAKER!")
+                                    continue loop1
+                                }
+                                else
+                                    break loop1
+                            }
                         }
+                    }
                 }
                 gridsListView.currentIndex = currentIndexWas
             }
 
-            function loadStacks(iconGridView, savedStacks) {
+            function loadStacks(gridWithGroup, savedStacks) {
+                var iconGridView = gridWithGroup.gridView
                 //console.log("LOADING STACKS")
 
                 for (var stackName in savedStacks) {
@@ -264,7 +296,8 @@ Item {
             function saveStacks() {
                 var setting = []
 
-                forEachGridView(function(iconGridView) {
+                forEachGridGroup("Apps", function(gridWithGroup) {
+                    var iconGridView = gridWithGroup.gridView
                     var model = iconGridView.model
                     //console.log("SAVING stacking")
 
@@ -276,25 +309,43 @@ Item {
                             //console.log(stack.length + "; at " + i)
                         }
                     }
+                    return true
                 })
 
                 mainWindow.saveSetting("Stacks", setting)
             }
 
             Component.onCompleted: {
+                var dataSourcesDict = new Object
+                //console.log("Component.onCompleted: {")
                 for (var i = 0; i < groups.length; i++)
                 {
-                    groups[i].dataSource.resetContent.connect(updateGridsContent)
-                }
+                    groups[i].dataSource.qmlGroupName = groups[i].groupName
 
-                createTabsFromGroups()
-                gridsListView.currentIndex = 0
+                    groups[i].dataSource.resetContent.connect(updateGridsContent)
+                    groups[i].dataSource.newItemData.connect(tabNewItemData)
+
+                    //console.log("groups[i].groupName: " + groups[i].groupName)
+                    if (dataSourcesDict[groups[i].groupName] === undefined) {
+                        //console.log("not found in dict. Adding: " + groups[i].groupName)
+                        dataSourcesDict[groups[i].groupName] = groups[i].dataSource
+                    }
+                }
+                //console.log("}")
+                dataSources = dataSourcesDict
             }
 
             function updateGridsContent() {
                 gridsListModel.clear()
                 //console.log("Clearing " + groups[0].group)
                 createTabsFromGroups()
+
+                //console.log("updateGridsContent() {")
+                for (var ds in dataSources) {
+                    //console.log("Getting content from " + dataSources[ds].qmlGroupName)
+                    dataSources[ds].getContent()
+                }
+
                 gridsListView.currentIndex = 0
             }
 

@@ -83,7 +83,7 @@ void DataSource_Apps::getContent()
         map["caption"] = appsList[i].caption;
         map["id"] = i;
         map["group"] = appsList[i].group;
-        emit newItemData(map);
+        emit newItemData(map, qmlGroupName);
     }
 }
 

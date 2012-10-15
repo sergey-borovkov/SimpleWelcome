@@ -204,12 +204,9 @@ GridView {
         //console.log("COMPLETED " + dataSource + " VIEW")
         if (dataSource)
         {
-            dataSource.newItemData.connect(newItemData)
             dataSource.resetContent.connect(resetContent)
             if (dataSource.updateItemData !== undefined)
                 dataSource.updateItemData.connect(updateItemContent)
-
-            dataSource.getContent()
         }
         appsModel.itemClicked.connect(onItemClicked)
     }

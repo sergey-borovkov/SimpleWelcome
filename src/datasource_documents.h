@@ -10,6 +10,7 @@ class QMLConstants;
 class DataSource_Documents : public DataSource
 {
     Q_OBJECT
+    Q_PROPERTY(QString qmlGroupName READ getQmlGroupName WRITE setQmlGroupName)
 
 public:
     explicit DataSource_Documents(QObject* parent, QMLConstants *inConstants);
@@ -18,7 +19,7 @@ public:
     QIcon getIcon(QString destination);
 
 signals:
-    void newItemData(QVariantMap itemData);
+    void newItemData(QVariantMap itemData, QString group);
     void resetContent();
     void runDesktopFile(QString desktopFile);
     void updateItemData(int id, QString field, QString data);
