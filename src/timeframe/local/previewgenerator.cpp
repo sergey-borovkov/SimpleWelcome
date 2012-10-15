@@ -22,14 +22,11 @@
 #include "localcontentmodel.h"
 #include "previewgenerator.h"
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QRect>
 #include <QtCore/QStringList>
-#include <QtGui/QLabel>
 #include <QtGui/QPainter>
 
-#include <kfile.h>
-#include <kicon.h>
+#include <KFile>
+#include <KIcon>
 
 PreviewGenerator *PreviewGenerator::m_instance = 0;
 

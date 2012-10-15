@@ -26,10 +26,8 @@
 
 #include <QtCore/QHash>
 #include <QtCore/QObject>
-#include <QtCore/QPair>
 
-#include <kio/previewjob.h>
-#include <kfileitem.h>
+#include <KIO/PreviewJob>
 
 class FileModel;
 class LocalContentModel;

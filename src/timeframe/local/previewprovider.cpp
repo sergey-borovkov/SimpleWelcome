@@ -22,9 +22,6 @@
 #include "previewprovider.h"
 #include "previewgenerator.h"
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QDebug>
-#include <QtDeclarative/QDeclarativeImageProvider>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
 
