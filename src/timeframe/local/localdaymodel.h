@@ -41,7 +41,6 @@ signals:
 
 public slots:
     void addActivityItem(Activity* item);
-    //void thumbnailReady(const QString &url);
 
 private:
     QHash<int, QByteArray> m_hash;

@@ -1,8 +1,10 @@
 #ifndef PLUGINITEM_H
 #define PLUGINITEM_H
 
+#include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtCore/QVariant>
+#include <QtCore/QHash>
+#include <QtCore/QMetaType>
 
 #include <listitem.h>
 
@@ -34,6 +36,7 @@ public:
         roles.insert(Authorized, "authorized");
         return roles;
     }
+
 signals:
     void dataChanged();
 

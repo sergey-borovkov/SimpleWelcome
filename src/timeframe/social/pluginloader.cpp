@@ -1,9 +1,9 @@
 #include "pluginloader.h"
 #include "socialplugin.h"
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
+#include <QtCore/QString>
 
 QList<ISocialPlugin*> PluginLoader::loadPlugins(QString dir_path)
 {

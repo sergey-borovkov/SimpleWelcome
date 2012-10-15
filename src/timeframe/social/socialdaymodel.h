@@ -1,9 +1,7 @@
 #ifndef SOCIALDAYMODEL_H
 #define SOCIALDAYMODEL_H
 
-#include <QtCore/QDate>
 #include <QtCore/QHash>
-#include <QtCore/QObject>
 #include <QtCore/QSet>
 #include <QtGui//QSortFilterProxyModel>
 
@@ -12,6 +10,7 @@
 class SocialDayItem;
 class SocialItem;
 class CommentItem;
+class QDate;
 
 class SocialDayFilterModel : public QSortFilterProxyModel
 {

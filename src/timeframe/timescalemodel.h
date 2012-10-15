@@ -1,10 +1,6 @@
 #ifndef TIMESCALEMODEL_H
 #define TIMESCALEMODEL_H
 
-#include <QtCore/QAbstractListModel>
-#include <QtCore/QHash>
-#include <QtCore/QPair>
-#include <QtCore/QSet>
 #include <QtCore/QDate>
 #include <QtGui/QSortFilterProxyModel>
 

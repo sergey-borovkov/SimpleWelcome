@@ -2,8 +2,6 @@
 #define SOCIALDAYITEM_H
 
 #include <QtCore/QDate>
-#include <QtCore/QObject>
-#include <QtCore/QStringList>
 #include <QtGui//QSortFilterProxyModel>
 
 #include <listitem.h>

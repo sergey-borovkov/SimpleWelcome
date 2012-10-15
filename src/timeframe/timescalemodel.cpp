@@ -10,8 +10,6 @@ TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
 {
     setDynamicSortFilter(true);
     setFilterRole(TimeScaleItem::TypesRole);
-//    setSortRole(TimeScaleItem::YearRole);
-//    setSortRole(TimeScaleItem::DateRole);
     setFilterRegExp(QRegExp("Image|Video|Document"));
 }
 
@@ -37,27 +35,6 @@ void TimeScaleFilterModel::setFilter(const QString &filter)
 
     setFilterRegExp(filterRegExp);
 }
-
-//bool TimeScaleFilterModel::lessThan(const QModelIndex & left, const QModelIndex & right) const
-//{
-//    qDebug() << "TimeScaleFilterModel::lessThan";
-//    //    int leftYear = sourceModel()->data(left, TimeScaleItem::YearRole).toInt();
-//    //    int rightYear = sourceModel()->data(right, TimeScaleItem::YearRole).toInt();
-
-//    //    if (leftYear < rightYear)
-//    //        return true;
-//    //    else if (leftYear > rightYear) {
-//    //        return false;
-//    //    } else {
-//    //        int leftMonth = sourceModel()->data(left, TimeScaleItem::MonthRole).toInt();
-//    //        int rightMonth = sourceModel()->data(right, TimeScaleItem::MonthRole).toInt();
-//    //        if (leftMonth < rightMonth)
-//    //            return true;
-//    //    }
-//    //    return false;
-
-//    return QSortFilterProxyModel::lessThan(left, right);
-//}
 
 int TimeScaleFilterModel::getYear(int ind)
 {

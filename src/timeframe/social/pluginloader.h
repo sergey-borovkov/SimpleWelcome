@@ -2,9 +2,9 @@
 #define PLUGINLOADER_H
 
 #include <QtCore/QList>
-#include <QtCore/QString>
 
 class ISocialPlugin;
+class QString;
 
 class PluginLoader
 {

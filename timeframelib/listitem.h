@@ -3,6 +3,8 @@
 
 #include "timeframelib_global.h"
 
+class QVariant;
+
 class TIMEFRAMELIB_EXPORT ListItem
 {
 public:
