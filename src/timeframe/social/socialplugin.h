@@ -30,7 +30,7 @@ public:
     virtual Request *queryWall(const QDate &beginDate, const QDate &endDate) = 0;
     virtual Request *queryUserId() = 0;
     virtual Request *queryImage(const QString &id) = 0;
-    virtual Request *postComment(const QString &message, const QString &parentId) = 0;
+    virtual Request *postComment(const QByteArray &message, const QString &parentId) = 0;
 
     /**
      * @brief Query comments to post. You need to connect to SocialRequestManager
