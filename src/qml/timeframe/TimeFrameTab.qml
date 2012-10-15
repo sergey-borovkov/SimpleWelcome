@@ -73,6 +73,15 @@ Item {
         return txt
     }
 
+    function closeSocialCloudItem()
+    {
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].objectName === "SocialCloudItem") {
+                children[i].mainParent.state = ""
+            }
+        }
+    }
+
     function resetTimeScale()
     {
         if (!isReset) {
@@ -80,7 +89,7 @@ Item {
 
             state = ""
 
-             //Set views on current date
+            //Set views on current date
 
             localFilterBox.state = "current"
 
@@ -134,6 +143,10 @@ Item {
                     timeFrameTab.state = "notNepomukInit"
                 }
             }
+            else {
+                // if need close cloud social item
+                closeSocialCloudItem()
+            }
         }
     }
 
@@ -169,7 +182,7 @@ Item {
                 timeLine.model = localDayModel
                 timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
-//                timeLine.positionViewAtBeginning()
+                //                timeLine.positionViewAtBeginning()
                 galleryView.positionViewAtEnd()
 
 
@@ -675,8 +688,8 @@ Item {
     AnimatedImage {
         id: waitIndicator
         source: "images/ajax-loader.gif"
-        anchors.centerIn: parent        
-        visible: false        
+        anchors.centerIn: parent
+        visible: false
     }
 
     Connections {
@@ -768,7 +781,7 @@ Item {
                 target: timeScale
                 anchors.verticalCenter: undefined
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom:  timeFrameTab.bottom                                
+                anchors.bottom:  timeFrameTab.bottom
             }
             PropertyChanges { target: timeScale; anchors.bottomMargin: 20 }
 

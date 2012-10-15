@@ -37,6 +37,9 @@ Item{
         width: parent.width
         height: parent.height
 
+        objectName: "SocialCloudItem"
+        property Item mainParent: cloudRect
+
         ItemRectangle
         {
             id: mainRect
