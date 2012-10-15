@@ -10,6 +10,7 @@
 #include <listmodel.h>
 
 #include <QtCore/QDebug>
+#include <QtCore/QDate>
 #include <QtCore/QSettings>
 #include <QtGui/QWidget>
 

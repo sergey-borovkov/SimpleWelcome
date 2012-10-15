@@ -4,7 +4,6 @@
 #include "pluginrequestreply.h"
 #include "socialitem.h"
 
-#include <QMetaType>
 #include <QtCore/QList>
 #include <QtCore/QMap>
 #include <QtCore/QObject>

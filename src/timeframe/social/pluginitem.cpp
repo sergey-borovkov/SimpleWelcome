@@ -1,6 +1,7 @@
 #include "pluginitem.h"
 #include "socialplugin.h"
 
+#include <QtCore/QVariant>
 #include <QtGui/QWidget>
 
 PluginItem::PluginItem(ISocialPlugin *module)
