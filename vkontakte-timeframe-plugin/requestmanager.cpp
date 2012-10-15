@@ -55,11 +55,11 @@ Request *RequestManager::queryImage(const QString &id)
     return request;
 }
 
-Request *RequestManager::postComment(const QString &message, const QString &postId)
+Request *RequestManager::postComment(const QByteArray &message, const QString &postId)
 {
     QUrl url = constructUrl(QLatin1String("wall.addComment"));
     url.addQueryItem(QLatin1String("post_id"), postId);
-    url.addQueryItem(QLatin1String("text"), message);
+    url.addEncodedQueryItem("text", message);
 
     VkRequest *request = new VkRequest(VkRequest::Post, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(postCommentReply(QByteArray)));
