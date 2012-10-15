@@ -37,7 +37,7 @@ public:
     void setDate(QDate date);
 
 signals:
-    void gotThumbnail(QString url);
+    void gotThumbnail(QString path);
 
 public slots:
     void addActivityItem(Activity* item);
