@@ -56,7 +56,7 @@ void DataSource_Documents::getContent()
         else
             map["imagePath"] = QString("image://generalicon/appicon/%1").arg(docsList[i].icon);
 
-        emit newItemData(map);
+        emit newItemData(map, qmlGroupName);
     }
 }
 

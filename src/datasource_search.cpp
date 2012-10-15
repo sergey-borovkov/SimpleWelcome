@@ -232,7 +232,7 @@ void DataSource_Search::getContent()
         map["caption"] = matches[i].name;
         map["id"] = counter;
         map["searchGroup"] = matches[i].group;
-        emit newItemData(map);
+        emit newItemData(map, qmlGroupName);
     }
 }
 

@@ -102,7 +102,7 @@ Column {
         id: iconGridView
 
         width: parent.width
-        height: groupName == "Applications" ? gridsListView.height : Math.ceil(count / columns) * groupCellHeight
+        height: groupName == "Apps" ? gridsListView.height : Math.ceil(count / columns) * groupCellHeight
         cellHeight: groupCellHeight
         interactive: false
 
@@ -158,7 +158,7 @@ Column {
 
         function newItemData(itemData)
         {
-            if (startIndex === endIndex && endIndex === -1)
+            /*if (startIndex === endIndex && endIndex === -1)
             {
                 for (var i = 0; i < model.count; i++)
                     if (model.get(i).id === itemData.id)
@@ -166,7 +166,7 @@ Column {
             }
             else if (!(startIndex <= itemData.id && itemData.id <= endIndex &&
                        count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
-                return
+                return*/
 
             // This is needed for delegate to not blaming unknown variable
             if (itemData.pinned === undefined)

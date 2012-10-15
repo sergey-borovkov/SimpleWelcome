@@ -47,7 +47,7 @@ void DataSource_Favorites::getContent()
         map["imagePath"] = QString("image://generalicon/appicon/%1").arg(favoritesList[i].icon);
         map["caption"] = favoritesList[i].caption;
         map["id"] = i;
-        emit newItemData(map);
+        emit newItemData(map, qmlGroupName);
     }
 }
 
