@@ -72,7 +72,6 @@ Item {
 
     function closeSocialCloudItem()
     {
-        console.log("closeSocialCloudItem")
         for (var i = 0; i < timeFrameTab.children.length; i++) {
             if (timeFrameTab.children[i].objectName === "SocialCloudItem" ||
                 timeFrameTab.children[i].objectName === "SocialGalleryItem" ) {
@@ -115,7 +114,9 @@ Item {
                 timeLine.model = undefined
                 timeFrameTab.state = "timeLineSearch"
             }
-
+            else {
+                timeFrameTab.state = "timeline"
+            }
         }
         else {
             timeFrameTab.state = "nepomukNotInit"
@@ -127,6 +128,9 @@ Item {
                 timeLine.currentIndex = timeLine.count - 1
                 timeLine.positionViewAtEnd()
                 galleryView.positionViewAtEnd()
+
+                timeScale.list.currentIndex = timeScale.list.count - 1
+                timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
             }
         }
     }
@@ -182,8 +186,6 @@ Item {
                 timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
                 galleryView.positionViewAtEnd()
-
-                timeFrameTab.state = ""
             }
         }
     }
@@ -219,6 +221,10 @@ Item {
                     socialFilterBox.state = ""
                     setLocalState()
                     setLocalFilter()
+
+                    timeLine.currentIndex = timeLine.count - 1
+                    timeLine.positionViewAtEnd()
+                    galleryView.positionViewAtEnd()
                     timeScale.list.currentIndex = timeScale.list.count - 1
                     timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
                 }
@@ -240,7 +246,6 @@ Item {
                 else {
                     timeFrameTab.state = "timeline"
                     updateTimeScale()
-
                 }
             }
 
@@ -293,6 +298,11 @@ Item {
                     }
                     localFilterBox.state = ""
                     setSocialFilter()
+
+                    socialTimeLine.currentIndex = socialTimeLine.count - 1
+                    socialTimeLine.positionViewAtEnd()
+                    socialGalleryView.positionViewAtEnd()
+
                     timeScale.list.currentIndex = timeScale.list.count - 1
                     timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
                 }
@@ -795,9 +805,7 @@ Item {
             name: "timeline"
             PropertyChanges { target: timeLine;  visible : true; model: localDayModel }
 
-        }
-        ,
-
+        },
         State {
             name: "gallery"
 
@@ -836,7 +844,6 @@ Item {
             PropertyChanges { target: socialTimeLine; visible: true; opacity: 1 }
 
         },
-
         State {
             name: "socialGallery"; extend: "social"
 
