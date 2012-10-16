@@ -17,12 +17,15 @@ class SocialDayFilterModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit SocialDayFilterModel(QObject * parent = 0);
+    Q_INVOKABLE QDate getDateOfIndex(int listIndex);
+    Q_INVOKABLE int getIndexByDate(int year, int month,  bool direction);
+    Q_INVOKABLE int getIndexByDate(QDate date);
 
 public slots:
     void setFilter(const QString &filter);
-    int getIndexByDate(int year, int month,  bool direction);
+
     QObject* itemsModel(QDate date) const;
-    QDate getDateOfIndex(int listIndex);
+
 
 };
 

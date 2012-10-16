@@ -20,6 +20,7 @@ Column {
             // following is very slow and should be later replaced
             // with more proper solution
 
+
             Component.onCompleted: {
                 localDayModel.itemsModel(date).gotThumbnail.connect(gotThumbnail)
                 galleryPreviewGenerator.itemShown(url, localDayModel.itemsModel(date))

@@ -32,17 +32,3 @@ void ActivityProxy::setModel(LocalContentModel* model)
         m_model = model;
 }
 
-int ActivityProxy::getIndexByDate(int year, int month, bool direction)
-{
-    if (m_model)
-        return m_model->getIndexByDate(year, month, direction);
-    return -1;
-}
-
-QDate ActivityProxy::getDateOfIndex(int listIndex)
-{
-    if (m_model)
-        return m_model->getDateOfIndex(listIndex);
-    return QDate();
-}
-
