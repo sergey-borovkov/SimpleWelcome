@@ -33,7 +33,6 @@ public:
  * id - uniqie identifier, used to interact between C++ and QML
  * pinned - reserved for use in Recent Documents pinning
  * group - used in Apps to pass the group app belong to
- * searchGroup - used in Search to distinguish the group app belong to
  * stack - items stacked in this item, array of dictionaries // auto set to undefined
 */
 

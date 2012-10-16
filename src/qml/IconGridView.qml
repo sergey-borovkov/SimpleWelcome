@@ -5,8 +5,7 @@ GridView {
     property variant dataSource
     property variant prevGrid
     property variant nextGrid
-    property int startIndex
-    property int endIndex
+    property int maxCount: -1
     property bool draggable: false
     property bool enabledSystemDnD: false  // set true to enable system Drag&Drop
     property bool stackable: false // set true to enable icons stacking while Drag&Dropping

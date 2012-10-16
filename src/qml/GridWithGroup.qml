@@ -12,8 +12,7 @@ Column {
 
     property alias prevGridGroup: iconGridView.prevGrid
     property alias nextGridGroup: iconGridView.nextGrid
-    property alias startIndex: iconGridView.startIndex
-    property alias endIndex: iconGridView.endIndex
+    property alias maxCount: iconGridView.maxCount
 
     property alias count: iconGridView.count
     property alias gridView: iconGridView
@@ -158,24 +157,11 @@ Column {
 
         function newItemData(itemData)
         {
-            /*if (startIndex === endIndex && endIndex === -1)
-            {
-                for (var i = 0; i < model.count; i++)
-                    if (model.get(i).id === itemData.id)
-                        return
-            }
-            else if (!(startIndex <= itemData.id && itemData.id <= endIndex &&
-                       count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
-                return*/
-
             // This is needed for delegate to not blaming unknown variable
             if (itemData.pinned === undefined)
                 itemData.pinned = undefined
 
-            if (itemData.searchGroup === undefined || itemData.searchGroup === groupName) // Adding only from matching search groups if it's from search
-                appendItemToModel(itemData)
-
-            //console.log("--- Added [" + startIndex + " to " + endIndex + "] with id: " + itemId)
+            appendItemToModel(itemData)
         }
 
         function onItemClicked(newIndex)
@@ -209,7 +195,7 @@ Column {
             if (newIndex == -1)
                 dataSource.itemClicked(-1)
             else
-                dataSource.itemClicked(realIndex, model.get(newIndex).searchGroup)
+                dataSource.itemClicked(realIndex, groupName)
         }
 
         function forceMyFocus() {

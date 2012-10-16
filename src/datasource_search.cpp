@@ -231,8 +231,8 @@ void DataSource_Search::getContent()
         map["imagePath"] = QString("image://generalicon/search/%1").arg(matches[i].name);
         map["caption"] = matches[i].name;
         map["id"] = counter;
-        map["searchGroup"] = matches[i].group;
-        emit newItemData(map, qmlGroupName);
+        //qDebug() << "-- Adding: " << matches[i].name + " | " + matches[i].group;
+        emit newItemData(map, matches[i].group);
     }
 }
 
