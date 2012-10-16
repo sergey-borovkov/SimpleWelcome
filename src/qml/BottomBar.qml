@@ -17,71 +17,13 @@ Item {
         onScrollVert: wheelScroll(delta)
     }
 
-    Item {
-        width: 45
-        height: 45
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.margins: 5
-
-        Image {
-            id: rosaButton
-            source: "image://generalicon/asset/rosa-launcher.png"
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-        }
-
-        Image {
-            id: rosaButtonHover
-            source: "image://generalicon/asset/rosa-launcher-hover.png"
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-            smooth: true
-            opacity: 0
-
-            Behavior on opacity {
-                NumberAnimation { duration: 200; }
-            }
-        }
-
-        states: [
-            State {
-                name: "normal";
-                when: !rosaButtonMouseArea.containsMouse
-                PropertyChanges { target: rosaButtonHover; opacity: 0; scale: 1 }
-            },
-
-            State {
-                name: "hover";
-                when: rosaButtonMouseArea.containsMouse && !rosaButtonMouseArea.pressed
-                PropertyChanges { target: rosaButtonHover; opacity: 1 }
-            },
-
-            State {
-                name: "pressed"
-                when: rosaButtonMouseArea.pressed
-                PropertyChanges { target: rosaButton; scale: 0.9 }
-                PropertyChanges { target: rosaButtonHover; opacity: 1; scale: 0.91 }
-            }
-        ]
-
-        MouseArea {
-            id: rosaButtonMouseArea
-            anchors.fill: parent
-
-            onClicked: mainWindow.close()
-
-            hoverEnabled: true
-        }
-    }
-
     Image {
         source: "image://generalicon/asset/tab_buttons_bg.png"
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 11
-        width: parent.width - (10 + 45 + 10) * 2
-        height: 48 //33
+        width: parent.width - 20 * 2
+        height: 48
 
         Item {
             id: button

@@ -46,11 +46,11 @@ Request *RequestManager::queryImage(const QString &id)
     return request;
 }
 
-Request *RequestManager::postComment(const QString &message, const QString &parentId)
+Request *RequestManager::postComment(const QByteArray &message, const QString &parentId)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
     QUrl url = constructUrl(parentId, QLatin1String("comments"));
-    url.addQueryItem("message", message);
+    url.addEncodedQueryItem("message", message);
     request->setUrl(url);
 
     return request;

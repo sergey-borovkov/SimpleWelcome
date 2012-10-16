@@ -126,6 +126,8 @@ void SWApp::loadShortcut()
     //qDebug() << m_globalShortcut.toString() << " is " << m_globalAction->isGlobalShortcutEnabled();
 }
 
+#include <QMainWindow>
+
 SWApp::SWApp()
     : KUniqueApplication()
 {
@@ -136,7 +138,8 @@ SWApp::SWApp()
 
     m_viewer = new QmlApplicationViewer();
     m_viewer->setGeometry(0, 0, QApplication::desktop()->width(), QApplication::desktop()->height());
-    m_viewer->setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
+    m_viewer->setFixedSize(QApplication::desktop()->width(), QApplication::desktop()->height());
+    m_viewer->setWindowFlags(Qt::FramelessWindowHint);
     // Window transparency
     m_viewer->setAttribute(Qt::WA_TranslucentBackground);
     m_viewer->setStyleSheet("background:transparent;");
@@ -229,7 +232,7 @@ SWApp::SWApp()
     initTimeframeLocalMode();
     initTimeframeSocialMode();
 
-    m_viewer->setMainQmlFile(pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml"));   // Qt converts path to native automatically
+    m_viewer->setSource(QUrl::fromLocalFile(pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml")));   // Qt converts path to native automatically
 
     setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
 }
@@ -317,7 +320,7 @@ void SWApp::globalActionTriggered()
 QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
     : QObject(parent), viewer(inViewer)
 {
-    connect(viewer, SIGNAL(windowSizeChanged(int, int)), SIGNAL(iconSizeChanged()));
+    connect(viewer, SIGNAL(windowSizeChanged()), SIGNAL(iconSizeChanged()));
 }
 
 int QMLConstants::cellWidth()

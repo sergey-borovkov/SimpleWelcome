@@ -246,7 +246,8 @@ Item {
             function fillModel() {
                 clear()
                 var count = socialProxy.authorizedPluginCount()
-                append({ "itemText": "All"})
+                if (count > 0)
+                    append({ "itemText": "All"})
 
                 for(var i = 0; i < count; i++)
                     append({ "itemText": socialProxy.authorizedPluginName(i) })
@@ -260,9 +261,9 @@ Item {
             name: i18n_Social_networkong_sites
             onStateChanged: {
                 if (socialFilterBox.state === "current") {
-                    if (socialFilterBox.view.count <= 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
+                    if (socialFilterBox.view.count < 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
                         timeFrameTab.state = "socialAuthorization"
-                        socialFilterBox.view.currentIndex = 1
+                        socialFilterBox.view.currentIndex = 0
                     } else
                         setSocialState()
                     localFilterBox.state = ""
@@ -425,6 +426,7 @@ Item {
         }
 
         WheelArea {
+            id: timeLineWheelArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, timeLine)
         }
@@ -460,6 +462,7 @@ Item {
         }
 
         WheelArea {
+            id: socialTimeLineWheelArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, socialTimeLine)
         }
@@ -473,6 +476,7 @@ Item {
         width: parent.width - 100
 
         WheelArea {
+            id: timeScaleWheelArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, timeScale.list)
         }
@@ -612,6 +616,7 @@ Item {
         boundsBehavior : Flickable.StopAtBounds
 
         WheelArea {
+            id: socialGalleryViewWhellArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, socialGalleryView)
         }
