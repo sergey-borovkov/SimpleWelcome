@@ -196,7 +196,6 @@ Item {
                         {
                             //set index on socialTimeLine
 
-                            console.log("olololo")
                             socialTimeLine.currentIndex = timeFrameTab.getSocialTimeLineIndex()
                             socialTimeLine.positionViewAtIndex(socialTimeLine.currentIndex, ListView.Center )
 
