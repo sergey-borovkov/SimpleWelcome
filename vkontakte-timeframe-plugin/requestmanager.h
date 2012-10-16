@@ -24,7 +24,7 @@ public:
     virtual Request *queryImage(const QString &id);
     virtual Request *queryComments(const QString &postId);
     virtual Request *queryLikes(const QString &postId);
-    virtual Request *postComment(const QString &message, const QString &postId);
+    virtual Request *postComment(const QByteArray &message, const QString &postId);
     virtual Request *like(const QString &id);
     virtual Request *unlike(const QString &id);
 

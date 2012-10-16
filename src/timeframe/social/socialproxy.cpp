@@ -12,6 +12,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDate>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
 #include <QtGui/QWidget>
 
 SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
@@ -156,7 +157,7 @@ PluginRequestReply *SocialProxy::dislike(const QString &id, const QString &plugi
 PluginRequestReply *SocialProxy::postComment(const QString &message, const QString &parentId, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
-    Request *request = plugin->requestManager()->postComment(message, parentId);
+    Request *request = plugin->requestManager()->postComment(QUrl::toPercentEncoding(message), parentId);
     PluginRequestReply *reply = new PluginRequestReply(request, parentId, this);
     request->start();
 
