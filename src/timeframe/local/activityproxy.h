@@ -4,9 +4,9 @@
 #include "nepomuksource.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QDate>
 
 class Activity;
-class QDate;
 class LocalContentModel;
 
 class ActivityProxy : public QObject

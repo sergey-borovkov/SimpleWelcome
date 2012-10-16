@@ -4,8 +4,6 @@
 #include "nepomuksource.h"
 #include "previewgenerator.h"
 
-#include <QtCore/QDate>
-
 ActivityProxy::ActivityProxy(NepomukSource *source, QObject *parent) :
     QObject(parent),
     m_model(0)
