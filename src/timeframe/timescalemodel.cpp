@@ -17,6 +17,7 @@ TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
 
 void TimeScaleFilterModel::setFilter(const QString &filter)
 {
+//    qDebug() << "TimeScaleFilterModel::setFilter:   " << filter;
     QRegExp filterRegExp;
     if (filter == "Local")
         filterRegExp = QRegExp("Image|Video|Document");
@@ -162,6 +163,7 @@ void TimeScaleModel::newItem(int year, int month, QString type)
 
         if (!findItem) {
             insertRow(j, newItem);
+//            qDebug() << "TimeScaleModel::newItem():    added time scale item " << newItem->date().toString("MMM");
             connect(newItem, SIGNAL(dataChanged()), SLOT(handleItemChange()));
         }
     }
