@@ -248,9 +248,10 @@ void DataSource_Search::newSearchMatches(const QList<Plasma::QueryMatch> &newMat
         matches.last().name = newMatches.at(i).text();
         matches.last().group = newMatches.at(i).runner()->name();
         matches.last().plasmaMatch = new Plasma::QueryMatch(newMatches.at(i));
-        //emit newItemData(QString("image://generalicon/search/%1").arg(matches.last().name), matches.last().name, matches.size() - 1, matches.last().group);
+
         //qDebug() << "FOUND" << matches.last().name << "FROM" << matches.last().group;
     }
+
     emit resetContent();
 }
 

@@ -128,16 +128,16 @@ Item {
                 //console.log("Starting to split " + availableHeight + "px to grids")
                 for (var i = 0; i < groups.length; i++) // Iterating by grids
                 {
+                    var itemCount = groups[i].dataSource.getItemCount(groups[i].groupName)
+                    if (!itemCount) // No need to add an empty group
+                        continue
+
                     var cellRealHeight = groups[i].groupCellHeight !== undefined ? groups[i].groupCellHeight : constants.cellHeight
                     //console.log(i + " - NEW ITERATION!!!!!!!!! with " + groups[i].groupName)
                     var textHeight = (groups[i].groupNameVisible !== undefined && groups[i].groupNameVisible === false ? 0 : constants.groupTextHeight + constants.textToGridSpacing),
-                            itemCount = groups[i].dataSource.getItemCount(groups[i].groupName),
                             projectedGroupHeight = textHeight + Math.ceil(itemCount / columns) * cellRealHeight,
                             currentGroup = groups[i]
                     //console.log(i + " - Projected group height: " + projectedGroupHeight + "; Left here: " + availableHeight + ";  itemCount: " + itemCount)
-
-                    if (!itemCount) // No need to add an empty group
-                        continue
 
                     if (projectedGroupHeight < availableHeight || (isForceOnOneScreen && count)) // Grid can be fully placed on the tab
                     {
