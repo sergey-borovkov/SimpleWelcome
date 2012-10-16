@@ -28,5 +28,5 @@ public slots:
 private:
     void saveData();
 
-    QList<AppItem> recentAppsList;
+    AppItemList recentAppsList;
 };

@@ -27,10 +27,13 @@ AppItemList GetFlatList(QString group)
                 continue;
 
             AppItem newItem;
-            newItem.icon = service->icon();
-            newItem.caption = service->name();
-            newItem.desktopEntry = service->entryPath();
-            newItem.group = group;
+
+            newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(service->icon());
+            newItem["caption"] = service->name();
+            newItem["id"] = out.count();
+            newItem["desktopEntry"] = service->entryPath();
+            newItem["group"] = group;
+
             out.append(newItem);
         } else if (p->isType(KST_KServiceGroup)) {
             const KServiceGroup::Ptr serviceGroup = KServiceGroup::Ptr::staticCast(p);
@@ -43,7 +46,7 @@ AppItemList GetFlatList(QString group)
             /*else
             {
                 AppItem newItem;
-                newItem.icon = serviceGroup->icon();
+                newItem.icon = QString("image://generalicon/appicon/%1").arg(serviceGroup->icon());
                 newItem.caption = serviceGroup->caption();
                 newItem.relPath = serviceGroup->relPath();
                 out.append(newItem);
@@ -72,18 +75,13 @@ QString DataSource_Apps::itemUrlDnd(int id)
 {
     if (id < 0 || id >= appsList.count())
         return QString();
-    return QString::fromAscii("file://") + appsList[id].desktopEntry;
+    return QString("file://%1").arg(appsList[id]["desktopEntry"].toString());
 }
 
 void DataSource_Apps::getContent()
 {
     for (int i = 0; i < appsList.size(); i++) {
-        QVariantMap map;
-        map["imagePath"] = QString("image://generalicon/appicon/%1").arg(appsList[i].icon);
-        map["caption"] = appsList[i].caption;
-        map["id"] = i;
-        map["group"] = appsList[i].group;
-        emit newItemData(map, qmlGroupName);
+        emit newItemData(appsList[i], qmlGroupName);
     }
 }
 
@@ -109,9 +107,9 @@ void DataSource_Apps::itemClicked(int newIndex)
 
     if (newIndex != -1) {
         AppItem clickedItem = appsList[newIndex];
-        if (clickedItem.relPath.isEmpty()) {
-            recentApps->addRecentApp(clickedItem.desktopEntry);
-            emit runDesktopFile(clickedItem.desktopEntry);
+        if (clickedItem["relPath"].toString().isEmpty()) {
+            recentApps->addRecentApp(clickedItem["desktopEntry"].toString());
+            emit runDesktopFile(clickedItem["desktopEntry"].toString());
             return;
         }
     }
@@ -119,7 +117,7 @@ void DataSource_Apps::itemClicked(int newIndex)
     if (newIndex == -1)
         currentGroup = "";
     else
-        currentGroup = appsList[newIndex].relPath;
+        currentGroup = appsList[newIndex]["relPath"].toString();
 
     if (prevCurrentGroup != currentGroup)
         updateItems(false);

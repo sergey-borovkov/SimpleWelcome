@@ -34,5 +34,4 @@ private:
     QString prevCurrentGroup;
 
     DataSource_RecentApps *recentApps;
-    QList<QPair<QString, int> > userAppsOrder;
 };
