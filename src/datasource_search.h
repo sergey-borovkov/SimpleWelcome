@@ -41,7 +41,7 @@ public slots:
     void setSearchQuery(const QString &queryText);
     QString getSearchQuery();
 
-    QIcon getMatchIcon(const QString &name);
+    QIcon getMatchIcon(const QString &caption);
 
 
     virtual void itemClicked(int newIndex, QString group);
@@ -59,7 +59,10 @@ private:
     QString m_searchQuery;
     Plasma::RunnerManager *m_runnerManager;
 
-    QVector<MatchResults> matches;
+    QMap<QString, AppItemList> matches;
 
     DataSource_RecentApps *recentApps;
 };
+
+
+Q_DECLARE_METATYPE(Plasma::QueryMatch*)

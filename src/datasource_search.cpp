@@ -92,12 +92,7 @@ KService::Ptr serviceForUrl(const KUrl & url)
 
 int DataSource_Search::getItemCount(QString group)
 {
-    int count = 0;
-    for (int i = 0; i < matches.size(); i++)
-        if (matches[i].group == group)
-            count++;
-
-    return count;
+    return matches[group].size();
 }
 
 QString DataSource_Search::itemUrlDnd(int id, QString group)
@@ -105,43 +100,38 @@ QString DataSource_Search::itemUrlDnd(int id, QString group)
     if (id < 0)
         return QString();
 
-    for (int i = 0, sz = matches.size(); i < sz; i++) {
-        if (matches[i].group == group) {
-            if (i + id < sz) {
-                Plasma::QueryMatch& match = *matches[i + id].plasmaMatch;
-                QString runner_id = match.runner()->id();
-                QString value = match.data().toString().toUtf8();
+    if (matches.contains(group) && id < matches[group].size()) {
+        Plasma::QueryMatch& match = *matches[group][id]["plasmaMatch"].value<Plasma::QueryMatch*>();
+        QString runner_id = match.runner()->id();
+        QString value = match.data().toString().toUtf8();
 
-                if (runner_id == QString::fromAscii("recentdocuments")) {
-                    // RecentDocuments runner give us path to temporary desktop file
-                    // we should extract path to recent document (file) and return it
-                    if (KDesktopFile::isDesktopFile(value)) {
-                        KDesktopFile file(value);
-                        QString url = file.readUrl();
-                        if (!url.isEmpty())
-                            return url;
-                    }
-                    return value;
-                }
-
-                if (KDesktopFile::isDesktopFile(value)) {
-                    if (QDir::isAbsolutePath(value))
-                        return QString::fromAscii("file://") + value;
-                    // try to find absolute path
-                    QString path = _FindFullPathToDesktopFile(value);
-                    // Workaround: kde4-name.desktop may be kde4/name.desktop in a real world
-                    if (path.isEmpty() && value.startsWith(QString::fromAscii("kde4-"))) {
-                        value[4] = QChar::fromAscii('/');
-                        path = _FindFullPathToDesktopFile(value);
-                    }
-
-                    if (!path.isEmpty())
-                        return QString::fromAscii("file://") + path;
-                }
-                return value;
+        if (runner_id == QString::fromAscii("recentdocuments")) {
+            // RecentDocuments runner give us path to temporary desktop file
+            // we should extract path to recent document (file) and return it
+            if (KDesktopFile::isDesktopFile(value)) {
+                KDesktopFile file(value);
+                QString url = file.readUrl();
+                if (!url.isEmpty())
+                    return url;
             }
-            break;
+            return value;
         }
+
+        if (KDesktopFile::isDesktopFile(value)) {
+            if (QDir::isAbsolutePath(value))
+                return QString::fromAscii("file://") + value;
+            // try to find absolute path
+            QString path = _FindFullPathToDesktopFile(value);
+            // Workaround: kde4-name.desktop may be kde4/name.desktop in a real world
+            if (path.isEmpty() && value.startsWith(QString::fromAscii("kde4-"))) {
+                value[4] = QChar::fromAscii('/');
+                path = _FindFullPathToDesktopFile(value);
+            }
+
+            if (!path.isEmpty())
+                return QString::fromAscii("file://") + path;
+        }
+        return value;
     }
 
     return QString();
@@ -180,71 +170,72 @@ QString DataSource_Search::getSearchQuery()
     return m_searchQuery;
 }
 
-QIcon DataSource_Search::getMatchIcon(const QString &name)
+QIcon DataSource_Search::getMatchIcon(const QString &caption)
 {
-    for (int i = 0; i < matches.size(); i++)
-        if (matches[i].name == name)
-            return matches[i].plasmaMatch->icon();
+    foreach (AppItemList matchesList, matches)
+        for (int i = 0; i < matchesList.size(); i++)
+            if (matchesList[i]["caption"].toString() == caption)
+                return matchesList[i]["plasmaMatch"].value<Plasma::QueryMatch*>()->icon();
 
     return QIcon();
 }
 
 void DataSource_Search::itemClicked(int newIndex, QString group)
 {
-    if (newIndex == -1)
+    if (newIndex == -1 || !matches.contains(group))
         return;
 
-    for (int i = 0; i < matches.size(); i++) {
-        if (matches[i].group == group) {
-            if (i + newIndex < matches.size()) {
-                Plasma::QueryMatch& match = *matches[i + newIndex].plasmaMatch;
-                QString url = QString("krunner://") + match.runner()->id() + "/" + match.id();
+    if (newIndex < matches[group].size()) {
+        Plasma::QueryMatch& match = *matches[group][newIndex]["plasmaMatch"].value<Plasma::QueryMatch*>();
+        QString url = QString("krunner://") + match.runner()->id() + "/" + match.id();
 
-                // Since krunner:// urls can't be added to recent applications,
-                // we find the local .desktop entry.
+        // Since krunner:// urls can't be added to recent applications,
+        // we find the local .desktop entry.
 
-                KService::Ptr service = serviceForUrl(url);
-                if (service)
-                    recentApps->addRecentApp(service->entryPath());
-                else {
-                    //qWarning() << "Failed to find service for" << url; <-- It's just that found entry in not app
-                }
-
-                m_runnerManager->run(*matches[i + newIndex].plasmaMatch);
-                emit runDesktopFile("");
-            }
-            break;
+        KService::Ptr service = serviceForUrl(url);
+        if (service)
+            recentApps->addRecentApp(service->entryPath());
+        else {
+            //qWarning() << "Failed to find service for" << url; <-- It's just that found entry in not app
         }
+
+        m_runnerManager->run(match);
+        emit runDesktopFile("");
     }
 }
 
 void DataSource_Search::getContent()
 {
-    QString group;
-    for (int i = 0, counter = 0; i < matches.size(); i++, counter++) {
-        if (group != matches[i].group) {
-            group = matches[i].group;
-            counter = 0;
-        }
-
-        QVariantMap map;
-        map["imagePath"] = QString("image://generalicon/search/%1").arg(matches[i].name);
-        map["caption"] = matches[i].name;
-        map["id"] = counter;
-        //qDebug() << "-- Adding: " << matches[i].name + " | " + matches[i].group;
-        emit newItemData(map, matches[i].group);
+    QMapIterator<QString, AppItemList> i(matches);
+    while (i.hasNext()) {
+        i.next();
+        foreach(QVariantMap map, i.value())
+            emit newItemData(map, i.key());
     }
 }
 
 void DataSource_Search::newSearchMatches(const QList<Plasma::QueryMatch> &newMatches)
 {
-    for (int i = 0; i < newMatches.size(); i++) {
-        matches.append(MatchResults());
-        matches.last().name = newMatches.at(i).text();
-        matches.last().group = newMatches.at(i).runner()->name();
-        matches.last().plasmaMatch = new Plasma::QueryMatch(newMatches.at(i));
+    QString group;
+    for (int i = 0, counter = 0; i < newMatches.size(); i++, counter++) {
+        QString currentGroup = newMatches.at(i).runner()->name();
 
-        //qDebug() << "FOUND" << matches.last().name << "FROM" << matches.last().group;
+        if (group != currentGroup) {
+            group = currentGroup;
+            counter = 0;
+        }
+
+        QVariant v;
+        v.setValue(new Plasma::QueryMatch(newMatches.at(i))); // FIXME: MEMORY LEAK
+
+        AppItem newItem;
+
+        newItem["imagePath"] = QString("image://generalicon/search/%1").arg(newMatches.at(i).text());
+        newItem["caption"] = newMatches.at(i).text();
+        newItem["id"] = counter;
+        newItem["plasmaMatch"] = v;
+
+        matches[currentGroup].append(newItem);
     }
 
     emit resetContent();
