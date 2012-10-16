@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import Private 0.1
 
 Item{
     id: galleryRect
@@ -16,6 +17,12 @@ Item{
         onClicked:  {
             galleryRect.state = ""
         }
+    }
+
+    WheelArea {
+        id: modalWheelArea
+        anchors.fill: parent
+        enabled: false
     }
 
     BorderImage {
@@ -52,7 +59,7 @@ Item{
 
             Column {
                 id: column
-                width: parent.width                
+                width: parent.width
                 anchors.bottomMargin: 10
                 anchors.top: parent.top
                 spacing: 10
@@ -454,6 +461,9 @@ Item{
                 x: timeFrameTab.width/2 - galleryItem.width/2
                 y: timeFrameTab.height/2 - galleryItem.height/2
             }
+
+            ParentChange { target: modalWheelArea; parent: timeFrameTab }
+
             PropertyChanges { target: galleryItem; z: 400}
 
             PropertyChanges { target: mainRect; width: 400; height: 300 }
@@ -467,9 +477,9 @@ Item{
                     return y
                 }
             }
-            PropertyChanges { target: galleryRect; z: 9000  }            
+            PropertyChanges { target: galleryRect; z: 9000  }
 
-            PropertyChanges { target: detailsOffArea; visible: true }            
+            PropertyChanges { target: detailsOffArea; visible: true }
 
             PropertyChanges { target: dateArea; visible: true }
 
@@ -501,7 +511,7 @@ Item{
                 target: commentsEdit
                 visible: true
                 height: 60
-            }           
+            }
         }
     ]
 
@@ -510,7 +520,7 @@ Item{
             ParentAnimation {
                 via: foreground
                 NumberAnimation { properties: "x,y,width,height,opacity,z"; duration: 300 }
-            }            
+            }
         }
     ]
 
