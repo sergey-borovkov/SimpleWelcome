@@ -28,7 +28,30 @@
 #include <KFile>
 #include <KIcon>
 
-PreviewGenerator *PreviewGenerator::m_instance = 0;
+struct PreviewItem
+{
+    LocalDayFilterModel *model;
+    KIO::PreviewJob *job;
+};
+
+typedef QHash<QString, PreviewItem *>::iterator PreviewItemIterator;
+
+PreviewGenerator *previewGenerator(const QString &type)
+{
+    static PreviewGenerator *galleryInstance = 0;
+    static PreviewGenerator *timeLineInstance = 0;
+
+    if (type == QLatin1String("gallery")) {
+        if (!galleryInstance)
+            galleryInstance = new PreviewGenerator;
+        return galleryInstance;
+    }
+    else {
+        if (!timeLineInstance)
+            timeLineInstance = new PreviewGenerator;
+        return timeLineInstance;
+    }
+}
 
 PreviewGenerator::PreviewGenerator()
 {
@@ -39,18 +62,15 @@ PreviewGenerator::PreviewGenerator()
 
 void PreviewGenerator::notifyModelAboutPreview(const QString &url)
 {
-    QHash<QString, LocalDayFilterModel *>::iterator it = m_urlsInModel.find(url);
-    if(it != m_urlsInModel.end()) {
-        it.value()->previewReady(url);
-        m_urlsInModel.erase(it);
+    PreviewItemIterator it = m_searchedItems.find(url);
+    if(it != m_searchedItems.end()) {
+        it.value()->model->previewReady(url);
+        m_searchedItems.erase(it);
     }
 }
 
 void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pixmap)
 {
-    if(m_urlsInModel.find(item.localPath()) == m_urlsInModel.end())
-        return;
-
     QPixmap pict = pixmap;
     if (item.mimetype().startsWith("video/")) {
         QPainter p(&pict);
@@ -64,20 +84,13 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
 
 void PreviewGenerator::previewJobFailed(const KFileItem &item)
 {
-    if(m_urlsInModel.find(item.localPath()) == m_urlsInModel.end())
+    if(m_searchedItems.find(item.localPath()) == m_searchedItems.end())
         return;
 
     KIcon icon(item.iconName(), 0, item.overlays());
     QPixmap pixmap = icon.pixmap(500);
     m_previews.insert(item.localPath(), pixmap);
     notifyModelAboutPreview(item.localPath());
-}
-
-PreviewGenerator * PreviewGenerator::instance()
-{
-    if (!m_instance)
-        m_instance = new PreviewGenerator;
-    return m_instance;
 }
 
 QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
@@ -94,29 +107,41 @@ QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
     }
 }
 
-void PreviewGenerator::modelShown(QStringList paths, QObject *dayModel)
+void PreviewGenerator::itemShown(QString path, QObject *dayModel)
 {
+    PreviewItemIterator it = m_searchedItems.find(path);
+    // duplicate request
+    if(it != m_searchedItems.end()) {
+        return;
+    }
+
     LocalDayFilterModel *filteredModel = static_cast<LocalDayFilterModel *>(dayModel);
     KFileItemList fileList;
-    foreach(QString path, paths) {
-        KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
-        fileList.append(fileItem);
-        m_urlsInModel.insert(path, filteredModel);
-    }
+    KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
+    fileList.append(fileItem);
 
     KIO::PreviewJob *job = KIO::filePreview(fileList, QSize(512, 512), &m_plugins);
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
 
+    PreviewItem *item = new PreviewItem;
+    item->model = filteredModel;
+    item->job = job;
+
+    m_searchedItems.insert(path, item);
+
     connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(previewJobResult(const KFileItem&, const QPixmap&)));
     connect(job, SIGNAL(failed(const KFileItem&)), SLOT(previewJobFailed(const KFileItem &)));
 }
 
-void PreviewGenerator::modelHidden(QStringList paths, QObject *dayModel)
+void PreviewGenerator::itemHidden(QString path, QObject *dayModel)
 {
     LocalDayFilterModel *filteredModel = static_cast<LocalDayFilterModel *>(dayModel);
     Q_UNUSED(filteredModel)
-    foreach(QString path, paths) {
-        m_urlsInModel.remove(path);
+    PreviewItemIterator it = m_searchedItems.find(path);
+    if(it != m_searchedItems.end()) {
+        it.value()->job->kill();
+        m_searchedItems.erase(it);
     }
+    m_previews.remove(path);
 }

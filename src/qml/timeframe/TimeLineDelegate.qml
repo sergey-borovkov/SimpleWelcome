@@ -16,12 +16,11 @@ Item {
         height: parent.height/2 - timeScale.height/2
 
         Component.onDestruction: {
-            var paths = []
             var m = localDayModel.itemsModel(date)
-            for(var i = 0; i < count; i++) {
-                paths.push(m.url(i))
+            var l = Math.min(7, m.count())
+            for(var i = 0; i < l; ++i) {
+                timelinePreviewGenerator.itemHidden(m.url(i), m)
             }
-            previewGenerator.modelHidden(paths, m)
         }
 
         Loader {
@@ -31,21 +30,19 @@ Item {
             onLoaded: {
                 cloud.item.cloudDate = date
                 cloud.item.model = localDayModel.itemsModel(date)
-                var paths = []
                 var c = 0, model = cloud.item.model
                 // in CloudSeven.qml cloudrects are nested in another item element
                 var objects = (model.count() >= 7) ? cloud.item.children[0].children : cloud.item.children
                 var i
                 for(i = 0; i < objects.length; ++i) {
                     if('url' in objects[i]) {
-                        objects[i].image.source = "image://preview/" + model.url(c) + "/rounded" +"%" + Math.random(10)
+                        objects[i].image.source = "image://timeline/" + model.url(c) + "/rounded" +"%" + Math.random(10)
                         model.gotThumbnail.connect(objects[i].gotThumbnail)
+                        timelinePreviewGenerator.itemShown(model.url(c), model)
                         objects[i].url = model.url(c)
-                        paths.push(model.url(c))
                         c++
                     }
                 }
-                previewGenerator.modelShown(paths, model)
             }
         }
     }
