@@ -21,7 +21,7 @@ Column {
             // with more proper solution
 
             Component.onCompleted: {
-                console.log(url + visible)
+//                console.log(url + visible)
                 localDayModel.itemsModel(date).gotThumbnail.connect(gotThumbnail)
                 previewGenerator.modelShown([url], localDayModel.itemsModel(date))
             }
