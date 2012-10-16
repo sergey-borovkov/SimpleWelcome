@@ -40,6 +40,9 @@ Item{
         width: 200
         height: (__notDetailed) ? childrenRect.height : __height  //we dont want futher increase height after initial state
 
+        objectName: "SocialGalleryItem"
+        property Item mainParent: galleryRect
+
         ItemRectangle {
             id: mainRect
             width: 200

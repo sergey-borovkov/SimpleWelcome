@@ -168,6 +168,8 @@ Item {
                 onClicked: {
                     var mouseIndex = timeScaleList.indexAt(mouseX + timeScaleList.contentX, mouseY + timeScaleList.contentY)
                     var oldIndex = timeScaleList.currentIndex
+                    console.log("-------------    model = " + timeScaleModel.count() + "     list = " + timeScaleList.count)
+
                     if ((mouseIndex !== -1) && (oldIndex !== mouseIndex))
                     {
                         //change current index
@@ -194,6 +196,7 @@ Item {
                         {
                             //set index on socialTimeLine
 
+                            console.log("olololo")
                             socialTimeLine.currentIndex = timeFrameTab.getSocialTimeLineIndex()
                             socialTimeLine.positionViewAtIndex(socialTimeLine.currentIndex, ListView.Center )
 
