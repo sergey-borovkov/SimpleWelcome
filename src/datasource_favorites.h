@@ -23,5 +23,5 @@ public slots:
     virtual void getContent();
 
 private:
-    QList<AppItem> favoritesList;
+    AppItemList favoritesList;
 };

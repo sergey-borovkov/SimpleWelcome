@@ -36,7 +36,7 @@ private slots:
 private:
     void createDocumentsPreviews(KFileItemList list);
 
-    QList<AppItem> docsList;
+    AppItemList docsList;
     QStringList m_previewJobPlugins;
     QMLConstants *constants;
     QMap<QString, QPixmap> m_pixmaps;

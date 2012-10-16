@@ -7,22 +7,11 @@
 #include <QHash>
 #include <QVariantMap>
 
-class AppItem
+class AppItem : public QVariantMap
 {
 public:
-    QString caption;
-    QString icon;
-    QString desktopEntry;
-    QString relPath;
-    QString destination;
-    QString group;
-
     bool operator <(const AppItem &other) const {
-        return caption.compare(other.caption, Qt::CaseInsensitive) < 0;
-    }
-
-    bool operator ==(AppItem &other) const {
-        return other.caption == caption && other.desktopEntry == desktopEntry && other.icon == icon && other.relPath == relPath && other.destination == destination;
+        return value("caption").toString().compare(other.value("caption").toString(), Qt::CaseInsensitive) < 0;
     }
 };
 
@@ -37,19 +26,7 @@ public:
 */
 
 inline uint qHash (const AppItem &item) {
-    return qHash(item.caption);
+    return qHash(item["caption"].toString());
 }
 
-
-class AppItemList : public QList<AppItem>
-{
-public:
-    QStringList toStringList() const
-    {
-        QStringList out;
-        out.reserve(count());
-        for (int i = 0; i < count(); i++)
-            out.append(at(i).caption);
-        return out;
-    }
-};
+class AppItemList : public QList<AppItem> { };
