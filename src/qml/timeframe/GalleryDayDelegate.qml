@@ -20,8 +20,7 @@ Column {
             // following is very slow and should be later replaced
             // with more proper solution
 
-            Component.onCompleted: {
-                console.log(url + visible)
+            Component.onCompleted: {                
                 localDayModel.itemsModel(date).gotThumbnail.connect(gotThumbnail)
                 previewGenerator.modelShown([url], localDayModel.itemsModel(date))
             }
