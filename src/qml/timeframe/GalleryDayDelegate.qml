@@ -11,7 +11,7 @@ Column {
             width: Math.min( sourceSize.width, parent.width -4)
             height: Math.min( sourceSize.height, parent.height -4 )
             fillMode: Image.PreserveAspectFit
-            source: "image://preview/" + url + "%"
+            source: "image://gallery/" + url + "%"
             smooth: true
             asynchronous: true
 
@@ -21,13 +21,12 @@ Column {
             // with more proper solution
 
             Component.onCompleted: {
-                console.log(url + visible)
                 localDayModel.itemsModel(date).gotThumbnail.connect(gotThumbnail)
-                previewGenerator.modelShown([url], localDayModel.itemsModel(date))
+                galleryPreviewGenerator.itemShown(url, localDayModel.itemsModel(date))
             }
 
             Component.onDestruction: {
-                previewGenerator.modelHidden([url], localDayModel.itemsModel(date))
+                galleryPreviewGenerator.itemHidden(url, localDayModel.itemsModel(date))
             }
 
             function gotThumbnail(path)

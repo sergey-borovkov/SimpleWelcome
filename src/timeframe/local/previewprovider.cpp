@@ -25,8 +25,9 @@
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
 
-PreviewProvider::PreviewProvider() :
-    QDeclarativeImageProvider(Pixmap)
+PreviewProvider::PreviewProvider(const QString &type) :
+    QDeclarativeImageProvider(Pixmap),
+    m_type(type)
 {
 
 }
@@ -41,7 +42,7 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
         str.chop(8);
     }
 
-    QPixmap pixmap = PreviewGenerator::instance()->takePreviewPixmap(str);
+    QPixmap pixmap = previewGenerator(m_type)->takePreviewPixmap(str);
 
     if (requestedSize.isValid())
         pixmap = pixmap.scaled(requestedSize);
