@@ -1,4 +1,6 @@
 import QtQuick 1.1
+import Private 0.1
+
 Item{
     id: cloudRect
     property string id
@@ -16,9 +18,15 @@ Item{
     MouseArea {
         id: modal
         anchors.fill: parent
-        onClicked:  {            
+        onClicked:  {
             cloudRect.state = ""
         }
+        enabled: false
+    }
+
+    WheelArea {
+        id: modalWheelArea
+        anchors.fill: parent
         enabled: false
     }
 
@@ -128,7 +136,7 @@ Item{
                     anchors.rightMargin: 5
                     width: 12
                     height: 12
-                    visible: false                    
+                    visible: false
                     Image{
                         id: closeIcon
                         anchors.centerIn: parent
@@ -263,7 +271,7 @@ Item{
                     height: parent.height
                     width: 100
                     visible: false
-                    state: (like == 1)? "liked" : ""                   
+                    state: (like == 1)? "liked" : ""
                     Text {
                         id: likesText
                         anchors.fill: parent
@@ -300,7 +308,7 @@ Item{
                     anchors.centerIn: parent
                     width: 140
                     height: parent.height
-                    visible: false                    
+                    visible: false
                     Image {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.left: parent.left
@@ -380,7 +388,7 @@ Item{
             }
             Connections {
                 target: commentsEdit.item
-                onSend: {                    
+                onSend: {
                     socialProxy.commentItem(comment, id, pluginName)
                 }
             }
@@ -398,7 +406,7 @@ Item{
                     //Query all comments and likes
                     socialProxy.getAllComments(id, pluginName)
                     socialProxy.getAllLikes(id, pluginName)
-                }                
+                }
             }
         }
     }
@@ -446,6 +454,9 @@ Item{
                 width: 400
                 height: 300
             }
+
+            ParentChange { target: modalWheelArea; parent: timeFrameTab }
+
             PropertyChanges { target: socialCloudItem; z: 400 }
 
             PropertyChanges { target: socialMessage; text: message }

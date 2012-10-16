@@ -132,11 +132,12 @@ Item {
                 }
             }
             onCurrentIndexChanged: {
+                if (currentIndex === -1)
+                    return
                 if (currentIndex === 0)
                     currentItemText.text = name
                 else {
-                    currentItemText.text = filterListView.currentItem.text
-                    //name = filterListView.currentItem.text
+                    currentItemText.text = filterListView.currentItem.text                    
                 }
 
             }
