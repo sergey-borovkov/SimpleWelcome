@@ -218,12 +218,8 @@ Item {
 loop1:
                 for (var currentView = 0; currentView < gridsListView.count; currentView++) {
                     gridsListView.currentIndex = currentView
-                    //if (group == "Recent Applications")
-                    console.log("AAA " + ", currentView:" + currentView)
 
                     if (gridsListView.currentItem) {
-                        //if (group == "Recent Applications")
-                        //    console.log("BBB")
                         var childs = gridsListView.currentItem.children
 loop2:
                         for (var child = 0; child < childs.length; child++) {
@@ -232,7 +228,7 @@ loop2:
                             {
                                 var res = processFunction(childs[child], args)
                                 if (!res) {
-                                    console.log("LOOP BREAKER!")
+                                    //console.log("LOOP BREAKER!")
                                     continue loop1
                                 }
                                 else

@@ -61,6 +61,7 @@ void QmlApplicationViewer::restore()
     //setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
     KWindowSystem::setState( winId(), NET::SkipTaskbar );
     show();
+    activateWindow();
     //showFullScreen();
     //move(/*896*/0, 0);
 }
