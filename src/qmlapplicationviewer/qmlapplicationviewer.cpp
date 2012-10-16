@@ -48,7 +48,7 @@ QRect QmlApplicationViewer::getMargins()
     return result;
 }
 
-void QmlApplicationViewer::moveEvent(QMoveEvent *event)
+void QmlApplicationViewer::moveEvent(QMoveEvent *)
 {
     //qDebug() << "-- Move to " << event->pos().x() << ":" << event->pos().y();
     move(0, 0);

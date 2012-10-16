@@ -24,7 +24,7 @@ public:
 
     virtual void resizeEvent(QResizeEvent *event);
     virtual void closeEvent(QCloseEvent *event);
-    virtual void moveEvent(QMoveEvent *event);
+    virtual void moveEvent(QMoveEvent *);
 
     Q_INVOKABLE QRect getMargins();
     Q_INVOKABLE void activateDragAndDrop(QString url, QString image_path, int image_size);

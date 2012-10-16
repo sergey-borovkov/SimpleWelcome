@@ -47,9 +47,6 @@ public slots:
     virtual void itemClicked(int newIndex, QString group);
     virtual void getContent();
 
-
-    virtual void test2();
-
 signals:
     void newItemData(QVariantMap itemData, QString group);
     void resetContent();
