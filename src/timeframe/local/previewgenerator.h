@@ -59,11 +59,18 @@ private slots:
     void previewJobFailed(const KFileItem &item);
 
 private:
+    struct PreviewItem
+    {
+        LocalDayFilterModel *model;
+        KIO::PreviewJob *job;
+    };
+    typedef QHash<QString, PreviewItem>::iterator PreviewItemIterator;
     friend PreviewGenerator *previewGenerator(const QString &type);
+
     explicit PreviewGenerator();
     void notifyModelAboutPreview(const QString &url);
 
-    QHash<QString, PreviewItem *> m_searchedItems;
+    QHash<QString, PreviewItem> m_searchedItems;
 
     QHash<QString, QPixmap> m_previews;
     QPixmap defaultPreview;
