@@ -1,7 +1,6 @@
 import QtQuick 1.1
 
 Rectangle {
-    //property string imageUrl: image.source
     property string url
     property alias image: image
 
