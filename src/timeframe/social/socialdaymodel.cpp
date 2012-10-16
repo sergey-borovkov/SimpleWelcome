@@ -50,6 +50,16 @@ int SocialDayFilterModel::getIndexByDate(int year, int month,  bool direction)
     return -1;
 }
 
+int SocialDayFilterModel::getIndexByDate(QDate date)
+{
+    for (int i = 0; i < rowCount(); i++) {
+        QDate contentDate = data(index(i, 0), SocialDayItem::DateRole).toDate();
+        if (contentDate >= date)
+            return i;
+    }
+    return rowCount() -1 ;
+}
+
 QDate SocialDayFilterModel::getDateOfIndex(int listIndex)
 {
     if ((listIndex >= rowCount()) || (listIndex < 0))

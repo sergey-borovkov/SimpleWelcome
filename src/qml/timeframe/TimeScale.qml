@@ -167,42 +167,21 @@ Item {
                 anchors.fill: parent
                 onClicked: {
                     var mouseIndex = timeScaleList.indexAt(mouseX + timeScaleList.contentX, mouseY + timeScaleList.contentY)
-                    var oldIndex = timeScaleList.currentIndex
-                    console.log("-------------    model = " + timeScaleModel.count() + "     list = " + timeScaleList.count)
+                    var oldIndex = timeScaleList.currentIndex                    
 
                     if ((mouseIndex !== -1) && (oldIndex !== mouseIndex))
                     {
                         //change current index
                         timeScaleList.currentIndex = mouseIndex
-                        //start new search here
-                        if (mouseIndex > oldIndex)
-                            timeFrameTab.direction = false // moving left
+
+                        var date = new Date(timeScaleModel.getYear(timeScaleList.currentIndex), timeScaleModel.getMonth(timeScaleList.currentIndex) - 1, 1)
+
+                        if (isSocial)
+                            timeFrameTab.currentView.currentIndex = socialDayModel.getIndexByDate(date)
                         else
-                            timeFrameTab.direction = true  // moving right
-                        timeFrameTab.__year = timeScaleModel.getYear(timeScaleList.currentIndex)
-                        timeFrameTab.__month = timeScaleModel.getMonth(timeScaleList.currentIndex) - 1
+                            timeFrameTab.currentView.currentIndex = localDayModel.getIndexByDate(date)
 
-                        if ((timeFrameTab.state === "timeline") || (timeFrameTab.state === "gallery"))
-                        {
-                            //set index on timeLine
-                            timeLine.currentIndex = timeFrameTab.getTimeLineIndex()
-                            timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Center )
-
-                            //set index on gallery
-                            galleryView.currentIndex = timeLine.currentIndex
-                            galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center )
-                        }
-                        else if ((timeFrameTab.state === "social") || (timeFrameTab.state === "socialGallery"))
-                        {
-                            //set index on socialTimeLine
-
-                            socialTimeLine.currentIndex = timeFrameTab.getSocialTimeLineIndex()
-                            socialTimeLine.positionViewAtIndex(socialTimeLine.currentIndex, ListView.Center )
-
-                            //set index on social gallery
-                            socialGalleryView.currentIndex = socialTimeLine.currentIndex
-                            socialGalleryView.positionViewAtIndex(socialGalleryView.currentIndex, ListView.Center )
-                        }
+                        timeFrameTab.currentView.positionViewAtIndex(timeFrameTab.currentView.currentIndex, ListView.Center )
                     }
                 }
             }

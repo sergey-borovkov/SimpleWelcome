@@ -2,7 +2,7 @@
 #define LOCALCONTENTMODEL_H
 
 #include <QtCore/QObject>
-#include <QtGui//QSortFilterProxyModel>
+#include <QtGui/QSortFilterProxyModel>
 
 #include <listmodel.h>
 #include <QDate>
@@ -64,7 +64,8 @@ public:
     Q_INVOKABLE void setFilter(const QString &filter);
     Q_INVOKABLE QObject* itemsModel(QDate date) const;
     Q_INVOKABLE int getIndexByDate(int year, int month, bool direction);
-    Q_INVOKABLE QDate getDateOfIndex(int listIndex);
+    Q_INVOKABLE int getIndexByDate(QDate date);
+    Q_INVOKABLE QDate getDateOfIndex(int listIndex);    
 };
 
 #endif // LOCALCONTENTMODEL_H

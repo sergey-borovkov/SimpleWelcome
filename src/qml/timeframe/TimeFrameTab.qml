@@ -5,31 +5,21 @@ import ".."
 Item {
     id: timeFrameTab
     clip: true
-    property int __year: new Date().getFullYear()   //Current year
-    property int __month: new Date().getMonth()
-    property int day: new Date().getDate()
+    property variant date: new Date()
     property bool __isLocalSearching: true              //New search in process
     property bool isSocialSearching: true
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
-    property bool isNepomukWorking: true
+    property bool isSocial: state === "social" || state === "socialGallery"
+    property bool isNepomukWorking: true   
+    property variant currentView: undefined
+
 
     function checkNepomuk()
     {
         return nepomukSource.isNepomukInitialized()
     }
 
-    function getTimeLineIndex() {
-        var index = localDayModel.getIndexByDate(__year, __month+1, direction)
-        return index
-    }
-
-    function getSocialTimeLineIndex() {
-        var index = socialDayModel.getIndexByDate(__year, __month+1, direction)
-        return index
-    }
-
-    //Start new serch
     function prevMonth() {
         timeLine.decrementCurrentIndex()
     }
@@ -80,19 +70,9 @@ Item {
         }
     }
 
-    function resetDate()
-    {
-        var d = new Date()
-        __year = d.getFullYear()
-        __month = d.getMonth()
-        day = d.getDate()
-    }
 
     function resetTimeScale()
     {
-        //Set views on current date
-
-        resetDate()
 
         //Set views on current date
         localFilterBox.state = "current"
@@ -134,6 +114,45 @@ Item {
             }
         }
     }
+
+    //get index of date in TimeScale
+    function getTSIndex(year, monthNumber) {
+        var i
+        for (i = 0; i < timeScaleModel.count(); i++ ) {
+            if ((year === timeScaleModel.getYear(i)) && (monthNumber === timeScaleModel.getMonth(i) - 1 ))
+                return i
+        }
+        return -1
+    }
+
+    //Save date of current item in property "date"
+    function saveCurrentDate() {
+        if (!isSocial)
+            timeFrameTab.date = localDayModel.getDateOfIndex(currentView.currentIndex)
+        else
+            timeFrameTab.date = socialDayModel.getDateOfIndex(currentView.currentIndex)        
+    }
+
+    //Force view to repaint after applying filter
+    function resetViews()  {
+        var index
+        if (!isSocial)
+            index = localDayModel.getIndexByDate(timeFrameTab.date)
+        else
+            index = socialDayModel.getIndexByDate(timeFrameTab.date)
+
+        currentView.model = undefined
+        if (isSocial)
+            currentView.model = socialDayModel
+        else
+            currentView.model = localDayModel
+        currentView.currentIndex = index
+        currentView.positionViewAtIndex(index, ListView.Center)
+        saveCurrentDate()
+        //set timeScale properly index        
+        timeScale.list.currentIndex = getTSIndex(timeFrameTab.date.getFullYear(), timeFrameTab.date.getMonth())
+    }
+
 
     //Start initial search
     Connections {
@@ -215,12 +234,8 @@ Item {
 
             onStateChanged: {
                 if (localFilterBox.state === "current") {
-
-                    resetDate()
-
                     socialFilterBox.state = ""
                     setLocalState()
-                    setLocalFilter()
 
                     timeLine.currentIndex = timeLine.count - 1
                     timeLine.positionViewAtEnd()
@@ -232,6 +247,7 @@ Item {
 
             onCurrentIndexChanged: {
                 setLocalFilter()
+                resetViews()
             }
 
             function setLocalState() {
@@ -250,6 +266,7 @@ Item {
             }
 
             function setLocalFilter() {
+                saveCurrentDate()
                 if(view.currentIndex === 0) {             //selectedText = "All"
                     timeScaleModel.setFilter("Local")
                     localDayModel.setFilter("Local")
@@ -284,9 +301,7 @@ Item {
             id: socialFilterBox
             model: menuSocialItems
             name: i18n_Social_networkong_sites
-            onStateChanged: {
-
-                resetDate()
+            onStateChanged: {                
 
                 if (socialFilterBox.state === "current") {
                     if (socialFilterBox.view.count < 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
@@ -299,17 +314,19 @@ Item {
                     localFilterBox.state = ""
                     setSocialFilter()
 
-                    socialTimeLine.currentIndex = socialTimeLine.count - 1
-                    socialTimeLine.positionViewAtEnd()
-                    socialGalleryView.positionViewAtEnd()
+//                    socialTimeLine.currentIndex = socialTimeLine.count - 1
+//                    socialTimeLine.positionViewAtEnd()
+//                    socialGalleryView.positionViewAtEnd()
 
-                    timeScale.list.currentIndex = timeScale.list.count - 1
-                    timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
+//                    timeScale.list.currentIndex = timeScale.list.count - 1
+//                    timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
                 }
             }
             onCurrentIndexChanged: {
+                saveCurrentDate()
                 setSocialState()
                 setSocialFilter()
+                resetViews()
             }
 
             function setSocialState() {
@@ -324,6 +341,7 @@ Item {
             }
 
             function setSocialFilter() {
+                saveCurrentDate()
                 if(view.currentIndex === 0) { //selectedText = "All"
                     timeScaleModel.setFilter("Social")
                     socialDayModel.setFilter("Social")
@@ -359,17 +377,6 @@ Item {
         color: "grey"
         radius: 1
         visible: false
-    }
-
-    //get index of date in TimeScale
-    function getTSIndex(year, monthNumber) {
-        var i
-        for (i = 0; i < timeScaleModel.count(); i++ ) {
-            if ((year === timeScaleModel.getYear(i)) && (monthNumber === timeScaleModel.getMonth(i) - 1 )) {
-                return i
-            }
-        }
-        return -1
     }
 
     Item {
@@ -455,13 +462,6 @@ Item {
         boundsBehavior : Flickable.StopAtBounds
         cacheBuffer: desktopWidth
 
-        onCurrentIndexChanged: {
-             var date = localDayModel.getDateOfIndex(timeLine.currentIndex)
-            timeFrameTab.__year = date.getFullYear()
-            timeFrameTab.__month = date.getMonth()
-            timeFrameTab.day = date.getDay()
-        }
-
         WheelArea {
             id: timeLineWheelArea
             anchors.fill: parent
@@ -490,13 +490,6 @@ Item {
         boundsBehavior : Flickable.StopAtBounds
         visible: false
         cacheBuffer: desktopWidth
-
-        onCurrentIndexChanged: {
-            var date = socialDayModel.getDateOfIndex(socialTimeLine.currentIndex)
-            timeFrameTab.__year = date.getFullYear()
-            timeFrameTab.__month = date.getMonth()
-            timeFrameTab.day = date.getDay()
-        }
 
         WheelArea {
             id: socialTimeLineWheelArea
@@ -695,9 +688,6 @@ Item {
         if (index === -1)
             return
 
-        __year = date.getFullYear()
-        __month = date.getMonth()
-        day = date.getDay()
         timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
     }
 
@@ -805,6 +795,7 @@ Item {
             name: "timeline"
             PropertyChanges { target: timeLine;  visible : true; model: localDayModel }
 
+            PropertyChanges { target: timeFrameTab;  currentView: timeLine }
         },
         State {
             name: "gallery"
@@ -820,6 +811,8 @@ Item {
             PropertyChanges { target: galleryView; visible: true }
 
             PropertyChanges { target: galleryView; model: localDayModel }
+
+            PropertyChanges { target: timeFrameTab; currentView: galleryView }
 
         },
         State {
@@ -843,6 +836,8 @@ Item {
 
             PropertyChanges { target: socialTimeLine; visible: true; opacity: 1 }
 
+            PropertyChanges { target: timeFrameTab; currentView: socialTimeLine }
+
         },
         State {
             name: "socialGallery"; extend: "social"
@@ -859,6 +854,8 @@ Item {
             }
 
             PropertyChanges { target: socialGalleryView; opacity: 1 }
+
+            PropertyChanges { target: timeFrameTab; currentView: socialGalleryView }
         },
         State {
             name: "socialAuthorization"; extend: "social"
