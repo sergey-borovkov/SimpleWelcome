@@ -24,8 +24,6 @@ signals:
 
 public slots:
     void startSearch();
-    int getIndexByDate(int year, int month,  bool direction);
-    QDate getDateOfIndex(int listIndex);
 
 private slots:
     void newData(QList<Activity*>);

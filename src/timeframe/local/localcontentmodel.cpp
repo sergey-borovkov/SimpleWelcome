@@ -6,7 +6,7 @@
 
 #include <QtCore/QRegExp>
 #include <QtCore/QVariant>
-#include <QtGui//QSortFilterProxyModel>
+#include <QtGui/QSortFilterProxyModel>
 
 
 LocalContentFilterModel::LocalContentFilterModel(QObject *parent) :
@@ -64,6 +64,16 @@ int LocalContentFilterModel::getIndexByDate(int year, int month, bool direction)
             return i;
     }
     return -1;
+}
+
+int LocalContentFilterModel::getIndexByDate(QDate date)
+{
+    for (int i = 0; i < rowCount(); i++) {
+        QDate contentDate = data(index(i, 0), LocalContentItem::CurrentDateRole).toDate();
+        if (contentDate >= date)
+            return i;
+    }
+    return rowCount() -1 ;
 }
 
 
