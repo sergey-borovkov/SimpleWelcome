@@ -28,14 +28,6 @@
 #include <KFile>
 #include <KIcon>
 
-struct PreviewItem
-{
-    LocalDayFilterModel *model;
-    KIO::PreviewJob *job;
-};
-
-typedef QHash<QString, PreviewItem *>::iterator PreviewItemIterator;
-
 PreviewGenerator *previewGenerator(const QString &type)
 {
     static PreviewGenerator *galleryInstance = 0;
@@ -64,7 +56,7 @@ void PreviewGenerator::notifyModelAboutPreview(const QString &url)
 {
     PreviewItemIterator it = m_searchedItems.find(url);
     if(it != m_searchedItems.end()) {
-        it.value()->model->previewReady(url);
+        it.value().model->previewReady(url);
         m_searchedItems.erase(it);
     }
 }
@@ -124,10 +116,9 @@ void PreviewGenerator::itemShown(QString path, QObject *dayModel)
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
 
-    PreviewItem *item = new PreviewItem;
-    item->model = filteredModel;
-    item->job = job;
-
+    PreviewItem item;
+    item.model = filteredModel;
+    item.job = job;
     m_searchedItems.insert(path, item);
 
     connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(previewJobResult(const KFileItem&, const QPixmap&)));
@@ -140,7 +131,7 @@ void PreviewGenerator::itemHidden(QString path, QObject *dayModel)
     Q_UNUSED(filteredModel)
     PreviewItemIterator it = m_searchedItems.find(path);
     if(it != m_searchedItems.end()) {
-        it.value()->job->kill();
+        it.value().job->kill();
         m_searchedItems.erase(it);
     }
     m_previews.remove(path);
