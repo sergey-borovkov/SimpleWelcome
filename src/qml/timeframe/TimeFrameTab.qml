@@ -426,6 +426,7 @@ Item {
         }
 
         WheelArea {
+            id: timeLineWheelArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, timeLine)
         }
@@ -461,6 +462,7 @@ Item {
         }
 
         WheelArea {
+            id: socialTimeLineWheelArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, socialTimeLine)
         }
@@ -474,6 +476,7 @@ Item {
         width: parent.width - 100
 
         WheelArea {
+            id: timeScaleWheelArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, timeScale.list)
         }
@@ -613,6 +616,7 @@ Item {
         boundsBehavior : Flickable.StopAtBounds
 
         WheelArea {
+            id: socialGalleryViewWhellArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, socialGalleryView)
         }
