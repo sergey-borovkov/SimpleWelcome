@@ -13,7 +13,6 @@ Item {
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
     property bool isNepomukWorking: true
-    property bool isReset: false
 
     function checkNepomuk()
     {
@@ -71,38 +70,64 @@ Item {
         return txt
     }
 
+    function closeSocialCloudItem()
+    {
+        console.log("closeSocialCloudItem")
+        for (var i = 0; i < timeFrameTab.children.length; i++) {
+            if (timeFrameTab.children[i].objectName === "SocialCloudItem" ||
+                timeFrameTab.children[i].objectName === "SocialGalleryItem" ) {
+                timeFrameTab.children[i].mainParent.state = ""
+            }
+        }
+    }
+
+    function resetDate()
+    {
+        var d = new Date()
+        __year = d.getFullYear()
+        __month = d.getMonth()
+        day = d.getDate()
+    }
+
     function resetTimeScale()
     {
-        if (!isReset) {
-            isReset = true
+        //Set views on current date
 
-            state = ""
+        resetDate()
 
-            //Set views on current date
+        //Set views on current date
+        localFilterBox.state = "current"
 
-            localFilterBox.state = "current"
+        localFilterBox.view.currentIndex = 0
+        socialFilterBox.view.currentIndex = 0
 
-            socialFilterBox.state = ""
-            socialFilterBox.view.currentIndex = 0
+        timeFrameTab.state = ""
+        if (isNepomukWorking) {
 
-            if (timeScale.list.count)
-                timeScale.list.currentIndex = timeScale.list.count - 1
+            // start searching local events
+            activityProxy.startSearch()
 
-            if (!__isLocalSearching)
-            {
-                if (timeLine.count) {
-                    timeLine.currentIndex = timeLine.count - 1
-                    timeLine.positionViewAtEnd()
-                    galleryView.positionViewAtEnd()
-                }
+            tabListView.interactive = false
+
+            if ((__isLocalSearching) && (timeFrameTab.state ==="")) {
+                // to prevent items created and destroyed since
+                // listview still exists and creates components
+                timeLine.model = undefined
+                timeFrameTab.state = "timeLineSearch"
             }
 
-            if (socialTimeLine.count) {
-                socialTimeLine.currentIndex = socialTimeLine.count - 1
-                socialTimeLine.positionViewAtEnd()
-                socialGalleryView.positionViewAtEnd()
-            }
+        }
+        else {
+            timeFrameTab.state = "nepomukNotInit"
+        }
 
+        if (!__isLocalSearching)
+        {
+            if (timeLine.count) {
+                timeLine.currentIndex = timeLine.count - 1
+                timeLine.positionViewAtEnd()
+                galleryView.positionViewAtEnd()
+            }
         }
     }
 
@@ -112,24 +137,18 @@ Item {
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3) {
 
-                isReset = false
-                resetTimeScale()
-                if (checkNepomuk()) {
-                    isNepomukWorking = true
-                    activityProxy.startSearch()
-                    tabListView.interactive = false
+                // check nepomuk
+                isNepomukWorking = checkNepomuk()
 
-                    if ((__isLocalSearching) && (timeFrameTab.state ==="")) {
-                        timeFrameTab.state = "timeLineSearch"
-                    }
-                } else {
-                    isNepomukWorking = false
-                    timeFrameTab.state = "nepomukNotInit"
-                }
+                // reset all data
+                resetTimeScale()
+            }
+            else {
+                // if need close cloud social item
+                closeSocialCloudItem()
             }
         }
     }
-
 
     Connections {
         target: socialProxy
@@ -163,6 +182,8 @@ Item {
                 timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
                 galleryView.positionViewAtEnd()
+
+                timeFrameTab.state = ""
             }
         }
     }
@@ -192,9 +213,14 @@ Item {
 
             onStateChanged: {
                 if (localFilterBox.state === "current") {
+
+                    resetDate()
+
                     socialFilterBox.state = ""
                     setLocalState()
                     setLocalFilter()
+                    timeScale.list.currentIndex = timeScale.list.count - 1
+                    timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
                 }
             }
 
@@ -254,14 +280,21 @@ Item {
             model: menuSocialItems
             name: i18n_Social_networkong_sites
             onStateChanged: {
+
+                resetDate()
+
                 if (socialFilterBox.state === "current") {
                     if (socialFilterBox.view.count < 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
                         timeFrameTab.state = "socialAuthorization"
                         socialFilterBox.view.currentIndex = 0
                     } else
+                    {
                         setSocialState()
+                    }
                     localFilterBox.state = ""
                     setSocialFilter()
+                    timeScale.list.currentIndex = timeScale.list.count - 1
+                    timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
                 }
             }
             onCurrentIndexChanged: {
@@ -279,6 +312,7 @@ Item {
                 else
                     timeFrameTab.state = "social"
             }
+
             function setSocialFilter() {
                 if(view.currentIndex === 0) { //selectedText = "All"
                     timeScaleModel.setFilter("Social")
@@ -448,7 +482,7 @@ Item {
         cacheBuffer: desktopWidth
 
         onCurrentIndexChanged: {
-            var date = socialDayModel.getDateOfIndex(timeLine.currentIndex)
+            var date = socialDayModel.getDateOfIndex(socialTimeLine.currentIndex)
             timeFrameTab.__year = date.getFullYear()
             timeFrameTab.__month = date.getMonth()
             timeFrameTab.day = date.getDay()
