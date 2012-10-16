@@ -30,7 +30,6 @@ AppItemList GetFlatList(QString group)
 
             newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(service->icon());
             newItem["caption"] = service->name();
-            newItem["id"] = out.count();
             newItem["desktopEntry"] = service->entryPath();
             newItem["group"] = group;
 
@@ -91,6 +90,8 @@ void DataSource_Apps::updateItems(bool isResetContent/* = true*/)
 
     AppItemList newList = GetFlatList(currentGroup);
     qSort(newList);
+    for (int i = 0; i < newList.count(); i++)
+        newList[i]["id"] = i;
 
     if (newList != appsList) {
         appsList = newList;
