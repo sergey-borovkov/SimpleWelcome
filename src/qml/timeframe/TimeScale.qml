@@ -46,7 +46,7 @@ Item {
                 id: scaleImage
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width
-                source: "images/month1.png"                
+                source: "images/month1.png"
 
             }
             Text {
@@ -118,7 +118,7 @@ Item {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         height: parent.height
-        clip: true    
+        clip: true
         width: getListViewItemsCount()*107
 
         Item {
@@ -180,7 +180,7 @@ Item {
                         timeFrameTab.__year = timeScaleModel.getYear(timeScaleList.currentIndex)
                         timeFrameTab.__month = timeScaleModel.getMonth(timeScaleList.currentIndex) - 1
 
-                        if ((timeFrameTab.state === "") || (timeFrameTab.state === "gallery"))
+                        if ((timeFrameTab.state === "timeline") || (timeFrameTab.state === "gallery"))
                         {
                             //set index on timeLine
                             timeLine.currentIndex = timeFrameTab.getTimeLineIndex()

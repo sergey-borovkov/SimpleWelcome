@@ -22,13 +22,11 @@ Item {
 
     function getTimeLineIndex() {
         var index = localDayModel.getIndexByDate(__year, __month+1, direction)
-        //console.log("getIndexByDate: " + index)
         return index
     }
 
     function getSocialTimeLineIndex() {
         var index = socialDayModel.getIndexByDate(__year, __month+1, direction)
-        //console.log("social index " + index)
         return index
     }
 
@@ -80,7 +78,7 @@ Item {
 
             state = ""
 
-             //Set views on current date
+            //Set views on current date
 
             localFilterBox.state = "current"
 
@@ -116,22 +114,17 @@ Item {
 
                 isReset = false
                 resetTimeScale()
-
-                // check nepomuk
                 if (checkNepomuk()) {
                     isNepomukWorking = true
                     activityProxy.startSearch()
-
                     tabListView.interactive = false
+
                     if ((__isLocalSearching) && (timeFrameTab.state ==="")) {
-                        // to prevent items created and destroyed since
-                        // listview still exists and creates components
-                        timeLine.model = undefined
                         timeFrameTab.state = "timeLineSearch"
                     }
                 } else {
                     isNepomukWorking = false
-                    timeFrameTab.state = "notNepomukInit"
+                    timeFrameTab.state = "nepomukNotInit"
                 }
             }
         }
@@ -164,16 +157,12 @@ Item {
         onFinished: {
             __isLocalSearching = false
             if (timeFrameTab.state === "timeLineSearch") {
+                timeFrameTab.state = "timeline"
                 //Set views on current date
                 timeScale.list.currentIndex = timeScale.list.count -1
-                timeLine.model = localDayModel
                 timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
-//                timeLine.positionViewAtBeginning()
                 galleryView.positionViewAtEnd()
-
-
-                timeFrameTab.state = ""
             }
         }
     }
@@ -215,13 +204,18 @@ Item {
 
             function setLocalState() {
                 if (!isNepomukWorking)
-                    timeFrameTab.state = "notNepomukInit"
+                    timeFrameTab.state = "nepomukNotInit"
                 else if (__isLocalSearching)
                     timeFrameTab.state = "timeLineSearch"
-                else if (inGallery)
+                else if (inGallery) {
                     timeFrameTab.state = "gallery"
-                else
-                    timeFrameTab.state = ""
+                    updateTimeScale()
+                }
+                else {
+                    timeFrameTab.state = "timeline"
+                    updateTimeScale()
+
+                }
             }
 
             function setLocalFilter() {
@@ -327,8 +321,9 @@ Item {
     function getTSIndex(year, monthNumber) {
         var i
         for (i = 0; i < timeScaleModel.count(); i++ ) {
-            if ((year === timeScaleModel.getYear(i)) && (monthNumber === timeScaleModel.getMonth(i) - 1 ))
+            if ((year === timeScaleModel.getYear(i)) && (monthNumber === timeScaleModel.getMonth(i) - 1 )) {
                 return i
+            }
         }
         return -1
     }
@@ -399,15 +394,13 @@ Item {
 
     ListView {
         id: timeLine
-
-        opacity: 1
         anchors.top: separator.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         width: parent.width
         anchors.bottomMargin: 10
         anchors.topMargin: 10
-
+        visible: false
         delegate: TimeLineDelegate {}
         orientation: Qt.Horizontal
         highlightFollowsCurrentItem: true
@@ -419,7 +412,7 @@ Item {
         cacheBuffer: desktopWidth
 
         onCurrentIndexChanged: {
-            var date = localDayModel.getDateOfIndex(timeLine.currentIndex)
+             var date = localDayModel.getDateOfIndex(timeLine.currentIndex)
             timeFrameTab.__year = date.getFullYear()
             timeFrameTab.__month = date.getMonth()
             timeFrameTab.day = date.getDay()
@@ -535,15 +528,17 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
             onClicked: {
-                if ( timeFrameTab.state === "" ) {
+                var index
+                if ( timeFrameTab.state === "timeline" ) {
+                    index = timeLine.currentIndex
                     timeFrameTab.state = "gallery"
-                    galleryView.currentIndex = timeLine.currentIndex
+                    galleryView.currentIndex = index
                     galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center )
                 }
                 else if ( timeFrameTab.state === "gallery" ) {
-                    var index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
+                    index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
                                                     galleryView.y + galleryView.height/2 + galleryView.contentY)
-                    timeFrameTab.state = ""
+                    timeFrameTab.state = "timeline"
                     timeLine.currentIndex = index
                     timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Contain)
                 }
@@ -627,40 +622,39 @@ Item {
         id: flickableTimer
         interval: 100; running: false; repeat: true
         onTriggered: updateTimeScale()
+    }
 
-        function updateTimeScale() {
-            var index = 0
-            var date = new Date()
-            if ((timeFrameTab.state === "") || (timeFrameTab.state === "timeLineSearch"))
-            {
-                index = timeLine.indexAt(timeLine.x + timeLine.width/2 + timeLine.contentX,
-                                         timeLine.y + timeLine.height/2 + timeLine.contentY)
-                date = localDayModel.getDateOfIndex(index)
-            } else if (timeFrameTab.state === "gallery")
-            {
-                index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
-                                            galleryView.y + galleryView.height/2 + galleryView.contentY)
-                date = localDayModel.getDateOfIndex(index)
-            } else if (timeFrameTab.state === "social")
-            {
-                index = socialTimeLine.indexAt(socialTimeLine.x + socialTimeLine.width/2 + socialTimeLine.contentX,
-                                               socialTimeLine.y + socialTimeLine.height/2 + socialTimeLine.contentY)
-                date = socialDayModel.getDateOfIndex(index)
-            } else if (timeFrameTab.state === "socialGallery")
-            {
-                index = socialGalleryView.indexAt(socialGalleryView.x + socialGalleryView.width/2 + socialGalleryView.contentX,
-                                                  socialGalleryView.y + socialGalleryView.height/2 + socialGalleryView.contentY)
-                date = socialDayModel.getDateOfIndex(index)
-            }
-            if (index === -1)
-                return
-
-            timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
-
-            __year = date.getFullYear()
-            __month = date.getMonth()
-            day = date.getDay()
+    function updateTimeScale() {
+        var index = 0
+        var date = new Date()
+        if ((timeFrameTab.state === "timeline") || (timeFrameTab.state === "timeLineSearch"))
+        {
+            index = timeLine.indexAt(timeLine.x + timeLine.width/2 + timeLine.contentX,
+                                     timeLine.y + timeLine.height/2 + timeLine.contentY)
+            date = localDayModel.getDateOfIndex(index)
+        } else if (timeFrameTab.state === "gallery")
+        {
+            index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
+                                        galleryView.y + galleryView.height/2 + galleryView.contentY)
+            date = localDayModel.getDateOfIndex(index)
+        } else if (timeFrameTab.state === "social")
+        {
+            index = socialTimeLine.indexAt(socialTimeLine.x + socialTimeLine.width/2 + socialTimeLine.contentX,
+                                           socialTimeLine.y + socialTimeLine.height/2 + socialTimeLine.contentY)
+            date = socialDayModel.getDateOfIndex(index)
+        } else if (timeFrameTab.state === "socialGallery")
+        {
+            index = socialGalleryView.indexAt(socialGalleryView.x + socialGalleryView.width/2 + socialGalleryView.contentX,
+                                              socialGalleryView.y + socialGalleryView.height/2 + socialGalleryView.contentY)
+            date = socialDayModel.getDateOfIndex(index)
         }
+        if (index === -1)
+            return
+
+        __year = date.getFullYear()
+        __month = date.getMonth()
+        day = date.getDay()
+        timeScale.list.currentIndex = getTSIndex(date.getFullYear(), date.getMonth())
     }
 
     SocialAuthorization {
@@ -680,8 +674,8 @@ Item {
     AnimatedImage {
         id: waitIndicator
         source: "images/ajax-loader.gif"
-        anchors.centerIn: parent        
-        visible: false        
+        anchors.centerIn: parent
+        visible: false
     }
 
     Connections {
@@ -746,7 +740,7 @@ Item {
             listView.positionViewAtEnd()
         else
             listView.positionViewAtIndex(index, ListView.Beginning)
-        flickableTimer.updateTimeScale()
+        updateTimeScale()
     }
 
     // States
@@ -754,10 +748,8 @@ Item {
     states: [
 
         State {
-            name: "notNepomukInit"; extend: ""
+            name: "nepomukNotInit";
             PropertyChanges { target: timeLine;  visible: false; opacity: 0 }
-
-            PropertyChanges { target: galleryView; visible: false }
 
             PropertyChanges { target: warningButton; visible: true }
 
@@ -765,6 +757,12 @@ Item {
 
             PropertyChanges { target: galleryButton; visible: false }
         },
+        State {
+            name: "timeline"
+            PropertyChanges { target: timeLine;  visible : true; model: localDayModel }
+
+        }
+        ,
 
         State {
             name: "gallery"
@@ -773,16 +771,14 @@ Item {
                 target: timeScale
                 anchors.verticalCenter: undefined
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom:  timeFrameTab.bottom                                
+                anchors.bottom:  timeFrameTab.bottom
             }
             PropertyChanges { target: timeScale; anchors.bottomMargin: 20 }
-
-            PropertyChanges { target: timeLine;  visible : false; opacity: 0 }
 
             PropertyChanges { target: galleryView; visible: true }
 
             PropertyChanges { target: galleryView; model: localDayModel }
-            //PropertyChanges { target: galleryView; enabled: true }
+
         },
         State {
             name: "gallerySearch"; extend: "gallery"
@@ -798,20 +794,13 @@ Item {
 
             PropertyChanges { target: timeScale; visible: false }
 
-            PropertyChanges { target: timeLine; visible: false; opacity: 0 }
-
             PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
         },
         State {
             name: "social"
 
-            PropertyChanges { target: timeLine; visible: false; opacity: 0 }
-
             PropertyChanges { target: socialTimeLine; visible: true; opacity: 1 }
 
-            //PropertyChanges { target: socialNetworks; state: "current" }
-
-            //PropertyChanges { target: localDocs; state: "" }
         },
 
         State {
