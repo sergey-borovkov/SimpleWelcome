@@ -140,7 +140,7 @@ void DataSource_Documents::previewFailed(const KFileItem &/*item*/)
 
 void DataSource_Documents::createDocumentsPreviews(KFileItemList list)
 {
-    KIO::PreviewJob *job = KIO::filePreview( list, constants->iconSize(), 0, 0, 0, true, false, &m_previewJobPlugins );
+    KIO::PreviewJob *job = KIO::filePreview(list, QSize(constants->iconSize(), constants->iconSize()), &m_previewJobPlugins);
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
     connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(resultPreviewJob(KFileItem,QPixmap)));

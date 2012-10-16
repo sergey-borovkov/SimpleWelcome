@@ -67,7 +67,6 @@ DataSource_Search::DataSource_Search(QObject *parent, DataSource_RecentApps *inR
                   << "services";
     m_runnerManager->setAllowedRunners(activeRunners);
     connect(m_runnerManager, SIGNAL(matchesChanged(const QList<Plasma::QueryMatch> &)), this, SLOT(newSearchMatches(const QList<Plasma::QueryMatch> &)));
-    connect(m_runnerManager, SIGNAL(queryFinished()), SLOT(test2()));
 }
 
 // Taken from kde-workspace-4.8.2/plasma/desktop/applets/kickoff/core/krunnermodel.cpp, line 92
@@ -206,9 +205,10 @@ void DataSource_Search::itemClicked(int newIndex, QString group)
 
                 KService::Ptr service = serviceForUrl(url);
                 if (service)
-                    recentApps->addRecentApp(service->desktopEntryPath());
-                else
-                    qWarning() << "Failed to find service for" << url;
+                    recentApps->addRecentApp(service->entryPath());
+                else {
+                    //qWarning() << "Failed to find service for" << url; <-- It's just that found entry in not app
+                }
 
                 m_runnerManager->run(*matches[i + newIndex].plasmaMatch);
                 emit runDesktopFile("");
@@ -236,11 +236,6 @@ void DataSource_Search::getContent()
     }
 }
 
-void DataSource_Search::test2()
-{
-    qDebug() << "WE ARE HERE!";
-}
-
 void DataSource_Search::newSearchMatches(const QList<Plasma::QueryMatch> &newMatches)
 {
     for (int i = 0; i < newMatches.size(); i++) {
@@ -257,16 +252,11 @@ void DataSource_Search::newSearchMatches(const QList<Plasma::QueryMatch> &newMat
 
 void DataSource_Search::launchSearch(const QString &text)
 {
-    //for(QHash<QString, Plasma::QueryMatch*>::iterator it = m_matches.begin(); it != m_matches.end(); it++)
-    //    delete it.value();
-    /// FIXFIXFIX
-
     matches.clear();
 
     if (text.size() > 0)
         m_runnerManager->launchQuery(text);
-    else {
+    else
         m_runnerManager->reset();
-    }
 }
 
