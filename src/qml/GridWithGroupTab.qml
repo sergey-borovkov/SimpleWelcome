@@ -115,10 +115,10 @@ Item {
 
             function createTabsFromGroups()
             {
-                if (groups !== undefined)
-                    console.log("----------------------------------- createTabsFromGroups " + groups[0].groupName)
-                else
-                    console.log("----------------------------------- createTabsFromGroups ")
+                //if (groups !== undefined)
+                //    console.log("----------------------------------- createTabsFromGroups " + groups[0].groupName)
+                //else
+                //    console.log("----------------------------------- createTabsFromGroups ")
 
                 // Constants. Used hack to retrieve them from C++, no way to do it straightforward AFAIK
                 var spacing = constants.gridWithGroupsSpacing, // spacing between GridWithGroups
@@ -142,8 +142,7 @@ Item {
                     if (projectedGroupHeight < availableHeight || (isForceOnOneScreen && count)) // Grid can be fully placed on the tab
                     {
                         //console.log(i + " - " + groups[i].dataSource + " is fitting the same screen");
-                        currentGroup['startIndex'] = 0
-                        currentGroup['endIndex'] = itemCount - 1
+                        currentGroup['maxCount'] = itemCount - 1
                         insertGrid(currentGroup, false)
                         availableHeight -= projectedGroupHeight + spacing
                         //console.log(i + " - " + availableHeight + "px left");
@@ -165,13 +164,12 @@ Item {
                                 availableHeight = gridsListView.height - textHeight
                                 rowsFit = Math.min(rowsLeftToFit, Math.max(1, Math.floor(availableHeight / cellRealHeight)) ) // We definitely want to have at least one row on newly created tab
                                 //console.log(i + " - availableHeight: " + availableHeight + "; cellRealHeight: " + cellRealHeight)
-                                currentGroup['startIndex'] = lastNotInsertedItem
-                                currentGroup['endIndex'] = Math.min(itemCount - 1, lastNotInsertedItem + rowsFit * columns - 1)
+                                currentGroup['maxCount'] = Math.min(itemCount - 1 - lastNotInsertedItem, rowsFit * columns - 1)
                                 lastNotInsertedItem += rowsFit * columns
                                 rowsLeftToFit -= rowsFit
                                 //console.log(i + " - " + "Fitted "  + rowsFit + " rows")
 
-                                //console.log("=== " + currentGroup.startIndex + "; " + currentGroup.endIndex)
+                                //console.log("=== " + currentGroup.maxCount)
                                 insertGrid(currentGroup, true)
                                 availableHeight -= rowsFit * cellRealHeight + spacing
                             }
@@ -179,12 +177,11 @@ Item {
                             {
                                 //console.log(i + " - " + "It's still possible to insert some rows to current tab. Inserting " + rowsFit)
 
-                                currentGroup['startIndex'] = lastNotInsertedItem
-                                currentGroup['endIndex'] = Math.min(itemCount - 1, lastNotInsertedItem + rowsFit * columns - 1)
+                                currentGroup['maxCount'] = Math.min(itemCount - 1 - lastNotInsertedItem, rowsFit * columns - 1)
                                 lastNotInsertedItem += rowsFit * columns
                                 rowsLeftToFit -= rowsFit
 
-                                //console.log(i + " - adding to current tab: " + currentGroup.group + ", " + currentGroup.dataSource + " [" + currentGroup.startIndex + " to " + currentGroup.endIndex + "]")
+                                //console.log(i + " - adding to current tab: " + currentGroup.group + ", " + currentGroup.dataSource + " [" + currentGroup.maxCount + "]")
                                 insertGrid(currentGroup, false)
                                 availableHeight -= rowsFit * cellRealHeight + spacing
                                 //console.log(i + " - Taken " + rowsFit * cellRealHeight + "px; " + availableHeight)
@@ -202,10 +199,10 @@ Item {
             function tabNewItemData(itemData, group) {
                 //console.log("New item " + group + " | " + itemData.caption)
                 forEachGridGroup(group, function(gridWithGroup, itemData) {
-                    //console.log("Adding item " + gridWithGroup.groupName + " | " + itemData.caption)
-                    if (gridWithGroup.gridView.count >= 5*7)
+                    if (gridWithGroup.maxCount !== -1 && gridWithGroup.gridView.count > gridWithGroup.maxCount) // 5*7
                         return false
 
+                    //console.log("Adding item " + gridWithGroup.groupName + " | " + itemData.caption)
                     gridWithGroup.gridView.newItemData(itemData)
                     return true
                 }, itemData)
@@ -316,15 +313,15 @@ loop2:
                 //console.log("Component.onCompleted: {")
                 for (var i = 0; i < groups.length; i++)
                 {
-                    groups[i].dataSource.qmlGroupName = groups[i].groupName
+                    //console.log("  groups[i].groupName: " + groups[i].groupName)
+                    if (dataSourcesDict[groups[i].dataSource] === undefined) {
+                        //console.log("  not found in dict. Adding: " + groups[i].groupName)
 
-                    groups[i].dataSource.resetContent.connect(updateGridsContent)
-                    groups[i].dataSource.newItemData.connect(tabNewItemData)
+                        groups[i].dataSource.qmlGroupName = groups[i].groupName
+                        groups[i].dataSource.resetContent.connect(updateGridsContent)
+                        groups[i].dataSource.newItemData.connect(tabNewItemData)
 
-                    //console.log("groups[i].groupName: " + groups[i].groupName)
-                    if (dataSourcesDict[groups[i].groupName] === undefined) {
-                        //console.log("not found in dict. Adding: " + groups[i].groupName)
-                        dataSourcesDict[groups[i].groupName] = groups[i].dataSource
+                        dataSourcesDict[groups[i].dataSource] = groups[i].dataSource
                     }
                 }
                 //console.log("}")
@@ -338,7 +335,7 @@ loop2:
 
                 //console.log("updateGridsContent() {")
                 for (var ds in dataSources) {
-                    //console.log("Getting content from " + dataSources[ds].qmlGroupName)
+                    //console.log("  Getting content from " + dataSources[ds].qmlGroupName)
                     dataSources[ds].getContent()
                 }
 
@@ -363,8 +360,6 @@ loop2:
                     popupFrame.groupTitle = item.caption
 
                     popupFrame.gridGroup.gridView.model.clear()
-                    popupFrame.gridGroup.startIndex = -1
-                    popupFrame.gridGroup.endIndex = -1
                     popupFrame.stackedIconIndex = index
 
                     //console.log("stacked group we are opening has length:" + item.stack.length)

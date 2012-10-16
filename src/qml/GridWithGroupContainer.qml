@@ -108,10 +108,7 @@ Column {
 
     Component.onCompleted: {
         if (defaultGroupData !== undefined)
-        {
-            //console.log("Constructing GridWithGroupContainer for: " + group.group + "; ds: " + group.dataSource + "; start: " + group.startIndex + "; " + group.endIndex)
             addGridGroup(defaultGroupData)
-        }
         gridsConnectionChanged()
     }
 }
