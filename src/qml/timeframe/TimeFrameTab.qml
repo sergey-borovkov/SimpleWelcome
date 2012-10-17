@@ -11,7 +11,7 @@ Item {
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery"
     property bool isSocial: state === "social" || state === "socialGallery"
-    property bool isNepomukWorking: true   
+    property bool isNepomukWorking: true
     property variant currentView: undefined
 
 
@@ -130,7 +130,7 @@ Item {
         if (!isSocial)
             timeFrameTab.date = localDayModel.getDateOfIndex(currentView.currentIndex)
         else
-            timeFrameTab.date = socialDayModel.getDateOfIndex(currentView.currentIndex)        
+            timeFrameTab.date = socialDayModel.getDateOfIndex(currentView.currentIndex)
     }
 
     //Force view to repaint after applying filter
@@ -149,7 +149,7 @@ Item {
         currentView.currentIndex = index
         currentView.positionViewAtIndex(index, ListView.Center)
         saveCurrentDate()
-        //set timeScale properly index        
+        //set timeScale properly index
         timeScale.list.currentIndex = getTSIndex(timeFrameTab.date.getFullYear(), timeFrameTab.date.getMonth())
     }
 
@@ -301,7 +301,7 @@ Item {
             id: socialFilterBox
             model: menuSocialItems
             name: i18n_Social_networkong_sites
-            onStateChanged: {                
+            onStateChanged: {
 
                 if (socialFilterBox.state === "current") {
                     if (socialFilterBox.view.count < 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
@@ -570,7 +570,7 @@ Item {
                     index = timeLine.currentIndex
                     timeFrameTab.state = "gallery"
                     galleryView.currentIndex = index
-                    galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center )
+                    galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center)
                 }
                 else if ( timeFrameTab.state === "gallery" ) {
                     index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
