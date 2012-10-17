@@ -64,7 +64,7 @@ Item {
     {
         for (var i = 0; i < timeFrameTab.children.length; i++) {
             if (timeFrameTab.children[i].objectName === "SocialCloudItem" ||
-                timeFrameTab.children[i].objectName === "SocialGalleryItem" ) {
+                    timeFrameTab.children[i].objectName === "SocialGalleryItem" ) {
                 timeFrameTab.children[i].mainParent.state = ""
             }
         }
@@ -233,9 +233,10 @@ Item {
             state: "current"
 
             onStateChanged: {
-                if (localFilterBox.state === "current") {
+                if ((localFilterBox.state === "current") && (socialFilterBox.state === "current")){
                     socialFilterBox.state = ""
                     setLocalState()
+                    setLocalFilter()
 
                     timeLine.currentIndex = timeLine.count - 1
                     timeLine.positionViewAtEnd()
@@ -302,8 +303,7 @@ Item {
             model: menuSocialItems
             name: i18n_Social_networkong_sites
             onStateChanged: {
-
-                if (socialFilterBox.state === "current") {
+                if ((localFilterBox.state === "current") && (socialFilterBox.state === "current")){
                     if (socialFilterBox.view.count < 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
                         timeFrameTab.state = "socialAuthorization"
                         socialFilterBox.view.currentIndex = 0
@@ -314,19 +314,20 @@ Item {
                     localFilterBox.state = ""
                     setSocialFilter()
 
-//                    socialTimeLine.currentIndex = socialTimeLine.count - 1
-//                    socialTimeLine.positionViewAtEnd()
-//                    socialGalleryView.positionViewAtEnd()
+                    socialTimeLine.currentIndex = socialTimeLine.count - 1
+                    socialTimeLine.positionViewAtEnd()
+                    socialGalleryView.positionViewAtEnd()
 
-//                    timeScale.list.currentIndex = timeScale.list.count - 1
-//                    timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
+                    timeScale.list.currentIndex = timeScale.list.count - 1
+                    timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
                 }
             }
             onCurrentIndexChanged: {
                 saveCurrentDate()
                 setSocialState()
                 setSocialFilter()
-                resetViews()
+                if (timeFrameTab.state !== "socialAuthorization")
+                    resetViews()
             }
 
             function setSocialState() {
@@ -574,7 +575,7 @@ Item {
                 }
                 else if ( timeFrameTab.state === "gallery" ) {
                     index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
-                                                    galleryView.y + galleryView.height/2 + galleryView.contentY)
+                                                galleryView.y + galleryView.height/2 + galleryView.contentY)
                     timeFrameTab.state = "timeline"
                     timeLine.currentIndex = index
                     timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Contain)
