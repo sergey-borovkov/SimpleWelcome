@@ -81,10 +81,14 @@ void DataSource_Documents::updateContent()
         newItem["desktopEntry"] = desktopFile.fileName();
         newItem["destination"] = KUrl(desktopFile.readUrl()).url();
 
+        bool thumbnailAvailable = m_pixmaps.contains(newItem["destination"].toString());
+        if (thumbnailAvailable)
+            newItem["imagePath"] = QString("image://generalicon/docicon/%1").arg(newItem["destination"].toString());
+
         if (!newItem["caption"].toString().isEmpty())
             newDocsList.append(newItem);
 
-        if (!m_pixmaps.contains(newItem["destination"].toString())) {
+        if (!thumbnailAvailable) {
             KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, newItem["destination"].toString(), false);
             previewRequestList.append(fileItem);
         }
