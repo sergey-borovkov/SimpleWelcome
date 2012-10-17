@@ -10,8 +10,8 @@ Column {
     property alias groupNameVisible: groupLabel.visible
     property alias stackable: iconGridView.stackable
 
-    property alias prevGridGroup: iconGridView.prevGrid
-    property alias nextGridGroup: iconGridView.nextGrid
+    property alias prevGridGroup: iconGridView.prevGridGroup
+    property alias nextGridGroup: iconGridView.nextGridGroup
     property alias maxCount: iconGridView.maxCount
 
     property alias count: iconGridView.count
@@ -24,7 +24,6 @@ Column {
     property bool isPopupGroup: false
     property int groupCellHeight: constants.cellHeight
 
-    signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
     signal showPopupGroup(int index, variant stackItemData, variant iconCoords)
     signal gridMyFocusChanged(int containerIndex)
