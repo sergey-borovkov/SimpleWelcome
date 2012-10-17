@@ -800,7 +800,7 @@ Item {
 
         },
         State {
-            name: "timeLineSearch"; extend: ""
+            name: "timeLineSearch"
 
             PropertyChanges { target: waitIndicator; visible: true }
 
