@@ -7,36 +7,11 @@
 #include <listitem.h>
 
 class CommentItem;
-class SocialItemModel;
+class SocialDayModel;
 class SocialItem;
-class SocialItemFilterModel;
+class SocialDayFilterModel;
 
-class SocialItemFilterModel : public QSortFilterProxyModel
-{
-    Q_OBJECT
-public:
-    explicit SocialItemFilterModel(QObject * parent = 0);
-
-signals:
-    /**
-     * @brief updateData - signal is emitted for not-view-based delegates to update role values
-     */
-    void updateData();
-
-public slots:
-    QString id(int row) const;
-    QString imageUrl(int row) const;
-    QString text(int row) const;
-    int likesCount(int row) const;
-    int like(int row);
-    int commentsCount(int row) const;
-    QObject *comments(int row) const;
-    QString pluginName(int row) const;
-    void update();
-};
-
-
-class SocialDayItem : public QObject, public ListItem
+class SocialContentItem : public QObject, public ListItem
 {
     Q_OBJECT
 
@@ -49,8 +24,8 @@ public:
         ItemsTypes
     };
 
-    explicit SocialDayItem(const QDate &date, QObject *parent = 0);
-    ~SocialDayItem();
+    explicit SocialContentItem(const QDate &date, QObject *parent = 0);
+    ~SocialContentItem();
 
     virtual QString id() const;
     virtual QVariant data(int role) const;
@@ -59,7 +34,7 @@ public:
     QDate date();
     int   count();
 
-    SocialItemFilterModel *model();
+    SocialDayFilterModel *model();
 
     QString types() const;
     void setSocialFilter(const QRegExp&);
@@ -89,13 +64,13 @@ public slots:
     void setSelfLiked(QString id);
 
 private:
-    QString m_types;
-    QDate       m_date;
-    int         m_count;
-    SocialItemModel *m_itemModel;
-    SocialItemFilterModel *m_model;
+    friend class SocialContentModel;
 
-    friend class SocialDayModel;
+    QString m_types;
+    QDate m_date;
+    int m_count;
+    SocialDayModel *m_itemModel;
+    SocialDayFilterModel *m_model;
 };
 
 #endif // SOCIALDAYITEM_H

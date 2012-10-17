@@ -1,7 +1,7 @@
 #include "pluginitem.h"
 #include "pluginmodel.h"
 #include "pluginrequestreply.h"
-#include "socialdaymodel.h"
+#include "socialcontentmodel.h"
 #include "socialitem.h"
 #include "socialplugin.h"
 #include "socialproxy.h"
@@ -365,7 +365,7 @@ void SocialProxy::onSelfLiked(QString postId)
     m_socialModel->setSelfLiked(postId);
 }
 
-void SocialProxy::setSocialModel(SocialDayModel *model)
+void SocialProxy::setSocialModel(SocialContentModel *model)
 {
     m_socialModel = model;
 }
