@@ -15,7 +15,7 @@ class ListModel;
 class PluginModel;
 class SocialItem;
 class CommentItem;
-class SocialDayModel;
+class SocialContentModel;
 class PluginRequestReply;
 
 class SocialProxy : public QObject
@@ -25,7 +25,7 @@ public:
     explicit SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent = 0);
     ~SocialProxy();
 
-    void setSocialModel(SocialDayModel *model);
+    void setSocialModel(SocialContentModel *model);
     ListModel *socialModel();
 
     PluginModel *pluginModel();
@@ -166,7 +166,7 @@ private:
 
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;
-    SocialDayModel *m_socialModel;
+    SocialContentModel *m_socialModel;
     QSet<QString> m_enabledPlugins;
 
     QString m_cachedComment;

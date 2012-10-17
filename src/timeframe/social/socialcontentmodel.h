@@ -1,5 +1,5 @@
-#ifndef SOCIALDAYMODEL_H
-#define SOCIALDAYMODEL_H
+#ifndef SOCIALCONTENTMODEL_H
+#define SOCIALCONTENTMODEL_H
 
 #include <QtCore/QHash>
 #include <QtCore/QSet>
@@ -11,20 +11,6 @@ class SocialContentItem;
 class SocialItem;
 class CommentItem;
 class QDate;
-
-class SocialDayFilterModel : public QSortFilterProxyModel
-{
-    Q_OBJECT
-public:
-    explicit SocialDayFilterModel(QObject * parent = 0);
-
-public slots:
-    void setFilter(const QString &filter);
-    int getIndexByDate(int year, int month,  bool direction);
-    QObject* itemsModel(QDate date) const;
-    QDate getDateOfIndex(int listIndex);
-
-};
 
 class SocialContentModel : public ListModel
 {
@@ -57,4 +43,18 @@ private:
     QSet<QString> m_idSet;
 };
 
-#endif // SOCIALDAYMODEL_H
+class SocialContentFilterModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+public:
+    explicit SocialContentFilterModel(QObject * parent = 0);
+
+    Q_INVOKABLE QObject* itemsModel(QDate date) const;
+    Q_INVOKABLE QDate getDateOfIndex(int listIndex);
+    Q_INVOKABLE int getIndexByDate(int year, int month,  bool direction) const;
+
+public slots:
+    void setFilter(const QString &filter);
+};
+
+#endif // SOCIALCONTENTMODEL_H

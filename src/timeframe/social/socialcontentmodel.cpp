@@ -1,61 +1,11 @@
 #include "socialdayitem.h"
 #include "socialcontentmodel.h"
 #include "socialitem.h"
-#include "socialitemmodel.h"
+#include "socialdaymodel.h"
 #include "socialproxy.h"
 
 #include <QtCore/QRegExp>
 #include <QtCore/QVariant>
-
-SocialDayFilterModel::SocialDayFilterModel(QObject * parent)
-    : QSortFilterProxyModel(parent)
-{
-    setDynamicSortFilter(true);
-    setFilterRole(SocialContentItem::ItemsTypes);
-}
-
-void SocialDayFilterModel::setFilter(const QString &filter)
-{
-    QRegExp filterRegExp;
-    if (filter == "Social")
-        filterRegExp = QRegExp("Facebook|VKontakte|Twitter");
-    else
-        filterRegExp = QRegExp(filter);
-    setFilterRegExp(filterRegExp);
-
-    for (int i = 0; i < rowCount(); i++) { //Set filter on nested models
-        QDate date = data(index(i, 0), SocialContentItem::DateRole).toDate();
-        SocialItemFilterModel * sModel = qobject_cast<SocialItemFilterModel *> (itemsModel(date));
-        if (sModel)
-            sModel->setFilterRegExp(filterRegExp);
-    }
-}
-
-QObject* SocialDayFilterModel::itemsModel(QDate date) const
-{
-    SocialContentModel* model = qobject_cast<SocialContentModel*>(sourceModel());
-    if (model)
-        return model->itemsModel(date);
-    return 0;
-}
-
-int SocialDayFilterModel::getIndexByDate(int year, int month,  bool direction)
-{
-    Q_UNUSED(direction)
-    for (int i = 0; i < rowCount(); i++) {
-        QDate date = data(index(i, 0), SocialContentItem::DateRole).toDate();
-        if ((date.year() == year) && (date.month() == month))
-            return i;
-    }
-    return -1;
-}
-
-QDate SocialDayFilterModel::getDateOfIndex(int listIndex)
-{
-    if ((listIndex >= rowCount()) || (listIndex < 0))
-        return QDate();
-    return data(index(listIndex, 0), SocialContentItem::DateRole).toDate();
-}
 
 SocialContentModel::SocialContentModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)
@@ -210,4 +160,55 @@ void SocialContentModel::newSocialItems(QList < SocialItem * > list)
 
         insertRow(j, socialDayItem);
     }
+}
+
+
+SocialContentFilterModel::SocialContentFilterModel(QObject * parent)
+    : QSortFilterProxyModel(parent)
+{
+    setDynamicSortFilter(true);
+    setFilterRole(SocialContentItem::ItemsTypes);
+}
+
+void SocialContentFilterModel::setFilter(const QString &filter)
+{
+    QRegExp filterRegExp;
+    if (filter == QLatin1String("Social"))
+        filterRegExp = QRegExp("Facebook|VKontakte|Twitter");
+    else
+        filterRegExp = QRegExp(filter);
+    setFilterRegExp(filterRegExp);
+
+    for (int i = 0; i < rowCount(); i++) { //Set filter on nested models
+        QDate date = data(index(i, 0), SocialContentItem::DateRole).toDate();
+        SocialDayFilterModel * sModel = qobject_cast<SocialDayFilterModel *> (itemsModel(date));
+        if (sModel)
+            sModel->setFilterRegExp(filterRegExp);
+    }
+}
+
+QObject* SocialContentFilterModel::itemsModel(QDate date) const
+{
+    SocialContentModel* model = qobject_cast<SocialContentModel*>(sourceModel());
+    if (model)
+        return model->itemsModel(date);
+    return 0;
+}
+
+int SocialContentFilterModel::getIndexByDate(int year, int month,  bool direction) const
+{
+    Q_UNUSED(direction)
+    for (int i = 0; i < rowCount(); i++) {
+        QDate date = data(index(i, 0), SocialContentItem::DateRole).toDate();
+        if ((date.year() == year) && (date.month() == month))
+            return i;
+    }
+    return -1;
+}
+
+QDate SocialContentFilterModel::getDateOfIndex(int listIndex)
+{
+    if ((listIndex >= rowCount()) || (listIndex < 0))
+        return QDate();
+    return data(index(listIndex, 0), SocialContentItem::DateRole).toDate();
 }

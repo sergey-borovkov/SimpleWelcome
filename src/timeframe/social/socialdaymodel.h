@@ -1,16 +1,34 @@
-#ifndef SOCIALDAYMODEL_H
-#define SOCIALDAYMODEL_H
+#ifndef SOCIALITEMMODEL_H
+#define SOCIALITEMMODEL_H
 
-#include <QtCore/QHash>
-#include <QtCore/QSet>
-#include <QtGui//QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
+#include <QSet>
 
 #include <listmodel.h>
 
-class SocialDayItem;
 class SocialItem;
 class CommentItem;
-class QDate;
+
+class SocialDayModel : public ListModel
+{
+    Q_OBJECT
+
+public:
+    explicit SocialDayModel(QHash<int, QByteArray> roles, QObject *parent = 0);
+    bool removeRow(int row, const QModelIndex &parent = QModelIndex());
+
+public slots:
+    void addComment(CommentItem* item, QString id);
+    void addComments(QString id, QList<CommentItem*> list);
+    void setSelfLiked(QString id);
+    void addSocialItem(SocialItem* item);
+    void like(QString id);
+    void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &id);
+    void updateUserName(const QString &userId, const QString &userName, const QString &id);
+
+private:
+    QSet<QString> m_idSet;
+};
 
 class SocialDayFilterModel : public QSortFilterProxyModel
 {
@@ -18,43 +36,24 @@ class SocialDayFilterModel : public QSortFilterProxyModel
 public:
     explicit SocialDayFilterModel(QObject * parent = 0);
 
-public slots:
-    void setFilter(const QString &filter);
-    int getIndexByDate(int year, int month,  bool direction);
-    QObject* itemsModel(QDate date) const;
-    QDate getDateOfIndex(int listIndex);
-
-};
-
-class SocialDayModel : public ListModel
-{
-    Q_OBJECT
-public:
-
-    explicit SocialDayModel(QHash<int, QByteArray> roles, QObject *parent = 0);
-
-    void appendRows(const QList<SocialDayItem*> &items);
-    void insertRow(int row, SocialDayItem* item);
+signals:
+    /**
+     * @brief updateData - signal is emitted for not-view-based delegates to update role values
+     */
+    void updateData();
 
 public slots:
-    QObject* itemsModel(QDate date) const;
-    void addComments(QString id, QList<CommentItem*> list);
-    void setSelfLiked(QString id);
-    void addCommentToItem(CommentItem *, QString);
-    void likeItem(QString eventId);
-    void newSocialItems(QList<SocialItem*> list);
-    void removeItems(const QString &type);
-    void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &eventId);
-    void updateUserName(const QString &userId, const QString &userName, const QString &eventId);
-
-private slots:
-    void handleItemChange();
-
-private:
-    SocialDayItem *findItemByDate(const QDate &date) const;
-
-    QHash<QString, QDate> m_idHash;
-    QSet<QString> m_idSet;
+    QString id(int row) const;
+    QString imageUrl(int row) const;
+    QString text(int row) const;
+    int likesCount(int row) const;
+    int like(int row);
+    int commentsCount(int row) const;
+    QObject *comments(int row) const;
+    QString pluginName(int row) const;
+    void update();
 };
 
-#endif // SOCIALDAYMODEL_H
+Q_DECLARE_METATYPE(SocialDayModel *)
+
+#endif // SOCIALITEMMODEL_H
