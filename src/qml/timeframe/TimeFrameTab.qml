@@ -9,7 +9,7 @@ Item {
     property bool __isLocalSearching: true              //New search in process
     property bool isSocialSearching: true
     property bool direction: false  //true is - right direction; false - is left
-    property bool inGallery: state === "socialGallery" || state === "gallery" || state === "gallerySearch"
+    property bool inGallery: state === "socialGallery" || state === "gallery"
     property bool isSocial: state === "social" || state === "socialGallery"
     property bool isNepomukWorking: true   
     property variant currentView: undefined
@@ -798,13 +798,6 @@ Item {
 
             PropertyChanges { target: timeFrameTab; currentView: galleryView }
 
-        },
-        State {
-            name: "gallerySearch"; extend: "gallery"
-
-            PropertyChanges { target: waitIndicator; visible: true }
-
-            PropertyChanges { target: galleryView; opacity: 0 }
         },
         State {
             name: "timeLineSearch"; extend: ""
