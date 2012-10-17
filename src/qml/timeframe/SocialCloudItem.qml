@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import Private 0.1
 
-Item{
+Item {
     id: cloudRect
     property string id
     property date cloudDate
