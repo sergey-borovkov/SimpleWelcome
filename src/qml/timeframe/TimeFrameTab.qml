@@ -767,7 +767,6 @@ Item {
 
         State {
             name: "nepomukNotInit";
-            PropertyChanges { target: timeLine;  visible: false; opacity: 0 }
 
             PropertyChanges { target: warningButton; visible: true }
 
