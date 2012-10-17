@@ -664,27 +664,11 @@ Item {
     function updateTimeScale() {
         var index = 0
         var date = new Date()
-        if ((timeFrameTab.state === "timeline") || (timeFrameTab.state === "timeLineSearch"))
-        {
-            index = timeLine.indexAt(timeLine.x + timeLine.width/2 + timeLine.contentX,
-                                     timeLine.y + timeLine.height/2 + timeLine.contentY)
-            date = localDayModel.getDateOfIndex(index)
-        } else if (timeFrameTab.state === "gallery")
-        {
-            index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
-                                        galleryView.y + galleryView.height/2 + galleryView.contentY)
-            date = localDayModel.getDateOfIndex(index)
-        } else if (timeFrameTab.state === "social")
-        {
-            index = socialTimeLine.indexAt(socialTimeLine.x + socialTimeLine.width/2 + socialTimeLine.contentX,
-                                           socialTimeLine.y + socialTimeLine.height/2 + socialTimeLine.contentY)
-            date = socialDayModel.getDateOfIndex(index)
-        } else if (timeFrameTab.state === "socialGallery")
-        {
-            index = socialGalleryView.indexAt(socialGalleryView.x + socialGalleryView.width/2 + socialGalleryView.contentX,
-                                              socialGalleryView.y + socialGalleryView.height/2 + socialGalleryView.contentY)
-            date = socialDayModel.getDateOfIndex(index)
-        }
+        index = currentView.indexAt(timeLine.x + timeLine.width/2 + timeLine.contentX,
+                                    timeLine.y + timeLine.height/2 + timeLine.contentY)
+
+        date = isSocial ? socialDayModel.getDateOfIndex(index) : localDayModel.getDateOfIndex(index)
+
         if (index === -1)
             return
 
