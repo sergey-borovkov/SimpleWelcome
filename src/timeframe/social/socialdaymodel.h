@@ -38,9 +38,9 @@ public:
 
     void appendRows(const QList<SocialDayItem*> &items);
     void insertRow(int row, SocialDayItem* item);
+    Q_INVOKABLE QObject* itemsModel(QDate date) const;
 
 public slots:
-    QObject* itemsModel(QDate date) const;
     void addComments(QString id, QList<CommentItem*> list);
     void setSelfLiked(QString id);
     void addCommentToItem(CommentItem *, QString);
