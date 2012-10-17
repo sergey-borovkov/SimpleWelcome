@@ -62,7 +62,6 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
 
         newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(desktopFile.readIcon());
         newItem["caption"] = desktopFile.readName();
-        newItem["id"] = recentAppsList.count();
         newItem["pinned"] = /*i < 4 ? true :*/ false;
         newItem["desktopEntry"] = desktopFilePath;
 
@@ -72,6 +71,10 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
 
     if (recentAppsList.size() > 7)
         recentAppsList.removeAt(7);
+
+    for (int i = 0; i < recentAppsList.size(); i++)
+        recentAppsList[i]["id"] = i;
+
 
     saveData();
     emit resetContent();
@@ -96,5 +99,9 @@ void DataSource_RecentApps::getContent()
 void DataSource_RecentApps::itemDragged(int fromIndex, int toIndex)
 {
     recentAppsList.move(fromIndex, toIndex);
+
+    for (int i = 0; i < recentAppsList.size(); i++)
+        recentAppsList[i]["id"] = i;
+
     saveData();
 }
