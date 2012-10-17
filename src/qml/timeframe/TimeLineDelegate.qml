@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import "clouds"
 
 Item {
     property int margin: 10
