@@ -16,14 +16,6 @@ set(_timeframe_plugins_install_path "${_share_dir_name}/${_timeframe_plugins_pat
 set(_assets_install_path "${_share_dir_install_path}/${_assets_dir_path}") # path where assets have to be installed to
 set(_qml_install_path "${_share_dir_install_path}/${_qml_dir_path}") # path where qml files have to be installed to
 
-# the library install dir
-set(LIBRARY_INSTALL_DIR "${_DEFAULT_LIBRARY_INSTALL_DIR}" CACHE PATH "Installation directory for libraries")
-# make the library install dir an absolute path (can be important e.g. when using CONFIGURE_FILE to embed
-# the library installation directory into a file)
-if(NOT IS_ABSOLUTE "${LIBRARY_INSTALL_DIR}")
-  set(LIBRARY_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${LIBRARY_INSTALL_DIR}")
-endif()
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${_bin_dir_name}")
 
 #check out of source build
