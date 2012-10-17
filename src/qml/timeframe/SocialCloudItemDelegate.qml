@@ -48,7 +48,7 @@ Component {
             function getHeight() {
                 var h = parent.height - topLine.height - 20
                 if ( message ) {
-                    h = h - msg.paintedHeight
+                    h -= msg.paintedHeight
                 }
 
                 h = picture ? h : 0
@@ -57,7 +57,7 @@ Component {
                     h = img.sourceSize.height
                 }
                 else  if ( h && h > 10 ){
-                    h = h - 10
+                    h -= 10
                 }
 
                 return h

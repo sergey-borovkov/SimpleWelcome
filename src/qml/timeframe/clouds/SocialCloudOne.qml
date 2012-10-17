@@ -30,19 +30,4 @@ Item{
         color: "white"
         horizontalAlignment: Text.AlignHCenter
     }
-
-    function createConnection()
-    {
-        rect1.id = model.id(0)
-        rect1.message = model.text(0)
-        rect1.picture = model.imageUrl(0)
-        rect1.like = model.like(0)
-        rect1.likes = model.likesCount(0)
-        rect1.commentCount = model.commentsCount(0)
-        rect1.pluginName = model.pluginName(0)
-        rect1.iconPlugin.source =  "image://plugin/" + rect1.pluginName + "/small"
-        rect1.commentsView.model = model.comments(0)
-        Qt.createQmlObject('import QtQuick 1.1;  Connections {target: model; onUpdateData: { \
-            rect1.likes = model.likesCount(0); rect1.commentCount = model.commentsCount(0); rect1.like = model.like(0) } }',cloudOne);
-    }
 }

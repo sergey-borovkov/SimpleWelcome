@@ -11,7 +11,6 @@ Item {
 
     // using Rectangle because with Item there is painting bug...
     Rectangle {
-
         id: cloudBorder
         color: "transparent"
         y: (index%2 === 1) ? parent.height/2 + timeScale.height/2 : 0
@@ -24,9 +23,23 @@ Item {
             anchors.fill: parent
             source: getSourceComponent(size)
             onLoaded: {
+                var model = socialDayModel.itemsModel(date)
                 cloud.item.cloudDate = date
-                cloud.item.model = socialDayModel.itemsModel( date )
-                cloud.item.createConnection()
+                cloud.item.model = model
+                var c
+                for(var i =0; i < cloud.item.children.length; i++) {
+                    var subChildren = cloud.item.children[i].children
+                    c = 0
+                    for(var j = 0; j < subChildren.length; j++) {
+                        if(subChildren[j].objectName === "cloudRect") {
+                            subChildren[j].index = c
+                            subChildren[j].model = socialDayModel.itemsModel(date)
+                            subChildren[j].initialize(c)
+                            model.updateData.connect(subChildren[j].update)
+                            c++
+                        }
+                    }
+                }
             }
         }
     }

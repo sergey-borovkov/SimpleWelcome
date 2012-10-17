@@ -3,6 +3,7 @@ import Private 0.1
 
 Item {
     id: cloudRect
+    objectName: "cloudRect"
     property string id
     property date cloudDate
     property variant model
@@ -14,6 +15,30 @@ Item {
     property string pluginName: ""
     property alias iconPlugin : iconPlugin
     property alias commentsView : commentsListView
+    property int index: -1
+
+    function update() {
+        if(index === -1) {
+            return;
+        }
+
+        likes = model.likesCount(index)
+        commentCount = model.commentsCount(index)
+        like = model.like(index)
+    }
+
+    function initialize(index)
+    {
+        id = model.id(index)
+        message = model.text(index)
+        picture = model.imageUrl(index)
+        like = model.like(index)
+        likes = model.likesCount(index)
+        commentCount = model.commentsCount(index)
+        pluginName = model.pluginName(index)
+        iconPlugin.source =  "image://plugin/" + pluginName + "/small"
+        commentsView.model = model.comments(index)
+    }
 
     MouseArea {
         id: modal
