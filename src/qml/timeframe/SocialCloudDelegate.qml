@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import "clouds"
 
 Item {
     property int margin: 10
@@ -11,10 +12,10 @@ Item {
     // using Rectangle because with Item there is painting bug...
     Rectangle {
 
-        id: cloudBorder        
+        id: cloudBorder
         color: "transparent"
         y: (index%2 === 1) ? parent.height/2 + timeScale.height/2 : 0
-        x: -100        
+        x: -100
         width: parent.width + 200
         height: parent.height/2 - timeScale.height/2 - 10
 
