@@ -3,8 +3,8 @@ import QtQuick 1.0
 GridView {
     id: grid
     property variant dataSource
-    property variant prevGrid
-    property variant nextGrid
+    property variant prevGridGroup
+    property variant nextGridGroup
     property int maxCount: -1
     property bool draggable: false
     property bool enabledSystemDnD: false  // set true to enable system Drag&Drop
@@ -218,7 +218,8 @@ GridView {
             }
     }
 
-    function selectOtherGrid(gridWorkingWith, newCurrentIndex) {
+    function selectOtherGrid(gridGroupWorkingWith, newCurrentIndex) {
+        var gridWorkingWith = gridGroupWorkingWith.gridView
         gridWorkingWith.highlightMoveDuration = 1
         gridWorkingWith.currentIndex = newCurrentIndex
         gridWorkingWith.forceMyFocus()
@@ -231,35 +232,35 @@ GridView {
         switch (key)
         {
         case Qt.Key_Left:
-            if (currentIndex == 0 && prevGrid)
-                newCurrentItem = selectOtherGrid(prevGrid, prevGrid.count - 1)
+            if (currentIndex == 0 && prevGridGroup)
+                newCurrentItem = selectOtherGrid(prevGridGroup, prevGridGroup.count - 1)
 
             if (!interactive)
                 moveCurrentIndexLeft()
             break
         case Qt.Key_Right:
-            if (currentIndex == count - 1 && nextGrid)
-                newCurrentItem = selectOtherGrid(nextGrid, 0)
+            if (currentIndex == count - 1 && nextGridGroup)
+                newCurrentItem = selectOtherGrid(nextGridGroup, 0)
 
             if (!interactive)
                 moveCurrentIndexRight()
             break
         case Qt.Key_Up:
-            if (currentIndex < columns && prevGrid)
+            if (currentIndex < columns && prevGridGroup)
             {
-                var roundCount = Math.floor((prevGrid.count) / columns) * columns
-                var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGrid.count - roundCount)))
+                var roundCount = Math.floor((prevGridGroup.count) / columns) * columns
+                var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGridGroup.count - roundCount)))
 
-                newCurrentItem = selectOtherGrid(prevGrid, newCur)
+                newCurrentItem = selectOtherGrid(prevGridGroup, newCur)
             }
 
             if (!interactive)
                 moveCurrentIndexUp()
             break
         case Qt.Key_Down:
-            if (currentIndex >= count - columns && nextGrid)
+            if (currentIndex >= count - columns && nextGridGroup)
             {
-                newCurrentItem = selectOtherGrid(nextGrid, currentIndex % columns)
+                newCurrentItem = selectOtherGrid(nextGridGroup, currentIndex % columns)
             }
 
             if (!interactive)

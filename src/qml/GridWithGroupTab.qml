@@ -198,32 +198,41 @@ Item {
 
             function tabNewItemData(itemData, group) {
                 //console.log("New item " + group + " | " + itemData.caption)
-                forEachGridGroup(group, function(gridWithGroup, itemData) {
-                    if (gridWithGroup.maxCount !== -1 && gridWithGroup.gridView.count > gridWithGroup.maxCount) // 5*7
-                        return false
+                forEachGridGroup(group,
+                                 function(gridWithGroup, itemData) {
+                                     if (gridWithGroup.maxCount !== -1 && gridWithGroup.gridView.count > gridWithGroup.maxCount) // 5*7
+                                         return false
 
-                    //console.log("Adding item " + gridWithGroup.groupName + " | " + itemData.caption)
-                    gridWithGroup.gridView.newItemData(itemData)
-                    return true
-                }, itemData)
+                                     //console.log("Adding item " + gridWithGroup.groupName + " | " + itemData.caption)
+                                     gridWithGroup.gridView.newItemData(itemData)
+                                     return true
+                                 },
+                                 itemData,
+                                 function(container) {
+                                     container.gridsConnectionChanged()
+                                 })
             }
 
-            function forEachGridGroup(group, processFunction, args) {
-                //console.log("DDD " + group)
+            function forEachGridGroup(group, gridGroupProcessFunction, args, containerProcessFunction) {
                 var currentIndexWas = gridsListView.currentIndex
 
 loop1:
+                // Iterating by all GridWithGroupContainers
                 for (var currentView = 0; currentView < gridsListView.count; currentView++) {
                     gridsListView.currentIndex = currentView
+
+                    if (containerProcessFunction !== undefined)
+                        containerProcessFunction(gridsListView.currentItem)
 
                     if (gridsListView.currentItem) {
                         var childs = gridsListView.currentItem.children
 loop2:
+                        // Iterating by it's GridWithGroups
                         for (var child = 0; child < childs.length; child++) {
                             //console.log("CAME ACROSS:" + childs[child].groupName + " WHEN NEED " + group)
                             if ('count' in childs[child] && childs[child].groupName === group)
                             {
-                                var res = processFunction(childs[child], args)
+                                var res = gridGroupProcessFunction(childs[child], args)
                                 if (!res) {
                                     //console.log("LOOP BREAKER!")
                                     continue loop1
