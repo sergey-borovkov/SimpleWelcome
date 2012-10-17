@@ -107,60 +107,14 @@ Column {
         property bool myActiveFocus: false
         signal myActiveFocusChanged(int containerIndex)
 
-        function appendItemToModel(itemData)
-        {
-            itemData.stack = undefined
-            model.append(itemData)
-
-            // UNREM THIS TO ENABLE AUTO-STACKING
-            /*/if (!groupNameVisible) // workaround to apply this to apps tab only
-            {
-                appendItemToModel.lastItem = model.get(model.count - 1)
-                if (appendItemToModel.lastItem && appendItemToModel.lastLetter != appendItemToModel.lastItem.caption.charAt(0).toLowerCase())
-                {
-                    appendItemToModel.lastLetter = appendItemToModel.lastItem.caption.charAt(0).toLowerCase()
-                    appendItemToModel.lastLetterItem = appendItemToModel.lastItem
-                    //console.log("CAHNGE OF")
-                }
-                //if (appentItemToModel.lastItem)
-                //    console.log("last item: " + appentItemToModel.lastItem.caption + "; last letter: " + appentItemToModel.lastLetter + "; stored_first: " + appentItemToModel.lastItem.caption.charAt(0).toLowerCase())
-
-//                console.log(appentItemToModel.lastLetter)
-                if (itemData.caption.charAt(0).toLowerCase() == appendItemToModel.lastLetter)
-                {
-                    if (typeof appendItemToModel.lastLetterItem.stack == 'undefined')
-                    {
-                        //console.log("Initializing group")
-                        var array = []
-                        array.push(itemData)
-                        appendItemToModel.lastLetterItem.stack = array
-                        // UNREM THIS TO GET ONE-ITEM GROUPS
-                        //appentItemToModel.lastLetterItem.imagePath = "image://generalicon/stacked/" + itemData.imagePath.slice(28) + "|"
-                        //console.log(model.get(2).stack + " | " + model.get(2).stack.length)
-                    }
-                    else
-                    {
-                        //console.log("Pushing " + itemData.caption)
-                        //console.log("Got still: " + model.get(2).stack)
-                        var array2 = appendItemToModel.lastLetterItem.stack
-                        array2.push(itemData)
-                        appendItemToModel.lastLetterItem.stack = array2
-                        appendItemToModel.lastLetterItem.imagePath = "image://generalicon/stacked/" + appendItemToModel.lastLetterItem.imagePath.slice(28) + "|" + itemData.imagePath.slice(28)
-                        //console.log(">" + appentItemToModel.lastLetterItem.imagePath)
-                        //console.log("Got after: " + model.get(2).stack)
-                        //model.get(2).stack = model.get(2).stack.push(itemData)
-                    }
-                }
-            } /**/
-        }
-
         function newItemData(itemData)
         {
             // This is needed for delegate to not blaming unknown variable
             if (itemData.pinned === undefined)
                 itemData.pinned = undefined
 
-            appendItemToModel(itemData)
+            itemData.stack = undefined
+            model.append(itemData)
         }
 
         function onItemClicked(newIndex)
