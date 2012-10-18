@@ -6,19 +6,27 @@ Item {
     id: timeFrameTab
     clip: true
     property variant date: new Date()
-    property bool __isLocalSearching: true              //New search in process
+    property bool isLocalSearching: true              //New search in process
     property bool isSocialSearching: true
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery"
     property bool isSocial: state === "social" || state === "socialGallery"
     property bool isNepomukWorking: true
     property variant currentView: undefined
-
     property bool enableWheel: true
+    property bool isReset: true
 
-    //property alias socialTimeLineWheel : socialTimeLineWheelArea
-    //property alias socialGalleryWheel : soc
+    Component.onCompleted: {
+        mainWindow.windowHidden.connect(resetModels)
+    }
 
+    function resetModels() {
+        timeFrameTab.state = ""
+        localDayModel.resetModel()
+        socialDayModel.resetModel()
+        timeScaleModel.resetModel()
+        isReset = true
+    }
 
     function checkNepomuk()
     {
@@ -36,15 +44,15 @@ Item {
     function getMenuItemText(id)
     {
         var txt = id
-        if (id == "All")
+        if (id === "All")
             txt =  i18n_All
-        if (id == "Images")
+        if (id === "Images")
             txt =  i18n_Photo
-        if (id == "Video")
+        if (id === "Video")
             txt =  i18n_Video
-        if (id == "Documents")
+        if (id === "Documents")
             txt =  i18n_Documents
-        if (id == "Manage Networks")
+        if (id === "Manage Networks")
             txt =  i18n_Manage_networks
         return txt
     }
@@ -75,47 +83,37 @@ Item {
         }
     }
 
-
-    function resetTimeScale()
+    function initTimeFrame()
     {
+        timeFrameTab.state = ""
+        // check nepomuk
+        isNepomukWorking = checkNepomuk()
 
-        //Set views on current date
         localFilterBox.state = "current"
-
         localFilterBox.view.currentIndex = 0
         socialFilterBox.view.currentIndex = 0
 
-        timeFrameTab.state = ""
-        if (isNepomukWorking) {
-
-            // start searching local events
-            activityProxy.startSearch()
-
-            tabListView.interactive = false
-
-            if ((__isLocalSearching) && (timeFrameTab.state ==="")) {
-                // to prevent items created and destroyed since
-                // listview still exists and creates components
-                timeLine.model = undefined
+        if (isReset) {
+            if (!isNepomukWorking) {
+                timeFrameTab.state = "nepomukNotInit"
+            } else {
+                activityProxy.startSearch()
+                isLocalSearching = true
+                //tabListView.interactive = false
                 timeFrameTab.state = "timeLineSearch"
             }
-            else {
+            socialProxy.startSearch()
+            isReset = false
+        } else {
+            if (!isNepomukWorking) {
+                timeFrameTab.state = "nepomukNotInit"
+            } else {
                 timeFrameTab.state = "timeline"
-            }
-        }
-        else {
-            timeFrameTab.state = "nepomukNotInit"
-        }
-
-        if (!__isLocalSearching)
-        {
-            if (timeLine.count) {
-                timeLine.currentIndex = timeLine.count - 1
+                //Set views on current date
+                timeScale.list.currentIndex = timeScale.list.count -1
+                timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
                 galleryView.positionViewAtEnd()
-
-                timeScale.list.currentIndex = timeScale.list.count - 1
-                timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
             }
         }
     }
@@ -164,12 +162,7 @@ Item {
         target:tabListView
         onCurrentIndexChanged:{
             if (tabListView.currentIndex === 3) {
-
-                // check nepomuk
-                isNepomukWorking = checkNepomuk()
-
-                // reset all data
-                resetTimeScale()
+                initTimeFrame()
             }
             else {
                 // if need close cloud social item
@@ -194,6 +187,9 @@ Item {
             isSocialSearching = false
             if (timeFrameTab.state === "socialSearching") {
                 timeFrameTab.state = "social"
+                timeScale.list.currentIndex = timeScale.list.count -1
+                socialTimeLine.currentIndex = socialTimeLine.count -1
+                socialTimeLine.positionViewAtEnd()
             }
         }
     }
@@ -201,15 +197,14 @@ Item {
     //On local search finished
     Connections {
         target: activityProxy
-        onFinished: {
-            __isLocalSearching = false
+        onSearchFinished: {
+            isLocalSearching = false
             if (timeFrameTab.state === "timeLineSearch") {
                 timeFrameTab.state = "timeline"
                 //Set views on current date
                 timeScale.list.currentIndex = timeScale.list.count -1
                 timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
-                galleryView.positionViewAtEnd()
             }
         }
     }
@@ -253,13 +248,14 @@ Item {
 
             onCurrentIndexChanged: {
                 setLocalFilter()
-                resetViews()
+                if (timeFrameTab.state !== "timeLineSearch")
+                    resetViews()
             }
 
             function setLocalState() {
                 if (!isNepomukWorking)
                     timeFrameTab.state = "nepomukNotInit"
-                else if (__isLocalSearching)
+                else if (isLocalSearching)
                     timeFrameTab.state = "timeLineSearch"
                 else if (inGallery) {
                     timeFrameTab.state = "gallery"
@@ -328,10 +324,11 @@ Item {
                 }
             }
             onCurrentIndexChanged: {
-                saveCurrentDate()
+                if ((timeFrameTab.state !== "socialAuthorization") && (timeFrameTab.state !== "socialSearching"))
+                    saveCurrentDate()
                 setSocialState()
                 setSocialFilter()
-                if (timeFrameTab.state !== "socialAuthorization")
+                if ((timeFrameTab.state !== "socialAuthorization") && (timeFrameTab.state !== "socialSearching"))
                     resetViews()
             }
 
@@ -347,7 +344,6 @@ Item {
             }
 
             function setSocialFilter() {
-                saveCurrentDate()
                 if(view.currentIndex === 0) { //selectedText = "All"
                     timeScaleModel.setFilter("Social")
                     socialDayModel.setFilter("Social")
@@ -574,24 +570,24 @@ Item {
             hoverEnabled: true
             onClicked: {
                 var index
-                if ( timeFrameTab.state === "timeline" ) {
-                    index = timeLine.currentIndex
-                    timeFrameTab.state = "gallery"
-                    galleryView.currentIndex = index
-                    galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center)
-                }
-                else if ( timeFrameTab.state === "gallery" ) {
-                    index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
-                                                galleryView.y + galleryView.height/2 + galleryView.contentY)
-                    timeFrameTab.state = "timeline"
-                    timeLine.currentIndex = index
-                    timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Contain)
-                }
-                else if ( timeFrameTab.state === "social" ) {
-                    timeFrameTab.state = "socialGallery"
-                }
-                else {
-                    timeFrameTab.state = "social"
+                if (inGallery)
+                {
+                    index = currentView.indexAt(currentView.x + currentView.width/2 + currentView.contentX,
+                                                currentView.y + currentView.height/2 + currentView.contentY)
+                    if (isSocial)
+                        timeFrameTab.state = "social"
+                    else
+                        timeFrameTab.state = "timeline"
+                    currentView.currentIndex = index
+                    currentView.positionViewAtIndex(currentView.currentIndex, ListView.Contain)
+                } else {
+                    index = currentView.currentIndex
+                    if (isSocial)
+                        timeFrameTab.state = "socialGallery"
+                    else
+                        timeFrameTab.state = "gallery"
+                    currentView.currentIndex = index
+                    currentView.positionViewAtIndex(currentView.currentIndex, ListView.Center)
                 }
             }
         }

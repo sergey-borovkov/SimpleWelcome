@@ -15,6 +15,8 @@ class TimeScaleFilterModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit TimeScaleFilterModel(QObject * parent = 0);
+    Q_INVOKABLE void resetModel();
+    Q_INVOKABLE int count();
 
 protected:
 //    bool lessThan(const QModelIndex & left, const QModelIndex & right) const;
@@ -22,8 +24,7 @@ public slots:
     void setFilter(const QString &filter);
     int getYear(int ind);
     int getMonth(int ind);
-    int getDate(int ind);
-    int count();
+    int getDate(int ind);    
 };
 
 class TimeScaleItem : public QObject, public ListItem

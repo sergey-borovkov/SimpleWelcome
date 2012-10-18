@@ -70,7 +70,7 @@ void QmlApplicationViewer::closeEvent(QCloseEvent *event)
     if (1) {
         event->ignore();
         hide();
-        emit windowHid();
+        emit windowHidden();
     }
 }
 
