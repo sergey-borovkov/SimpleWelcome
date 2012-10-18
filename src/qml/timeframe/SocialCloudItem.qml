@@ -214,6 +214,11 @@ Item {
                     maximumLineCount: 5
                     elide: Text.ElideRight
                     //visible: textVisible()
+
+                    onLinkActivated: {
+                        Qt.openUrlExternally(link)
+                    }
+
                 }
                 Image {
                     id: socialImage
