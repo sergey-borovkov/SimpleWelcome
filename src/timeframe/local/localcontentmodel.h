@@ -27,6 +27,7 @@ public:
     void appendRows(const QList<LocalContentItem*> &items);
     void insertRow(int row, LocalContentItem *item);
     void setLister(ActivityProxy* lister);
+    void resetModel();
     LocalContentItem * find(const QDate &date) const;
 
     QRegExp filter() const;
@@ -65,7 +66,9 @@ public:
     Q_INVOKABLE QObject* itemsModel(QDate date) const;
     Q_INVOKABLE int getIndexByDate(int year, int month, bool direction);
     Q_INVOKABLE int getIndexByDate(QDate date);
-    Q_INVOKABLE QDate getDateOfIndex(int listIndex);    
+    Q_INVOKABLE QDate getDateOfIndex(int listIndex);
+    Q_INVOKABLE void resetModel();
+    Q_INVOKABLE int count();
 };
 
 #endif // LOCALCONTENTMODEL_H

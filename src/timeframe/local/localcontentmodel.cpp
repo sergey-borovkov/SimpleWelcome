@@ -55,6 +55,21 @@ QDate LocalContentFilterModel::getDateOfIndex(int listIndex)
     return data(index(listIndex, 0), LocalContentItem::CurrentDateRole).toDate();
 }
 
+
+
+void LocalContentFilterModel::resetModel()
+{
+    LocalContentModel* model = qobject_cast<LocalContentModel*>(sourceModel());
+    if (model) {
+        model->resetModel();
+    }
+}
+
+int LocalContentFilterModel::count()
+{
+    return rowCount();
+}
+
 int LocalContentFilterModel::getIndexByDate(int year, int month, bool direction)
 {
     Q_UNUSED(direction)
@@ -113,6 +128,13 @@ void LocalContentModel::setLister(ActivityProxy *lister)
     m_lister = lister;
     m_lister->setModel(this);
     connect(m_lister, SIGNAL(newActivities(QList<Activity*>)), SLOT(newActivities(QList<Activity*>)));
+}
+
+void LocalContentModel::resetModel()
+{
+    m_urlHash.clear();
+    removeRows(0,rowCount());
+    clear();
 }
 
 void LocalContentModel::newActivities(QList<Activity*> list)
