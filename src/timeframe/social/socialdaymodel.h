@@ -20,6 +20,7 @@ public:
     Q_INVOKABLE QDate getDateOfIndex(int listIndex);
     Q_INVOKABLE int getIndexByDate(int year, int month,  bool direction);
     Q_INVOKABLE int getIndexByDate(QDate date);
+    Q_INVOKABLE void resetModel();
 
 public slots:
     void setFilter(const QString &filter);

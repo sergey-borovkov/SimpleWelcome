@@ -26,10 +26,9 @@ Item {
                 var model = socialDayModel.itemsModel(date)
                 cloud.item.cloudDate = date
                 cloud.item.model = model
-                var c
+                var c = 0
                 for(var i =0; i < cloud.item.children.length; i++) {
                     var subChildren = cloud.item.children[i].children
-                    c = 0
                     for(var j = 0; j < subChildren.length; j++) {
                         if(subChildren[j].objectName === "cloudRect") {
                             subChildren[j].index = c

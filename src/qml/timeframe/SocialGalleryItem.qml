@@ -19,12 +19,6 @@ Item{
         }
     }
 
-    WheelArea {
-        id: modalWheelArea
-        anchors.fill: parent
-        enabled: false
-    }
-
     BorderImage {
         id: innerShadow
         anchors.fill: parent
@@ -463,9 +457,7 @@ Item{
                 height: 300
                 x: timeFrameTab.width/2 - galleryItem.width/2
                 y: timeFrameTab.height/2 - galleryItem.height/2
-            }
-
-            ParentChange { target: modalWheelArea; parent: timeFrameTab }
+            }            
 
             PropertyChanges { target: galleryItem; z: 400}
 
@@ -481,6 +473,8 @@ Item{
                 }
             }
             PropertyChanges { target: galleryRect; z: 9000  }
+
+            PropertyChanges { target: timeFrameTab; enableWheel: false }
 
             PropertyChanges { target: detailsOffArea; visible: true }
 

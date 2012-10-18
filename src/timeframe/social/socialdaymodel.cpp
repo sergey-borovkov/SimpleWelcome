@@ -60,6 +60,15 @@ int SocialDayFilterModel::getIndexByDate(QDate date)
     return rowCount() -1 ;
 }
 
+void SocialDayFilterModel::resetModel()
+{
+    SocialDayModel* model = qobject_cast<SocialDayModel*>(sourceModel());
+    if (model) {
+        model->removeRows(0,model->rowCount());
+        //model->clear();
+    }
+}
+
 QDate SocialDayFilterModel::getDateOfIndex(int listIndex)
 {
     if ((listIndex >= rowCount()) || (listIndex < 0))

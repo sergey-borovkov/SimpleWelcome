@@ -58,8 +58,10 @@ QDate LocalContentFilterModel::getDateOfIndex(int listIndex)
 void LocalContentFilterModel::resetModel()
 {
     LocalContentModel* model = qobject_cast<LocalContentModel*>(sourceModel());
-    if (model)
-        model->clear();
+    if (model) {
+        model->removeRows(0,model->rowCount());
+        //model->clear();
+    }
 }
 
 int LocalContentFilterModel::getIndexByDate(int year, int month, bool direction)
