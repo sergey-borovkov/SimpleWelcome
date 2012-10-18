@@ -49,12 +49,6 @@ Item {
         enabled: false
     }
 
-    WheelArea {
-        id: modalWheelArea
-        anchors.fill: parent
-        enabled: false
-    }
-
     BorderImage {
         id: innerShadow
         anchors.fill: parent
@@ -483,7 +477,7 @@ Item {
                 height: 300
             }
 
-            ParentChange { target: modalWheelArea; parent: timeFrameTab }
+            PropertyChanges { target: timeFrameTab; enableWheel: false }
 
             PropertyChanges { target: socialCloudItem; z: 400 }
 

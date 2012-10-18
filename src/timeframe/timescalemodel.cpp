@@ -13,6 +13,15 @@ TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
     setFilterRegExp(QRegExp("Image|Video|Document"));
 }
 
+void TimeScaleFilterModel::resetModel()
+{
+    TimeScaleModel* model = qobject_cast<TimeScaleModel*>(sourceModel());
+    if (model) {
+        model->removeRows(0,model->rowCount());
+        //model->clear();
+    }
+}
+
 /*TO-DO: add dynamic plugin type*/
 
 void TimeScaleFilterModel::setFilter(const QString &filter)

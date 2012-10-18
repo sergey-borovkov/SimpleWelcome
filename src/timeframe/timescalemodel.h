@@ -15,6 +15,7 @@ class TimeScaleFilterModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit TimeScaleFilterModel(QObject * parent = 0);
+    Q_INVOKABLE void resetModel();
 
 protected:
 //    bool lessThan(const QModelIndex & left, const QModelIndex & right) const;
