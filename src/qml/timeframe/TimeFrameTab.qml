@@ -570,24 +570,24 @@ Item {
             hoverEnabled: true
             onClicked: {
                 var index
-                if ( timeFrameTab.state === "timeline" ) {
-                    index = timeLine.currentIndex
-                    timeFrameTab.state = "gallery"
-                    galleryView.currentIndex = index
-                    galleryView.positionViewAtIndex(galleryView.currentIndex, ListView.Center)
-                }
-                else if ( timeFrameTab.state === "gallery" ) {
-                    index = galleryView.indexAt(galleryView.x + galleryView.width/2 + galleryView.contentX,
-                                                galleryView.y + galleryView.height/2 + galleryView.contentY)
-                    timeFrameTab.state = "timeline"
-                    timeLine.currentIndex = index
-                    timeLine.positionViewAtIndex(timeLine.currentIndex, ListView.Contain)
-                }
-                else if ( timeFrameTab.state === "social" ) {
-                    timeFrameTab.state = "socialGallery"
-                }
-                else {
-                    timeFrameTab.state = "social"
+                if (inGallery)
+                {
+                    index = currentView.indexAt(currentView.x + currentView.width/2 + currentView.contentX,
+                                                currentView.y + currentView.height/2 + currentView.contentY)
+                    if (isSocial)
+                        timeFrameTab.state = "social"
+                    else
+                        timeFrameTab.state = "timeline"
+                    currentView.currentIndex = index
+                    currentView.positionViewAtIndex(currentView.currentIndex, ListView.Contain)
+                } else {
+                    index = currentView.currentIndex
+                    if (isSocial)
+                        timeFrameTab.state = "socialGallery"
+                    else
+                        timeFrameTab.state = "gallery"
+                    currentView.currentIndex = index
+                    currentView.positionViewAtIndex(currentView.currentIndex, ListView.Center)
                 }
             }
         }
