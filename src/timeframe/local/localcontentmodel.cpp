@@ -55,6 +55,13 @@ QDate LocalContentFilterModel::getDateOfIndex(int listIndex)
     return data(index(listIndex, 0), LocalContentItem::CurrentDateRole).toDate();
 }
 
+void LocalContentFilterModel::resetModel()
+{
+    LocalContentModel* model = qobject_cast<LocalContentModel*>(sourceModel());
+    if (model)
+        model->clear();
+}
+
 int LocalContentFilterModel::getIndexByDate(int year, int month, bool direction)
 {
     Q_UNUSED(direction)

@@ -33,7 +33,7 @@ public:
 
 signals:
     void windowSizeChanged();
-    void windowHid();
+    void windowHidden();
     void windowShown();
 
 public slots:

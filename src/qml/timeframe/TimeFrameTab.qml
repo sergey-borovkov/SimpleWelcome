@@ -14,6 +14,14 @@ Item {
     property bool isNepomukWorking: true
     property variant currentView: undefined
 
+    Component.onCompleted: {
+        mainWindow.windowHidden.connect(resetModels)
+    }
+
+    function resetModels() {
+        console.log("hidden")
+        localDayModel.resetModel()
+    }
 
     function checkNepomuk()
     {
@@ -31,15 +39,15 @@ Item {
     function getMenuItemText(id)
     {
         var txt = id
-        if (id == "All")
+        if (id === "All")
             txt =  i18n_All
-        if (id == "Images")
+        if (id === "Images")
             txt =  i18n_Photo
-        if (id == "Video")
+        if (id === "Video")
             txt =  i18n_Video
-        if (id == "Documents")
+        if (id === "Documents")
             txt =  i18n_Documents
-        if (id == "Manage Networks")
+        if (id === "Manage Networks")
             txt =  i18n_Manage_networks
         return txt
     }
