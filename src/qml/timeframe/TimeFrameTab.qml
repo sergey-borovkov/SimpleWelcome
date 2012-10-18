@@ -233,7 +233,7 @@ Item {
             state: "current"
 
             onStateChanged: {
-                if ((localFilterBox.state === "current") && (socialFilterBox.state === "current")){
+                if ((localFilterBox.state === "current") && ((socialFilterBox.state === "current") || (socialFilterBox.state === "open"))) {
                     socialFilterBox.state = ""
                     setLocalState()
                     setLocalFilter()
@@ -304,7 +304,7 @@ Item {
             model: menuSocialItems
             name: i18n_Social_networkong_sites
             onStateChanged: {
-                if ((localFilterBox.state === "current") && (socialFilterBox.state === "current")){
+                if ((socialFilterBox.state === "current") && ((localFilterBox.state === "current") || (localFilterBox.state === "open"))) {
                     if (socialFilterBox.view.count < 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
                         timeFrameTab.state = "socialAuthorization"
                         socialFilterBox.view.currentIndex = 0
