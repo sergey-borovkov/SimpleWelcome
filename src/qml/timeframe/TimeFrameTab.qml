@@ -463,6 +463,7 @@ Item {
         preferredHighlightEnd : timeLine.width*2/3
         boundsBehavior : Flickable.StopAtBounds
         cacheBuffer: desktopWidth
+        opacity: 0
 
         WheelArea {
             id: timeLineWheelArea
@@ -492,6 +493,7 @@ Item {
         boundsBehavior : Flickable.StopAtBounds
         visible: false
         cacheBuffer: desktopWidth
+        opacity: 0
 
         WheelArea {
             id: socialTimeLineWheelArea
@@ -781,7 +783,7 @@ Item {
         },
         State {
             name: "timeline"
-            PropertyChanges { target: timeLine;  visible : true; model: localDayModel }
+            PropertyChanges { target: timeLine;  visible : true; model: localDayModel; opacity: 1 }
 
             PropertyChanges { target: timeFrameTab;  currentView: timeLine }
         },
@@ -808,7 +810,7 @@ Item {
 
             PropertyChanges { target: waitIndicator; visible: true }
 
-            PropertyChanges { target: timeScale; visible: false }
+            PropertyChanges { target: timeScale; visible: false; opacity: 0 }
 
             PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
         },
@@ -858,7 +860,7 @@ Item {
 
             PropertyChanges { target: galleryButton; visible: false }
 
-            PropertyChanges { target: timeScale; visible: false }
+            PropertyChanges { target: timeScale; visible: false; opacity: 0 }
         }
     ]
 }
