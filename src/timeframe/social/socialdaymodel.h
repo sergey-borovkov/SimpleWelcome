@@ -21,6 +21,7 @@ public:
     Q_INVOKABLE int getIndexByDate(int year, int month,  bool direction);
     Q_INVOKABLE int getIndexByDate(QDate date);
     Q_INVOKABLE void resetModel();
+    Q_INVOKABLE int count();
 
 public slots:
     void setFilter(const QString &filter);
@@ -39,6 +40,7 @@ public:
 
     void appendRows(const QList<SocialDayItem*> &items);
     void insertRow(int row, SocialDayItem* item);
+    void resetModel();
     Q_INVOKABLE QObject* itemsModel(QDate date) const;
 
 public slots:

@@ -64,9 +64,14 @@ void SocialDayFilterModel::resetModel()
 {
     SocialDayModel* model = qobject_cast<SocialDayModel*>(sourceModel());
     if (model) {
-        model->removeRows(0,model->rowCount());
+        model->resetModel();
         //model->clear();
     }
+}
+
+int SocialDayFilterModel::count()
+{
+    return rowCount();
 }
 
 QDate SocialDayFilterModel::getDateOfIndex(int listIndex)
@@ -95,6 +100,14 @@ void SocialDayModel::insertRow(int row, SocialDayItem *item)
 {
     ListModel::insertRow(row, item);
     connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
+}
+
+void SocialDayModel::resetModel()
+{
+    m_idSet.clear();
+    m_idHash.clear();
+    removeRows(0,rowCount());
+    clear();
 }
 
 QObject* SocialDayModel::itemsModel(QDate date) const

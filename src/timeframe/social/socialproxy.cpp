@@ -46,11 +46,12 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
 
         bool isEnabled = settings.value(plugin->name()).toBool();
         if (isEnabled && plugin->authorized()) {
-            Request *requestId = plugin->requestManager()->queryUserId();
+            /*Request *requestId = plugin->requestManager()->queryUserId();
             requestId->start();
             Request *request = plugin->requestManager()->queryWall(QDate(), QDate());
             m_searchInProgressCount++;
             request->start();
+            */
             m_enabledPlugins.insert(plugin->name());
         }
     }
@@ -127,12 +128,19 @@ void SocialProxy::getUserPicture(const QString &id, const QString &parentId, con
 
 void SocialProxy::startSearch()
 {
+    bool start = false;
     foreach(ISocialPlugin * plugin, m_plugins) {
-        if (m_enabledPlugins.contains(plugin->name())) {
-            plugin->requestManager()->queryWall(QDate(), QDate());
+        if (m_enabledPlugins.contains(plugin->name())) {            
+            Request *requestId = plugin->requestManager()->queryUserId();
+            requestId->start();
+            Request *request = plugin->requestManager()->queryWall(QDate(), QDate());
             m_searchInProgressCount++;
+            request->start();
+            start = true;
         }
     }
+    if (start)
+        emit searchStarted();
 }
 
 PluginRequestReply *SocialProxy::like(const QString &id, const QString &pluginName)

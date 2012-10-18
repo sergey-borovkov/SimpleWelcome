@@ -9,7 +9,7 @@ ActivityProxy::ActivityProxy(NepomukSource *source, QObject *parent) :
     m_model(0)
 {
     connect(source, SIGNAL(newActivities(QList<Activity*>)), this, SLOT(newData(QList<Activity*>)));
-    connect(source, SIGNAL(searchFinished()), SIGNAL(finished()));
+    connect(source, SIGNAL(searchFinished()), SIGNAL(searchFinished()));
     connect(this, SIGNAL(search()), source, SLOT(startSearch()));
 }
 

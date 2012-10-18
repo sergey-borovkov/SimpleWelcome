@@ -105,7 +105,7 @@ bool ListModel::removeRow(int row, const QModelIndex &parent)
 bool ListModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     Q_UNUSED(parent);
-    if (row < 0 || (row + count) >= m_items.size())
+    if (row < 0 || (row + count) > m_items.size())
         return false;
     beginRemoveRows(QModelIndex(), row, row + count - 1);
     for (int i = 0; i < count; ++i)
