@@ -7,14 +7,6 @@
 #include <QHash>
 #include <QVariantMap>
 
-class AppItem : public QVariantMap
-{
-public:
-    bool operator <(const AppItem &other) const {
-        return value("caption").toString().compare(other.value("caption").toString(), Qt::CaseInsensitive) < 0;
-    }
-};
-
 /* Item in QML is a dictionary with the following fields:
  * -----
  * imagePath - path to image provider to get icon
@@ -25,8 +17,9 @@ public:
  * stack - items stacked in this item, array of dictionaries // auto set to undefined
 */
 
+typedef QVariantMap AppItem;
+typedef QList<AppItem> AppItemList;
+
 inline uint qHash (const AppItem &item) {
     return qHash(item["caption"].toString());
 }
-
-class AppItemList : public QList<AppItem> { };

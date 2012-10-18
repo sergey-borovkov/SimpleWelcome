@@ -13,11 +13,6 @@ DataSource_RecentApps::DataSource_RecentApps(QObject *parent)
     addRecentApp(recentApp);
 }
 
-DataSource_RecentApps::~DataSource_RecentApps()
-{
-    saveData();
-}
-
 int DataSource_RecentApps::getItemCount()
 {
     return recentAppsList.count();
@@ -89,11 +84,9 @@ void DataSource_RecentApps::itemClicked(int newIndex)
     }
 }
 
-void DataSource_RecentApps::getContent()
+QVariantMap DataSource_RecentApps::getContent(int index)
 {
-    for (int i = 0; i < recentAppsList.size(); i++) {
-        emit newItemData(recentAppsList[i], qmlGroupName);
-    }
+    return recentAppsList[index];
 }
 
 void DataSource_RecentApps::itemDragged(int fromIndex, int toIndex)

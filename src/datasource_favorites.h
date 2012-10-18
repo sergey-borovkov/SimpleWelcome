@@ -11,6 +11,8 @@ class DataSource_Favorites : public DataSource
 public:
     explicit DataSource_Favorites(QObject* parent = 0);
     Q_INVOKABLE virtual int getItemCount();
+    Q_INVOKABLE virtual QVariantMap getContent(int index);
+
     Q_INVOKABLE QString itemUrlDnd(int id);
 
 signals:
@@ -20,7 +22,6 @@ signals:
 
 public slots:
     virtual void itemClicked(int newIndex);
-    virtual void getContent();
 
 private:
     AppItemList favoritesList;

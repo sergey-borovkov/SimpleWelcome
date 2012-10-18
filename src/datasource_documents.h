@@ -15,6 +15,8 @@ class DataSource_Documents : public DataSource
 public:
     explicit DataSource_Documents(QObject* parent, QMLConstants *inConstants);
     Q_INVOKABLE virtual int getItemCount();
+    Q_INVOKABLE virtual QVariantMap getContent(int index);
+
     Q_INVOKABLE QString itemUrlDnd(int id);
     QIcon getIcon(QString destination);
 
@@ -26,7 +28,6 @@ signals:
 
 public slots:
     virtual void itemClicked(int newIndex);
-    virtual void getContent();
     void updateContent();
 
 private slots:

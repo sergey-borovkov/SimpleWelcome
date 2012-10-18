@@ -10,8 +10,9 @@ class DataSource_RecentApps : public DataSource
 
 public:
     explicit DataSource_RecentApps(QObject* parent = 0);
-    ~DataSource_RecentApps();
     Q_INVOKABLE virtual int getItemCount();
+    Q_INVOKABLE virtual QVariantMap getContent(int index);
+
     Q_INVOKABLE QString itemUrlDnd(int id);
     void addRecentApp(QString desktopFile);
 
@@ -22,7 +23,6 @@ signals:
 
 public slots:
     virtual void itemClicked(int newIndex);
-    virtual void getContent();
     void itemDragged(int fromIndex, int toIndex);
 
 private:

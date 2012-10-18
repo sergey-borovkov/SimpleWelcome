@@ -69,7 +69,6 @@ int DataSource_Apps::getItemCount()
     return appsList.count();
 }
 
-
 QString DataSource_Apps::itemUrlDnd(int id)
 {
     if (id < 0 || id >= appsList.count())
@@ -77,11 +76,14 @@ QString DataSource_Apps::itemUrlDnd(int id)
     return QString("file://%1").arg(appsList[id]["desktopEntry"].toString());
 }
 
-void DataSource_Apps::getContent()
+QVariantMap DataSource_Apps::getContent(int index)
 {
-    for (int i = 0; i < appsList.size(); i++) {
-        emit newItemData(appsList[i], qmlGroupName);
-    }
+    return appsList[index];
+}
+
+bool appItemLessThan(const AppItem &a, const QVariantMap &b)
+{
+    return a.value("caption").toString().compare(b.value("caption").toString(), Qt::CaseInsensitive) < 0;
 }
 
 void DataSource_Apps::updateItems(bool isResetContent/* = true*/)
@@ -89,7 +91,7 @@ void DataSource_Apps::updateItems(bool isResetContent/* = true*/)
     prevCurrentGroup = currentGroup;
 
     AppItemList newList = GetFlatList(currentGroup);
-    qSort(newList);
+    qSort(newList.begin(), newList.end(), appItemLessThan);
     for (int i = 0; i < newList.count(); i++)
         newList[i]["id"] = i;
 

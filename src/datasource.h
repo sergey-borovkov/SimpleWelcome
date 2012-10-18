@@ -15,7 +15,7 @@ public:
 
 public slots:
     //virtual void itemClicked(int newIndex) = 0;
-    virtual void getContent() = 0;
+    //Q_INVOKABLE virtual QVariantMap getContent(int index, QString group) = 0;
 
 signals:
     //void newItemData(QVariantMap itemData) const;

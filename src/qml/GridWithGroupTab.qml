@@ -12,7 +12,7 @@ Item {
     property string isPopupOpened: popupFrame.state === "OPEN"
     property int stackCellOpenedId: -1
 
-    property variant dataSources: {"1" : "1"}
+    property variant dataSources
 
     function updateGridsContent()
     {
@@ -116,9 +116,9 @@ Item {
             function createTabsFromGroups()
             {
                 //if (groups !== undefined)
-                //    console.log("----------------------------------- createTabsFromGroups " + groups[0].groupName)
+                //    //console.log("----------------------------------- createTabsFromGroups " + groups[0].groupName)
                 //else
-                //    console.log("----------------------------------- createTabsFromGroups ")
+                //    //console.log("----------------------------------- createTabsFromGroups ")
 
                 // Constants. Used hack to retrieve them from C++, no way to do it straightforward AFAIK
                 var spacing = constants.gridWithGroupsSpacing, // spacing between GridWithGroups
@@ -196,23 +196,6 @@ Item {
                 //forEachGridGroup("Apps", loadStacks, mainWindow.loadSetting("Stacks"))
             }
 
-            function tabNewItemData(itemData, group) {
-                //console.log("New item " + group + " | " + itemData.caption)
-                forEachGridGroup(group,
-                                 function(gridWithGroup, itemData) {
-                                     if (gridWithGroup.maxCount !== -1 && gridWithGroup.gridView.count > gridWithGroup.maxCount) // 5*7
-                                         return false
-
-                                     //console.log("Adding item " + gridWithGroup.groupName + " | " + itemData.caption)
-                                     gridWithGroup.gridView.newItemData(itemData)
-                                     return true
-                                 },
-                                 itemData,
-                                 function(container) {
-                                     container.gridsConnectionChanged()
-                                 })
-            }
-
             function forEachGridGroup(group, gridGroupProcessFunction, args, containerProcessFunction) {
                 var currentIndexWas = gridsListView.currentIndex
 
@@ -230,7 +213,7 @@ loop2:
                         // Iterating by it's GridWithGroups
                         for (var child = 0; child < childs.length; child++) {
                             //console.log("CAME ACROSS:" + childs[child].groupName + " WHEN NEED " + group)
-                            if ('count' in childs[child] && childs[child].groupName === group)
+                            if ('count' in childs[child] && (!group || childs[child].groupName === group))
                             {
                                 var res = gridGroupProcessFunction(childs[child], args)
                                 if (!res) {
@@ -317,38 +300,78 @@ loop2:
                 mainWindow.saveSetting("Stacks", setting)
             }
 
+            function fetchItemsFromDataSources() {
+                var dataSourcesVar = dataSources
+
+                // Iterating by all GridWithGroupContainers
+                for (var currentView = 0; currentView < gridsListView.count; currentView++) {
+                    gridsListView.currentIndex = currentView
+                    gridsListView.currentItem.gridsConnectionChanged()
+                    //console.log("iterating gridsListView")
+
+                    if (gridsListView.currentItem) {
+                        var childs = gridsListView.currentItem.children
+
+                        // Iterating by it's GridWithGroups
+                        for (var child = 0; child < childs.length; child++) {
+                            var gridWithGroup = childs[child]
+                            //console.log("CAME ACROSS:" + gridWithGroup.groupName)
+                            if ('count' in gridWithGroup)
+                            {
+                                //console.log("Adding items to " + gridWithGroup.groupName + "; dataSourcesVar.length: " + dataSourcesVar.length)
+                                for (var ds = 0; ds < dataSourcesVar.length; ds++) {
+                                    //console.log("checking " + dataSourcesVar[ds].groupName + " == " + gridWithGroup.groupName)
+                                    if (dataSourcesVar[ds].groupName === gridWithGroup.groupName) {
+                                        //console.log("Adding to " + gridWithGroup.groupName)
+                                        var itemCount = dataSourcesVar[ds].dataSource.getItemCount(gridWithGroup.groupName)
+                                        //console.log("Item count: " + itemCount)
+                                        if (dataSourcesVar[ds].index === undefined)
+                                            dataSourcesVar[ds].index = 0
+                                        //console.log("dataSourcesVar[ds].index: " + dataSourcesVar[ds].index)
+                                        for (; dataSourcesVar[ds].index < itemCount &&
+                                             (gridWithGroup.maxCount === -1 || gridWithGroup.gridView.count <= gridWithGroup.maxCount ); dataSourcesVar[ds].index++) {
+                                            //console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "]")
+                                            gridWithGroup.gridView.newItemData(dataSourcesVar[ds].dataSource.getContent(dataSourcesVar[ds].index, gridWithGroup.groupName))
+                                        }
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                gridsListView.currentIndex = 0
+            }
+
+            function updateGridsContent() {
+                gridsListModel.clear()
+                createTabsFromGroups()
+                fetchItemsFromDataSources()
+            }
+
             Component.onCompleted: {
                 var dataSourcesDict = new Object
                 //console.log("Component.onCompleted: {")
                 for (var i = 0; i < groups.length; i++)
                 {
                     //console.log("  groups[i].groupName: " + groups[i].groupName)
-                    if (dataSourcesDict[groups[i].dataSource] === undefined) {
+                    if (dataSourcesDict[groups[i].groupName] === undefined) {
                         //console.log("  not found in dict. Adding: " + groups[i].groupName)
 
                         groups[i].dataSource.qmlGroupName = groups[i].groupName
                         groups[i].dataSource.resetContent.connect(updateGridsContent)
-                        groups[i].dataSource.newItemData.connect(tabNewItemData)
 
-                        dataSourcesDict[groups[i].dataSource] = groups[i].dataSource
+                        dataSourcesDict[groups[i].groupName] = groups[i]
                     }
                 }
+
+                var dataSourcesArr = new Array
+                for (var ds in dataSourcesDict)
+                    dataSourcesArr.push(dataSourcesDict[ds])
+                dataSources = dataSourcesArr
+
                 //console.log("}")
-                dataSources = dataSourcesDict
-            }
-
-            function updateGridsContent() {
-                gridsListModel.clear()
-                //console.log("Clearing " + groups[0].group)
-                createTabsFromGroups()
-
-                //console.log("updateGridsContent() {")
-                for (var ds in dataSources) {
-                    //console.log("  Getting content from " + dataSources[ds].qmlGroupName)
-                    dataSources[ds].getContent()
-                }
-
-                gridsListView.currentIndex = 0
             }
 
             function hideGroup()
