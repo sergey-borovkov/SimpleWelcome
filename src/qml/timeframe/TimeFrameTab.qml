@@ -14,6 +14,11 @@ Item {
     property bool isNepomukWorking: true
     property variant currentView: undefined
 
+    property bool enableWheel: true
+
+    //property alias socialTimeLineWheel : socialTimeLineWheelArea
+    //property alias socialGalleryWheel : soc
+
 
     function checkNepomuk()
     {
@@ -496,6 +501,7 @@ Item {
             id: socialTimeLineWheelArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, socialTimeLine)
+            enabled: enableWheel
         }
     }
 
@@ -510,6 +516,7 @@ Item {
             id: timeScaleWheelArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, timeScale.list)
+            enabled: enableWheel
         }
     }
 
@@ -652,6 +659,7 @@ Item {
             id: socialGalleryViewWhellArea
             anchors.fill: parent
             onScrollVert: _processScroll(delta, socialGalleryView)
+            enabled: enableWheel
         }
     }
 
@@ -665,8 +673,8 @@ Item {
     function updateTimeScale() {
         var index = 0
         var date = new Date()
-        index = currentView.indexAt(timeLine.x + timeLine.width/2 + timeLine.contentX,
-                                    timeLine.y + timeLine.height/2 + timeLine.contentY)
+        index = currentView.indexAt(currentView.x + currentView.width/2 + currentView.contentX,
+                                    currentView.y + currentView.height/2 + currentView.contentY)
 
         date = isSocial ? socialDayModel.getDateOfIndex(index) : localDayModel.getDateOfIndex(index)
 
