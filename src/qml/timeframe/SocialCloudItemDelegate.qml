@@ -106,6 +106,10 @@ Component {
                 text: message
                 elide: Text.ElideRight
                 maximumLineCount: picture ? 1 : 6
+
+                onLinkActivated: {
+                    Qt.openUrlExternally(link)
+                }
             }
         }
     }
