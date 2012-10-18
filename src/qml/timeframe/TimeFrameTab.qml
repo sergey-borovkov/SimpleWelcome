@@ -833,6 +833,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom:  timeFrameTab.bottom
             }
+            PropertyChanges { target: timeScale; anchors.bottomMargin: 20 }
 
             PropertyChanges { target: socialGalleryView; opacity: 1 }
 
