@@ -65,7 +65,8 @@ public:
     Q_INVOKABLE QObject* itemsModel(QDate date) const;
     Q_INVOKABLE int getIndexByDate(int year, int month, bool direction);
     Q_INVOKABLE int getIndexByDate(QDate date);
-    Q_INVOKABLE QDate getDateOfIndex(int listIndex);    
+    Q_INVOKABLE QDate getDateOfIndex(int listIndex);
+    Q_INVOKABLE void resetModel();
 };
 
 #endif // LOCALCONTENTMODEL_H

@@ -68,7 +68,7 @@ Item {
         Component.onCompleted: {
             isCompleted = true
             console.log("completed with: " + width + "x" + height + "")
-            mainWindow.windowHid.connect(onWindowHid)
+            mainWindow.windowHidden.connect(onWindowHid)
             mainWindow.windowSizeChanged.connect(onWindowSizeChanged)
             bottomBar.wheelScroll.connect(tabListView.onWheelScroll)
         }
