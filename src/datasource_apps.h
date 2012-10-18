@@ -13,6 +13,7 @@ class DataSource_Apps : public DataSource
 public:
     explicit DataSource_Apps(QObject* parent = 0, DataSource_RecentApps *recentApps = 0);
     Q_INVOKABLE virtual int getItemCount();
+    Q_INVOKABLE virtual QVariantMap getContent(int index);
 
     Q_INVOKABLE QString itemUrlDnd(int id);
 
@@ -23,7 +24,6 @@ signals:
 
 public slots:
     virtual void itemClicked(int newIndex);
-    virtual void getContent();
     void updateItems(bool isResetContent = true);
 
 private:

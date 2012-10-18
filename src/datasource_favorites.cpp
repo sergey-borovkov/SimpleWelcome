@@ -41,11 +41,9 @@ QString DataSource_Favorites::itemUrlDnd(int id)
 }
 
 
-void DataSource_Favorites::getContent()
+QVariantMap DataSource_Favorites::getContent(int index)
 {
-    for (int i = 0; i < favoritesList.count(); i++) {
-        emit newItemData(favoritesList[i], qmlGroupName);
-    }
+    return favoritesList[index];
 }
 
 void DataSource_Favorites::itemClicked(int newIndex)

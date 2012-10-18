@@ -43,11 +43,9 @@ QIcon DataSource_Documents::getIcon(QString destination)
     return QIcon();
 }
 
-void DataSource_Documents::getContent()
+QVariantMap DataSource_Documents::getContent(int index)
 {
-    for (int i = 0; i < docsList.size(); i++) {
-        emit newItemData(docsList[i], qmlGroupName);
-    }
+    return docsList[index];
 }
 
 void DataSource_Documents::updateContent()

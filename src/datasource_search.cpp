@@ -204,14 +204,12 @@ void DataSource_Search::itemClicked(int newIndex, QString group)
     }
 }
 
-void DataSource_Search::getContent()
+QVariantMap DataSource_Search::getContent(int index, QString group)
 {
-    QMapIterator<QString, AppItemList> i(matches);
-    while (i.hasNext()) {
-        i.next();
-        foreach(QVariantMap map, i.value())
-            emit newItemData(map, i.key());
-    }
+    QMap<QString, AppItemList>::iterator it = matches.find(group);
+    if (it != matches.end())
+        return it.value()[index];
+    return QVariantMap();
 }
 
 void DataSource_Search::newSearchMatches(const QList<Plasma::QueryMatch> &newMatches)
