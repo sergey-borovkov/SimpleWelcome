@@ -5,8 +5,9 @@
 #include <QtCore/QUrl>
 #include <QtCore/QRegExp>
 #include <QtCore/QStringList>
-#include <QVariant>
-#include <QMap>
+#include <QtCore/QVariant>
+#include <QtCore/QMap>
+
 #include <qjson/parser.h>
 
 
@@ -64,12 +65,21 @@ void FeedItem::fillFromMap(QVariantMap map)
     }
 
     // if user posts a link
-    bool isLink = message.startsWith("http://");
-    if (isLink) {
-        m_data.insert(Text, QString("<a href=%1>%2</a>").arg(message).arg(message));
-    } else
-        m_data.insert(Text, message);
+    QRegExp reUrl("(((?:https?|ftp)://|www)\\S+)");
+    bool hasLink = message.contains(reUrl);
+    if (hasLink) {
+        int pos = reUrl.indexIn(message);
+        QString after = "<a href=\"\\1\">\\1</a>";
+        if (pos > -1) {
+            if (reUrl.cap(1).startsWith("www", Qt::CaseInsensitive)) {
+                after = "<a href=\"http://\\1\">\\1</a>";
+            }
+        }
 
+        m_data.insert(Text, message.replace(reUrl, after));
+    }
+    else
+        m_data.insert(Text, message);
 
     if (map.contains("date")) {
         uint t  = map.value("date").toUInt();

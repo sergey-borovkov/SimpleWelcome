@@ -197,6 +197,12 @@ Item{
                     verticalAlignment: Text.AlignVCenter
                     text: message
                     color: "white"
+                    //textFormat: Text.RichText
+
+                    onLinkActivated: {
+                        Qt.openUrlExternally(link)
+                    }
+
                 }
 
 
