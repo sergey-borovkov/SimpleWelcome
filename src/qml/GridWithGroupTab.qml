@@ -306,7 +306,6 @@ loop2:
                 // Iterating by all GridWithGroupContainers
                 for (var currentView = 0; currentView < gridsListView.count; currentView++) {
                     gridsListView.currentIndex = currentView
-                    gridsListView.currentItem.gridsConnectionChanged()
                     //console.log("iterating gridsListView")
 
                     if (gridsListView.currentItem) {
@@ -339,6 +338,7 @@ loop2:
                             }
                         }
                     }
+                    gridsListView.currentItem.gridsConnectionChanged()
                 }
 
                 gridsListView.currentIndex = 0
