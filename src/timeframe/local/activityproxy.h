@@ -19,7 +19,7 @@ public:
 signals:
     void newActivities(QList<Activity*>);
     void newMonth(int, int , QString type);
-    void finished();
+    void searchFinished();
     void search();
 
 public slots:

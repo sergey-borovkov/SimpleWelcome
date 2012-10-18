@@ -6,33 +6,27 @@ Item {
     id: timeFrameTab
     clip: true
     property variant date: new Date()
-    property bool __isLocalSearching: true              //New search in process
+    property bool isLocalSearching: true              //New search in process
     property bool isSocialSearching: true
     property bool direction: false  //true is - right direction; false - is left
     property bool inGallery: state === "socialGallery" || state === "gallery"
     property bool isSocial: state === "social" || state === "socialGallery"
     property bool isNepomukWorking: true
     property variant currentView: undefined
-
+    property bool enableWheel: true
+    property bool isReset: true
 
     Component.onCompleted: {
         mainWindow.windowHidden.connect(resetModels)
     }
 
-    function resetModels() {
-        console.log("hidden")
+    function resetModels() {        
         timeFrameTab.state = ""
         localDayModel.resetModel()
         socialDayModel.resetModel()
         timeScaleModel.resetModel()
+        isReset = true
     }
-
-    property bool enableWheel: true
-
-    //property alias socialTimeLineWheel : socialTimeLineWheelArea
-    //property alias socialGalleryWheel : soc
-
-
 
     function checkNepomuk()
     {
@@ -90,46 +84,37 @@ Item {
     }
 
 
-    function resetTimeScale()
+    function initTimeFrame()
     {
+        timeFrameTab.state = ""
+        // check nepomuk
+        isNepomukWorking = checkNepomuk()
 
-        //Set views on current date
         localFilterBox.state = "current"
-
         localFilterBox.view.currentIndex = 0
         socialFilterBox.view.currentIndex = 0
 
-        timeFrameTab.state = ""
-        if (isNepomukWorking) {
-
-            // start searching local events
-            activityProxy.startSearch()
-
-            tabListView.interactive = false
-
-            if ((__isLocalSearching) && (timeFrameTab.state ==="")) {
-                // to prevent items created and destroyed since
-                // listview still exists and creates components
-                timeLine.model = undefined
+        if (isReset) {
+            if (!isNepomukWorking) {
+                timeFrameTab.state = "nepomukNotInit"
+            } else {
+                activityProxy.startSearch()
+                isLocalSearching = true
+                //tabListView.interactive = false
                 timeFrameTab.state = "timeLineSearch"
             }
-            else {
+            socialProxy.startSearch()
+            isReset = false
+        } else {
+            if (!isNepomukWorking) {
+                timeFrameTab.state = "nepomukNotInit"
+            } else {
                 timeFrameTab.state = "timeline"
-            }
-        }
-        else {
-            timeFrameTab.state = "nepomukNotInit"
-        }
-
-        if (!__isLocalSearching)
-        {
-            if (timeLine.count) {
-                timeLine.currentIndex = timeLine.count - 1
+                //Set views on current date
+                timeScale.list.currentIndex = timeScale.list.count -1
+                timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
                 galleryView.positionViewAtEnd()
-
-                timeScale.list.currentIndex = timeScale.list.count - 1
-                timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
             }
         }
     }
@@ -177,13 +162,8 @@ Item {
     Connections {
         target:tabListView
         onCurrentIndexChanged:{
-            if (tabListView.currentIndex === 3) {
-
-                // check nepomuk
-                isNepomukWorking = checkNepomuk()
-
-                // reset all data
-                resetTimeScale()
+            if (tabListView.currentIndex === 3) {                
+                initTimeFrame()
             }
             else {
                 // if need close cloud social item
@@ -215,8 +195,8 @@ Item {
     //On local search finished
     Connections {
         target: activityProxy
-        onFinished: {
-            __isLocalSearching = false
+        onSearchFinished: {
+            isLocalSearching = false
             if (timeFrameTab.state === "timeLineSearch") {
                 timeFrameTab.state = "timeline"
                 //Set views on current date
@@ -273,7 +253,7 @@ Item {
             function setLocalState() {
                 if (!isNepomukWorking)
                     timeFrameTab.state = "nepomukNotInit"
-                else if (__isLocalSearching)
+                else if (isLocalSearching)
                     timeFrameTab.state = "timeLineSearch"
                 else if (inGallery) {
                     timeFrameTab.state = "gallery"
