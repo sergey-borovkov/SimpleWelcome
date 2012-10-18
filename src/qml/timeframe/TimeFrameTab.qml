@@ -483,7 +483,6 @@ Item {
         anchors.topMargin: 10
 
         delegate: SocialCloudDelegate {}
-        model: socialDayModel
 
         orientation: Qt.Horizontal
         highlightFollowsCurrentItem: true
@@ -645,7 +644,6 @@ Item {
         anchors.leftMargin: 20
         anchors.rightMargin: 20
 
-        model: socialDayModel
         delegate: SocialGalleryDelegate {}
 
         visible: false
@@ -817,7 +815,7 @@ Item {
         State {
             name: "social"
 
-            PropertyChanges { target: socialTimeLine; visible: true; opacity: 1 }
+            PropertyChanges { target: socialTimeLine; visible: true; opacity: 1; model: socialDayModel }
 
             PropertyChanges { target: timeFrameTab; currentView: socialTimeLine }
 
@@ -827,7 +825,7 @@ Item {
 
             PropertyChanges { target: socialTimeLine; visible: false; opacity: 0 }
 
-            PropertyChanges { target: socialGalleryView; visible: true }
+            PropertyChanges { target: socialGalleryView; visible: true; model: socialDayModel }
 
             AnchorChanges {
                 target: timeScale
