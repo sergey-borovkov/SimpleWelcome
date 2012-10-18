@@ -20,7 +20,7 @@ Item {
         mainWindow.windowHidden.connect(resetModels)
     }
 
-    function resetModels() {        
+    function resetModels() {
         timeFrameTab.state = ""
         localDayModel.resetModel()
         socialDayModel.resetModel()
@@ -82,7 +82,6 @@ Item {
             }
         }
     }
-
 
     function initTimeFrame()
     {
@@ -162,7 +161,7 @@ Item {
     Connections {
         target:tabListView
         onCurrentIndexChanged:{
-            if (tabListView.currentIndex === 3) {                
+            if (tabListView.currentIndex === 3) {
                 initTimeFrame()
             }
             else {
@@ -188,6 +187,9 @@ Item {
             isSocialSearching = false
             if (timeFrameTab.state === "socialSearching") {
                 timeFrameTab.state = "social"
+                timeScale.list.currentIndex = timeScale.list.count -1
+                socialTimeLine.currentIndex = socialTimeLine.count -1
+                socialTimeLine.positionViewAtEnd()
             }
         }
     }
@@ -203,7 +205,6 @@ Item {
                 timeScale.list.currentIndex = timeScale.list.count -1
                 timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
-                galleryView.positionViewAtEnd()
             }
         }
     }
@@ -247,7 +248,8 @@ Item {
 
             onCurrentIndexChanged: {
                 setLocalFilter()
-                resetViews()
+                if (timeFrameTab.state !== "timeLineSearch")
+                    resetViews()
             }
 
             function setLocalState() {
@@ -322,10 +324,11 @@ Item {
                 }
             }
             onCurrentIndexChanged: {
-                saveCurrentDate()
+                if ((timeFrameTab.state !== "socialAuthorization") && (timeFrameTab.state !== "socialSearching"))
+                    saveCurrentDate()
                 setSocialState()
                 setSocialFilter()
-                if (timeFrameTab.state !== "socialAuthorization")
+                if ((timeFrameTab.state !== "socialAuthorization") && (timeFrameTab.state !== "socialSearching"))
                     resetViews()
             }
 
@@ -341,7 +344,6 @@ Item {
             }
 
             function setSocialFilter() {
-                saveCurrentDate()
                 if(view.currentIndex === 0) { //selectedText = "All"
                     timeScaleModel.setFilter("Social")
                     socialDayModel.setFilter("Social")
