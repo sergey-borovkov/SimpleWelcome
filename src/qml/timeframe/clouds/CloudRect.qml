@@ -9,10 +9,8 @@ Rectangle {
     color: "transparent"
     radius: 10
 
-    function gotThumbnail(newUrl) {
-        if(newUrl === url) {
+    function gotThumbnail() {
             image.source = image.source + "1"
-        }
     }
     ItemRectangle {
         anchors.centerIn: parent

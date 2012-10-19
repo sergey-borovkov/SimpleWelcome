@@ -46,19 +46,22 @@ PreviewGenerator *previewGenerator(const QString &type)
 }
 
 PreviewGenerator::PreviewGenerator()
+    : m_plugins(KIO::PreviewJob::availablePlugins())
+    , m_model(0)
 {
-    defaultPreview.load(":/pla-empty-box.png");
     videoPixmap.load(":/play-empty.png");
-    m_plugins = KIO::PreviewJob::availablePlugins();
+    m_defaultPreview.load(":/pla-empty-box.png");
+}
+
+void PreviewGenerator::setModel(LocalContentModel *model)
+{
+    m_model = model;
 }
 
 void PreviewGenerator::notifyModelAboutPreview(const QString &url)
 {
-    PreviewItemIterator it = m_searchedItems.find(url);
-    if(it != m_searchedItems.end()) {
-        it.value().model->previewReady(url);
-        m_searchedItems.erase(it);
-    }
+    if (m_model)
+        m_model->previewReady(url);
 }
 
 void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pixmap)
@@ -76,38 +79,46 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
 
 void PreviewGenerator::previewJobFailed(const KFileItem &item)
 {
-    if(m_searchedItems.find(item.localPath()) == m_searchedItems.end())
-        return;
-
     KIcon icon(item.iconName(), 0, item.overlays());
     QPixmap pixmap = icon.pixmap(500);
     m_previews.insert(item.localPath(), pixmap);
     notifyModelAboutPreview(item.localPath());
 }
-
+#include <QDebug>
 QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
 {
     QHash<QString, QPixmap>::iterator it;
     it = m_previews.find(filePath);
     if(it != m_previews.end()) {
         QPixmap pixmap = it.value();
-        m_previews.erase(it);
+
+        PreviewItemIterator ii = m_pendingItems.find(filePath);
+        if(ii != m_pendingItems.end()) {
+            if(ii.value().count > 1) {
+                ii.value().count--;
+                ii.value().job = 0;
+            }
+            else {
+    //            m_previews.erase(it);
+            }
+        }
         return pixmap;
     }
-    else {
-        return defaultPreview;
-    }
-}
 
-void PreviewGenerator::itemShown(QString path, QObject *dayModel)
+    return m_defaultPreview;
+}
+#include <QDebug>
+void PreviewGenerator::request(const QString &path)
 {
-    PreviewItemIterator it = m_searchedItems.find(path);
+    PreviewItemIterator it = m_pendingItems.find(path);
+
     // duplicate request
-    if(it != m_searchedItems.end()) {
+    if(it != m_pendingItems.end()) {
+        it.value().count++;
+    //    qDebug() << it.value().count;
         return;
     }
 
-    LocalDayFilterModel *filteredModel = static_cast<LocalDayFilterModel *>(dayModel);
     KFileItemList fileList;
     KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
     fileList.append(fileItem);
@@ -117,22 +128,24 @@ void PreviewGenerator::itemShown(QString path, QObject *dayModel)
     job->setAutoDelete(true);
 
     PreviewItem item;
-    item.model = filteredModel;
     item.job = job;
-    m_searchedItems.insert(path, item);
+
+    m_pendingItems.insert(path, item);
 
     connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(previewJobResult(const KFileItem&, const QPixmap&)));
     connect(job, SIGNAL(failed(const KFileItem&)), SLOT(previewJobFailed(const KFileItem &)));
 }
 
-void PreviewGenerator::itemHidden(QString path, QObject *dayModel)
+void PreviewGenerator::cancel(const QString &path)
 {
-    LocalDayFilterModel *filteredModel = static_cast<LocalDayFilterModel *>(dayModel);
-    Q_UNUSED(filteredModel)
-    PreviewItemIterator it = m_searchedItems.find(path);
-    if(it != m_searchedItems.end()) {
-        it.value().job->kill();
-        m_searchedItems.erase(it);
+    PreviewItemIterator it = m_pendingItems.find(path);
+    if(it != m_pendingItems.end()) {
+        if(it.value().count > 1) {
+            it.value().count--;
+            return;
+        }
+        m_pendingItems.erase(it);
+    } else {
+        m_previews.remove(path);
     }
-    m_previews.remove(path);
 }

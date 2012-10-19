@@ -144,7 +144,6 @@ void LocalContentModel::newActivities(QList<Activity*> list)
         Activity* newItem = list.at(i);
         if (m_urlHash.contains(newItem->url()))
             continue;
-        m_urlHash.insert(newItem->url(), newItem->date());
 
         //first check of null item, if we find one, edit it with new data
         for (int j = 0; j < rowCount(); j++) {
@@ -155,6 +154,7 @@ void LocalContentModel::newActivities(QList<Activity*> list)
                ) {
                 it->setDate(newItem->date());
                 it->addActivity(newItem);
+                m_urlHash.insert(newItem->url(), it);
                 continue;
             }
         }
@@ -166,6 +166,7 @@ void LocalContentModel::newActivities(QList<Activity*> list)
             while (item->getDate() <= newItem->date()) {
                 if (item->getDate() == newItem->date()) {
                     item->addActivity(newItem);
+                    m_urlHash.insert(newItem->url(), item);
                     flag = true;
                     break;
                 }
@@ -183,6 +184,7 @@ void LocalContentModel::newActivities(QList<Activity*> list)
 
         LocalContentItem * gallItem = new LocalContentItem(newItem->date(), this);
         gallItem->addActivity(newItem);
+        m_urlHash.insert(newItem->url(), gallItem);
         insertRow(j, gallItem);
     }
 }
@@ -283,6 +285,15 @@ LocalContentItem * LocalContentModel::find(const QDate &date) const
 void LocalContentModel::setFilter(QRegExp regexp)
 {
     m_filter = regexp;
+}
+
+void LocalContentModel::previewReady(const QString &path)
+{
+    QHash<QString, LocalContentItem *>::iterator it = m_urlHash.find(path);
+    if(it != m_urlHash.end()) {
+        LocalDayFilterModel *model = it.value()->model();
+        model->previewReady(path);
+    }
 }
 
 QRegExp LocalContentModel::filter() const

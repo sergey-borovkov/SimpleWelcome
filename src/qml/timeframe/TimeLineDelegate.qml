@@ -20,7 +20,7 @@ Item {
             var m = localDayModel.itemsModel(date)
             var l = Math.min(7, m.count())
             for(var i = 0; i < l; ++i) {
-                timelinePreviewGenerator.itemHidden(m.url(i), m)
+                timelinePreviewGenerator.cancel(m.url(i))
             }
         }
 
@@ -37,10 +37,9 @@ Item {
                 var i
                 for(i = 0; i < objects.length; ++i) {
                     if('url' in objects[i]) {
+                        objects[i].url = model.url(c)
                         objects[i].image.source = "image://timeline/" + model.url(c) + "/rounded" +"%" + Math.random(10)
                         model.gotThumbnail.connect(objects[i].gotThumbnail)
-                        timelinePreviewGenerator.itemShown(model.url(c), model)
-                        objects[i].url = model.url(c)
                         c++
                     }
                 }
@@ -50,8 +49,7 @@ Item {
 
     function getSourceComponent(count)
     {
-        if (count === 0)
-        {
+        if (count === 0) {
             return "CloudNull.qml"
         }
         else if (count === 1)
@@ -68,5 +66,4 @@ Item {
             return "CloudSix.qml"
         return "CloudSeven.qml"
     }
-
 }
