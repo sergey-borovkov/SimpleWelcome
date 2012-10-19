@@ -1,5 +1,5 @@
 import QtQuick 1.0
-
+import ".."
 Item{
     id: cloudThree
     property date cloudDate
