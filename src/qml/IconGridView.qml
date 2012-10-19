@@ -72,7 +72,7 @@ GridView {
     }
 
     function onItemClicked(newIndex) {
-        dataSource.itemClicked(newIndex == -1 ? newIndex : appsModel.get(newIndex).id)
+        dataSource.itemClicked(newIndex == -1 ? newIndex : model.get(newIndex).id)
     }
 
     function getCellIndex(inX, inY) {
@@ -207,7 +207,7 @@ GridView {
             if (dataSource.updateItemData !== undefined)
                 dataSource.updateItemData.connect(updateItemContent)
         }
-        appsModel.itemClicked.connect(onItemClicked)
+        model.itemClicked.connect(onItemClicked)
     }
 
     function updateItemContent(id, field, data) {
