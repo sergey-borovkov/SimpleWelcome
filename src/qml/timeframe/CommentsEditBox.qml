@@ -13,7 +13,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
         fillMode: Image.PreserveAspectFit
-        width: 55        
+        width: 55
         anchors.leftMargin: 5
     }
 
@@ -61,6 +61,7 @@ Rectangle {
                 focus: true
                 wrapMode: TextEdit.Wrap
                 onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+
                 Keys.onPressed: {
                     if (edit.text === i18n_Write_Comment)
                     {
@@ -69,7 +70,10 @@ Rectangle {
                         edit.cursorPosition = 0
                     }
                     if (event.key === Qt.Key_Return) {
-                        commentBox.send(edit.text)
+                        var comment = edit.text
+                        if (comment.length > 4096)
+                            comment = comment.slice(0, 4096)
+                        commentBox.send(comment)
                         edit.color = "grey"
                         edit.text = i18n_Write_Comment
                         event.accepted = true
