@@ -13,6 +13,7 @@ Column {
     property alias prevGridGroup: iconGridView.prevGridGroup
     property alias nextGridGroup: iconGridView.nextGridGroup
     property alias maxCount: iconGridView.maxCount
+    property int groupCountStart: 0
 
     property alias count: iconGridView.count
     property alias gridView: iconGridView

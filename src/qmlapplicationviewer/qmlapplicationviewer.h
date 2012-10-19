@@ -28,8 +28,11 @@ public:
 
     Q_INVOKABLE QRect getMargins();
     Q_INVOKABLE void activateDragAndDrop(QString url, QString image_path, int image_size);
-    Q_INVOKABLE void saveSetting(QString groupName, QVariantList setting);
-    Q_INVOKABLE QVariantMap loadSetting(QString groupName);
+
+    Q_INVOKABLE void saveStacks(QVariantList setting);
+    Q_INVOKABLE void saveIconPositions(QVariantMap setting);
+    Q_INVOKABLE QVariantMap loadStacks();
+    Q_INVOKABLE QVariantMap loadIconPositions();
 
 signals:
     void windowSizeChanged();

@@ -102,11 +102,11 @@ void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, 
     drag->exec(Qt::CopyAction | Qt::MoveAction | Qt::LinkAction, Qt::CopyAction);
 }
 
-void QmlApplicationViewer::saveSetting(QString groupName, QVariantList setting)
+void QmlApplicationViewer::saveStacks(QVariantList setting)
 {
     //qDebug() << "WE ARE HERE WE ARE SAVING" << groupName;
 
-    KConfigGroup configGroup(KGlobal::config(), groupName);
+    KConfigGroup configGroup(KGlobal::config(), "Stacks");
     configGroup.deleteGroup();
 
     foreach(QVariant variant, setting) {
@@ -134,15 +134,56 @@ void QmlApplicationViewer::saveSetting(QString groupName, QVariantList setting)
     configGroup.sync();
 }
 
-QVariantMap QmlApplicationViewer::loadSetting(QString groupName)
+void QmlApplicationViewer::saveIconPositions(QVariantMap setting)
+{
+    //qDebug() << "WE ARE HERE WE ARE SAVING" << setting;
+
+    KConfigGroup configGroup(KGlobal::config(), "Apps positions");
+    configGroup.deleteGroup();
+
+    QVariantMap::iterator it = setting.begin();
+    for (; it != setting.end(); ++it) {
+        configGroup.writeEntry(it.key(), it.value());
+    }
+
+//    foreach(QVariant variant, setting) {
+//        QVariantMap map;
+//        if (!strcmp(variant.typeName(), "QVariantMap")) {
+//            map = variant.value<QVariantMap>();
+//            qDebug() << map;
+
+//            //configGroup.writeEntry(map["caption"].toString(), stackList);
+//            //qDebug() << "SIZE" << map["stack"].toList().size();
+//        }
+//    }
+
+    configGroup.sync();
+}
+
+QVariantMap QmlApplicationViewer::loadStacks()
 {
     QVariantMap list;
 
-    KConfigGroup configGroup(KGlobal::config(), groupName);
+    KConfigGroup configGroup(KGlobal::config(), "Stacks");
     QMap<QString, QString > map = configGroup.entryMap();
 
     foreach(QString key, map.keys())
-    list[key] = map[key];
+        list[key] = map[key];
 
     return list;
+}
+
+
+QVariantMap QmlApplicationViewer::loadIconPositions()
+{
+    QVariantMap out;
+
+    KConfigGroup configGroup(KGlobal::config(), "Apps positions");
+    QMap<QString, QString> map = configGroup.entryMap();
+
+    QMap<QString, QString>::iterator it = map.begin();
+    for (; it != map.end(); ++it)
+        out[it.key()] = it.value().toInt();
+
+    return out;
 }
