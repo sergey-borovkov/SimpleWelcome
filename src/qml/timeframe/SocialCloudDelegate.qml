@@ -50,15 +50,15 @@ Item {
         if (count === 0)
             return ""
         if (count === 1)
-            return "SocialCloudOne.qml"
+            return "clouds/SocialCloudOne.qml"
         else if (count  === 2)
-            return "SocialCloudTwo.qml"
+            return "clouds/SocialCloudTwo.qml"
         else if (count === 3)
-            return "SocialCloudThree.qml"
+            return "clouds/SocialCloudThree.qml"
         else if (count > 3)
-            return "SocialCloudFour.qml"
+            return "clouds/SocialCloudFour.qml"
         else
-            return "SocialCloudOne.qml"
+            return "clouds/SocialCloudOne.qml"
     }
 
 }
