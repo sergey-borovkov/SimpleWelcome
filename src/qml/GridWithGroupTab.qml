@@ -329,12 +329,15 @@ loop2:
                                         //console.log("dataSourcesVar[ds].index: " + dataSourcesVar[ds].index)
                                         for (; dataSourcesVar[ds].index < itemCount &&
                                              (gridWithGroup.maxCount === -1 || gridWithGroup.gridView.count <= gridWithGroup.maxCount ); dataSourcesVar[ds].index++) {
-                                            //console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "]")
-                                            gridWithGroup.gridView.newItemData(dataSourcesVar[ds].dataSource.getContent(dataSourcesVar[ds].index, gridWithGroup.groupName))
+
+                                            var newItem = dataSourcesVar[ds].dataSource.getContent(dataSourcesVar[ds].index, gridWithGroup.groupName)
+                                            console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "] - " + newItem.caption + " / " + newItem.id)
+                                            gridWithGroup.gridView.newItemData(newItem)
                                         }
                                         break
                                     }
                                 }
+
                             }
                         }
                     }
