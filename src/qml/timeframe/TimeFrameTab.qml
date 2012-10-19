@@ -240,7 +240,6 @@ Item {
 
                     timeLine.currentIndex = timeLine.count - 1
                     timeLine.positionViewAtEnd()
-                    galleryView.positionViewAtEnd()
                     timeScale.list.currentIndex = timeScale.list.count - 1
                     timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
                 }
@@ -317,7 +316,6 @@ Item {
 
                     socialTimeLine.currentIndex = socialTimeLine.count - 1
                     socialTimeLine.positionViewAtEnd()
-                    socialGalleryView.positionViewAtEnd()
 
                     timeScale.list.currentIndex = timeScale.list.count - 1
                     timeScale.list.positionViewAtIndex(timeScale.list.currentIndex, ListView.Center)
@@ -470,6 +468,10 @@ Item {
             anchors.fill: parent
             onScrollVert: _processScroll(delta, timeLine)
         }
+        Rectangle{
+            anchors.fill: parent
+            color: "transparent"
+        }
     }
 
     ListView {
@@ -499,6 +501,10 @@ Item {
             anchors.fill: parent
             onScrollVert: _processScroll(delta, socialTimeLine)
             enabled: enableWheel
+        }
+        Rectangle{
+            anchors.fill: parent
+            color: "transparent"
         }
     }
 
@@ -667,6 +673,9 @@ Item {
     }
 
     function updateTimeScale() {
+        if (currentView === undefined)
+            return
+
         var index = 0
         var date = new Date()
         index = currentView.indexAt(currentView.x + currentView.width/2 + currentView.contentX,
