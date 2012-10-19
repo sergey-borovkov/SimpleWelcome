@@ -365,10 +365,12 @@ loop2:
                         // Iterating by it's GridWithGroups
                         for (var child = 0; child < childs.length; child++) {
                             var gridWithGroup = childs[child]
-                            //console.log("CAME ACROSS:" + gridWithGroup.groupName)
+                            //console.log("-== NEW GRID WITH GROUP ==-")
                             if ('count' in gridWithGroup)
                             {
 
+                                var movedIcons = []
+                                var gridMaxCount = gridWithGroup.maxCount
 
                                 //console.log("Adding items to " + gridWithGroup.groupName + "; dataSourcesVar.length: " + dataSourcesVar.length)
                                 for (var ds = 0; ds < dataSourcesVar.length; ds++) {
@@ -381,10 +383,20 @@ loop2:
                                             dataSourcesVar[ds].index = 0
                                         //console.log("dataSourcesVar[ds].index: " + dataSourcesVar[ds].index)
                                         for (; dataSourcesVar[ds].index < itemCount &&
-                                             (gridWithGroup.maxCount === -1 || gridWithGroup.gridView.count < gridWithGroup.maxCount ); dataSourcesVar[ds].index++) {
+                                             (gridWithGroup.maxCount === -1 || gridWithGroup.gridView.count < gridMaxCount ); dataSourcesVar[ds].index++) {
 
                                             var newItem = dataSourcesVar[ds].dataSource.getContent(dataSourcesVar[ds].index, gridWithGroup.groupName)
-                                            console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "] - " + newItem.caption + " / " + newItem.id)
+                                            //console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "] - " + newItem.caption + " / " + newItem.id)
+
+                                            if (gridWithGroup.groupName === "Apps") {
+                                                var newPos = iconPositions[newItem.caption]
+                                                if (newPos !== undefined) {
+                                                    //console.log("## new moved icon: " + newItem.caption + " to " + newPos)
+                                                    movedIcons[newPos] = newItem
+                                                    gridMaxCount--
+                                                    continue
+                                                }
+                                            }
 
                                             gridWithGroup.gridView.newItemData(newItem)
                                         }
@@ -393,21 +405,9 @@ loop2:
                                 }
 
                                 if (gridWithGroup.groupName === "Apps") {
-                                    console.log("APPS: " + gridWithGroup.groupCountStart + " to " + (gridWithGroup.groupCountStart + gridWithGroup.maxCount))
-                                    for (var iconMoveTo in iconPositionsArr) {
-                                        if (iconMoveTo >= gridWithGroup.groupCountStart && iconMoveTo < gridWithGroup.groupCountStart + gridWithGroup.maxCount) {
-                                            console.log("-> " + iconMoveTo + " is " + iconPositionsArr[iconMoveTo])
-
-                                            //console.log(" -------------------- bruting again")
-                                            var model = gridWithGroup.gridView.model
-                                            for (var modelIndex = 0; modelIndex < model.count; modelIndex++) {
-                                                //console.log(modelIndex + " "  + model.get(modelIndex).caption)
-                                                if (model.get(modelIndex).caption === iconPositionsArr[iconMoveTo]) {
-                                                    model.move(modelIndex, iconMoveTo - gridWithGroup.groupCountStart, 1)
-                                                    break;
-                                                }
-                                            }
-                                        }
+                                    for (var movedPos in movedIcons) {
+                                        //console.log("*** Adding moved icon " + movedIcons[movedPos].caption + " to " + (movedPos - gridWithGroup.groupCountStart))
+                                        gridWithGroup.gridView.newItemDataAt(movedPos - gridWithGroup.groupCountStart, movedIcons[movedPos])
                                     }
                                 }
 

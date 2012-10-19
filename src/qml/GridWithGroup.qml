@@ -118,6 +118,15 @@ Column {
             model.append(itemData)
         }
 
+        function newItemDataAt(pos, itemData) {
+            // This is needed for delegate to not blaming unknown variable
+            if (itemData.pinned === undefined)
+                itemData.pinned = undefined
+
+            itemData.stack = undefined
+            model.insert(pos, itemData)
+        }
+
         function onItemClicked(newIndex)
         {
             if (newIndex != -1)
