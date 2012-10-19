@@ -125,6 +125,14 @@ void RequestManager::feedReply(QByteArray reply)
     foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
         FeedItem *feedItem = new FeedItem(map, m_selfId);
+
+        // drop item without text and image
+        if (feedItem && feedItem->data(SocialItem::Text).toString().isEmpty() &&
+            feedItem->data(SocialItem::ImageUrl).toString().isEmpty()) {
+            delete feedItem;
+            continue;
+        }
+
         feedItems.append(feedItem);
     }
 

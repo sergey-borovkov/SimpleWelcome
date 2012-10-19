@@ -60,6 +60,7 @@ void FeedItem::fillFromMap(const QVariantMap &map)
     bool hasLink = message.contains(reUrl);
     if (hasLink) {
         int pos = reUrl.indexIn(message);
+
         QString after = "<a href=\"\\1\">\\1</a>";
         if (pos > -1) {
             if (reUrl.cap(1).indexOf("www", Qt::CaseInsensitive) != (-1)) {
@@ -73,9 +74,11 @@ void FeedItem::fillFromMap(const QVariantMap &map)
         m_data.insert(Text, message);
 
     m_data.insert(ImageUrl, QUrl::fromPercentEncoding(map.value("picture").toByteArray()));
-    if (message.isEmpty()) {
-        m_data.insert(Text, map.value("story").toString());
-    }
+
+//    if (message.isEmpty()) {
+//        m_data.insert(Text, map.value("story").toString());
+//    }
+
     if (map.contains("created_time")) {
         QDateTime dt = map.value("created_time").toDateTime();
         QDate date = dt.date();
