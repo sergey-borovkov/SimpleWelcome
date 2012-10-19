@@ -67,7 +67,7 @@ QWidget *VkontakteModule::authenticationWidget()
     m_authorizationView->window()->setWindowIcon(QPixmap(":/images/vk.png"));
     m_authorizationView->resize(800, 700);
     m_authorizationView->setUrl(QUrl("http://oauth.vk.com/authorize?client_id=2944872&"
-                                     "scope=wall,friends&"
+                                     "scope=wall,friends,offline&"
                                      "redirect_uri=http://oauth.vk.com/blank.html&"
                                      "display=popup&"
                                      "response_type=token"));
