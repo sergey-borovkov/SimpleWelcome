@@ -13,6 +13,7 @@ Item {
     property int stackCellOpenedId: -1
 
     property variant dataSources
+    property variant iconPositions
 
     function updateGridsContent()
     {
@@ -91,8 +92,19 @@ Item {
 
             function insertGrid(groupData, isOnNewTab)
             {
+                var lastCountEnd = 0,
+                    lastGridGroupName = undefined
+
+                if (gridsListView.currentItem && gridsListView.currentItem.activeGridGroup !== undefined) {
+                    lastCountEnd = gridsListView.currentItem.activeGridGroup.groupCountStart + gridsListView.currentItem.activeGridGroup.maxCount
+                    lastGridGroupName = gridsListView.currentItem.activeGridGroup.groupName
+                }
+
                 if (isOnNewTab)
                 {
+                    if (lastGridGroupName !== undefined && lastGridGroupName === groupData.groupName)
+                        groupData["groupCountStart"] = lastCountEnd
+
                     gridsListModel.append( { defaultGroup: groupData } )
                     gridsListView.currentIndex = count - 1
                 }
@@ -106,6 +118,7 @@ Item {
                 {
                     newGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
                     newGridGroup.gridView.itemStackingChanged.connect(saveStacks)
+                    newGridGroup.gridView.itemMoved.connect(itemMoved)
 
                     if (newGridGroup.gridView.stackable)
                         newGridGroup.showPopupGroup.connect(showGroup)
@@ -142,7 +155,7 @@ Item {
                     if (projectedGroupHeight < availableHeight || (isForceOnOneScreen && count)) // Grid can be fully placed on the tab
                     {
                         //console.log(i + " - " + groups[i].dataSource + " is fitting the same screen");
-                        currentGroup['maxCount'] = itemCount - 1
+                        currentGroup['maxCount'] = itemCount
                         insertGrid(currentGroup, false)
                         availableHeight -= projectedGroupHeight + spacing
                         //console.log(i + " - " + availableHeight + "px left");
@@ -164,7 +177,7 @@ Item {
                                 availableHeight = gridsListView.height - textHeight
                                 rowsFit = Math.min(rowsLeftToFit, Math.max(1, Math.floor(availableHeight / cellRealHeight)) ) // We definitely want to have at least one row on newly created tab
                                 //console.log(i + " - availableHeight: " + availableHeight + "; cellRealHeight: " + cellRealHeight)
-                                currentGroup['maxCount'] = Math.min(itemCount - 1 - lastNotInsertedItem, rowsFit * columns - 1)
+                                currentGroup['maxCount'] = Math.min(itemCount - lastNotInsertedItem, rowsFit * columns)
                                 lastNotInsertedItem += rowsFit * columns
                                 rowsLeftToFit -= rowsFit
                                 //console.log(i + " - " + "Fitted "  + rowsFit + " rows")
@@ -177,7 +190,7 @@ Item {
                             {
                                 //console.log(i + " - " + "It's still possible to insert some rows to current tab. Inserting " + rowsFit)
 
-                                currentGroup['maxCount'] = Math.min(itemCount - 1 - lastNotInsertedItem, rowsFit * columns - 1)
+                                currentGroup['maxCount'] = Math.min(itemCount - lastNotInsertedItem, rowsFit * columns)
                                 lastNotInsertedItem += rowsFit * columns
                                 rowsLeftToFit -= rowsFit
 
@@ -193,7 +206,8 @@ Item {
                 }
 
                 // Doing afterjob to load user icons positioning and stacks
-                //forEachGridGroup("Apps", loadStacks, mainWindow.loadSetting("Stacks"))
+                //forEachGridGroup("Apps", loadStacks, mainWindow.loadStacks())
+                iconPositions = mainWindow.loadIconPositions()
             }
 
             function forEachGridGroup(group, gridGroupProcessFunction, args, containerProcessFunction) {
@@ -297,10 +311,47 @@ loop2:
                     return true
                 })
 
-                mainWindow.saveSetting("Stacks", setting)
+                mainWindow.saveStacks(setting)
+            }
+
+            function itemMoved(group, item, srcPos, destPos) {
+                var map = iconPositions
+                if (map === undefined)
+                    map = new Object
+
+                for (var i in map) {
+                    var pos = map[i]
+                    if (destPos < srcPos) {
+                        if (pos >= destPos && pos < srcPos)
+                            map[i] = pos + 1
+                    }
+                    else {
+                        if (pos > srcPos && pos <= destPos)
+                            map[i] = pos - 1
+                    }
+                }
+                map[item] = destPos
+
+                console.log("MOVED: " + item + " from " + srcPos  + " to " + destPos)
+
+                mainWindow.saveIconPositions(map)
+                iconPositions = map
             }
 
             function fetchItemsFromDataSources() {
+
+                // iconPositionsArr is needed to sort moved icons array by position
+                var iconPositionsArr = []
+                for (var icon in iconPositions)
+                    iconPositionsArr[iconPositions[icon]] = icon
+
+//                console.log("iconPositionsArr ------------")
+//                for (var aa in iconPositionsArr)
+//                    console.log(iconPositionsArr[aa] + " " + aa)
+//                console.log("</iconPositionsArr ------------")
+
+
+
                 var dataSourcesVar = dataSources
 
                 // Iterating by all GridWithGroupContainers
@@ -317,6 +368,8 @@ loop2:
                             //console.log("CAME ACROSS:" + gridWithGroup.groupName)
                             if ('count' in gridWithGroup)
                             {
+
+
                                 //console.log("Adding items to " + gridWithGroup.groupName + "; dataSourcesVar.length: " + dataSourcesVar.length)
                                 for (var ds = 0; ds < dataSourcesVar.length; ds++) {
                                     //console.log("checking " + dataSourcesVar[ds].groupName + " == " + gridWithGroup.groupName)
@@ -328,13 +381,33 @@ loop2:
                                             dataSourcesVar[ds].index = 0
                                         //console.log("dataSourcesVar[ds].index: " + dataSourcesVar[ds].index)
                                         for (; dataSourcesVar[ds].index < itemCount &&
-                                             (gridWithGroup.maxCount === -1 || gridWithGroup.gridView.count <= gridWithGroup.maxCount ); dataSourcesVar[ds].index++) {
+                                             (gridWithGroup.maxCount === -1 || gridWithGroup.gridView.count < gridWithGroup.maxCount ); dataSourcesVar[ds].index++) {
 
                                             var newItem = dataSourcesVar[ds].dataSource.getContent(dataSourcesVar[ds].index, gridWithGroup.groupName)
                                             console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "] - " + newItem.caption + " / " + newItem.id)
+
                                             gridWithGroup.gridView.newItemData(newItem)
                                         }
                                         break
+                                    }
+                                }
+
+                                if (gridWithGroup.groupName === "Apps") {
+                                    console.log("APPS: " + gridWithGroup.groupCountStart + " to " + (gridWithGroup.groupCountStart + gridWithGroup.maxCount))
+                                    for (var iconMoveTo in iconPositionsArr) {
+                                        if (iconMoveTo >= gridWithGroup.groupCountStart && iconMoveTo < gridWithGroup.groupCountStart + gridWithGroup.maxCount) {
+                                            console.log("-> " + iconMoveTo + " is " + iconPositionsArr[iconMoveTo])
+
+                                            //console.log(" -------------------- bruting again")
+                                            var model = gridWithGroup.gridView.model
+                                            for (var modelIndex = 0; modelIndex < model.count; modelIndex++) {
+                                                //console.log(modelIndex + " "  + model.get(modelIndex).caption)
+                                                if (model.get(modelIndex).caption === iconPositionsArr[iconMoveTo]) {
+                                                    model.move(modelIndex, iconMoveTo - gridWithGroup.groupCountStart, 1)
+                                                    break;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
 

@@ -18,6 +18,7 @@ GridView {
     signal selectionChangedByKeyboard(variant newCurrentItem)
     signal draggedOut(variant item)
     signal itemStackingChanged()
+    signal itemMoved(string group, string item, int srcPos, int destPos)
 
     // constants
     property int columns: constants.gridColumns
@@ -543,6 +544,9 @@ GridView {
                     dndDest = count - 1
                 }
 
+                itemMoved(groupName, model.get(dndDest).caption, groupCountStart + dndSrc, groupCountStart + dndDest)
+
+
                 model.remove(dndDest)
 
                 //dndSrcId = -1; - this is intentionally commented out 'cause it's done in delegate's remove animation
@@ -553,11 +557,15 @@ GridView {
 
                 if (dndSrcIdSaved != -1) {
                     dndStateChanged(false)
-                    // MOVE ALL ITEMS TO -- IN (> dndSrcIdSaved && <= dndDest)
-                    console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest)
+
+                    if (dndSrc !== dndDest) {
+                        //console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest + " | " + groupCountStart)
+                        itemMoved(groupName, model.get(dndDest).caption, groupCountStart + dndSrc, groupCountStart + dndDest)
+                    }
 
                     // Sync icons order in C++ model to QML model. Used in Recent Apps
                     if (typeof dataSource.itemDragged !== "undefined" && dndDest != -1) {
+                        console.log("REARRANGING C++")
                         //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
 
                         dataSource.itemDragged(dndSrcIdSaved, dndDest)
