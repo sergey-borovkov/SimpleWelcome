@@ -38,6 +38,8 @@ class PreviewGenerator : public QObject
 {
     Q_OBJECT
 public:
+    void setModel(LocalContentModel *model);
+
     QPixmap takePreviewPixmap(QString filePath);
 
     /**
@@ -45,14 +47,14 @@ public:
      *        previews and notifies model when previews are generated
      * @param dayModel
      */
-    Q_INVOKABLE void itemShown(QString path, QObject *dayModel);
+    Q_INVOKABLE void request(const QString &path);
 
     /**
      * @brief modelHidden is in QML when cloud component gets destroyed. It removes
      *        unused  images generated for model
      * @param dayModel
      */
-    Q_INVOKABLE void itemHidden(QString path, QObject *dayModel);
+    Q_INVOKABLE void cancel(const QString &path);
 
 private slots:
     void previewJobResult(const KFileItem&, const QPixmap&);
@@ -61,26 +63,31 @@ private slots:
 private:
     struct PreviewItem
     {
-        LocalDayFilterModel *model;
+        PreviewItem() : count(1), job(0)
+        {}
+
+        int count;
         KIO::PreviewJob *job;
     };
+
     typedef QHash<QString, PreviewItem>::iterator PreviewItemIterator;
     friend PreviewGenerator *previewGenerator(const QString &type);
 
     explicit PreviewGenerator();
     void notifyModelAboutPreview(const QString &url);
 
-    QHash<QString, PreviewItem> m_searchedItems;
+    QHash<QString, PreviewItem> m_pendingItems;
 
     QHash<QString, QPixmap> m_previews;
-    QPixmap defaultPreview;
 
     QPixmap videoPixmap;
+    QPixmap m_defaultPreview;
     QStringList m_plugins;
+    LocalContentModel *m_model;
 };
 
 /**
- * @brief previewGenerator return instance of PreviewGenerator class
+ * @brief previewGenerator returns instance of PreviewGenerator class
  * @param type is either "gallery" or "timeline"
  * @return
  */

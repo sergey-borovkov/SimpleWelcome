@@ -33,6 +33,8 @@ public:
     QRegExp filter() const;
     void setFilter(QRegExp regexp);
 
+    void previewReady(const QString &path);
+
 public slots:
     void newActivities(QList <Activity*> list);
     QObject* itemsModel(QDate date) const;
@@ -47,7 +49,7 @@ private slots:
     void handleItemChange();
 
 private:
-    QHash<QString, QDate> m_urlHash;
+    QHash<QString, LocalContentItem *> m_urlHash;
     ActivityProxy* m_lister;
     QRegExp m_filter;
 };

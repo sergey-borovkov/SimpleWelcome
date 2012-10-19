@@ -24,6 +24,8 @@
 
 #include <QtDeclarative/QDeclarativeImageProvider>
 
+class PreviewGenerator;
+
 class PreviewProvider : public QDeclarativeImageProvider
 {
 public:
@@ -32,6 +34,7 @@ public:
 private:
     QImage getRoundedImage(QImage image, int radius);
     QString m_type;
+    PreviewGenerator *m_generator;
 };
 
 #endif // PREVIEWIMAGEPROVIDER_H

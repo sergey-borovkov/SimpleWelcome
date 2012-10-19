@@ -79,7 +79,7 @@ public:
     void previewReady(const QString &url);
 
 signals:
-    void gotThumbnail(QString);
+    void gotThumbnail(QString path);
 };
 
 

@@ -252,11 +252,14 @@ void SWApp::initTimeframeLocalMode()
     proxymodel->setSourceModel(model);
 
     QRect r = QDesktopWidget().screenGeometry(m_viewer);
-
+    previewGenerator("gallery")->setModel(model);
+    previewGenerator("timeline")->setModel(model);
     m_viewer->rootContext()->setContextProperty("desktopWidth", r.width());
     m_viewer->rootContext()->setContextProperty("localDayModel", proxymodel);
     m_viewer->rootContext()->setContextProperty("activityProxy", m_proxy);
     m_viewer->rootContext()->setContextProperty("nepomukSource", m_source);
+    m_viewer->rootContext()->setContextProperty("galleryPreviewGenerator", previewGenerator("gallery"));
+    m_viewer->rootContext()->setContextProperty("timelinePreviewGenerator", previewGenerator("timeline"));
 
     m_viewer->rootContext()->engine()->addImageProvider("timeline", new PreviewProvider("timeline"));
     m_viewer->rootContext()->engine()->addImageProvider("gallery", new PreviewProvider("gallery"));
@@ -285,8 +288,6 @@ void SWApp::initTimeframeSocialMode()
     m_viewer->rootContext()->setContextProperty("socialDayModel", socialProxyModel);
     m_viewer->rootContext()->setContextProperty("pluginModel", m_manager->pluginModel());
     m_viewer->rootContext()->setContextProperty("timeScaleModel", timeScaleFilterModel);
-    m_viewer->rootContext()->setContextProperty("galleryPreviewGenerator", previewGenerator("gallery"));
-    m_viewer->rootContext()->setContextProperty("timelinePreviewGenerator", previewGenerator("timeline"));
 
     connect(m_proxy, SIGNAL(newMonth(int, int, QString)), timeScaleModel, SLOT(newItem(int, int, QString)));
     connect(m_manager, SIGNAL(newMonth(int, int, QString)), timeScaleModel, SLOT(newItem(int, int, QString)));

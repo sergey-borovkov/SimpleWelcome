@@ -15,27 +15,20 @@ Column {
             smooth: true
             asynchronous: true
 
-            // because gridview for some reason instantiates
-            // delegates for whole model when it's created
-            // following is very slow and should be later replaced
-            // with more proper solution
-
-
-            Component.onCompleted: {
-                localDayModel.itemsModel(date).gotThumbnail.connect(gotThumbnail)
-                galleryPreviewGenerator.itemShown(url, localDayModel.itemsModel(date))
-            }
-
             Component.onDestruction: {
-                galleryPreviewGenerator.itemHidden(url, localDayModel.itemsModel(date))
+                galleryPreviewGenerator.cancel(url)
             }
 
-            function gotThumbnail(path)
-            {
-                if(path === url) {
-                    source += "1"
+            Connections {
+                target: localDayModel.itemsModel(date)
+                onGotThumbnail: {
+                   // if(path //=== url) {
+                        image.source += "1"
+                    //}
+
                 }
             }
+
         }
 
         MouseArea {
