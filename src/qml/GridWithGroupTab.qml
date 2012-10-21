@@ -338,20 +338,63 @@ loop2:
                 iconPositions = map
             }
 
+            function fetchApps() {
+                var appsList = []
+
+
+                for (var ds in dataSources) {
+                    if (dataSources[ds].groupName === "Apps") {
+
+                        // iconPositionsArr is needed to sort moved icons array by position
+                        var iconPositionsArr = []
+                        for (var icon in iconPositions)
+                            iconPositionsArr[iconPositions[icon]] = icon
+
+                        // console.log("iconPositionsArr ------------")
+                        // for (var aa in iconPositionsArr)
+                        //     console.log(iconPositionsArr[aa] + " " + aa)
+                        // console.log("</iconPositionsArr ------------")
+
+                        var appsPositionsDict = {}
+
+                        // Filling appsList with app vailable apps
+                        var appsCount = dataSources[ds].dataSource.getItemCount("Apps")
+
+                        for (var appIndex = 0; appIndex < appsCount; appIndex++) {
+
+                            var newItem = dataSources[ds].dataSource.getContent(appIndex, "Apps")
+                            console.log("++ " + "Apps" + "[" + appIndex + "] - " + newItem.caption + " / " + newItem.id)
+                            appsList.push(newItem)
+
+                            if (iconPositions[newItem.caption] !== undefined)
+                                appsPositionsDict[newItem.caption] = appsList.length - 1
+
+                            //gridWithGroup.gridView.newItemData(newItem)
+                        }
+
+
+                        // Reordering loaded items
+                        for (var newIndex in iconPositionsArr) {
+                            for (appIndex = 0; appIndex < appsCount; appIndex++)
+                                if (appsList[appIndex].caption === iconPositionsArr[newIndex]) {
+                                    appsList.move(appIndex, newIndex)
+                                    break
+                                }
+                        }
+
+
+                        // Adding to GridView
+                        console.log("--------- REORDERED TO:")
+                        for (appIndex = 0; appIndex < appsCount; appIndex++)
+                            console.log("++ " + "Apps" + "[" + appIndex + "] - " + appsList[appIndex].caption + " / " + appsList[appIndex].id)
+                    }
+                }
+
+                return appsList
+            }
+
             function fetchItemsFromDataSources() {
-
-                // iconPositionsArr is needed to sort moved icons array by position
-                var iconPositionsArr = []
-                for (var icon in iconPositions)
-                    iconPositionsArr[iconPositions[icon]] = icon
-
-//                console.log("iconPositionsArr ------------")
-//                for (var aa in iconPositionsArr)
-//                    console.log(iconPositionsArr[aa] + " " + aa)
-//                console.log("</iconPositionsArr ------------")
-
-
-
+                var appsList = fetchApps()
                 var dataSourcesVar = dataSources
 
                 // Iterating by all GridWithGroupContainers
@@ -368,8 +411,6 @@ loop2:
                             //console.log("-== NEW GRID WITH GROUP ==-")
                             if ('count' in gridWithGroup)
                             {
-
-                                var movedIcons = []
                                 var gridMaxCount = gridWithGroup.maxCount
 
                                 //console.log("Adding items to " + gridWithGroup.groupName + "; dataSourcesVar.length: " + dataSourcesVar.length)
@@ -385,33 +426,22 @@ loop2:
                                         for (; dataSourcesVar[ds].index < itemCount &&
                                              (gridWithGroup.maxCount === -1 || gridWithGroup.gridView.count < gridMaxCount ); dataSourcesVar[ds].index++) {
 
-                                            var newItem = dataSourcesVar[ds].dataSource.getContent(dataSourcesVar[ds].index, gridWithGroup.groupName)
-                                            //console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "] - " + newItem.caption + " / " + newItem.id)
+                                            var itemToAdd
 
-                                            if (gridWithGroup.groupName === "Apps") {
-                                                var newPos = iconPositions[newItem.caption]
-                                                if (newPos !== undefined) {
-                                                    //console.log("## new moved icon: " + newItem.caption + " to " + newPos)
-                                                    movedIcons[newPos] = newItem
-                                                    gridMaxCount--
-                                                    continue
-                                                }
-                                            }
+                                            if (gridWithGroup.groupName === "Apps")
+                                                itemToAdd = appsList[dataSourcesVar[ds].index]
+                                            else
+                                                itemToAdd = dataSourcesVar[ds].dataSource.getContent(dataSourcesVar[ds].index, gridWithGroup.groupName)
 
-                                            gridWithGroup.gridView.newItemData(newItem)
+                                            console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "] - " + itemToAdd.caption + " / " + itemToAdd.id)
+                                            gridWithGroup.gridView.newItemData(itemToAdd)
                                         }
                                         break
                                     }
                                 }
-
-                                if (gridWithGroup.groupName === "Apps") {
-                                    for (var movedPos in movedIcons) {
-                                        //console.log("*** Adding moved icon " + movedIcons[movedPos].caption + " to " + (movedPos - gridWithGroup.groupCountStart))
-                                        gridWithGroup.gridView.newItemDataAt(movedPos - gridWithGroup.groupCountStart, movedIcons[movedPos])
-                                    }
-                                }
-
                             }
+
+
                         }
                     }
                     gridsListView.currentItem.gridsConnectionChanged()

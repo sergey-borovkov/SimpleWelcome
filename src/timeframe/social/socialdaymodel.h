@@ -6,6 +6,7 @@
 #include <QtGui//QSortFilterProxyModel>
 
 #include <listmodel.h>
+#include <QDate>
 
 class SocialDayItem;
 class SocialItem;
