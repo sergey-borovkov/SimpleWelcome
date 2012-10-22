@@ -63,6 +63,22 @@ public:
     virtual QWidget *authenticationWidget() = 0;
     virtual ISocialRequestManager *requestManager() = 0;
     virtual bool authorized() const = 0;
+
+    virtual QString selfId() const = 0;
+    virtual void setSelfId( const QString& id ) = 0;
+
+    virtual QString selfName() const = 0;
+    virtual void setSelfName( const QString & name ) = 0;
+
+    virtual QString selfPictureUrl() const = 0;
+    virtual void setSelfPictureUrl( const QString & url) = 0;
+
+private:
+    // User info
+    QString m_selfId;
+    QString m_selfName;
+    QString m_selfPictureUrl;
+
 };
 
 Q_DECLARE_INTERFACE(ISocialPlugin, "Timeframe_Library.SocialModule/1.0")

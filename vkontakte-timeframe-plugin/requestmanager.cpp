@@ -347,6 +347,8 @@ void RequestManager::idReply(QByteArray reply)
 
         m_selfName = map.value(QLatin1String("user_name")).toString();
         emit selfName(m_selfName);
+
+        qDebug() << "VK:       m_selfId =" << m_selfId << ",    m_selfName =" << m_selfName;
     }
 }
 

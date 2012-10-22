@@ -368,7 +368,7 @@ Item {
                                 commentsEdit.source = "CommentsEditBox.qml"
                                 commentsEdit.item.edit.color = "grey"
                                 commentsEdit.item.edit.text = i18n_Write_Comment
-                                commentsEdit.item.userPhoto.source = socialProxy.selfPictureUrl()
+                                commentsEdit.item.userPhoto.source = socialProxy.selfPictureUrl(pluginName)
                                 commentsListView.view.positionViewAtEnd()
                                 cloudRect.state = "comments"
                             }

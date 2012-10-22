@@ -51,6 +51,7 @@ private:
     QUrl constructUrl(const QString &id, const QString &type) const;
 
     OAuth2Authorizer *m_authorizer;
+
     QString m_selfId;
     QString m_selfName;
 
