@@ -53,6 +53,19 @@ PreviewGenerator::PreviewGenerator()
     m_defaultPreview.load(":/pla-empty-box.png");
 }
 
+void PreviewGenerator::previewComplete(PreviewGenerator::PreviewItemIterator it)
+{
+    if(it != m_pendingItems.end()) {
+        PreviewItem &item = it.value();
+        // remove from pending items if only one request left
+        if(item.count == 1) {
+            m_pendingItems.erase(it);
+        } else {
+            item.count--;
+        }
+    }
+}
+
 void PreviewGenerator::setModel(LocalContentModel *model)
 {
     m_model = model;
@@ -66,6 +79,7 @@ void PreviewGenerator::notifyModelAboutPreview(const QString &url)
 
 void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pixmap)
 {
+    previewComplete(m_pendingItems.find(item.localPath()));
     QPixmap pict = pixmap;
     if (item.mimetype().startsWith("video/")) {
         QPainter p(&pict);
@@ -79,43 +93,35 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
 
 void PreviewGenerator::previewJobFailed(const KFileItem &item)
 {
+    previewComplete(m_pendingItems.find(item.localPath()));
     KIcon icon(item.iconName(), 0, item.overlays());
     QPixmap pixmap = icon.pixmap(500);
     m_previews.insert(item.localPath(), pixmap);
     notifyModelAboutPreview(item.localPath());
 }
-#include <QDebug>
+
 QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
 {
-    QHash<QString, QPixmap>::iterator it;
-    it = m_previews.find(filePath);
+    QHash<QString, QPixmap>::iterator it = m_previews.find(filePath);
     if(it != m_previews.end()) {
         QPixmap pixmap = it.value();
 
-        PreviewItemIterator ii = m_pendingItems.find(filePath);
-        if(ii != m_pendingItems.end()) {
-            if(ii.value().count > 1) {
-                ii.value().count--;
-                ii.value().job = 0;
-            }
-            else {
-    //            m_previews.erase(it);
-            }
+        // item is not in pending requests
+        if (m_pendingItems.find(filePath) == m_pendingItems.end()) {
+            m_previews.erase(it);
         }
+
         return pixmap;
     }
 
     return m_defaultPreview;
 }
-#include <QDebug>
+
 void PreviewGenerator::request(const QString &path)
 {
     PreviewItemIterator it = m_pendingItems.find(path);
-
-    // duplicate request
-    if(it != m_pendingItems.end()) {
+    if (it != m_pendingItems.end()) {
         it.value().count++;
-    //    qDebug() << it.value().count;
         return;
     }
 
@@ -138,14 +144,8 @@ void PreviewGenerator::request(const QString &path)
 
 void PreviewGenerator::cancel(const QString &path)
 {
-    PreviewItemIterator it = m_pendingItems.find(path);
-    if(it != m_pendingItems.end()) {
-        if(it.value().count > 1) {
-            it.value().count--;
-            return;
-        }
-        m_pendingItems.erase(it);
-    } else {
-        m_previews.remove(path);
+    previewComplete(m_pendingItems.find(path));
+    if (m_pendingItems.find(path) == m_pendingItems.end()) {
+       m_previews.remove(path);
     }
 }

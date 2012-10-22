@@ -65,6 +65,8 @@ private:
     {
         PreviewItem() : count(1), job(0)
         {}
+        ~PreviewItem()
+        {}
 
         int count;
         KIO::PreviewJob *job;
@@ -74,8 +76,11 @@ private:
     friend PreviewGenerator *previewGenerator(const QString &type);
 
     explicit PreviewGenerator();
+    void previewComplete(PreviewItemIterator it);
     void notifyModelAboutPreview(const QString &url);
 
+    // contains items that are still searched
+    // or items which results were still not taken
     QHash<QString, PreviewItem> m_pendingItems;
 
     QHash<QString, QPixmap> m_previews;
