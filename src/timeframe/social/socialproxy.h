@@ -70,10 +70,9 @@ public:
     Q_INVOKABLE QString authorizedPluginName(int i) const;
     Q_INVOKABLE bool anyPluginsEnabled();
 
-    Q_INVOKABLE QString selfId() const {
-        return m_selfId;
-    }
-    Q_INVOKABLE QString selfPictureUrl();
+    Q_INVOKABLE QString selfId(const QString &pluginName) const;
+    Q_INVOKABLE QString selfName(const QString &pluginName) const;
+    Q_INVOKABLE QString selfPictureUrl(const QString &pluginName) const;
 
     void getSelfUserPicture(const QString &pluginName);
 
@@ -170,11 +169,6 @@ private:
     QSet<QString> m_enabledPlugins;
 
     QString m_cachedComment;
-
-    // User info
-    QString m_selfId;
-    QString m_selfName;
-    QString m_selfPictureUrl;
 
     int m_searchInProgressCount;
 };

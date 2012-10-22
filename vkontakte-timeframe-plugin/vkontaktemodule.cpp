@@ -77,6 +77,39 @@ QWidget *VkontakteModule::authenticationWidget()
     return m_authorizationView;
 }
 
+QString VkontakteModule::selfId() const
+{
+    return m_selfId;
+}
+
+void VkontakteModule::setSelfId(const QString &id)
+{
+    m_selfId = id;
+}
+
+QString VkontakteModule::selfName() const
+{
+    return m_selfName;
+}
+
+void VkontakteModule::setSelfName(const QString &name)
+{
+    m_selfName = name;
+}
+
+QString VkontakteModule::selfPictureUrl() const
+{
+    if (m_selfPictureUrl.isEmpty()) {
+        return QString("images/user.png");
+    }
+    return m_selfPictureUrl;
+}
+
+void VkontakteModule::setSelfPictureUrl(const QString &url)
+{
+    m_selfPictureUrl = url;
+}
+
 void VkontakteModule::onAcessTokenChanged()
 {
 }
