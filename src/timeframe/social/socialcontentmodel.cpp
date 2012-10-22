@@ -223,6 +223,21 @@ int SocialContentFilterModel::getIndexByDate(int year, int month,  bool directio
     return -1;
 }
 
+int SocialContentFilterModel::getIndexByDate(QDate date)
+{
+    for (int i = 0; i < rowCount(); i++) {
+        QDate contentDate = data(index(i, 0), SocialContentItem::DateRole).toDate();
+        if (contentDate >= date)
+            return i;
+    }
+    return rowCount() -1 ;
+}
+
+int SocialContentFilterModel::count()
+{
+    return rowCount();
+}
+
 QDate SocialContentFilterModel::getDateOfIndex(int listIndex)
 {
     if ((listIndex >= rowCount()) || (listIndex < 0))

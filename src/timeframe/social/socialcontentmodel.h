@@ -50,14 +50,14 @@ class SocialContentFilterModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit SocialContentFilterModel(QObject * parent = 0);
-
+    Q_INVOKABLE void setFilter(const QString &filter);
     Q_INVOKABLE void resetModel();
     Q_INVOKABLE QObject* itemsModel(QDate date) const;
     Q_INVOKABLE QDate getDateOfIndex(int listIndex);
     Q_INVOKABLE int getIndexByDate(int year, int month,  bool direction) const;
+    Q_INVOKABLE int getIndexByDate(QDate date);
+    Q_INVOKABLE int count();
 
-public slots:
-    void setFilter(const QString &filter);
 };
 
 #endif // SOCIALCONTENTMODEL_H
