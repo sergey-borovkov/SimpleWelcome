@@ -83,28 +83,17 @@ GridView {
         return curIndex
     }
 
-    function copyObjectByValue(obj) {
-        // Copying object by value
-        var newObj = new Object
-        for (var s in (obj)) {
-            //console.log("copying " + itemStackingTo[s])
-            newObj[s] = (obj)[s]
-        }
-        return newObj
-    }
-
     function stackItemInItem(indexStackingTo, indexDragging, notSaveChanges) {
         //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
 
         var itemDragging = model.get(indexDragging)
-        //console.log(gridMouseArea.dndDest + " with " + itemDragging)
         var itemStackingTo = model.get(indexStackingTo)
 
         var stackArray = itemStackingTo.stack
         if (stackArray === undefined) {
             //console.log("FIRST TIME STACKING")
             stackArray = []
-            stackArray.push(copyObjectByValue(itemStackingTo))
+            stackArray.push(root.cloneObject(itemStackingTo))
         }
         else {
             //console.log("STACKING AGAIN")
@@ -115,7 +104,7 @@ GridView {
                     return false
                 }
         }
-        stackArray.push(copyObjectByValue(itemDragging))
+        stackArray.push(root.cloneObject(itemDragging))
 
         model.setProperty(indexStackingTo, "imagePath", "image://generalicon/stacked/" + itemStackingTo.imagePath.slice(28) + "|" + itemDragging.imagePath.slice(28))
         model.setProperty(indexStackingTo, "stack", stackArray)
@@ -536,7 +525,7 @@ GridView {
 
             // Adding icon to stack
             if (draggedItemStackedAt !== undefined && model.get(dndDest).stack === undefined) {
-                //console.log("STACK UPPED")
+                console.log("STACK UPPED")
 
                 if (dndDest < draggedItemStackedAt) {
                     model.move(dndDest, count - 1, 1)
@@ -544,7 +533,7 @@ GridView {
                     dndDest = count - 1
                 }
 
-                itemMoved(groupName, model.get(dndDest).caption, groupCountStart + dndSrc, groupCountStart + dndDest)
+                itemMoved(groupName, model.get(dndDest).caption, groupCountStart + dndSrc, -1)
 
 
                 model.remove(dndDest)
