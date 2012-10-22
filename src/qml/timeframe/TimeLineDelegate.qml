@@ -39,7 +39,6 @@ Item {
                     if('url' in objects[i]) {
                         objects[i].url = model.url(c)
                         objects[i].image.source = "image://timeline/" + model.url(c) + "/rounded" +"%" + Math.random(10)
-                        model.gotThumbnail.connect(objects[i].gotThumbnail)
                         c++
                     }
                 }
