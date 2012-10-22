@@ -27,7 +27,7 @@ Column {
         var i
 
         for (i = 0; i < children.length; i++)
-            if ('count' in children[i])
+            if ('gridView' in children[i])
             {
                 if (children[i].count)
                     visibleGrids.push(i)

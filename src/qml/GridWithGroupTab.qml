@@ -206,58 +206,23 @@ Item {
                 }
 
                 // Doing afterjob to load user icons positioning and stacks
-                //forEachGridGroup("Apps", loadStacks, mainWindow.loadStacks())
-                iconPositions = mainWindow.loadIconPositions()
+                iconPositions = mainWindow.loadIconPositions() // FIXME: DO IT ONCE
             }
 
-            function forEachGridGroup(group, gridGroupProcessFunction, args, containerProcessFunction) {
-                var currentIndexWas = gridsListView.currentIndex
-
-loop1:
-                // Iterating by all GridWithGroupContainers
-                for (var currentView = 0; currentView < gridsListView.count; currentView++) {
-                    gridsListView.currentIndex = currentView
-
-                    if (containerProcessFunction !== undefined)
-                        containerProcessFunction(gridsListView.currentItem)
-
-                    if (gridsListView.currentItem) {
-                        var childs = gridsListView.currentItem.children
-loop2:
-                        // Iterating by it's GridWithGroups
-                        for (var child = 0; child < childs.length; child++) {
-                            //console.log("CAME ACROSS:" + childs[child].groupName + " WHEN NEED " + group)
-                            if ('count' in childs[child] && (!group || childs[child].groupName === group))
-                            {
-                                var res = gridGroupProcessFunction(childs[child], args)
-                                if (!res) {
-                                    //console.log("LOOP BREAKER!")
-                                    continue loop1
-                                }
-                                else
-                                    break loop1
-                            }
-                        }
-                    }
-                }
-                gridsListView.currentIndex = currentIndexWas
-            }
-
-            function loadStacks(gridWithGroup, savedStacks) {
-                var iconGridView = gridWithGroup.gridView
-                //console.log("LOADING STACKS")
+            function loadStacks(list, savedStacks) {
+                console.log("LOADING STACKS ")
 
                 for (var stackName in savedStacks) {
+                    console.log("stackName: " + stackName)
 
                     var captionsList = savedStacks[stackName].split(",")
                     var captionStackingTo = captionsList[0]
                     //console.log("Object item:", captionStackingTo, "=", captionsList)
 
-                    var model = iconGridView.model
                     var indexStackingTo = -1
-                    for (var i = 0; i < model.count; i++) {
+                    for (var i = 0; i < list.length; i++) {
                         //console.log("LOADING " + stackName + " checking with " + model.get(i).caption)
-                        if (model.get(i).caption === captionStackingTo) {
+                        if (list[i].caption === captionStackingTo) {
                             indexStackingTo = i
                             break
                         }
@@ -272,17 +237,18 @@ loop2:
                             //console.log("NEED TO STACK: " + captionToStack)
 
                             var indexToStack = -1
-                            for (var j = 0; j < model.count; j++)
-                                if (model.get(j).caption === captionToStack) {
+                            for (var j = 0; j < list.length; j++)
+                                if (list[j].caption === captionToStack) {
                                     indexToStack = j
                                     break
                                 }
 
                             if (indexToStack != -1) {
-                                iconGridView.stackItemInItem(indexStackingTo, indexToStack, true)
+                                gridsListView.stackItemInItem(list, indexStackingTo, indexToStack)
                                 //console.log("SETTING " + indexStackingTo + " caption to " + stackName)
-                                model.setProperty(indexStackingTo, "caption", stackName)
-                                model.remove(indexToStack)
+                                list[indexStackingTo].caption = stackName
+                                moveItemInArray(list, indexToStack, list.length - 1)
+                                list[list.length - 1].caption = ""
                             }
                         }
                     }
@@ -293,23 +259,36 @@ loop2:
             }
 
             function saveStacks() {
+                console.log("function saveStacks()")
                 var setting = []
+                var currentIndexWas = gridsListView.currentIndex
 
-                forEachGridGroup("Apps", function(gridWithGroup) {
-                    var iconGridView = gridWithGroup.gridView
-                    var model = iconGridView.model
-                    //console.log("SAVING stacking")
+                // Iterating by all GridWithGroupContainers
+                for (var currentView = 0; currentView < gridsListView.count; currentView++) {
+                    gridsListView.currentIndex = currentView
 
-                    for (var i = 0; i < model.count; i++) {
-                        var item = model.get(i)
-                        var stack = item.stack
-                        if (stack !== undefined) {
-                            setting.push(iconGridView.copyObjectByValue(item))
-                            //console.log(stack.length + "; at " + i)
+                    if (gridsListView.currentItem) {
+                        var childs = gridsListView.currentItem.children
+
+                        // Iterating by it's GridWithGroups
+                        for (var child = 0; child < childs.length; child++) {
+                            if ('gridView' in childs[child] && childs[child].groupName === "Apps")
+                            {
+                                var model = childs[child].gridView.model
+                                console.log("SAVING stacking")
+
+                                for (var i = 0; i < model.count; i++) {
+                                    var item = model.get(i)
+                                    var stack = item.stack
+                                    if (stack !== undefined) {
+                                        setting.push(root.cloneObject(item))
+                                    }
+                                }
+                            }
                         }
                     }
-                    return true
-                })
+                }
+                gridsListView.currentIndex = currentIndexWas
 
                 mainWindow.saveStacks(setting)
             }
@@ -321,13 +300,13 @@ loop2:
 
                 for (var i in map) {
                     var pos = map[i]
-                    if (destPos < srcPos) {
+                    if (destPos < srcPos && destPos !== -1) {
                         if (pos >= destPos && pos < srcPos)
                             map[i] = pos + 1
                     }
                     else {
-                        if (pos > srcPos && pos <= destPos)
-                            map[i] = pos - 1
+                        if (pos > srcPos && pos <= destPos || destPos === -1)
+                            map[i] = Math.max(-1, pos - 1)
                     }
                 }
                 map[item] = destPos
@@ -337,6 +316,71 @@ loop2:
                 mainWindow.saveIconPositions(map)
                 iconPositions = map
             }
+
+            function moveItemInArray(array, pos1, pos2) {
+                // local variables
+                var i, tmp;
+                // cast input parameters to integers
+                pos1 = parseInt(pos1, 10);
+                pos2 = parseInt(pos2, 10);
+                // if positions are different and inside array
+                if (pos1 !== pos2 &&
+                    0 <= pos1 && pos1 <= array.length &&
+                    0 <= pos2 && pos2 <= array.length) {
+                    // save element from position 1
+                    tmp = array[pos1];
+                    // move element down and shift other elements up
+                    if (pos1 < pos2) {
+                        for (i = pos1; i < pos2; i++) {
+                            array[i] = array[i + 1];
+                        }
+                    }
+                    // move element up and shift other elements down
+                    else {
+                        for (i = pos1; i > pos2; i--) {
+                            array[i] = array[i - 1];
+                        }
+                    }
+                    // put element from position 1 to destination
+                    array[pos2] = tmp;
+                }
+            }
+
+            // Sorry for the copypaste - had no time to do it proper way(
+            function stackItemInItem(list, indexStackingTo, indexDragging) {
+                //console.log("----------------- STACKING " + indexDragging + " to " + indexStackingTo)
+
+                var itemDragging = list[indexDragging]
+                var itemStackingTo = list[indexStackingTo]
+
+                var stackArray = itemStackingTo.stack
+                if (stackArray === undefined) {
+                    //console.log("FIRST TIME STACKING")
+                    stackArray = []
+
+                    stackArray.push(root.cloneObject(itemStackingTo))
+                }
+                else {
+                    //console.log("STACKING AGAIN")
+                    for (var i in stackArray) // Checking if item is already present in stack
+                        if (stackArray[i].id === itemDragging.id)
+                        {
+                            //console.log("Duplicate ignored")
+                            return false
+                        }
+                }
+                //console.log(" L Adding " + itemDragging.caption)
+                stackArray.push(root.cloneObject(itemDragging))
+
+                list[indexStackingTo].imagePath = "image://generalicon/stacked/" + itemStackingTo.imagePath.slice(28) + "|" + itemDragging.imagePath.slice(28)
+                list[indexStackingTo].stack = stackArray
+
+                //console.log("image: " + list[indexStackingTo].imagePath)
+                //console.log("stack: " + list[indexStackingTo].stack)
+
+                return true
+            }
+
 
             function fetchApps() {
                 var appsList = []
@@ -357,13 +401,13 @@ loop2:
 
                         var appsPositionsDict = {}
 
-                        // Filling appsList with app vailable apps
+                        // Filling appsList with available apps
                         var appsCount = dataSources[ds].dataSource.getItemCount("Apps")
 
                         for (var appIndex = 0; appIndex < appsCount; appIndex++) {
 
                             var newItem = dataSources[ds].dataSource.getContent(appIndex, "Apps")
-                            console.log("++ " + "Apps" + "[" + appIndex + "] - " + newItem.caption + " / " + newItem.id)
+                            //console.log("++ " + "Apps" + "[" + appIndex + "] - " + newItem.caption + " / " + newItem.id)
                             appsList.push(newItem)
 
                             if (iconPositions[newItem.caption] !== undefined)
@@ -372,21 +416,31 @@ loop2:
                             //gridWithGroup.gridView.newItemData(newItem)
                         }
 
+                        // Loading stacks
+                        loadStacks(appsList, mainWindow.loadStacks()) // FIXME: do mainWindow.loadStacks() only once
 
                         // Reordering loaded items
                         for (var newIndex in iconPositionsArr) {
                             for (appIndex = 0; appIndex < appsCount; appIndex++)
                                 if (appsList[appIndex].caption === iconPositionsArr[newIndex]) {
-                                    appsList.move(appIndex, newIndex)
+                                    if (newIndex === -1)
+                                        moveItemInArray(appsList, appIndex, appsList.length - 1)
+                                    else
+                                        moveItemInArray(appsList, appIndex, newIndex)
                                     break
                                 }
                         }
 
+                        // Logging
+//                        console.log("--------- REORDERED AND STACKED TO:")
+//                        for (appIndex = 0; appIndex < appsCount; appIndex++) {
+//                            console.log("++ " + "Apps" + "[" + appIndex + "] - " + appsList[appIndex].caption + " / " + appsList[appIndex].id)
+//                            if (appsList[appIndex].stack !== undefined)
+//                                for (var ii in appsList[appIndex].stack)
+//                                    console.log("   L " + appsList[appIndex].stack[ii].caption)
+//                        }
 
-                        // Adding to GridView
-                        console.log("--------- REORDERED TO:")
-                        for (appIndex = 0; appIndex < appsCount; appIndex++)
-                            console.log("++ " + "Apps" + "[" + appIndex + "] - " + appsList[appIndex].caption + " / " + appsList[appIndex].id)
+                        break
                     }
                 }
 
@@ -409,7 +463,7 @@ loop2:
                         for (var child = 0; child < childs.length; child++) {
                             var gridWithGroup = childs[child]
                             //console.log("-== NEW GRID WITH GROUP ==-")
-                            if ('count' in gridWithGroup)
+                            if ('gridView' in gridWithGroup)
                             {
                                 var gridMaxCount = gridWithGroup.maxCount
 
@@ -426,15 +480,21 @@ loop2:
                                         for (; dataSourcesVar[ds].index < itemCount &&
                                              (gridWithGroup.maxCount === -1 || gridWithGroup.gridView.count < gridMaxCount ); dataSourcesVar[ds].index++) {
 
-                                            var itemToAdd
+                                            if (gridWithGroup.groupName === "Apps") {
+                                                var itemToAdd = appsList[dataSourcesVar[ds].index]
 
-                                            if (gridWithGroup.groupName === "Apps")
-                                                itemToAdd = appsList[dataSourcesVar[ds].index]
+                                                //console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "] - " + itemToAdd.caption + " / " + itemToAdd.id)
+
+                                                // This is needed to prevent ListModel.append from converting JsObject to ListModel
+                                                var stack = itemToAdd.stack
+                                                itemToAdd.stack = undefined
+                                                if (itemToAdd.caption)
+                                                    gridWithGroup.gridView.newItemData(itemToAdd)
+                                                if (stack !== undefined)
+                                                    gridWithGroup.gridView.model.setProperty(gridWithGroup.gridView.model.count - 1, "stack", stack)
+                                            }
                                             else
-                                                itemToAdd = dataSourcesVar[ds].dataSource.getContent(dataSourcesVar[ds].index, gridWithGroup.groupName)
-
-                                            console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "] - " + itemToAdd.caption + " / " + itemToAdd.id)
-                                            gridWithGroup.gridView.newItemData(itemToAdd)
+                                                gridWithGroup.gridView.newItemData(dataSourcesVar[ds].dataSource.getContent(dataSourcesVar[ds].index, gridWithGroup.groupName))
                                         }
                                         break
                                     }
@@ -486,7 +546,7 @@ loop2:
                 stackCellOpenedId = -1
                 topBar.forceActiveFocus()
                 activeGridView.myActiveFocus = true
-                saveStacks()
+                gridsListView.saveStacks()
             }
 
             function showGroup(index, item, iconCoords)
@@ -500,10 +560,10 @@ loop2:
                     popupFrame.gridGroup.gridView.model.clear()
                     popupFrame.stackedIconIndex = index
 
-                    //console.log("stacked group we are opening has length:" + item.stack.length)
+                    console.log("stacked group we are opening has length:" + item.stack + " of " + item.stack.length)
                     for (var i = 0; i < item.stack.length; i++)
                     {
-                        //console.log("N" + i + ": " + item.stack[i].caption + " [" + item.stack[i].id + "]")
+                        console.log("N" + i + ": " + item.stack[i].caption + " [" + item.stack[i].id + "]")
                         popupFrame.gridGroup.gridView.newItemData(item.stack[i])
                     }
                     popupFrame.gridGroup.gridView.forceMyFocus()

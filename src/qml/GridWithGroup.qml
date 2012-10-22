@@ -114,7 +114,8 @@ Column {
             if (itemData.pinned === undefined)
                 itemData.pinned = undefined
 
-            itemData.stack = undefined
+            if (itemData.stack === undefined)
+                itemData.stack = undefined
             model.append(itemData)
         }
 
@@ -123,7 +124,8 @@ Column {
             if (itemData.pinned === undefined)
                 itemData.pinned = undefined
 
-            itemData.stack = undefined
+            if (itemData.stack === undefined)
+                itemData.stack = undefined
             model.insert(pos, itemData)
         }
 

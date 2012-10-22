@@ -104,7 +104,7 @@ void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, 
 
 void QmlApplicationViewer::saveStacks(QVariantList setting)
 {
-    //qDebug() << "WE ARE HERE WE ARE SAVING" << groupName;
+    //qDebug() << "WE ARE HERE WE ARE SAVING stacking";
 
     KConfigGroup configGroup(KGlobal::config(), "Stacks");
     configGroup.deleteGroup();
@@ -118,12 +118,14 @@ void QmlApplicationViewer::saveStacks(QVariantList setting)
             //qDebug() << map["imagePath"].toString();
             //qDebug() << map["stack"];
 
+            //qDebug() << "In" << map["caption"].toString();
 
             QStringList stackList;
             QVariantList stack = map["stack"].toList();
             foreach(QVariant item, stack) {
                 QVariantMap properties = item.toMap();
                 stackList.append(properties["caption"].toString());
+                //qDebug() << " L" << properties["caption"].toString();
             }
 
             configGroup.writeEntry(map["caption"].toString(), stackList);
@@ -170,6 +172,8 @@ QVariantMap QmlApplicationViewer::loadStacks()
     foreach(QString key, map.keys())
         list[key] = map[key];
 
+    //qDebug() << "LOADED STACKS:";
+    //qDebug() << list;
     return list;
 }
 
