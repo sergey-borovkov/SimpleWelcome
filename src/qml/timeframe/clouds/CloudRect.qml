@@ -10,8 +10,16 @@ Rectangle {
     radius: 10
 
     function gotThumbnail() {
-            image.source = image.source + "1"
+            image.source += "1"
     }
+
+    Connections {
+        target: localDayModel.itemsModel(date)
+        onGotThumbnail: {
+            gotThumbnail()
+        }
+    }
+
     ItemRectangle {
         anchors.centerIn: parent
         width: image.paintedWidth -1
