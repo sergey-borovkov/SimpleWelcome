@@ -58,7 +58,7 @@
 #include "timeframe/social/pluginimageprovider.h"
 #include "timeframe/social/socialitem.h"
 #include "timeframe/social/pluginmodel.h"
-#include "timeframe/social/socialdaymodel.h"
+#include "timeframe/social/socialcontentmodel.h"
 #include "timeframe/social/socialdayitem.h"
 
 #include <listitem.h>
@@ -270,8 +270,8 @@ void SWApp::initTimeframeSocialMode()
     PluginLoader loader;
     QList<ISocialPlugin *> plugins = loader.loadPlugins(pathToRoot() + QString::fromLatin1("/" SW_TIMEFRAME_PLUGINS_PATH));
 
-    SocialDayModel* socialModel = new SocialDayModel(SocialDayItem::roleNames());
-    SocialDayFilterModel* socialProxyModel = new SocialDayFilterModel(this);
+    SocialContentModel* socialModel = new SocialContentModel(SocialContentItem::roleNames());
+    SocialContentFilterModel* socialProxyModel = new SocialContentFilterModel(this);
     socialProxyModel->setSourceModel(socialModel);
     m_manager = new SocialProxy(plugins, this);
     m_manager->setSocialModel(socialModel);
