@@ -55,7 +55,7 @@ PreviewGenerator::PreviewGenerator()
 
 void PreviewGenerator::previewComplete(PreviewGenerator::PreviewItemIterator it)
 {
-    if(it != m_pendingItems.end()) {
+    if (it != m_pendingItems.end()) {
         PreviewItem &item = it.value();
         // remove from pending items if only one request left
         if(item.count == 1) {
@@ -103,14 +103,12 @@ void PreviewGenerator::previewJobFailed(const KFileItem &item)
 QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
 {
     QHash<QString, QPixmap>::iterator it = m_previews.find(filePath);
-    if(it != m_previews.end()) {
+    if (it != m_previews.end()) {
         QPixmap pixmap = it.value();
-
         // item is not in pending requests
         if (m_pendingItems.find(filePath) == m_pendingItems.end()) {
             m_previews.erase(it);
         }
-
         return pixmap;
     }
 
