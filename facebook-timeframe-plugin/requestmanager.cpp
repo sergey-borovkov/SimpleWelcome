@@ -198,7 +198,6 @@ void RequestManager::idReply(QByteArray reply)
 
     m_selfName = result.value(QLatin1String("name")).toString();
     emit selfName(m_selfName);
-
 }
 
 void RequestManager::imageReply(QByteArray reply)

@@ -27,6 +27,15 @@ public:
         return !m_authorizer->accessToken().isEmpty();
     }
 
+    QString selfId() const;
+    void setSelfId( const QString& id );
+
+    QString selfName() const;
+    void setSelfName( const QString & name );
+
+    QString selfPictureUrl() const;
+    void setSelfPictureUrl( const QString & url);
+
 private slots:
     void onAcessTokenChanged();
 
@@ -40,6 +49,7 @@ private:
     OAuth2Authorizer *m_authorizer;
     QPixmap m_pixmap;
     QPixmap m_smallPixmap;
+
 };
 
 #endif
