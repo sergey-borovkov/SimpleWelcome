@@ -317,11 +317,11 @@ Item {
                 }
                 map[item] = destPos
 
-                console.log("MOVED: " + item + " from " + srcPos  + " to " + destPos)
+                //console.log("MOVED: " + item + " from " + srcPos  + " to " + destPos)
 
-                for (var j in map) {
-                    console.log("> " + j + " " + map[j])
-                }
+//                for (var j in map) {
+//                    console.log("> " + j + " " + map[j])
+//                }
 
                 iconPositions = map
                 saveIconPositions()
