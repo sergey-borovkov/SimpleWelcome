@@ -288,6 +288,10 @@ void SocialProxy::deauthorized()
     QSettings settings("ROSA", "Timeframe");
     settings.setValue(plugin->name(), 0);
 
+    plugin->setSelfId("");
+    plugin->setSelfName("");
+    plugin->setSelfPictureUrl("");
+
     emit pluginDeauthorized();
 }
 
