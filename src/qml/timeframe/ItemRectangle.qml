@@ -21,4 +21,14 @@ Item {
             source: "images/shadow.png"; smooth: true
         }
     }
+    states: [
+        State {
+            name: "notEnabled"
+            PropertyChanges {
+                target: rectangle
+                color: "#2A3947"
+                border.color: "#4B5E6E"
+            }
+        }
+    ]
 }
