@@ -72,6 +72,39 @@ QWidget *FacebookModule::authenticationWidget()
     return m_authorizationView;
 }
 
+QString FacebookModule::selfId() const
+{
+    return m_selfId;
+}
+
+void FacebookModule::setSelfId(const QString &id)
+{
+    m_selfId = id;
+}
+
+QString FacebookModule::selfName() const
+{
+    return m_selfName;
+}
+
+void FacebookModule::setSelfName(const QString &name)
+{
+    m_selfName = name;
+}
+
+QString FacebookModule::selfPictureUrl() const
+{
+    if (m_selfPictureUrl.isEmpty()) {
+        return QString("images/user.png");
+    }
+    return m_selfPictureUrl;
+}
+
+void FacebookModule::setSelfPictureUrl(const QString &url)
+{
+    m_selfPictureUrl = url;
+}
+
 void FacebookModule::onAcessTokenChanged()
 {
     /*    if(m_authorizer->isAuthorized())

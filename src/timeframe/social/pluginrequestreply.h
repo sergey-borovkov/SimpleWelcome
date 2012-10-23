@@ -22,7 +22,7 @@ public:
      * @param request Pointer to Request
      * @param parent
      */
-    explicit PluginRequestReply(Request *request, const QString& sourceId, QObject *parent = 0);
+    explicit PluginRequestReply(Request *request, const QString& sourceId, const QString & pluginName, QObject *parent = 0);
 
     /**
      * @brief isComplete Check if request already completed
@@ -48,6 +48,8 @@ public:
     Q_INVOKABLE QString userId() const;
     Q_INVOKABLE QString userName() const;
 
+    Q_INVOKABLE QString pluginName() const;
+
 signals:
     void success(PluginRequestReply*);
     void failure(PluginRequestReply*);
@@ -68,6 +70,8 @@ private:
     QString m_userId;
     QString m_userPictureUrl;
     QString m_userName;
+
+    QString m_pluginName;
 
     bool m_finished;
 };
