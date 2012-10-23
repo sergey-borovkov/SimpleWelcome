@@ -21,6 +21,9 @@ set(QT_USE_QTNETWORK TRUE)
 set(QT_USE_QTWEBKIT TRUE)
 
 add_library(facebook-timeframe-plugin SHARED ${HEADERS} ${SOURCES} ${MOC_OUT} ${QRC_SOURCES})
-target_link_libraries(facebook-timeframe-plugin ${QJSON} timeframe)
+target_link_libraries(facebook-timeframe-plugin
+                        ${KDE4_KDEUI_LIBS}
+                        ${QJSON}
+                        timeframe)
 
 install(TARGETS facebook-timeframe-plugin DESTINATION "${_timeframe_plugins_install_path}")

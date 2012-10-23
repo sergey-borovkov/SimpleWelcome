@@ -21,6 +21,7 @@ public:
     QString name() const;
     QPixmap icon() const;
     QPixmap smallIcon() const;
+    QString localizedName() const;
 
     QWidget *authenticationWidget();
     bool authorized() const {

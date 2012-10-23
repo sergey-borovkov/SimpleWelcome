@@ -9,6 +9,7 @@
 #include <QtWebKit/QWebView>
 #include <QtWebKit/QWebFrame>
 
+#include <klocalizedstring.h>
 
 VkontakteModule::VkontakteModule()
 {
@@ -56,6 +57,11 @@ QPixmap VkontakteModule::icon() const
 QPixmap VkontakteModule::smallIcon() const
 {
     return m_smallPixmap;
+}
+
+QString VkontakteModule::localizedName() const
+{
+    return i18n("VKontakte");
 }
 
 QWidget *VkontakteModule::authenticationWidget()

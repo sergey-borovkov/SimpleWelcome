@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: SimpleWelcome\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-10-11 17:42+0400\n"
+"POT-Creation-Date: 2012-10-23 17:51+0400\n"
 "PO-Revision-Date: 2011-06-19 11:10+0000\n"
 "Last-Translator: Mandriva Linux <almusalimalmusalimah@gmail.com>\n"
 "Language-Team: Arabic (http://transifex.mandriva.com/projects/p/"
@@ -21,201 +21,211 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5\n"
 
-#: main.cpp:37 main.cpp:44
-msgid "ROSA Desktop Application Launcher"
-msgstr "مطلق - تطبيقات سطح المكتب - روسا"
-
-#: main.cpp:46
-#, fuzzy
-msgid "Copyright 2010-2012, ROSALab"
-msgstr "حقوق الطبع 2010-2011 ، مختبرات روسا ROSALab"
-
-#: main.cpp:47
-msgid "Alexander Skakov"
+#: facebook-timeframe-plugin/facebookmodule.cpp:63
+msgid "Facebook"
 msgstr ""
 
-#: main.cpp:48 main.cpp:51 main.cpp:54 main.cpp:57 main.cpp:60
-msgid "Author"
-msgstr "المؤلف"
-
-#: main.cpp:50
-msgid "Evgeniy Augin"
-msgstr ""
-
-#: main.cpp:53
-msgid "Sergey Borovkov"
-msgstr ""
-
-#: main.cpp:56
-msgid "Julia Mineeva"
-msgstr ""
-
-#: main.cpp:59
-msgid "Aleksey Yermakov"
-msgstr "Aleksey Yermakov"
-
-#: main.cpp:67
-msgid "Silent run. Hide application window after start."
-msgstr ""
-
-#: swapp.cpp:176
-msgid "Welcome"
-msgstr "مرحبا"
-
-#: swapp.cpp:177
-msgid "Applications"
-msgstr "التطبيقات"
-
-#: swapp.cpp:178
-msgid "TimeFrame"
-msgstr "الخط الزمني"
-
-#: swapp.cpp:180
-msgid "Recent Applications"
-msgstr "التطبيقات المستعملة مؤخرا"
-
-#: swapp.cpp:181
-msgid "Places"
-msgstr "اﻷماكن"
-
-#: swapp.cpp:182
-msgid "Recent Documents"
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: swapp.cpp:184
-msgid "All"
-msgstr ""
-
-#: swapp.cpp:185
-msgid "Images"
-msgstr ""
-
-#: swapp.cpp:186
-msgid "Video"
-msgstr "الفيديو"
-
-#: swapp.cpp:187
-#, fuzzy
-msgid "Documents"
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: swapp.cpp:188
-msgid "Manage Networks"
-msgstr ""
-
-#: swapp.cpp:189
-#, fuzzy
-msgid "My Local Documents"
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: swapp.cpp:190
-msgid "Local"
-msgstr ""
-
-#: swapp.cpp:191
-msgid "Write comment..."
-msgstr ""
-
-#: swapp.cpp:192
-msgid "Audio: "
-msgstr ""
-
-#: swapp.cpp:193
-msgid "Like"
-msgstr ""
-
-#: swapp.cpp:194
-msgid "Unlike"
-msgstr ""
-
-#: swapp.cpp:195
-msgid "Social Networking Sites"
-msgstr ""
-
-#: swapp.cpp:196
-#, fuzzy
-msgid "Show comments"
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: swapp.cpp:197
-#, fuzzy
-msgid "Hide comments"
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: swapp.cpp:198
-msgid "Login"
-msgstr ""
-
-#: swapp.cpp:199
-msgid "Logout"
-msgstr ""
-
-#: swapp.cpp:200
-msgid "Enable..."
-msgstr ""
-
-#: swapp.cpp:201
-msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
-msgstr ""
-
-#: swapp.cpp:203
-msgid "JAN"
-msgstr "يناير"
-
-#: swapp.cpp:204
-msgid "FEB"
-msgstr "فبراير"
-
-#: swapp.cpp:205
-msgid "MAR"
-msgstr "مارس"
-
-#: swapp.cpp:206
-msgid "APR"
-msgstr "إبريل"
-
-#: swapp.cpp:207
-msgid "MAY"
-msgstr "مايو"
-
-#: swapp.cpp:208
-#, fuzzy
-msgid "JUN"
-msgstr "يونيو"
-
-#: swapp.cpp:209
-#, fuzzy
-msgid "JUL"
-msgstr "يوليو"
-
-#: swapp.cpp:210
-msgid "AUG"
-msgstr "أغسطس"
-
-#: swapp.cpp:211
-msgid "SEP"
-msgstr "سبتمبر"
-
-#: swapp.cpp:212
-msgid "OCT"
-msgstr "أُكتوبر"
-
-#: swapp.cpp:213
-msgid "NOV"
-msgstr "نوفمبر"
-
-#: swapp.cpp:214
-msgid "DEC"
-msgstr "ديسمبر"
-
-#: rc.cpp:1
+#: po/rc.cpp:1 rc.cpp:1
 msgctxt "Julia Mineeva"
 msgid "Julia Mineeva"
 msgstr ""
 
-#: rc.cpp:2
+#: po/rc.cpp:2 rc.cpp:2
 msgctxt "julia.mineeva@osinit.ru"
 msgid "julia.mineeva@osinit.ru"
+msgstr ""
+
+#: src/main.cpp:37 src/main.cpp:44
+msgid "ROSA Desktop Application Launcher"
+msgstr "مطلق - تطبيقات سطح المكتب - روسا"
+
+#: src/main.cpp:46
+#, fuzzy
+msgid "Copyright 2010-2012, ROSALab"
+msgstr "حقوق الطبع 2010-2011 ، مختبرات روسا ROSALab"
+
+#: src/main.cpp:47
+msgid "Alexander Skakov"
+msgstr ""
+
+#: src/main.cpp:48 src/main.cpp:51 src/main.cpp:54 src/main.cpp:57
+#: src/main.cpp:60
+msgid "Author"
+msgstr "المؤلف"
+
+#: src/main.cpp:50
+msgid "Evgeniy Augin"
+msgstr ""
+
+#: src/main.cpp:53
+msgid "Sergey Borovkov"
+msgstr ""
+
+#: src/main.cpp:56
+msgid "Julia Mineeva"
+msgstr ""
+
+#: src/main.cpp:59
+msgid "Aleksey Yermakov"
+msgstr "Aleksey Yermakov"
+
+#: src/main.cpp:67
+msgid "Silent run. Hide application window after start."
+msgstr ""
+
+#: src/swapp.cpp:178
+msgid "Welcome"
+msgstr "مرحبا"
+
+#: src/swapp.cpp:179
+msgid "Applications"
+msgstr "التطبيقات"
+
+#: src/swapp.cpp:180
+msgid "TimeFrame"
+msgstr "الخط الزمني"
+
+#: src/swapp.cpp:182
+msgid "Recent Applications"
+msgstr "التطبيقات المستعملة مؤخرا"
+
+#: src/swapp.cpp:183
+msgid "Places"
+msgstr "اﻷماكن"
+
+#: src/swapp.cpp:184
+msgid "Recent Documents"
+msgstr "المستندات المستخدمة مؤخرا"
+
+#: src/swapp.cpp:186
+msgid "All"
+msgstr ""
+
+#: src/swapp.cpp:187
+msgid "Images"
+msgstr ""
+
+#: src/swapp.cpp:188
+msgid "Video"
+msgstr "الفيديو"
+
+#: src/swapp.cpp:189
+#, fuzzy
+msgid "Documents"
+msgstr "المستندات المستخدمة مؤخرا"
+
+#: src/swapp.cpp:190
+msgid "Manage Networks"
+msgstr ""
+
+#: src/swapp.cpp:191
+#, fuzzy
+msgid "My Local Documents"
+msgstr "المستندات المستخدمة مؤخرا"
+
+#: src/swapp.cpp:192
+msgid "Local"
+msgstr ""
+
+#: src/swapp.cpp:193
+#, fuzzy
+msgid "Write comment..."
+msgstr "المستندات المستخدمة مؤخرا"
+
+#: src/swapp.cpp:194
+msgid "Audio: "
+msgstr ""
+
+#: src/swapp.cpp:195
+msgid "Like"
+msgstr ""
+
+#: src/swapp.cpp:196
+msgid "Unlike"
+msgstr ""
+
+#: src/swapp.cpp:197
+msgid "Social Networking Sites"
+msgstr ""
+
+#: src/swapp.cpp:198
+#, fuzzy
+msgid "Show comments"
+msgstr "المستندات المستخدمة مؤخرا"
+
+#: src/swapp.cpp:199
+#, fuzzy
+msgid "Hide comments"
+msgstr "المستندات المستخدمة مؤخرا"
+
+#: src/swapp.cpp:200
+msgid "Login"
+msgstr ""
+
+#: src/swapp.cpp:201
+msgid "Logout"
+msgstr ""
+
+#: src/swapp.cpp:202
+msgid "Enable..."
+msgstr ""
+
+#: src/swapp.cpp:203
+msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
+msgstr ""
+
+#: src/swapp.cpp:205
+msgid "JAN"
+msgstr "يناير"
+
+#: src/swapp.cpp:206
+msgid "FEB"
+msgstr "فبراير"
+
+#: src/swapp.cpp:207
+msgid "MAR"
+msgstr "مارس"
+
+#: src/swapp.cpp:208
+msgid "APR"
+msgstr "إبريل"
+
+#: src/swapp.cpp:209
+msgid "MAY"
+msgstr "مايو"
+
+#: src/swapp.cpp:210
+#, fuzzy
+msgid "JUN"
+msgstr "يونيو"
+
+#: src/swapp.cpp:211
+#, fuzzy
+msgid "JUL"
+msgstr "يوليو"
+
+#: src/swapp.cpp:212
+msgid "AUG"
+msgstr "أغسطس"
+
+#: src/swapp.cpp:213
+msgid "SEP"
+msgstr "سبتمبر"
+
+#: src/swapp.cpp:214
+msgid "OCT"
+msgstr "أُكتوبر"
+
+#: src/swapp.cpp:215
+msgid "NOV"
+msgstr "نوفمبر"
+
+#: src/swapp.cpp:216
+msgid "DEC"
+msgstr "ديسمبر"
+
+#: vkontakte-timeframe-plugin/vkontaktemodule.cpp:64
+msgid "VKontakte"
 msgstr ""
 
 #, fuzzy

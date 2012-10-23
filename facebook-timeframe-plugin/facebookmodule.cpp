@@ -8,6 +8,8 @@
 #include <QtWebKit/QWebView>
 #include <QtWebKit/QWebFrame>
 
+#include <klocalizedstring.h>
+
 FacebookModule::FacebookModule()
 {
     m_authorizer = new OAuth2Authorizer;
@@ -56,6 +58,10 @@ QPixmap FacebookModule::smallIcon() const
     return m_smallPixmap;
 }
 
+QString FacebookModule::localizedName() const
+{
+    return i18n("Facebook");
+}
 
 QWidget *FacebookModule::authenticationWidget()
 {

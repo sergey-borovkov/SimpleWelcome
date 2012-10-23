@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-10-11 17:42+0400\n"
+"POT-Creation-Date: 2012-10-23 17:51+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,197 +20,206 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
-#: main.cpp:37 main.cpp:44
-msgid "ROSA Desktop Application Launcher"
+#: facebook-timeframe-plugin/facebookmodule.cpp:63
+msgid "Facebook"
 msgstr ""
 
-#: main.cpp:46
-msgid "Copyright 2010-2012, ROSALab"
-msgstr ""
-
-#: main.cpp:47
-msgid "Alexander Skakov"
-msgstr ""
-
-#: main.cpp:48 main.cpp:51 main.cpp:54 main.cpp:57 main.cpp:60
-msgid "Author"
-msgstr "Автор"
-
-#: main.cpp:50
-msgid "Evgeniy Augin"
-msgstr ""
-
-#: main.cpp:53
-msgid "Sergey Borovkov"
-msgstr ""
-
-#: main.cpp:56
+#: po/rc.cpp:1 rc.cpp:1
+msgctxt "Julia Mineeva"
 msgid "Julia Mineeva"
 msgstr ""
 
-#: main.cpp:59
+#: po/rc.cpp:2 rc.cpp:2
+msgctxt "julia.mineeva@osinit.ru"
+msgid "julia.mineeva@osinit.ru"
+msgstr ""
+
+#: src/main.cpp:37 src/main.cpp:44
+msgid "ROSA Desktop Application Launcher"
+msgstr ""
+
+#: src/main.cpp:46
+msgid "Copyright 2010-2012, ROSALab"
+msgstr ""
+
+#: src/main.cpp:47
+msgid "Alexander Skakov"
+msgstr ""
+
+#: src/main.cpp:48 src/main.cpp:51 src/main.cpp:54 src/main.cpp:57
+#: src/main.cpp:60
+msgid "Author"
+msgstr "Автор"
+
+#: src/main.cpp:50
+msgid "Evgeniy Augin"
+msgstr ""
+
+#: src/main.cpp:53
+msgid "Sergey Borovkov"
+msgstr ""
+
+#: src/main.cpp:56
+msgid "Julia Mineeva"
+msgstr ""
+
+#: src/main.cpp:59
 msgid "Aleksey Yermakov"
 msgstr ""
 
-#: main.cpp:67
+#: src/main.cpp:67
 msgid "Silent run. Hide application window after start."
 msgstr ""
 
-#: swapp.cpp:176
+#: src/swapp.cpp:178
 msgid "Welcome"
 msgstr "Приветствие"
 
-#: swapp.cpp:177
+#: src/swapp.cpp:179
 msgid "Applications"
 msgstr "Приложения"
 
-#: swapp.cpp:178
+#: src/swapp.cpp:180
 msgid "TimeFrame"
 msgstr ""
 
-#: swapp.cpp:180
+#: src/swapp.cpp:182
 msgid "Recent Applications"
 msgstr "Недавние приложения"
 
-#: swapp.cpp:181
+#: src/swapp.cpp:183
 msgid "Places"
 msgstr "Точки входа"
 
-#: swapp.cpp:182
+#: src/swapp.cpp:184
 msgid "Recent Documents"
 msgstr "Недавние документы"
 
-#: swapp.cpp:184
+#: src/swapp.cpp:186
 msgid "All"
 msgstr "Все"
 
-#: swapp.cpp:185
+#: src/swapp.cpp:187
 msgid "Images"
 msgstr "Изображения"
 
-#: swapp.cpp:186
+#: src/swapp.cpp:188
 msgid "Video"
 msgstr "Видео"
 
-#: swapp.cpp:187
+#: src/swapp.cpp:189
 msgid "Documents"
 msgstr "Документы"
 
-#: swapp.cpp:188
+#: src/swapp.cpp:190
 msgid "Manage Networks"
 msgstr "Управление сетями"
 
-#: swapp.cpp:189
+#: src/swapp.cpp:191
 msgid "My Local Documents"
 msgstr "Мои локальные документы"
 
-#: swapp.cpp:190
+#: src/swapp.cpp:192
 msgid "Local"
 msgstr ""
 
-#: swapp.cpp:191
+#: src/swapp.cpp:193
 msgid "Write comment..."
 msgstr "Написать комментарий..."
 
-#: swapp.cpp:192
+#: src/swapp.cpp:194
 msgid "Audio: "
 msgstr "Аудио: "
 
-#: swapp.cpp:193
+#: src/swapp.cpp:195
 msgid "Like"
 msgstr "Мне нравится"
 
-#: swapp.cpp:194
+#: src/swapp.cpp:196
 msgid "Unlike"
 msgstr "Больше не нравится"
 
-#: swapp.cpp:195
+#: src/swapp.cpp:197
 msgid "Social Networking Sites"
 msgstr "Социальные сети"
 
-#: swapp.cpp:196
+#: src/swapp.cpp:198
 msgid "Show comments"
 msgstr "Показать комментарии"
 
-#: swapp.cpp:197
+#: src/swapp.cpp:199
 msgid "Hide comments"
 msgstr "Скрыть комментарии"
 
-#: swapp.cpp:198
+#: src/swapp.cpp:200
 msgid "Login"
 msgstr "Вход"
 
-#: swapp.cpp:199
+#: src/swapp.cpp:201
 msgid "Logout"
 msgstr "Выход"
 
-#: swapp.cpp:200
+#: src/swapp.cpp:202
 msgid "Enable..."
 msgstr "Включить..."
 
-#: swapp.cpp:201
+#: src/swapp.cpp:203
 msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
 msgstr ""
 "Служба \"Поиск по меткам и содержимому\" выключена. Вы можете включить ее в "
 "параметрах системы."
 
-#: swapp.cpp:203
+#: src/swapp.cpp:205
 msgid "JAN"
 msgstr "ЯНВ"
 
-#: swapp.cpp:204
+#: src/swapp.cpp:206
 msgid "FEB"
 msgstr "ФЕВ"
 
-#: swapp.cpp:205
+#: src/swapp.cpp:207
 msgid "MAR"
 msgstr "МАРТ"
 
-#: swapp.cpp:206
+#: src/swapp.cpp:208
 msgid "APR"
 msgstr "АПР"
 
-#: swapp.cpp:207
+#: src/swapp.cpp:209
 msgid "MAY"
 msgstr "МАЙ"
 
-#: swapp.cpp:208
+#: src/swapp.cpp:210
 msgid "JUN"
 msgstr "ИЮНЬ"
 
-#: swapp.cpp:209
+#: src/swapp.cpp:211
 msgid "JUL"
 msgstr "ИЮЛЬ"
 
-#: swapp.cpp:210
+#: src/swapp.cpp:212
 msgid "AUG"
 msgstr "АВГ"
 
-#: swapp.cpp:211
+#: src/swapp.cpp:213
 msgid "SEP"
 msgstr "СЕН"
 
-#: swapp.cpp:212
+#: src/swapp.cpp:214
 msgid "OCT"
 msgstr "ОКТ"
 
-#: swapp.cpp:213
+#: src/swapp.cpp:215
 msgid "NOV"
 msgstr "НOЯБ"
 
-#: swapp.cpp:214
+#: src/swapp.cpp:216
 msgid "DEC"
 msgstr "ДЕК"
 
-#: rc.cpp:1
-msgctxt "Julia Mineeva"
-msgid "Julia Mineeva"
-msgstr "Юлия Минеева"
-
-#: rc.cpp:2
-msgctxt "julia.mineeva@osinit.ru"
-msgid "julia.mineeva@osinit.ru"
-msgstr ""
+#: vkontakte-timeframe-plugin/vkontaktemodule.cpp:64
+msgid "VKontakte"
+msgstr "ВКонтакте"
 
 #~ msgid "Photo"
 #~ msgstr "Фото"
