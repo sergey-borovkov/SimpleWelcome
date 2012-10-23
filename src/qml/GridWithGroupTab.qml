@@ -45,7 +45,7 @@ Item {
             gridsListView.activeGridView.newItemData(item)
             gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
             gridsListView.activeGridView.startDragging(gridsListView.activeGridView.count - 1)
-
+            popupFrame.stackedIconIndex = -1
         }
 
         ListView {
@@ -210,10 +210,11 @@ Item {
             }
 
             function loadStacks(list, savedStacks) {
-                console.log("LOADING STACKS ")
+                //console.log("LOADING STACKS ")
 
                 for (var stackName in savedStacks) {
-                    console.log("stackName: " + stackName)
+                    //console.log("-----------")
+                    //console.log("stackName: " + stackName)
 
                     var captionsList = savedStacks[stackName].split(",")
                     var captionStackingTo = captionsList[0]
@@ -221,8 +222,8 @@ Item {
 
                     var indexStackingTo = -1
                     for (var i = 0; i < list.length; i++) {
-                        //console.log("LOADING " + stackName + " checking with " + model.get(i).caption)
                         if (list[i].caption === captionStackingTo) {
+                            //console.log("LOADING " + list[i].caption + " checking with " + captionStackingTo)
                             indexStackingTo = i
                             break
                         }
@@ -231,7 +232,7 @@ Item {
                     if (indexStackingTo == -1)
                         continue
 
-                    for (var captionToStackIndex in captionsList) {
+                    for (var captionToStackIndex = 0; captionToStackIndex < captionsList.length; captionToStackIndex++) {
                         var captionToStack = captionsList[captionToStackIndex]
                         if (captionToStack !== captionStackingTo) {
                             //console.log("NEED TO STACK: " + captionToStack)
@@ -245,9 +246,14 @@ Item {
 
                             if (indexToStack != -1) {
                                 gridsListView.stackItemInItem(list, indexStackingTo, indexToStack)
-                                //console.log("SETTING " + indexStackingTo + " caption to " + stackName)
+                                //console.log("SETTING " + list[indexStackingTo].caption + " caption to " + stackName)
                                 list[indexStackingTo].caption = stackName
+
                                 moveItemInArray(list, indexToStack, list.length - 1)
+
+                                if (indexStackingTo > indexToStack)
+                                    indexStackingTo--
+
                                 list[list.length - 1].caption = ""
                             }
                         }
@@ -255,11 +261,11 @@ Item {
 
                 }
 
-                //console.log("LOADING STACKS FINISHED ---------------- " + iconGridView.count)
+                //console.log("LOADING STACKS FINISHED ---------------- ")
             }
 
             function saveStacks() {
-                console.log("function saveStacks()")
+                //console.log("function saveStacks()")
                 var setting = []
                 var currentIndexWas = gridsListView.currentIndex
 
@@ -275,7 +281,7 @@ Item {
                             if ('gridView' in childs[child] && childs[child].groupName === "Apps")
                             {
                                 var model = childs[child].gridView.model
-                                console.log("SAVING stacking")
+                                //console.log("SAVING stacking")
 
                                 for (var i = 0; i < model.count; i++) {
                                     var item = model.get(i)
@@ -305,7 +311,7 @@ Item {
                             map[i] = pos + 1
                     }
                     else {
-                        if (pos > srcPos && pos <= destPos || destPos === -1)
+                        if (pos > srcPos && (pos <= destPos || destPos === -1))
                             map[i] = Math.max(-1, pos - 1)
                     }
                 }
@@ -313,8 +319,16 @@ Item {
 
                 console.log("MOVED: " + item + " from " + srcPos  + " to " + destPos)
 
-                mainWindow.saveIconPositions(map)
+                for (var j in map) {
+                    console.log("> " + j + " " + map[j])
+                }
+
                 iconPositions = map
+                saveIconPositions()
+            }
+
+            function saveIconPositions() {
+                mainWindow.saveIconPositions(iconPositions)
             }
 
             function moveItemInArray(array, pos1, pos2) {
@@ -372,6 +386,9 @@ Item {
                 //console.log(" L Adding " + itemDragging.caption)
                 stackArray.push(root.cloneObject(itemDragging))
 
+                if (stackArray.length === 2) // First time stacking
+                    list[indexStackingTo].caption = itemStackingTo.caption + " Group"
+
                 list[indexStackingTo].imagePath = "image://generalicon/stacked/" + itemStackingTo.imagePath.slice(28) + "|" + itemDragging.imagePath.slice(28)
                 list[indexStackingTo].stack = stackArray
 
@@ -391,8 +408,18 @@ Item {
 
                         // iconPositionsArr is needed to sort moved icons array by position
                         var iconPositionsArr = []
-                        for (var icon in iconPositions)
-                            iconPositionsArr[iconPositions[icon]] = icon
+                        for (var iconCaption in iconPositions) {
+                            iconPositionsArr.push({"pos": iconPositions[iconCaption], "caption": iconCaption})
+                        }
+
+                        iconPositionsArr.sort(function (a,b) {
+                            return a.pos - b.pos;
+                        })
+
+//                        for (var icon in iconPositionsArr) {
+//                            console.log(iconPositionsArr[icon].pos + " - " + iconPositionsArr[icon].caption)
+//                        }
+
 
                         // console.log("iconPositionsArr ------------")
                         // for (var aa in iconPositionsArr)
@@ -419,14 +446,25 @@ Item {
                         // Loading stacks
                         loadStacks(appsList, mainWindow.loadStacks()) // FIXME: do mainWindow.loadStacks() only once
 
+                        // Moving items that are about to be moved to the end // FIXME: too slow and stupid solution
+                        var appsShrinkableCount = appsCount
+                        for (appIndex = 0; appIndex < appsShrinkableCount; appIndex++)
+                            if (iconPositions[appsList[appIndex].caption] !== undefined) {
+                                moveItemInArray(appsList, appIndex, appsList.length - 1)
+                                //console.log("move to end " + appsList[appsList.length - 1].caption)
+                                appsShrinkableCount--
+                                appIndex--
+                            }
+                        //console.log("---")
+
                         // Reordering loaded items
                         for (var newIndex in iconPositionsArr) {
                             for (appIndex = 0; appIndex < appsCount; appIndex++)
-                                if (appsList[appIndex].caption === iconPositionsArr[newIndex]) {
-                                    if (newIndex === -1)
+                                if (appsList[appIndex].caption === iconPositionsArr[newIndex].caption) {
+                                    if (iconPositionsArr[newIndex].pos === -1)
                                         moveItemInArray(appsList, appIndex, appsList.length - 1)
                                     else
-                                        moveItemInArray(appsList, appIndex, newIndex)
+                                        moveItemInArray(appsList, appIndex, iconPositionsArr[newIndex].pos)
                                     break
                                 }
                         }
@@ -516,6 +554,22 @@ Item {
                 fetchItemsFromDataSources()
             }
 
+            function groupNameChanged(newName) {
+                if (popupFrame.stackedIconIndex !== -1) {
+                    var nameWas = activeGridView.model.get(popupFrame.stackedIconIndex).caption
+                    activeGridView.model.setProperty(popupFrame.stackedIconIndex, "caption", newName)
+                    console.log("updated group from [" + nameWas + "] to [" + newName + "]")
+
+                    if (iconPositions[nameWas] !== undefined) {
+                        console.log("updating movage from [" + nameWas + "] to [" + newName + "]")
+                        var iconPositionsArr = iconPositions
+                        iconPositionsArr[newName] = iconPositionsArr[nameWas]
+                        delete iconPositionsArr[nameWas]
+                        iconPositions = iconPositionsArr
+                    }
+                }
+            }
+
             Component.onCompleted: {
                 var dataSourcesDict = new Object
                 //console.log("Component.onCompleted: {")
@@ -547,6 +601,7 @@ Item {
                 topBar.forceActiveFocus()
                 activeGridView.myActiveFocus = true
                 gridsListView.saveStacks()
+                gridsListView.saveIconPositions()
             }
 
             function showGroup(index, item, iconCoords)
@@ -560,10 +615,10 @@ Item {
                     popupFrame.gridGroup.gridView.model.clear()
                     popupFrame.stackedIconIndex = index
 
-                    console.log("stacked group we are opening has length:" + item.stack + " of " + item.stack.length)
+                    //console.log("stacked group we are opening has length:" + item.stack + " of " + item.stack.length)
                     for (var i = 0; i < item.stack.length; i++)
                     {
-                        console.log("N" + i + ": " + item.stack[i].caption + " [" + item.stack[i].id + "]")
+                        //console.log("N" + i + ": " + item.stack[i].caption + " [" + item.stack[i].id + "]")
                         popupFrame.gridGroup.gridView.newItemData(item.stack[i])
                     }
                     popupFrame.gridGroup.gridView.forceMyFocus()
@@ -669,6 +724,10 @@ Item {
             //anchors.top: parent.bottom
             width: parent.width
             z: 1
+
+            Component.onCompleted: {
+                gridGroup.groupNameChanged.connect(gridsListView.groupNameChanged)
+            }
 
             state: "CLOSED"
 

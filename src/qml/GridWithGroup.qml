@@ -28,6 +28,7 @@ Column {
     signal gridCurrentItemChanged(variant newCurrentItem)
     signal showPopupGroup(int index, variant stackItemData, variant iconCoords)
     signal gridMyFocusChanged(int containerIndex)
+    signal groupNameChanged(string newName)
 
     property int containerIndex: 0
 
@@ -61,9 +62,8 @@ Column {
         //styleColor: "#000"
 
         onTextChanged: {
-            if (isPopupGroup && popupFrame.stackedIconIndex !== -1) {
-                gridsListView.activeGridView.model.setProperty(popupFrame.stackedIconIndex, "caption", groupName)
-            }
+            if (isPopupGroup)
+                groupNameChanged(groupName)
         }
 
         onActiveFocusChanged: {

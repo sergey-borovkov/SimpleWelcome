@@ -106,6 +106,9 @@ GridView {
         }
         stackArray.push(root.cloneObject(itemDragging))
 
+        if (stackArray.length === 2) // First time stacking
+            model.setProperty(indexStackingTo, "caption", itemStackingTo.caption + " Group")
+
         model.setProperty(indexStackingTo, "imagePath", "image://generalicon/stacked/" + itemStackingTo.imagePath.slice(28) + "|" + itemDragging.imagePath.slice(28))
         model.setProperty(indexStackingTo, "stack", stackArray)
 
@@ -115,11 +118,12 @@ GridView {
     }
 
     function unstackItemInItem(indexUnstackingFrom, indexDragging) {
-        //console.log("----------------- UNSTACKING " + indexDragging + " from " + indexUnstackingFrom)
+        console.log("----------------- UNSTACKING " + indexDragging + " from " + indexUnstackingFrom)
 
         var itemDragging = model.get(indexDragging)
         //console.log(gridMouseArea.dndDest + " with " + itemDragging)
         var itemUnstackingFrom = model.get(indexUnstackingFrom)
+        console.log("itemUnstackingFrom: " + itemUnstackingFrom)
 
         var stackArray = itemUnstackingFrom.stack
         if (stackArray === undefined)
@@ -525,7 +529,11 @@ GridView {
 
             // Adding icon to stack
             if (draggedItemStackedAt !== undefined && model.get(dndDest).stack === undefined) {
-                console.log("STACK UPPED")
+                //console.log("STACK UPPED")
+
+                var container = model.get(draggedItemStackedAt)
+                if (container.stack.length === 2) // First time stacking
+                    itemMoved(groupName, container.caption, groupCountStart + draggedItemStackedAt, groupCountStart + draggedItemStackedAt)
 
                 if (dndDest < draggedItemStackedAt) {
                     model.move(dndDest, count - 1, 1)
@@ -575,9 +583,15 @@ GridView {
 
             draggedItemStackedAt = undefined
 
+            if (1) {
+                console.log("REINITING")
+                var wasCurrent = gridsListView.currentIndex
+                updateGridsContent()
+                gridsListView.currentIndex = wasCurrent
+            }
 
             // Duplicates detection. Remove later when sure no duplication occurs
-            var Set = function() {}
+            /*var Set = function() {}
             Set.prototype.add = function(o) { this[o] = o; }
             Set.prototype.remove = function(o) { delete this[o]; }
             var ids = new Set
@@ -590,7 +604,7 @@ GridView {
                     ids.add(model.get(j).id)
                     ids[model.get(j).id].caption = model.get(j).caption
                 }
-            }
+            }*/
 
             //    console.log(model.get(j).caption + " | " + model.get(i).id + " | " + i)
 
