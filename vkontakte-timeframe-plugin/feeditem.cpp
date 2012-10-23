@@ -52,6 +52,8 @@ QDate FeedItem::date() const
     return QDate::fromString(data(Date).toString(), QString("d MM yyyy"));
 }
 
+static QRegExp rx_user_link("\\[(id\\d+)\\|(\\S*)\\]");
+
 void FeedItem::fillFromMap(QVariantMap map)
 {
     // http://vk.com/developers.php?oid=-1&p=%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5_%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D0%BE%D0%B2_API
@@ -62,24 +64,31 @@ void FeedItem::fillFromMap(QVariantMap map)
     QString message;
     if (map.contains("text")) {
         message = map.value("text").toString();
-    }
 
-    // if user posts a link
-    QRegExp reUrl("(((?:https?|ftp)://|www)\\S+)");
-    bool hasLink = message.contains(reUrl);
-    if (hasLink) {
-        int pos = reUrl.indexIn(message);
-        QString after = "<a href=\"\\1\">\\1</a>";
-        if (pos > -1) {
-            if (reUrl.cap(1).startsWith("www", Qt::CaseInsensitive)) {
-                after = "<a href=\"http://\\1\">\\1</a>";
+        // if user posts a link
+        QRegExp reUrl("(((?:https?|ftp)://|www)\\S+)");
+        bool hasLink = message.contains(reUrl);
+        if (hasLink) {
+            int pos = reUrl.indexIn(message);
+            QString after = "<a href=\"\\1\">\\1</a>";
+            if (pos > -1) {
+                if (reUrl.cap(1).startsWith("www", Qt::CaseInsensitive)) {
+                    after = "<a href=\"http://\\1\">\\1</a>";
+                }
             }
+
+            message = message.replace(reUrl, after);
         }
 
-        m_data.insert(Text, message.replace(reUrl, after));
-    }
-    else
+        // if there is message with [user_id|user_name] string...
+        int pos = rx_user_link.indexIn(message);
+        if (pos != (-1)) {
+            // get only user name
+            message = rx_user_link.cap(2) + message.remove(rx_user_link.cap(0));
+        }
+
         m_data.insert(Text, message);
+    }
 
     if (map.contains("date")) {
         uint t  = map.value("date").toUInt();
@@ -147,14 +156,13 @@ void fillCommentFromMap(CommentItem *item, const QVariantMap &map)
     QDate date = dt.date();
 
     if (map.contains("reply_to_uid") && map.contains("reply_to_cid")) {
-        QString s, str = map.value("text").toString();
-        QRegExp rx("\\[(id\\d+)\\|(\\S*)\\]");
-        int pos = rx.indexIn(str);
+        QString str = map.value("text").toString();
+        int pos = rx_user_link.indexIn(str);
         if (pos != (-1)) {
 //            s = rx.cap(1); // user id
-            s = rx.cap(2); // user name
+            // get only user name
+            str = rx_user_link.cap(2) + str.remove(rx_user_link.cap(0));
         }
-        str = s + str.remove(rx.cap(0));
         item->setData(CommentItem::Message, str);
     }
     else {
