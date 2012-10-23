@@ -73,7 +73,7 @@ public:
     virtual QString selfPictureUrl() const = 0;
     virtual void setSelfPictureUrl( const QString & url) = 0;
 
-private:
+protected:
     // User info
     QString m_selfId;
     QString m_selfName;

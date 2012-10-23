@@ -1,10 +1,11 @@
 #include "pluginrequestreply.h"
 #include "socialplugin.h"
 
-PluginRequestReply::PluginRequestReply(Request *request, const QString &sourceId, QObject *parent) :
-    QObject(parent),
-    m_sourceId(sourceId),
-    m_finished(false)
+PluginRequestReply::PluginRequestReply(Request *request, const QString &sourceId, const QString &pluginName, QObject *parent)
+    : QObject(parent)
+    , m_sourceId(sourceId)
+    , m_pluginName(pluginName)
+    , m_finished(false)
 {
     QObject *r = dynamic_cast<QObject *>(request);
     if (r != 0) {
@@ -48,6 +49,11 @@ QString PluginRequestReply::userId() const
 QString PluginRequestReply::userName() const
 {
     return m_userName;
+}
+
+QString PluginRequestReply::pluginName() const
+{
+    return m_pluginName;
 }
 
 void PluginRequestReply::newItemId(QString id)

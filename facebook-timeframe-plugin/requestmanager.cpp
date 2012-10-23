@@ -198,8 +198,6 @@ void RequestManager::idReply(QByteArray reply)
 
     m_selfName = result.value(QLatin1String("name")).toString();
     emit selfName(m_selfName);
-
-    qDebug() << "FB:       m_selfId =" << m_selfId << ",    m_selfName =" << m_selfName;
 }
 
 void RequestManager::imageReply(QByteArray reply)
