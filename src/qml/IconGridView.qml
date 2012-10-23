@@ -583,7 +583,7 @@ GridView {
 
             draggedItemStackedAt = undefined
 
-            if (1) {
+            if (count > maxCount) {
                 console.log("REINITING")
                 var wasCurrent = gridsListView.currentIndex
                 updateGridsContent()
