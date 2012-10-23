@@ -96,7 +96,6 @@ Item {
         anchors.left: parent.left
         anchors.right: listViewAnchor.left
         anchors.verticalCenter: parent.verticalCenter
-        horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 15
 
@@ -109,7 +108,7 @@ Item {
     }
 
     function getListViewItemsCount() {
-        var y = Math.floor((timeScale.width - 100)/ 110)
+        var y = Math.floor((timeScale.width - yearLabel.paintedWidth)/ 110)
         return y
     }
 
