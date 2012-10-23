@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-10-11 17:42+0400\n"
+"POT-Creation-Date: 2012-10-23 17:51+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,192 +18,201 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.cpp:37 main.cpp:44
-msgid "ROSA Desktop Application Launcher"
+#: facebook-timeframe-plugin/facebookmodule.cpp:63
+msgid "Facebook"
 msgstr ""
 
-#: main.cpp:46
-msgid "Copyright 2010-2012, ROSALab"
-msgstr ""
-
-#: main.cpp:47
-msgid "Alexander Skakov"
-msgstr ""
-
-#: main.cpp:48 main.cpp:51 main.cpp:54 main.cpp:57 main.cpp:60
-msgid "Author"
-msgstr ""
-
-#: main.cpp:50
-msgid "Evgeniy Augin"
-msgstr ""
-
-#: main.cpp:53
-msgid "Sergey Borovkov"
-msgstr ""
-
-#: main.cpp:56
-msgid "Julia Mineeva"
-msgstr ""
-
-#: main.cpp:59
-msgid "Aleksey Yermakov"
-msgstr ""
-
-#: main.cpp:67
-msgid "Silent run. Hide application window after start."
-msgstr ""
-
-#: swapp.cpp:176
-msgid "Welcome"
-msgstr ""
-
-#: swapp.cpp:177
-msgid "Applications"
-msgstr ""
-
-#: swapp.cpp:178
-msgid "TimeFrame"
-msgstr ""
-
-#: swapp.cpp:180
-msgid "Recent Applications"
-msgstr ""
-
-#: swapp.cpp:181
-msgid "Places"
-msgstr ""
-
-#: swapp.cpp:182
-msgid "Recent Documents"
-msgstr ""
-
-#: swapp.cpp:184
-msgid "All"
-msgstr ""
-
-#: swapp.cpp:185
-msgid "Images"
-msgstr ""
-
-#: swapp.cpp:186
-msgid "Video"
-msgstr ""
-
-#: swapp.cpp:187
-msgid "Documents"
-msgstr ""
-
-#: swapp.cpp:188
-msgid "Manage Networks"
-msgstr ""
-
-#: swapp.cpp:189
-msgid "My Local Documents"
-msgstr ""
-
-#: swapp.cpp:190
-msgid "Local"
-msgstr ""
-
-#: swapp.cpp:191
-msgid "Write comment..."
-msgstr ""
-
-#: swapp.cpp:192
-msgid "Audio: "
-msgstr ""
-
-#: swapp.cpp:193
-msgid "Like"
-msgstr ""
-
-#: swapp.cpp:194
-msgid "Unlike"
-msgstr ""
-
-#: swapp.cpp:195
-msgid "Social Networking Sites"
-msgstr ""
-
-#: swapp.cpp:196
-msgid "Show comments"
-msgstr ""
-
-#: swapp.cpp:197
-msgid "Hide comments"
-msgstr ""
-
-#: swapp.cpp:198
-msgid "Login"
-msgstr ""
-
-#: swapp.cpp:199
-msgid "Logout"
-msgstr ""
-
-#: swapp.cpp:200
-msgid "Enable..."
-msgstr ""
-
-#: swapp.cpp:201
-msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
-msgstr ""
-
-#: swapp.cpp:203
-msgid "JAN"
-msgstr ""
-
-#: swapp.cpp:204
-msgid "FEB"
-msgstr ""
-
-#: swapp.cpp:205
-msgid "MAR"
-msgstr ""
-
-#: swapp.cpp:206
-msgid "APR"
-msgstr ""
-
-#: swapp.cpp:207
-msgid "MAY"
-msgstr ""
-
-#: swapp.cpp:208
-msgid "JUN"
-msgstr ""
-
-#: swapp.cpp:209
-msgid "JUL"
-msgstr ""
-
-#: swapp.cpp:210
-msgid "AUG"
-msgstr ""
-
-#: swapp.cpp:211
-msgid "SEP"
-msgstr ""
-
-#: swapp.cpp:212
-msgid "OCT"
-msgstr ""
-
-#: swapp.cpp:213
-msgid "NOV"
-msgstr ""
-
-#: swapp.cpp:214
-msgid "DEC"
-msgstr ""
-
-#: rc.cpp:1
+#: po/rc.cpp:1 rc.cpp:1
 msgctxt "Julia Mineeva"
 msgid "Julia Mineeva"
 msgstr ""
 
-#: rc.cpp:2
+#: po/rc.cpp:2 rc.cpp:2
 msgctxt "julia.mineeva@osinit.ru"
 msgid "julia.mineeva@osinit.ru"
+msgstr ""
+
+#: src/main.cpp:37 src/main.cpp:44
+msgid "ROSA Desktop Application Launcher"
+msgstr ""
+
+#: src/main.cpp:46
+msgid "Copyright 2010-2012, ROSALab"
+msgstr ""
+
+#: src/main.cpp:47
+msgid "Alexander Skakov"
+msgstr ""
+
+#: src/main.cpp:48 src/main.cpp:51 src/main.cpp:54 src/main.cpp:57
+#: src/main.cpp:60
+msgid "Author"
+msgstr ""
+
+#: src/main.cpp:50
+msgid "Evgeniy Augin"
+msgstr ""
+
+#: src/main.cpp:53
+msgid "Sergey Borovkov"
+msgstr ""
+
+#: src/main.cpp:56
+msgid "Julia Mineeva"
+msgstr ""
+
+#: src/main.cpp:59
+msgid "Aleksey Yermakov"
+msgstr ""
+
+#: src/main.cpp:67
+msgid "Silent run. Hide application window after start."
+msgstr ""
+
+#: src/swapp.cpp:178
+msgid "Welcome"
+msgstr ""
+
+#: src/swapp.cpp:179
+msgid "Applications"
+msgstr ""
+
+#: src/swapp.cpp:180
+msgid "TimeFrame"
+msgstr ""
+
+#: src/swapp.cpp:182
+msgid "Recent Applications"
+msgstr ""
+
+#: src/swapp.cpp:183
+msgid "Places"
+msgstr ""
+
+#: src/swapp.cpp:184
+msgid "Recent Documents"
+msgstr ""
+
+#: src/swapp.cpp:186
+msgid "All"
+msgstr ""
+
+#: src/swapp.cpp:187
+msgid "Images"
+msgstr ""
+
+#: src/swapp.cpp:188
+msgid "Video"
+msgstr ""
+
+#: src/swapp.cpp:189
+msgid "Documents"
+msgstr ""
+
+#: src/swapp.cpp:190
+msgid "Manage Networks"
+msgstr ""
+
+#: src/swapp.cpp:191
+msgid "My Local Documents"
+msgstr ""
+
+#: src/swapp.cpp:192
+msgid "Local"
+msgstr ""
+
+#: src/swapp.cpp:193
+msgid "Write comment..."
+msgstr ""
+
+#: src/swapp.cpp:194
+msgid "Audio: "
+msgstr ""
+
+#: src/swapp.cpp:195
+msgid "Like"
+msgstr ""
+
+#: src/swapp.cpp:196
+msgid "Unlike"
+msgstr ""
+
+#: src/swapp.cpp:197
+msgid "Social Networking Sites"
+msgstr ""
+
+#: src/swapp.cpp:198
+msgid "Show comments"
+msgstr ""
+
+#: src/swapp.cpp:199
+msgid "Hide comments"
+msgstr ""
+
+#: src/swapp.cpp:200
+msgid "Login"
+msgstr ""
+
+#: src/swapp.cpp:201
+msgid "Logout"
+msgstr ""
+
+#: src/swapp.cpp:202
+msgid "Enable..."
+msgstr ""
+
+#: src/swapp.cpp:203
+msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
+msgstr ""
+
+#: src/swapp.cpp:205
+msgid "JAN"
+msgstr ""
+
+#: src/swapp.cpp:206
+msgid "FEB"
+msgstr ""
+
+#: src/swapp.cpp:207
+msgid "MAR"
+msgstr ""
+
+#: src/swapp.cpp:208
+msgid "APR"
+msgstr ""
+
+#: src/swapp.cpp:209
+msgid "MAY"
+msgstr ""
+
+#: src/swapp.cpp:210
+msgid "JUN"
+msgstr ""
+
+#: src/swapp.cpp:211
+msgid "JUL"
+msgstr ""
+
+#: src/swapp.cpp:212
+msgid "AUG"
+msgstr ""
+
+#: src/swapp.cpp:213
+msgid "SEP"
+msgstr ""
+
+#: src/swapp.cpp:214
+msgid "OCT"
+msgstr ""
+
+#: src/swapp.cpp:215
+msgid "NOV"
+msgstr ""
+
+#: src/swapp.cpp:216
+msgid "DEC"
+msgstr ""
+
+#: vkontakte-timeframe-plugin/vkontaktemodule.cpp:64
+msgid "VKontakte"
 msgstr ""

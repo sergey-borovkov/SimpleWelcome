@@ -196,6 +196,21 @@ QString SocialProxy::authorizedPluginName(int i) const
     return authorizedPlugins.at(i);
 }
 
+QString SocialProxy::authorizedLocalizedPluginName(int i) const
+{
+    QStringList authorizedPlugins = m_enabledPlugins.toList();
+
+    QString name = authorizedPlugins.at(i);
+    QString localizedName = name;
+    foreach(ISocialPlugin *plugin, m_plugins) {
+        if (plugin->name() == name) {
+            localizedName = plugin->localizedName();
+        }
+    }
+
+    return localizedName;
+}
+
 PluginRequestReply *SocialProxy::getAllComments(const QString &id, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);

@@ -68,6 +68,7 @@ public:
 
     Q_INVOKABLE int authorizedPluginCount() const;
     Q_INVOKABLE QString authorizedPluginName(int i) const;
+    Q_INVOKABLE QString authorizedLocalizedPluginName(int i) const;
     Q_INVOKABLE bool anyPluginsEnabled();
 
     Q_INVOKABLE QString selfId(const QString &pluginName);

@@ -45,15 +45,24 @@ Item {
     {
         var txt = id
         if (id === "All")
-            txt =  i18n_All
+            txt = i18n_All
         if (id === "Images")
-            txt =  i18n_Photo
+            txt = i18n_Photo
         if (id === "Video")
-            txt =  i18n_Video
+            txt = i18n_Video
         if (id === "Documents")
-            txt =  i18n_Documents
+            txt = i18n_Documents
         if (id === "Manage Networks")
-            txt =  i18n_Manage_networks
+            txt = i18n_Manage_networks
+
+        var count = socialProxy.authorizedPluginCount()
+        for(var i = 0; i < count; i++) {
+            if (id === socialProxy.authorizedPluginName(i)) {
+                txt = socialProxy.authorizedLocalizedPluginName(i)
+                break;
+            }
+        }
+
         return txt
     }
 
@@ -67,9 +76,18 @@ Item {
         if (str === i18n_Video)
             txt = "Video"
         if (str === i18n_Documents)
-            txt =  "Documents"
+            txt = "Documents"
         if (str === i18n_Manage_networks)
-            txt =  "Manage Networks"
+            txt = "Manage Networks"
+
+        var count = socialProxy.authorizedPluginCount()
+        for(var i = 0; i < count; i++) {
+            if (str === socialProxy.authorizedLocalizedPluginName(i)) {
+                txt = socialProxy.authorizedPluginName(i)
+                break;
+            }
+        }
+
         return txt
     }
 

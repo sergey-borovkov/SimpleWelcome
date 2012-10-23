@@ -22,7 +22,9 @@ set(QT_USE_QTNETWORK TRUE)
 set(QT_USE_QTWEBKIT TRUE)
 
 add_library(vkontakte-timeframe-plugin SHARED ${HEADERS} ${SOURCES} ${MOC_OUT} ${QRC_SOURCES})
-target_link_libraries(vkontakte-timeframe-plugin ${QJSON} timeframe)
-
+target_link_libraries(vkontakte-timeframe-plugin
+                        ${KDE4_KDEUI_LIBS}
+                        ${QJSON}
+                        timeframe)
 
 install(TARGETS vkontakte-timeframe-plugin DESTINATION "${_timeframe_plugins_install_path}")
