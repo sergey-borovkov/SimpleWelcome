@@ -3,7 +3,7 @@ import QtQuick 1.1
 Item {
     id: dropFilterBox
     width: 330
-    height: 30    
+    height: 30
 
     property alias model: filterListView.model
     property alias text: currentItemText.text
@@ -30,23 +30,12 @@ Item {
         width: parent.width
         height: 30
 
-        Rectangle {
-            id: border
-            anchors.fill: parent
-            anchors.bottomMargin: 2
-            radius: 4
-            border.color: "#172634"
-            color: "transparent"
-            border.width: 1
-        }
-
-
         ItemRectangle {
             id: background
             anchors.fill: parent
             anchors.bottomMargin: 2
-            visible: false
             radius: 4
+            state: "notEnabled"
         }
 
         MouseArea{
@@ -137,7 +126,7 @@ Item {
                 if (currentIndex === 0)
                     currentItemText.text = name
                 else {
-                    currentItemText.text = filterListView.currentItem.text                    
+                    currentItemText.text = filterListView.currentItem.text
                 }
 
             }
@@ -145,8 +134,8 @@ Item {
     }
     states: [
         State {
-            name: "current"            
-            PropertyChanges { target: background; visible: true }
+            name: "current"
+            PropertyChanges { target: background; state: "" }
         },
         State {
             name: "open" ; extend: "current"

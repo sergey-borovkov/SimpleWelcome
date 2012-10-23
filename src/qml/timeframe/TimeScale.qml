@@ -40,12 +40,12 @@ Item {
         id: monthDelegate
         Item {
             id: listItem
-            width: 107
+            width: 110
             height: 80
             Image {
                 id: scaleImage
                 anchors.verticalCenter: parent.verticalCenter
-                width: parent.width
+                anchors.left: parent.left
                 source: "images/month1.png"
 
             }
@@ -63,9 +63,9 @@ Item {
     Component {
         id: highlight
         Item{
-            width: 107
+            width: 112
             height: 32
-            x: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.x
+            x: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.x -1
             y: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.y + timeScaleList.currentItem.height/2 - 16
             Image {
                 id: activeLeft
@@ -109,7 +109,7 @@ Item {
     }
 
     function getListViewItemsCount() {
-        var y = Math.floor((timeScale.width - 100)/ 107)
+        var y = Math.floor((timeScale.width - 100)/ 110)
         return y
     }
 
@@ -119,7 +119,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         height: parent.height
         clip: true
-        width: getListViewItemsCount()*107
+        width: getListViewItemsCount()*110
 
         Item {
             id: scaleBackground
@@ -167,7 +167,7 @@ Item {
                 anchors.fill: parent
                 onClicked: {
                     var mouseIndex = timeScaleList.indexAt(mouseX + timeScaleList.contentX, mouseY + timeScaleList.contentY)
-                    var oldIndex = timeScaleList.currentIndex                    
+                    var oldIndex = timeScaleList.currentIndex
 
                     if ((mouseIndex !== -1) && (oldIndex !== mouseIndex))
                     {
