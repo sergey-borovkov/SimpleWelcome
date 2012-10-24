@@ -144,10 +144,6 @@ Item {
             }
         }
 
-        TopBar {
-            id: topBar
-        }
-
 //        Rectangle{
 //            color: Qt.rgba(0, 0, 0, 0.2)
 //            anchors.fill: tabListView
@@ -209,6 +205,9 @@ Item {
             }
         }
 
+        TopBar {
+            id: topBar
+        }
 
         BottomBar {
             id: bottomBar
