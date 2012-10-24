@@ -14,7 +14,6 @@ Column {
     // constants
     property int gridContainersSpacing: constants.gridWithGroupsSpacing
 
-
     width: parent.width
     height: childrenRect.height
     anchors.bottom: parent.bottom
@@ -27,7 +26,7 @@ Column {
         var i
 
         for (i = 0; i < children.length; i++)
-            if ('count' in children[i])
+            if ('gridView' in children[i])
             {
                 if (children[i].count)
                     visibleGrids.push(i)
@@ -44,8 +43,8 @@ Column {
             var prevIndex = i - 1 < 0 ? visibleGrids.length - 1 : i - 1
             var nextIndex = i + 1 >= visibleGrids.length ? 0 : i + 1
 
-            children[visibleGrids[i]].prevGridGroup = children[visibleGrids[prevIndex]].gridView
-            children[visibleGrids[i]].nextGridGroup = children[visibleGrids[nextIndex]].gridView
+            children[visibleGrids[i]].prevGridGroup = children[visibleGrids[prevIndex]]
+            children[visibleGrids[i]].nextGridGroup = children[visibleGrids[nextIndex]]
         }
 
         if (visibleGrids.length)
@@ -67,11 +66,8 @@ Column {
         var groupObject = groupComponent.createObject(gridsContainer, groupData);
         activeGridGroup = groupObject
 
-        activeGridGroup.gridItemCountChanged.connect(gridsConnectionChanged)
         activeGridGroup.gridCurrentItemChanged.connect(gridCurrentItemChanged)
         activeGridGroup.gridMyFocusChanged.connect(gridMyFocusChanged)
-
-        gridsConnectionChanged()
     }
 
     function gridMyFocusChanged(index) {
@@ -108,10 +104,6 @@ Column {
 
     Component.onCompleted: {
         if (defaultGroupData !== undefined)
-        {
-            //console.log("Constructing GridWithGroupContainer for: " + group.group + "; ds: " + group.dataSource + "; start: " + group.startIndex + "; " + group.endIndex)
             addGridGroup(defaultGroupData)
-        }
-        gridsConnectionChanged()
     }
 }

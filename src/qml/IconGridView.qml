@@ -3,10 +3,9 @@ import QtQuick 1.0
 GridView {
     id: grid
     property variant dataSource
-    property variant prevGrid
-    property variant nextGrid
-    property int startIndex
-    property int endIndex
+    property variant prevGridGroup
+    property variant nextGridGroup
+    property int maxCount: -1
     property bool draggable: false
     property bool enabledSystemDnD: false  // set true to enable system Drag&Drop
     property bool stackable: false // set true to enable icons stacking while Drag&Dropping
@@ -19,10 +18,11 @@ GridView {
     signal selectionChangedByKeyboard(variant newCurrentItem)
     signal draggedOut(variant item)
     signal itemStackingChanged()
+    signal itemMoved(string group, string item, int srcPos, int destPos)
+    signal requestIconPushPop(string gridGroupName)
 
     // constants
     property int columns: constants.gridColumns
-    property int highlightMoveDurationConst: 150
 
     property int cellHorizontalSpacing: Math.max(0, (parent.width - constants.cellWidth * columns) / (columns + 1))
 
@@ -34,31 +34,6 @@ GridView {
     cellHeight: constants.cellHeight
 
     delegate: Cell {}
-
-    highlight: Item {
-        id: gridSelection
-        property int animationDuration: 150
-        opacity: myActiveFocus ? 1 : 0
-
-        BorderImage {
-            border.left: 5
-            border.right: 7
-            border.top: 5
-            border.bottom: 7
-
-            anchors.fill: parent
-            anchors.rightMargin: -2
-            anchors.bottomMargin: -2
-
-            source: "image://generalicon/asset/grid_selection.png"
-        }
-
-        Behavior on opacity {
-            NumberAnimation { duration: animationDuration }
-        }
-    }
-
-    highlightMoveDuration: highlightMoveDurationConst
 
     ListModel {
         id: appsModel
@@ -73,7 +48,7 @@ GridView {
     }
 
     function onItemClicked(newIndex) {
-        dataSource.itemClicked(newIndex == -1 ? newIndex : appsModel.get(newIndex).id)
+        dataSource.itemClicked(newIndex == -1 ? newIndex : model.get(newIndex).id)
     }
 
     function getCellIndex(inX, inY) {
@@ -83,28 +58,17 @@ GridView {
         return curIndex
     }
 
-    function copyObjectByValue(obj) {
-        // Copying object by value
-        var newObj = new Object
-        for (var s in (obj)) {
-            //console.log("copying " + itemStackingTo[s])
-            newObj[s] = (obj)[s]
-        }
-        return newObj
-    }
-
     function stackItemInItem(indexStackingTo, indexDragging, notSaveChanges) {
         //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
 
         var itemDragging = model.get(indexDragging)
-        //console.log(gridMouseArea.dndDest + " with " + itemDragging)
         var itemStackingTo = model.get(indexStackingTo)
 
         var stackArray = itemStackingTo.stack
         if (stackArray === undefined) {
             //console.log("FIRST TIME STACKING")
             stackArray = []
-            stackArray.push(copyObjectByValue(itemStackingTo))
+            stackArray.push(root.cloneObject(itemStackingTo))
         }
         else {
             //console.log("STACKING AGAIN")
@@ -115,7 +79,10 @@ GridView {
                     return false
                 }
         }
-        stackArray.push(copyObjectByValue(itemDragging))
+        stackArray.push(root.cloneObject(itemDragging))
+
+        if (stackArray.length === 2) // First time stacking
+            model.setProperty(indexStackingTo, "caption", itemStackingTo.caption + " Group")
 
         model.setProperty(indexStackingTo, "imagePath", "image://generalicon/stacked/" + itemStackingTo.imagePath.slice(28) + "|" + itemDragging.imagePath.slice(28))
         model.setProperty(indexStackingTo, "stack", stackArray)
@@ -131,6 +98,7 @@ GridView {
         var itemDragging = model.get(indexDragging)
         //console.log(gridMouseArea.dndDest + " with " + itemDragging)
         var itemUnstackingFrom = model.get(indexUnstackingFrom)
+        //console.log("itemUnstackingFrom: " + itemUnstackingFrom)
 
         var stackArray = itemUnstackingFrom.stack
         if (stackArray === undefined)
@@ -204,14 +172,11 @@ GridView {
         //console.log("COMPLETED " + dataSource + " VIEW")
         if (dataSource)
         {
-            dataSource.newItemData.connect(newItemData)
             dataSource.resetContent.connect(resetContent)
             if (dataSource.updateItemData !== undefined)
                 dataSource.updateItemData.connect(updateItemContent)
-
-            dataSource.getContent()
         }
-        appsModel.itemClicked.connect(onItemClicked)
+        model.itemClicked.connect(onItemClicked)
     }
 
     function updateItemContent(id, field, data) {
@@ -223,10 +188,11 @@ GridView {
     }
 
     function selectOtherGrid(gridWorkingWith, newCurrentIndex) {
-        gridWorkingWith.highlightMoveDuration = 1
+
+        gridWorkingWith.highlightItem.moveDuration = 0
         gridWorkingWith.currentIndex = newCurrentIndex
         gridWorkingWith.forceMyFocus()
-        gridWorkingWith.highlightMoveDuration = highlightMoveDurationConst
+        gridWorkingWith.highlightItem.moveDuration = gridWorkingWith.highlightItem.moveDurationConst
         return gridWorkingWith.currentItem
     }
 
@@ -235,35 +201,35 @@ GridView {
         switch (key)
         {
         case Qt.Key_Left:
-            if (currentIndex == 0 && prevGrid)
-                newCurrentItem = selectOtherGrid(prevGrid, prevGrid.count - 1)
+            if (currentIndex == 0 && prevGridGroup)
+                newCurrentItem = selectOtherGrid(prevGridGroup.gridView, prevGridGroup.count - 1)
 
             if (!interactive)
                 moveCurrentIndexLeft()
             break
         case Qt.Key_Right:
-            if (currentIndex == count - 1 && nextGrid)
-                newCurrentItem = selectOtherGrid(nextGrid, 0)
+            if (currentIndex == count - 1 && nextGridGroup)
+                newCurrentItem = selectOtherGrid(nextGridGroup.gridView, 0)
 
             if (!interactive)
                 moveCurrentIndexRight()
             break
         case Qt.Key_Up:
-            if (currentIndex < columns && prevGrid)
+            if (currentIndex < columns && prevGridGroup)
             {
-                var roundCount = Math.floor((prevGrid.count) / columns) * columns
-                var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGrid.count - roundCount)))
+                var roundCount = Math.floor((prevGridGroup.count) / columns) * columns
+                var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGridGroup.count - roundCount)))
 
-                newCurrentItem = selectOtherGrid(prevGrid, newCur)
+                newCurrentItem = selectOtherGrid(prevGridGroup.gridView, newCur)
             }
 
             if (!interactive)
                 moveCurrentIndexUp()
             break
         case Qt.Key_Down:
-            if (currentIndex >= count - columns && nextGrid)
+            if (currentIndex >= count - columns && nextGridGroup)
             {
-                newCurrentItem = selectOtherGrid(nextGrid, currentIndex % columns)
+                newCurrentItem = selectOtherGrid(nextGridGroup.gridView, currentIndex % columns)
             }
 
             if (!interactive)
@@ -341,7 +307,7 @@ GridView {
             var mouseXReal = mouseX + grid.contentX, mouseYReal = mouseY + grid.contentY
             var wasContentX = grid.contentX, wasContentY = grid.contentY
             var indexUnderMouse = grid.indexAt(mouseXReal, mouseYReal)
-            var result = new Array()
+            var result = new Array
             result.index = -1// = {"index": -1}
 
             if (indexUnderMouse != -1 && (grid.currentIndex != indexUnderMouse || isForceRecheck))
@@ -445,12 +411,7 @@ GridView {
                 if (newCurrentIndex != -1 && (newCurrentIndex != currentIndex || !grid.myActiveFocus))
                 {
                     if (!grid.myActiveFocus)
-                    {
-                        grid.highlightMoveDuration = 1
-                        grid.currentIndex = newCurrentIndex
-                        grid.forceMyFocus()
-                        grid.highlightMoveDuration = highlightMoveDurationConst
-                    }
+                        selectOtherGrid(grid, newCurrentIndex)
                     else
                         grid.currentIndex = newCurrentIndex
                 }
@@ -486,7 +447,7 @@ GridView {
                 {
                     if (isPopupGroup)
                     {
-                        console.log("OUT")
+                        //console.log("OUT")
                         draggedOut(model.get(dndDest))
                         // onReleased():
                         dndSrcId = -1
@@ -540,15 +501,22 @@ GridView {
             if (draggedItemStackedAt !== undefined && model.get(dndDest).stack === undefined) {
                 //console.log("STACK UPPED")
 
+                var container = model.get(draggedItemStackedAt)
+                if (container.stack.length === 2) // First time stacking
+                    itemMoved(groupName, container.caption, groupCountStart + draggedItemStackedAt, groupCountStart + draggedItemStackedAt)
+
                 if (dndDest < draggedItemStackedAt) {
                     model.move(dndDest, count - 1, 1)
                     //currentIndex = draggedItemStackedAt
                     dndDest = count - 1
                 }
 
+                itemMoved(groupName, model.get(dndDest).caption, groupCountStart + dndSrc, -1)
+
+
                 model.remove(dndDest)
 
-                //dndSrcId = -1; - this is intentionally commented out 'cause it's done in delegate's remove animation
+                dndSrcId = -1; //- this is intentionally commented out 'cause it's done in delegate's remove animation
                 dndStateChanged(false)
             }
             else {
@@ -556,11 +524,15 @@ GridView {
 
                 if (dndSrcIdSaved != -1) {
                     dndStateChanged(false)
-                    // MOVE ALL ITEMS TO -- IN (> dndSrcIdSaved && <= dndDest)
-                    console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest)
+
+                    if (dndSrc !== dndDest) {
+                        //console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest + " | " + groupCountStart)
+                        itemMoved(groupName, model.get(dndDest).caption, groupCountStart + dndSrc, groupCountStart + dndDest)
+                    }
 
                     // Sync icons order in C++ model to QML model. Used in Recent Apps
                     if (typeof dataSource.itemDragged !== "undefined" && dndDest != -1) {
+                        console.log("REARRANGING C++")
                         //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
 
                         dataSource.itemDragged(dndSrcIdSaved, dndDest)
@@ -581,9 +553,12 @@ GridView {
 
             draggedItemStackedAt = undefined
 
+            if (maxCount !== -1 && dndSrcIdSaved !== -1 && count !== maxCount) {
+                requestIconPushPop(groupName)
+            }
 
             // Duplicates detection. Remove later when sure no duplication occurs
-            var Set = function() {}
+            /*var Set = function() {}
             Set.prototype.add = function(o) { this[o] = o; }
             Set.prototype.remove = function(o) { delete this[o]; }
             var ids = new Set
@@ -596,7 +571,7 @@ GridView {
                     ids.add(model.get(j).id)
                     ids[model.get(j).id].caption = model.get(j).caption
                 }
-            }
+            }*/
 
             //    console.log(model.get(j).caption + " | " + model.get(i).id + " | " + i)
 

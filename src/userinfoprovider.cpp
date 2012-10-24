@@ -26,7 +26,7 @@
 
 QString UserInfoProvider::getFullName()
 {
-    return m_userInfo.fullName();
+    return m_userInfo.property(KUser::FullName).toString();
 }
 
 QString UserInfoProvider::getLoginName()
@@ -36,7 +36,7 @@ QString UserInfoProvider::getLoginName()
 
 QString UserInfoProvider::getUserName()
 {
-    QString username = m_userInfo.fullName();
+    QString username = getFullName();
 
     if (username.isEmpty())
         username = m_userInfo.loginName();

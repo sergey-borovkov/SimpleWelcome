@@ -94,7 +94,6 @@ Item {
 
             maximumLineCount: 3
             elide: Text.ElideRight
-            clip: true
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
         }
@@ -105,7 +104,7 @@ Item {
         states: [
             State {
                 name: "gridInDrag"
-                when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id
+                when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id && state !== "REMOVING"
             },
 
             State {
@@ -167,8 +166,8 @@ Item {
                 SequentialAnimation {
                                  PropertyAction { target: cell; property: "GridView.delayRemove"; value: true }
                                  NumberAnimation { target: wrapper; property: "scale"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
-                                 PropertyAction { target: gridMouseArea; property: "dndSrcId"; value: -1 }
                                  PropertyAction { target: cell; property: "GridView.delayRemove"; value: false }
+                                 PropertyAction { target: groupRoot; property: "state"; value: "unclipped" }
                              }
 
             }
