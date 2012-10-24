@@ -42,6 +42,8 @@ Item {
         function draggedOut(item) {
             gridsListView.hideGroup()
             //console.log(item.caption + " GOT")
+            if (gridsListView.currentItem)
+                gridsListView.currentItem.activeGridGroup.state = "clipped"
             gridsListView.activeGridView.newItemData(item)
             gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
             gridsListView.activeGridView.startDragging(gridsListView.activeGridView.count - 1)
@@ -90,6 +92,52 @@ Item {
                 interactive = !isDrag
             }
 
+            function gridIconPushPop(groupName) {
+                //console.log("REINITING " + groupName)
+
+                var currentIndexWas = gridsListView.currentIndex
+                var prevPageModel = activeGridView.model
+                var isPushingFurther = activeGridView.count > activeGridView.maxCount
+                if (currentItem)
+                    currentItem.activeGridGroup.state = isPushingFurther ? "unclipped" : "clipped"
+
+                // Iterating by all GridWithGroupContainers
+                for (var currentView = currentIndexWas + 1; currentView < gridsListView.count; currentView++) {
+                    gridsListView.currentIndex = currentView
+
+                    if (gridsListView.currentItem) {
+                        var childs = gridsListView.currentItem.children
+
+                        // Iterating by it's GridWithGroups
+                        for (var child = 0; child < childs.length; child++) {
+                            if ('gridView' in childs[child] && childs[child].groupName === groupName)
+                            {
+                                var nextPageModel = childs[child].gridView.model
+
+                                if (isPushingFurther) {
+                                    nextPageModel.insert(0, prevPageModel.get(prevPageModel.count - 1))
+                                    prevPageModel.remove(prevPageModel.count - 1)
+                                    // FIXME: Add logic to append new page when current one is overflown
+                                }
+                                else if (nextPageModel.count) {
+                                    prevPageModel.append(nextPageModel.get(0))
+                                    nextPageModel.remove(0)
+                                }
+
+                                prevPageModel = nextPageModel
+                            }
+                        }
+                    }
+                }
+                gridsListView.currentIndex = currentIndexWas
+
+
+//                var wasCurrent = gridsListView.currentIndex
+//                updateGridsContent()
+//                gridsListView.currentIndex = wasCurrent
+
+            }
+
             function insertGrid(groupData, isOnNewTab)
             {
                 var lastCountEnd = 0,
@@ -119,6 +167,7 @@ Item {
                     newGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
                     newGridGroup.gridView.itemStackingChanged.connect(saveStacks)
                     newGridGroup.gridView.itemMoved.connect(itemMoved)
+                    newGridGroup.gridView.requestIconPushPop.connect(gridIconPushPop)
 
                     if (newGridGroup.gridView.stackable)
                         newGridGroup.showPopupGroup.connect(showGroup)
@@ -555,8 +604,9 @@ Item {
             }
 
             function groupNameChanged(newName) {
-                if (popupFrame.stackedIconIndex !== -1) {
-                    var nameWas = activeGridView.model.get(popupFrame.stackedIconIndex).caption
+                var itemWas = activeGridView.model.get(popupFrame.stackedIconIndex)
+                if (popupFrame.stackedIconIndex !== -1 && itemWas !== undefined) {
+                    var nameWas = itemWas.caption
                     activeGridView.model.setProperty(popupFrame.stackedIconIndex, "caption", newName)
                     console.log("updated group from [" + nameWas + "] to [" + newName + "]")
 

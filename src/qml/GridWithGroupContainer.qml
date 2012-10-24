@@ -14,7 +14,6 @@ Column {
     // constants
     property int gridContainersSpacing: constants.gridWithGroupsSpacing
 
-
     width: parent.width
     height: childrenRect.height
     anchors.bottom: parent.bottom
