@@ -22,7 +22,6 @@ GridView {
 
     // constants
     property int columns: constants.gridColumns
-    property int highlightMoveDurationConst: 150
 
     property int cellHorizontalSpacing: Math.max(0, (parent.width - constants.cellWidth * columns) / (columns + 1))
 
@@ -34,31 +33,6 @@ GridView {
     cellHeight: constants.cellHeight
 
     delegate: Cell {}
-
-    highlight: Item {
-        id: gridSelection
-        property int animationDuration: 150
-        opacity: myActiveFocus ? 1 : 0
-
-        BorderImage {
-            border.left: 5
-            border.right: 7
-            border.top: 5
-            border.bottom: 7
-
-            anchors.fill: parent
-            anchors.rightMargin: -2
-            anchors.bottomMargin: -2
-
-            source: "image://generalicon/asset/grid_selection.png"
-        }
-
-        Behavior on opacity {
-            NumberAnimation { duration: animationDuration }
-        }
-    }
-
-    highlightMoveDuration: highlightMoveDurationConst
 
     ListModel {
         id: appsModel
@@ -212,12 +186,12 @@ GridView {
             }
     }
 
-    function selectOtherGrid(gridGroupWorkingWith, newCurrentIndex) {
-        var gridWorkingWith = gridGroupWorkingWith.gridView
-        gridWorkingWith.highlightMoveDuration = 1
+    function selectOtherGrid(gridWorkingWith, newCurrentIndex) {
+
+        gridWorkingWith.highlightItem.moveDuration = 0
         gridWorkingWith.currentIndex = newCurrentIndex
         gridWorkingWith.forceMyFocus()
-        gridWorkingWith.highlightMoveDuration = highlightMoveDurationConst
+        gridWorkingWith.highlightItem.moveDuration = gridWorkingWith.highlightItem.moveDurationConst
         return gridWorkingWith.currentItem
     }
 
@@ -227,14 +201,14 @@ GridView {
         {
         case Qt.Key_Left:
             if (currentIndex == 0 && prevGridGroup)
-                newCurrentItem = selectOtherGrid(prevGridGroup, prevGridGroup.count - 1)
+                newCurrentItem = selectOtherGrid(prevGridGroup.gridView, prevGridGroup.count - 1)
 
             if (!interactive)
                 moveCurrentIndexLeft()
             break
         case Qt.Key_Right:
             if (currentIndex == count - 1 && nextGridGroup)
-                newCurrentItem = selectOtherGrid(nextGridGroup, 0)
+                newCurrentItem = selectOtherGrid(nextGridGroup.gridView, 0)
 
             if (!interactive)
                 moveCurrentIndexRight()
@@ -245,7 +219,7 @@ GridView {
                 var roundCount = Math.floor((prevGridGroup.count) / columns) * columns
                 var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGridGroup.count - roundCount)))
 
-                newCurrentItem = selectOtherGrid(prevGridGroup, newCur)
+                newCurrentItem = selectOtherGrid(prevGridGroup.gridView, newCur)
             }
 
             if (!interactive)
@@ -254,7 +228,7 @@ GridView {
         case Qt.Key_Down:
             if (currentIndex >= count - columns && nextGridGroup)
             {
-                newCurrentItem = selectOtherGrid(nextGridGroup, currentIndex % columns)
+                newCurrentItem = selectOtherGrid(nextGridGroup.gridView, currentIndex % columns)
             }
 
             if (!interactive)
@@ -332,7 +306,7 @@ GridView {
             var mouseXReal = mouseX + grid.contentX, mouseYReal = mouseY + grid.contentY
             var wasContentX = grid.contentX, wasContentY = grid.contentY
             var indexUnderMouse = grid.indexAt(mouseXReal, mouseYReal)
-            var result = new Array()
+            var result = new Array
             result.index = -1// = {"index": -1}
 
             if (indexUnderMouse != -1 && (grid.currentIndex != indexUnderMouse || isForceRecheck))
@@ -436,12 +410,7 @@ GridView {
                 if (newCurrentIndex != -1 && (newCurrentIndex != currentIndex || !grid.myActiveFocus))
                 {
                     if (!grid.myActiveFocus)
-                    {
-                        grid.highlightMoveDuration = 1
-                        grid.currentIndex = newCurrentIndex
-                        grid.forceMyFocus()
-                        grid.highlightMoveDuration = highlightMoveDurationConst
-                    }
+                        selectOtherGrid(grid, newCurrentIndex)
                     else
                         grid.currentIndex = newCurrentIndex
                 }
