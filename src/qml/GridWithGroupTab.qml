@@ -608,10 +608,10 @@ Item {
                 if (popupFrame.stackedIconIndex !== -1 && itemWas !== undefined) {
                     var nameWas = itemWas.caption
                     activeGridView.model.setProperty(popupFrame.stackedIconIndex, "caption", newName)
-                    console.log("updated group from [" + nameWas + "] to [" + newName + "]")
+                    //console.log("updated group from [" + nameWas + "] to [" + newName + "]")
 
                     if (iconPositions[nameWas] !== undefined) {
-                        console.log("updating movage from [" + nameWas + "] to [" + newName + "]")
+                        //console.log("updating movage from [" + nameWas + "] to [" + newName + "]")
                         var iconPositionsArr = iconPositions
                         iconPositionsArr[newName] = iconPositionsArr[nameWas]
                         delete iconPositionsArr[nameWas]
