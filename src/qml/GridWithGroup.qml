@@ -32,6 +32,31 @@ Column {
 
     property int containerIndex: 0
 
+    states: [
+        State {
+            name: "clipped"
+            PropertyChanges {
+                target: groupRoot
+                clip: true
+            }
+        },
+
+        State {
+            name: "unclipped"
+            PropertyChanges {
+                target: groupRoot
+                clip: false
+            }
+        }
+    ]
+
+    transitions: Transition {
+        from: "clipped"
+        to: "unclipped"
+        PropertyAnimation { target: groupRoot; properties: "clip"; duration: 300 }
+    }
+
+
     // constants
     property int textToGridSpacing: constants.textToGridSpacing
     property int textHeight: constants.groupTextHeight

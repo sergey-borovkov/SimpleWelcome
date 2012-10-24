@@ -19,6 +19,7 @@ GridView {
     signal draggedOut(variant item)
     signal itemStackingChanged()
     signal itemMoved(string group, string item, int srcPos, int destPos)
+    signal requestIconPushPop(string gridGroupName)
 
     // constants
     property int columns: constants.gridColumns
@@ -92,12 +93,12 @@ GridView {
     }
 
     function unstackItemInItem(indexUnstackingFrom, indexDragging) {
-        console.log("----------------- UNSTACKING " + indexDragging + " from " + indexUnstackingFrom)
+        //console.log("----------------- UNSTACKING " + indexDragging + " from " + indexUnstackingFrom)
 
         var itemDragging = model.get(indexDragging)
         //console.log(gridMouseArea.dndDest + " with " + itemDragging)
         var itemUnstackingFrom = model.get(indexUnstackingFrom)
-        console.log("itemUnstackingFrom: " + itemUnstackingFrom)
+        //console.log("itemUnstackingFrom: " + itemUnstackingFrom)
 
         var stackArray = itemUnstackingFrom.stack
         if (stackArray === undefined)
@@ -446,7 +447,7 @@ GridView {
                 {
                     if (isPopupGroup)
                     {
-                        console.log("OUT")
+                        //console.log("OUT")
                         draggedOut(model.get(dndDest))
                         // onReleased():
                         dndSrcId = -1
@@ -515,7 +516,7 @@ GridView {
 
                 model.remove(dndDest)
 
-                //dndSrcId = -1; - this is intentionally commented out 'cause it's done in delegate's remove animation
+                dndSrcId = -1; //- this is intentionally commented out 'cause it's done in delegate's remove animation
                 dndStateChanged(false)
             }
             else {
@@ -552,11 +553,8 @@ GridView {
 
             draggedItemStackedAt = undefined
 
-            if (count > maxCount) {
-                console.log("REINITING")
-                var wasCurrent = gridsListView.currentIndex
-                updateGridsContent()
-                gridsListView.currentIndex = wasCurrent
+            if (maxCount !== -1 && dndSrcIdSaved !== -1 && count !== maxCount) {
+                requestIconPushPop(groupName)
             }
 
             // Duplicates detection. Remove later when sure no duplication occurs
