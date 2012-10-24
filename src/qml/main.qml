@@ -65,12 +65,37 @@ Item {
             }
         }
 
+        /*function cloneObject(obj) {
+            // Copying object by value
+            var newObj = new Object
+            for (var s in (obj)) {
+                //console.log("copying " + itemStackingTo[s])
+                newObj[s] = (obj)[s]
+            }
+            return newObj
+        }*/
+
+
+        function cloneObject(inObj) {
+            var newObj = (inObj instanceof Array) ? [] : {}
+            for (var i in inObj) {
+
+                if (inObj[i] && typeof inObj[i] == "object")
+                    newObj[i] = cloneObject(inObj[i])
+                else
+                    newObj[i] = inObj[i]
+            }
+            return newObj
+        }
+
+
         Component.onCompleted: {
             isCompleted = true
             console.log("completed with: " + width + "x" + height + "")
             mainWindow.windowHidden.connect(onWindowHid)
             mainWindow.windowSizeChanged.connect(onWindowSizeChanged)
             bottomBar.wheelScroll.connect(tabListView.onWheelScroll)
+
         }
 
         function onWindowHid() {
@@ -117,10 +142,6 @@ Item {
                 width: tabListView.width
                 height: tabListView.height
             }
-        }
-
-        TopBar {
-            id: topBar
         }
 
 //        Rectangle{
@@ -184,6 +205,9 @@ Item {
             }
         }
 
+        TopBar {
+            id: topBar
+        }
 
         BottomBar {
             id: bottomBar

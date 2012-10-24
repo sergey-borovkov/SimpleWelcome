@@ -11,7 +11,7 @@ FocusScope {
         id: groupTab
         groups: [
             {
-                groupName: "Applications",
+                groupName: "Apps",
                 dataSource: dataSource_Apps,
                 draggable: true,
                 enabledSystemDnD: true,

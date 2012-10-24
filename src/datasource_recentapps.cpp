@@ -13,11 +13,6 @@ DataSource_RecentApps::DataSource_RecentApps(QObject *parent)
     addRecentApp(recentApp);
 }
 
-DataSource_RecentApps::~DataSource_RecentApps()
-{
-    saveData();
-}
-
 int DataSource_RecentApps::getItemCount()
 {
     return recentAppsList.count();
@@ -26,7 +21,7 @@ int DataSource_RecentApps::getItemCount()
 QString DataSource_RecentApps::itemUrlDnd(int id)
 {
     if (id >= 0 && id < recentAppsList.count())
-        return QString::fromAscii("file://") + recentAppsList[id].desktopEntry;
+        return QString::fromAscii("file://") + recentAppsList[id]["desktopEntry"].toString();
     return QString();
 }
 
@@ -34,7 +29,7 @@ void DataSource_RecentApps::saveData()
 {
     QStringList desktopFiles;
     for (int i = 0; i < recentAppsList.size(); i++)
-        desktopFiles.prepend(recentAppsList[i].desktopEntry);
+        desktopFiles.prepend(recentAppsList[i]["desktopEntry"].toString());
 
     KConfigGroup configGroup(KGlobal::config(), "General");
     configGroup.writeEntry("Recent applications", desktopFiles);
@@ -49,7 +44,7 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
     bool isFound = false;
 
     for (int i = 0; i < recentAppsList.size(); i++) {
-        if (recentAppsList[i].desktopEntry == desktopFilePath) {
+        if (recentAppsList[i]["desktopEntry"].toString() == desktopFilePath) {
             recentAppsList.move(i, 0);
             isFound = true;
             break;
@@ -60,15 +55,21 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
         KDesktopFile desktopFile(desktopFilePath);
         AppItem newItem;
 
-        newItem.caption = desktopFile.readName();
-        newItem.icon = desktopFile.readIcon();
-        newItem.desktopEntry = desktopFilePath;
-        if (!newItem.caption.isEmpty())
+        newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(desktopFile.readIcon());
+        newItem["caption"] = desktopFile.readName();
+        newItem["pinned"] = /*i < 4 ? true :*/ false;
+        newItem["desktopEntry"] = desktopFilePath;
+
+        if (!newItem["caption"].toString().isEmpty())
             recentAppsList.prepend(newItem);
     }
 
     if (recentAppsList.size() > 7)
         recentAppsList.removeAt(7);
+
+    for (int i = 0; i < recentAppsList.size(); i++)
+        recentAppsList[i]["id"] = i;
+
 
     saveData();
     emit resetContent();
@@ -79,24 +80,21 @@ void DataSource_RecentApps::itemClicked(int newIndex)
     if (newIndex != -1) {
         recentAppsList.move(newIndex, 0);
         saveData();
-        emit runDesktopFile(recentAppsList[0].desktopEntry);
+        emit runDesktopFile(recentAppsList[0]["desktopEntry"].toString());
     }
 }
 
-void DataSource_RecentApps::getContent()
+QVariantMap DataSource_RecentApps::getContent(int index)
 {
-    for (int i = 0; i < recentAppsList.size(); i++) {
-        QVariantMap map;
-        map["imagePath"] = QString("image://generalicon/appicon/%1").arg(recentAppsList[i].icon);
-        map["caption"] = recentAppsList[i].caption;
-        map["id"] = i;
-        map["pinned"] = /*i < 4 ? true :*/ false;
-        emit newItemData(map);
-    }
+    return recentAppsList[index];
 }
 
 void DataSource_RecentApps::itemDragged(int fromIndex, int toIndex)
 {
     recentAppsList.move(fromIndex, toIndex);
+
+    for (int i = 0; i < recentAppsList.size(); i++)
+        recentAppsList[i]["id"] = i;
+
     saveData();
 }

@@ -7,13 +7,13 @@ Column {
     property alias dataSource: iconGridView.dataSource
     property alias draggable: iconGridView.draggable
     property alias enabledSystemDnD: iconGridView.enabledSystemDnD
-    property alias groupNameVisible: groupLabel.visible
+    property alias groupNameVisible: groupLabelWrapper.visible
     property alias stackable: iconGridView.stackable
 
-    property alias prevGridGroup: iconGridView.prevGrid
-    property alias nextGridGroup: iconGridView.nextGrid
-    property alias startIndex: iconGridView.startIndex
-    property alias endIndex: iconGridView.endIndex
+    property alias prevGridGroup: iconGridView.prevGridGroup
+    property alias nextGridGroup: iconGridView.nextGridGroup
+    property alias maxCount: iconGridView.maxCount
+    property int groupCountStart: 0
 
     property alias count: iconGridView.count
     property alias gridView: iconGridView
@@ -25,12 +25,37 @@ Column {
     property bool isPopupGroup: false
     property int groupCellHeight: constants.cellHeight
 
-    signal gridItemCountChanged
     signal gridCurrentItemChanged(variant newCurrentItem)
     signal showPopupGroup(int index, variant stackItemData, variant iconCoords)
     signal gridMyFocusChanged(int containerIndex)
+    signal groupNameChanged(string newName)
 
     property int containerIndex: 0
+
+    states: [
+        State {
+            name: "clipped"
+            PropertyChanges {
+                target: groupRoot
+                clip: true
+            }
+        },
+
+        State {
+            name: "unclipped"
+            PropertyChanges {
+                target: groupRoot
+                clip: false
+            }
+        }
+    ]
+
+    transitions: Transition {
+        from: "clipped"
+        to: "unclipped"
+        PropertyAnimation { target: groupRoot; properties: "clip"; duration: 300 }
+    }
+
 
     // constants
     property int textToGridSpacing: constants.textToGridSpacing
@@ -46,44 +71,65 @@ Column {
         iconGridView.myActiveFocusChanged.connect(gridMyFocusChanged)
     }
 
-    TextInput {
-        id: groupLabel
+    Item {
+        id: groupLabelWrapper
         width: parent.width
         height: groupLabel.text || isPopupGroup ? textHeight : 0
         anchors.left: parent.left
-        anchors.leftMargin: 39//16
-        readOnly: !isPopupGroup
-        activeFocusOnPress: isPopupGroup
 
-        font.family: "Bitstream Vera Sans"
-        font.bold: true
-        font.pixelSize: 14//18
-        color: "#eee"
-        //styleColor: "#000"
+        TextInput {
+            id: groupLabel
+            height: parent.height
+            anchors.left: parent.left
+            anchors.leftMargin: 39//16
+            readOnly: !isPopupGroup
+            activeFocusOnPress: isPopupGroup
 
-        onTextChanged: {
-            if (isPopupGroup && popupFrame.stackedIconIndex !== -1) {
-                gridsListView.activeGridView.model.setProperty(popupFrame.stackedIconIndex, "caption", groupName)
+            font.family: "Bitstream Vera Sans"
+            font.bold: true
+            font.pixelSize: 14//18
+            color: "#eee"
+            //styleColor: "#000"
+
+            onTextChanged: {
+                if (isPopupGroup)
+                    groupNameChanged(groupName)
             }
-        }
 
-        onActiveFocusChanged: {
-            if (activeFocus)
-                iconGridView.myActiveFocus = false
-        }
+            onActiveFocusChanged: {
+                if (activeFocus)
+                    iconGridView.myActiveFocus = false
+            }
 
-        Keys.onEnterPressed: {
-            if (isPopupGroup)
-                gridsListView.hideGroup()
-        }
+            Keys.onEnterPressed: {
+                if (isPopupGroup)
+                    gridsListView.hideGroup()
+            }
 
-        Keys.onReturnPressed: {
-            if (isPopupGroup)
-                gridsListView.hideGroup()
-        }
-        Keys.onTabPressed: {
-            iconGridView.myActiveFocus = true
-            event.accepted = false
+            Keys.onReturnPressed: {
+                if (isPopupGroup)
+                    gridsListView.hideGroup()
+            }
+            Keys.onTabPressed: {
+                iconGridView.myActiveFocus = true
+                event.accepted = false
+            }
+
+            BorderImage {
+                visible: !groupLabel.readOnly
+                border.left: 6
+                border.right: 6
+                border.top: 6
+                border.bottom: 6
+                anchors.left: parent.left
+                anchors.leftMargin: -10
+                anchors.top: parent.top
+                anchors.topMargin: -7
+                width: groupLabel.width + 20
+                height: 30
+                source: "image://generalicon/asset/search_bar_bg.png"
+                z: -1
+            }
         }
 
         Image {
@@ -98,84 +144,88 @@ Column {
         }
     }
 
+    Component {
+        id: highlightComponent
+        Item {
+            id: gridSelection
+            property int animationDuration: 150
+            property int moveDurationConst: 150
+            property int moveDuration: moveDurationConst
+            opacity: myActiveFocus ? 1 : 0
+
+            width: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.width : 0
+            height: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.height : 0
+            x: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.x : 0
+            y: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.y : 0
+
+            BorderImage {
+                border.left: 5
+                border.right: 7
+                border.top: 5
+                border.bottom: 7
+
+                anchors.fill: parent
+                anchors.rightMargin: -2
+                anchors.bottomMargin: -2
+
+                source: "image://generalicon/asset/grid_selection.png"
+            }
+
+            Behavior on x {
+                NumberAnimation { duration: moveDuration }
+            }
+
+            Behavior on y {
+                NumberAnimation { duration: moveDuration }
+            }
+
+            Behavior on width {
+                NumberAnimation { duration: moveDuration }
+            }
+
+            Behavior on height {
+                NumberAnimation { duration: moveDuration }
+            }
+
+            Behavior on opacity {
+                NumberAnimation { duration: animationDuration }
+            }
+        }
+    }
+
     IconGridView {
         id: iconGridView
 
         width: parent.width
-        height: groupName == "Applications" ? gridsListView.height : Math.ceil(count / columns) * groupCellHeight
+        height: groupName == "Apps" ? gridsListView.height : Math.ceil(count / columns) * groupCellHeight
         cellHeight: groupCellHeight
         interactive: false
+
+        highlight: highlightComponent
+        highlightFollowsCurrentItem: false
 
         property bool myActiveFocus: false
         signal myActiveFocusChanged(int containerIndex)
 
-        function appendItemToModel(itemData)
-        {
-            itemData.stack = undefined
-            model.append(itemData)
-
-            // UNREM THIS TO ENABLE AUTO-STACKING
-            /*/if (!groupNameVisible) // workaround to apply this to apps tab only
-            {
-                appendItemToModel.lastItem = model.get(model.count - 1)
-                if (appendItemToModel.lastItem && appendItemToModel.lastLetter != appendItemToModel.lastItem.caption.charAt(0).toLowerCase())
-                {
-                    appendItemToModel.lastLetter = appendItemToModel.lastItem.caption.charAt(0).toLowerCase()
-                    appendItemToModel.lastLetterItem = appendItemToModel.lastItem
-                    //console.log("CAHNGE OF")
-                }
-                //if (appentItemToModel.lastItem)
-                //    console.log("last item: " + appentItemToModel.lastItem.caption + "; last letter: " + appentItemToModel.lastLetter + "; stored_first: " + appentItemToModel.lastItem.caption.charAt(0).toLowerCase())
-
-//                console.log(appentItemToModel.lastLetter)
-                if (itemData.caption.charAt(0).toLowerCase() == appendItemToModel.lastLetter)
-                {
-                    if (typeof appendItemToModel.lastLetterItem.stack == 'undefined')
-                    {
-                        //console.log("Initializing group")
-                        var array = []
-                        array.push(itemData)
-                        appendItemToModel.lastLetterItem.stack = array
-                        // UNREM THIS TO GET ONE-ITEM GROUPS
-                        //appentItemToModel.lastLetterItem.imagePath = "image://generalicon/stacked/" + itemData.imagePath.slice(28) + "|"
-                        //console.log(model.get(2).stack + " | " + model.get(2).stack.length)
-                    }
-                    else
-                    {
-                        //console.log("Pushing " + itemData.caption)
-                        //console.log("Got still: " + model.get(2).stack)
-                        var array2 = appendItemToModel.lastLetterItem.stack
-                        array2.push(itemData)
-                        appendItemToModel.lastLetterItem.stack = array2
-                        appendItemToModel.lastLetterItem.imagePath = "image://generalicon/stacked/" + appendItemToModel.lastLetterItem.imagePath.slice(28) + "|" + itemData.imagePath.slice(28)
-                        //console.log(">" + appentItemToModel.lastLetterItem.imagePath)
-                        //console.log("Got after: " + model.get(2).stack)
-                        //model.get(2).stack = model.get(2).stack.push(itemData)
-                    }
-                }
-            } /**/
-        }
-
         function newItemData(itemData)
         {
-            if (startIndex === endIndex && endIndex === -1)
-            {
-                for (var i = 0; i < model.count; i++)
-                    if (model.get(i).id === itemData.id)
-                        return
-            }
-            else if (!(startIndex <= itemData.id && itemData.id <= endIndex &&
-                       count <= endIndex - startIndex)) // Last condition eliminates duplicates via limiting item count. Not the best solution, fix someday
-                return
-
             // This is needed for delegate to not blaming unknown variable
             if (itemData.pinned === undefined)
                 itemData.pinned = undefined
 
-            if (itemData.searchGroup === undefined || itemData.searchGroup === groupName) // Adding only from matching search groups if it's from search
-                appendItemToModel(itemData)
+            if (itemData.stack === undefined)
+                itemData.stack = undefined
+            model.append(itemData)
+        }
 
-            //console.log("--- Added [" + startIndex + " to " + endIndex + "] with id: " + itemId)
+        function newItemDataAt(pos, itemData) {
+            // This is needed for delegate to not blaming unknown variable
+            if (itemData.pinned === undefined)
+                itemData.pinned = undefined
+
+            if (itemData.stack === undefined)
+                itemData.stack = undefined
+            model.insert(pos, itemData)
         }
 
         function onItemClicked(newIndex)
@@ -197,10 +247,7 @@ Column {
                     model.move(newIndex, 0, 1)
 
                     for (var i = 0; i < model.count; i++)
-                        if (model.get(i).id < realIndex)
-                            model.setProperty(i, "id", model.get(i).id + 1)
-                        else if (model.get(i).id == realIndex)
-                            model.setProperty(i, "id", 0)
+                        model.setProperty(i, "id", i)
 
                     dndSrcId = -1
                     gridView.currentIndex = 0
@@ -209,7 +256,7 @@ Column {
             if (newIndex == -1)
                 dataSource.itemClicked(-1)
             else
-                dataSource.itemClicked(realIndex, model.get(newIndex).searchGroup)
+                dataSource.itemClicked(realIndex, groupName)
         }
 
         function forceMyFocus() {

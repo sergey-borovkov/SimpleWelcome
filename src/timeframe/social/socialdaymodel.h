@@ -5,6 +5,7 @@
 #include <QSet>
 
 #include <listmodel.h>
+#include <QDate>
 
 class SocialItem;
 class CommentItem;

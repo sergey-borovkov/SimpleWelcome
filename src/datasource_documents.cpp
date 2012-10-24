@@ -24,7 +24,7 @@ int DataSource_Documents::getItemCount()
 QString DataSource_Documents::itemUrlDnd(int id)
 {
     if (id >= 0 && id < docsList.count()) {
-        KDesktopFile file(docsList[id].desktopEntry);
+        KDesktopFile file(docsList[id]["desktopEntry"].toString());
         return file.readUrl();
     }
     return QString();
@@ -43,21 +43,9 @@ QIcon DataSource_Documents::getIcon(QString destination)
     return QIcon();
 }
 
-void DataSource_Documents::getContent()
+QVariantMap DataSource_Documents::getContent(int index)
 {
-    for (int i = 0; i < docsList.size(); i++)
-    {
-        QVariantMap map;
-        map["caption"] = docsList[i].caption;
-        map["id"] = i;
-
-        if (m_pixmaps.contains(docsList[i].destination))
-            map["imagePath"] = QString("image://generalicon/docicon/%1").arg(docsList[i].destination);
-        else
-            map["imagePath"] = QString("image://generalicon/appicon/%1").arg(docsList[i].icon);
-
-        emit newItemData(map);
-    }
+    return docsList[index];
 }
 
 void DataSource_Documents::updateContent()
@@ -71,7 +59,7 @@ void DataSource_Documents::updateContent()
     QStringList recentDocsList = KRecentDocument::recentDocuments();
     KFileItemList previewRequestList;
 
-    QList<AppItem> newDocsList;
+    AppItemList newDocsList;
     for (int i = 0; i < recentDocsList.size() && newDocsList.count() < 7; i++) {
         if (!QFile::exists(recentDocsList[i]) || !KDesktopFile::isDesktopFile(recentDocsList[i]))
             continue;
@@ -84,16 +72,22 @@ void DataSource_Documents::updateContent()
             continue;
 
         AppItem newItem;
-        newItem.caption = desktopFile.readName();
-        newItem.icon = desktopFile.readIcon();
-        newItem.desktopEntry = desktopFile.fileName();
-        newItem.destination = KUrl(desktopFile.readUrl()).url();
 
-        if (!newItem.caption.isEmpty())
+        newItem["caption"] = desktopFile.readName();
+        newItem["id"] = newDocsList.count();
+        newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(desktopFile.readIcon());
+        newItem["desktopEntry"] = desktopFile.fileName();
+        newItem["destination"] = KUrl(desktopFile.readUrl()).url();
+
+        bool thumbnailAvailable = m_pixmaps.contains(newItem["destination"].toString());
+        if (thumbnailAvailable)
+            newItem["imagePath"] = QString("image://generalicon/docicon/%1").arg(newItem["destination"].toString());
+
+        if (!newItem["caption"].toString().isEmpty())
             newDocsList.append(newItem);
 
-        if (!m_pixmaps.contains(newItem.destination)) {
-            KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, newItem.destination, false);
+        if (!thumbnailAvailable) {
+            KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, newItem["destination"].toString(), false);
             previewRequestList.append(fileItem);
         }
     }
@@ -127,8 +121,10 @@ void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap
 
     m_pixmaps[item.url().url()] = pix;
     for (int i = 0; i < docsList.size(); i++) {
-        if (docsList[i].destination == item.url().url())
-            emit updateItemData(i, "imagePath", QString("image://generalicon/docicon/%1").arg(docsList[i].destination));
+        if (docsList[i]["destination"].toString() == item.url().url()) {
+            docsList[i]["imagePath"] = QString("image://generalicon/docicon/%1").arg(docsList[i]["destination"].toString());
+            emit updateItemData(i, "imagePath", docsList[i]["imagePath"].toString());
+        }
     }
     //emit resetContent();
 }
@@ -140,7 +136,7 @@ void DataSource_Documents::previewFailed(const KFileItem &/*item*/)
 
 void DataSource_Documents::createDocumentsPreviews(KFileItemList list)
 {
-    KIO::PreviewJob *job = KIO::filePreview( list, constants->iconSize(), 0, 0, 0, true, false, &m_previewJobPlugins );
+    KIO::PreviewJob *job = KIO::filePreview(list, QSize(constants->iconSize(), constants->iconSize()), &m_previewJobPlugins);
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
     connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(resultPreviewJob(KFileItem,QPixmap)));
@@ -151,6 +147,6 @@ void DataSource_Documents::itemClicked(int newIndex)
 {
     if (newIndex != -1) {
         docsList.move(newIndex, 0);
-        emit runDesktopFile(docsList[0].desktopEntry);
+        emit runDesktopFile(docsList[0]["desktopEntry"].toString());
     }
 }
