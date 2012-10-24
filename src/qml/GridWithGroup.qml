@@ -7,7 +7,7 @@ Column {
     property alias dataSource: iconGridView.dataSource
     property alias draggable: iconGridView.draggable
     property alias enabledSystemDnD: iconGridView.enabledSystemDnD
-    property alias groupNameVisible: groupLabel.visible
+    property alias groupNameVisible: groupLabelWrapper.visible
     property alias stackable: iconGridView.stackable
 
     property alias prevGridGroup: iconGridView.prevGridGroup
@@ -71,43 +71,65 @@ Column {
         iconGridView.myActiveFocusChanged.connect(gridMyFocusChanged)
     }
 
-    TextInput {
-        id: groupLabel
+    Item {
+        id: groupLabelWrapper
         width: parent.width
         height: groupLabel.text || isPopupGroup ? textHeight : 0
         anchors.left: parent.left
-        anchors.leftMargin: 39//16
-        readOnly: !isPopupGroup
-        activeFocusOnPress: isPopupGroup
 
-        font.family: "Bitstream Vera Sans"
-        font.bold: true
-        font.pixelSize: 14//18
-        color: "#eee"
-        //styleColor: "#000"
+        TextInput {
+            id: groupLabel
+            height: parent.height
+            anchors.left: parent.left
+            anchors.leftMargin: 39//16
+            readOnly: !isPopupGroup
+            activeFocusOnPress: isPopupGroup
 
-        onTextChanged: {
-            if (isPopupGroup)
-                groupNameChanged(groupName)
-        }
+            font.family: "Bitstream Vera Sans"
+            font.bold: true
+            font.pixelSize: 14//18
+            color: "#eee"
+            //styleColor: "#000"
 
-        onActiveFocusChanged: {
-            if (activeFocus)
-                iconGridView.myActiveFocus = false
-        }
+            onTextChanged: {
+                if (isPopupGroup)
+                    groupNameChanged(groupName)
+            }
 
-        Keys.onEnterPressed: {
-            if (isPopupGroup)
-                gridsListView.hideGroup()
-        }
+            onActiveFocusChanged: {
+                if (activeFocus)
+                    iconGridView.myActiveFocus = false
+            }
 
-        Keys.onReturnPressed: {
-            if (isPopupGroup)
-                gridsListView.hideGroup()
-        }
-        Keys.onTabPressed: {
-            iconGridView.myActiveFocus = true
-            event.accepted = false
+            Keys.onEnterPressed: {
+                if (isPopupGroup)
+                    gridsListView.hideGroup()
+            }
+
+            Keys.onReturnPressed: {
+                if (isPopupGroup)
+                    gridsListView.hideGroup()
+            }
+            Keys.onTabPressed: {
+                iconGridView.myActiveFocus = true
+                event.accepted = false
+            }
+
+            BorderImage {
+                visible: !groupLabel.readOnly
+                border.left: 6
+                border.right: 6
+                border.top: 6
+                border.bottom: 6
+                anchors.left: parent.left
+                anchors.leftMargin: -10
+                anchors.top: parent.top
+                anchors.topMargin: -7
+                width: groupLabel.width + 20
+                height: 30
+                source: "image://generalicon/asset/search_bar_bg.png"
+                z: -1
+            }
         }
 
         Image {
