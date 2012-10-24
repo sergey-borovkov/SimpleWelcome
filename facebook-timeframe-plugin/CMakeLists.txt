@@ -22,7 +22,7 @@ set(QT_USE_QTWEBKIT TRUE)
 
 add_library(facebook-timeframe-plugin SHARED ${HEADERS} ${SOURCES} ${MOC_OUT} ${QRC_SOURCES})
 target_link_libraries(facebook-timeframe-plugin
-                        ${KDE4_KDEUI_LIBS}
+                        ${KDE4_KDECORE_LIBS}
                         ${QJSON}
                         timeframe)
 

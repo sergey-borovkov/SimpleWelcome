@@ -63,7 +63,7 @@ public:
     virtual QWidget *authenticationWidget() = 0;
     virtual ISocialRequestManager *requestManager() = 0;
     virtual bool authorized() const = 0;
-    virtual QString localizedName() const = 0;
+    virtual QString displayName() const = 0;
 
     virtual QString selfId() const = 0;
     virtual void setSelfId( const QString& id ) = 0;

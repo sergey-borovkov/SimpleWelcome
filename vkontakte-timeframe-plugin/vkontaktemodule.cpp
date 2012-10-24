@@ -9,7 +9,7 @@
 #include <QtWebKit/QWebView>
 #include <QtWebKit/QWebFrame>
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 VkontakteModule::VkontakteModule()
 {
@@ -59,7 +59,7 @@ QPixmap VkontakteModule::smallIcon() const
     return m_smallPixmap;
 }
 
-QString VkontakteModule::localizedName() const
+QString VkontakteModule::displayName() const
 {
     return i18n("VKontakte");
 }

@@ -8,7 +8,7 @@
 #include <QtWebKit/QWebView>
 #include <QtWebKit/QWebFrame>
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 FacebookModule::FacebookModule()
 {
@@ -58,7 +58,7 @@ QPixmap FacebookModule::smallIcon() const
     return m_smallPixmap;
 }
 
-QString FacebookModule::localizedName() const
+QString FacebookModule::displayName() const
 {
     return i18n("Facebook");
 }

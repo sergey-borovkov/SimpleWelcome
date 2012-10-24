@@ -201,14 +201,14 @@ QString SocialProxy::authorizedLocalizedPluginName(int i) const
     QStringList authorizedPlugins = m_enabledPlugins.toList();
 
     QString name = authorizedPlugins.at(i);
-    QString localizedName = name;
+    QString displayName = name;
     foreach(ISocialPlugin *plugin, m_plugins) {
         if (plugin->name() == name) {
-            localizedName = plugin->localizedName();
+            displayName = plugin->displayName();
         }
     }
 
-    return localizedName;
+    return displayName;
 }
 
 PluginRequestReply *SocialProxy::getAllComments(const QString &id, const QString &pluginName)
