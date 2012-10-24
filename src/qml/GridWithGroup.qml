@@ -97,6 +97,55 @@ Column {
         }
     }
 
+    Component {
+        id: highlightComponent
+        Item {
+            id: gridSelection
+            property int animationDuration: 150
+            property int moveDurationConst: 150
+            property int moveDuration: moveDurationConst
+            opacity: myActiveFocus ? 1 : 0
+
+            width: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.width : 0
+            height: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.height : 0
+            x: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.x : 0
+            y: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.y : 0
+
+            BorderImage {
+                border.left: 5
+                border.right: 7
+                border.top: 5
+                border.bottom: 7
+
+                anchors.fill: parent
+                anchors.rightMargin: -2
+                anchors.bottomMargin: -2
+
+                source: "image://generalicon/asset/grid_selection.png"
+            }
+
+            Behavior on x {
+                NumberAnimation { duration: moveDuration }
+            }
+
+            Behavior on y {
+                NumberAnimation { duration: moveDuration }
+            }
+
+            Behavior on width {
+                NumberAnimation { duration: moveDuration }
+            }
+
+            Behavior on height {
+                NumberAnimation { duration: moveDuration }
+            }
+
+            Behavior on opacity {
+                NumberAnimation { duration: animationDuration }
+            }
+        }
+    }
+
     IconGridView {
         id: iconGridView
 
@@ -104,6 +153,9 @@ Column {
         height: groupName == "Apps" ? gridsListView.height : Math.ceil(count / columns) * groupCellHeight
         cellHeight: groupCellHeight
         interactive: false
+
+        highlight: highlightComponent
+        highlightFollowsCurrentItem: false
 
         property bool myActiveFocus: false
         signal myActiveFocusChanged(int containerIndex)
