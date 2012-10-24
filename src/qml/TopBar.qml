@@ -67,19 +67,28 @@ FocusScope {
         id: searchField
         x: Math.max(parent.width/2 - width/2, userNameItem.x + userNameItem.width + 30)
         width: Math.max(40, Math.min(600, sessionButtons.x - (userNameItem.x + userNameItem.width) - 30*2))
-        height: 26
+        height: 35//26
 
         visible: tabListView.currentIndex !== 3
 
         anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: 2
+
+        Image {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: -2
+            anchors.right: parent.right
+            anchors.rightMargin: 11
+            source: "image://generalicon/asset/search_pic.png"
+        }
 
         BorderImage {
-            border.left: 10
-            border.right: 10
-            border.top: 10
-            border.bottom: 10
+            border.left: 6
+            border.right: 6
+            border.top: 6
+            border.bottom: 6
             anchors.fill: parent
-            source: "image://generalicon/asset/textfield_border_bg.png"
+            source: "image://generalicon/asset/search_bar_bg.png"
         }
 
         Item {
@@ -114,15 +123,15 @@ FocusScope {
             id: searchInput
             width: parent.width - 20
             anchors.top: parent.top
-            anchors.topMargin: 5
+            anchors.topMargin: 6
             anchors.horizontalCenter: parent.horizontalCenter
             selectByMouse: true
             activeFocusOnPress: false
             cursorVisible: true
             font.family: "Bitstream Vera Sans"
-            //color: "white"
+            color: "white"
             //font.italic: true
-            //font.pixelSize: 12
+            font.pixelSize: 16
         }
         Binding {
             target: searchGridModel
