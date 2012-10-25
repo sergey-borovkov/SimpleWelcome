@@ -261,6 +261,7 @@ void SocialProxy::getPictureSuccess(PluginRequestReply* reply)
 
 void SocialProxy::getSelfPictureSuccess(PluginRequestReply* reply)
 {
+    Q_UNUSED(reply)
 //    m_selfPictureUrl = reply->userPictureUrl();
 //    qDebug() << "SocialProxy::getSelfPictureSuccess";
 }

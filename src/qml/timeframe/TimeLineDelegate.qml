@@ -48,9 +48,8 @@ Item {
 
     function getSourceComponent(count)
     {
-        if (count === 0) {
+        if (count === 0)
             return "clouds/CloudNull.qml"
-        }
         else if (count === 1)
             return "clouds/CloudOne.qml"
         else if (count === 2)
@@ -60,7 +59,7 @@ Item {
         else if (count === 4)
             return "clouds/CloudFour.qml"
         else if (count === 5)
-            return "CloudFive.qml"
+            return "clouds/CloudFive.qml"
         else if (count === 6)
             return "clouds/CloudSix.qml"
         return "clouds/CloudSeven.qml"
