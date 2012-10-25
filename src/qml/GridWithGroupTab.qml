@@ -693,15 +693,11 @@ Item {
             id: wheelArea
             anchors.fill: parent
 
-            onScrollVert: _scroll(delta)
-
-            function _scroll(delta) {
-                // See Qt documentation of QGraphicsSceneWheelEvent
-                // Most mice report delta = 120
-                var pages_delta = Math.round(delta / 120)
-                if (pages_delta === 0)
-                    pages_delta = (delta > 0 ? 1 : -1)
-                gridsListView.currentIndex = ((gridsListView.currentIndex + gridsListView.count - pages_delta) % gridsListView.count)
+            onScrollVert: {
+                if (delta > 0)
+                    gridsListView.decrementCurrentIndex()
+                else
+                    gridsListView.incrementCurrentIndex()
             }
         }
 
