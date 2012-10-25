@@ -16,7 +16,7 @@ Item {
 
     Item {
         id: wrapper
-        parent: gridMouseArea
+        parent: grid
         x: cell.x
         y: cell.y
         width: cellWidth
