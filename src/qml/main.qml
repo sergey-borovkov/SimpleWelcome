@@ -190,14 +190,12 @@ Item {
             }
 
             function onWheelScroll(delta) {
-                // See Qt documentation of QGraphicsSceneWheelEvent
-                // Most mice report delta = 120
-                var pages_delta = Math.round(delta / 120)
-                if (pages_delta === 0)
-                    pages_delta = (delta > 0 ? 1 : -1)
-
-                var count2 = count - 1
-                currentTabIndexChanged((currentIndex + count2 - pages_delta - 1) % count2 + 1)
+                if (delta > 0) {
+                    if (currentIndex > 1)
+                        tabListView.decrementCurrentIndex()
+                }
+                else
+                    tabListView.incrementCurrentIndex()
             }
 
             Component.onCompleted: {
