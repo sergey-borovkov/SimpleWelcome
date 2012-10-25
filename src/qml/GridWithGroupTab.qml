@@ -35,10 +35,6 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: -popupFrame.slideHeight
 
-        Component.onCompleted: {
-            popupFrame.gridGroup.gridView.draggedOut.connect(draggedOut)
-        }
-
         function draggedOut(item) {
             gridsListView.hideGroup()
             //console.log(item.caption + " GOT")
@@ -46,7 +42,7 @@ Item {
                 gridsListView.currentItem.activeGridGroup.state = "clipped"
             gridsListView.activeGridView.newItemData(item)
             gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
-            gridsListView.activeGridView.startDragging(gridsListView.activeGridView.count - 1)
+            gridMouseArea.startDragging(gridsListView.activeGridView.count - 1)
             popupFrame.stackedIconIndex = -1
         }
 
@@ -93,7 +89,7 @@ Item {
             }
 
             function gridIconPushPop(groupName) {
-                //console.log("REINITING " + groupName)
+                console.log("REINITING " + groupName)
 
                 var currentIndexWas = gridsListView.currentIndex
                 var prevPageModel = activeGridView.model
@@ -164,10 +160,7 @@ Item {
                 var newGridGroup = gridsListView.currentItem.activeGridGroup
                 if (gridsListView.currentItem)
                 {
-                    newGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
                     newGridGroup.gridView.itemStackingChanged.connect(saveStacks)
-                    newGridGroup.gridView.itemMoved.connect(itemMoved)
-                    newGridGroup.gridView.requestIconPushPop.connect(gridIconPushPop)
 
                     if (newGridGroup.gridView.stackable)
                         newGridGroup.showPopupGroup.connect(showGroup)
@@ -804,5 +797,11 @@ Item {
                 NumberAnimation { properties: "height, slideHeight"; easing.type: Easing.InOutQuad }
             }
         }
+
+
+        GridWithGroupTabMouse {
+            id: gridMouseArea
+        }
+
     }
 }
