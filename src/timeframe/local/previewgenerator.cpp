@@ -27,7 +27,7 @@
 
 #include <KFile>
 #include <KIcon>
-
+#include <QDebug>
 PreviewGenerator *previewGenerator(const QString &type)
 {
     static PreviewGenerator *galleryInstance = 0;
@@ -54,15 +54,7 @@ PreviewGenerator::PreviewGenerator()
 
 void PreviewGenerator::previewComplete(PreviewGenerator::PreviewItemIterator it)
 {
-    if (it != m_pendingItems.end()) {
-        PreviewItem &item = it.value();
-        // remove from pending items if only one request left
-        if(item.count == 1) {
-            m_pendingItems.erase(it);
-        } else {
-            item.count--;
-        }
-    }
+
 }
 
 void PreviewGenerator::setModel(LocalContentModel *model)
@@ -78,7 +70,7 @@ void PreviewGenerator::notifyModelAboutPreview(const QString &url)
 
 void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pixmap)
 {
-    previewComplete(m_pendingItems.find(item.localPath()));
+    //previewComplete(item.localPath());
     QPixmap pict = pixmap;
     if (item.mimetype().startsWith("video/")) {
         QPainter p(&pict);
@@ -92,7 +84,6 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
 
 void PreviewGenerator::previewJobFailed(const KFileItem &item)
 {
-    previewComplete(m_pendingItems.find(item.localPath()));
     KIcon icon(item.iconName(), 0, item.overlays());
     QPixmap pixmap = icon.pixmap(500);
     m_previews.insert(item.localPath(), pixmap);
@@ -104,10 +95,8 @@ QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
     QHash<QString, QPixmap>::iterator it = m_previews.find(filePath);
     if (it != m_previews.end()) {
         QPixmap pixmap = it.value();
-        // item is not in pending requests
-        if (m_pendingItems.find(filePath) == m_pendingItems.end()) {
-            m_previews.erase(it);
-        }
+        m_previews.erase(it);
+        //}
         return pixmap;
     }
 
@@ -116,12 +105,6 @@ QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
 
 void PreviewGenerator::request(const QString &path)
 {
-    PreviewItemIterator it = m_pendingItems.find(path);
-    if (it != m_pendingItems.end()) {
-        it.value().count++;
-        return;
-    }
-
     KFileItemList fileList;
     KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
     fileList.append(fileItem);
@@ -130,19 +113,10 @@ void PreviewGenerator::request(const QString &path)
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
 
-    PreviewItem item;
-    item.job = job;
-
-    m_pendingItems.insert(path, item);
-
     connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(previewJobResult(const KFileItem&, const QPixmap&)));
     connect(job, SIGNAL(failed(const KFileItem&)), SLOT(previewJobFailed(const KFileItem &)));
 }
 
 void PreviewGenerator::cancel(const QString &path)
 {
-    previewComplete(m_pendingItems.find(path));
-    if (m_pendingItems.find(path) == m_pendingItems.end()) {
-       m_previews.remove(path);
-    }
 }

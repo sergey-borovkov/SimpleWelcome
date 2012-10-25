@@ -79,9 +79,6 @@ private:
     void previewComplete(PreviewItemIterator it);
     void notifyModelAboutPreview(const QString &url);
 
-    // contains items that are still searched
-    QHash<QString, PreviewItem> m_pendingItems;
-
     QHash<QString, QPixmap> m_previews;
 
     QPixmap videoPixmap;
