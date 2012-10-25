@@ -32,10 +32,8 @@ void NepomukSource::startSearch()
         QString path = it["url"].uri().toLocalFile();
         QDate lastModified = it["lastModified"].literal().toDate();
         QString mimeType = it["mimeType"].toString();
-        int imageWidth = it["width"].toString().toInt();
-        int imageHeight = it["height"].toString().toInt();
-
         QString type;
+        int imageWidth = 0, imageHeight = 0;
         if (path.contains(".svg"))
             type = "Image";
         else if (mimeType.contains("video"))
@@ -44,8 +42,10 @@ void NepomukSource::startSearch()
             type = "Image";
         else
             type = "Document";
-
-//        qDebug() << "     " << type << ":   " << imageWidth << "x" << imageHeight;
+        if(type == "Image") {
+            imageWidth = it["width"].toString().toInt();
+            imageHeight = it["height"].toString().toInt();
+        }
 
         if(i %= 100) {
             emit newActivities(activities);
