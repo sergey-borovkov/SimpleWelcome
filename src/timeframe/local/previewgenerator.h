@@ -85,7 +85,6 @@ private:
     QHash<QString, QPixmap> m_previews;
 
     QPixmap videoPixmap;
-    QPixmap m_defaultPreview;
     QStringList m_plugins;
     LocalContentModel *m_model;
 };

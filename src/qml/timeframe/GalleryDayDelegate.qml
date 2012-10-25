@@ -22,10 +22,9 @@ Column {
             Connections {
                 target: localDayModel.itemsModel(date)
                 onGotThumbnail: {
-                   // if(path //=== url) {
+                    if(path === url) {
                         image.source += "1"
-                    //}
-
+                    }
                 }
             }
 

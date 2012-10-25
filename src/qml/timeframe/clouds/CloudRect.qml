@@ -10,13 +10,14 @@ Rectangle {
     radius: 10
 
     function gotThumbnail() {
-            image.source += "1"
     }
 
     Connections {
         target: localDayModel.itemsModel(date)
         onGotThumbnail: {
-            gotThumbnail()
+            if(path === url) {
+                image.source += "1"
+             }
         }
     }
 

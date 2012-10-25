@@ -50,7 +50,6 @@ PreviewGenerator::PreviewGenerator()
     , m_model(0)
 {
     videoPixmap.load(":/play-empty.png");
-    m_defaultPreview.load(":/pla-empty-box.png");
 }
 
 void PreviewGenerator::previewComplete(PreviewGenerator::PreviewItemIterator it)
@@ -112,7 +111,7 @@ QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
         return pixmap;
     }
 
-    return m_defaultPreview;
+    return QPixmap();
 }
 
 void PreviewGenerator::request(const QString &path)

@@ -34,6 +34,7 @@ public:
 private:
     QImage getRoundedImage(QImage image, int radius);
     QString m_type;
+    QPixmap m_defaultPreview;
     PreviewGenerator *m_generator;
 };
 
