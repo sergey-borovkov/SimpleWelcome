@@ -60,7 +60,7 @@ Item {
         else if (count === 4)
             return "clouds/CloudFour.qml"
         else if (count === 5)
-            return "CloudFive.qml"
+            return "clouds/CloudFive.qml"
         else if (count === 6)
             return "clouds/CloudSix.qml"
         return "clouds/CloudSeven.qml"
