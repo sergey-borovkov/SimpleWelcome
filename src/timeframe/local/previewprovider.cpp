@@ -30,6 +30,7 @@ PreviewProvider::PreviewProvider(const QString &type) :
     m_type(type),
     m_generator(previewGenerator(m_type))
 {
+    m_defaultPreview.load(":/pla-empty-box.png");
 }
 
 QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
@@ -42,8 +43,11 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
         str.chop(8);
     }
 
-    m_generator->request(str);
     QPixmap pixmap = m_generator->takePreviewPixmap(str);
+    if(pixmap.isNull()) {
+        m_generator->request(str);
+        return m_defaultPreview;
+    }
 
     if (requestedSize.isValid())
         pixmap = pixmap.scaled(requestedSize);
