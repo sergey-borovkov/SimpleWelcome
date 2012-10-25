@@ -43,22 +43,9 @@ public slots:
     void addActivityItem(Activity* item);
 
 private:
-    enum {
-        AllItemMax = 7,
-        ImageItemMax = 4,
-        VideoItemMax = 2,
-        DocumentItemMax = 1
-    };
-
-    int getImageInsertPosition(Activity *item, int from, int to);
-    int getInsertPosition(Activity *item);
-    void printFirstItems(int count);
-
-private:
     QHash<int, QByteArray> m_hash;
     QList<Activity *> m_items;
     QSet<QString> m_urlSet;
-    QHash<QString, QSize> m_imgDimensions;
     QDate m_date;
 };
 
@@ -76,7 +63,7 @@ public:
     // for QML
     Q_INVOKABLE int count() const;
     Q_INVOKABLE QString url(int row) const;
-    void previewReady(const QString &url);
+     void previewReady(const QString &url);
 
 signals:
     void gotThumbnail(QString path);
