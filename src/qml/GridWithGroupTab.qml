@@ -40,7 +40,7 @@ Item {
         }
 
         function draggedOut(item) {
-            gridsListView.hideGroup()
+            gridsListView.hideGroup(false)
             //console.log(item.caption + " GOT")
             if (gridsListView.currentItem)
                 gridsListView.currentItem.activeGridGroup.state = "clipped"
@@ -644,15 +644,17 @@ Item {
                 //console.log("}")
             }
 
-            function hideGroup()
+            function hideGroup(isNullifyStackedIndex)
             {
-                popupFrame.stackedIconIndex = -1
                 popupFrame.state = "CLOSED"
                 stackCellOpenedId = -1
                 topBar.forceActiveFocus()
                 activeGridView.myActiveFocus = true
                 gridsListView.saveStacks()
                 gridsListView.saveIconPositions()
+
+                if (isNullifyStackedIndex !== false)
+                    popupFrame.stackedIconIndex = -1
             }
 
             function showGroup(index, item, iconCoords)
