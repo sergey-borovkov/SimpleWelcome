@@ -59,8 +59,6 @@ GridView {
     }
 
     function stackItemInItem(indexStackingTo, indexDragging, notSaveChanges) {
-        //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
-
         var itemDragging = model.get(indexDragging)
         var itemStackingTo = model.get(indexStackingTo)
 
@@ -80,6 +78,9 @@ GridView {
                 }
         }
         stackArray.push(root.cloneObject(itemDragging))
+
+        //console.log("----------------- STACKING [" + indexDragging + "] " + model.get(indexDragging).caption + " to [" + indexStackingTo + "] " + model.get(indexStackingTo).caption)
+
 
         if (stackArray.length === 2) // First time stacking
             model.setProperty(indexStackingTo, "caption", itemStackingTo.caption + " Group")
@@ -353,7 +354,7 @@ GridView {
             }
 
             onTriggered: {
-                if (itemWaitingOn !== undefined && model.get(gridMouseArea.dndDest) !== undefined)
+                if (itemWaitingOn !== undefined && model.get(gridMouseArea.dndDest) !== undefined && gridMouseArea.pressed)
                 {
                     var item = itemWaitingOn
                     var isHitInnerIcon = gridMouseArea.mouseX > item.x && gridMouseArea.mouseX < item.x + constants.cellWidth
@@ -370,7 +371,7 @@ GridView {
                     }
                     else if (stackable && isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest && !isDragginStack) //&& pointsDistance <= 3)
                     { // Hit central part of item. Using for stacking
-                        if (isAimingOnStacking)
+                        if (isAimingOnStacking && gridMouseArea.draggedItemStackedAt === undefined)
                         {
                             //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
                             var res = grid.stackItemInItem(indexWaitingOn, gridMouseArea.dndDest)
