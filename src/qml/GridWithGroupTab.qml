@@ -646,6 +646,7 @@ Item {
 
             function hideGroup()
             {
+                popupFrame.stackedIconIndex = -1
                 popupFrame.state = "CLOSED"
                 stackCellOpenedId = -1
                 topBar.forceActiveFocus()
