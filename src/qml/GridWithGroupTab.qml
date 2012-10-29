@@ -21,7 +21,7 @@ Item {
     }
 
     function processKeyboard(key) {
-        if (popupFrame.state == "OPEN") {
+        if (popupFrame.state === "OPEN") {
             popupFrame.gridGroup.gridView.processKeyboard(key)
         }
         else if (gridsListView.currentItem)
@@ -691,10 +691,12 @@ Item {
             anchors.fill: parent
 
             onScrollVert: {
-                if (delta > 0)
-                    gridsListView.decrementCurrentIndex()
-                else
-                    gridsListView.incrementCurrentIndex()
+                if (popupFrame.state === "CLOSED") {
+                    if (delta > 0)
+                        gridsListView.decrementCurrentIndex()
+                    else
+                        gridsListView.incrementCurrentIndex()
+                }
             }
         }
 
