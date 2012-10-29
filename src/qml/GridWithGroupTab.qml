@@ -341,7 +341,7 @@ Item {
                 mainWindow.saveStacks(setting)
             }
 
-            function itemMoved(group, item, srcPos, destPos) {
+            function itemMoved(item, srcPos, destPos) {
                 var map = iconPositions
                 if (map === undefined)
                     map = new Object
@@ -743,14 +743,6 @@ Item {
 
             color: Qt.rgba(0, 0, 0, 0.6)
             opacity: popupFrame.state == "OPEN"
-
-            MouseArea {
-                anchors.fill: parent
-
-                hoverEnabled: true
-
-                onClicked: gridsListView.hideGroup()
-            }
 
             Behavior on opacity {
                 NumberAnimation { duration: 200; /*easing.type: Easing.OutQuint*/ }

@@ -19,6 +19,9 @@ MouseArea {
     }
 
     function getCurrentGrid() {
+        if (popupFrame.state === "OPEN")
+            return popupFrame.gridGroup.gridView
+
         if (getCurrentGrid.cachedGrid !== undefined) {
             var cachedGridCoords = mapToItem(getCurrentGrid.cachedGrid, mouseX, mouseY)
             if (hitTest(getCurrentGrid.cachedGrid, cachedGridCoords)) {
@@ -78,8 +81,9 @@ MouseArea {
             dndDest = index
             dndSrc = index
             dndSrcId = grid.model.get(dndSrc).id
-            //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
+            console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
             gridsListView.dndStateChanged(true)
+            console.log("grid: " + grid)
 
 //                    console.log("NOW----------------")
 //                    for (var i = 0; i < model.count; i++)
@@ -166,14 +170,14 @@ MouseArea {
 
 
     onMousePositionChanged: {
-        if (grid === undefined)
+        if (grid === undefined || !grid)
             return
 
-        if (!grid.moving && dndSrcId == -1)
+        if (!grid.moving && dndSrcId === -1)
         {
             // Optimize later to lesser use of getItemUnderCursor(true)
             var newCurrentIndex = getItemUnderCursor(!grid.myActiveFocus).index
-            if (newCurrentIndex != -1 && (newCurrentIndex != grid.currentIndex || !grid.myActiveFocus))
+            if (newCurrentIndex !== -1 && (newCurrentIndex !== grid.currentIndex || !grid.myActiveFocus))
             {
                 if (!grid.myActiveFocus)
                     grid.selectOtherGrid(grid, newCurrentIndex)
@@ -186,6 +190,7 @@ MouseArea {
             // activate system DnD if icons isn't group
             if (grid.enabledSystemDnD && (gridMouseX < 0 || gridMouseX > width || gridMouseY < 0 || gridMouseY > height) &&
                     grid.model.get(dndDest).stack === undefined) {
+
                 var url = grid.dataSource.itemUrlDnd(dndSrcId, grid.model.get(dndSrc).group)
                 if (url) {
                     // Return dragged icon to home position & disable internal DnD
@@ -210,13 +215,13 @@ MouseArea {
 
             if (gridMouseY < -grid.dragOutTopMargin || gridMouseY > grid.height + grid.dragOutBottomMargin)
             {
-                if (isPopupGroup)
+                if (grid.isPopupGroup)
                 {
                     //console.log("OUT")
                     tabWrapper.draggedOut(grid.model.get(dndDest))
                     // onReleased():
-                    dndSrcId = -1
-                    gridsListView.dndStateChanged(false)
+                    // dndSrcId = -1
+                    // gridsListView.dndStateChanged(false)
                 }
             }
 
@@ -261,6 +266,7 @@ MouseArea {
     }
     onReleased: {
         var dndSrcIdSaved = dndSrcId
+        console.log("RELEASED")
 
         // Adding icon to stack
         if (draggedItemStackedAt !== undefined && grid.model.get(dndDest).stack === undefined) {
@@ -268,7 +274,7 @@ MouseArea {
 
             var container = grid.model.get(draggedItemStackedAt)
             if (container.stack.length === 2) // First time stacking
-                gridsListView.itemMoved(grid.groupName, container.caption, grid.groupCountStart + draggedItemStackedAt, grid.groupCountStart + draggedItemStackedAt)
+                gridsListView.itemMoved(container.caption, grid.groupCountStart + draggedItemStackedAt, grid.groupCountStart + draggedItemStackedAt)
 
             if (dndDest < draggedItemStackedAt) {
                 grid.model.move(dndDest, grid.count - 1, 1)
@@ -276,7 +282,7 @@ MouseArea {
                 dndDest = grid.count - 1
             }
 
-            gridsListView.itemMoved(grid.groupName, grid.model.get(dndDest).caption, grid.groupCountStart + dndSrc, -1)
+            gridsListView.itemMoved(grid.model.get(dndDest).caption, grid.groupCountStart + dndSrc, -1)
 
 
             grid.model.remove(dndDest)
@@ -292,7 +298,7 @@ MouseArea {
 
                 if (dndSrc !== dndDest) {
                     //console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + grid.model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest + " | " + grid.groupCountStart)
-                    gridsListView.itemMoved(grid.groupName, grid.model.get(dndDest).caption, grid.groupCountStart + dndSrc, grid.groupCountStart + dndDest)
+                    gridsListView.itemMoved(grid.model.get(dndDest).caption, grid.groupCountStart + dndSrc, grid.groupCountStart + dndDest)
                 }
 
                 // Sync icons order in C++ model to QML model. Used in Recent Apps
@@ -319,7 +325,7 @@ MouseArea {
         draggedItemStackedAt = undefined
 
         if (grid.maxCount !== -1 && dndSrcIdSaved !== -1 && grid.count !== grid.maxCount) {
-            gridsListView.gridIconPushPop(grid.groupName)
+            gridsListView.gridIconPushPop("Apps")
         }
 
         // Duplicates detection. Remove later when sure no duplication occurs
@@ -343,7 +349,9 @@ MouseArea {
     }
 
     onClicked: {
-        if (!grid.moving)
+        if (grid.isPopupGroup && (gridMouseY < -grid.dragOutTopMargin || gridMouseY > grid.height + grid.dragOutBottomMargin))
+            gridsListView.hideGroup()
+        else if (!grid.moving)
         {
             var indexClicked = getItemUnderCursor(true).index
             grid.model.itemClicked(indexClicked)
