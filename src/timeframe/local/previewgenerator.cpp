@@ -52,11 +52,6 @@ PreviewGenerator::PreviewGenerator()
     videoPixmap.load(":/play-empty.png");
 }
 
-void PreviewGenerator::previewComplete(PreviewGenerator::PreviewItemIterator it)
-{
-
-}
-
 void PreviewGenerator::setModel(LocalContentModel *model)
 {
     m_model = model;
@@ -70,7 +65,6 @@ void PreviewGenerator::notifyModelAboutPreview(const QString &url)
 
 void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pixmap)
 {
-    //previewComplete(item.localPath());
     QPixmap pict = pixmap;
     if (item.mimetype().startsWith("video/")) {
         QPainter p(&pict);
@@ -96,7 +90,6 @@ QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
     if (it != m_previews.end()) {
         QPixmap pixmap = it.value();
         m_previews.erase(it);
-        //}
         return pixmap;
     }
 
