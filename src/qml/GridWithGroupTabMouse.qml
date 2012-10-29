@@ -119,7 +119,7 @@ MouseArea {
         }
 
         onTriggered: {
-            if (itemWaitingOn !== undefined && grid.model.get(gridMouseArea.dndDest) !== undefined)
+            if (itemWaitingOn !== undefined && grid.model.get(gridMouseArea.dndDest) !== undefined && gridMouseArea.pressed)
             {
                 var item = itemWaitingOn
                 var isHitInnerIcon = gridMouseArea.gridMouseX > item.x && gridMouseArea.gridMouseX < item.x + constants.cellWidth
