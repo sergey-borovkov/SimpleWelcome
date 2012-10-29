@@ -24,9 +24,9 @@ MouseArea {
         if (popupFrame.state === "OPEN")
             return popupFrame.gridGroup.gridView
 
-        if (getCurrentGrid.cachedGrid !== undefined) {
+        if (getCurrentGrid.cachedGrid) {
             var cachedGridCoords = mapToItem(getCurrentGrid.cachedGrid, mouseX, mouseY)
-            if (hitTest(getCurrentGrid.cachedGrid, cachedGridCoords)) {
+            if (!getCurrentGrid.cachedGrid.mouseDragChangesGrids && pressed || hitTest(getCurrentGrid.cachedGrid, cachedGridCoords)) {
                 //console.log("returning cached " + getCurrentGrid.cachedGrid)
                 return getCurrentGrid.cachedGrid
             }
@@ -121,7 +121,7 @@ MouseArea {
         }
 
         onTriggered: {
-            if (itemWaitingOn !== undefined && grid.model.get(gridMouseArea.dndDest) !== undefined && gridMouseArea.pressed)
+            if (grid && itemWaitingOn !== undefined && grid.model.get(gridMouseArea.dndDest) !== undefined && gridMouseArea.pressed)
             {
                 var item = itemWaitingOn
                 var isHitInnerIcon = gridMouseArea.gridMouseX > item.x && gridMouseArea.gridMouseX < item.x + constants.cellWidth
