@@ -61,22 +61,9 @@ private slots:
     void previewJobFailed(const KFileItem &item);
 
 private:
-    struct PreviewItem
-    {
-        PreviewItem() : count(1), job(0)
-        {}
-        ~PreviewItem()
-        {}
-
-        int count;
-        KIO::PreviewJob *job;
-    };
-
-    typedef QHash<QString, PreviewItem>::iterator PreviewItemIterator;
     friend PreviewGenerator *previewGenerator(const QString &type);
 
     explicit PreviewGenerator();
-    void previewComplete(PreviewItemIterator it);
     void notifyModelAboutPreview(const QString &url);
 
     QHash<QString, QPixmap> m_previews;
