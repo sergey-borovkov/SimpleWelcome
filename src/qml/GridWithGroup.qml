@@ -9,6 +9,7 @@ Column {
     property alias enabledSystemDnD: iconGridView.enabledSystemDnD
     property alias groupNameVisible: groupLabelWrapper.visible
     property alias stackable: iconGridView.stackable
+    property alias mouseDragChangesGrids: iconGridView.mouseDragChangesGrids
 
     property alias prevGridGroup: iconGridView.prevGridGroup
     property alias nextGridGroup: iconGridView.nextGridGroup

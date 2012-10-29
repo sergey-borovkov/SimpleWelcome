@@ -10,6 +10,7 @@ GridView {
     property bool draggable: false
     property bool enabledSystemDnD: false  // set true to enable system Drag&Drop
     property bool stackable: false // set true to enable icons stacking while Drag&Dropping
+    property bool mouseDragChangesGrids: false
     property bool isPopupGroup: false
 
     property int dndSrcId: gridMouseArea.dndSrcId

@@ -50,6 +50,8 @@ FocusScope {
                 anchors.topMargin: 32
 
                 draggable: true
+                mouseDragChangesGrids: true
+
                 dragOutTopMargin: 72 // FIXME: stupid hardcode for now
                 dragOutBottomMargin: 33 // FIXME: stupid hardcode for now
 
