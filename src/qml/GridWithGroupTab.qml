@@ -42,6 +42,7 @@ Item {
                 gridsListView.currentItem.activeGridGroup.state = "clipped"
             gridsListView.activeGridView.newItemData(item)
             gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
+            gridMouseArea.skipMoveAnimation = true
             gridMouseArea.startDragging(gridsListView.activeGridView.count - 1)
             popupFrame.stackedIconIndex = -1
         }
@@ -89,7 +90,7 @@ Item {
             }
 
             function gridIconPushPop(groupName) {
-                console.log("REINITING " + groupName)
+                //console.log("REINITING " + groupName)
 
                 var currentIndexWas = gridsListView.currentIndex
                 var prevPageModel = activeGridView.model
@@ -140,14 +141,14 @@ Item {
                     lastGridGroupName = undefined
 
                 if (gridsListView.currentItem && gridsListView.currentItem.activeGridGroup !== undefined) {
-                    lastCountEnd = gridsListView.currentItem.activeGridGroup.groupCountStart + gridsListView.currentItem.activeGridGroup.maxCount
+                    lastCountEnd = gridsListView.currentItem.activeGridGroup.indexStartAt + gridsListView.currentItem.activeGridGroup.maxCount
                     lastGridGroupName = gridsListView.currentItem.activeGridGroup.groupName
                 }
 
                 if (isOnNewTab)
                 {
                     if (lastGridGroupName !== undefined && lastGridGroupName === groupData.groupName)
-                        groupData["groupCountStart"] = lastCountEnd
+                        groupData["indexStartAt"] = lastCountEnd
 
                     gridsListModel.append( { defaultGroup: groupData } )
                     gridsListView.currentIndex = count - 1
