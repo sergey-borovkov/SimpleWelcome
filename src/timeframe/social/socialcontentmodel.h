@@ -3,6 +3,7 @@
 
 #include <QtCore/QHash>
 #include <QtCore/QSet>
+#include <QtCore/QDate>
 #include <QtGui//QSortFilterProxyModel>
 
 #include <listmodel.h>

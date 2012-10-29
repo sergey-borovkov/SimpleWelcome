@@ -36,7 +36,7 @@ Item {
         anchors.topMargin: -popupFrame.slideHeight
 
         function draggedOut(item) {
-            gridsListView.hideGroup()
+            gridsListView.hideGroup(false)
             //console.log(item.caption + " GOT")
             if (gridsListView.currentItem)
                 gridsListView.currentItem.activeGridGroup.state = "clipped"
@@ -637,7 +637,7 @@ Item {
                 //console.log("}")
             }
 
-            function hideGroup()
+            function hideGroup(isNullifyStackedIndex)
             {
                 popupFrame.state = "CLOSED"
                 stackCellOpenedId = -1
@@ -645,6 +645,9 @@ Item {
                 activeGridView.myActiveFocus = true
                 gridsListView.saveStacks()
                 gridsListView.saveIconPositions()
+
+                if (isNullifyStackedIndex !== false)
+                    popupFrame.stackedIconIndex = -1
             }
 
             function showGroup(index, item, iconCoords)
@@ -686,15 +689,11 @@ Item {
             id: wheelArea
             anchors.fill: parent
 
-            onScrollVert: _scroll(delta)
-
-            function _scroll(delta) {
-                // See Qt documentation of QGraphicsSceneWheelEvent
-                // Most mice report delta = 120
-                var pages_delta = Math.round(delta / 120)
-                if (pages_delta === 0)
-                    pages_delta = (delta > 0 ? 1 : -1)
-                gridsListView.currentIndex = ((gridsListView.currentIndex + gridsListView.count - pages_delta) % gridsListView.count)
+            onScrollVert: {
+                if (delta > 0)
+                    gridsListView.decrementCurrentIndex()
+                else
+                    gridsListView.incrementCurrentIndex()
             }
         }
 

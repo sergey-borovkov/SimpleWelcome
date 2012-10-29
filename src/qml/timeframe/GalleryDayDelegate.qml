@@ -19,6 +19,7 @@ Column {
                 galleryPreviewGenerator.cancel(url)
             }
 
+            cache: false
             Connections {
                 target: localDayModel.itemsModel(date)
                 onGotThumbnail: {

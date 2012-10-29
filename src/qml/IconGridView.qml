@@ -55,8 +55,6 @@ GridView {
     }
 
     function stackItemInItem(indexStackingTo, indexDragging, notSaveChanges) {
-        //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
-
         var itemDragging = model.get(indexDragging)
         var itemStackingTo = model.get(indexStackingTo)
 
@@ -76,6 +74,9 @@ GridView {
                 }
         }
         stackArray.push(root.cloneObject(itemDragging))
+
+        //console.log("----------------- STACKING [" + indexDragging + "] " + model.get(indexDragging).caption + " to [" + indexStackingTo + "] " + model.get(indexStackingTo).caption)
+
 
         if (stackArray.length === 2) // First time stacking
             model.setProperty(indexStackingTo, "caption", itemStackingTo.caption + " Group")
