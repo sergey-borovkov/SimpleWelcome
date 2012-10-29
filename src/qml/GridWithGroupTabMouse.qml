@@ -14,6 +14,8 @@ MouseArea {
     property real gridMouseX: grid ? mapToItem(grid, mouseX, mouseY).x : 0
     property real gridMouseY: grid ? mapToItem(grid, 0, mouseY).y : 0
 
+    property bool skipMoveAnimation: false
+
     function hitTest(bound, coords) {
         return coords.x >= 0 && coords.y >= 0 && coords.x <= bound.width && coords.y <= bound.height
     }
@@ -81,9 +83,9 @@ MouseArea {
             dndDest = index
             dndSrc = index
             dndSrcId = grid.model.get(dndSrc).id
-            console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
+            //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
             gridsListView.dndStateChanged(true)
-            console.log("grid: " + grid)
+            //console.log("grid: " + grid)
 
 //                    console.log("NOW----------------")
 //                    for (var i = 0; i < model.count; i++)
@@ -265,16 +267,21 @@ MouseArea {
 
     }
     onReleased: {
+        skipMoveAnimation = false
+
         var dndSrcIdSaved = dndSrcId
-        console.log("RELEASED")
+        //console.log("RELEASED")
 
         // Adding icon to stack
         if (draggedItemStackedAt !== undefined && grid.model.get(dndDest).stack === undefined) {
             //console.log("STACK UPPED")
 
             var container = grid.model.get(draggedItemStackedAt)
-            if (container.stack.length === 2) // First time stacking
-                gridsListView.itemMoved(container.caption, grid.groupCountStart + draggedItemStackedAt, grid.groupCountStart + draggedItemStackedAt)
+            if (container.stack.length === 2) { // First time stacking
+                console.log("draggedItemStackedAt: " + draggedItemStackedAt)
+                console.log("Adding move of " + container.caption + " from "  + (grid.indexStartAt + draggedItemStackedAt) + " to " + (grid.indexStartAt + draggedItemStackedAt))
+                gridsListView.itemMoved(container.caption, grid.indexStartAt + draggedItemStackedAt, grid.indexStartAt + draggedItemStackedAt)
+            }
 
             if (dndDest < draggedItemStackedAt) {
                 grid.model.move(dndDest, grid.count - 1, 1)
@@ -282,7 +289,7 @@ MouseArea {
                 dndDest = grid.count - 1
             }
 
-            gridsListView.itemMoved(grid.model.get(dndDest).caption, grid.groupCountStart + dndSrc, -1)
+            gridsListView.itemMoved(grid.model.get(dndDest).caption, grid.indexStartAt + dndSrc, -1)
 
 
             grid.model.remove(dndDest)
@@ -297,8 +304,8 @@ MouseArea {
                 gridsListView.dndStateChanged(false)
 
                 if (dndSrc !== dndDest) {
-                    //console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + grid.model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest + " | " + grid.groupCountStart)
-                    gridsListView.itemMoved(grid.model.get(dndDest).caption, grid.groupCountStart + dndSrc, grid.groupCountStart + dndDest)
+                    //console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + grid.model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest + " | " + grid.indexStartAt)
+                    gridsListView.itemMoved(grid.model.get(dndDest).caption, grid.indexStartAt + dndSrc, grid.indexStartAt + dndDest)
                 }
 
                 // Sync icons order in C++ model to QML model. Used in Recent Apps
