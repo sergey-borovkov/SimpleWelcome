@@ -22,7 +22,7 @@ Column {
     property alias dragOutBottomMargin: iconGridView.dragOutBottomMargin
     property alias myActiveFocus: iconGridView.myActiveFocus
 
-    property bool isPopupGroup: false
+    property alias isPopupGroup: iconGridView.isPopupGroup
     property int groupCellHeight: constants.cellHeight
 
     signal gridCurrentItemChanged(variant newCurrentItem)

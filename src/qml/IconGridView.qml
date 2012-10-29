@@ -2,7 +2,6 @@ import QtQuick 1.0
 
 GridView {
     id: grid
-    property alias groupName: groupRoot.groupName
     property variant dataSource
     property variant prevGridGroup
     property variant nextGridGroup
@@ -10,6 +9,7 @@ GridView {
     property bool draggable: false
     property bool enabledSystemDnD: false  // set true to enable system Drag&Drop
     property bool stackable: false // set true to enable icons stacking while Drag&Dropping
+    property bool isPopupGroup: false
 
     property int dndSrcId: gridMouseArea.dndSrcId
     property int dragOutTopMargin: -1

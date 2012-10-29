@@ -103,13 +103,18 @@ Item {
 
         states: [
             State {
+                name: "cellWasInDrag"
+                when: gridMouseArea.dndSrcId === id && gridMouseArea.grid !== grid
+            },
+
+            State {
                 name: "gridInDrag"
                 when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id && state !== "REMOVING"
             },
 
             State {
                 name: "cellInDrag"
-                when: gridMouseArea.dndSrcId === id
+                when: gridMouseArea.dndSrcId === id && gridMouseArea.grid === grid
 
                 ParentChange {
                     target: wrapper
