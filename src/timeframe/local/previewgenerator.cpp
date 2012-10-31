@@ -112,4 +112,5 @@ void PreviewGenerator::request(const QString &path)
 
 void PreviewGenerator::cancel(const QString &path)
 {
+    m_previews.remove(path);
 }
