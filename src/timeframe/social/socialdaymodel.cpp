@@ -159,6 +159,11 @@ QString SocialDayFilterModel::imageUrl(int row) const
     return data(index(row, 0), SocialItem::ImageUrl).toString();
 }
 
+QString SocialDayFilterModel::audio(int row) const
+{
+    return data(index(row, 0), SocialItem::Audio).toString();
+}
+
 QString SocialDayFilterModel::text(int row) const
 {
     return data(index(row, 0), SocialItem::Text).toString();

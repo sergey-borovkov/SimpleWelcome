@@ -46,6 +46,7 @@ signals:
 public slots:
     QString id(int row) const;
     QString imageUrl(int row) const;
+    QString audio(int row) const;
     QString text(int row) const;
     int likesCount(int row) const;
     int like(int row);
