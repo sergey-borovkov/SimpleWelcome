@@ -10,6 +10,29 @@ Item{
     property bool __notDetailed: true
     property int __height: 0
 
+    function popupDetailsWidget()
+    {
+        if (galleryRect.state === "") {
+            modal.parent = timeFrameTab;
+            modal.z = 300
+            __notDetailed = false
+            __height = galleryItem.childrenRect.height
+            galleryRect.state = "details"
+            socialProxy.getAllComments(id, pluginName)
+            socialProxy.getAllLikes(id, pluginName)
+        }
+    }
+
+    function msgViewHeight() {
+        var h = mainRect.height - bottomLine.height - topLine.height - 10
+        if (img.height)
+            h = h - img.height - 10
+        if (audioItem.height)
+            h = h - audioItem.height - 10;
+
+        return Math.min(msg.height, h)
+    }
+
     MouseArea {
         id: modal
         anchors.fill: parent
@@ -62,6 +85,7 @@ Item{
                 spacing: 10
 
                 Item {
+                    id: topLine
                     width: parent.width
                     height: Math.max( icon.height, dateArea.paintedHeight )
                     Image {
@@ -173,7 +197,6 @@ Item{
                                 closeIcon.width = 8
                                 closeIcon.height = 8
                             }
-
                         }
                     }
                 }
@@ -188,23 +211,6 @@ Item{
                     smooth: true
                     source: picture
                 }
-                Text {
-                    id: msg
-                    width: parent.width
-                    anchors.bottomMargin: 3
-                    wrapMode: Text.Wrap
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    text: message
-                    color: "white"
-                    //textFormat: Text.RichText
-
-                    onLinkActivated: {
-                        Qt.openUrlExternally(link)
-                    }
-
-                }
-
 
                 Text {
                     function getAudio()
@@ -216,14 +222,69 @@ Item{
                     }
 
                     id: audioItem
-                    width: parent.width
-                    anchors.bottomMargin: 3
+                    width: parent.width - 20
                     wrapMode: Text.Wrap
+                    anchors.horizontalCenter: parent.horizontalCenter
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     text: getAudio()
                     color: "lightblue"
-                    visible: audio !== ""
+                    visible: {
+                        var vis = (typeof audio !== "undefined")
+                        if (!vis)
+                            height = 0;
+                        return vis
+                    }
+                }
+
+                Item {
+                    width: parent.width
+                    height: msgView.height + 10
+
+                    Flickable {
+                        id: msgView
+                        width: parent.width
+                        height: msg.height
+                        contentHeight: msg.paintedHeight
+                        clip: true
+
+                        Text {
+                            id: msg
+                            width: msgView.width - 20
+                            anchors.bottomMargin: 5
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            wrapMode: Text.Wrap
+                            horizontalAlignment: truncated ? Text.AlignLeft : Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            text: message
+
+                            color: "white"
+                            clip: true
+                            textFormat: Text.StyledText
+                            elide: Text.ElideRight
+                            maximumLineCount: 5
+
+                            onLinkActivated: {
+                                Qt.openUrlExternally(link)
+                            }
+
+                            MouseArea {
+                                id: msgMouseArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                onClicked: {
+                                    popupDetailsWidget()
+                                }
+                            }
+                        }
+                    }
+                    ScrollBar {
+                        id: msgScrollBar
+                        flickable: msgView
+                        vertical: true
+                        hideScrollBarsWhenStopped: false
+                        visible: false
+                    }
                 }
 
             }
@@ -431,15 +492,7 @@ Item{
             z: -2
             onClicked: {
                 //console.log("details on")
-                if (galleryRect.state === "") {
-                    modal.parent = timeFrameTab;
-                    modal.z = 300
-                    __notDetailed = false
-                    __height = galleryItem.childrenRect.height
-                    galleryRect.state = "details"
-                    socialProxy.getAllComments(id, pluginName)
-                    socialProxy.getAllLikes(id, pluginName)
-                }
+                popupDetailsWidget()
             }
         }
     }
@@ -463,7 +516,7 @@ Item{
                 height: 300
                 x: timeFrameTab.width/2 - galleryItem.width/2
                 y: timeFrameTab.height/2 - galleryItem.height/2
-            }            
+            }
 
             PropertyChanges { target: galleryItem; z: 400}
 
@@ -495,6 +548,17 @@ Item{
             PropertyChanges { target: commentsShowArea; visible: true }
 
             PropertyChanges { target: modal; enabled: true }
+
+            PropertyChanges { target: msg; textFormat: Text.RichText }
+
+            PropertyChanges { target: msgMouseArea; enabled: false; z: -1 }
+
+            PropertyChanges { target: msgView; height: msgViewHeight() }
+
+            PropertyChanges { target: msgScrollBar; visible: (msgView.contentHeight > msgView.height) }
+
+            PropertyChanges { target: msg; horizontalAlignment: (msgView.contentHeight > msgView.height) ? Text.AlignLeft : Text.AlignHCenter }
+
 
         },
         State {

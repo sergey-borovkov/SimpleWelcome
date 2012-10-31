@@ -4,6 +4,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QUrl>
 #include <QtCore/QRegExp>
+#include <QtGui/QColor>
+#include <QtGui/QPalette>
 
 #include <qjson/parser.h>
 
@@ -55,17 +57,18 @@ void FeedItem::fillFromMap(const QVariantMap &map)
     m_id = map.value("id").toString();
     QString message = map.value("message").toString();
 
+    QColor colorLink = QPalette().color(QPalette::Link);
+
     // if user posts a link
     QRegExp reUrl("(((?:https?|ftp)://|www)\\S+)");
     bool hasLink = message.contains(reUrl);
     if (hasLink) {
         int pos = reUrl.indexIn(message);
 
-        QString after = "<a href=\"\\1\">\\1</a>";
+        QString after = "<a href=\"\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";
         if (pos > -1) {
             if (reUrl.cap(1).indexOf("www", Qt::CaseInsensitive) != (-1)) {
-                after = "<a href=\"http://\\1\">\\1</a>";
-            }
+                after = "<a href=\"http://\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";            }
         }
 
         m_data.insert(Text, message.replace(reUrl, after));
