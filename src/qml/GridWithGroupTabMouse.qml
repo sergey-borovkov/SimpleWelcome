@@ -7,10 +7,12 @@ MouseArea {
 
     property int dndSrcId: -1
     property int dndSrc: -1
+    property int dndAbsoluteSrc: -1
     property int dndDest: -1
     property int pressedOnIndex
     property variant draggedItemStackedAt
-    property variant grid: getCurrentGrid()
+    property variant cachedGrid
+    property variant grid
     property real gridMouseX: grid ? mapToItem(grid, mouseX, mouseY).x : 0
     property real gridMouseY: grid ? mapToItem(grid, 0, mouseY).y : 0
 
@@ -20,19 +22,22 @@ MouseArea {
         return coords.x >= 0 && coords.y >= 0 && coords.x <= bound.width && coords.y <= bound.height
     }
 
-    function getCurrentGrid() {
-        if (popupFrame.state === "OPEN")
-            return popupFrame.gridGroup.gridView
+    function updateCurrentGrid() {
+        if (popupFrame.state === "OPEN") {
+            grid = popupFrame.gridGroup.gridView
+            return
+        }
 
-        if (getCurrentGrid.cachedGrid) {
-            var cachedGridCoords = mapToItem(getCurrentGrid.cachedGrid, mouseX, mouseY)
-            if (!getCurrentGrid.cachedGrid.mouseDragChangesGrids && pressed || hitTest(getCurrentGrid.cachedGrid, cachedGridCoords)) {
-                //console.log("returning cached " + getCurrentGrid.cachedGrid)
-                return getCurrentGrid.cachedGrid
+        if (cachedGrid !== undefined && cachedGrid) {
+            var cachedGridCoords = mapToItem(cachedGrid, mouseX, mouseY)
+            if (!cachedGrid.mouseDragChangesGrids && pressed || hitTest(cachedGrid, cachedGridCoords)) {
+                //console.log("returning cached " + cachedGrid)
+                grid = cachedGrid
+                return
             }
         }
         //console.log("request grid at " + mouseX + ":" + mouseY)
-        if (gridsListView.currentItem) {
+        if (gridsListView.currentItem && !gridsListView.moving) {
             var childs = gridsListView.currentItem.children
 
             // Iterating by it's GridWithGroups
@@ -42,15 +47,17 @@ MouseArea {
                     var gridView = childs[child].gridView
                     var coords = mapToItem(gridView, mouseX, mouseY)
                     if (hitTest(gridView, coords)) {
-                        getCurrentGrid.cachedGrid = gridView
-                        return gridView
+                        console.log("7")
+                        cachedGrid = gridView
+                        console.log("8")
+                        grid = cachedGrid
+                        return
                     }
                 }
             }
         }
 
-        return getCurrentGrid.cachedGrid
-        //gridsListView.activeGridView
+        grid = cachedGrid
     }
 
     function getItemUnderCursor(isForceRecheck)
@@ -84,8 +91,9 @@ MouseArea {
         {
             dndDest = index
             dndSrc = index
-            dndSrcId = grid.model.get(dndSrc).id
-            //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
+            dndAbsoluteSrc = index + grid.indexStartAt
+            dndSrcId = grid.model.get(index).id
+            console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
             gridsListView.dndStateChanged(true)
             //console.log("grid: " + grid)
 
@@ -182,30 +190,94 @@ MouseArea {
         property int firstInterval: 300
         property int nextInterval: 800
 
+        property int cornerZone: 15
+
         onTriggered: {
             interval = nextInterval
 
-            if (isForward) {
-                if (grid.mouseDragChangesGrids && gridMouseArea.mouseX <= tabListView.width - 15)
+            if (grid.mouseDragChangesGrids) {
+                if (isForward && gridMouseArea.mouseX <= tabListView.width - cornerZone ||
+                        !isForward && gridMouseArea.mouseX >= cornerZone) {
                     stop()
-                else {
-                    tabListView.incrementCurrentIndex()
-                }
-            }
-            else {
-                if (grid.mouseDragChangesGrids && gridMouseArea.mouseX >= 15)
-                    stop()
-                else {
-                    tabListView.decrementCurrentIndex()
+                    return
                 }
 
+                if (isForward && tabListView.currentIndex < tabListView.count - 1 ||
+                        !isForward && tabListView.currentIndex > 0) {
+                    var itemMoved = root.cloneObject(grid.model.get(gridMouseArea.dndDest))
+
+                    if (isForward)
+                        tabListView.incrementCurrentIndex()
+                    else
+                        tabListView.decrementCurrentIndex()
+
+                    var nextContainer = tabListView.currentItem
+                    if (isForward)
+                        tabListView.decrementCurrentIndex()
+                    else
+                        tabListView.incrementCurrentIndex()
+
+                    var nextPageModel, nextPageGrid
+                    var childs = nextContainer.children
+
+                    // Iterating by it's GridWithGroups
+                    for (var child = 0; child < childs.length; child++)
+                        if ('gridView' in childs[child] && childs[child].groupName === "Apps")
+                        {
+                            nextPageGrid = childs[child].gridView
+                            nextPageModel = childs[child].gridView.model
+                            break
+                        }
+
+                    var itemFromNextPage
+                    if (isForward)
+                        itemFromNextPage = nextPageModel.get(0)
+                    else
+                        itemFromNextPage = nextPageModel.get(nextPageModel.count - 1)
+
+                    var dndDestWas = gridMouseArea.dndDest
+                    var gridWas = grid
+                    gridMouseArea.dndSrc = nextPageModel.count - 1
+                    gridMouseArea.dndDest = gridMouseArea.dndSrc
+                    gridMouseArea.dndSrcId = itemMoved.id
+
+                    // FIXME: Add logic to append new page when current one is overflown
+                    if (isForward)
+                        tabListView.incrementCurrentIndex()
+                    else
+                        tabListView.decrementCurrentIndex()
+
+                    //console.log(" x: " + gridMouseArea.gridMouseX + "; y: " + gridMouseArea.gridMouseY + " " + grid)
+                    gridMouseArea.cachedGrid = nextPageGrid
+                    //console.log("  x: " + gridMouseArea.gridMouseX + "; y: " + gridMouseArea.gridMouseY + " " + grid)
+                    //mousePosChanged()
+                    mousePosChanged()
+                    //console.log("   x: " + gridMouseArea.gridMouseX + "; y: " + gridMouseArea.gridMouseY + " " + grid)
+                    gridWas.model.remove(dndDestWas)
+
+                    if (isForward) {
+                        if (itemFromNextPage)
+                            gridWas.model.append(itemFromNextPage)
+                        nextPageModel.remove(0)
+                        nextPageModel.append(itemMoved)
+                    }
+                    else {
+                        if (itemFromNextPage)
+                            gridWas.model.insert(0, itemFromNextPage)
+                        nextPageModel.remove(nextPageModel.count - 1)
+                        nextPageModel.append(itemMoved)
+                    }
+                }
             }
         }
     }
 
-    onMousePositionChanged: {
+    function mousePosChanged() {
+        updateCurrentGrid()
         if (grid === undefined || !grid)
             return
+
+        //console.log("x: " + gridMouseX + "; y: " + gridMouseY + " " + grid)
 
         if (!grid.moving && dndSrcId === -1)
         {
@@ -249,7 +321,7 @@ MouseArea {
 
             if (grid.isPopupGroup && (gridMouseY < -grid.dragOutTopMargin || gridMouseY > grid.height + grid.dragOutBottomMargin))
                 tabWrapper.draggedOut(grid.model.get(dndDest))
-            else if (grid.mouseDragChangesGrids && mouseX > tabListView.width - 15) {
+            else if (grid.mouseDragChangesGrids && mouseX > tabListView.width - tabsSwitchingTimer.cornerZone) {
                 if (!tabsSwitchingTimer.running || !tabsSwitchingTimer.isForward)
                 {
                     tabsSwitchingTimer.interval = tabsSwitchingTimer.firstInterval
@@ -258,7 +330,7 @@ MouseArea {
                 }
                 //console.log(grid.mouseDragChangesGrids  + " " + mouseX + " > " + grid.width + " - 10")
             }
-            else if (grid.mouseDragChangesGrids && mouseX < 15) {
+            else if (grid.mouseDragChangesGrids && mouseX < tabsSwitchingTimer.cornerZone) {
                 if (!tabsSwitchingTimer.running || tabsSwitchingTimer.isForward)
                 {
                     tabsSwitchingTimer.interval = tabsSwitchingTimer.firstInterval
@@ -280,6 +352,10 @@ MouseArea {
             mouseHoverTimer.start()
         }
     }
+
+
+    onMousePositionChanged: mousePosChanged()
+
 
     onPressed: {
         pressedOnIndex = getItemUnderCursor(true).index
@@ -309,6 +385,7 @@ MouseArea {
     }
     onReleased: {
         skipMoveAnimation = false
+        tabsSwitchingTimer.stop()
 
         var dndSrcIdSaved = dndSrcId
         //console.log("RELEASED")
@@ -330,12 +407,12 @@ MouseArea {
                 dndDest = grid.count - 1
             }
 
-            gridsListView.itemMoved(grid.model.get(dndDest).caption, grid.indexStartAt + dndSrc, -1)
+            gridsListView.itemMoved(grid.model.get(dndDest).caption, dndAbsoluteSrc, -1)
 
 
             grid.model.remove(dndDest)
 
-            dndSrcId = -1; //- this is intentionally commented out 'cause it's done in delegate's remove animation
+            dndSrcId = -1
             gridsListView.dndStateChanged(false)
         }
         else {
@@ -344,9 +421,9 @@ MouseArea {
             if (dndSrcIdSaved != -1) {
                 gridsListView.dndStateChanged(false)
 
-                if (dndSrc !== dndDest) {
+                if (dndAbsoluteSrc !== dndDest + grid.indexStartAt) {
                     //console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + grid.model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest + " | " + grid.indexStartAt)
-                    gridsListView.itemMoved(grid.model.get(dndDest).caption, grid.indexStartAt + dndSrc, grid.indexStartAt + dndDest)
+                    gridsListView.itemMoved(grid.model.get(dndDest).caption, dndAbsoluteSrc, grid.indexStartAt + dndDest)
                 }
 
                 // Sync icons order in C++ model to QML model. Used in Recent Apps
