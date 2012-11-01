@@ -48,6 +48,8 @@ MouseArea {
                 }
             }
         }
+
+        return getCurrentGrid.cachedGrid
         //gridsListView.activeGridView
     }
 
@@ -171,6 +173,36 @@ MouseArea {
     }
 
 
+
+    Timer {
+        id: tabsSwitchingTimer
+        repeat: true
+
+        property bool isForward
+        property int firstInterval: 300
+        property int nextInterval: 800
+
+        onTriggered: {
+            interval = nextInterval
+
+            if (isForward) {
+                if (grid.mouseDragChangesGrids && gridMouseArea.mouseX <= tabListView.width - 15)
+                    stop()
+                else {
+                    tabListView.incrementCurrentIndex()
+                }
+            }
+            else {
+                if (grid.mouseDragChangesGrids && gridMouseArea.mouseX >= 15)
+                    stop()
+                else {
+                    tabListView.decrementCurrentIndex()
+                }
+
+            }
+        }
+    }
+
     onMousePositionChanged: {
         if (grid === undefined || !grid)
             return
@@ -190,7 +222,7 @@ MouseArea {
         else if (dndSrcId != -1)
         {
             // activate system DnD if icons isn't group
-            if (grid.enabledSystemDnD && (gridMouseX < 0 || gridMouseX > width || gridMouseY < 0 || gridMouseY > height) &&
+            if (grid.enabledSystemDnD && gridMouseY > height &&
                     grid.model.get(dndDest).stack === undefined) {
 
                 var url = grid.dataSource.itemUrlDnd(dndSrcId, grid.model.get(dndSrc).group)
@@ -215,16 +247,25 @@ MouseArea {
                 }
             }
 
-            if (gridMouseY < -grid.dragOutTopMargin || gridMouseY > grid.height + grid.dragOutBottomMargin)
-            {
-                if (grid.isPopupGroup)
+            if (grid.isPopupGroup && (gridMouseY < -grid.dragOutTopMargin || gridMouseY > grid.height + grid.dragOutBottomMargin))
+                tabWrapper.draggedOut(grid.model.get(dndDest))
+            else if (grid.mouseDragChangesGrids && mouseX > tabListView.width - 15) {
+                if (!tabsSwitchingTimer.running || !tabsSwitchingTimer.isForward)
                 {
-                    //console.log("OUT")
-                    tabWrapper.draggedOut(grid.model.get(dndDest))
-                    // onReleased():
-                    // dndSrcId = -1
-                    // gridsListView.dndStateChanged(false)
+                    tabsSwitchingTimer.interval = tabsSwitchingTimer.firstInterval
+                    tabsSwitchingTimer.isForward = true
+                    tabsSwitchingTimer.start()
                 }
+                //console.log(grid.mouseDragChangesGrids  + " " + mouseX + " > " + grid.width + " - 10")
+            }
+            else if (grid.mouseDragChangesGrids && mouseX < 15) {
+                if (!tabsSwitchingTimer.running || tabsSwitchingTimer.isForward)
+                {
+                    tabsSwitchingTimer.interval = tabsSwitchingTimer.firstInterval
+                    tabsSwitchingTimer.isForward = false
+                    tabsSwitchingTimer.start()
+                }
+                //console.log(grid.mouseDragChangesGrids  + " " + mouseX)
             }
 
             var index = grid.getCellIndex(gridMouseX, gridMouseY)
