@@ -20,6 +20,7 @@ public:
 
 private:
     void fillFromMap(QVariantMap map);
+    QString convertSecsToStr(int secs);
 
     QString m_id;
     QMap<int, QVariant> m_data;

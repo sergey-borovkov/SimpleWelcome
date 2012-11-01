@@ -114,17 +114,34 @@ void FeedItem::fillFromMap(QVariantMap map)
             if (map.contains("type")) {
                 QString typeAttachment = map.value("type").toString();
 
+                // add image
                 if (typeAttachment == "photo") {
                     QVariantMap photoMap = map[ "photo" ].toMap();
                     if (photoMap.contains("src"))
                         m_data.insert(ImageUrl, QUrl::fromPercentEncoding(photoMap.value("src").toByteArray()));
                 }
 
+                // add graffiti as image
+                if (m_data[ImageUrl].toString().isEmpty() && typeAttachment == "graffiti" ) {
+                    QVariantMap graffitiMap = map[ "graffiti" ].toMap();
+                    if (graffitiMap.contains("src"))
+                        m_data.insert(ImageUrl, QUrl::fromPercentEncoding(graffitiMap.value("src").toByteArray()));
+                }
+
+                // add audio info
                 if (typeAttachment == "audio") {
                     QVariantMap audioMap = map[ "audio" ].toMap();
 
-                    if (audioMap.contains("title"))
-                        m_data.insert(Audio, audioMap.value("performer").toString() + " - " + audioMap.value("title").toString());
+                    if (audioMap.contains("title")) {
+                        QString audioStr = audioMap.value("performer").toString() + " - " +
+                                audioMap.value("title").toString();
+
+                        // add duration info (if possible)
+                        if (audioMap.contains("duration")) {
+                            audioStr += " (" + convertSecsToStr(audioMap.value("duration").toInt()) + ")";
+                        }
+                        m_data.insert(Audio, audioStr);
+                    }
                 }
             }
         }
@@ -152,6 +169,26 @@ void FeedItem::fillFromMap(QVariantMap map)
     var.setValue(m_commentsModel);
     m_data.insert(Comments, var);
     m_data.insert(PluginName, pluginName());
+}
+
+QString FeedItem::convertSecsToStr(int secs)
+{
+    QTime tm;
+    tm = tm.addSecs(secs);
+    QString str = "h:mm:ss";
+
+    if (tm.hour() == 0) {
+        str = "mm:ss";
+        if (tm.minute() == 0) {
+            str = "ss";
+            if (tm.second() < 10)
+                str = "s";
+        }
+        else if (tm.minute() < 10)
+            str = "m:ss";
+    }
+
+    return tm.toString(str);
 }
 
 void fillCommentFromMap(CommentItem *item, const QVariantMap &map)
