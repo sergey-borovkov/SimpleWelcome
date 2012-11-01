@@ -500,7 +500,6 @@ Item {
                 anchors.bottom: commentsEdit.top
                 anchors { topMargin: 15; leftMargin: 3; rightMargin: 3; bottomMargin: 5}
                 visible: false
-                model: repeater.model.comments(index)
             }
 
             Loader {
@@ -508,8 +507,8 @@ Item {
                 height: 0
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 3
-                anchors.rightMargin: 3
+                anchors.leftMargin: 1 //3
+                anchors.rightMargin: 1 //3
                 anchors.right: parent.right
                 visible: false
             }
