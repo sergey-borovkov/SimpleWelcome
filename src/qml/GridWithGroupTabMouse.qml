@@ -13,10 +13,24 @@ MouseArea {
     property variant draggedItemStackedAt
     property variant cachedGrid
     property variant grid
-    property real gridMouseX: grid ? mapToItem(grid, mouseX, mouseY).x : 0
-    property real gridMouseY: grid ? mapToItem(grid, 0, mouseY).y : 0
-
     property bool skipMoveAnimation: false
+
+    property real gridMouseY: grid ? mapToItem(grid, 0, mouseY).y : 0
+    property real gridMouseX
+
+    function getGridMouseX() {
+        return grid ? mapToItem(grid, mouseX, 0).x : 0
+    }
+
+    Binding
+    {
+        id: gridMouseXBinding
+        property bool enabled: true
+        target: gridMouseArea
+        property: "gridMouseX"
+        value: getGridMouseX()
+        when: enabled
+    }
 
     function hitTest(bound, coords) {
         return coords.x >= 0 && coords.y >= 0 && coords.x <= bound.width && coords.y <= bound.height
@@ -47,9 +61,7 @@ MouseArea {
                     var gridView = childs[child].gridView
                     var coords = mapToItem(gridView, mouseX, mouseY)
                     if (hitTest(gridView, coords)) {
-                        console.log("7")
                         cachedGrid = gridView
-                        console.log("8")
                         grid = cachedGrid
                         return
                     }
@@ -189,6 +201,7 @@ MouseArea {
         property bool isForward
         property int firstInterval: 300
         property int nextInterval: 800
+        property int gridMouseXWas
 
         property int cornerZone: 15
 
@@ -247,12 +260,15 @@ MouseArea {
                     else
                         tabListView.decrementCurrentIndex()
 
-                    //console.log(" x: " + gridMouseArea.gridMouseX + "; y: " + gridMouseArea.gridMouseY + " " + grid)
                     gridMouseArea.cachedGrid = nextPageGrid
-                    //console.log("  x: " + gridMouseArea.gridMouseX + "; y: " + gridMouseArea.gridMouseY + " " + grid)
-                    //mousePosChanged()
+
+                    // A hack to use correct mouse coordinates when tabListView is scrolled
+                    gridMouseXBinding.enabled = false
+                    gridMouseX = gridMouseXWas
+
                     mousePosChanged()
-                    //console.log("   x: " + gridMouseArea.gridMouseX + "; y: " + gridMouseArea.gridMouseY + " " + grid)
+                    gridMouseXBinding.enabled = true
+
                     gridWas.model.remove(dndDestWas)
 
                     if (isForward) {
@@ -319,25 +335,28 @@ MouseArea {
                 }
             }
 
+            // In case group is popup - check necessity to drag out of popup
             if (grid.isPopupGroup && (gridMouseY < -grid.dragOutTopMargin || gridMouseY > grid.height + grid.dragOutBottomMargin))
                 tabWrapper.draggedOut(grid.model.get(dndDest))
+            // If hit right corner of screen - scrolling to next screen
             else if (grid.mouseDragChangesGrids && mouseX > tabListView.width - tabsSwitchingTimer.cornerZone) {
                 if (!tabsSwitchingTimer.running || !tabsSwitchingTimer.isForward)
                 {
                     tabsSwitchingTimer.interval = tabsSwitchingTimer.firstInterval
                     tabsSwitchingTimer.isForward = true
+                    tabsSwitchingTimer.gridMouseXWas = gridMouseX
                     tabsSwitchingTimer.start()
                 }
-                //console.log(grid.mouseDragChangesGrids  + " " + mouseX + " > " + grid.width + " - 10")
             }
+            // If hit left corner of screen - scrolling to previous screen
             else if (grid.mouseDragChangesGrids && mouseX < tabsSwitchingTimer.cornerZone) {
                 if (!tabsSwitchingTimer.running || tabsSwitchingTimer.isForward)
                 {
                     tabsSwitchingTimer.interval = tabsSwitchingTimer.firstInterval
                     tabsSwitchingTimer.isForward = false
+                    tabsSwitchingTimer.gridMouseXWas = gridMouseX
                     tabsSwitchingTimer.start()
                 }
-                //console.log(grid.mouseDragChangesGrids  + " " + mouseX)
             }
 
             var index = grid.getCellIndex(gridMouseX, gridMouseY)
