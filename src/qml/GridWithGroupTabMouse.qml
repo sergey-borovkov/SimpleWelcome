@@ -145,7 +145,7 @@ MouseArea {
         }
 
         onTriggered: {
-            if (grid && itemWaitingOn !== undefined && grid.model.get(gridMouseArea.dndDest) !== undefined && gridMouseArea.pressed)
+            if (grid && itemWaitingOn && grid.model.get(gridMouseArea.dndDest) !== undefined && gridMouseArea.pressed)
             {
                 var item = itemWaitingOn
                 var isHitInnerIcon = gridMouseArea.gridMouseX > item.x && gridMouseArea.gridMouseX < item.x + constants.cellWidth
@@ -180,7 +180,7 @@ MouseArea {
                         }
                     }
                 }
-                else if (!isAimingOnStacking || !grid.stackable || isDragginStack) // Hit outer part of item. Using for repositioning
+                else // if (!grid.stackable || isDragginStack) // Hit outer part of item. Using for repositioning
                 {
                     //console.log("MOVING")
 
