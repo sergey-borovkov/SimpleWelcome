@@ -122,6 +122,7 @@ MouseArea {
         if (isForward && tabListView.currentIndex < tabListView.count - 1 ||
                 !isForward && tabListView.currentIndex > 0) {
             var itemMoved = root.cloneObject(grid.model.get(dndDest))
+            gridMouseArea.skipMoveAnimation = true
 
             if (isForward)
                 tabListView.incrementCurrentIndex()
@@ -195,6 +196,7 @@ MouseArea {
                 nextPageModel.remove(nextPageModel.count - 1)
                 nextPageModel.append(itemMoved)
             }
+            gridMouseArea.skipMoveAnimation = false
         }
     }
 
