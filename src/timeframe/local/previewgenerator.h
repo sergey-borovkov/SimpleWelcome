@@ -47,7 +47,7 @@ public:
      *        previews and notifies model when previews are generated
      * @param dayModel
      */
-    Q_INVOKABLE void request(const QString &path);
+    Q_INVOKABLE void request(const QString &path, const QSize &size);
 
     /**
      * @brief modelHidden is in QML when cloud component gets destroyed. It removes
