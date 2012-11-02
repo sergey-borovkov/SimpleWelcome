@@ -118,82 +118,6 @@ MouseArea {
         }
     }
 
-
-    Timer {
-        id: mouseHoverTimer
-        interval: grid === undefined || grid.stackable ? 300 : 0
-        property variant itemWaitingOn: undefined
-        property variant indexWaitingOn: undefined
-        property bool isAimingOnStacking
-        property real xWaiting
-        property real yWaiting
-
-        function calculateExpectations(gridMouseX, gridMouseY) {
-            if (itemWaitingOn !== undefined)
-            {
-                var item = itemWaitingOn
-
-                if (gridMouseX > item.x && gridMouseX < item.x + constants.cellWidth) // We entered corner of other item, starting timer
-                    isAimingOnStacking = true
-                else
-                    isAimingOnStacking = false
-
-                xWaiting = gridMouseX
-                yWaiting = gridMouseY
-            }
-
-        }
-
-        onTriggered: {
-            if (grid && itemWaitingOn && grid.model.get(gridMouseArea.dndDest) !== undefined && gridMouseArea.pressed)
-            {
-                var item = itemWaitingOn
-                var isHitInnerIcon = gridMouseArea.gridMouseX > item.x && gridMouseArea.gridMouseX < item.x + constants.cellWidth
-                var isDragginStack = grid.model.get(gridMouseArea.dndDest).stack !== undefined
-
-                //var pointsDistance = Math.sqrt(Math.pow(gridMouseArea.gridMouseX - xWaiting, 2) + Math.pow(gridMouseArea.gridMouseY - yWaiting, 2))
-                //console.log("distance: " + pointsDistance)
-
-                if (grid.stackable && gridMouseArea.draggedItemStackedAt !== undefined && (gridMouseArea.draggedItemStackedAt !== indexWaitingOn || !isHitInnerIcon) && !isDragginStack)
-                { // Unstacking if item we are above is not the one we stacked to
-                    //console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
-                    grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
-                    gridMouseArea.draggedItemStackedAt = undefined
-                }
-                else if (grid.stackable && isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest && !isDragginStack) //&& pointsDistance <= 3)
-                { // Hit central part of item. Using for stacking
-                    if (isAimingOnStacking)
-                    {
-                        //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
-                        var res = grid.stackItemInItem(indexWaitingOn, gridMouseArea.dndDest)
-                        if (res)
-                        {
-                            gridMouseArea.draggedItemStackedAt = indexWaitingOn
-
-                            //console.log("set " + indexWaitingOn + " with " + grid.model.get(indexWaitingOn).stack.length + " at real pos " + grid.model.get(indexWaitingOn).id)
-                            if (gridMouseArea.dndDest > indexWaitingOn)
-                            {
-                                grid.model.move(gridMouseArea.dndDest, grid.count - 1, 1)
-                                grid.currentIndex = gridMouseArea.draggedItemStackedAt
-                                gridMouseArea.dndDest = grid.count - 1
-                            }
-                        }
-                    }
-                }
-                else // if (!grid.stackable || isDragginStack) // Hit outer part of item. Using for repositioning
-                {
-                    //console.log("MOVING")
-
-                    grid.model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
-                    gridMouseArea.dndDest = indexWaitingOn
-                    grid.currentIndex = gridMouseArea.dndDest
-                }
-
-                itemWaitingOn = undefined
-            }
-        }
-    }
-
     function dragIconToPrevNextTab(isForward) {
         if (isForward && tabListView.currentIndex < tabListView.count - 1 ||
                 !isForward && tabListView.currentIndex > 0) {
@@ -296,6 +220,81 @@ MouseArea {
                 }
 
                 dragIconToPrevNextTab(isForward)
+            }
+        }
+    }
+
+    Timer {
+        id: mouseHoverTimer
+        interval: grid === undefined || grid.stackable ? 300 : 0
+        property variant itemWaitingOn: undefined
+        property variant indexWaitingOn: undefined
+        property bool isAimingOnStacking
+        property real xWaiting
+        property real yWaiting
+
+        function calculateExpectations(gridMouseX, gridMouseY) {
+            if (itemWaitingOn !== undefined)
+            {
+                var item = itemWaitingOn
+
+                if (gridMouseX > item.x && gridMouseX < item.x + constants.cellWidth) // We entered corner of other item, starting timer
+                    isAimingOnStacking = true
+                else
+                    isAimingOnStacking = false
+
+                xWaiting = gridMouseX
+                yWaiting = gridMouseY
+            }
+
+        }
+
+        onTriggered: {
+            if (grid && itemWaitingOn && grid.model.get(gridMouseArea.dndDest) !== undefined && gridMouseArea.pressed)
+            {
+                var item = itemWaitingOn
+                var isHitInnerIcon = gridMouseArea.gridMouseX > item.x && gridMouseArea.gridMouseX < item.x + constants.cellWidth
+                var isDragginStack = grid.model.get(gridMouseArea.dndDest).stack !== undefined
+
+                //var pointsDistance = Math.sqrt(Math.pow(gridMouseArea.gridMouseX - xWaiting, 2) + Math.pow(gridMouseArea.gridMouseY - yWaiting, 2))
+                //console.log("distance: " + pointsDistance)
+
+                if (grid.stackable && gridMouseArea.draggedItemStackedAt !== undefined && (gridMouseArea.draggedItemStackedAt !== indexWaitingOn || !isHitInnerIcon) && !isDragginStack)
+                { // Unstacking if item we are above is not the one we stacked to
+                    //console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
+                    grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
+                    gridMouseArea.draggedItemStackedAt = undefined
+                }
+                else if (grid.stackable && isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest && !isDragginStack) //&& pointsDistance <= 3)
+                { // Hit central part of item. Using for stacking
+                    if (isAimingOnStacking)
+                    {
+                        //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
+                        var res = grid.stackItemInItem(indexWaitingOn, gridMouseArea.dndDest)
+                        if (res)
+                        {
+                            gridMouseArea.draggedItemStackedAt = indexWaitingOn
+
+                            //console.log("set " + indexWaitingOn + " with " + grid.model.get(indexWaitingOn).stack.length + " at real pos " + grid.model.get(indexWaitingOn).id)
+                            if (gridMouseArea.dndDest > indexWaitingOn)
+                            {
+                                grid.model.move(gridMouseArea.dndDest, grid.count - 1, 1)
+                                grid.currentIndex = gridMouseArea.draggedItemStackedAt
+                                gridMouseArea.dndDest = grid.count - 1
+                            }
+                        }
+                    }
+                }
+                else // if (!grid.stackable || isDragginStack) // Hit outer part of item. Using for repositioning
+                {
+                    //console.log("MOVING")
+
+                    grid.model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
+                    gridMouseArea.dndDest = indexWaitingOn
+                    grid.currentIndex = gridMouseArea.dndDest
+                }
+
+                itemWaitingOn = undefined
             }
         }
     }
