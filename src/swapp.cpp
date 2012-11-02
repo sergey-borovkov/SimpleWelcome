@@ -232,6 +232,7 @@ SWApp::SWApp()
     initTimeframeLocalMode();
     initTimeframeSocialMode();
 
+    connect(this, SIGNAL(focusChanged(QWidget*,QWidget*)), m_viewer, SLOT(focusChanged(QWidget*,QWidget*)));
     m_viewer->setSource(QUrl::fromLocalFile(pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml")));   // Qt converts path to native automatically
 
     setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false

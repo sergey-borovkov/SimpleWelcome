@@ -9,11 +9,12 @@ Column {
     property alias enabledSystemDnD: iconGridView.enabledSystemDnD
     property alias groupNameVisible: groupLabelWrapper.visible
     property alias stackable: iconGridView.stackable
+    property alias mouseDragChangesGrids: iconGridView.mouseDragChangesGrids
 
     property alias prevGridGroup: iconGridView.prevGridGroup
     property alias nextGridGroup: iconGridView.nextGridGroup
     property alias maxCount: iconGridView.maxCount
-    property int groupCountStart: 0
+    property alias indexStartAt: iconGridView.indexStartAt
 
     property alias count: iconGridView.count
     property alias gridView: iconGridView
@@ -22,7 +23,7 @@ Column {
     property alias dragOutBottomMargin: iconGridView.dragOutBottomMargin
     property alias myActiveFocus: iconGridView.myActiveFocus
 
-    property bool isPopupGroup: false
+    property alias isPopupGroup: iconGridView.isPopupGroup
     property int groupCellHeight: constants.cellHeight
 
     signal gridCurrentItemChanged(variant newCurrentItem)

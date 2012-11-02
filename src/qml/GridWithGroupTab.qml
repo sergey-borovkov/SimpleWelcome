@@ -21,7 +21,7 @@ Item {
     }
 
     function processKeyboard(key) {
-        if (popupFrame.state == "OPEN") {
+        if (popupFrame.state === "OPEN") {
             popupFrame.gridGroup.gridView.processKeyboard(key)
         }
         else if (gridsListView.currentItem)
@@ -35,10 +35,6 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: -popupFrame.slideHeight
 
-        Component.onCompleted: {
-            popupFrame.gridGroup.gridView.draggedOut.connect(draggedOut)
-        }
-
         function draggedOut(item) {
             gridsListView.hideGroup(false)
             //console.log(item.caption + " GOT")
@@ -46,7 +42,9 @@ Item {
                 gridsListView.currentItem.activeGridGroup.state = "clipped"
             gridsListView.activeGridView.newItemData(item)
             gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
-            gridsListView.activeGridView.startDragging(gridsListView.activeGridView.count - 1)
+            gridMouseArea.skipMoveAnimation = true
+            gridMouseArea.updateCurrentGrid()
+            gridMouseArea.startDragging(gridsListView.activeGridView.count - 1)
             popupFrame.stackedIconIndex = -1
         }
 
@@ -144,14 +142,14 @@ Item {
                     lastGridGroupName = undefined
 
                 if (gridsListView.currentItem && gridsListView.currentItem.activeGridGroup !== undefined) {
-                    lastCountEnd = gridsListView.currentItem.activeGridGroup.groupCountStart + gridsListView.currentItem.activeGridGroup.maxCount
+                    lastCountEnd = gridsListView.currentItem.activeGridGroup.indexStartAt + gridsListView.currentItem.activeGridGroup.maxCount
                     lastGridGroupName = gridsListView.currentItem.activeGridGroup.groupName
                 }
 
                 if (isOnNewTab)
                 {
                     if (lastGridGroupName !== undefined && lastGridGroupName === groupData.groupName)
-                        groupData["groupCountStart"] = lastCountEnd
+                        groupData["indexStartAt"] = lastCountEnd
 
                     gridsListModel.append( { defaultGroup: groupData } )
                     gridsListView.currentIndex = count - 1
@@ -164,10 +162,7 @@ Item {
                 var newGridGroup = gridsListView.currentItem.activeGridGroup
                 if (gridsListView.currentItem)
                 {
-                    newGridGroup.gridView.dndStateChanged.connect(dndStateChanged)
                     newGridGroup.gridView.itemStackingChanged.connect(saveStacks)
-                    newGridGroup.gridView.itemMoved.connect(itemMoved)
-                    newGridGroup.gridView.requestIconPushPop.connect(gridIconPushPop)
 
                     if (newGridGroup.gridView.stackable)
                         newGridGroup.showPopupGroup.connect(showGroup)
@@ -348,7 +343,7 @@ Item {
                 mainWindow.saveStacks(setting)
             }
 
-            function itemMoved(group, item, srcPos, destPos) {
+            function itemMoved(item, srcPos, destPos) {
                 var map = iconPositions
                 if (map === undefined)
                     map = new Object
@@ -697,10 +692,17 @@ Item {
             anchors.fill: parent
 
             onScrollVert: {
-                if (delta > 0)
-                    gridsListView.decrementCurrentIndex()
-                else
-                    gridsListView.incrementCurrentIndex()
+                if (popupFrame.state === "CLOSED") {
+                    if (gridMouseArea.pressed && gridMouseArea.dndSrcId != -1) {
+                        gridMouseArea.dragIconToPrevNextTab(delta <= 0)
+                    }
+                    else {
+                        if (delta > 0)
+                            gridsListView.decrementCurrentIndex()
+                        else
+                            gridsListView.incrementCurrentIndex()
+                    }
+                }
             }
         }
 
@@ -750,14 +752,6 @@ Item {
             color: Qt.rgba(0, 0, 0, 0.6)
             opacity: popupFrame.state == "OPEN"
 
-            MouseArea {
-                anchors.fill: parent
-
-                hoverEnabled: true
-
-                onClicked: gridsListView.hideGroup()
-            }
-
             Behavior on opacity {
                 NumberAnimation { duration: 200; /*easing.type: Easing.OutQuint*/ }
             }
@@ -803,5 +797,11 @@ Item {
                 NumberAnimation { properties: "height, slideHeight"; easing.type: Easing.InOutQuad }
             }
         }
+
+
+        GridWithGroupTabMouse {
+            id: gridMouseArea
+        }
+
     }
 }
