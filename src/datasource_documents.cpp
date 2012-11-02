@@ -117,7 +117,7 @@ void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap
     p.setBrush(brush);
     p.setPen(pen);
     p.translate((iconSize - pixmap.width())/2, (iconSize - pixmap.height())/2);
-    p.drawRoundedRect(0, 0, pixmap.width(), pixmap.height(), 7, 7, Qt::AbsoluteSize);
+    p.drawRoundedRect(0, 0, pixmap.width() - 1, pixmap.height() - 1, 7, 7, Qt::AbsoluteSize);
 
     m_pixmaps[item.url().url()] = pix;
     for (int i = 0; i < docsList.size(); i++) {
