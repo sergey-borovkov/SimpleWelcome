@@ -40,6 +40,12 @@ void QmlApplicationViewer::updateWorkArea()
     emit windowSizeChanged();
 }
 
+void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
+{
+    if (!now)
+        close();
+}
+
 QRect QmlApplicationViewer::getMargins()
 {
     QRect result(QApplication::desktop()->availableGeometry().left(), QApplication::desktop()->availableGeometry().top(),
@@ -68,11 +74,9 @@ void QmlApplicationViewer::restore()
 
 void QmlApplicationViewer::closeEvent(QCloseEvent *event)
 {
-    if (1) {
-        event->ignore();
-        hide();
-        emit windowHidden();
-    }
+    event->ignore();
+    hide();
+    emit windowHidden();
 }
 
 void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, int image_size)
