@@ -16,12 +16,12 @@ DataSource_Documents::DataSource_Documents(QObject* parent, QMLConstants *inCons
     updateContent();
 }
 
-int DataSource_Documents::getItemCount()
+int DataSource_Documents::getItemCount() const
 {
     return docsList.count();
 }
 
-QString DataSource_Documents::itemUrlDnd(int id)
+QString DataSource_Documents::itemUrlDnd(int id) const
 {
     if (id >= 0 && id < docsList.count()) {
         KDesktopFile file(docsList[id]["desktopEntry"].toString());
@@ -30,7 +30,7 @@ QString DataSource_Documents::itemUrlDnd(int id)
     return QString();
 }
 
-QPixmap DataSource_Documents::getPreview(QString destination)
+QPixmap DataSource_Documents::getPreview(QString destination) const
 {
     destination = KUrl(destination).url();
     if (m_pixmaps.contains(destination))
@@ -43,7 +43,7 @@ QPixmap DataSource_Documents::getPreview(QString destination)
     return QPixmap();
 }
 
-QVariantMap DataSource_Documents::getContent(int index)
+QVariantMap DataSource_Documents::getContent(int index) const
 {
     return docsList[index];
 }
