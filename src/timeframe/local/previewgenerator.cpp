@@ -96,13 +96,13 @@ QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
     return QPixmap();
 }
 
-void PreviewGenerator::request(const QString &path)
+void PreviewGenerator::request(const QString &path, const QSize &size)
 {
     KFileItemList fileList;
     KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
     fileList.append(fileItem);
 
-    KIO::PreviewJob *job = KIO::filePreview(fileList, QSize(512, 512), &m_plugins);
+    KIO::PreviewJob *job = KIO::filePreview(fileList, size, &m_plugins);
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
 
