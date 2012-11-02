@@ -84,7 +84,7 @@ QImage PreviewProvider::getRoundedImage(QImage image, int radius)
 
     painter.setBrush(brush);
     painter.setPen(pen);
-    painter.drawRoundedRect(0, 0, image.width(), image.height(), radius, radius , Qt::RelativeSize);
+    painter.drawRoundedRect(0, 0, image.width() - 1, image.height() - 1, radius, radius, Qt::AbsoluteSize);
 
     return out;
 }
