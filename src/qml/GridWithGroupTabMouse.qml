@@ -222,7 +222,7 @@ MouseArea {
         onTriggered: {
             interval = nextInterval
 
-            if (grid.mouseDragChangesGrids) {
+            if (grid.mouseDragChangesGrids && !grid.isPopupGroup) {
                 if (isForward && gridMouseArea.mouseX <= tabListView.width - cornerZone ||
                         !isForward && gridMouseArea.mouseX >= cornerZone) {
                     stop()
