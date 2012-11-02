@@ -128,6 +128,10 @@ MouseArea {
 
             gridMouseArea.skipMoveAnimation = true
 
+            if (grid.maxCount !== -1 && dndSrcId !== -1 && grid.count !== grid.maxCount) {
+                gridsListView.gridIconPushPop("Apps")
+            }
+
             if (isForward)
                 tabListView.incrementCurrentIndex()
             else
