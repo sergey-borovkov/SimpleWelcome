@@ -43,6 +43,7 @@ Item {
             gridsListView.activeGridView.newItemData(item)
             gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
             gridMouseArea.skipMoveAnimation = true
+            gridMouseArea.updateCurrentGrid()
             gridMouseArea.startDragging(gridsListView.activeGridView.count - 1)
             popupFrame.stackedIconIndex = -1
         }
