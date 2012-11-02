@@ -30,7 +30,7 @@ QString DataSource_Documents::itemUrlDnd(int id)
     return QString();
 }
 
-QIcon DataSource_Documents::getIcon(QString destination)
+QPixmap DataSource_Documents::getPreview(QString destination)
 {
     destination = KUrl(destination).url();
     if (m_pixmaps.contains(destination))
@@ -40,7 +40,7 @@ QIcon DataSource_Documents::getIcon(QString destination)
         qDebug() << "IMAGE NOT FOUND! A BUG";
         qDebug() << m_pixmaps.keys();
     }
-    return QIcon();
+    return QPixmap();
 }
 
 QVariantMap DataSource_Documents::getContent(int index)
