@@ -12,7 +12,7 @@
 #include <KWindowSystem>
 
 QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
-    QDeclarativeView(parent)
+    QDeclarativeView(parent), currentTabIndex(0)
 {
     connect(engine(), SIGNAL(quit()), SLOT(close()));
     connect(QApplication::desktop(), SIGNAL(workAreaResized(int)), SLOT(updateWorkArea()));
@@ -42,7 +42,7 @@ void QmlApplicationViewer::updateWorkArea()
 
 void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
 {
-    if (!now)
+    if (!now && currentTabIndex != 3) // When not on TimeFrame tab
         close();
 }
 
@@ -194,4 +194,9 @@ QVariantMap QmlApplicationViewer::loadIconPositions()
         out[it.key()] = it.value().toInt();
 
     return out;
+}
+
+void QmlApplicationViewer::currentTabChanged(int newCurrentIndex)
+{
+    currentTabIndex = newCurrentIndex;
 }
