@@ -16,7 +16,7 @@ Item {
 
     Item {
         id: wrapper
-        parent: gridMouseArea
+        parent: grid
         x: cell.x
         y: cell.y
         width: cellWidth
@@ -103,31 +103,46 @@ Item {
 
         states: [
             State {
-                name: "gridInDrag"
-                when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id && state !== "REMOVING"
-            },
-
-            State {
-                name: "cellInDrag"
-                when: gridMouseArea.dndSrcId === id
-
-                ParentChange {
-                    target: wrapper
-                    parent: tabRoot
-                    x: gridMouseArea.mapToItem(tabRoot, gridMouseArea.mouseX - wrapper.width/2, 0).x
-                    y: gridMouseArea.mapToItem(tabRoot, 0, gridMouseArea.mouseY - wrapper.height/2).y
-                    //x: gridMouseArea.mouseX - wrapper.width/2
-                    //y: gridMouseArea.mouseY - wrapper.height/2
-                }
-            },
-
-            State {
                 name: "cellOpenedStack"
                 when: stackCellOpenedId === id && stack !== undefined
 
                 ParentChange {
                     target: wrapper
                     parent: tabWrapper
+                }
+            },
+
+            State {
+                name: "cellWasInDrag"
+                when: gridMouseArea.dndSrcId === id && gridMouseArea.grid !== grid
+            },
+
+            State {
+                name: "gridInDrag"
+                when: gridMouseArea.dndSrcId != -1 && gridMouseArea.dndSrcId != id && state !== "REMOVING"
+            },
+
+            State {
+                name: "cellInDrag"
+                when: gridMouseArea.dndSrcId === id && gridMouseArea.grid === grid && !gridMouseArea.skipMoveAnimation
+
+                ParentChange {
+                    target: wrapper
+                    parent: tabRoot
+                    x: gridMouseArea.mapToItem(tabRoot, gridMouseArea.mouseX - wrapper.width/2, 0).x
+                    y: gridMouseArea.mapToItem(tabRoot, 0, gridMouseArea.mouseY - wrapper.height/2).y
+                }
+            },
+
+            State {
+                name: "cellInDragSkipMoveAnimation"
+                when: gridMouseArea.dndSrcId === id && gridMouseArea.grid === grid && gridMouseArea.skipMoveAnimation
+
+                ParentChange {
+                    target: wrapper
+                    parent: tabRoot
+                    x: gridMouseArea.mapToItem(tabRoot, gridMouseArea.mouseX - wrapper.width/2, 0).x
+                    y: gridMouseArea.mapToItem(tabRoot, 0, gridMouseArea.mouseY - wrapper.height/2).y
                 }
             },
 
