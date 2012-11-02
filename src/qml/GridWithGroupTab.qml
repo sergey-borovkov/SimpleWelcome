@@ -692,10 +692,15 @@ Item {
 
             onScrollVert: {
                 if (popupFrame.state === "CLOSED") {
-                    if (delta > 0)
-                        gridsListView.decrementCurrentIndex()
-                    else
-                        gridsListView.incrementCurrentIndex()
+                    if (gridMouseArea.pressed && gridMouseArea.dndSrcId != -1) {
+                        gridMouseArea.dragIconToPrevNextTab(delta <= 0)
+                    }
+                    else {
+                        if (delta > 0)
+                            gridsListView.decrementCurrentIndex()
+                        else
+                            gridsListView.incrementCurrentIndex()
+                    }
                 }
             }
         }
