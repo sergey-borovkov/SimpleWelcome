@@ -18,6 +18,8 @@ MouseArea {
     property real gridMouseY: grid ? mapToItem(grid, 0, mouseY).y : 0
     property real gridMouseX
 
+    property int gridMouseXWas // used when dragging icon between tabs
+
     function getGridMouseX() {
         return grid ? mapToItem(grid, mouseX, 0).x : 0
     }
@@ -192,6 +194,85 @@ MouseArea {
         }
     }
 
+    function dragIconToPrevNextTab(isForward) {
+        if (isForward && tabListView.currentIndex < tabListView.count - 1 ||
+                !isForward && tabListView.currentIndex > 0) {
+            var itemMoved = root.cloneObject(grid.model.get(dndDest))
+
+            if (isForward)
+                tabListView.incrementCurrentIndex()
+            else
+                tabListView.decrementCurrentIndex()
+
+            var nextContainer = tabListView.currentItem
+            if (isForward)
+                tabListView.decrementCurrentIndex()
+            else
+                tabListView.incrementCurrentIndex()
+
+            var nextPageModel, nextPageGrid
+            var childs = nextContainer.children
+
+            // Iterating by it's GridWithGroups
+            for (var child = 0; child < childs.length; child++)
+                if ('gridView' in childs[child] && childs[child].groupName === "Apps")
+                {
+                    nextPageGrid = childs[child].gridView
+                    nextPageModel = childs[child].gridView.model
+                    break
+                }
+
+            var itemFromNextPage
+            if (isForward)
+                itemFromNextPage = nextPageModel.get(0)
+            else
+                itemFromNextPage = nextPageModel.get(nextPageModel.count - 1)
+
+            var dndDestWas = dndDest
+            var gridWas = grid
+            dndSrc = nextPageModel.count - 1
+            dndDest = dndSrc
+            dndSrcId = itemMoved.id
+
+            // FIXME: Add logic to append new page when current one is overflown
+            if (isForward)
+                tabListView.incrementCurrentIndex()
+            else
+                tabListView.decrementCurrentIndex()
+
+            cachedGrid = nextPageGrid
+
+            // A hack to use correct mouse coordinates when tabListView is scrolled
+            gridMouseXBinding.enabled = false
+            console.log("gridMouseXWas", gridMouseXWas, "now:", gridMouseX)
+            gridMouseX = gridMouseXWas
+
+            mousePosChanged()
+            gridMouseXBinding.enabled = true
+
+
+            if (gridWas.stackable && draggedItemStackedAt !== undefined) {
+                // Unstacking first
+                gridWas.unstackItemInItem(draggedItemStackedAt, dndDestWas)
+                draggedItemStackedAt = undefined
+            }
+
+            gridWas.model.remove(dndDestWas)
+
+            if (isForward) {
+                if (itemFromNextPage)
+                    gridWas.model.append(itemFromNextPage)
+                nextPageModel.remove(0)
+                nextPageModel.append(itemMoved)
+            }
+            else {
+                if (itemFromNextPage)
+                    gridWas.model.insert(0, itemFromNextPage)
+                nextPageModel.remove(nextPageModel.count - 1)
+                nextPageModel.append(itemMoved)
+            }
+        }
+    }
 
 
     Timer {
@@ -201,7 +282,6 @@ MouseArea {
         property bool isForward
         property int firstInterval: 300
         property int nextInterval: 800
-        property int gridMouseXWas
 
         property int cornerZone: 15
 
@@ -215,75 +295,7 @@ MouseArea {
                     return
                 }
 
-                if (isForward && tabListView.currentIndex < tabListView.count - 1 ||
-                        !isForward && tabListView.currentIndex > 0) {
-                    var itemMoved = root.cloneObject(grid.model.get(gridMouseArea.dndDest))
-
-                    if (isForward)
-                        tabListView.incrementCurrentIndex()
-                    else
-                        tabListView.decrementCurrentIndex()
-
-                    var nextContainer = tabListView.currentItem
-                    if (isForward)
-                        tabListView.decrementCurrentIndex()
-                    else
-                        tabListView.incrementCurrentIndex()
-
-                    var nextPageModel, nextPageGrid
-                    var childs = nextContainer.children
-
-                    // Iterating by it's GridWithGroups
-                    for (var child = 0; child < childs.length; child++)
-                        if ('gridView' in childs[child] && childs[child].groupName === "Apps")
-                        {
-                            nextPageGrid = childs[child].gridView
-                            nextPageModel = childs[child].gridView.model
-                            break
-                        }
-
-                    var itemFromNextPage
-                    if (isForward)
-                        itemFromNextPage = nextPageModel.get(0)
-                    else
-                        itemFromNextPage = nextPageModel.get(nextPageModel.count - 1)
-
-                    var dndDestWas = gridMouseArea.dndDest
-                    var gridWas = grid
-                    gridMouseArea.dndSrc = nextPageModel.count - 1
-                    gridMouseArea.dndDest = gridMouseArea.dndSrc
-                    gridMouseArea.dndSrcId = itemMoved.id
-
-                    // FIXME: Add logic to append new page when current one is overflown
-                    if (isForward)
-                        tabListView.incrementCurrentIndex()
-                    else
-                        tabListView.decrementCurrentIndex()
-
-                    gridMouseArea.cachedGrid = nextPageGrid
-
-                    // A hack to use correct mouse coordinates when tabListView is scrolled
-                    gridMouseXBinding.enabled = false
-                    gridMouseX = gridMouseXWas
-
-                    mousePosChanged()
-                    gridMouseXBinding.enabled = true
-
-                    gridWas.model.remove(dndDestWas)
-
-                    if (isForward) {
-                        if (itemFromNextPage)
-                            gridWas.model.append(itemFromNextPage)
-                        nextPageModel.remove(0)
-                        nextPageModel.append(itemMoved)
-                    }
-                    else {
-                        if (itemFromNextPage)
-                            gridWas.model.insert(0, itemFromNextPage)
-                        nextPageModel.remove(nextPageModel.count - 1)
-                        nextPageModel.append(itemMoved)
-                    }
-                }
+                dragIconToPrevNextTab(isForward)
             }
         }
     }
@@ -292,6 +304,11 @@ MouseArea {
         updateCurrentGrid()
         if (grid === undefined || !grid)
             return
+
+        if (gridMouseX >= 0 && gridMouseX < width) {
+            gridMouseXWas = gridMouseX
+            console.log("update gridMouseXWas to", gridMouseX)
+        }
 
         //console.log("x: " + gridMouseX + "; y: " + gridMouseY + " " + grid)
 
@@ -344,7 +361,7 @@ MouseArea {
                 {
                     tabsSwitchingTimer.interval = tabsSwitchingTimer.firstInterval
                     tabsSwitchingTimer.isForward = true
-                    tabsSwitchingTimer.gridMouseXWas = gridMouseX
+                    gridMouseArea.gridMouseXWas = gridMouseX
                     tabsSwitchingTimer.start()
                 }
             }
@@ -354,7 +371,7 @@ MouseArea {
                 {
                     tabsSwitchingTimer.interval = tabsSwitchingTimer.firstInterval
                     tabsSwitchingTimer.isForward = false
-                    tabsSwitchingTimer.gridMouseXWas = gridMouseX
+                    gridMouseArea.gridMouseXWas = gridMouseX
                     tabsSwitchingTimer.start()
                 }
             }

@@ -108,32 +108,22 @@ void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, 
 
 void QmlApplicationViewer::saveStacks(QVariantList setting)
 {
-    //qDebug() << "WE ARE HERE WE ARE SAVING stacking";
-
     KConfigGroup configGroup(KGlobal::config(), "Stacks");
     configGroup.deleteGroup();
 
     foreach(QVariant variant, setting) {
         QVariantMap map;
         if (!strcmp(variant.typeName(), "QVariantMap")) {
-            //qDebug() << "REALLY QVariantMap";
             map = variant.value<QVariantMap>();
-            //qDebug() << map["caption"].toString();
-            //qDebug() << map["imagePath"].toString();
-            //qDebug() << map["stack"];
-
-            //qDebug() << "In" << map["caption"].toString();
 
             QStringList stackList;
             QVariantList stack = map["stack"].toList();
             foreach(QVariant item, stack) {
                 QVariantMap properties = item.toMap();
                 stackList.append(properties["caption"].toString());
-                //qDebug() << " L" << properties["caption"].toString();
             }
 
             configGroup.writeEntry(map["caption"].toString(), stackList);
-            //qDebug() << "SIZE" << map["stack"].toList().size();
         }
     }
 
@@ -142,8 +132,6 @@ void QmlApplicationViewer::saveStacks(QVariantList setting)
 
 void QmlApplicationViewer::saveIconPositions(QVariantMap setting)
 {
-    //qDebug() << "WE ARE HERE WE ARE SAVING" << setting;
-
     KConfigGroup configGroup(KGlobal::config(), "Apps positions");
     configGroup.deleteGroup();
 
@@ -151,17 +139,6 @@ void QmlApplicationViewer::saveIconPositions(QVariantMap setting)
     for (; it != setting.end(); ++it) {
         configGroup.writeEntry(it.key(), it.value());
     }
-
-//    foreach(QVariant variant, setting) {
-//        QVariantMap map;
-//        if (!strcmp(variant.typeName(), "QVariantMap")) {
-//            map = variant.value<QVariantMap>();
-//            qDebug() << map;
-
-//            //configGroup.writeEntry(map["caption"].toString(), stackList);
-//            //qDebug() << "SIZE" << map["stack"].toList().size();
-//        }
-//    }
 
     configGroup.sync();
 }
