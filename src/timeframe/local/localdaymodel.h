@@ -50,8 +50,17 @@ private:
         AllItemMax = ImageItemMax + VideoItemMax + DocumentItemMax
     };
 
-    int getImageInsertPosition(Activity *item, int from, int to);
-    int getInsertPosition(Activity *item);
+    int getImageInsertPosition(Activity *item, int from, int to) const;
+
+    /**
+     * @brief LocalDayModel::getInsertPosition - return position of
+     *        inserted item, first 7 items of the list must be LocalDayModel::ImageItemMax images,
+     *        LocalDayModel::VideoItemMax video, LocalDayModel::DocumentItemMax document
+     * @param item - item which add to model
+     * @return -1 - need append item to the list
+     *         pos - need insert item to the position pos in the list
+     */
+    int getInsertPosition(Activity *item) const;
     void addActivityItemToCloud(Activity *item, int pos);
     void printFirstItems(int count);
 
