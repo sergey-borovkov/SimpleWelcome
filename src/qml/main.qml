@@ -183,6 +183,7 @@ Item {
                 if (currentItem && currentItem.grid)
                     currentItem.grid.forceMyFocus()
                 topBar.forceActiveFocus()
+                mainWindow.currentTabChanged(currentIndex)
             }
 
             function currentTabIndexChanged(newCurrentIndex) {

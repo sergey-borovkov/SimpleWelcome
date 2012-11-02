@@ -34,6 +34,8 @@ public:
     Q_INVOKABLE QVariantMap loadStacks();
     Q_INVOKABLE QVariantMap loadIconPositions();
 
+    Q_INVOKABLE void currentTabChanged(int newCurrentIndex);
+
 signals:
     void windowSizeChanged();
     void windowHidden();
@@ -43,4 +45,7 @@ public slots:
     void restore();
     void updateWorkArea();
     void focusChanged(QWidget*, QWidget *now);
+
+private:
+    int currentTabIndex;
 };
