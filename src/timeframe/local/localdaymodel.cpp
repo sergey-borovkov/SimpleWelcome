@@ -52,8 +52,6 @@ int LocalDayModel::rowCount(const QModelIndex &parent) const
         return m_items.size();
 }
 
-
-
 /**
   * @brief LocalDayModel::getImageInsertPosition - return position of inserted
   *        image item, items must be sorted by descending of dimension image
@@ -63,51 +61,39 @@ int LocalDayModel::rowCount(const QModelIndex &parent) const
   * @return -1 - need append item to the list
   *         pos - need insert item to the position pos in the list
   */
-int LocalDayModel::getImageInsertPosition(Activity *item, int from, int to)
+int LocalDayModel::getImageInsertPosition(Activity *item, int from, int to) const
 {
     if (item->type() != "Image")
-        return (-1);
+        return -1;
     if ((from < 0) && (to > m_items.size()))
-        return (-1);
+        return -1;
 
     QSize szItem = item->imageSize();
-    long squareItem = szItem.width() * szItem.height();
-
-//    if (item->date() == QDate(2012, 8, 2)) qDebug() << "inserted IMAGE szItem " << szItem;
+    int squareItem = szItem.width() * szItem.height();
 
     bool isItemInserted = false;
 
     int row;
     for (row = from; row < to; ++row) {
-
         if (m_items.at(row)->type() != "Image")
             continue;
 
         QSize sz = m_items.at(row)->imageSize();
-        long square = sz.width() * sz.height();
-
-//        if (item->date() == QDate(2012, 8, 2)) qDebug() << "        sz " << sz;
+        int square = sz.width() * sz.height();
 
         if (squareItem > square) {
             isItemInserted = true;
             break;
         }
     }
+
     if (!isItemInserted)
-        return (-1);
+        return -1;
 
     return row;
 }
 
-/**
- * @brief LocalDayModel::getInsertPosition - return position of
- *        inserted item, first 7 items of the list must be LocalDayModel::ImageItemMax images,
- *        LocalDayModel::VideoItemMax video, LocalDayModel::DocumentItemMax document
- * @param item - item which add to model
- * @return -1 - need append item to the list
- *         pos - need insert item to the position pos in the list
- */
-int LocalDayModel::getInsertPosition(Activity *item)
+int LocalDayModel::getInsertPosition(Activity *item) const
 {
     int cloudItemCount = m_items.size();
     if (cloudItemCount > AllItemMax) // max item's count in the cloud
@@ -138,12 +124,11 @@ int LocalDayModel::getInsertPosition(Activity *item)
         }
     }
 
-    // Note:   need sort image items!!!
     if (cloudItemCount < AllItemMax) {
         if (typeItem == "Image")
             pos = getImageInsertPosition(item, 0, cloudItemCount);
         else
-            pos = (-1);
+            pos = -1;
     }
     else {
         if (typeItem == "Image") {
@@ -205,7 +190,7 @@ void LocalDayModel::addActivityItemToCloud(Activity *item, int pos)
             lastRow = row;
         }
     }
-//    qDebug() << m_items.size() << " ---- " << lastRow << " to " << cloudItemCount << " (" << item->url() << ")" << typeItem;
+
     if (lastRow == (-1))
         m_items.insert(cloudItemCount, item);
     else {
@@ -227,20 +212,16 @@ void LocalDayModel::addActivityItem(Activity *item)
     beginInsertRows(QModelIndex(), ind , ind);
 
     int pos = getInsertPosition(item);
-    //    qDebug() << "pos =" << pos << ", type =" << item->type();
     if (pos == (-1))
         m_items.append(item);
     else {
         if (pos < AllItemMax) { // switch items
-//            addActivityItemToCloud(item, pos);
             m_items.insert(AllItemMax, m_items.at(pos));
             m_items.replace(pos, item);
         }
         else
             m_items.insert(pos, item);
     }
-
-//    if (item->date() == QDate(2012, 8, 2)) printFirstItems(m_items.size());
 
     m_urlSet.insert(item->url());
     endInsertRows();
