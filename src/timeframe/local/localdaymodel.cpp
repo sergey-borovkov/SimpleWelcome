@@ -52,8 +52,6 @@ int LocalDayModel::rowCount(const QModelIndex &parent) const
         return m_items.size();
 }
 
-
-
 /**
   * @brief LocalDayModel::getImageInsertPosition - return position of inserted
   *        image item, items must be sorted by descending of dimension image
@@ -73,8 +71,6 @@ int LocalDayModel::getImageInsertPosition(Activity *item, int from, int to)
     QSize szItem = item->imageSize();
     long squareItem = szItem.width() * szItem.height();
 
-//    if (item->date() == QDate(2012, 8, 2)) qDebug() << "inserted IMAGE szItem " << szItem;
-
     bool isItemInserted = false;
 
     int row;
@@ -85,8 +81,6 @@ int LocalDayModel::getImageInsertPosition(Activity *item, int from, int to)
 
         QSize sz = m_items.at(row)->imageSize();
         long square = sz.width() * sz.height();
-
-//        if (item->date() == QDate(2012, 8, 2)) qDebug() << "        sz " << sz;
 
         if (squareItem > square) {
             isItemInserted = true;
@@ -205,7 +199,7 @@ void LocalDayModel::addActivityItemToCloud(Activity *item, int pos)
             lastRow = row;
         }
     }
-//    qDebug() << m_items.size() << " ---- " << lastRow << " to " << cloudItemCount << " (" << item->url() << ")" << typeItem;
+
     if (lastRow == (-1))
         m_items.insert(cloudItemCount, item);
     else {
@@ -227,7 +221,6 @@ void LocalDayModel::addActivityItem(Activity *item)
     beginInsertRows(QModelIndex(), ind , ind);
 
     int pos = getInsertPosition(item);
-    //    qDebug() << "pos =" << pos << ", type =" << item->type();
     if (pos == (-1))
         m_items.append(item);
     else {
@@ -240,23 +233,8 @@ void LocalDayModel::addActivityItem(Activity *item)
             m_items.insert(pos, item);
     }
 
-//    if (item->date() == QDate(2012, 8, 2)) printFirstItems(m_items.size());
-
     m_urlSet.insert(item->url());
     endInsertRows();
-}
-
-void LocalDayModel::printFirstItems(int count)
-{
-    int len = count;
-    if (len > AllItemMax) // max item's count in the cloud
-        len = AllItemMax;
-
-    QString str = "           ";
-    for (int row = 0; row < len; ++row) {
-        str += QString("%1: %2;  ").arg(row).arg(m_items.at(row)->type());
-    }
-    qDebug() << str;
 }
 
 QString LocalDayModel::url(int row) const

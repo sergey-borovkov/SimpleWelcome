@@ -46,9 +46,9 @@ bool FeedItem::setData(int role, const QVariant &value)
     return true;
 }
 
-QDate FeedItem::date() const
+QDateTime FeedItem::datetime() const
 {
-    return QDate::fromString(data(Date).toString(), QString("d MM yyyy"));
+    return data(DateTime).toDateTime();
 }
 
 void FeedItem::fillFromMap(const QVariantMap &map)
@@ -84,8 +84,7 @@ void FeedItem::fillFromMap(const QVariantMap &map)
 
     if (map.contains("created_time")) {
         QDateTime dt = map.value("created_time").toDateTime();
-        QDate date = dt.date();
-        m_data.insert(Date, date.toString("d MM yyyy"));
+        m_data.insert(DateTime, dt);
     }
 
     if (map.contains("comments")) {

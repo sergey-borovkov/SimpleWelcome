@@ -26,16 +26,16 @@ Item {
                 var model = socialDayModel.itemsModel(date)
                 cloud.item.cloudDate = date
                 cloud.item.model = model
-                var c = 0
-                for(var i =0; i < cloud.item.children.length; i++) {
+                var c = size - 1
+                for(var i = 0; i < cloud.item.children.length; i++) {
                     var subChildren = cloud.item.children[i].children
                     for(var j = 0; j < subChildren.length; j++) {
                         if(subChildren[j].objectName === "cloudRect") {
                             subChildren[j].index = c
-                            subChildren[j].model = socialDayModel.itemsModel(date)
+                            subChildren[j].model = model
                             subChildren[j].initialize(c)
                             model.updateData.connect(subChildren[j].update)
-                            c++
+                            c--
                         }
                     }
                 }
@@ -44,13 +44,13 @@ Item {
 
         Component.onDestruction: {
             var model = socialDayModel.itemsModel(date)
-            var c = 0
-            for(var i =0; i < cloud.item.children.length; i++) {
+            var c = size - 1
+            for(var i = 0; i < cloud.item.children.length; i++) {
                 var subChildren = cloud.item.children[i].children
                 for(var j = 0; j < subChildren.length; j++) {
                     if(subChildren[j].objectName === "cloudRect") {
                         model.updateData.disconnect(subChildren[j].update)
-                        c++
+                        c--
                     }
                 }
             }

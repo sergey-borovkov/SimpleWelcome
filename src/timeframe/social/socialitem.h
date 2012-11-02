@@ -7,6 +7,32 @@
 
 #include <listitem.h>
 
+
+struct AudioDesc {
+    int id;
+    int ownerId;
+    QString url;
+    QString title;
+    QString duration;
+    QString performer;
+
+};
+
+struct VideoDesc {
+    int id;
+    int ownerId;
+    QString title;
+    QString duration;
+    QString url;
+};
+
+struct ImageDesc {
+    int id;
+    int ownerId;
+    QString url;
+};
+
+
 class SocialItem : public ListItem
 {
 public:
@@ -14,7 +40,7 @@ public:
         Text = Qt::UserRole + 1,
         ImageUrl,
         LikeUrl,
-        Date,
+        DateTime,
         Likes,
         Like,
         Comments,
@@ -42,7 +68,7 @@ public:
     virtual Type type() const = 0;
     virtual QString id() const = 0;
     virtual QVariant data(int role) const = 0;
-    virtual QDate date() const = 0;
+    virtual QDateTime datetime() const = 0;
 
     static const QHash<int, QByteArray> roleNames() {
         QHash<int, QByteArray> roles;
@@ -59,7 +85,7 @@ public:
         roles.insert(Comments, "comments");
         roles.insert(Count, "count");
         roles.insert(ItemsCount, "size");
-        roles.insert(Date, "date");
+        roles.insert(DateTime, "datetime");
 
         return roles;
     }

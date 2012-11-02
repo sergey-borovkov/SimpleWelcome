@@ -21,6 +21,8 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role);
     virtual void appendRow(ListItem* item);
     virtual void appendRows(const QList<ListItem*> &items);
+    virtual void prependRow(ListItem* item);
+    virtual void prependRows(const QList<ListItem*> &items);
     virtual void insertRow(int row, ListItem* item);
     virtual bool removeRow(int row, const QModelIndex &parent = QModelIndex());
     virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
