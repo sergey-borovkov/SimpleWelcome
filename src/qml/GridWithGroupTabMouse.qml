@@ -107,7 +107,6 @@ MouseArea {
             dndSrc = index
             dndAbsoluteSrc = index + grid.indexStartAt
             dndSrcId = grid.model.get(index).id
-            console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
             gridsListView.dndStateChanged(true)
             //console.log("grid: " + grid)
 
@@ -169,7 +168,7 @@ MouseArea {
 
             // A hack to use correct mouse coordinates when tabListView is scrolled
             gridMouseXBinding.enabled = false
-            console.log("gridMouseXWas", gridMouseXWas, "now:", gridMouseX)
+            //console.log("gridMouseXWas", gridMouseXWas, "now:", gridMouseX)
             gridMouseX = gridMouseXWas
 
             mousePosChanged()
@@ -287,7 +286,7 @@ MouseArea {
                         }
                     }
                 }
-                else // if (!grid.stackable || isDragginStack) // Hit outer part of item. Using for repositioning
+                else // if (!isAimingOnStacking && !grid.stackable || isDragginStack) // Hit outer part of item. Using for repositioning
                 {
                     //console.log("MOVING")
 
@@ -308,7 +307,7 @@ MouseArea {
 
         if (gridMouseX >= 0 && gridMouseX < width) {
             gridMouseXWas = gridMouseX
-            console.log("update gridMouseXWas to", gridMouseX)
+//            console.log("update gridMouseXWas to", gridMouseX)
         }
 
         //console.log("x: " + gridMouseX + "; y: " + gridMouseY + " " + grid)
