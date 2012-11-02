@@ -139,14 +139,14 @@ void SocialContentModel::newSocialItems(QList < SocialItem * > list)
         if (m_idSet.contains(uniqueId))
             continue;
         m_idSet.insert(uniqueId);
-        m_idHash.insert(newItem->id(), newItem->date());
+        m_idHash.insert(newItem->id(), newItem->datetime().date());
 
         int j = 0;
         bool flag = false;
         if (rowCount() > 0) {
             SocialContentItem *item = static_cast<SocialContentItem *>(itemAt(j));
-            while (item->date() <= newItem->date()) {
-                if (item->date() == newItem->date()) {
+            while (item->date() <= newItem->datetime().date()) {
+                if (item->date() == newItem->datetime().date()) {
                     item->addSocialItem(newItem);
                     flag = true;
                     break;
@@ -163,7 +163,7 @@ void SocialContentModel::newSocialItems(QList < SocialItem * > list)
             continue;
         }
 
-        SocialContentItem * socialDayItem = new SocialContentItem(newItem->date());
+        SocialContentItem * socialDayItem = new SocialContentItem(newItem->datetime().date());
         socialDayItem->addSocialItem(newItem);
 
         insertRow(j, socialDayItem);

@@ -35,7 +35,7 @@ void SocialDayModel::addSocialItem(SocialItem *item)
     }
     m_idSet.insert(strId);
 
-    appendRow(item);
+    prependRow(item);
 }
 
 void SocialDayModel::like(QString id)
@@ -167,6 +167,11 @@ QString SocialDayFilterModel::audio(int row) const
 QString SocialDayFilterModel::text(int row) const
 {
     return data(index(row, 0), SocialItem::Text).toString();
+}
+
+QDateTime SocialDayFilterModel::datetime(int row) const
+{
+    return data(index(row, 0), SocialItem::DateTime).toDateTime();
 }
 
 int SocialDayFilterModel::likesCount(int row) const

@@ -49,10 +49,11 @@ bool FeedItem::setData(int role, const QVariant &value)
     return true;
 }
 
-QDate FeedItem::date() const
+QDateTime FeedItem::datetime() const
 {
-    return QDate::fromString(data(Date).toString(), QString("d MM yyyy"));
+    return data(DateTime).toDateTime();
 }
+
 
 static QRegExp rx_user_link("\\[(id\\d+)\\|(\\S*)\\]");
 
@@ -83,7 +84,6 @@ void FeedItem::fillFromMap(QVariantMap map)
             }
 
             message = message.replace(reUrl, after);
-//            qDebug() << message.left(200);
         }
 
         // if there is message with [user_id|user_name] string...
@@ -100,8 +100,7 @@ void FeedItem::fillFromMap(QVariantMap map)
         uint t  = map.value("date").toUInt();
         QDateTime dt;
         dt.setTime_t(t);
-        QDate date = dt.date();
-        m_data.insert(Date, date.toString("d MM yyyy"));
+        m_data.insert(DateTime, dt);
     }
 
     m_data.insert(ImageUrl, QUrl(""));

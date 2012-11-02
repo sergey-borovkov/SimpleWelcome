@@ -368,7 +368,7 @@ void SocialProxy::newItems(QList<SocialItem *> items)
     if (!m_socialModel)
         return;
     foreach(SocialItem * item, items) {
-        emit newMonth(item->date().year(), item->date().month(), item->pluginName());
+        emit newMonth(item->datetime().date().year(), item->datetime().date().month(), item->pluginName());
     }
     m_socialModel->newSocialItems(items);
 }
