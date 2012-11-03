@@ -2,6 +2,8 @@
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QtCore/QSettings>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
@@ -34,8 +36,7 @@ FacebookModule::FacebookModule()
 FacebookModule::~FacebookModule()
 {
     delete m_requestManager;
-    delete m_authorizer;
-    m_authorizationView->deleteLater();
+    delete m_authorizer;    
 }
 
 ISocialRequestManager *FacebookModule::requestManager()
@@ -65,17 +66,20 @@ QString FacebookModule::displayName() const
 
 QWidget *FacebookModule::authenticationWidget()
 {
-    m_authorizationView = new QWebView;
-    m_authorizationView->setWindowModality(Qt::ApplicationModal);
-    m_authorizationView->window()->setWindowTitle(name());
-    m_authorizationView->page()->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
-    m_authorizationView->window()->setWindowIcon(QPixmap(":/images/fb.png"));
-    m_authorizationView->setUrl(QUrl("https://www.facebook.com/dialog/oauth?client_id=148453655273563&redirect_uri=http://www.facebook.com/connect/login_success.html&response_type=token&scope=publish_stream,read_stream"));
-    m_authorizationView->resize(1024,640);
-    connect(m_authorizationView, SIGNAL(urlChanged(QUrl)), m_authorizer, SLOT(urlChanged(QUrl)));
-    connect(this, SIGNAL(authorized()), m_authorizationView, SLOT(hide()));
+    QWebView *authorizationView = new QWebView();
+    authorizationView->setAttribute(Qt::WA_DeleteOnClose);
+    authorizationView->setWindowModality(Qt::ApplicationModal);
+    authorizationView->window()->setWindowTitle(name());
+    authorizationView->page()->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
+    authorizationView->window()->setWindowIcon(QPixmap(":/images/fb.png"));
+    authorizationView->setUrl(QUrl("https://www.facebook.com/dialog/oauth?client_id=148453655273563&redirect_uri=http://www.facebook.com/connect/login_success.html&response_type=token&scope=publish_stream,read_stream"));
+    authorizationView->resize(1024,640);
+    authorizationView->move(QApplication::desktop()->screen()->rect().center() - authorizationView->rect().center());
 
-    return m_authorizationView;
+    connect(authorizationView, SIGNAL(urlChanged(QUrl)), m_authorizer, SLOT(urlChanged(QUrl)));
+    connect(this, SIGNAL(authorized()), authorizationView, SLOT(close()));
+
+    return authorizationView;
 }
 
 QString FacebookModule::selfId() const
