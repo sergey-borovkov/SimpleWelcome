@@ -2,6 +2,8 @@
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QtCore/QDebug>
 #include <QtCore/QSettings>
 #include <QtDeclarative/QDeclarativeContext>
@@ -35,8 +37,7 @@ VkontakteModule::VkontakteModule()
 VkontakteModule::~VkontakteModule()
 {
     delete m_requestManager;
-    delete m_authorizer;
-    m_authorizationView->deleteLater();
+    delete m_authorizer;    
 }
 
 ISocialRequestManager *VkontakteModule::requestManager()
@@ -66,21 +67,24 @@ QString VkontakteModule::displayName() const
 
 QWidget *VkontakteModule::authenticationWidget()
 {
-    m_authorizationView = new QWebView;
-    m_authorizationView->window()->setWindowTitle(name());
-    m_authorizationView->setWindowModality(Qt::ApplicationModal);
-    m_authorizationView->page()->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
-    m_authorizationView->window()->setWindowIcon(QPixmap(":/images/vk.png"));
-    m_authorizationView->resize(800, 700);
-    m_authorizationView->setUrl(QUrl("http://oauth.vk.com/authorize?client_id=2944872&"
+    QWebView *authorizationView = new QWebView();
+    authorizationView->setAttribute(Qt::WA_DeleteOnClose);
+    authorizationView->window()->setWindowTitle(name());
+    authorizationView->setWindowModality(Qt::ApplicationModal);
+    authorizationView->page()->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
+    authorizationView->window()->setWindowIcon(QPixmap(":/images/vk.png"));
+    authorizationView->setUrl(QUrl("http://oauth.vk.com/authorize?client_id=2944872&"
                                      "scope=wall,friends,offline&"
                                      "redirect_uri=http://oauth.vk.com/blank.html&"
                                      "display=popup&"
                                      "response_type=token"));
-    connect(m_authorizationView, SIGNAL(urlChanged(QUrl)), m_authorizer, SLOT(urlChanged(QUrl)));
-    connect(this, SIGNAL(authorized()), m_authorizationView, SLOT(hide()));
+    authorizationView->resize(800, 700);
+    authorizationView->move(QApplication::desktop()->screen()->rect().center() - authorizationView->rect().center());
 
-    return m_authorizationView;
+    connect(authorizationView, SIGNAL(urlChanged(QUrl)), m_authorizer, SLOT(urlChanged(QUrl)));
+    connect(this, SIGNAL(authorized()), authorizationView, SLOT(close()));
+
+    return authorizationView;
 }
 
 QString VkontakteModule::selfId() const
