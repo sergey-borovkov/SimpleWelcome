@@ -684,7 +684,12 @@ Item {
                 NumberAnimation { properties: "opacity"; duration: 400 }
             }
 
+            GridWithGroupTabMouse {
+                id: gridMouseArea
+            }
         }
+
+
 
         // Scroll using mouse wheel
         WheelArea {
@@ -797,11 +802,5 @@ Item {
                 NumberAnimation { properties: "height, slideHeight"; easing.type: Easing.InOutQuad }
             }
         }
-
-
-        GridWithGroupTabMouse {
-            id: gridMouseArea
-        }
-
     }
 }
