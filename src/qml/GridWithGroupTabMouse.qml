@@ -441,12 +441,12 @@ MouseArea {
 
         // Adding icon to stack
         if (draggedItemStackedAt !== undefined && grid.model.get(dndDest).stack === undefined) {
-            //console.log("STACK UPPED")
+            console.log("STACK UPPED")
 
             var container = grid.model.get(draggedItemStackedAt)
             if (container.stack.length === 2) { // First time stacking
-                console.log("draggedItemStackedAt: " + draggedItemStackedAt)
-                console.log("Adding move of " + container.caption + " from "  + (grid.indexStartAt + draggedItemStackedAt) + " to " + (grid.indexStartAt + draggedItemStackedAt))
+                //console.log("draggedItemStackedAt: " + draggedItemStackedAt)
+                //console.log("Adding move of " + container.caption + " from "  + (grid.indexStartAt + draggedItemStackedAt) + " to " + (grid.indexStartAt + draggedItemStackedAt))
                 gridsListView.itemMoved(container.caption, grid.indexStartAt + draggedItemStackedAt, grid.indexStartAt + draggedItemStackedAt)
             }
 
@@ -471,13 +471,31 @@ MouseArea {
                 gridsListView.dndStateChanged(false)
 
                 if (dndAbsoluteSrc !== dndDest + grid.indexStartAt) {
+                    if (grid.isPopupGroup) {
+
+                        var model = gridsListView.activeGridView.model
+                        var item = model.get(popupFrame.stackedIconIndex)
+                        var stackArray = item.stack
+                        var stackIcon = "image://generalicon/stacked/"
+                        gridsListView.moveItemInArray(stackArray, dndSrc, dndDest)
+                        for (var i in stackArray) // If desired item occured - remove it. Otherwise recalculate stack icon
+                            stackIcon += stackArray[i].imagePath.slice(28) + "|"
+                        stackIcon = stackIcon.substring(0, stackIcon.length - 1)
+
+                        model.setProperty(popupFrame.stackedIconIndex, "imagePath", stackIcon)
+                        model.setProperty(popupFrame.stackedIconIndex, "stack", stackArray)
+
+                        gridsListView.saveStacks()
+                        //console.log("POPUP DRAG", item)
+                    }
+                    else
+                        gridsListView.itemMoved(grid.model.get(dndDest).caption, dndAbsoluteSrc, grid.indexStartAt + dndDest)
                     //console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + grid.model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest + " | " + grid.indexStartAt)
-                    gridsListView.itemMoved(grid.model.get(dndDest).caption, dndAbsoluteSrc, grid.indexStartAt + dndDest)
                 }
 
                 // Sync icons order in C++ model to QML model. Used in Recent Apps
                 if (typeof grid.dataSource.itemDragged !== "undefined" && dndDest != -1) {
-                    console.log("REARRANGING C++")
+                    //console.log("REARRANGING C++")
                     //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
 
                     grid.dataSource.itemDragged(dndSrcIdSaved, dndDest)
