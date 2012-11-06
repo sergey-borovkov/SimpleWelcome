@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: SimpleWelcome\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-10-23 17:51+0400\n"
+"POT-Creation-Date: 2012-11-06 12:41+0400\n"
 "PO-Revision-Date: 2011-09-13 21:09+0000\n"
 "Last-Translator: Emilio Castro <periliocastrol@gmail.com>\n"
 "Language-Team: Spanish (Castilian) (http://transifex.mandriva.com/projects/p/"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: facebook-timeframe-plugin/facebookmodule.cpp:63
+#: facebook-timeframe-plugin/facebookmodule.cpp:64
 msgid "Facebook"
 msgstr ""
 
@@ -176,57 +176,61 @@ msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
 msgstr ""
 "Nepomuk está desactivado. Puede activarlo en el Centro de Control de KDE"
 
-#: src/swapp.cpp:205
+#: src/swapp.cpp:204
+msgid "in"
+msgstr ""
+
+#: src/swapp.cpp:206
 msgid "JAN"
 msgstr "ENE"
 
-#: src/swapp.cpp:206
+#: src/swapp.cpp:207
 msgid "FEB"
 msgstr "FEB"
 
-#: src/swapp.cpp:207
+#: src/swapp.cpp:208
 msgid "MAR"
 msgstr "MAR"
 
-#: src/swapp.cpp:208
+#: src/swapp.cpp:209
 msgid "APR"
 msgstr "ABR"
 
-#: src/swapp.cpp:209
+#: src/swapp.cpp:210
 msgid "MAY"
 msgstr "MAY"
 
-#: src/swapp.cpp:210
+#: src/swapp.cpp:211
 #, fuzzy
 msgid "JUN"
 msgstr "JUN"
 
-#: src/swapp.cpp:211
+#: src/swapp.cpp:212
 #, fuzzy
 msgid "JUL"
 msgstr "JUL"
 
-#: src/swapp.cpp:212
+#: src/swapp.cpp:213
 msgid "AUG"
 msgstr "AGO"
 
-#: src/swapp.cpp:213
+#: src/swapp.cpp:214
 msgid "SEP"
 msgstr "SEP"
 
-#: src/swapp.cpp:214
+#: src/swapp.cpp:215
 msgid "OCT"
 msgstr "OCT"
 
-#: src/swapp.cpp:215
+#: src/swapp.cpp:216
 msgid "NOV"
 msgstr "NOV"
 
-#: src/swapp.cpp:216
+#: src/swapp.cpp:217
 msgid "DEC"
 msgstr "DIC"
 
-#: vkontakte-timeframe-plugin/vkontaktemodule.cpp:64
+#: vkontakte-timeframe-plugin/vkontaktemodule.cpp:65
 msgid "VKontakte"
 msgstr ""
 

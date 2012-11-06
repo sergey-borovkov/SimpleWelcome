@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-10-23 17:51+0400\n"
+"POT-Creation-Date: 2012-11-06 12:41+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
-#: facebook-timeframe-plugin/facebookmodule.cpp:63
+#: facebook-timeframe-plugin/facebookmodule.cpp:64
 msgid "Facebook"
 msgstr ""
 
@@ -169,55 +169,59 @@ msgstr ""
 "Служба \"Поиск по меткам и содержимому\" выключена. Вы можете включить ее в "
 "параметрах системы."
 
-#: src/swapp.cpp:205
+#: src/swapp.cpp:204
+msgid "in"
+msgstr "в"
+
+#: src/swapp.cpp:206
 msgid "JAN"
 msgstr "ЯНВ"
 
-#: src/swapp.cpp:206
+#: src/swapp.cpp:207
 msgid "FEB"
 msgstr "ФЕВ"
 
-#: src/swapp.cpp:207
+#: src/swapp.cpp:208
 msgid "MAR"
 msgstr "МАРТ"
 
-#: src/swapp.cpp:208
+#: src/swapp.cpp:209
 msgid "APR"
 msgstr "АПР"
 
-#: src/swapp.cpp:209
+#: src/swapp.cpp:210
 msgid "MAY"
 msgstr "МАЙ"
 
-#: src/swapp.cpp:210
+#: src/swapp.cpp:211
 msgid "JUN"
 msgstr "ИЮНЬ"
 
-#: src/swapp.cpp:211
+#: src/swapp.cpp:212
 msgid "JUL"
 msgstr "ИЮЛЬ"
 
-#: src/swapp.cpp:212
+#: src/swapp.cpp:213
 msgid "AUG"
 msgstr "АВГ"
 
-#: src/swapp.cpp:213
+#: src/swapp.cpp:214
 msgid "SEP"
 msgstr "СЕН"
 
-#: src/swapp.cpp:214
+#: src/swapp.cpp:215
 msgid "OCT"
 msgstr "ОКТ"
 
-#: src/swapp.cpp:215
+#: src/swapp.cpp:216
 msgid "NOV"
 msgstr "НOЯБ"
 
-#: src/swapp.cpp:216
+#: src/swapp.cpp:217
 msgid "DEC"
 msgstr "ДЕК"
 
-#: vkontakte-timeframe-plugin/vkontaktemodule.cpp:64
+#: vkontakte-timeframe-plugin/vkontaktemodule.cpp:65
 msgid "VKontakte"
 msgstr "ВКонтакте"
 
