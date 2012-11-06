@@ -45,7 +45,6 @@ signals:
     void deauthorized();
 
 private:
-    QWebView *m_authorizationView;
     RequestManager *m_requestManager;
     OAuth2Authorizer *m_authorizer;
     QPixmap m_pixmap;

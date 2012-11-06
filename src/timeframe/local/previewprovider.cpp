@@ -44,13 +44,19 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
     }
 
     QPixmap pixmap = m_generator->takePreviewPixmap(str);
+
     if(pixmap.isNull()) {
-        m_generator->request(str);
+        QSize size = requestedSize.isValid() ? requestedSize : QSize(512, 512);
+        m_generator->request(str, size);
         return m_defaultPreview;
     }
 
-    if (requestedSize.isValid())
-        pixmap = pixmap.scaled(requestedSize);
+    // only scale down
+    if (requestedSize.isValid() && (requestedSize.width() < pixmap.width() || requestedSize.height() < pixmap.height())) {
+        pixmap = pixmap.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    }
+
     if (size)
         *size = pixmap.size();
     if (rounded)
@@ -78,7 +84,7 @@ QImage PreviewProvider::getRoundedImage(QImage image, int radius)
 
     painter.setBrush(brush);
     painter.setPen(pen);
-    painter.drawRoundedRect(0, 0, image.width(), image.height(), radius, radius , Qt::RelativeSize);
+    painter.drawRoundedRect(0, 0, image.width() - 1, image.height() - 1, radius, radius, Qt::AbsoluteSize);
 
     return out;
 }

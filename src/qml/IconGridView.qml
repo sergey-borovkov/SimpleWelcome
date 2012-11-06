@@ -6,24 +6,22 @@ GridView {
     property variant prevGridGroup
     property variant nextGridGroup
     property int maxCount: -1
+    property int indexStartAt: 0
     property bool draggable: false
     property bool enabledSystemDnD: false  // set true to enable system Drag&Drop
     property bool stackable: false // set true to enable icons stacking while Drag&Dropping
+    property bool mouseDragChangesGrids: false
+    property bool isPopupGroup: false
 
-    property alias dndSrcId: gridMouseArea.dndSrcId
+    property int dndSrcId: gridMouseArea.dndSrcId
     property int dragOutTopMargin: -1
     property int dragOutBottomMargin: -1
 
-    signal dndStateChanged(bool isDrag)
     signal selectionChangedByKeyboard(variant newCurrentItem)
-    signal draggedOut(variant item)
     signal itemStackingChanged()
-    signal itemMoved(string group, string item, int srcPos, int destPos)
-    signal requestIconPushPop(string gridGroupName)
 
     // constants
     property int columns: constants.gridColumns
-
     property int cellHorizontalSpacing: Math.max(0, (parent.width - constants.cellWidth * columns) / (columns + 1))
 
     anchors {
@@ -152,23 +150,6 @@ GridView {
         return true
     }
 
-    function startDragging(index) {
-        if (index != -1)
-        {
-            gridMouseArea.dndDest = index
-            gridMouseArea.dndSrc = index
-            gridMouseArea.dndSrcId = model.get(gridMouseArea.dndSrc).id
-            //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
-            dndStateChanged(true)
-
-//                    console.log("NOW----------------")
-//                    for (var i = 0; i < model.count; i++)
-//                        console.log(model.get(i).caption + " | " + model.get(i).id + " | " + i)
-//                    console.log("END----------------")
-        }
-
-    }
-
     Component.onCompleted: {
         //console.log("COMPLETED " + dataSource + " VIEW")
         if (dataSource)
@@ -289,302 +270,6 @@ GridView {
         orientation: Qt.Vertical
         position: grid.visibleArea.yPosition
         pageSize: grid.visibleArea.heightRatio
-    }
-
-    MouseArea {
-        id: gridMouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-
-        property int dndSrcId: -1
-        property int dndSrc: -1
-        property int dndDest: -1
-        property int pressedOnIndex
-        property variant draggedItemStackedAt
-
-        function getItemUnderCursor(isForceRecheck)
-        {
-            var wasCurrentIndex = grid.currentIndex
-            var mouseXReal = mouseX + grid.contentX, mouseYReal = mouseY + grid.contentY
-            var wasContentX = grid.contentX, wasContentY = grid.contentY
-            var indexUnderMouse = grid.indexAt(mouseXReal, mouseYReal)
-            var result = new Array
-            result.index = -1// = {"index": -1}
-
-            if (indexUnderMouse != -1 && (grid.currentIndex != indexUnderMouse || isForceRecheck))
-            {
-                // Dirty hack to check if there is a need to change the current item after mouse position have changed
-                grid.currentIndex = indexUnderMouse
-                if (grid.currentItem && grid.currentItem.x < mouseXReal && grid.currentItem.y < mouseYReal &&
-                      grid.currentItem.x + grid.currentItem.width > mouseXReal && grid.currentItem.y + grid.currentItem.height > mouseYReal)
-                {
-                    result.index = indexUnderMouse
-                    result.item = grid.currentItem
-                }
-                grid.currentIndex = wasCurrentIndex
-                grid.contentX = wasContentX
-                grid.contentY = wasContentY
-            }
-            return result
-        }
-
-        Timer {
-            id: mouseHoverTimer
-            interval: stackable ? 300 : 0
-            property variant itemWaitingOn: undefined
-            property variant indexWaitingOn: undefined
-            property bool isAimingOnStacking
-            property real xWaiting
-            property real yWaiting
-
-            function calculateExpectations(mouseX, mouseY) {
-                if (itemWaitingOn !== undefined)
-                {
-                    var item = itemWaitingOn
-
-                    if (mouseX > item.x && mouseX < item.x + constants.cellWidth) // We entered corner of other item, starting timer
-                        isAimingOnStacking = true
-                    else
-                        isAimingOnStacking = false
-
-                    xWaiting = mouseX
-                    yWaiting = mouseY
-                }
-
-            }
-
-            onTriggered: {
-                if (itemWaitingOn !== undefined && model.get(gridMouseArea.dndDest) !== undefined && gridMouseArea.pressed)
-                {
-                    var item = itemWaitingOn
-                    var isHitInnerIcon = gridMouseArea.mouseX > item.x && gridMouseArea.mouseX < item.x + constants.cellWidth
-                    var isDragginStack = model.get(gridMouseArea.dndDest).stack !== undefined
-
-                    //var pointsDistance = Math.sqrt(Math.pow(gridMouseArea.mouseX - xWaiting, 2) + Math.pow(gridMouseArea.mouseY - yWaiting, 2))
-                    //console.log("distance: " + pointsDistance)
-
-                    if (stackable && gridMouseArea.draggedItemStackedAt !== undefined && (gridMouseArea.draggedItemStackedAt !== indexWaitingOn || !isHitInnerIcon) && !isDragginStack)
-                    { // Unstacking if item we are above is not the one we stacked to
-                        //console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
-                        grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
-                        gridMouseArea.draggedItemStackedAt = undefined
-                    }
-                    else if (stackable && isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest && !isDragginStack) //&& pointsDistance <= 3)
-                    { // Hit central part of item. Using for stacking
-                        if (isAimingOnStacking && gridMouseArea.draggedItemStackedAt === undefined)
-                        {
-                            //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
-                            var res = grid.stackItemInItem(indexWaitingOn, gridMouseArea.dndDest)
-                            if (res)
-                            {
-                                gridMouseArea.draggedItemStackedAt = indexWaitingOn
-
-                                //console.log("set " + indexWaitingOn + " with " + model.get(indexWaitingOn).stack.length + " at real pos " + model.get(indexWaitingOn).id)
-                                if (gridMouseArea.dndDest > indexWaitingOn)
-                                {
-                                    model.move(gridMouseArea.dndDest, count - 1, 1)
-                                    currentIndex = gridMouseArea.draggedItemStackedAt
-                                    gridMouseArea.dndDest = count - 1
-                                }
-                            }
-                        }
-                    }
-                    else if (!isAimingOnStacking || !stackable || isDragginStack) // Hit outer part of item. Using for repositioning
-                    {
-                        //console.log("MOVING")
-
-                        model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
-                        gridMouseArea.dndDest = indexWaitingOn
-                        currentIndex = gridMouseArea.dndDest
-                    }
-
-                    itemWaitingOn = undefined
-                }
-            }
-        }
-
-
-        onMousePositionChanged: {
-            if (!grid.moving && dndSrcId == -1)
-            {
-                // Optimize later to lesser use of getItemUnderCursor(true)
-                var newCurrentIndex = getItemUnderCursor(!grid.myActiveFocus).index
-                if (newCurrentIndex != -1 && (newCurrentIndex != currentIndex || !grid.myActiveFocus))
-                {
-                    if (!grid.myActiveFocus)
-                        selectOtherGrid(grid, newCurrentIndex)
-                    else
-                        grid.currentIndex = newCurrentIndex
-                }
-            }
-            else if (dndSrcId != -1)
-            {
-                // activate system DnD if icons isn't group
-                if (enabledSystemDnD && (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height) &&
-                        model.get(dndDest).stack === undefined) {
-                    var url = dataSource.itemUrlDnd(dndSrcId, model.get(dndSrc).group)
-                    if (url) {
-                        // Return dragged icon to home position & disable internal DnD
-                        if (stackable && draggedItemStackedAt !== undefined) {
-                            // Unstacking before starting of system D&D
-                            grid.unstackItemInItem(draggedItemStackedAt, dndDest)
-                            draggedItemStackedAt = undefined
-                        }
-                        model.move(dndDest, dndSrc, 1)
-
-                        var imagePath = model.get(dndSrc).imagePath
-                        dndStateChanged(false)
-                        dndSrcId = -1
-                        dndSrc = -1
-                        dndDest = -1
-                        // start system DnD
-                        mainWindow.close()
-                        mainWindow.activateDragAndDrop(url, imagePath, constants.iconSize)
-                        return
-                    }
-                }
-
-                if (mouseY < -dragOutTopMargin || mouseY > grid.height + dragOutBottomMargin)
-                {
-                    if (isPopupGroup)
-                    {
-                        //console.log("OUT")
-                        draggedOut(model.get(dndDest))
-                        // onReleased():
-                        dndSrcId = -1
-                        dndStateChanged(false)
-                    }
-                }
-
-                var index = grid.getCellIndex(mouseX, mouseY)
-                var wasCurrent = grid.currentIndex
-                grid.currentIndex = index
-                var item = grid.currentItem
-                grid.currentIndex = wasCurrent
-
-                mouseHoverTimer.itemWaitingOn = item
-                mouseHoverTimer.indexWaitingOn = index
-                mouseHoverTimer.calculateExpectations(mouseX, mouseY)
-                mouseHoverTimer.start()
-            }
-        }
-
-        onPressed: {
-            pressedOnIndex = getItemUnderCursor(true).index
-        }
-
-        onPressAndHold: {
-            if (draggable)
-            {
-                var index = getItemUnderCursor(true).index
-                if (pressedOnIndex == index)
-                    grid.startDragging(index)
-            }
-            else if (enabledSystemDnD)
-            {
-                var icon_index = getItemUnderCursor(true).index
-                if (icon_index != -1 && pressedOnIndex == icon_index && model.get(icon_index).stack === undefined) {
-                    var url = dataSource.itemUrlDnd(model.get(icon_index).id, model.get(icon_index).group)
-                    if (url) {
-                        var imagePath = model.get(icon_index).imagePath
-                        // start system DnD
-                        mainWindow.close()
-                        mainWindow.activateDragAndDrop(url, imagePath, constants.iconSize)
-                    }
-                }
-            }
-
-        }
-        onReleased: {
-            var dndSrcIdSaved = dndSrcId
-
-            // Adding icon to stack
-            if (draggedItemStackedAt !== undefined && model.get(dndDest).stack === undefined) {
-                //console.log("STACK UPPED")
-
-                var container = model.get(draggedItemStackedAt)
-                if (container.stack.length === 2) // First time stacking
-                    itemMoved(groupName, container.caption, groupCountStart + draggedItemStackedAt, groupCountStart + draggedItemStackedAt)
-
-                if (dndDest < draggedItemStackedAt) {
-                    model.move(dndDest, count - 1, 1)
-                    //currentIndex = draggedItemStackedAt
-                    dndDest = count - 1
-                }
-
-                itemMoved(groupName, model.get(dndDest).caption, groupCountStart + dndSrc, -1)
-
-
-                model.remove(dndDest)
-
-                dndSrcId = -1; //- this is intentionally commented out 'cause it's done in delegate's remove animation
-                dndStateChanged(false)
-            }
-            else {
-                dndSrcId = -1
-
-                if (dndSrcIdSaved != -1) {
-                    dndStateChanged(false)
-
-                    if (dndSrc !== dndDest) {
-                        //console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest + " | " + groupCountStart)
-                        itemMoved(groupName, model.get(dndDest).caption, groupCountStart + dndSrc, groupCountStart + dndDest)
-                    }
-
-                    // Sync icons order in C++ model to QML model. Used in Recent Apps
-                    if (typeof dataSource.itemDragged !== "undefined" && dndDest != -1) {
-                        console.log("REARRANGING C++")
-                        //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
-
-                        dataSource.itemDragged(dndSrcIdSaved, dndDest)
-                        model.setProperty(dndDest, "id", dndDest)
-
-                        var i
-                        if (dndDest < dndSrc) {
-                            for (i = dndDest + 1; i <= dndSrc; i++)
-                                model.setProperty(i, "id", model.get(i).id + 1)
-                        }
-                        else {
-                            for (i = dndSrc; i < dndDest; i++)
-                                model.setProperty(i, "id", model.get(i).id - 1)
-                        }
-                    }
-                }
-            }
-
-            draggedItemStackedAt = undefined
-
-            if (maxCount !== -1 && dndSrcIdSaved !== -1 && count !== maxCount) {
-                requestIconPushPop(groupName)
-            }
-
-            // Duplicates detection. Remove later when sure no duplication occurs
-            /*var Set = function() {}
-            Set.prototype.add = function(o) { this[o] = o; }
-            Set.prototype.remove = function(o) { delete this[o]; }
-            var ids = new Set
-            for (var j = 0; j < model.count; j++)
-            {
-                if (model.get(j).id in ids)
-                    console.log("!!!!!!!!!!!!!!!!!!!!! DUPLICATE ID DETECTED!!!!: " + model.get(j).id + " - " + model.get(j).caption + " | " + (model.get(j).stack === undefined) + "; count: " + j + " | TAKEN BY: " + ids[model.get(j).id].caption)
-                else
-                {
-                    ids.add(model.get(j).id)
-                    ids[model.get(j).id].caption = model.get(j).caption
-                }
-            }*/
-
-            //    console.log(model.get(j).caption + " | " + model.get(i).id + " | " + i)
-
-        }
-
-        onClicked: {
-            if (!grid.moving)
-            {
-                var indexClicked = getItemUnderCursor(true).index
-                model.itemClicked(indexClicked)
-            }
-        }
     }
 }
 

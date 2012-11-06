@@ -17,6 +17,7 @@ FocusScope {
                 enabledSystemDnD: true,
                 groupNameVisible: false,
                 stackable: true,
+                mouseDragChangesGrids: true,
                 groupCellHeight: tabListView.height / 5 - 1
             }
         ]

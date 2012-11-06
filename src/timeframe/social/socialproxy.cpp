@@ -90,7 +90,7 @@ void SocialProxy::unlikeItem(const QString &id, const QString &pluginName)
 void SocialProxy::logout(const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
-    if (plugin->authorized()) {
+    if (plugin && plugin->authorized()) {
         plugin->requestManager()->logout();
         emit removeType(pluginName);
         m_socialModel->removeItems(pluginName);
@@ -105,9 +105,11 @@ void SocialProxy::login(const QString &pluginName)
     QSettings settings("ROSA", "Timeframe");
     settings.setValue(plugin->name(), 1);
 
-    QWidget *w = plugin->authenticationWidget();
-    if (w)
-        w->show();
+    if(plugin) {
+        QWidget *w = plugin->authenticationWidget();
+        if (w)
+            w->show();
+    }
 }
 
 void SocialProxy::commentItem(const QString &message, const QString &parentId, const QString &pluginName)
@@ -146,9 +148,12 @@ void SocialProxy::startSearch()
 PluginRequestReply *SocialProxy::like(const QString &id, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
+    if(!plugin)
+        return 0;
     Request *request = plugin->requestManager()->like(id);
     PluginRequestReply *reply = new PluginRequestReply(request, id, pluginName, this);
     request->start();
+
 
     return reply;
 }
@@ -156,15 +161,21 @@ PluginRequestReply *SocialProxy::like(const QString &id, const QString &pluginNa
 PluginRequestReply *SocialProxy::dislike(const QString &id, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
+    if(!plugin)
+        return 0;
     Request *request = plugin->requestManager()->unlike(id);
     PluginRequestReply *reply = new PluginRequestReply(request, id, pluginName, this);
     request->start();
+
     return reply;
 }
 
 PluginRequestReply *SocialProxy::postComment(const QString &message, const QString &parentId, const QString &pluginName)
-{
+{    
     ISocialPlugin *plugin = pluginFromName(pluginName);
+    if(!plugin)
+        return 0;
+
     Request *request = plugin->requestManager()->postComment(QUrl::toPercentEncoding(message), parentId);
     PluginRequestReply *reply = new PluginRequestReply(request, parentId, pluginName, this);
     request->start();
@@ -214,6 +225,8 @@ QString SocialProxy::authorizedLocalizedPluginName(int i) const
 PluginRequestReply *SocialProxy::getAllComments(const QString &id, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
+    if(!plugin)
+        return 0;
     Request *request = plugin->requestManager()->queryComments(id);
     PluginRequestReply *reply = new PluginRequestReply(request, id, pluginName, this);
     request->start();
@@ -279,9 +292,6 @@ void SocialProxy::authorized()
     Request *request = plugin->requestManager()->queryWall(QDate(), QDate());
     m_searchInProgressCount++;
     request->start();
-
-    if (plugin->authenticationWidget())
-        plugin->authenticationWidget()->hide();
 
     emit pluginAuthorized();
     emit searchStarted();
@@ -376,6 +386,9 @@ void SocialProxy::newItems(QList<SocialItem *> items)
 PluginRequestReply *SocialProxy::selfPicture(const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
+    if(!plugin)
+        return 0;
+
     Request *request = plugin->requestManager()->queryImage(plugin->selfId());
     PluginRequestReply *reply = new PluginRequestReply(request, 0, pluginName, this);
     QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
@@ -466,6 +479,7 @@ ISocialPlugin *SocialProxy::pluginFromName(const QString &pluginName)
             break;
         }
     }
+
     return plugin;
 }
 

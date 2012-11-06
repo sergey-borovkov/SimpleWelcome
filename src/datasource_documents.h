@@ -14,11 +14,11 @@ class DataSource_Documents : public DataSource
 
 public:
     explicit DataSource_Documents(QObject* parent, QMLConstants *inConstants);
-    Q_INVOKABLE virtual int getItemCount();
-    Q_INVOKABLE virtual QVariantMap getContent(int index);
+    Q_INVOKABLE virtual int getItemCount() const;
+    Q_INVOKABLE virtual QVariantMap getContent(int index) const;
 
-    Q_INVOKABLE QString itemUrlDnd(int id);
-    QIcon getIcon(QString destination);
+    Q_INVOKABLE QString itemUrlDnd(int id) const;
+    QPixmap getPreview(QString destination) const;
 
 signals:
     void newItemData(QVariantMap itemData, QString group);
