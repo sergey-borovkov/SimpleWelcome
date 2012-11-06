@@ -177,7 +177,6 @@ void RequestManager::feedReply(QByteArray reply)
     foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
         FeedItem *feedItem = new FeedItem(map, m_selfId);
-        feedItems.append(feedItem);
 
         // drop item without text and image
         if (feedItem && feedItem->data(SocialItem::Text).toString().isEmpty() &&
@@ -186,6 +185,8 @@ void RequestManager::feedReply(QByteArray reply)
             delete feedItem;
             continue;
         }
+
+        feedItems.append(feedItem);
     }
 
     emit newSocialItems(feedItems);
@@ -227,7 +228,6 @@ void RequestManager::replyQueryWall(QByteArray reply)
     foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
         FeedItem *feedItem = new FeedItem(map, m_selfId);
-        feedItems.append(feedItem);
 
         // drop item without text and image
         if (feedItem && feedItem->data(SocialItem::Text).toString().isEmpty() &&
@@ -236,6 +236,8 @@ void RequestManager::replyQueryWall(QByteArray reply)
             delete feedItem;
             continue;
         }
+
+        feedItems.append(feedItem);
 
     }
 
