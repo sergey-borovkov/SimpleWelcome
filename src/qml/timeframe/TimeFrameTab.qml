@@ -725,11 +725,19 @@ Item {
         }
     }
 
-    AnimatedImage {
+    Image {
         id: waitIndicator
-        source: "images/ajax-loader.gif"
         anchors.centerIn: parent
+        source: "images/wait-indicator.png"
         visible: false
+        smooth: true
+    }
+
+    Timer {
+        id: waitTimer
+        interval: 10; running: false; repeat: true
+        onTriggered: waitIndicator.rotation = waitIndicator.rotation +10
+
     }
 
     Connections {
@@ -839,6 +847,8 @@ Item {
 
             PropertyChanges { target: waitIndicator; visible: true }
 
+            PropertyChanges { target: waitTimer; running: true }
+
             PropertyChanges { target: timeScale; visible: false; opacity: 0 }
 
             PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
@@ -887,6 +897,8 @@ Item {
             PropertyChanges { target: socialTimeLine; visible: false; opacity: 0; }
 
             PropertyChanges { target: waitIndicator; visible: true }
+
+            PropertyChanges { target: waitTimer; running: true }
 
             PropertyChanges { target: galleryButton; visible: false }
 
