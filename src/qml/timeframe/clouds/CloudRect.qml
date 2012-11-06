@@ -17,24 +17,23 @@ Rectangle {
         onGotThumbnail: {
             if(path === url) {
                 image.source += "1"
-             }
+            }
         }
     }
 
     ItemRectangle {
         anchors.centerIn: parent
-        width: image.paintedWidth -1
-        height: image.paintedHeight -1
+        width: image.paintedWidth - 2
+        height: image.paintedHeight - 2
     }
 
     Image {
         id: image
         anchors.centerIn: parent
-        width: Math.min(sourceSize.width, parent.width -10)
-        height: Math.min(sourceSize.height, parent.height -10 )
-        fillMode: Image.PreserveAspectFit
-        smooth: true
-        asynchronous: true
+
+        sourceSize.width: parent.width - 10
+        sourceSize.height: parent.height - 10
+
         cache: false
     }
 

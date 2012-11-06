@@ -89,7 +89,7 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
         icon = KIcon(iconName);
     else if (iconType == "docicon") {
         if (m_documentsDataSource)
-            icon = KIcon(m_documentsDataSource->getIcon(iconName));
+            icon = KIcon(m_documentsDataSource->getPreview(iconName));
     }
     else if (iconType == "search") {
         if (m_searchDataSource)

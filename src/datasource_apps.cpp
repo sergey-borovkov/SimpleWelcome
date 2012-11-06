@@ -41,7 +41,18 @@ AppItemList GetFlatList(QString group)
                 continue;
 
             //if (serviceGroup->relPath().indexOf("/") != serviceGroup->relPath().size() - 1)
-            out.append(GetFlatList(serviceGroup->relPath()));
+            AppItemList temp = GetFlatList(serviceGroup->relPath());
+            for (int i = 0; i < temp.size(); i++) {
+                bool isFound = false;
+                for (int j = 0; j < out.size(); j++)
+                    if (out[j]["desktopEntry"].toString() == temp[i]["desktopEntry"].toString()) {
+                        isFound = true;
+                        break;
+                    }
+                if (!isFound)
+                    out.append(temp[i]);
+            }
+            //out.append(temp);
             /*else
             {
                 AppItem newItem;

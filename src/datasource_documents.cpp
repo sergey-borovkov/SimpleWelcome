@@ -16,12 +16,12 @@ DataSource_Documents::DataSource_Documents(QObject* parent, QMLConstants *inCons
     updateContent();
 }
 
-int DataSource_Documents::getItemCount()
+int DataSource_Documents::getItemCount() const
 {
     return docsList.count();
 }
 
-QString DataSource_Documents::itemUrlDnd(int id)
+QString DataSource_Documents::itemUrlDnd(int id) const
 {
     if (id >= 0 && id < docsList.count()) {
         KDesktopFile file(docsList[id]["desktopEntry"].toString());
@@ -30,7 +30,7 @@ QString DataSource_Documents::itemUrlDnd(int id)
     return QString();
 }
 
-QIcon DataSource_Documents::getIcon(QString destination)
+QPixmap DataSource_Documents::getPreview(QString destination) const
 {
     destination = KUrl(destination).url();
     if (m_pixmaps.contains(destination))
@@ -40,10 +40,10 @@ QIcon DataSource_Documents::getIcon(QString destination)
         qDebug() << "IMAGE NOT FOUND! A BUG";
         qDebug() << m_pixmaps.keys();
     }
-    return QIcon();
+    return QPixmap();
 }
 
-QVariantMap DataSource_Documents::getContent(int index)
+QVariantMap DataSource_Documents::getContent(int index) const
 {
     return docsList[index];
 }
@@ -117,7 +117,7 @@ void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap
     p.setBrush(brush);
     p.setPen(pen);
     p.translate((iconSize - pixmap.width())/2, (iconSize - pixmap.height())/2);
-    p.drawRoundedRect(0, 0, pixmap.width(), pixmap.height(), 7, 7, Qt::AbsoluteSize);
+    p.drawRoundedRect(0, 0, pixmap.width() - 1, pixmap.height() - 1, 7, 7, Qt::AbsoluteSize);
 
     m_pixmaps[item.url().url()] = pix;
     for (int i = 0; i < docsList.size(); i++) {
