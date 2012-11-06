@@ -5,6 +5,7 @@ Item {
     id: cloudRect
     objectName: "cloudRect"
     property string id
+    property date datetime
     property date cloudDate
     property variant model
     property int like: 0
@@ -32,6 +33,7 @@ Item {
     {
         id = model.id(index)
         message = model.text(index)
+        datetime = model.datetime(index)
         picture = model.imageUrl(index)
         audio = model.audio(index)
         like = model.like(index)
@@ -107,11 +109,8 @@ Item {
                 Rectangle {
                     id: topLine
                     color: "transparent"
-                    //                    anchors.top: parent.top
-                    //                    anchors.right: parent.right
-                    //                    anchors.left: parent.left
-                    height: 26
                     width: parent.width
+                    height: Math.max( iconPlugin.height, dateArea.paintedHeight )
 
                     Image {
                         id: iconPlugin
@@ -123,6 +122,16 @@ Item {
                         fillMode: Image.PreserveAspectFit
                         smooth: true
                         //source: iconPlugin.source
+                    }
+                    Text {
+                        id: dateArea
+                        anchors.centerIn: parent
+                        wrapMode: Text.WordWrap
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                        text: date
+                        color: "white"
+                        visible: false
                     }
                     Item {
                         id: likesCountArea
@@ -227,6 +236,7 @@ Item {
                         id: socialImage
                         anchors.horizontalCenter: parent.horizontalCenter
                         fillMode: Image.PreserveAspectFit
+                        width: Math.min( sourceSize.height, mainRect.width - 20)
                         height: Math.min( sourceSize.height, mainRect.height - topLine.height - 20)
                         anchors.leftMargin: 5
                         anchors.rightMargin: 5
@@ -581,6 +591,11 @@ Item {
 
             PropertyChanges { target: msgViewRect; height: msgView.height }
 
+            PropertyChanges { target: dateArea; visible: true; color: "lightgrey"; text: Qt.formatDateTime(datetime, "d MMM " + i18n_In + " hh:mm") }
+
+            PropertyChanges { target: socialImage;
+                width: Math.min(mainRect.width - 20, sourceSize.width);
+                height: Math.min( mainRect.height - topLine.height - bottomLine.height - Math.min(70, msgViewRect.height) - audioItem.height - 20, sourceSize.height) }
         },
         State {
             name: "comments" ; extend: "details"

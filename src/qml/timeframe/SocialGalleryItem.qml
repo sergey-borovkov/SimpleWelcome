@@ -104,7 +104,7 @@ Item{
                         wrapMode: Text.WordWrap
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
-                        text: date
+                        text: Qt.formatDateTime(datetime, "d MMM yyyy ")
                         color: "white"
                         visible: false
                     }
