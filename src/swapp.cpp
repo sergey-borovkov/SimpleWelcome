@@ -201,6 +201,7 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("i18n_Logout", i18n("Logout"));
     m_viewer->rootContext()->setContextProperty("i18n_Enable", i18n("Enable..."));
     m_viewer->rootContext()->setContextProperty("i18n_Nepomuk_disabled", i18n("Nepomuk is disabled. You can enable it in the KDE Control Centre"));
+    m_viewer->rootContext()->setContextProperty("i18n_In", i18n("in"));
 
     m_viewer->rootContext()->setContextProperty("i18n_JAN", i18n("JAN"));
     m_viewer->rootContext()->setContextProperty("i18n_FEB", i18n("FEB"));

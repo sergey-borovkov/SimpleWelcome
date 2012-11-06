@@ -227,19 +227,6 @@ void LocalDayModel::addActivityItem(Activity *item)
     endInsertRows();
 }
 
-void LocalDayModel::printFirstItems(int count)
-{
-    int len = count;
-    if (len > AllItemMax) // max item's count in the cloud
-        len = AllItemMax;
-
-    QString str = "           ";
-    for (int row = 0; row < len; ++row) {
-        str += QString("%1: %2;  ").arg(row).arg(m_items.at(row)->type());
-    }
-    qDebug() << str;
-}
-
 QString LocalDayModel::url(int row) const
 {
     return m_items.at(row)->url();

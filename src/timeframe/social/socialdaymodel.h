@@ -48,6 +48,7 @@ public slots:
     QString imageUrl(int row) const;
     QString audio(int row) const;
     QString text(int row) const;
+    QDateTime datetime(int row) const;
     int likesCount(int row) const;
     int like(int row);
     int commentsCount(int row) const;
