@@ -148,8 +148,12 @@ Item {
 
     //Save date of current item in property "date"
     function saveCurrentDate() {
-        if (!isSocial)
-            timeFrameTab.date = localDayModel.getDateOfIndex(currentView.currentIndex)
+        if (!isSocial) {
+            if (typeof currentView !== "undefined")
+                timeFrameTab.date = localDayModel.getDateOfIndex(currentView.currentIndex)
+//            else
+//                timeFrameTab.date = new Date()
+        }
         else
             timeFrameTab.date = socialDayModel.getDateOfIndex(currentView.currentIndex)
     }
