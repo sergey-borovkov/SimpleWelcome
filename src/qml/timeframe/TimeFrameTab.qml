@@ -727,16 +727,21 @@ Item {
 
     Image {
         id: waitIndicator
-        anchors.centerIn: parent
-        source: "images/wait-indicator.png"
-        visible: false
-        smooth: true
+        anchors.centerIn: parent        
+        source: "images/indicator-shadow.png"
+        opacity: 0
+        Image {
+            id: can
+            source: "images/can2.png"
+            smooth: true
+        }
+        Behavior on opacity { NumberAnimation{ duration: 1000 }}
     }
 
     Timer {
         id: waitTimer
         interval: 10; running: false; repeat: true
-        onTriggered: waitIndicator.rotation = waitIndicator.rotation +10
+        onTriggered: can.rotation = can.rotation +10
 
     }
 
@@ -845,7 +850,7 @@ Item {
         State {
             name: "timeLineSearch"
 
-            PropertyChanges { target: waitIndicator; visible: true }
+            PropertyChanges { target: waitIndicator; opacity: 1 }
 
             PropertyChanges { target: waitTimer; running: true }
 
@@ -896,7 +901,7 @@ Item {
 
             PropertyChanges { target: socialTimeLine; visible: false; opacity: 0; }
 
-            PropertyChanges { target: waitIndicator; visible: true }
+            PropertyChanges { target: waitIndicator; opacity: 1 }
 
             PropertyChanges { target: waitTimer; running: true }
 
