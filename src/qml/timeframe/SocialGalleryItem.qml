@@ -104,7 +104,7 @@ Item{
                         wrapMode: Text.WordWrap
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
-                        text: date
+                        text: Qt.formatDateTime(datetime, "d MMM yyyy ")
                         color: "white"
                         visible: false
                     }
@@ -537,7 +537,7 @@ Item{
 
             PropertyChanges { target: detailsOffArea; visible: true }
 
-            PropertyChanges { target: dateArea; visible: true }
+            PropertyChanges { target: dateArea; visible: true; color: "lightgrey"; text: Qt.formatDateTime(datetime, "d MMM " + i18n_In + " hh:mm") }
 
             PropertyChanges { target: likeItem; visible: true }
 

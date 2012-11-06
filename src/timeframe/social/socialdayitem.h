@@ -45,7 +45,7 @@ public:
         roles.insert(ItemsRole,        "items");
         roles.insert(CountRole,        "count");
         roles.insert(ItemsCountRole,   "size");
-        roles.insert(ItemsTypes,      "type");
+        roles.insert(ItemsTypes,       "type");
 
         return roles;
     }

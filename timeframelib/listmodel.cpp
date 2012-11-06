@@ -48,6 +48,20 @@ void ListModel::appendRows(const QList<ListItem *> &items)
     endInsertRows();
 }
 
+
+void ListModel::prependRow(ListItem *item)
+{
+    prependRows(QList<ListItem*>() << item);
+}
+
+void ListModel::prependRows(const QList<ListItem *> &items)
+{
+    beginInsertRows(QModelIndex(), rowCount(), rowCount() + items.size() - 1);
+    foreach(ListItem * item, items)
+    m_items.prepend(item);
+    endInsertRows();
+}
+
 void ListModel::insertRow(int row, ListItem *item)
 {
     beginInsertRows(QModelIndex(), row, row);
