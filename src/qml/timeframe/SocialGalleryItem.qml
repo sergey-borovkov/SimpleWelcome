@@ -200,11 +200,12 @@ Item{
                         }
                     }
                 }
+
                 Image { //Main image
                     id: img
                     anchors.horizontalCenter: parent.horizontalCenter
                     fillMode: Image.PreserveAspectFit
-                    width: Math.min(200, sourceSize.width)
+                    width: Math.min(200 - 20, sourceSize.width)
                     height: Math.min(150, sourceSize.height)
                     anchors.leftMargin: 5
                     anchors.rightMargin: 5

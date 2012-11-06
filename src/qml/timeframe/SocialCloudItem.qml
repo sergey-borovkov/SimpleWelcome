@@ -236,7 +236,7 @@ Item {
                         id: socialImage
                         anchors.horizontalCenter: parent.horizontalCenter
                         fillMode: Image.PreserveAspectFit
-                        width: Math.min( sourceSize.height, mainRect.width - 20)
+                        width: Math.min( sourceSize.width, mainRect.width - 20)
                         height: Math.min( sourceSize.height, mainRect.height - topLine.height - 20)
                         anchors.leftMargin: 5
                         anchors.rightMargin: 5
@@ -557,8 +557,6 @@ Item {
 
             PropertyChanges { target: socialCloudItem; z: 400 }
 
-            PropertyChanges { target: socialMessage; text: message }
-
             PropertyChanges { target: likesCountArea; visible: false }
 
             PropertyChanges { target: commentsCountArea; visible: false }
@@ -577,7 +575,13 @@ Item {
 
             PropertyChanges { target: modal; enabled: true }
 
-            PropertyChanges { target: socialMessage; textFormat: Text.RichText; visible: true; horizontalAlignment: (msgView.contentHeight > msgView.height) ? Text.AlignLeft : Text.AlignHCenter }
+            PropertyChanges {
+                target: socialMessage;
+                text: message;
+                textFormat: Text.RichText;
+                visible: true;
+                horizontalAlignment: (msgView.contentHeight > msgView.height) ? Text.AlignLeft : Text.AlignHCenter;
+            }
 
             PropertyChanges { target: audioItem; visible: audio !== "" }
 
