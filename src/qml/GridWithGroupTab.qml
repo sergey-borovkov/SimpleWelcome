@@ -641,6 +641,8 @@ Item {
 
             function hideGroup(isNullifyStackedIndex)
             {
+                gridsListView.dndStateChanged(false)
+
                 popupFrame.state = "CLOSED"
                 stackCellOpenedId = -1
                 topBar.forceActiveFocus()
@@ -656,6 +658,8 @@ Item {
             {
                 if (popupFrame.state == "CLOSED")
                 {
+                    gridsListView.dndStateChanged(true)
+
                     popupFrame.arrowX = iconCoords.x
                     popupFrame.y = iconCoords.y
                     popupFrame.groupTitle = item.caption
