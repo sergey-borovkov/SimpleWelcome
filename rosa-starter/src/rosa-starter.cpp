@@ -22,6 +22,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "config.h"
 #include "rosa-starter.h"
 
 #include <QtDBus/QtDBus>
@@ -39,7 +40,6 @@
 
 #include <klocalizedstring.h>
 
-#include "config.h"
 
 void ROSA_Starter::init()
 {
@@ -63,7 +63,7 @@ void ROSA_Starter::init()
     resize(m_iconSize, m_iconSize);
 
     m_icon = new Plasma::IconWidget();
-    m_icon->setIcon(QIcon(QString(PIXMAP_PATH) + "rosa-icon.png"));
+    m_icon->setIcon(QIcon(pathToRoot() + QString::fromLatin1("/" SW_ASSETS_PATH "/") + "rosa-icon.png"));
     m_layout->addItem(m_icon);
 
     connect(this, SIGNAL(geometryChanged()), SLOT(resetIconSize()));
