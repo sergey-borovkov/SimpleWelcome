@@ -1,8 +1,9 @@
 /*
- * Copyright (c) ROSA Laboratory 2011
+ * Copyright (c) ROSA Laboratory 2011-2012
  * License: GPLv3
  *
  * Authors:
+ * Alexander Skakov <alexander.skakov@osinit.ru>
  * Alexey Yermakov <alexey.yermakov@rosalab.ru>
  *
  *
@@ -22,24 +23,27 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+// Own
 #include "config.h"
 #include "rosa-starter.h"
 
+// Qt
 #include <QtDBus/QtDBus>
+#include <QtGui/QAction>
+#include <QtGui/QGraphicsLinearLayout>
 
-#include <QPainter>
-#include <QGraphicsWidget>
-#include <QIcon>
-#include <QObject>
-#include <QTimer>
-#include <QProcess>
-
+// KDE
 #include <Plasma/IconWidget>
-
+#include <KLocalizedString>
 #include <KRun>
 
-#include <klocalizedstring.h>
 
+QString ROSA_Starter::pathToRoot()
+{
+    QDir root_dir = QCoreApplication::applicationDirPath();
+    root_dir.cdUp(); // skip 'bin' directory
+    return root_dir.canonicalPath();
+}
 
 void ROSA_Starter::init()
 {
@@ -85,7 +89,7 @@ void ROSA_Starter::buttonClicked()
     if (interface.isValid()) // if SW is launched
         interface.call("newInstance");
     else
-        QProcess::execute("rosa-launcher");
+        KRun::runCommand("rosa-launcher", NULL);
 }
 
 K_EXPORT_PLASMA_APPLET(rosastarter, ROSA_Starter)

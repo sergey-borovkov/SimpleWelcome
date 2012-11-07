@@ -1,8 +1,9 @@
 /*
- * Copyright (c) ROSA Laboratory 2011
+ * Copyright (c) ROSA Laboratory 2011-2012
  * License: GPLv3
  *
  * Authors:
+ * Alexander Skakov <alexander.skakov@osinit.ru>
  * Alexey Yermakov <alexey.yermakov@rosalab.ru>
  *
  *
@@ -24,15 +25,12 @@
 
 #pragma once
 
-#include <KIcon>
-
-#include <QTimer>
-
 #include <Plasma/Applet>
-#include <Plasma/Svg>
-#include <Plasma/IconWidget>
 
-#include <QGraphicsLinearLayout>
+class QGraphicsLinearLayout;
+namespace Plasma {
+class IconWidget;
+}
 
 class ROSA_Starter : public Plasma::Applet
 {
