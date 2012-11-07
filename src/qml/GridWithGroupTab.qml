@@ -641,10 +641,10 @@ Item {
 
             function hideGroup(isNullifyStackedIndex)
             {
-                gridsListView.dndStateChanged(false)
+                //gridsListView.dndStateChanged(false)
+                stackCellOpenedId = -1
 
                 popupFrame.state = "CLOSED"
-                stackCellOpenedId = -1
                 topBar.forceActiveFocus()
                 activeGridView.myActiveFocus = true
                 gridsListView.saveStacks()
@@ -802,9 +802,29 @@ Item {
                 }
             ]
 
-            transitions: Transition {
-                NumberAnimation { properties: "height, slideHeight"; easing.type: Easing.InOutQuad }
+            function groupCloseCompleted() {
+                if (gridMouseArea.dndSrcId === -1)
+                    gridsListView.dndStateChanged(false)
             }
+
+
+            transitions: [
+                Transition {
+                    from: "CLOSED"
+                    to: "OPEN"
+
+                    NumberAnimation { properties: "height, slideHeight"; easing.type: Easing.InOutQuad }
+                },
+                Transition {
+                    from: "OPEN"
+                    to: "CLOSED"
+
+                    SequentialAnimation {
+                        NumberAnimation { properties: "height, slideHeight"; easing.type: Easing.InOutQuad }
+                        ScriptAction { script: popupFrame.groupCloseCompleted() }
+                    }
+                }
+            ]
         }
     }
 }
