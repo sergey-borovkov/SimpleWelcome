@@ -277,6 +277,7 @@ MouseArea {
                 { // Unstacking if item we are above is not the one we stacked to
                     //console.log("UNSTACKING " + gridMouseArea.dndDest + " FROM " + indexWaitingOn)
                     grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
+                    grid.currentIndex = gridMouseArea.dndDest
                     gridMouseArea.draggedItemStackedAt = undefined
                 }
                 else if (grid.stackable && isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest && !isDragginStack) //&& pointsDistance <= 3)
@@ -293,9 +294,9 @@ MouseArea {
                             if (gridMouseArea.dndDest > indexWaitingOn)
                             {
                                 grid.model.move(gridMouseArea.dndDest, grid.count - 1, 1)
-                                grid.currentIndex = gridMouseArea.draggedItemStackedAt
                                 gridMouseArea.dndDest = grid.count - 1
                             }
+                            grid.currentIndex = gridMouseArea.draggedItemStackedAt
                         }
                     }
                 }
