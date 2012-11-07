@@ -73,7 +73,17 @@ void ROSA_Starter::init()
     connect(this, SIGNAL(geometryChanged()), SLOT(resetIconSize()));
     connect(m_icon, SIGNAL(clicked()), SLOT(buttonClicked()));
 
+    QAction* menuEditor = new QAction(i18n("Edit Applications..."), this);
+    m_actions.append(menuEditor);
+    connect(menuEditor, SIGNAL(triggered(bool)), SLOT(startMenuEditor()));
+
+
     KRun::runCommand("rosa-launcher -s", NULL);
+}
+
+QList<QAction *> ROSA_Starter::contextualActions()
+{
+    return m_actions;
 }
 
 void ROSA_Starter::resetIconSize()
@@ -90,6 +100,11 @@ void ROSA_Starter::buttonClicked()
         interface.call("newInstance");
     else
         KRun::runCommand("rosa-launcher", NULL);
+}
+
+void ROSA_Starter::startMenuEditor()
+{
+    KRun::runCommand("kmenuedit", NULL);
 }
 
 K_EXPORT_PLASMA_APPLET(rosastarter, ROSA_Starter)
