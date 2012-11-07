@@ -15,7 +15,7 @@ Item {
     property string picture: ""
     property string pluginName: ""
     property string audio: ""
-    property alias iconPlugin : iconPlugin
+    //property alias iconPlugin : iconPlugin
     property alias commentsView : commentsListView
     property int index: -1
 
@@ -40,7 +40,7 @@ Item {
         likes = model.likesCount(index)
         commentCount = model.commentsCount(index)
         pluginName = model.pluginName(index)
-        iconPlugin.source =  "image://plugin/" + pluginName + "/small"
+        topLine.pluginIcon =  "image://plugin/" + pluginName + "/small"
         commentsView.model = model.comments(index)
     }
 
@@ -93,133 +93,30 @@ Item {
 
         ItemRectangle {
             id: mainRect
+
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
             height: parent.height
 
-            Item {
+            SocialTopBar {
                 id: topLine
 
                 anchors.top: parent.top
                 width: parent.width
-                height: 26//Math.max( iconPlugin.height, dateArea.paintedHeight )
+                height: 26
 
-                Image {
-                    id: iconPlugin
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    width: 22
-                    height: 22
-                    fillMode: Image.PreserveAspectFit
-                    smooth: true
-                    //source: iconPlugin.source
-                }
-                Text {
-                    id: dateArea
-                    anchors.centerIn: parent
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    text: date
-                    color: "white"
-                    visible: false
-                }
-                Item {
-                    id: likesCountArea
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    anchors.topMargin: 3
-                    anchors.leftMargin: 5
-                    width: 40
-                    height: 22
-                    Image {
-                        id: smallLikeIcon
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 22
-                        height: 22
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        source: "images/like.png"
-                    }
-                    Text {
-                        anchors.left: smallLikeIcon.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.leftMargin: 5
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                        text: likes
-                        color: "white"
-                    }
-                }
-                Item {
-                    id: commentsCountArea
-                    anchors.right: likesCountArea.left
-                    anchors.rightMargin: 5
-                    anchors.top: parent.top
-                    anchors.topMargin: 3
-                    width: 40
-                    height: 22
-                    Image {
-                        id: smallCommentIcon
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 22
-                        height: 22
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        source: "images/comment.png"
-                    }
-                    Text {
-                        anchors.left: smallCommentIcon.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.leftMargin: 5
-                        text: commentCount
-                        color: "white"
-                    }
-                }
+                dateText : date
+                likesCount : likes
+                commentsCount: commentCount
 
-                Item {
-                    id: detailsOffArea
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
-                    anchors.rightMargin: 5
-                    width: 12
-                    height: 12
-                    visible: false
-                    Image{
-                        id: closeIcon
-                        anchors.centerIn: parent
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        source: "images/x.png"
-                        width: 8
-                        height: 8
-                    }
-                    MouseArea{
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: {
-                            modal.parent = cloudRect
-                            modal.z = -1
-                            cloudRect.state = ""
-                        }
-                        onEntered: {
-                            closeIcon.width = 10
-                            closeIcon.height = 10
-                        }
-                        onExited:{
-                            closeIcon.width = 8
-                            closeIcon.height = 8
-                        }
-
-                    }
+                onExitClicked: {
+                    modal.parent = cloudRect
+                    modal.z = -1
+                    cloudRect.state = ""
                 }
             }
+
             Item{
                 id: bodyItem
 
@@ -235,6 +132,7 @@ Item {
 
                     Item {
                         id: imageAnchor
+
                         width: parent.width
                         height: socialImage.height
 
@@ -568,15 +466,9 @@ Item {
 
             PropertyChanges { target: socialCloudItem; z: 400 }
 
-            PropertyChanges { target: likesCountArea; visible: false }
-
-            PropertyChanges { target: commentsCountArea; visible: false }
-
             PropertyChanges { target: bottomLikesCountArea; visible: true }
 
             PropertyChanges { target: bottomCommentsCountArea; visible: true }
-
-            PropertyChanges { target: detailsOffArea; visible: true }
 
             PropertyChanges { target: commentsShowArea; visible: true }
 
@@ -604,7 +496,11 @@ Item {
 
             PropertyChanges { target: cloudRect; z: 9000; height: { var y = cloudRect.height; return y } }
 
-            PropertyChanges { target: dateArea; visible: true; color: "lightgrey"; text: Qt.formatDateTime(datetime, "d MMM " + i18n_In + " hh:mm") }
+            PropertyChanges {
+                target: topLine
+                state: "detailed"
+                dateText: Qt.formatDateTime(datetime, "d MMM " + i18n_In + " hh:mm")
+            }
 
             PropertyChanges {
                 target: socialImage
