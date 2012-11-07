@@ -18,6 +18,10 @@ MouseArea {
     property real gridMouseY: grid ? mapToItem(grid, 0, mouseY).y : 0
     property real gridMouseX
 
+    property real gridMouseXPressedAt
+    property real gridMouseYPressedAt
+    property bool isPressedAndHolded: false
+
     property int gridMouseXWas // used when dragging icon between tabs
 
     function getGridMouseX() {
@@ -107,7 +111,8 @@ MouseArea {
             dndSrc = index
             dndAbsoluteSrc = index + grid.indexStartAt
             dndSrcId = grid.model.get(index).id
-            gridsListView.dndStateChanged(true)
+            if (!grid.isPopupGroup)
+                gridsListView.interactive = false
             //console.log("grid: " + grid)
 
 //                    console.log("NOW----------------")
@@ -240,7 +245,7 @@ MouseArea {
 
     Timer {
         id: mouseHoverTimer
-        interval: grid === undefined || grid.stackable ? 300 : 0
+        interval: grid === undefined || grid.stackable ? 110 : 0
         property variant itemWaitingOn: undefined
         property variant indexWaitingOn: undefined
         property bool isAimingOnStacking
@@ -263,11 +268,45 @@ MouseArea {
 
         }
 
+        function moveIconWhereAiming() {
+
+            if (gridMouseArea.dndDest > indexWaitingOn && gridMouseArea.gridMouseX >= itemWaitingOn.x + constants.cellWidth)
+                indexWaitingOn++;
+            else if (gridMouseArea.dndDest < indexWaitingOn && gridMouseArea.gridMouseX <= itemWaitingOn.x)
+                indexWaitingOn--;
+
+            //if (gridMouseArea.dndDest > indexWaitingOn && gridMouseArea.gridMouseX <= item.x || gridMouseArea.dndDest < indexWaitingOn && gridMouseArea.gridMouseX >= item.x + constants.cellWidth) // if (!isAimingOnStacking && !grid.stackable || isDragginStack) // Hit outer part of item. Using for repositioning
+                //console.log("MOVING")
+
+            grid.model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
+            gridMouseArea.dndDest = indexWaitingOn
+            grid.currentIndex = gridMouseArea.dndDest
+        }
+
+        function stackIconWhereAiming() {
+            if (isAimingOnStacking)
+            {
+                //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
+                var res = grid.stackItemInItem(indexWaitingOn, gridMouseArea.dndDest)
+                if (res)
+                {
+                    gridMouseArea.draggedItemStackedAt = indexWaitingOn
+
+                    //console.log("set " + indexWaitingOn + " with " + grid.model.get(indexWaitingOn).stack.length + " at real pos " + grid.model.get(indexWaitingOn).id)
+                    if (gridMouseArea.dndDest > indexWaitingOn)
+                    {
+                        grid.model.move(gridMouseArea.dndDest, grid.count - 1, 1)
+                        gridMouseArea.dndDest = grid.count - 1
+                    }
+                    grid.currentIndex = gridMouseArea.draggedItemStackedAt
+                }
+            }
+        }
+
         onTriggered: {
             if (grid && itemWaitingOn && grid.model.get(gridMouseArea.dndDest) !== undefined && gridMouseArea.pressed)
             {
-                var item = itemWaitingOn
-                var isHitInnerIcon = gridMouseArea.gridMouseX > item.x && gridMouseArea.gridMouseX < item.x + constants.cellWidth
+                var isHitInnerIcon = gridMouseArea.gridMouseX > itemWaitingOn.x && gridMouseArea.gridMouseX < itemWaitingOn.x + constants.cellWidth
                 var isDragginStack = grid.model.get(gridMouseArea.dndDest).stack !== undefined
 
                 //var pointsDistance = Math.sqrt(Math.pow(gridMouseArea.gridMouseX - xWaiting, 2) + Math.pow(gridMouseArea.gridMouseY - yWaiting, 2))
@@ -279,38 +318,33 @@ MouseArea {
                     grid.unstackItemInItem(gridMouseArea.draggedItemStackedAt, gridMouseArea.dndDest)
                     grid.currentIndex = gridMouseArea.dndDest
                     gridMouseArea.draggedItemStackedAt = undefined
+
+                    if (!isHitInnerIcon)
+                        moveIconWhereAiming()
+                    else if (indexWaitingOn != gridMouseArea.dndDest)
+                        stackIconWhereAiming()
                 }
                 else if (grid.stackable && isHitInnerIcon && indexWaitingOn != gridMouseArea.dndDest && !isDragginStack) //&& pointsDistance <= 3)
                 { // Hit central part of item. Using for stacking
-                    if (isAimingOnStacking)
-                    {
-                        //console.log("----------------- STACKING " + gridMouseArea.dndDest + " to " + indexWaitingOn)
-                        var res = grid.stackItemInItem(indexWaitingOn, gridMouseArea.dndDest)
-                        if (res)
-                        {
-                            gridMouseArea.draggedItemStackedAt = indexWaitingOn
-
-                            //console.log("set " + indexWaitingOn + " with " + grid.model.get(indexWaitingOn).stack.length + " at real pos " + grid.model.get(indexWaitingOn).id)
-                            if (gridMouseArea.dndDest > indexWaitingOn)
-                            {
-                                grid.model.move(gridMouseArea.dndDest, grid.count - 1, 1)
-                                gridMouseArea.dndDest = grid.count - 1
-                            }
-                            grid.currentIndex = gridMouseArea.draggedItemStackedAt
-                        }
-                    }
+                    stackIconWhereAiming()
                 }
-                else // if (!isAimingOnStacking && !grid.stackable || isDragginStack) // Hit outer part of item. Using for repositioning
-                {
-                    //console.log("MOVING")
+                else
+                    moveIconWhereAiming()
 
-                    grid.model.move(gridMouseArea.dndDest, indexWaitingOn, 1)
-                    gridMouseArea.dndDest = indexWaitingOn
-                    grid.currentIndex = gridMouseArea.dndDest
-                }
+                //console.log("indexWaitingOn:", indexWaitingOn)
 
                 itemWaitingOn = undefined
             }
+        }
+    }
+
+    Timer {
+        id: mousePressTimer
+        interval: 200
+
+        onTriggered: {
+            if (dndSrcId === -1 && (gridMouseXPressedAt === gridMouseX || gridMouseYPressedAt === gridMouseY) && pressed && gridMouseY > 0 && gridMouseY < grid.height)
+                pressAndHoldEvent()
         }
     }
 
@@ -355,7 +389,8 @@ MouseArea {
                     grid.model.move(dndDest, dndSrc, 1)
 
                     var imagePath = grid.model.get(dndSrc).imagePath
-                    gridsListView.dndStateChanged(false)
+                    if (!grid.isPopupGroup)
+                        gridsListView.interactive = true
                     dndSrcId = -1
                     dndSrc = -1
                     dndDest = -1
@@ -408,10 +443,17 @@ MouseArea {
 
 
     onPressed: {
+        isPressedAndHolded = false
         pressedOnIndex = getItemUnderCursor(true).index
+
+        gridMouseXPressedAt = gridMouseX
+        gridMouseYPressedAt = gridMouseY
+
+        mousePressTimer.start()
     }
 
-    onPressAndHold: {
+    function pressAndHoldEvent() {
+        isPressedAndHolded = true
         if (grid.draggable)
         {
             var index = getItemUnderCursor(true).index
@@ -431,8 +473,10 @@ MouseArea {
                 }
             }
         }
-
     }
+
+    //onPressAndHold: pressAndHoldEvent()
+
     onReleased: {
         skipMoveAnimation = false
         tabsSwitchingTimer.stop()
@@ -463,13 +507,15 @@ MouseArea {
             grid.model.remove(dndDest)
 
             dndSrcId = -1
-            gridsListView.dndStateChanged(false)
+            if (!grid.isPopupGroup)
+                gridsListView.interactive = true
         }
         else {
             dndSrcId = -1
 
             if (dndSrcIdSaved != -1) {
-                gridsListView.dndStateChanged(false)
+                if (!grid.isPopupGroup)
+                    gridsListView.interactive = true
 
                 if (dndAbsoluteSrc !== dndDest + grid.indexStartAt) {
                     if (grid.isPopupGroup) {
@@ -539,13 +585,15 @@ MouseArea {
 
         //    console.log(grid.model.get(j).caption + " | " + grid.model.get(i).id + " | " + i)
 
-    }
-
-    onClicked: {
-        if (grid.isPopupGroup && (gridMouseY < -grid.dragOutTopMargin || gridMouseY > grid.height + grid.dragOutBottomMargin))
+        if (grid.isPopupGroup && (gridMouseY < -grid.dragOutTopMargin || gridMouseY > grid.height + grid.dragOutBottomMargin)) {
             gridsListView.hideGroup()
-        else if (!grid.moving)
-        {
+            return
+        }
+
+        if (gridMouseXPressedAt !== gridMouseX || gridMouseYPressedAt !== gridMouseY || isPressedAndHolded)
+            return
+
+        if (!grid.moving) {
             var indexClicked = getItemUnderCursor(true).index
             grid.model.itemClicked(indexClicked)
         }
