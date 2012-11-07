@@ -11,27 +11,33 @@ Item {
             Image
             {
                 id: userPhoto
+
+                width: 55
                 anchors.left: parent.left
                 anchors.top: parent.top
-                fillMode: Image.PreserveAspectFit
-                width: 55
                 anchors.rightMargin: 5
+
+                fillMode: Image.PreserveAspectFit                
                 source: fromPictureUrl
             }
             Text {
                 id: nameField;
+
                 anchors.left: userPhoto.right
                 anchors.top: parent.top
                 anchors.leftMargin: 10
+
                 text: from
                 color: "grey"
             }
             Text {
                 id: textField;
+
                 anchors.left: userPhoto.right
                 anchors.top: nameField.bottom
-                width: parent.width - userPhoto.width - 40
                 anchors.leftMargin: 10
+                width: parent.width - userPhoto.width - 40
+
                 text: messageText
                 color: "white"
                 wrapMode: Text.Wrap
@@ -42,8 +48,8 @@ Item {
     ListView {
         id: commentsListView
         anchors.fill: parent
-        clip: true
-       // snapMode:  ListView.SnapToItem
+
+        clip: true       
         property string parentId: ""
         property string pluginName: ""
         delegate: commentsDelegate

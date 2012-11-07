@@ -742,7 +742,6 @@ Item {
         id: waitTimer
         interval: 10; running: false; repeat: true
         onTriggered: can.rotation = can.rotation +10
-
     }
 
     Connections {

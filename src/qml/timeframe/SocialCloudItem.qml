@@ -98,227 +98,238 @@ Item {
             width: parent.width
             height: parent.height
 
-            Column {
-                id: column
-                width: parent.width
-                anchors.bottomMargin: 5
+            Item {
+                id: topLine
+
                 anchors.top: parent.top
-                anchors.bottom: bottomLine.top
-                spacing: 10
+                width: parent.width
+                height: 26//Math.max( iconPlugin.height, dateArea.paintedHeight )
 
-                Rectangle {
-                    id: topLine
-                    color: "transparent"
-                    width: parent.width
-                    height: Math.max( iconPlugin.height, dateArea.paintedHeight )
-
+                Image {
+                    id: iconPlugin
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    width: 22
+                    height: 22
+                    fillMode: Image.PreserveAspectFit
+                    smooth: true
+                    //source: iconPlugin.source
+                }
+                Text {
+                    id: dateArea
+                    anchors.centerIn: parent
+                    wrapMode: Text.WordWrap
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    text: date
+                    color: "white"
+                    visible: false
+                }
+                Item {
+                    id: likesCountArea
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.topMargin: 3
+                    anchors.leftMargin: 5
+                    width: 40
+                    height: 22
                     Image {
-                        id: iconPlugin
-                        anchors.top: parent.top
+                        id: smallLikeIcon
                         anchors.left: parent.left
-                        anchors.leftMargin: 10
+                        anchors.verticalCenter: parent.verticalCenter
                         width: 22
                         height: 22
                         fillMode: Image.PreserveAspectFit
                         smooth: true
-                        //source: iconPlugin.source
+                        source: "images/like.png"
                     }
                     Text {
-                        id: dateArea
-                        anchors.centerIn: parent
-                        wrapMode: Text.WordWrap
-                        horizontalAlignment: Text.AlignLeft
-                        verticalAlignment: Text.AlignVCenter
-                        text: date
-                        color: "white"
-                        visible: false
-                    }
-                    Item {
-                        id: likesCountArea
-                        anchors.right: parent.right
-                        anchors.top: parent.top
-                        anchors.topMargin: 3
-                        anchors.leftMargin: 5
-                        width: 40
-                        height: 22
-                        Image {
-                            id: smallLikeIcon
-                            anchors.left: parent.left
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 22
-                            height: 22
-                            fillMode: Image.PreserveAspectFit
-                            smooth: true
-                            source: "images/like.png"
-                        }
-                        Text {
-                            anchors.left: smallLikeIcon.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.leftMargin: 5
-                            horizontalAlignment: Text.AlignRight
-                            verticalAlignment: Text.AlignVCenter
-                            text: likes
-                            color: "white"
-                        }
-                    }
-                    Item {
-                        id: commentsCountArea
-                        anchors.right: likesCountArea.left
-                        anchors.rightMargin: 5
-                        anchors.top: parent.top
-                        anchors.topMargin: 3
-                        width: 40
-                        height: 22
-                        Image {
-                            id: smallCommentIcon
-                            anchors.left: parent.left
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 22
-                            height: 22
-                            fillMode: Image.PreserveAspectFit
-                            smooth: true
-                            source: "images/comment.png"
-                        }
-                        Text {
-                            anchors.left: smallCommentIcon.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            horizontalAlignment: Text.AlignRight
-                            verticalAlignment: Text.AlignVCenter
-                            anchors.leftMargin: 5
-                            text: commentCount
-                            color: "white"
-                        }
-                    }
-
-                    Item {
-                        id: detailsOffArea
+                        anchors.left: smallLikeIcon.right
                         anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: parent.right
-                        anchors.rightMargin: 5
-                        width: 12
-                        height: 12
-                        visible: false
-                        Image{
-                            id: closeIcon
-                            anchors.centerIn: parent
+                        anchors.leftMargin: 5
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                        text: likes
+                        color: "white"
+                    }
+                }
+                Item {
+                    id: commentsCountArea
+                    anchors.right: likesCountArea.left
+                    anchors.rightMargin: 5
+                    anchors.top: parent.top
+                    anchors.topMargin: 3
+                    width: 40
+                    height: 22
+                    Image {
+                        id: smallCommentIcon
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 22
+                        height: 22
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        source: "images/comment.png"
+                    }
+                    Text {
+                        anchors.left: smallCommentIcon.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.leftMargin: 5
+                        text: commentCount
+                        color: "white"
+                    }
+                }
+
+                Item {
+                    id: detailsOffArea
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.right
+                    anchors.rightMargin: 5
+                    width: 12
+                    height: 12
+                    visible: false
+                    Image{
+                        id: closeIcon
+                        anchors.centerIn: parent
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        source: "images/x.png"
+                        width: 8
+                        height: 8
+                    }
+                    MouseArea{
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: {
+                            modal.parent = cloudRect
+                            modal.z = -1
+                            cloudRect.state = ""
+                        }
+                        onEntered: {
+                            closeIcon.width = 10
+                            closeIcon.height = 10
+                        }
+                        onExited:{
+                            closeIcon.width = 8
+                            closeIcon.height = 8
+                        }
+
+                    }
+                }
+            }
+            Item{
+                id: bodyItem
+
+                anchors { top: topLine.bottom; bottom: bottomLine.top; left: parent.left; right: parent.right }
+
+                Column {
+                    id: column
+
+                    anchors.centerIn: parent
+                    width: parent.width
+
+                    spacing: 10
+
+                    Item {
+                        id: imageAnchor
+                        width: parent.width
+                        height: socialImage.height
+
+                        Image { //Main image
+                            id: socialImage
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            width: Math.min( sourceSize.width, mainRect.width - 20)
+                            height: Math.min( sourceSize.height, mainRect.height - topLine.height - bottomLine.height)
+                            anchors.leftMargin: 5
+                            anchors.rightMargin: 5
+
                             fillMode: Image.PreserveAspectFit
                             smooth: true
-                            source: "images/x.png"
-                            width: 8
-                            height: 8
-                        }
-                        MouseArea{
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onClicked: {
-                                modal.parent = cloudRect
-                                modal.z = -1
-                                cloudRect.state = ""
-                            }
-                            onEntered: {
-                                closeIcon.width = 10
-                                closeIcon.height = 10
-                            }
-                            onExited:{
-                                closeIcon.width = 8
-                                closeIcon.height = 8
-                            }
-
-                        }
-                    }
-                }
-
-                Item {
-                    width: parent.width
-                    height: socialImage.height
-
-                    Image { //Main image
-                        id: socialImage
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        fillMode: Image.PreserveAspectFit
-                        width: Math.min( sourceSize.width, mainRect.width - 20)
-                        height: Math.min( sourceSize.height, mainRect.height - topLine.height - 20)
-                        anchors.leftMargin: 5
-                        anchors.rightMargin: 5
-                        smooth: true
-                        source: picture
-                        clip: true
-                    }
-                }
-
-                Text {
-                    function getAudio()
-                    {
-                        if(typeof audio === "undefined")
-                            return ""
-                        else
-                            return i18n_Audio + audio
-                    }
-
-                    id: audioItem
-                    width: parent.width - 20
-                    anchors.bottomMargin: 3
-                    wrapMode: Text.Wrap
-                    textFormat: Text.StyledText
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    elide: Text.ElideRight
-                    maximumLineCount: 2
-                    text: getAudio()
-                    color: "lightblue"
-                    visible: (picture === "") && (audio !== "")
-                }
-
-                Item {
-                    id: msgViewRect
-                    width: parent.width
-                    height: (picture === "") ? msgView.height : 0
-
-                    Flickable {
-                        id: msgView
-                        width: parent.width
-                        height: socialMessage.height
-                        contentHeight: socialMessage.paintedHeight
-                        clip: true
-
-                        Text {
-                            id: socialMessage
-                            width: msgView.width - 20
-                            anchors.bottomMargin: 3
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            wrapMode: Text.Wrap
-                            horizontalAlignment: truncated ? Text.AlignLeft : Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            text: (picture === "") ? message : ""
-                            visible: (picture === "")
-
-                            color: "white"
+                            source: picture
                             clip: true
-                            textFormat: Text.StyledText
-                            elide: Text.ElideRight
-                            maximumLineCount: { var lines = ( mainRect.height - topLine.height - (audioItem.visible ? audioItem.height : 0)) / font.pixelSize / 1.5; return lines }
+                        }
+                    }
 
-                            onLinkActivated: {
-                                Qt.openUrlExternally(link)
-                            }
+                    Text {
+                        id: audioItem
+                        width: parent.width - 20
+                        anchors.bottomMargin: 3
 
-                            MouseArea {
-                                id: msgMouseArea
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                onClicked: {
-                                    popupDetailsWidget()
+                        wrapMode: Text.Wrap
+                        textFormat: Text.StyledText
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                        maximumLineCount: 2
+                        text: getAudio()
+                        color: "lightblue"
+                        visible: (picture === "") && (audio !== "")
+
+                        function getAudio()
+                        {
+                            if(typeof audio === "undefined")
+                                return ""
+                            else
+                                return i18n_Audio + audio
+                        }
+                    }
+
+                    Item {
+                        id: msgViewRect
+                        x: 10
+                        width: parent.width - 20
+                        height: msgView.height
+                        visible: (picture === "")
+
+                        Flickable {
+                            id: msgView
+                            width: parent.width
+                            height: socialMessage.paintedHeight
+
+                            contentHeight: socialMessage.paintedHeight
+                            clip: true
+
+                            Text {
+                                id: socialMessage
+                                width: msgView.width - 20
+                                anchors.bottomMargin: 3
+                                anchors.horizontalCenter: parent.horizontalCenter
+
+                                wrapMode: Text.Wrap
+                                horizontalAlignment: truncated ? Text.AlignLeft : Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                text: (picture === "") ? message : ""
+                                color: "white"
+                                clip: true
+                                textFormat: Text.StyledText
+                                elide: Text.ElideRight
+                                maximumLineCount: { var lines = ( mainRect.height - topLine.height - (audioItem.visible ? audioItem.height : 0)) / font.pixelSize / 1.5; return lines }
+
+                                onLinkActivated: {
+                                    Qt.openUrlExternally(link)
+                                }
+
+                                MouseArea {
+                                    id: msgMouseArea
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onClicked: {
+                                        popupDetailsWidget()
+                                    }
                                 }
                             }
                         }
-                    }
-                    ScrollBar {
-                        id: msgScrollBar
-                        flickable: msgView
-                        vertical: true
-                        hideScrollBarsWhenStopped: false
-                        visible: false
+                        ScrollBar {
+                            id: msgScrollBar
+                            flickable: msgView
+                            vertical: true
+                            hideScrollBarsWhenStopped: false
+                            visible: false
+                        }
                     }
                 }
             }
@@ -329,7 +340,7 @@ Item {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.left: parent.left
-                height: 10
+                height: 5
                 Item {
                     id: bottomCommentsCountArea
                     anchors.verticalCenter: parent.verticalCenter
@@ -593,13 +604,13 @@ Item {
 
             PropertyChanges { target: cloudRect; z: 9000; height: { var y = cloudRect.height; return y } }
 
-            PropertyChanges { target: msgViewRect; height: msgView.height }
-
             PropertyChanges { target: dateArea; visible: true; color: "lightgrey"; text: Qt.formatDateTime(datetime, "d MMM " + i18n_In + " hh:mm") }
 
-            PropertyChanges { target: socialImage;
-                width: Math.min(mainRect.width - 20, sourceSize.width);
-                height: Math.min( mainRect.height - topLine.height - bottomLine.height - Math.min(70, msgViewRect.height) - audioItem.height - 20, sourceSize.height) }
+            PropertyChanges {
+                target: socialImage
+                width: Math.min(mainRect.width - 20, sourceSize.width)
+                height: Math.min( mainRect.height - topLine.height - bottomLine.height - Math.min(70, msgViewRect.height) - audioItem.height - 20, sourceSize.height)
+            }
         },
         State {
             name: "comments" ; extend: "details"
@@ -625,7 +636,6 @@ Item {
             ParentAnimation {
                 via: foreground
                 NumberAnimation { properties: "x,y,width,height,opacity,z"; duration: 300 }
-
             }
         }
     ]
