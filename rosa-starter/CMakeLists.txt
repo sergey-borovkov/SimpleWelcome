@@ -3,6 +3,8 @@ project(rosa-starter)
 set(rosastarter_SRCS
     src/rosa-starter.cpp)
 
+include_directories(${CMAKE_BINARY_DIR})
+
 kde4_add_plugin(plasma_applet_rosastarter ${rosastarter_SRCS})
 target_link_libraries(plasma_applet_rosastarter
         ${KDE4_PLASMA_LIBS}

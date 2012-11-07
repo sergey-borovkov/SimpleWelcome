@@ -46,8 +46,11 @@ public:
 private slots:
     void resetIconSize();
     void buttonClicked();
+    void startMenuEditor();
 
 private:
+    QString pathToRoot();
+
     Plasma::IconWidget *m_icon;
     QGraphicsLinearLayout *m_layout;
     int m_iconSize;
