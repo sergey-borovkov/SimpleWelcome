@@ -164,7 +164,7 @@ Item {
                 reversible: true
                 ParentAnimation {
                     via: tabRoot
-                    NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad }
+                    NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad; duration: 100 }
                 }
             },
             Transition {
