@@ -160,6 +160,9 @@ MouseArea {
                     break
                 }
 
+            if (!nextPageModel.count)
+                return
+
             var itemFromNextPage
             if (isForward)
                 itemFromNextPage = nextPageModel.get(0)
@@ -245,7 +248,7 @@ MouseArea {
 
     Timer {
         id: mouseHoverTimer
-        interval: grid === undefined || grid.stackable ? 110 : 0
+        interval: grid === undefined || grid.stackable ? 200 : 0
         property variant itemWaitingOn: undefined
         property variant indexWaitingOn: undefined
         property bool isAimingOnStacking
