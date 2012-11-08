@@ -14,9 +14,18 @@
 QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
     QDeclarativeView(parent), currentTabIndex(0)
 {
+    QDesktopWidget *desktop = QApplication::desktop();
     connect(engine(), SIGNAL(quit()), SLOT(close()));
-    connect(QApplication::desktop(), SIGNAL(workAreaResized(int)), SLOT(updateWorkArea()));
+    connect(desktop, SIGNAL(workAreaResized(int)), SLOT(updateWorkArea(int)));
     setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    setWindowFlags(Qt::FramelessWindowHint);
+
+    setGeometry(desktop->screenGeometry(0));
+    setFixedSize(size());
+
+    // Window transparency
+    setAttribute(Qt::WA_TranslucentBackground);
+    setStyleSheet("background:transparent;");
 }
 
 void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
@@ -33,10 +42,13 @@ void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
 }
 
 
-void QmlApplicationViewer::updateWorkArea()
+void QmlApplicationViewer::updateWorkArea(int screen)
 {
-    // if work area is changed, then change size of main window
-    setFixedSize(QApplication::desktop()->size());
+    if (screen == 0) {
+        // if work area is changed, then change size of main window
+        QRect geom = QApplication::desktop()->screenGeometry(0);
+        setFixedSize(geom.size());
+    }
 }
 
 void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
@@ -45,12 +57,12 @@ void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
         close();
 }
 
-QRect QmlApplicationViewer::getMargins() const
+
+QRect QmlApplicationViewer::getAvailableGeometry() const
 {
-    QRect result(QApplication::desktop()->availableGeometry().left(), QApplication::desktop()->availableGeometry().top(),
-                 QApplication::desktop()->width() - QApplication::desktop()->availableGeometry().right(),
-                 QApplication::desktop()->height() - QApplication::desktop()->availableGeometry().bottom());
-    return result;
+    qDebug() << "Screen geom: " << QApplication::desktop()->screenGeometry(0);
+    qDebug() << "Avail geom: " << QApplication::desktop()->availableGeometry(0);
+    return QApplication::desktop()->availableGeometry(0);
 }
 
 void QmlApplicationViewer::moveEvent(QMoveEvent *)

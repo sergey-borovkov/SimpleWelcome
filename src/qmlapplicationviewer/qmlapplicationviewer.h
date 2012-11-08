@@ -16,7 +16,7 @@ public:
     virtual void closeEvent(QCloseEvent *event);
     virtual void moveEvent(QMoveEvent *);
 
-    Q_INVOKABLE QRect getMargins() const;
+    Q_INVOKABLE QRect getAvailableGeometry() const;
     Q_INVOKABLE void activateDragAndDrop(QString url, QString image_path, int image_size);
 
     Q_INVOKABLE void saveStacks(QVariantList setting);
@@ -33,7 +33,7 @@ signals:
 
 public slots:
     void restore();
-    void updateWorkArea();
+    void updateWorkArea(int screen);
     void focusChanged(QWidget *, QWidget *now);
 
 private:

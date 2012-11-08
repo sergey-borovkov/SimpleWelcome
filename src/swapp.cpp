@@ -135,12 +135,6 @@ SWApp::SWApp()
     m_globalAction = new KAction(this);
 
     m_viewer = new QmlApplicationViewer();
-    m_viewer->setGeometry(0, 0, QApplication::desktop()->width(), QApplication::desktop()->height());
-    m_viewer->setFixedSize(QApplication::desktop()->width(), QApplication::desktop()->height());
-    m_viewer->setWindowFlags(Qt::FramelessWindowHint);
-    // Window transparency
-    m_viewer->setAttribute(Qt::WA_TranslucentBackground);
-    m_viewer->setStyleSheet("background:transparent;");
 
     m_viewer->rootContext()->setContextProperty("mainWindow", m_viewer);
     m_viewer->rootContext()->setContextProperty("sessionProvider", new SessionProvider(this));

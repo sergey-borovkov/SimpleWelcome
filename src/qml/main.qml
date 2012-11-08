@@ -36,11 +36,11 @@ Item {
             if (isCompleted)
             {
                 var wasCurrentIndex = tabListView.currentIndex
-                var margins = mainWindow.getMargins()
+                var margins = mainWindow.getAvailableGeometry()
                 anchors.leftMargin = margins.x
                 anchors.topMargin = margins.y
-                anchors.rightMargin = margins.width
-                anchors.bottomMargin = margins.height
+                anchors.rightMargin = rootWrapper.width - (margins.x + margins.width)
+                anchors.bottomMargin = rootWrapper.height - (margins.y + margins.height)
                 console.log("resize to " + width + "x" + height + " [" + margins.x + "," + margins.y + "," + margins.width  + "," + margins.height + "]")
 
                 searchTab.tab.updateGridsContent()
