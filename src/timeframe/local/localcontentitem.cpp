@@ -56,9 +56,9 @@ void LocalContentItem::setDate(const QDate &d)
     emit dataChanged();
 }
 
-void LocalContentItem::addActivity(Activity* item)
+void LocalContentItem::addActivity(Activity *item)
 {
-    if(m_itemModel->rowCount(QModelIndex()) > 500)
+    if (m_itemModel->rowCount(QModelIndex()) > 500)
         return;
 
     if (!m_types.contains(item->type())) {
@@ -79,7 +79,7 @@ int LocalContentItem::getCount() const
     return m_model->rowCount(QModelIndex());
 }
 
-LocalDayFilterModel * LocalContentItem::model()
+LocalDayFilterModel *LocalContentItem::model()
 {
     return m_model;
 }

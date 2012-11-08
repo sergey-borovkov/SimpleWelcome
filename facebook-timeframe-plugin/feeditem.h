@@ -25,7 +25,7 @@ private:
     QString m_id;
     QMap<int, QVariant> m_data;
     QList<CommentItem *> m_comments;
-    ListModel* m_commentsModel;
+    ListModel *m_commentsModel;
     QString m_selfId;
 };
 

@@ -37,7 +37,7 @@ ListModel::~ListModel()
 
 void ListModel::appendRow(ListItem *item)
 {
-    appendRows(QList<ListItem*>() << item);
+    appendRows(QList<ListItem *>() << item);
 }
 
 void ListModel::appendRows(const QList<ListItem *> &items)
@@ -51,7 +51,7 @@ void ListModel::appendRows(const QList<ListItem *> &items)
 
 void ListModel::prependRow(ListItem *item)
 {
-    prependRows(QList<ListItem*>() << item);
+    prependRows(QList<ListItem *>() << item);
 }
 
 void ListModel::prependRows(const QList<ListItem *> &items)
@@ -69,7 +69,7 @@ void ListModel::insertRow(int row, ListItem *item)
     endInsertRows();
 }
 
-ListItem * ListModel::find(const QString &id) const
+ListItem *ListModel::find(const QString &id) const
 {
     foreach(ListItem * item, m_items)
     if (item->id() == id)
@@ -134,10 +134,10 @@ void ListModel::refreshRow(int row)
     emit dataChanged(ind, ind);
 }
 
-ListItem * ListModel::takeRow(int row)
+ListItem *ListModel::takeRow(int row)
 {
     beginRemoveRows(QModelIndex(), row, row);
-    ListItem* item = m_items.takeAt(row);
+    ListItem *item = m_items.takeAt(row);
     endRemoveRows();
     return item;
 }

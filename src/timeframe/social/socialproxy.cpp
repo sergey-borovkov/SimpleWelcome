@@ -28,10 +28,10 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
         QObject *object = 0;
         if ((object = dynamic_cast<QObject *>(plugin->requestManager())) != 0) {
             // perphaps need to make it work via PluginRequestReply later
-            connect(object, SIGNAL(newSocialItems(QList<SocialItem*>)), SLOT(newItems(QList<SocialItem*>)));
+            connect(object, SIGNAL(newSocialItems(QList<SocialItem *>)), SLOT(newItems(QList<SocialItem *>)));
             connect(object, SIGNAL(selfId(QString)), SLOT(onSelfId(QString)));
             connect(object, SIGNAL(selfName(QString)), SLOT(onSelfName(QString)));
-            connect(object, SIGNAL(newComments(QString, QList<CommentItem *>)), SLOT(newComments(QString, QList<CommentItem*>)));
+            connect(object, SIGNAL(newComments(QString, QList<CommentItem *>)), SLOT(newComments(QString, QList<CommentItem *>)));
             connect(object, SIGNAL(searchComplete()), SLOT(searchComplete()));
             connect(object, SIGNAL(selfLiked(QString)), SLOT(onSelfLiked(QString)));
             connect(object, SIGNAL(selfLiked(QString)), SLOT(onSelfLiked(QString)));
@@ -74,16 +74,16 @@ PluginModel *SocialProxy::pluginModel()
 
 void SocialProxy::likeItem(const QString &id, const QString &pluginName)
 {
-    PluginRequestReply* reply = like(id, pluginName);
-    connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(likeSuccess(PluginRequestReply*)));
+    PluginRequestReply *reply = like(id, pluginName);
+    connect(reply, SIGNAL(success(PluginRequestReply *)), this, SLOT(likeSuccess(PluginRequestReply *)));
     /*TO-DO: process error replies*/
     connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 }
 
 void SocialProxy::unlikeItem(const QString &id, const QString &pluginName)
 {
-    PluginRequestReply* reply = dislike(id, pluginName);
-    connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(likeSuccess(PluginRequestReply*)));
+    PluginRequestReply *reply = dislike(id, pluginName);
+    connect(reply, SIGNAL(success(PluginRequestReply *)), this, SLOT(likeSuccess(PluginRequestReply *)));
     /*TO-DO: process error replies*/
 }
 
@@ -105,7 +105,7 @@ void SocialProxy::login(const QString &pluginName)
     QSettings settings("ROSA", "Timeframe");
     settings.setValue(plugin->name(), 1);
 
-    if(plugin) {
+    if (plugin) {
         QWidget *w = plugin->authenticationWidget();
         if (w)
             w->show();
@@ -114,16 +114,16 @@ void SocialProxy::login(const QString &pluginName)
 
 void SocialProxy::commentItem(const QString &message, const QString &parentId, const QString &pluginName)
 {
-    PluginRequestReply* reply = postComment(message, parentId, pluginName);
+    PluginRequestReply *reply = postComment(message, parentId, pluginName);
     m_cachedComment = message;
-    connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(commentSuccess(PluginRequestReply*)));
+    connect(reply, SIGNAL(success(PluginRequestReply *)), this, SLOT(commentSuccess(PluginRequestReply *)));
     connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 }
 
 void SocialProxy::getUserPicture(const QString &id, const QString &parentId, const QString &pluginName)
 {
-    PluginRequestReply* reply = userPicture(id, parentId, pluginName);
-    connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(getPictureSuccess(PluginRequestReply*)));
+    PluginRequestReply *reply = userPicture(id, parentId, pluginName);
+    connect(reply, SIGNAL(success(PluginRequestReply *)), this, SLOT(getPictureSuccess(PluginRequestReply *)));
     /*TO-DO: process error replies*/
     connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 }
@@ -148,7 +148,7 @@ void SocialProxy::startSearch()
 PluginRequestReply *SocialProxy::like(const QString &id, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
-    if(!plugin)
+    if (!plugin)
         return 0;
     Request *request = plugin->requestManager()->like(id);
     PluginRequestReply *reply = new PluginRequestReply(request, id, pluginName, this);
@@ -161,7 +161,7 @@ PluginRequestReply *SocialProxy::like(const QString &id, const QString &pluginNa
 PluginRequestReply *SocialProxy::dislike(const QString &id, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
-    if(!plugin)
+    if (!plugin)
         return 0;
     Request *request = plugin->requestManager()->unlike(id);
     PluginRequestReply *reply = new PluginRequestReply(request, id, pluginName, this);
@@ -171,9 +171,9 @@ PluginRequestReply *SocialProxy::dislike(const QString &id, const QString &plugi
 }
 
 PluginRequestReply *SocialProxy::postComment(const QString &message, const QString &parentId, const QString &pluginName)
-{    
+{
     ISocialPlugin *plugin = pluginFromName(pluginName);
-    if(!plugin)
+    if (!plugin)
         return 0;
 
     Request *request = plugin->requestManager()->postComment(QUrl::toPercentEncoding(message), parentId);
@@ -188,7 +188,7 @@ PluginRequestReply *SocialProxy::userPicture(const QString &id, const QString &p
     ISocialPlugin *plugin = pluginFromName(pluginName);
     Request *request = plugin->requestManager()->queryImage(id);
     PluginRequestReply *reply = new PluginRequestReply(request, parentId, pluginName, this);
-    QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
+    QObject *obj = dynamic_cast<QObject *>(plugin->requestManager());
     connect(obj, SIGNAL(gotUserImage(QString, QString)), reply, SLOT(gotUserPictureUrl(QString, QString)));
     connect(obj, SIGNAL(gotUserName(QString, QString)), reply, SLOT(gotUserName(QString, QString)));
     request->start();
@@ -213,7 +213,7 @@ QString SocialProxy::authorizedLocalizedPluginName(int i) const
 
     QString name = authorizedPlugins.at(i);
     QString displayName = name;
-    foreach(ISocialPlugin *plugin, m_plugins) {
+    foreach(ISocialPlugin * plugin, m_plugins) {
         if (plugin->name() == name) {
             displayName = plugin->displayName();
         }
@@ -225,7 +225,7 @@ QString SocialProxy::authorizedLocalizedPluginName(int i) const
 PluginRequestReply *SocialProxy::getAllComments(const QString &id, const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
-    if(!plugin)
+    if (!plugin)
         return 0;
     Request *request = plugin->requestManager()->queryComments(id);
     PluginRequestReply *reply = new PluginRequestReply(request, id, pluginName, this);
@@ -244,26 +244,26 @@ PluginRequestReply *SocialProxy::getAllLikes(const QString &id, const QString &p
     return reply;
 }
 
-void SocialProxy::likeSuccess(PluginRequestReply* reply)
+void SocialProxy::likeSuccess(PluginRequestReply *reply)
 {
     m_socialModel->likeItem(reply->sourceId());
 }
 
-void SocialProxy::commentSuccess(PluginRequestReply* reply)
+void SocialProxy::commentSuccess(PluginRequestReply *reply)
 {
-    ISocialPlugin *plugin = pluginFromName( reply->pluginName() );
+    ISocialPlugin *plugin = pluginFromName(reply->pluginName());
 
-    CommentItem* item = new CommentItem();
+    CommentItem *item = new CommentItem();
     item->setData(CommentItem::Message, m_cachedComment);
     item->setData(CommentItem::Id, reply->id());
-    item->setData(CommentItem::From, plugin ? plugin->selfName(): "");
-    item->setData(CommentItem::FromId, plugin ? plugin->selfId(): "");
+    item->setData(CommentItem::From, plugin ? plugin->selfName() : "");
+    item->setData(CommentItem::FromId, plugin ? plugin->selfId() : "");
     item->setData(CommentItem::FromPictureUrl, plugin ? plugin->selfPictureUrl() : "images/user.png");
     item->setData(CommentItem::CreatedTime, QDateTime::currentDateTime());
     m_socialModel->addCommentToItem(item, reply->sourceId());
 }
 
-void SocialProxy::getPictureSuccess(PluginRequestReply* reply)
+void SocialProxy::getPictureSuccess(PluginRequestReply *reply)
 {
     m_socialModel->updateUserImage(reply->userId(), reply->userPictureUrl(), reply->sourceId());
     if (!reply->userName().isEmpty()) {
@@ -271,7 +271,7 @@ void SocialProxy::getPictureSuccess(PluginRequestReply* reply)
     }
 }
 
-void SocialProxy::getSelfPictureSuccess(PluginRequestReply* reply)
+void SocialProxy::getSelfPictureSuccess(PluginRequestReply *reply)
 {
     Q_UNUSED(reply)
 //    m_selfPictureUrl = reply->userPictureUrl();
@@ -299,7 +299,7 @@ void SocialProxy::authorized()
 void SocialProxy::searchComplete()
 {
     m_searchInProgressCount--;
-    if(!m_searchInProgressCount) {
+    if (!m_searchInProgressCount) {
         emit searchFinished();
     }
 }
@@ -402,12 +402,12 @@ void SocialProxy::newItems(QList<SocialItem *> items)
 PluginRequestReply *SocialProxy::selfPicture(const QString &pluginName)
 {
     ISocialPlugin *plugin = pluginFromName(pluginName);
-    if(!plugin)
+    if (!plugin)
         return 0;
 
     Request *request = plugin->requestManager()->queryImage(plugin->selfId());
     PluginRequestReply *reply = new PluginRequestReply(request, 0, pluginName, this);
-    QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
+    QObject *obj = dynamic_cast<QObject *>(plugin->requestManager());
     connect(obj, SIGNAL(gotUserImage(QString, QString)), SLOT(gotUserPictureUrl(QString, QString)));
     request->start();
 
@@ -416,7 +416,7 @@ PluginRequestReply *SocialProxy::selfPicture(const QString &pluginName)
 
 void SocialProxy::getSelfUserPicture(const QString &pluginName)
 {
-    PluginRequestReply* reply = selfPicture(pluginName);
+    PluginRequestReply *reply = selfPicture(pluginName);
 //    connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(getSelfPictureSuccess(PluginRequestReply*)));
     /*TO-DO: process error replies*/
     connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
@@ -430,7 +430,7 @@ PluginRequestReply *SocialProxy::audioUrl(const QString &parentId, const QString
 
     Request *request = plugin->requestManager()->queryAudio(aid, ownerId);
     PluginRequestReply *reply = new PluginRequestReply(request, parentId, pluginName, this);
-    QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
+    QObject *obj = dynamic_cast<QObject *>(plugin->requestManager());
     connect(obj, SIGNAL(gotAudioUrl(QString, QString, QString)), reply, SLOT(gotAudioUrl(QString, QString, QString)));
 
     request->start();
@@ -438,15 +438,15 @@ PluginRequestReply *SocialProxy::audioUrl(const QString &parentId, const QString
     return reply;
 }
 
-void SocialProxy::getAudioSuccess(PluginRequestReply* reply)
+void SocialProxy::getAudioSuccess(PluginRequestReply *reply)
 {
     m_socialModel->updateAudioUrl(reply->audioId(), reply->audioOwnerId(), reply->audioUrl(), reply->sourceId());
 }
 
 void SocialProxy::getAudio(const QString &parentId, const QString &aid, const QString &ownerId, const QString &pluginName)
 {
-    PluginRequestReply* reply = audioUrl(parentId, aid, ownerId, pluginName);
-    connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(getAudioSuccess(PluginRequestReply*)));
+    PluginRequestReply *reply = audioUrl(parentId, aid, ownerId, pluginName);
+    connect(reply, SIGNAL(success(PluginRequestReply *)), this, SLOT(getAudioSuccess(PluginRequestReply *)));
     /*TO-DO: process error replies*/
     connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 }
@@ -459,7 +459,7 @@ PluginRequestReply *SocialProxy::videoUrl(const QString &parentId, const QString
 
     Request *request = plugin->requestManager()->queryVideo(vid, ownerId);
     PluginRequestReply *reply = new PluginRequestReply(request, parentId, pluginName, this);
-    QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
+    QObject *obj = dynamic_cast<QObject *>(plugin->requestManager());
     connect(obj, SIGNAL(gotVideoUrl(QString, QString, QString)), reply, SLOT(gotVideoUrl(QString, QString, QString)));
 
     request->start();
@@ -467,15 +467,15 @@ PluginRequestReply *SocialProxy::videoUrl(const QString &parentId, const QString
     return reply;
 }
 
-void SocialProxy::getVideoSuccess(PluginRequestReply* reply)
+void SocialProxy::getVideoSuccess(PluginRequestReply *reply)
 {
     m_socialModel->updateVideoUrl(reply->videoId(), reply->videoOwnerId(), reply->videoUrl(), reply->sourceId());
 }
 
 void SocialProxy::getVideo(const QString &parentId, const QString &vid, const QString &ownerId, const QString &pluginName)
 {
-    PluginRequestReply* reply = videoUrl(parentId, vid, ownerId, pluginName);
-    connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(getVideoSuccess(PluginRequestReply*)));
+    PluginRequestReply *reply = videoUrl(parentId, vid, ownerId, pluginName);
+    connect(reply, SIGNAL(success(PluginRequestReply *)), this, SLOT(getVideoSuccess(PluginRequestReply *)));
     /*TO-DO: process error replies*/
     connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 }
@@ -488,7 +488,7 @@ void SocialProxy::onSelfId(QString id)
     foreach(ISocialPlugin * plugin, m_plugins) {
         bool isEnabled = settings.value(plugin->name()).toBool();
         if (isEnabled && plugin->authorized() && manager && (plugin->requestManager() == manager)) {
-            plugin->setSelfId( id );
+            plugin->setSelfId(id);
             // get self user avatar
             getSelfUserPicture(plugin->name());
         }
@@ -503,7 +503,7 @@ void SocialProxy::onSelfName(QString name)
     foreach(ISocialPlugin * plugin, m_plugins) {
         bool isEnabled = settings.value(plugin->name()).toBool();
         if (isEnabled && plugin->authorized() && manager && (plugin->requestManager() == manager)) {
-            plugin->setSelfName( name );
+            plugin->setSelfName(name);
         }
     }
 }
@@ -518,8 +518,8 @@ void SocialProxy::gotUserPictureUrl(QString userId, QString userPictureUrl)
     foreach(ISocialPlugin * plugin, m_plugins) {
         bool isEnabled = settings.value(plugin->name()).toBool();
         if (isEnabled && plugin->authorized() && manager &&
-            (plugin->requestManager() == manager) && userId == plugin->selfId()) {
-            plugin->setSelfPictureUrl( userPictureUrl );
+                (plugin->requestManager() == manager) && userId == plugin->selfId()) {
+            plugin->setSelfPictureUrl(userPictureUrl);
         }
     }
 }

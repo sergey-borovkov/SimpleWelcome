@@ -73,10 +73,10 @@ QWidget *VkontakteModule::authenticationWidget()
     authorizationView->page()->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     authorizationView->window()->setWindowIcon(QPixmap(":/images/vk.png"));
     authorizationView->setUrl(QUrl("http://oauth.vk.com/authorize?client_id=2944872&"
-                                     "scope=wall,friends,audio,video,offline&"
-                                     "redirect_uri=http://oauth.vk.com/blank.html&"
-                                     "display=popup&"
-                                     "response_type=token"));
+                                   "scope=wall,friends,audio,video,offline&"
+                                   "redirect_uri=http://oauth.vk.com/blank.html&"
+                                   "display=popup&"
+                                   "response_type=token"));
     authorizationView->resize(800, 700);
     authorizationView->move(QApplication::desktop()->screen()->rect().center() - authorizationView->rect().center());
 

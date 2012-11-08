@@ -32,12 +32,12 @@ public:
 
     QString id() const;
     virtual QVariant data(int role) const;
-    virtual bool setData(int role, const QVariant & value);
+    virtual bool setData(int role, const QVariant &value);
 
     QDate getDate() const;
     int   getCount() const;
 
-    LocalDayFilterModel * model();
+    LocalDayFilterModel *model();
     QString types() const;
 
     static QHash<int, QByteArray> roleNames();
@@ -46,14 +46,14 @@ signals:
     void dataChanged();
 
 public slots:
-    void setDate(const QDate&);
-    void addActivity(Activity* item);
+    void setDate(const QDate &);
+    void addActivity(Activity *item);
 
 private:
     QString     m_types;
     int         m_count;
-    LocalDayModel*  m_itemModel;
-    LocalDayFilterModel*  m_model;
+    LocalDayModel  *m_itemModel;
+    LocalDayFilterModel  *m_model;
 };
 
 #endif // GALLERYITEM_H

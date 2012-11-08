@@ -40,7 +40,7 @@ signals:
     void gotThumbnail(QString path);
 
 public slots:
-    void addActivityItem(Activity* item);
+    void addActivityItem(Activity *item);
 
 private:
     enum {
@@ -81,8 +81,8 @@ class LocalDayFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit LocalDayFilterModel(QObject * parent = 0);
-    void setSourceModel(LocalDayModel * sourceModel);
+    explicit LocalDayFilterModel(QObject *parent = 0);
+    void setSourceModel(LocalDayModel *sourceModel);
 
     // for QML
     Q_INVOKABLE int count() const;

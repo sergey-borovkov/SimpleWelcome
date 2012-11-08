@@ -7,8 +7,8 @@ class PluginModel : public ListModel
 {
     Q_OBJECT
 public:
-    PluginModel(QHash<int, QByteArray> roles, QObject* parent = 0);
-    virtual void appendRows(const QList<ListItem*> &items);
+    PluginModel(QHash<int, QByteArray> roles, QObject *parent = 0);
+    virtual void appendRows(const QList<ListItem *> &items);
 
 private slots:
     void itemChanged();

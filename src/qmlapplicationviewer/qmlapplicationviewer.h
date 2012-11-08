@@ -44,7 +44,7 @@ signals:
 public slots:
     void restore();
     void updateWorkArea();
-    void focusChanged(QWidget*, QWidget *now);
+    void focusChanged(QWidget *, QWidget *now);
 
 private:
     int currentTabIndex;

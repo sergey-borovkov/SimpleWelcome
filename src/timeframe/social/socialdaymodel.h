@@ -19,10 +19,10 @@ public:
     bool removeRow(int row, const QModelIndex &parent = QModelIndex());
 
 public slots:
-    void addComment(CommentItem* item, QString id);
-    void addComments(QString id, QList<CommentItem*> list);
+    void addComment(CommentItem *item, QString id);
+    void addComments(QString id, QList<CommentItem *> list);
     void setSelfLiked(QString id);
-    void addSocialItem(SocialItem* item);
+    void addSocialItem(SocialItem *item);
     void like(QString id);
     void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &id);
     void updateUserName(const QString &userId, const QString &userName, const QString &id);
@@ -37,7 +37,7 @@ class SocialDayFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit SocialDayFilterModel(QObject * parent = 0);
+    explicit SocialDayFilterModel(QObject *parent = 0);
 
 signals:
     /**

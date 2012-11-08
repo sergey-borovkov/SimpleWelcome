@@ -36,7 +36,7 @@ FacebookModule::FacebookModule()
 FacebookModule::~FacebookModule()
 {
     delete m_requestManager;
-    delete m_authorizer;    
+    delete m_authorizer;
 }
 
 ISocialRequestManager *FacebookModule::requestManager()
@@ -73,7 +73,7 @@ QWidget *FacebookModule::authenticationWidget()
     authorizationView->page()->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
     authorizationView->window()->setWindowIcon(QPixmap(":/images/fb.png"));
     authorizationView->setUrl(QUrl("https://www.facebook.com/dialog/oauth?client_id=148453655273563&redirect_uri=http://www.facebook.com/connect/login_success.html&response_type=token&scope=publish_stream,read_stream"));
-    authorizationView->resize(1024,640);
+    authorizationView->resize(1024, 640);
     authorizationView->move(QApplication::desktop()->screen()->rect().center() - authorizationView->rect().center());
 
     connect(authorizationView, SIGNAL(urlChanged(QUrl)), m_authorizer, SLOT(urlChanged(QUrl)));

@@ -4,7 +4,7 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QStringList>
 
-TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
+TimeScaleFilterModel::TimeScaleFilterModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
@@ -14,9 +14,9 @@ TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
 
 void TimeScaleFilterModel::resetModel()
 {
-    TimeScaleModel* model = qobject_cast<TimeScaleModel*>(sourceModel());
+    TimeScaleModel *model = qobject_cast<TimeScaleModel *>(sourceModel());
     if (model) {
-        model->removeRows(0,model->rowCount());
+        model->removeRows(0, model->rowCount());
         //model->clear();
     }
 }
@@ -143,7 +143,7 @@ TimeScaleModel::TimeScaleModel(QHash<int, QByteArray> roles, QObject *parent) :
 
 void TimeScaleModel::newItem(int year, int month, QString type)
 {
-    TimeScaleItem* item = 0;
+    TimeScaleItem *item = 0;
     if ((item = find(year, month))) { // add new type to existing item
         if (!item->types().contains(type)) {
             item->addType(type);
@@ -151,8 +151,8 @@ void TimeScaleModel::newItem(int year, int month, QString type)
     } else { //add new item (with sorting)
 
         bool findItem = false;
-        int j=0;
-        TimeScaleItem* newItem = new TimeScaleItem(year, month, type, this);
+        int j = 0;
+        TimeScaleItem *newItem = new TimeScaleItem(year, month, type, this);
         if (rowCount() > 0) {
             TimeScaleItem *item = static_cast<TimeScaleItem *>(itemAt(j));
             while (item->date() <= newItem->date()) {
@@ -193,13 +193,13 @@ void TimeScaleModel::removeItems(const QString &type)
 
 void TimeScaleModel::handleItemChange()
 {
-    TimeScaleItem* item = static_cast<TimeScaleItem*>(sender());
+    TimeScaleItem *item = static_cast<TimeScaleItem *>(sender());
     QModelIndex index = indexFromItem(item);
     if (index.isValid())
         emit dataChanged(index, index);
 }
 
-TimeScaleItem * TimeScaleModel::find(const int year, const int month)
+TimeScaleItem *TimeScaleModel::find(const int year, const int month)
 {
     int size = rowCount();
     for (int i = 0; i < size; i++) {
@@ -210,7 +210,7 @@ TimeScaleItem * TimeScaleModel::find(const int year, const int month)
     return 0;
 }
 
-TimeScaleItem * TimeScaleModel::find(const QDate & date)
+TimeScaleItem *TimeScaleModel::find(const QDate &date)
 {
     int size = rowCount();
     for (int i = 0; i < size; i++) {

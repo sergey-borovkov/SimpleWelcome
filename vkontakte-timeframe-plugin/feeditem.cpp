@@ -119,7 +119,7 @@ void FeedItem::fillFromMap(QVariantMap map)
                 }
 
                 // add graffiti as image
-                if (m_data[ImageUrl].toString().isEmpty() && typeAttachment == "graffiti" ) {
+                if (m_data[ImageUrl].toString().isEmpty() && typeAttachment == "graffiti") {
                     QVariantMap graffitiMap = map[ "graffiti" ].toMap();
                     if (graffitiMap.contains("src"))
                         m_data.insert(ImageUrl, QUrl::fromPercentEncoding(graffitiMap.value("src").toByteArray()));
@@ -140,7 +140,7 @@ void FeedItem::fillFromMap(QVariantMap map)
                     if (audioMap.contains("title")) {
 
                         QString audioStr = audioMap.value("performer").toString() + " - " +
-                                audioMap.value("title").toString();
+                                           audioMap.value("title").toString();
 
                         // add duration info (if possible)
                         if (audioMap.contains("duration")) {

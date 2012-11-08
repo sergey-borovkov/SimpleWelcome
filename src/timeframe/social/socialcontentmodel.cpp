@@ -28,7 +28,7 @@ void SocialContentModel::insertRow(int row, SocialContentItem *item)
     connect(item, SIGNAL(dataChanged()), SLOT(handleItemChange()));
 }
 
-QObject* SocialContentModel::itemsModel(QDate date) const
+QObject *SocialContentModel::itemsModel(QDate date) const
 {
     SocialContentItem *item = findItemByDate(date);
     return item ? item->model() : 0;
@@ -38,7 +38,7 @@ void SocialContentModel::resetModel()
 {
     m_idSet.clear();
     m_idHash.clear();
-    removeRows(0,rowCount());
+    removeRows(0, rowCount());
     clear();
 }
 
@@ -130,7 +130,7 @@ void SocialContentModel::removeItems(const QString &type)
 
 void SocialContentModel::handleItemChange()
 {
-    SocialContentItem* item = static_cast<SocialContentItem*>(sender());
+    SocialContentItem *item = static_cast<SocialContentItem *>(sender());
     QModelIndex index = indexFromItem(item);
     if (index.isValid())
         emit dataChanged(index, index);
@@ -150,7 +150,7 @@ SocialContentItem *SocialContentModel::findItemByDate(const QDate &date) const
 void SocialContentModel::newSocialItems(QList < SocialItem * > list)
 {
     for (int i = 0; i < list.size() ; i++) {
-        SocialItem* newItem = list.at(i);
+        SocialItem *newItem = list.at(i);
         QString uniqueId = newItem->pluginName() + newItem->id();
         if (m_idSet.contains(uniqueId))
             continue;
@@ -179,7 +179,7 @@ void SocialContentModel::newSocialItems(QList < SocialItem * > list)
             continue;
         }
 
-        SocialContentItem * socialDayItem = new SocialContentItem(newItem->datetime().date());
+        SocialContentItem *socialDayItem = new SocialContentItem(newItem->datetime().date());
         socialDayItem->addSocialItem(newItem);
 
         insertRow(j, socialDayItem);
@@ -187,7 +187,7 @@ void SocialContentModel::newSocialItems(QList < SocialItem * > list)
 }
 
 
-SocialContentFilterModel::SocialContentFilterModel(QObject * parent)
+SocialContentFilterModel::SocialContentFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
@@ -205,7 +205,7 @@ void SocialContentFilterModel::setFilter(const QString &filter)
 
     for (int i = 0; i < rowCount(); i++) { //Set filter on nested models
         QDate date = data(index(i, 0), SocialContentItem::DateRole).toDate();
-        SocialDayFilterModel * sModel = qobject_cast<SocialDayFilterModel *> (itemsModel(date));
+        SocialDayFilterModel *sModel = qobject_cast<SocialDayFilterModel *> (itemsModel(date));
         if (sModel)
             sModel->setFilterRegExp(filterRegExp);
     }
@@ -213,16 +213,16 @@ void SocialContentFilterModel::setFilter(const QString &filter)
 
 void SocialContentFilterModel::resetModel()
 {
-    SocialContentModel* model = qobject_cast<SocialContentModel*>(sourceModel());
+    SocialContentModel *model = qobject_cast<SocialContentModel *>(sourceModel());
     if (model) {
         model->resetModel();
     }
 }
 
 
-QObject* SocialContentFilterModel::itemsModel(QDate date) const
+QObject *SocialContentFilterModel::itemsModel(QDate date) const
 {
-    SocialContentModel* model = qobject_cast<SocialContentModel*>(sourceModel());
+    SocialContentModel *model = qobject_cast<SocialContentModel *>(sourceModel());
     if (model)
         return model->itemsModel(date);
     return 0;
@@ -246,7 +246,7 @@ int SocialContentFilterModel::getIndexByDate(QDate date)
         if (contentDate >= date)
             return i;
     }
-    return rowCount() -1 ;
+    return rowCount() - 1 ;
 }
 
 int SocialContentFilterModel::count()

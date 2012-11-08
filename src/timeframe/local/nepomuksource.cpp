@@ -12,7 +12,7 @@
 NepomukSource::NepomukSource(QObject *parent) :
     QObject(parent)
 {
-    qRegisterMetaType< QList<Activity*> >("QList<Activity*>");
+    qRegisterMetaType< QList<Activity *> >("QList<Activity*>");
 }
 
 void NepomukSource::startSearch()
@@ -21,12 +21,12 @@ void NepomukSource::startSearch()
                         "{ ?r nie:url ?url . ?r nie:lastModified ?lastModified . ?r nie:mimeType ?mimeType . "
                         "optional { ?r nfo:width ?width . ?r nfo:height ?height } . "
                         "{ ?r a nfo:Document .} UNION { ?r a nfo:Image . } UNION { ?r a nfo:Video . }}");
-    Soprano::Model* model = Nepomuk::ResourceManager::instance()->mainModel();
-    Soprano::QueryResultIterator it = model->executeQuery( sparqlQuery, Soprano::Query::QueryLanguageSparql );
+    Soprano::Model *model = Nepomuk::ResourceManager::instance()->mainModel();
+    Soprano::QueryResultIterator it = model->executeQuery(sparqlQuery, Soprano::Query::QueryLanguageSparql);
 
     QList<Activity *> activities;
     int i = 0;
-    while(it.next()) {
+    while (it.next()) {
         QString path = it["url"].uri().toLocalFile();
         QDate lastModified = it["lastModified"].literal().toDate();
         QString mimeType = it["mimeType"].toString();
@@ -48,12 +48,12 @@ void NepomukSource::startSearch()
             type = "Image";
         else
             type = "Document";
-        if(type == "Image") {
+        if (type == "Image") {
             imageWidth = it["width"].toString().toInt();
             imageHeight = it["height"].toString().toInt();
         }
 
-        if(i %= 100) {
+        if (i %= 100) {
             emit newActivities(activities);
             activities.clear();
         }
@@ -62,7 +62,7 @@ void NepomukSource::startSearch()
         activities.append(activity);
     }
 
-    if(!activities.isEmpty()) {
+    if (!activities.isEmpty()) {
         emit newActivities(activities);
     }
 

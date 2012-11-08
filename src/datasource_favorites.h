@@ -9,7 +9,7 @@ class DataSource_Favorites : public DataSource
     Q_PROPERTY(QString qmlGroupName READ getQmlGroupName WRITE setQmlGroupName)
 
 public:
-    explicit DataSource_Favorites(QObject* parent = 0);
+    explicit DataSource_Favorites(QObject *parent = 0);
     Q_INVOKABLE virtual int getItemCount();
     Q_INVOKABLE virtual QVariantMap getContent(int index);
 

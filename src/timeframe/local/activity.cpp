@@ -5,7 +5,7 @@ QString Activity::url() const
     return m_url;
 }
 
-void Activity::setUrl(const QString & url)
+void Activity::setUrl(const QString &url)
 {
     m_url = url;
 }
@@ -15,7 +15,7 @@ QString Activity::type() const
     return m_type;
 }
 
-void Activity::setType(const QString & type)
+void Activity::setType(const QString &type)
 {
     m_type = type;
 }
@@ -25,7 +25,7 @@ QDate Activity::date() const
     return m_date;
 }
 
-void Activity::setDate(const QDate & date)
+void Activity::setDate(const QDate &date)
 {
     m_date = date;
 }

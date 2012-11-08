@@ -73,7 +73,7 @@ void ROSA_Starter::init()
     connect(this, SIGNAL(geometryChanged()), SLOT(resetIconSize()));
     connect(m_icon, SIGNAL(clicked()), SLOT(buttonClicked()));
 
-    QAction* menuEditor = new QAction(i18n("Edit Applications..."), this);
+    QAction *menuEditor = new QAction(i18n("Edit Applications..."), this);
     m_actions.append(menuEditor);
     connect(menuEditor, SIGNAL(triggered(bool)), SLOT(startMenuEditor()));
 

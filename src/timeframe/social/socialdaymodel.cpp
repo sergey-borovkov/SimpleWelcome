@@ -13,7 +13,7 @@ SocialDayModel::SocialDayModel(QHash<int, QByteArray> roles, QObject *parent)
 
 bool SocialDayModel::removeRow(int row, const QModelIndex &parent)
 {
-    SocialItem *item = static_cast<SocialItem*>(itemAt(row));
+    SocialItem *item = static_cast<SocialItem *>(itemAt(row));
     QString id = QString("%1-%2").arg(item->pluginName()).arg(item->id());
     m_idSet.remove(id);
     return ListModel::removeRow(row, parent);
@@ -65,8 +65,8 @@ void SocialDayModel::addComment(CommentItem *item, QString id)
     for (int i = 0; i < rowCount(); i++) {
         if (data(index(i, 0), SocialItem::Id).toString() == id) {
             QVariant v = data(index(i, 0), SocialItem::Comments);
-            ListModel * commentsModel = qvariant_cast<ListModel* >(v);
-            if(commentsModel)
+            ListModel *commentsModel = qvariant_cast<ListModel * >(v);
+            if (commentsModel)
                 commentsModel->appendRow(item);
             int commentCount = data(index(i, 0), SocialItem::CommentCount).toInt();
             bool result = setData(index(i, 0), ++commentCount, SocialItem::CommentCount);
@@ -83,8 +83,8 @@ void SocialDayModel::updateUserImage(const QString &userId, const QString &userI
         if (data(index(i, 0), SocialItem::Id).toString() == id) {
 
             QVariant v = data(index(i, 0), SocialItem::Comments);
-            ListModel * commentsModel = qvariant_cast<ListModel* >(v);
-            if(commentsModel)
+            ListModel *commentsModel = qvariant_cast<ListModel * >(v);
+            if (commentsModel)
                 for (int j = 0; j < commentsModel->rowCount(); j++) {
                     if (commentsModel->data(commentsModel->index(j, 0), CommentItem::FromId).toString() == userId) {
                         commentsModel->setData(commentsModel->index(j, 0), QVariant(userImageUrl), CommentItem::FromPictureUrl);
@@ -100,8 +100,8 @@ void SocialDayModel::updateUserName(const QString &userId, const QString &userNa
         if (data(index(i, 0), SocialItem::Id).toString() == id) {
 
             QVariant v = data(index(i, 0), SocialItem::Comments);
-            ListModel * commentsModel = qvariant_cast<ListModel* >(v);
-            if(commentsModel)
+            ListModel *commentsModel = qvariant_cast<ListModel * >(v);
+            if (commentsModel)
                 for (int j = 0; j < commentsModel->rowCount(); j++) {
                     if (commentsModel->data(commentsModel->index(j, 0), CommentItem::FromId).toString() == userId) {
                         commentsModel->setData(commentsModel->index(j, 0), QVariant(userName), CommentItem::From);
@@ -138,11 +138,11 @@ void SocialDayModel::addComments(QString id, QList<CommentItem *> list)
     for (int i = 0; i < rowCount(); i++) {
         if (data(index(i, 0), SocialItem::Id).toString() == id) {
             QVariant v = data(index(i, 0), SocialItem::Comments);
-            ListModel * commentsModel = qvariant_cast<ListModel* >(v);
-            if(commentsModel) {
+            ListModel *commentsModel = qvariant_cast<ListModel * >(v);
+            if (commentsModel) {
                 QString firstPostId = commentsModel->data(index(0, 0), CommentItem::Id).toString();
                 for (int j = 0; j < list.size(); j++) {
-                    CommentItem* item = list.at(j);
+                    CommentItem *item = list.at(j);
                     if (item->id() == firstPostId) {
                         break;
                     }
@@ -163,7 +163,7 @@ void SocialDayModel::setSelfLiked(QString id)
     }
 }
 
-SocialDayFilterModel::SocialDayFilterModel(QObject * parent)
+SocialDayFilterModel::SocialDayFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
@@ -228,8 +228,8 @@ int SocialDayFilterModel::commentsCount(int row) const
 QObject *SocialDayFilterModel::comments(int row) const
 {
     QVariant v = data(index(row, 0), SocialItem::Comments);
-    ListModel * commentsModel = qvariant_cast<ListModel* >(v);
-    if(commentsModel)
+    ListModel *commentsModel = qvariant_cast<ListModel * >(v);
+    if (commentsModel)
         commentsModel->setParent(sourceModel());
     return commentsModel;
 }

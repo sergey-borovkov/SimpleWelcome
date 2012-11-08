@@ -8,7 +8,7 @@
 #include "swapp.h"
 #include <QPainter>
 
-DataSource_Documents::DataSource_Documents(QObject* parent, QMLConstants *inConstants)
+DataSource_Documents::DataSource_Documents(QObject *parent, QMLConstants *inConstants)
     : DataSource(parent),
       m_previewJobPlugins(KIO::PreviewJob::availablePlugins()),
       constants(inConstants)
@@ -116,7 +116,7 @@ void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap
     p.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     p.setBrush(brush);
     p.setPen(pen);
-    p.translate((iconSize - pixmap.width())/2, (iconSize - pixmap.height())/2);
+    p.translate((iconSize - pixmap.width()) / 2, (iconSize - pixmap.height()) / 2);
     p.drawRoundedRect(0, 0, pixmap.width() - 1, pixmap.height() - 1, 7, 7, Qt::AbsoluteSize);
 
     m_pixmaps[item.url().url()] = pix;
@@ -139,8 +139,8 @@ void DataSource_Documents::createDocumentsPreviews(KFileItemList list)
     KIO::PreviewJob *job = KIO::filePreview(list, QSize(constants->iconSize(), constants->iconSize()), &m_previewJobPlugins);
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
-    connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(resultPreviewJob(KFileItem,QPixmap)));
-    connect(job, SIGNAL(failed(const KFileItem&)), SLOT(previewFailed(const KFileItem &)));
+    connect(job, SIGNAL(gotPreview(const KFileItem &, const QPixmap &)), SLOT(resultPreviewJob(KFileItem, QPixmap)));
+    connect(job, SIGNAL(failed(const KFileItem &)), SLOT(previewFailed(const KFileItem &)));
 }
 
 void DataSource_Documents::itemClicked(int newIndex)

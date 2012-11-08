@@ -57,7 +57,7 @@ public:
     Q_INVOKABLE void cancel(const QString &path);
 
 private slots:
-    void previewJobResult(const KFileItem&, const QPixmap&);
+    void previewJobResult(const KFileItem &, const QPixmap &);
     void previewJobFailed(const KFileItem &item);
 
 private:

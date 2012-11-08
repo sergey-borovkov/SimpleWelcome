@@ -76,8 +76,8 @@ public:
     Q_INVOKABLE QString selfPictureUrl(const QString &pluginName);
 
     void getSelfUserPicture(const QString &pluginName);
-    void getAudio(const QString &parentId, const QString & aid, const QString & ownerId, const QString &pluginName);
-    void getVideo(const QString &parentId, const QString & vid, const QString & ownerId, const QString &pluginName);
+    void getAudio(const QString &parentId, const QString &aid, const QString &ownerId, const QString &pluginName);
+    void getVideo(const QString &parentId, const QString &vid, const QString &ownerId, const QString &pluginName);
 
     /**
      * @brief Request all comments of item
@@ -103,7 +103,7 @@ private slots:
     void likeSuccess(PluginRequestReply *);
     void commentSuccess(PluginRequestReply *);
     void getPictureSuccess(PluginRequestReply *);
-    void getSelfPictureSuccess(PluginRequestReply*);
+    void getSelfPictureSuccess(PluginRequestReply *);
     void getAudioSuccess(PluginRequestReply *);
     void getVideoSuccess(PluginRequestReply *);
 

@@ -37,7 +37,7 @@ public:
     SocialDayFilterModel *model();
 
     QString types() const;
-    void setSocialFilter(const QRegExp&);
+    void setSocialFilter(const QRegExp &);
 
     static const QHash<int, QByteArray> roleNames() {
         QHash<int, QByteArray> roles;
@@ -54,15 +54,15 @@ signals:
     void dataChanged();
 
 public slots:
-    void setDate(const QDate&);
-    void addSocialItem(SocialItem* item);
+    void setDate(const QDate &);
+    void addSocialItem(SocialItem *item);
     void likeItem(QString eventId);
     void addCommentToItem(CommentItem *, QString);
     void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &id);
     void updateUserName(const QString &userId, const QString &userName, const QString &id);
     void updateAudioUrl(const QString &audioId, const QString &audioOwnerId, const QString &audioUrl, const QString &eventId);
     void updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &eventId);
-    void addComments(QString id, QList<CommentItem*> list);
+    void addComments(QString id, QList<CommentItem *> list);
     void setSelfLiked(QString id);
 
 private:

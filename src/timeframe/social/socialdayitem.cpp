@@ -48,7 +48,7 @@ void SocialContentItem::setDate(const QDate &d)
     emit dataChanged();
 }
 
-void SocialContentItem::addSocialItem(SocialItem* item)
+void SocialContentItem::addSocialItem(SocialItem *item)
 {
     if (!m_types.contains(item->pluginName())) {
         m_types += (item->pluginName() + ";");
@@ -125,7 +125,7 @@ QString SocialContentItem::types() const
     return m_types;
 }
 
-void SocialContentItem::setSocialFilter(const QRegExp& filter)
+void SocialContentItem::setSocialFilter(const QRegExp &filter)
 {
     m_model->setFilterRegExp(filter);
     emit dataChanged();

@@ -17,7 +17,7 @@ public:
     FacebookModule();
     ~FacebookModule();
 
-    virtual ISocialRequestManager* requestManager();
+    virtual ISocialRequestManager *requestManager();
     QString name() const;
     QPixmap icon() const;
     QPixmap smallIcon() const;
@@ -29,13 +29,13 @@ public:
     }
 
     QString selfId() const;
-    void setSelfId( const QString& id );
+    void setSelfId(const QString &id);
 
     QString selfName() const;
-    void setSelfName( const QString & name );
+    void setSelfName(const QString &name);
 
     QString selfPictureUrl() const;
-    void setSelfPictureUrl( const QString & url);
+    void setSelfPictureUrl(const QString &url);
 
 private slots:
     void onAcessTokenChanged();

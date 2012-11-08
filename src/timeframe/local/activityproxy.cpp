@@ -8,7 +8,7 @@ ActivityProxy::ActivityProxy(NepomukSource *source, QObject *parent) :
     QObject(parent),
     m_model(0)
 {
-    connect(source, SIGNAL(newActivities(QList<Activity*>)), this, SLOT(newData(QList<Activity*>)));
+    connect(source, SIGNAL(newActivities(QList<Activity *>)), this, SLOT(newData(QList<Activity *>)));
     connect(source, SIGNAL(searchFinished()), SIGNAL(searchFinished()));
     connect(this, SIGNAL(search()), source, SLOT(startSearch()));
 }
@@ -26,7 +26,7 @@ void ActivityProxy::newData(QList<Activity *> list)
     emit newActivities(list);
 }
 
-void ActivityProxy::setModel(LocalContentModel* model)
+void ActivityProxy::setModel(LocalContentModel *model)
 {
     if (m_model)
         m_model = model;

@@ -30,7 +30,7 @@ class PreviewProvider : public QDeclarativeImageProvider
 {
 public:
     PreviewProvider(const QString &type);
-    QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize);
+    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
 private:
     QImage getRoundedImage(QImage image, int radius);
     QString m_type;

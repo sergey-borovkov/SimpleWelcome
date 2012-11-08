@@ -72,13 +72,13 @@
 
 #include <klocalizedstring.h>
 
-SWApp* SWApp::self()
+SWApp *SWApp::self()
 {
     if (!kapp) {
         return new SWApp();
     }
 
-    return qobject_cast<SWApp*>(kapp);
+    return qobject_cast<SWApp *>(kapp);
 }
 
 
@@ -91,7 +91,7 @@ QString SWApp::pathToRoot()
 
 int SWApp::newInstance()
 {
-    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     static bool isFirst = true;
     if (!args->isSet("silent") || !isFirst) {
@@ -232,7 +232,7 @@ SWApp::SWApp()
     initTimeframeLocalMode();
     initTimeframeSocialMode();
 
-    connect(this, SIGNAL(focusChanged(QWidget*,QWidget*)), m_viewer, SLOT(focusChanged(QWidget*,QWidget*)));
+    connect(this, SIGNAL(focusChanged(QWidget *, QWidget *)), m_viewer, SLOT(focusChanged(QWidget *, QWidget *)));
     m_viewer->setSource(QUrl::fromLocalFile(pathToRoot() + QString::fromLatin1("/" SW_QML_PATH "/main.qml")));   // Qt converts path to native automatically
 
     setQuitOnLastWindowClosed(true); // NEED TO CHANGE TO false
@@ -247,8 +247,8 @@ void SWApp::initTimeframeLocalMode()
 
     m_proxy = new ActivityProxy(m_source, this);
 
-    LocalContentModel* model = new LocalContentModel(LocalContentItem::roleNames(), this);
-    LocalContentFilterModel* proxymodel = new LocalContentFilterModel(this);
+    LocalContentModel *model = new LocalContentModel(LocalContentItem::roleNames(), this);
+    LocalContentFilterModel *proxymodel = new LocalContentFilterModel(this);
     model->setLister(m_proxy);
     proxymodel->setSourceModel(model);
 
@@ -271,16 +271,16 @@ void SWApp::initTimeframeSocialMode()
     PluginLoader loader;
     QList<ISocialPlugin *> plugins = loader.loadPlugins(pathToRoot() + QString::fromLatin1("/" SW_TIMEFRAME_PLUGINS_PATH));
 
-    SocialContentModel* socialModel = new SocialContentModel(SocialContentItem::roleNames());
-    SocialContentFilterModel* socialProxyModel = new SocialContentFilterModel(this);
+    SocialContentModel *socialModel = new SocialContentModel(SocialContentItem::roleNames());
+    SocialContentFilterModel *socialProxyModel = new SocialContentFilterModel(this);
     socialProxyModel->setSourceModel(socialModel);
     m_manager = new SocialProxy(plugins, this);
     m_manager->setSocialModel(socialModel);
 
     m_viewer->engine()->addImageProvider("plugin", new PluginImageProvider(plugins));
     qmlRegisterInterface<LocalDayFilterModel>("LocalDayFilterModel");
-    TimeScaleFilterModel * timeScaleFilterModel = new TimeScaleFilterModel();
-    TimeScaleModel* timeScaleModel = new TimeScaleModel(TimeScaleItem::roleNames(), this);
+    TimeScaleFilterModel *timeScaleFilterModel = new TimeScaleFilterModel();
+    TimeScaleModel *timeScaleModel = new TimeScaleModel(TimeScaleItem::roleNames(), this);
     timeScaleFilterModel->setSourceModel(timeScaleModel);
     connect(m_manager, SIGNAL(removeType(QString)), timeScaleModel, SLOT(removeItems(QString)));
 

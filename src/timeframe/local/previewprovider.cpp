@@ -45,7 +45,7 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
 
     QPixmap pixmap = m_generator->takePreviewPixmap(str);
 
-    if(pixmap.isNull()) {
+    if (pixmap.isNull()) {
         QSize size = requestedSize.isValid() ? requestedSize : QSize(512, 512);
         m_generator->request(str, size);
         return m_defaultPreview;

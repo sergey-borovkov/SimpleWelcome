@@ -14,7 +14,7 @@ class TimeScaleFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit TimeScaleFilterModel(QObject * parent = 0);
+    explicit TimeScaleFilterModel(QObject *parent = 0);
     Q_INVOKABLE void resetModel();
     Q_INVOKABLE int count();
 
@@ -24,7 +24,7 @@ public slots:
     void setFilter(const QString &filter);
     int getYear(int ind);
     int getMonth(int ind);
-    int getDate(int ind);    
+    int getDate(int ind);
 };
 
 class TimeScaleItem : public QObject, public ListItem
@@ -38,7 +38,7 @@ public:
         TypesRole
     };
 public:
-    explicit TimeScaleItem(int year, int month, QString type, QObject* parent = 0);
+    explicit TimeScaleItem(int year, int month, QString type, QObject *parent = 0);
     QString id() const;
     bool setData(int role, const QVariant &value) {
         Q_UNUSED(role)
@@ -68,8 +68,8 @@ class TimeScaleModel : public ListModel
     Q_OBJECT
 public:
     explicit TimeScaleModel(QHash<int, QByteArray> roles, QObject *parent = 0);
-    TimeScaleItem* find(const int year, const int month);
-    TimeScaleItem* find(const QDate &year);
+    TimeScaleItem *find(const int year, const int month);
+    TimeScaleItem *find(const QDate &year);
 public slots:
     void newItem(int year, int month, QString type);
 

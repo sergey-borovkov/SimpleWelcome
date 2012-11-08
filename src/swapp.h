@@ -23,7 +23,7 @@ public:
     SWApp();
     ~SWApp();
 
-    static SWApp* self();
+    static SWApp *self();
     static QString pathToRoot(); ///< Returns path to root of installation
 
 

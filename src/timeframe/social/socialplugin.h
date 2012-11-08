@@ -68,13 +68,13 @@ public:
     virtual QString displayName() const = 0;
 
     virtual QString selfId() const = 0;
-    virtual void setSelfId( const QString& id ) = 0;
+    virtual void setSelfId(const QString &id) = 0;
 
     virtual QString selfName() const = 0;
-    virtual void setSelfName( const QString & name ) = 0;
+    virtual void setSelfName(const QString &name) = 0;
 
     virtual QString selfPictureUrl() const = 0;
-    virtual void setSelfPictureUrl( const QString & url) = 0;
+    virtual void setSelfPictureUrl(const QString &url) = 0;
 
 protected:
     // User info

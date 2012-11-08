@@ -28,7 +28,8 @@
 #include <Plasma/Applet>
 
 class QGraphicsLinearLayout;
-namespace Plasma {
+namespace Plasma
+{
 class IconWidget;
 }
 
@@ -40,7 +41,7 @@ public:
     ROSA_Starter(QObject *parent, const QVariantList &args)
         : Plasma::Applet(parent, args) {}
     virtual void init();
-    virtual QList<QAction*> contextualActions();
+    virtual QList<QAction *> contextualActions();
 
 private slots:
     void resetIconSize();
@@ -54,5 +55,5 @@ private:
     QGraphicsLinearLayout *m_layout;
     int m_iconSize;
 
-    QList<QAction*> m_actions;
+    QList<QAction *> m_actions;
 };

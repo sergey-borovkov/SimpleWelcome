@@ -54,7 +54,7 @@ Request *RequestManager::queryImage(const QString &id)
     return request;
 }
 
-Request *RequestManager::queryAudio(const QString &aid, const QString & ownerId)
+Request *RequestManager::queryAudio(const QString &aid, const QString &ownerId)
 {
     QUrl url = constructUrl(QLatin1String("audio.getById"));
     url.addQueryItem(QLatin1String("audios"), ownerId + QLatin1String("_") + aid);
@@ -66,7 +66,7 @@ Request *RequestManager::queryAudio(const QString &aid, const QString & ownerId)
     return request;
 }
 
-Request *RequestManager::queryVideo(const QString &vid, const QString & ownerId)
+Request *RequestManager::queryVideo(const QString &vid, const QString &ownerId)
 {
     QUrl url = constructUrl(QLatin1String("video.get"));
     url.addQueryItem(QLatin1String("videos"), ownerId + QLatin1String("_") + vid);
@@ -200,7 +200,7 @@ void RequestManager::feedReply(QByteArray reply)
     foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
         FeedItem *feedItem = new FeedItem(map, m_selfId);
-        if(!canBeDisplayed(*feedItem)) {
+        if (!canBeDisplayed(*feedItem)) {
             delete feedItem;
         }
         else {
@@ -345,7 +345,7 @@ void RequestManager::likesReply(QByteArray reply)
         }
     }
 
-    if (!isSelfLiked && (likesCount > m_gotLikesCount) ) {
+    if (!isSelfLiked && (likesCount > m_gotLikesCount)) {
         VkRequest *request = new VkRequest(VkRequest::Get, this);
         QUrl url = constructUrl(QLatin1String("wall.getLikes"));
         url.addQueryItem(QLatin1String("post_id"), postId);

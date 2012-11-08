@@ -243,12 +243,12 @@ void LocalDayModel::setDate(QDate date)
 }
 
 
-LocalDayFilterModel::LocalDayFilterModel(QObject * parent) :
+LocalDayFilterModel::LocalDayFilterModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
 }
 
-void LocalDayFilterModel::setSourceModel(LocalDayModel * sourceModel)
+void LocalDayFilterModel::setSourceModel(LocalDayModel *sourceModel)
 {
     if (sourceModel) {
         QSortFilterProxyModel::setSourceModel(sourceModel);

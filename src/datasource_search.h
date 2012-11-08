@@ -15,7 +15,7 @@ class QueryMatch;
 struct MatchResults {
     QString group;
     QString name;
-    Plasma::QueryMatch* plasmaMatch;
+    Plasma::QueryMatch *plasmaMatch;
 };
 
 class DataSource_RecentApps;
@@ -28,7 +28,7 @@ class DataSource_Search : public DataSource
 
 
 public:
-    explicit DataSource_Search(QObject* parent = 0, DataSource_RecentApps *recentApps = 0);
+    explicit DataSource_Search(QObject *parent = 0, DataSource_RecentApps *recentApps = 0);
     Q_INVOKABLE virtual int getItemCount(QString group = "");
     Q_INVOKABLE virtual QVariantMap getContent(int index, QString group = "");
 
@@ -66,4 +66,4 @@ private:
 };
 
 
-Q_DECLARE_METATYPE(Plasma::QueryMatch*)
+Q_DECLARE_METATYPE(Plasma::QueryMatch *)

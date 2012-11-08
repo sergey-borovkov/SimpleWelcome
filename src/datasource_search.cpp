@@ -70,7 +70,7 @@ DataSource_Search::DataSource_Search(QObject *parent, DataSource_RecentApps *inR
 }
 
 // Taken from kde-workspace-4.8.2/plasma/desktop/applets/kickoff/core/krunnermodel.cpp, line 92
-KService::Ptr serviceForUrl(const KUrl & url)
+KService::Ptr serviceForUrl(const KUrl &url)
 {
     QString runner = url.host();
     QString id = url.path();
@@ -101,7 +101,7 @@ QString DataSource_Search::itemUrlDnd(int id, QString group)
         return QString();
 
     if (matches.contains(group) && id < matches[group].size()) {
-        Plasma::QueryMatch& match = *matches[group][id]["plasmaMatch"].value<Plasma::QueryMatch*>();
+        Plasma::QueryMatch &match = *matches[group][id]["plasmaMatch"].value<Plasma::QueryMatch *>();
         QString runner_id = match.runner()->id();
         QString value = match.data().toString().toUtf8();
 
@@ -186,7 +186,7 @@ void DataSource_Search::itemClicked(int newIndex, QString group)
         return;
 
     if (newIndex < matches[group].size()) {
-        Plasma::QueryMatch& match = *matches[group][newIndex]["plasmaMatch"].value<Plasma::QueryMatch*>();
+        Plasma::QueryMatch &match = *matches[group][newIndex]["plasmaMatch"].value<Plasma::QueryMatch *>();
         QString url = QString("krunner://") + match.runner()->id() + "/" + match.id();
 
         // Since krunner:// urls can't be added to recent applications,

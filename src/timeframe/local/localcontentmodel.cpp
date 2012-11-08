@@ -33,16 +33,16 @@ void LocalContentFilterModel::setFilter(const QString &filter)
         model->setFilter(filterRegExp);
     for (int i = 0; i < rowCount(); i++) { //Set filter on nested models
         QDate date = data(index(i, 0), LocalContentItem::CurrentDateRole).toDate();
-        LocalDayFilterModel * tModel = qobject_cast<LocalDayFilterModel *> (itemsModel(date));
+        LocalDayFilterModel *tModel = qobject_cast<LocalDayFilterModel *> (itemsModel(date));
         if (tModel)
             tModel->setFilterRegExp(filterRegExp);
     }
 
 }
 
-QObject* LocalContentFilterModel::itemsModel(QDate date) const
+QObject *LocalContentFilterModel::itemsModel(QDate date) const
 {
-    LocalContentModel* model = qobject_cast<LocalContentModel*>(sourceModel());
+    LocalContentModel *model = qobject_cast<LocalContentModel *>(sourceModel());
     if (model)
         return model->itemsModel(date);
     return 0;
@@ -59,7 +59,7 @@ QDate LocalContentFilterModel::getDateOfIndex(int listIndex)
 
 void LocalContentFilterModel::resetModel()
 {
-    LocalContentModel* model = qobject_cast<LocalContentModel*>(sourceModel());
+    LocalContentModel *model = qobject_cast<LocalContentModel *>(sourceModel());
     if (model) {
         model->resetModel();
     }
@@ -88,11 +88,11 @@ int LocalContentFilterModel::getIndexByDate(QDate date)
         if (contentDate >= date)
             return i;
     }
-    return rowCount() -1 ;
+    return rowCount() - 1 ;
 }
 
 
-LocalContentModel::LocalContentModel(QHash<int, QByteArray> roles, QObject* parent) :
+LocalContentModel::LocalContentModel(QHash<int, QByteArray> roles, QObject *parent) :
     ListModel(roles, parent),
     m_lister(0)
 {
@@ -111,7 +111,7 @@ QVariant LocalContentModel::data(const QModelIndex &index, int role) const
     return ListModel::data(index, role);
 }
 
-QObject* LocalContentModel::itemsModel(QDate date) const
+QObject *LocalContentModel::itemsModel(QDate date) const
 {
     for (int i = 0; i < rowCount(); i++) {
         LocalContentItem *item = static_cast<LocalContentItem *>(itemAt(i));
@@ -127,21 +127,21 @@ void LocalContentModel::setLister(ActivityProxy *lister)
         delete m_lister;
     m_lister = lister;
     m_lister->setModel(this);
-    connect(m_lister, SIGNAL(newActivities(QList<Activity*>)), SLOT(newActivities(QList<Activity*>)));
+    connect(m_lister, SIGNAL(newActivities(QList<Activity *>)), SLOT(newActivities(QList<Activity *>)));
 }
 
 void LocalContentModel::resetModel()
 {
     m_urlHash.clear();
-    removeRows(0,rowCount());
+    removeRows(0, rowCount());
     clear();
 }
 
-void LocalContentModel::newActivities(QList<Activity*> list)
+void LocalContentModel::newActivities(QList<Activity *> list)
 {
     for (int i = 0; i < list.size() ; i++) {
 
-        Activity* newItem = list.at(i);
+        Activity *newItem = list.at(i);
         if (m_urlHash.contains(newItem->url()))
             continue;
 
@@ -182,7 +182,7 @@ void LocalContentModel::newActivities(QList<Activity*> list)
             continue;
         }
 
-        LocalContentItem * gallItem = new LocalContentItem(newItem->date(), this);
+        LocalContentItem *gallItem = new LocalContentItem(newItem->date(), this);
         gallItem->addActivity(newItem);
         m_urlHash.insert(newItem->url(), gallItem);
         insertRow(j, gallItem);
@@ -201,7 +201,7 @@ void LocalContentModel::newMonth(int year, int month)
     }
 
     int j = 0;
-    LocalContentItem * gallItem = new LocalContentItem(date, this);
+    LocalContentItem *gallItem = new LocalContentItem(date, this);
     if (rowCount() > 0) {
         LocalContentItem *item = static_cast<LocalContentItem *>(itemAt(0));
         while (item->getDate() <= gallItem->getDate()) {
@@ -243,7 +243,7 @@ bool LocalContentModel::removeNullItem(int year, int month)
 
 void LocalContentModel::appendRow(LocalContentItem *item)
 {
-    appendRows(QList<LocalContentItem*>() << item);
+    appendRows(QList<LocalContentItem *>() << item);
 }
 
 void LocalContentModel::appendRows(const QList<LocalContentItem *> &items)
@@ -264,13 +264,13 @@ void LocalContentModel::insertRow(int row, LocalContentItem *item)
 
 void LocalContentModel::handleItemChange()
 {
-    LocalContentItem* item = static_cast<LocalContentItem*>(sender());
+    LocalContentItem *item = static_cast<LocalContentItem *>(sender());
     QModelIndex index = indexFromItem(item);
     if (index.isValid())
         emit dataChanged(index, index);
 }
 
-LocalContentItem * LocalContentModel::find(const QDate &date) const
+LocalContentItem *LocalContentModel::find(const QDate &date) const
 {
     const int size = rowCount();
     for (int i = 0; i < size; i++) {
@@ -290,7 +290,7 @@ void LocalContentModel::setFilter(QRegExp regexp)
 void LocalContentModel::previewReady(const QString &path)
 {
     QHash<QString, LocalContentItem *>::iterator it = m_urlHash.find(path);
-    if(it != m_urlHash.end()) {
+    if (it != m_urlHash.end()) {
         LocalDayFilterModel *model = it.value()->model();
         model->previewReady(path);
     }
@@ -305,7 +305,7 @@ int LocalContentModel::getIndexByDate(int year, int month,  bool direction)
 {
     Q_UNUSED(direction)
 
-    LocalContentItem* ptr = 0;
+    LocalContentItem *ptr = 0;
 
     for (int i = 0; i < rowCount(); i++) {
         LocalContentItem *item = static_cast<LocalContentItem *>(itemAt(i));

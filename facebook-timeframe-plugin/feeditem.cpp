@@ -67,7 +67,8 @@ void FeedItem::fillFromMap(const QVariantMap &map)
         QString after = "<a href=\"\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";
         if (pos > -1) {
             if (reUrl.cap(1).indexOf("www", Qt::CaseInsensitive) != (-1)) {
-                after = "<a href=\"http://\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";            }
+                after = "<a href=\"http://\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";
+            }
         }
 
         m_data.insert(Text, message.replace(reUrl, after));

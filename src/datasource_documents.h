@@ -13,7 +13,7 @@ class DataSource_Documents : public DataSource
     Q_PROPERTY(QString qmlGroupName READ getQmlGroupName WRITE setQmlGroupName)
 
 public:
-    explicit DataSource_Documents(QObject* parent, QMLConstants *inConstants);
+    explicit DataSource_Documents(QObject *parent, QMLConstants *inConstants);
     Q_INVOKABLE virtual int getItemCount() const;
     Q_INVOKABLE virtual QVariantMap getContent(int index) const;
 
@@ -31,8 +31,8 @@ public slots:
     void updateContent();
 
 private slots:
-    void resultPreviewJob(const KFileItem& item, const QPixmap& pixmap);
-    void previewFailed(const KFileItem& item);
+    void resultPreviewJob(const KFileItem &item, const QPixmap &pixmap);
+    void previewFailed(const KFileItem &item);
 
 private:
     void createDocumentsPreviews(KFileItemList list);

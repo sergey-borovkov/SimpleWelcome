@@ -23,12 +23,12 @@ class LocalContentModel : public ListModel
 public:
     explicit LocalContentModel(QHash<int, QByteArray> roles, QObject *parent = 0);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    void appendRow(LocalContentItem* item);
-    void appendRows(const QList<LocalContentItem*> &items);
+    void appendRow(LocalContentItem *item);
+    void appendRows(const QList<LocalContentItem *> &items);
     void insertRow(int row, LocalContentItem *item);
-    void setLister(ActivityProxy* lister);
+    void setLister(ActivityProxy *lister);
     void resetModel();
-    LocalContentItem * find(const QDate &date) const;
+    LocalContentItem *find(const QDate &date) const;
 
     QRegExp filter() const;
     void setFilter(QRegExp regexp);
@@ -36,8 +36,8 @@ public:
     void previewReady(const QString &path);
 
 public slots:
-    void newActivities(QList <Activity*> list);
-    QObject* itemsModel(QDate date) const;
+    void newActivities(QList <Activity *> list);
+    QObject *itemsModel(QDate date) const;
     int getIndexByDate(int year, int month, bool direction);
     QDate getDateOfIndex(int listIndex);
 
@@ -50,7 +50,7 @@ private slots:
 
 private:
     QHash<QString, LocalContentItem *> m_urlHash;
-    ActivityProxy* m_lister;
+    ActivityProxy *m_lister;
     QRegExp m_filter;
 };
 
@@ -63,9 +63,9 @@ class LocalContentFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    explicit LocalContentFilterModel(QObject * parent = 0);
+    explicit LocalContentFilterModel(QObject *parent = 0);
     Q_INVOKABLE void setFilter(const QString &filter);
-    Q_INVOKABLE QObject* itemsModel(QDate date) const;
+    Q_INVOKABLE QObject *itemsModel(QDate date) const;
     Q_INVOKABLE int getIndexByDate(int year, int month, bool direction);
     Q_INVOKABLE int getIndexByDate(QDate date);
     Q_INVOKABLE QDate getDateOfIndex(int listIndex);

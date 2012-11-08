@@ -106,8 +106,8 @@ void PreviewGenerator::request(const QString &path, const QSize &size)
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
 
-    connect(job, SIGNAL(gotPreview(const KFileItem&, const QPixmap&)), SLOT(previewJobResult(const KFileItem&, const QPixmap&)));
-    connect(job, SIGNAL(failed(const KFileItem&)), SLOT(previewJobFailed(const KFileItem &)));
+    connect(job, SIGNAL(gotPreview(const KFileItem &, const QPixmap &)), SLOT(previewJobResult(const KFileItem &, const QPixmap &)));
+    connect(job, SIGNAL(failed(const KFileItem &)), SLOT(previewJobFailed(const KFileItem &)));
 }
 
 void PreviewGenerator::cancel(const QString &path)

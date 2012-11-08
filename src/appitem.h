@@ -20,6 +20,7 @@
 typedef QVariantMap AppItem;
 typedef QList<AppItem> AppItemList;
 
-inline uint qHash (const AppItem &item) {
+inline uint qHash(const AppItem &item)
+{
     return qHash(item["caption"].toString());
 }
