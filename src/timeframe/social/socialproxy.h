@@ -76,6 +76,8 @@ public:
     Q_INVOKABLE QString selfPictureUrl(const QString &pluginName);
 
     void getSelfUserPicture(const QString &pluginName);
+    void getAudio(const QString &parentId, const QString & aid, const QString & ownerId, const QString &pluginName);
+    void getVideo(const QString &parentId, const QString & vid, const QString & ownerId, const QString &pluginName);
 
     /**
      * @brief Request all comments of item
@@ -102,6 +104,8 @@ private slots:
     void commentSuccess(PluginRequestReply *);
     void getPictureSuccess(PluginRequestReply *);
     void getSelfPictureSuccess(PluginRequestReply*);
+    void getAudioSuccess(PluginRequestReply *);
+    void getVideoSuccess(PluginRequestReply *);
 
     /**
      * @brief Slot called on social network deauthorization
@@ -164,6 +168,10 @@ private:
     PluginRequestReply *userPicture(const QString &id, const QString &parentId, const QString &pluginName);
 
     PluginRequestReply *selfPicture(const QString &pluginName);
+
+    PluginRequestReply *audioUrl(const QString &parentId, const QString &aid, const QString &ownerId, const QString &pluginName);
+
+    PluginRequestReply *videoUrl(const QString &parentId, const QString &vid, const QString &ownerId, const QString &pluginName);
 
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;

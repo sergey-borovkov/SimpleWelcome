@@ -21,6 +21,8 @@ public:
     virtual Request *queryWall(const QDate &beginDate, const QDate &endDate);
     virtual Request *queryUserId();
     virtual Request *queryImage(const QString &id);
+    virtual Request *queryAudio(const QString &aid, const QString &ownerId);
+    virtual Request *queryVideo(const QString &vid, const QString &ownerId);
     virtual Request *queryComments(const QString &postId);
     virtual Request *queryLikes(const QString &postId);
     virtual Request *postComment(const QByteArray &message, const QString &parentId);

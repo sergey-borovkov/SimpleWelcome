@@ -15,7 +15,10 @@ Item {
     property string picture: ""
     property string pluginName: ""
     property string audio: ""
-    //property alias iconPlugin : iconPlugin
+    property string audioUrl: ""
+    property string video: ""
+    property string videoUrl: ""
+//    property alias iconPlugin : iconPlugin
     property alias commentsView : commentsListView
     property int index: -1
 
@@ -36,6 +39,9 @@ Item {
         datetime = model.datetime(index)
         picture = model.imageUrl(index)
         audio = model.audio(index)
+        audioUrl = model.audioUrl(index)
+        video = model.video(index)
+        videoUrl = model.videoUrl(index)
         like = model.like(index)
         likes = model.likesCount(index)
         commentCount = model.commentsCount(index)
@@ -61,6 +67,8 @@ Item {
             h = h - socialImage.height - 10
         if (audioItem.visible)
             h = h - audioItem.height - 10;
+        if (videoItem.visible)
+            h = h - videoItem.height - 10;
         return Math.min(socialMessage.height, h)
     }
 
@@ -157,7 +165,7 @@ Item {
                         anchors.bottomMargin: 3
 
                         wrapMode: Text.Wrap
-                        textFormat: Text.StyledText
+//                        textFormat: Text.StyledText
                         anchors.horizontalCenter: parent.horizontalCenter
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -172,7 +180,40 @@ Item {
                             if(typeof audio === "undefined")
                                 return ""
                             else
-                                return i18n_Audio + audio
+                                return i18n_Audio + " <a href=\"" + audioUrl + "\">" + audio + "</a>"
+                        }
+
+                        onLinkActivated: {
+                            Qt.openUrlExternally(link)
+                        }
+                    }
+
+                    Text {
+                        id: videoItem
+                        width: parent.width - 20
+                        anchors.bottomMargin: 3
+
+                        wrapMode: Text.Wrap
+//                        textFormat: Text.StyledText
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                        maximumLineCount: 2
+                        text: getVideo()
+                        color: "lightblue"
+                        visible: (picture === "") && (video !== "")
+
+                        function getVideo()
+                        {
+                            if(typeof video === "undefined")
+                                return ""
+                            else
+                                return i18n_Video + " <a href=\"" + videoUrl + "\">" + video + "</a>"
+                        }
+
+                        onLinkActivated: {
+                            Qt.openUrlExternally(link)
                         }
                     }
 
@@ -205,7 +246,7 @@ Item {
                                 clip: true
                                 textFormat: Text.StyledText
                                 elide: Text.ElideRight
-                                maximumLineCount: { var lines = ( mainRect.height - topLine.height - (audioItem.visible ? audioItem.height : 0)) / font.pixelSize / 1.5; return lines }
+                                maximumLineCount: { var lines = ( mainRect.height - topLine.height - (audioItem.visible ? audioItem.height : 0) -  - (videoItem.visible ? videoItem.height : 0)) / font.pixelSize / 1.5; return lines }
 
                                 onLinkActivated: {
                                     Qt.openUrlExternally(link)
@@ -487,6 +528,8 @@ Item {
             }
 
             PropertyChanges { target: audioItem; visible: audio !== "" }
+
+            PropertyChanges { target: videoItem; visible: video !== "" }
 
             PropertyChanges { target: msgMouseArea; enabled: false; z: -1 }
 

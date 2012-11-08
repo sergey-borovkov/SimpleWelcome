@@ -46,6 +46,20 @@ Request *RequestManager::queryImage(const QString &id)
     return request;
 }
 
+Request *RequestManager::queryAudio(const QString &aid, const QString &ownerId)
+{
+    Q_UNUSED(ownerId)
+    Q_UNUSED(aid)
+    return 0;
+}
+
+Request *RequestManager::queryVideo(const QString &vid, const QString &ownerId)
+{
+    Q_UNUSED(ownerId)
+    Q_UNUSED(vid)
+    return 0;
+}
+
 Request *RequestManager::postComment(const QByteArray &message, const QString &parentId)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);

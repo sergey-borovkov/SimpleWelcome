@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: SimpleWelcome\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-11-06 12:41+0400\n"
+"POT-Creation-Date: 2012-11-08 11:09+0400\n"
 "PO-Revision-Date: 2011-07-03 19:34+0000\n"
 "Last-Translator: Jure Repinc <jlp@holodeck1.com>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -34,6 +34,11 @@ msgstr ""
 msgctxt "julia.mineeva@osinit.ru"
 msgid "julia.mineeva@osinit.ru"
 msgstr ""
+
+#: rosa-starter/src/rosa-starter.cpp:76
+#, fuzzy
+msgid "Edit Applications..."
+msgstr "Programi"
 
 #: src/main.cpp:37 src/main.cpp:44
 msgid "ROSA Desktop Application Launcher"
@@ -137,94 +142,99 @@ msgid "Audio: "
 msgstr ""
 
 #: src/swapp.cpp:195
+#, fuzzy
+msgid "Video: "
+msgstr "VIDEO"
+
+#: src/swapp.cpp:196
 msgid "Like"
 msgstr ""
 
-#: src/swapp.cpp:196
+#: src/swapp.cpp:197
 msgid "Unlike"
 msgstr ""
 
-#: src/swapp.cpp:197
+#: src/swapp.cpp:198
 msgid "Social Networking Sites"
 msgstr ""
 
-#: src/swapp.cpp:198
+#: src/swapp.cpp:199
 #, fuzzy
 msgid "Show comments"
 msgstr "Nedavni dokumenti"
 
-#: src/swapp.cpp:199
+#: src/swapp.cpp:200
 #, fuzzy
 msgid "Hide comments"
 msgstr "Nedavni dokumenti"
 
-#: src/swapp.cpp:200
+#: src/swapp.cpp:201
 msgid "Login"
 msgstr ""
 
-#: src/swapp.cpp:201
+#: src/swapp.cpp:202
 msgid "Logout"
 msgstr ""
 
-#: src/swapp.cpp:202
+#: src/swapp.cpp:203
 msgid "Enable..."
 msgstr ""
 
-#: src/swapp.cpp:203
+#: src/swapp.cpp:204
 msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
 msgstr ""
 
-#: src/swapp.cpp:204
+#: src/swapp.cpp:205
 msgid "in"
 msgstr ""
 
-#: src/swapp.cpp:206
+#: src/swapp.cpp:207
 msgid "JAN"
 msgstr "JAN"
 
-#: src/swapp.cpp:207
+#: src/swapp.cpp:208
 msgid "FEB"
 msgstr "FEB"
 
-#: src/swapp.cpp:208
+#: src/swapp.cpp:209
 msgid "MAR"
 msgstr "MAR"
 
-#: src/swapp.cpp:209
+#: src/swapp.cpp:210
 msgid "APR"
 msgstr "APR"
 
-#: src/swapp.cpp:210
+#: src/swapp.cpp:211
 msgid "MAY"
 msgstr "MAJ"
 
-#: src/swapp.cpp:211
+#: src/swapp.cpp:212
 #, fuzzy
 msgid "JUN"
 msgstr "JUN"
 
-#: src/swapp.cpp:212
+#: src/swapp.cpp:213
 #, fuzzy
 msgid "JUL"
 msgstr "JUL"
 
-#: src/swapp.cpp:213
+#: src/swapp.cpp:214
 msgid "AUG"
 msgstr "AVG"
 
-#: src/swapp.cpp:214
+#: src/swapp.cpp:215
 msgid "SEP"
 msgstr "SEP"
 
-#: src/swapp.cpp:215
+#: src/swapp.cpp:216
 msgid "OCT"
 msgstr "OKT"
 
-#: src/swapp.cpp:216
+#: src/swapp.cpp:217
 msgid "NOV"
 msgstr "NOV"
 
-#: src/swapp.cpp:217
+#: src/swapp.cpp:218
 msgid "DEC"
 msgstr "DEC"
 

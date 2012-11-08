@@ -192,6 +192,7 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("i18n_Local", i18n("Local"));
     m_viewer->rootContext()->setContextProperty("i18n_Write_Comment", i18n("Write comment..."));
     m_viewer->rootContext()->setContextProperty("i18n_Audio", i18n("Audio: "));
+    m_viewer->rootContext()->setContextProperty("i18n_Video", i18n("Video: "));
     m_viewer->rootContext()->setContextProperty("i18n_Like", i18n("Like"));
     m_viewer->rootContext()->setContextProperty("i18n_Unlike", i18n("Unlike"));
     m_viewer->rootContext()->setContextProperty("i18n_Social_networkong_sites", i18n("Social Networking Sites"));

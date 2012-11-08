@@ -29,6 +29,8 @@ Item{
             h = h - img.height - 10
         if (audioItem.height)
             h = h - audioItem.height - 10;
+        if (videoItem.height)
+            h = h - videoItem.height - 10;
 
         return Math.min(msg.height, h)
     }
@@ -219,7 +221,7 @@ Item{
                         if(typeof audio === "undefined")
                             return ""
                         else
-                            return i18n_Audio + audio
+                            return i18n_Audio + " <a href=\"" + audioUrl + "\">" + audio + "</a>"
                     }
 
                     id: audioItem
@@ -236,7 +238,42 @@ Item{
                             height = 0;
                         return vis
                     }
+
+                    onLinkActivated: {
+                        Qt.openUrlExternally(link)
+                    }
+
                 }
+
+                Text {
+                    function getVideo()
+                    {
+                        if(typeof video === "undefined")
+                            return ""
+                        else
+                            return i18n_Video + " <a href=\"" + videoUrl + "\">" + video + "</a>"
+                    }
+
+                    id: videoItem
+                    width: parent.width - 20
+                    wrapMode: Text.Wrap
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    text: getVideo()
+                    color: "lightblue"
+                    visible: {
+                        var vis = (typeof video !== "undefined")
+                        if (!vis)
+                            height = 0;
+                        return vis
+                    }
+
+                    onLinkActivated: {
+                        Qt.openUrlExternally(link)
+                    }
+                }
+
 
                 Item {
                     width: parent.width

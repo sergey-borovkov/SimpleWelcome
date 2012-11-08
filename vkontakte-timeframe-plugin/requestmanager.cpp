@@ -55,6 +55,31 @@ Request *RequestManager::queryImage(const QString &id)
     return request;
 }
 
+Request *RequestManager::queryAudio(const QString &aid, const QString & ownerId)
+{
+    QUrl url = constructUrl(QLatin1String("audio.getById"));
+    url.addQueryItem(QLatin1String("audios"), ownerId + QLatin1String("_") + aid);
+
+    VkRequest *request = new VkRequest(VkRequest::Get, this);
+    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(audioReply(QByteArray)));
+
+    request->setUrl(url);
+    return request;
+}
+
+Request *RequestManager::queryVideo(const QString &vid, const QString & ownerId)
+{
+    QUrl url = constructUrl(QLatin1String("video.get"));
+    url.addQueryItem(QLatin1String("videos"), ownerId + QLatin1String("_") + vid);
+
+    VkRequest *request = new VkRequest(VkRequest::Get, this);
+    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(videoReply(QByteArray)));
+
+//    qDebug() << "[VK]   RequestManager::queryVideo:   url =" << url;
+    request->setUrl(url);
+    return request;
+}
+
 Request *RequestManager::postComment(const QByteArray &message, const QString &postId)
 {
     QUrl url = constructUrl(QLatin1String("wall.addComment"));
@@ -181,7 +206,8 @@ void RequestManager::feedReply(QByteArray reply)
         // drop item without text and image
         if (feedItem && feedItem->data(SocialItem::Text).toString().isEmpty() &&
             feedItem->data(SocialItem::ImageUrl).toString().isEmpty() &&
-            feedItem->data(SocialItem::Audio).toString().isEmpty() ) {
+            feedItem->data(SocialItem::Audio).toString().isEmpty() &&
+            feedItem->data(SocialItem::Video).toString().isEmpty() ) {
             delete feedItem;
             continue;
         }
@@ -232,7 +258,8 @@ void RequestManager::replyQueryWall(QByteArray reply)
         // drop item without text and image
         if (feedItem && feedItem->data(SocialItem::Text).toString().isEmpty() &&
             feedItem->data(SocialItem::ImageUrl).toString().isEmpty() &&
-            feedItem->data(SocialItem::Audio).toString().isEmpty() ) {
+            feedItem->data(SocialItem::Audio).toString().isEmpty() &&
+            feedItem->data(SocialItem::Video).toString().isEmpty()) {
             delete feedItem;
             continue;
         }
@@ -405,6 +432,72 @@ void RequestManager::imageReply(QByteArray reply)
 
             emit gotUserImage(userId, userImageUrl);
             emit gotUserName(userId, userName);
+        }
+    }
+}
+
+void RequestManager::audioReply(QByteArray reply)
+{
+    QJson::Parser parser;
+    QVariantMap result = parser.parse(reply).toMap();
+
+    if (result.contains(QLatin1String("error"))) {
+        m_authorizer->logout();
+        return;
+    }
+
+    QString audioId, audioOwnerId, audioUrl;
+
+    if (result.contains(QLatin1String("response"))) {
+        QVariantList list = result.value(QLatin1String("response")).toList();
+
+        foreach(QVariant item, list) {
+            QVariantMap map = item.toMap();
+
+            if (map.contains(QLatin1String("aid"))) {
+                audioId = map.value(QLatin1String("aid")).toString();
+            }
+            if (map.contains(QLatin1String("owner_id"))) {
+                audioOwnerId = map.value(QLatin1String("owner_id")).toString();
+            }
+            if (map.contains(QLatin1String("url"))) {
+                audioUrl = map.value(QLatin1String("url")).toString();
+            }
+
+            emit gotAudioUrl(audioId, audioOwnerId, audioUrl);
+        }
+    }
+}
+
+void RequestManager::videoReply(QByteArray reply)
+{
+    QJson::Parser parser;
+    QVariantMap result = parser.parse(reply).toMap();
+
+    if (result.contains(QLatin1String("error"))) {
+        m_authorizer->logout();
+        return;
+    }
+
+    // video fields: vid, owner_id, title, description, duration, link, image, date, player
+    QString videoId, videoOwnerId, videoUrl;
+
+    if (result.contains(QLatin1String("response"))) {
+        QVariantList list = result.value(QLatin1String("response")).toList();
+
+        foreach(QVariant item, list) {
+            QVariantMap map = item.toMap();
+
+            if (map.contains(QLatin1String("aid"))) {
+                videoId = map.value(QLatin1String("aid")).toString();
+            }
+            if (map.contains(QLatin1String("owner_id"))) {
+                videoOwnerId = map.value(QLatin1String("owner_id")).toString();
+            }
+            if (map.contains(QLatin1String("player"))) {
+                videoUrl = map.value(QLatin1String("player")).toString();
+            }
+            emit gotVideoUrl(videoId, videoOwnerId, videoUrl);
         }
     }
 }

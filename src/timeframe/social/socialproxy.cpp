@@ -34,7 +34,7 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
             connect(object, SIGNAL(newComments(QString, QList<CommentItem *>)), SLOT(newComments(QString, QList<CommentItem*>)));
             connect(object, SIGNAL(searchComplete()), SLOT(searchComplete()));
             connect(object, SIGNAL(selfLiked(QString)), SLOT(onSelfLiked(QString)));
-
+            connect(object, SIGNAL(selfLiked(QString)), SLOT(onSelfLiked(QString)));
         }
         if ((object = dynamic_cast<QObject *>(plugin)) != 0) {
             connect(object, SIGNAL(authorized()), SLOT(authorized()));
@@ -244,7 +244,6 @@ PluginRequestReply *SocialProxy::getAllLikes(const QString &id, const QString &p
     return reply;
 }
 
-
 void SocialProxy::likeSuccess(PluginRequestReply* reply)
 {
     m_socialModel->likeItem(reply->sourceId());
@@ -377,8 +376,25 @@ void SocialProxy::newItems(QList<SocialItem *> items)
 {
     if (!m_socialModel)
         return;
+
+    ISocialRequestManager *manager = dynamic_cast<ISocialRequestManager *>(sender());
+    QSettings settings("ROSA", "Timeframe");
+
     foreach(SocialItem * item, items) {
         emit newMonth(item->datetime().date().year(), item->datetime().date().month(), item->pluginName());
+
+        foreach(ISocialPlugin * plugin, m_plugins) {
+            bool isEnabled = settings.value(plugin->name()).toBool();
+            if (isEnabled && plugin->authorized() && manager && (plugin->requestManager() == manager)) {
+                // get audio url
+                if (!item->data(SocialItem::AudioId).toString().isEmpty() && !item->data(SocialItem::AudioOwnerId).toString().isEmpty())
+                    getAudio(item->data(SocialItem::Id).toString(), item->data(SocialItem::AudioId).toString(), item->data(SocialItem::AudioOwnerId).toString(), plugin->name());
+                // get video url
+                if (!item->data(SocialItem::VideoId).toString().isEmpty() && !item->data(SocialItem::VideoOwnerId).toString().isEmpty())
+                    getVideo(item->data(SocialItem::Id).toString(), item->data(SocialItem::VideoId).toString(), item->data(SocialItem::VideoOwnerId).toString(), plugin->name());
+            }
+        }
+
     }
     m_socialModel->newSocialItems(items);
 }
@@ -402,6 +418,64 @@ void SocialProxy::getSelfUserPicture(const QString &pluginName)
 {
     PluginRequestReply* reply = selfPicture(pluginName);
 //    connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(getSelfPictureSuccess(PluginRequestReply*)));
+    /*TO-DO: process error replies*/
+    connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
+}
+
+PluginRequestReply *SocialProxy::audioUrl(const QString &parentId, const QString &aid, const QString &ownerId, const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    if (!plugin)
+        return 0;
+
+    Request *request = plugin->requestManager()->queryAudio(aid, ownerId);
+    PluginRequestReply *reply = new PluginRequestReply(request, parentId, pluginName, this);
+    QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
+    connect(obj, SIGNAL(gotAudioUrl(QString, QString, QString)), reply, SLOT(gotAudioUrl(QString, QString, QString)));
+
+    request->start();
+
+    return reply;
+}
+
+void SocialProxy::getAudioSuccess(PluginRequestReply* reply)
+{
+    m_socialModel->updateAudioUrl(reply->audioId(), reply->audioOwnerId(), reply->audioUrl(), reply->sourceId());
+}
+
+void SocialProxy::getAudio(const QString &parentId, const QString &aid, const QString &ownerId, const QString &pluginName)
+{
+    PluginRequestReply* reply = audioUrl(parentId, aid, ownerId, pluginName);
+    connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(getAudioSuccess(PluginRequestReply*)));
+    /*TO-DO: process error replies*/
+    connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
+}
+
+PluginRequestReply *SocialProxy::videoUrl(const QString &parentId, const QString &vid, const QString &ownerId, const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    if (!plugin)
+        return 0;
+
+    Request *request = plugin->requestManager()->queryVideo(vid, ownerId);
+    PluginRequestReply *reply = new PluginRequestReply(request, parentId, pluginName, this);
+    QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
+    connect(obj, SIGNAL(gotVideoUrl(QString, QString, QString)), reply, SLOT(gotVideoUrl(QString, QString, QString)));
+
+    request->start();
+
+    return reply;
+}
+
+void SocialProxy::getVideoSuccess(PluginRequestReply* reply)
+{
+    m_socialModel->updateVideoUrl(reply->videoId(), reply->videoOwnerId(), reply->videoUrl(), reply->sourceId());
+}
+
+void SocialProxy::getVideo(const QString &parentId, const QString &vid, const QString &ownerId, const QString &pluginName)
+{
+    PluginRequestReply* reply = videoUrl(parentId, vid, ownerId, pluginName);
+    connect(reply, SIGNAL(success(PluginRequestReply*)), this, SLOT(getVideoSuccess(PluginRequestReply*)));
     /*TO-DO: process error replies*/
     connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 }

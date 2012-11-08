@@ -131,7 +131,16 @@ void FeedItem::fillFromMap(QVariantMap map)
                 if (typeAttachment == "audio") {
                     QVariantMap audioMap = map[ "audio" ].toMap();
 
+                    if (audioMap.contains("aid")) {
+                        m_data.insert(AudioId, audioMap.value("aid").toString());
+                    }
+
+                    if (audioMap.contains("owner_id")) {
+                        m_data.insert(AudioOwnerId, audioMap.value("owner_id").toString());
+                    }
+
                     if (audioMap.contains("title")) {
+
                         QString audioStr = audioMap.value("performer").toString() + " - " +
                                 audioMap.value("title").toString();
 
@@ -142,6 +151,33 @@ void FeedItem::fillFromMap(QVariantMap map)
                         m_data.insert(Audio, audioStr);
                     }
                 }
+
+                // add video info
+                if (typeAttachment == "video") {
+                    QVariantMap videoMap = map[ "video" ].toMap();
+
+                    if (videoMap.contains("vid")) {
+                        m_data.insert(VideoId, videoMap.value("vid").toString());
+                    }
+
+                    if (videoMap.contains("owner_id")) {
+                        m_data.insert(VideoOwnerId, videoMap.value("owner_id").toString());
+                    }
+
+                    if (videoMap.contains("title")) {
+
+                        QString videoStr = videoMap.value("title").toString();
+
+                        // add duration info (if possible)
+                        if (videoMap.contains("duration")) {
+                            videoStr += " (" + convertSecsToStr(videoMap.value("duration").toInt()) + ")";
+                        }
+
+//                        qDebug() << "[VK]  FeedItem::fillFromMap:   videoStr =" << videoStr << videoMap.value("vid").toString() << videoMap.value("owner_id").toString();
+                        m_data.insert(Video, videoStr);
+                    }
+                }
+
             }
         }
     }

@@ -82,6 +82,18 @@ void SocialContentItem::updateUserName(const QString &userId, const QString &use
     m_model->update();
 }
 
+void SocialContentItem::updateAudioUrl(const QString &audioId, const QString &audioOwnerId, const QString &audioUrl, const QString &eventId)
+{
+    m_itemModel->updateAudioUrl(audioId, audioOwnerId, audioUrl, eventId);
+    m_model->update();
+}
+
+void SocialContentItem::updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &eventId)
+{
+    m_itemModel->updateVideoUrl(videoId, videoOwnerId, videoUrl, eventId);
+    m_model->update();
+}
+
 void SocialContentItem::addComments(QString id, QList<CommentItem *> list)
 {
     m_itemModel->addComments(id, list);

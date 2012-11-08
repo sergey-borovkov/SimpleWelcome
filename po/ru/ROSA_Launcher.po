@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
 "quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-11-06 12:41+0400\n"
+"POT-Creation-Date: 2012-11-08 11:09+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,6 +33,11 @@ msgstr ""
 msgctxt "julia.mineeva@osinit.ru"
 msgid "julia.mineeva@osinit.ru"
 msgstr ""
+
+#: rosa-starter/src/rosa-starter.cpp:76
+#, fuzzy
+msgid "Edit Applications..."
+msgstr "Приложения"
 
 #: src/main.cpp:37 src/main.cpp:44
 msgid "ROSA Desktop Application Launcher"
@@ -132,92 +137,96 @@ msgid "Audio: "
 msgstr "Аудио: "
 
 #: src/swapp.cpp:195
+msgid "Video: "
+msgstr "Видео: "
+
+#: src/swapp.cpp:196
 msgid "Like"
 msgstr "Мне нравится"
 
-#: src/swapp.cpp:196
+#: src/swapp.cpp:197
 msgid "Unlike"
 msgstr "Больше не нравится"
 
-#: src/swapp.cpp:197
+#: src/swapp.cpp:198
 msgid "Social Networking Sites"
 msgstr "Социальные сети"
 
-#: src/swapp.cpp:198
+#: src/swapp.cpp:199
 msgid "Show comments"
 msgstr "Показать комментарии"
 
-#: src/swapp.cpp:199
+#: src/swapp.cpp:200
 msgid "Hide comments"
 msgstr "Скрыть комментарии"
 
-#: src/swapp.cpp:200
+#: src/swapp.cpp:201
 msgid "Login"
 msgstr "Вход"
 
-#: src/swapp.cpp:201
+#: src/swapp.cpp:202
 msgid "Logout"
 msgstr "Выход"
 
-#: src/swapp.cpp:202
+#: src/swapp.cpp:203
 msgid "Enable..."
 msgstr "Включить..."
 
-#: src/swapp.cpp:203
+#: src/swapp.cpp:204
 msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
 msgstr ""
 "Служба \"Поиск по меткам и содержимому\" выключена. Вы можете включить ее в "
 "параметрах системы."
 
-#: src/swapp.cpp:204
+#: src/swapp.cpp:205
 msgid "in"
 msgstr "в"
 
-#: src/swapp.cpp:206
+#: src/swapp.cpp:207
 msgid "JAN"
 msgstr "ЯНВ"
 
-#: src/swapp.cpp:207
+#: src/swapp.cpp:208
 msgid "FEB"
 msgstr "ФЕВ"
 
-#: src/swapp.cpp:208
+#: src/swapp.cpp:209
 msgid "MAR"
 msgstr "МАРТ"
 
-#: src/swapp.cpp:209
+#: src/swapp.cpp:210
 msgid "APR"
 msgstr "АПР"
 
-#: src/swapp.cpp:210
+#: src/swapp.cpp:211
 msgid "MAY"
 msgstr "МАЙ"
 
-#: src/swapp.cpp:211
+#: src/swapp.cpp:212
 msgid "JUN"
 msgstr "ИЮНЬ"
 
-#: src/swapp.cpp:212
+#: src/swapp.cpp:213
 msgid "JUL"
 msgstr "ИЮЛЬ"
 
-#: src/swapp.cpp:213
+#: src/swapp.cpp:214
 msgid "AUG"
 msgstr "АВГ"
 
-#: src/swapp.cpp:214
+#: src/swapp.cpp:215
 msgid "SEP"
 msgstr "СЕН"
 
-#: src/swapp.cpp:215
+#: src/swapp.cpp:216
 msgid "OCT"
 msgstr "ОКТ"
 
-#: src/swapp.cpp:216
+#: src/swapp.cpp:217
 msgid "NOV"
 msgstr "НOЯБ"
 
-#: src/swapp.cpp:217
+#: src/swapp.cpp:218
 msgid "DEC"
 msgstr "ДЕК"
 

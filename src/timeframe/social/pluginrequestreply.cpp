@@ -51,6 +51,36 @@ QString PluginRequestReply::userName() const
     return m_userName;
 }
 
+QString PluginRequestReply::audioId() const
+{
+    return m_audioId;
+}
+
+QString PluginRequestReply::audioOwnerId() const
+{
+    return m_audioOwnerId;
+}
+
+QString PluginRequestReply::audioUrl() const
+{
+    return m_audioUrl;
+}
+
+QString PluginRequestReply::videoId() const
+{
+    return m_videoId;
+}
+
+QString PluginRequestReply::videoOwnerId() const
+{
+    return m_videoOwnerId;
+}
+
+QString PluginRequestReply::videoUrl() const
+{
+    return m_videoUrl;
+}
+
 QString PluginRequestReply::pluginName() const
 {
     return m_pluginName;
@@ -65,6 +95,20 @@ void PluginRequestReply::gotUserPictureUrl(QString id, QString url)
 {
     m_userId = id;
     m_userPictureUrl = url;
+}
+
+void PluginRequestReply::gotAudioUrl(QString aid, QString ownerId, QString url)
+{
+    m_audioId = aid;
+    m_audioOwnerId = ownerId;
+    m_audioUrl = url;
+}
+
+void PluginRequestReply::gotVideoUrl(QString vid, QString ownerId, QString url)
+{
+    m_videoId = vid;
+    m_videoOwnerId = ownerId;
+    m_videoUrl = url;
 }
 
 void PluginRequestReply::gotUserName(QString id, QString name)
