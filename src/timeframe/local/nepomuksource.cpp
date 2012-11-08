@@ -27,10 +27,17 @@ void NepomukSource::startSearch()
     QList<Activity *> activities;
     int i = 0;
     while(it.next()) {
-        i++;
         QString path = it["url"].uri().toLocalFile();
         QDate lastModified = it["lastModified"].literal().toDate();
         QString mimeType = it["mimeType"].toString();
+
+        // skip desktop files
+        if (mimeType == QLatin1String("application/x-desktop")) {
+            continue;
+        }
+
+        i++;
+
         QString type;
         int imageWidth = 0, imageHeight = 0;
         if (path.contains(".svg"))
