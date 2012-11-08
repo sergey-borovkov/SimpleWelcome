@@ -88,6 +88,28 @@ Item {
             return newObj
         }
 
+        function prependItemWithStack(model, item) {
+            // This is needed to prevent ListModel.append from converting JsObject to ListModel
+            var itemStack = item.stack
+            item.stack = undefined
+
+            model.insert(0, item)
+
+            if (itemStack !== undefined)
+                model.setProperty(0, "stack", itemStack)
+        }
+
+        function appendItemWithStack(model, item) {
+            // This is needed to prevent ListModel.append from converting JsObject to ListModel
+            var itemStack = item.stack
+            item.stack = undefined
+
+            model.append(item)
+
+            if (itemStack !== undefined)
+                model.setProperty(model.count - 1, "stack", itemStack)
+        }
+
 
         Component.onCompleted: {
             isCompleted = true

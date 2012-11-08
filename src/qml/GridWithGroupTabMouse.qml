@@ -127,10 +127,6 @@ MouseArea {
                 !isForward && tabListView.currentIndex > 0) {
             var itemMoved = root.cloneObject(grid.model.get(dndDest))
 
-            // This is needed to prevent ListModel.append from converting JsObject to ListModel
-            var itemMovedStack = itemMoved.stack
-            itemMoved.stack = undefined
-
             gridMouseArea.skipMoveAnimation = true
 
             if (grid.maxCount !== -1 && dndSrcId !== -1 && grid.count !== grid.maxCount) {
@@ -202,19 +198,16 @@ MouseArea {
 
             if (isForward) {
                 if (itemFromNextPage)
-                    gridWas.model.append(itemFromNextPage)
+                    root.appendItemWithStack(gridWas.model, itemFromNextPage)
                 nextPageModel.remove(0)
             }
             else {
                 if (itemFromNextPage)
-                    gridWas.model.insert(0, itemFromNextPage)
+                    root.prependItemWithStack(gridWas.model, itemFromNextPage)
                 nextPageModel.remove(nextPageModel.count - 1)
             }
 
-            nextPageModel.append(itemMoved)
-            // This is needed to prevent ListModel.append from converting JsObject to ListModel
-            if (itemMovedStack !== undefined)
-                nextPageModel.setProperty(nextPageModel.count - 1, "stack", itemMovedStack)
+            root.appendItemWithStack(nextPageModel, itemMoved)
 
             gridMouseArea.skipMoveAnimation = false
         }

@@ -114,32 +114,14 @@ Item {
 
                                 var itemMoved, itemMovedStack
                                 if (isPushingFurther) {
-                                    // This is needed to prevent ListModel.append from converting JsObject to ListModel
-                                    itemMoved = root.cloneObject(prevPageModel.get(prevPageModel.count - 1))
-                                    itemMovedStack = itemMoved.stack
-                                    itemMoved.stack = undefined
-
-                                    nextPageModel.insert(0, itemMoved)
+                                    root.prependItemWithStack(nextPageModel, root.cloneObject(prevPageModel.get(prevPageModel.count - 1)))
                                     prevPageModel.remove(prevPageModel.count - 1)
-
-                                    // This is needed to prevent ListModel.append from converting JsObject to ListModel
-                                    if (itemMovedStack !== undefined)
-                                        nextPageModel.setProperty(0, "stack", itemMovedStack)
 
                                     // FIXME: Add logic to append new page when current one is overflown
                                 }
                                 else if (nextPageModel.count) {
-                                    // This is needed to prevent ListModel.append from converting JsObject to ListModel
-                                    itemMoved = root.cloneObject(nextPageModel.get(0))
-                                    itemMovedStack = itemMoved.stack
-                                    itemMoved.stack = undefined
-
-                                    prevPageModel.append(itemMoved)
+                                    root.appendItemWithStack(prevPageModel, root.cloneObject(nextPageModel.get(0)))
                                     nextPageModel.remove(0)
-
-                                    // This is needed to prevent ListModel.append from converting JsObject to ListModel
-                                    if (itemMovedStack !== undefined)
-                                        prevPageModel.setProperty(prevPageModel.count - 1, "stack", itemMovedStack)
                                 }
 
                                 prevPageModel = nextPageModel
