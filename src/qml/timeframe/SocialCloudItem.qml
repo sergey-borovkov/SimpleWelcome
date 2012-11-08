@@ -206,7 +206,7 @@ Item {
 
                         function getVideo()
                         {
-                            if(typeof video === "undefined")
+                            if(typeof videoUrl === "undefined")
                                 return ""
                             else
                                 return i18n_Video + " <a href=\"" + videoUrl + "\">" + video + "</a>"

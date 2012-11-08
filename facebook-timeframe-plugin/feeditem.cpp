@@ -78,9 +78,19 @@ void FeedItem::fillFromMap(const QVariantMap &map)
 
     m_data.insert(ImageUrl, QUrl::fromPercentEncoding(map.value("picture").toByteArray()));
 
-//    if (message.isEmpty()) {
-//        m_data.insert(Text, map.value("story").toString());
-//    }
+
+    // get video if possible
+    if (map.value("type").toString() == QLatin1String("video") && !map.value("source").isNull()) {
+        QString src = map.value("source").toString();
+        if (!src.isEmpty()) {
+            m_data.insert(VideoUrl, src);
+            QString name = map.value("name").toString();
+            if (!name.isEmpty())
+                m_data.insert(Video, name);
+            else
+                m_data.insert(Video, src);
+        }
+    }
 
     if (map.contains("created_time")) {
         QDateTime dt = map.value("created_time").toDateTime();
