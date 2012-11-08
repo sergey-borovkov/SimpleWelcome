@@ -123,13 +123,14 @@ void SocialDayModel::updateAudioUrl(const QString &audioId, const QString &audio
     }
 }
 
-void SocialDayModel::updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &eventId)
+void SocialDayModel::updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &videoImage, const QString &eventId)
 {
     for (int i = 0; i < rowCount(); i++) {
         if (data(index(i, 0), SocialItem::Id).toString() == eventId) {
             setData(index(i, 0), QVariant(videoId), SocialItem::VideoId);
             setData(index(i, 0), QVariant(videoOwnerId), SocialItem::VideoOwnerId);
             setData(index(i, 0), QVariant(videoUrl), SocialItem::VideoUrl);
+            setData(index(i, 0), QVariant(videoImage), SocialItem::VideoImage);
         }
     }
 }

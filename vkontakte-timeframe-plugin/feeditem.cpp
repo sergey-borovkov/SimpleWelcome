@@ -173,7 +173,6 @@ void FeedItem::fillFromMap(QVariantMap map)
                             videoStr += " (" + convertSecsToStr(videoMap.value("duration").toInt()) + ")";
                         }
 
-//                        qDebug() << "[VK]  FeedItem::fillFromMap:   videoStr =" << videoStr << videoMap.value("vid").toString() << videoMap.value("owner_id").toString();
                         m_data.insert(Video, videoStr);
                     }
                 }

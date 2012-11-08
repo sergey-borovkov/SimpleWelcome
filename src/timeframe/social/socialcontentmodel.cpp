@@ -82,12 +82,12 @@ void SocialContentModel::updateAudioUrl(const QString &audioId, const QString &a
         item->updateAudioUrl(audioId, audioOwnerId, audioUrl, eventId);
 }
 
-void SocialContentModel::updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &eventId)
+void SocialContentModel::updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &videoImage, const QString &eventId)
 {
     QDate date = m_idHash.value(eventId);
     SocialContentItem *item = findItemByDate(date);
     if (item)
-        item->updateVideoUrl(videoId, videoOwnerId, videoUrl, eventId);
+        item->updateVideoUrl(videoId, videoOwnerId, videoUrl, videoImage, eventId);
 }
 
 void SocialContentModel::addComments(QString id, QList<CommentItem *> list)

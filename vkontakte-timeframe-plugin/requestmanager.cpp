@@ -75,7 +75,6 @@ Request *RequestManager::queryVideo(const QString &vid, const QString & ownerId)
     VkRequest *request = new VkRequest(VkRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(videoReply(QByteArray)));
 
-//    qDebug() << "[VK]   RequestManager::queryVideo:   url =" << url;
     request->setUrl(url);
     return request;
 }
@@ -480,7 +479,7 @@ void RequestManager::videoReply(QByteArray reply)
     }
 
     // video fields: vid, owner_id, title, description, duration, link, image, date, player
-    QString videoId, videoOwnerId, videoUrl;
+    QString videoId, videoOwnerId, videoUrl, videoImage;
 
     if (result.contains(QLatin1String("response"))) {
         QVariantList list = result.value(QLatin1String("response")).toList();
@@ -488,16 +487,22 @@ void RequestManager::videoReply(QByteArray reply)
         foreach(QVariant item, list) {
             QVariantMap map = item.toMap();
 
-            if (map.contains(QLatin1String("aid"))) {
-                videoId = map.value(QLatin1String("aid")).toString();
+            if (map.contains(QLatin1String("vid"))) {
+                videoId = map.value(QLatin1String("vid")).toString();
             }
             if (map.contains(QLatin1String("owner_id"))) {
                 videoOwnerId = map.value(QLatin1String("owner_id")).toString();
             }
             if (map.contains(QLatin1String("player"))) {
-                videoUrl = map.value(QLatin1String("player")).toString();
+                videoUrl = QUrl::fromPercentEncoding(map.value(QLatin1String("player")).toByteArray());
             }
-            emit gotVideoUrl(videoId, videoOwnerId, videoUrl);
+            if (map.contains(QLatin1String("image"))) {
+                videoImage = map.value(QLatin1String("image")).toString();
+            }
+            if (!videoId.isEmpty() && !videoOwnerId.isEmpty()
+                    && !videoId.isEmpty() && !videoImage.isEmpty()) {
+                emit gotVideoUrl(videoId, videoOwnerId, videoUrl, videoImage);
+            }
         }
     }
 }

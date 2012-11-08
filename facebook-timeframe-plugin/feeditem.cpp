@@ -80,8 +80,9 @@ void FeedItem::fillFromMap(const QVariantMap &map)
 
 
     // get video if possible
-    if (map.value("type").toString() == QLatin1String("video") && !map.value("source").isNull()) {
-        QString src = map.value("source").toString();
+    if (map.value("type").toString() == QLatin1String(QLatin1String("video")) &&
+        !map.value(QLatin1String("source")).isNull()) {
+        QString src = QUrl::fromPercentEncoding(map.value(QLatin1String("source")).toByteArray());
         if (!src.isEmpty()) {
             m_data.insert(VideoUrl, src);
             QString name = map.value("name").toString();
@@ -89,6 +90,7 @@ void FeedItem::fillFromMap(const QVariantMap &map)
                 m_data.insert(Video, name);
             else
                 m_data.insert(Video, src);
+            m_data.insert(VideoImage, QUrl::fromPercentEncoding(map.value(QLatin1String("picture")).toByteArray()));
         }
     }
 

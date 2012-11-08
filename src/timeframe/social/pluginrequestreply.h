@@ -55,6 +55,7 @@ public:
     Q_INVOKABLE QString videoId() const;
     Q_INVOKABLE QString videoOwnerId() const;
     Q_INVOKABLE QString videoUrl() const;
+    Q_INVOKABLE QString videoImage() const;
 
     Q_INVOKABLE QString pluginName() const;
 
@@ -68,7 +69,7 @@ private slots:
     void newItemId(QString id);
     void gotUserPictureUrl(QString id, QString url);
     void gotAudioUrl(QString aid, QString ownerId, QString url);
-    void gotVideoUrl(QString vid, QString ownerId, QString url);
+    void gotVideoUrl(QString vid, QString ownerId, QString url, QString image);
     void gotUserName(QString id, QString name);
     void error(QString error);
 
@@ -90,6 +91,7 @@ private:
     QString m_videoId;
     QString m_videoOwnerId;
     QString m_videoUrl;
+    QString m_videoImage;
 
     bool m_finished;
 };
