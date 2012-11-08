@@ -251,7 +251,7 @@ Item{
                         if(typeof video === "undefined")
                             return ""
                         else
-                            return i18n_Video + " <a href=\"" + videoUrl + "\">" + video + "</a>"
+                            return i18n_VideoUrl + " <a href=\"" + videoUrl + "\">" + video + "</a>"
                     }
 
                     id: videoItem
