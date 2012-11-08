@@ -16,13 +16,13 @@ public:
     virtual void closeEvent(QCloseEvent *event);
     virtual void moveEvent(QMoveEvent *);
 
-    Q_INVOKABLE QRect getMargins();
+    Q_INVOKABLE QRect getMargins() const;
     Q_INVOKABLE void activateDragAndDrop(QString url, QString image_path, int image_size);
 
     Q_INVOKABLE void saveStacks(QVariantList setting);
     Q_INVOKABLE void saveIconPositions(QVariantMap setting);
-    Q_INVOKABLE QVariantMap loadStacks();
-    Q_INVOKABLE QVariantMap loadIconPositions();
+    Q_INVOKABLE QVariantMap loadStacks() const;
+    Q_INVOKABLE QVariantMap loadIconPositions() const;
 
     Q_INVOKABLE void currentTabChanged(int newCurrentIndex);
 

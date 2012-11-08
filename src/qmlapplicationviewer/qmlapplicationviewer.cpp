@@ -45,7 +45,7 @@ void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
         close();
 }
 
-QRect QmlApplicationViewer::getMargins()
+QRect QmlApplicationViewer::getMargins() const
 {
     QRect result(QApplication::desktop()->availableGeometry().left(), QApplication::desktop()->availableGeometry().top(),
                  QApplication::desktop()->width() - QApplication::desktop()->availableGeometry().right(),
@@ -142,7 +142,7 @@ void QmlApplicationViewer::saveIconPositions(QVariantMap setting)
     configGroup.sync();
 }
 
-QVariantMap QmlApplicationViewer::loadStacks()
+QVariantMap QmlApplicationViewer::loadStacks() const
 {
     QVariantMap list;
 
@@ -158,7 +158,7 @@ QVariantMap QmlApplicationViewer::loadStacks()
 }
 
 
-QVariantMap QmlApplicationViewer::loadIconPositions()
+QVariantMap QmlApplicationViewer::loadIconPositions() const
 {
     QVariantMap out;
 
