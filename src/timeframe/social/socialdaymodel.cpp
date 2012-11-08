@@ -116,9 +116,12 @@ void SocialDayModel::updateAudioUrl(const QString &audioId, const QString &audio
 {
     for (int i = 0; i < rowCount(); i++) {
         if (data(index(i, 0), SocialItem::Id).toString() == eventId) {
-            setData(index(i, 0), QVariant(audioId), SocialItem::AudioId);
-            setData(index(i, 0), QVariant(audioOwnerId), SocialItem::AudioOwnerId);
-            setData(index(i, 0), QVariant(audioUrl), SocialItem::AudioUrl);
+            if (!audioId.isEmpty())
+                setData(index(i, 0), QVariant(audioId), SocialItem::AudioId);
+            if (!audioOwnerId.isEmpty())
+                setData(index(i, 0), QVariant(audioOwnerId), SocialItem::AudioOwnerId);
+            if (!audioUrl.isEmpty())
+                setData(index(i, 0), QVariant(audioUrl), SocialItem::AudioUrl);
         }
     }
 }
@@ -127,10 +130,14 @@ void SocialDayModel::updateVideoUrl(const QString &videoId, const QString &video
 {
     for (int i = 0; i < rowCount(); i++) {
         if (data(index(i, 0), SocialItem::Id).toString() == eventId) {
-            setData(index(i, 0), QVariant(videoId), SocialItem::VideoId);
-            setData(index(i, 0), QVariant(videoOwnerId), SocialItem::VideoOwnerId);
-            setData(index(i, 0), QVariant(videoUrl), SocialItem::VideoUrl);
-            setData(index(i, 0), QVariant(videoImage), SocialItem::VideoImage);
+            if (!videoId.isEmpty())
+                setData(index(i, 0), QVariant(videoId), SocialItem::VideoId);
+            if (!videoOwnerId.isEmpty())
+                setData(index(i, 0), QVariant(videoOwnerId), SocialItem::VideoOwnerId);
+            if (!videoUrl.isEmpty())
+                setData(index(i, 0), QVariant(videoUrl), SocialItem::VideoUrl);
+            if (!videoImage.isEmpty())
+                setData(index(i, 0), QVariant(videoImage), SocialItem::VideoImage);
         }
     }
 }
