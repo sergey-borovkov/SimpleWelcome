@@ -8,16 +8,18 @@ Column {
 
         Image {
             id: image
+
             anchors.centerIn: parent
+
             source: "image://gallery/" + url + "%"
             sourceSize.width: parent.width - 4
             sourceSize.height: parent.height - 4
+            cache: false
 
             Component.onDestruction: {
                 galleryPreviewGenerator.cancel(url)
             }
 
-            cache: false
             Connections {
                 target: localDayModel.itemsModel(date)
                 onGotThumbnail: {
@@ -35,11 +37,14 @@ Column {
     }
     Text {
         id: label
-        text: url
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: parent.width
+
+        text:  url.replace(/^.*[\\\/]/, '')
         color: "white"
         elide: Text.ElideLeft
-        width: parent.width
         verticalAlignment: Text.AlignHCenter
-        anchors.horizontalCenter: parent.horizontalCenter
+        horizontalAlignment: Text.AlignHCenter
     }
 }

@@ -27,13 +27,6 @@ Item {
         horizontalAlignment: Text.AlignHCenter
     }
 
-    AnimatedImage {
-        id: waitIndicator
-        source: "images/ajax-loader.gif"
-        anchors.centerIn: parent
-        visible: (size === 0) ? true : false
-    }
-
     GridView {
         id: itemGrid
         anchors.top: dateLabel.bottom
