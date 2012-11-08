@@ -48,6 +48,14 @@ public:
     Q_INVOKABLE QString userId() const;
     Q_INVOKABLE QString userName() const;
 
+    Q_INVOKABLE QString audioId() const;
+    Q_INVOKABLE QString audioOwnerId() const;
+    Q_INVOKABLE QString audioUrl() const;
+
+    Q_INVOKABLE QString videoId() const;
+    Q_INVOKABLE QString videoOwnerId() const;
+    Q_INVOKABLE QString videoUrl() const;
+
     Q_INVOKABLE QString pluginName() const;
 
 signals:
@@ -59,6 +67,8 @@ private slots:
     void requestSuccess();
     void newItemId(QString id);
     void gotUserPictureUrl(QString id, QString url);
+    void gotAudioUrl(QString aid, QString ownerId, QString url);
+    void gotVideoUrl(QString vid, QString ownerId, QString url);
     void gotUserName(QString id, QString name);
     void error(QString error);
 
@@ -72,6 +82,14 @@ private:
     QString m_userName;
 
     QString m_pluginName;
+
+    QString m_audioId;
+    QString m_audioOwnerId;
+    QString m_audioUrl;
+
+    QString m_videoId;
+    QString m_videoOwnerId;
+    QString m_videoUrl;
 
     bool m_finished;
 };

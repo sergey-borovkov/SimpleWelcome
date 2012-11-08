@@ -74,6 +74,22 @@ void SocialContentModel::updateUserName(const QString &userId, const QString &us
         item->updateUserName(userId, userName, eventId);
 }
 
+void SocialContentModel::updateAudioUrl(const QString &audioId, const QString &audioOwnerId, const QString &audioUrl, const QString &eventId)
+{
+    QDate date = m_idHash.value(eventId);
+    SocialContentItem *item = findItemByDate(date);
+    if (item)
+        item->updateAudioUrl(audioId, audioOwnerId, audioUrl, eventId);
+}
+
+void SocialContentModel::updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &eventId)
+{
+    QDate date = m_idHash.value(eventId);
+    SocialContentItem *item = findItemByDate(date);
+    if (item)
+        item->updateVideoUrl(videoId, videoOwnerId, videoUrl, eventId);
+}
+
 void SocialContentModel::addComments(QString id, QList<CommentItem *> list)
 {
     QDate date = m_idHash.value(id);

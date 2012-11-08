@@ -112,6 +112,28 @@ void SocialDayModel::updateUserName(const QString &userId, const QString &userNa
     }
 }
 
+void SocialDayModel::updateAudioUrl(const QString &audioId, const QString &audioOwnerId, const QString &audioUrl, const QString &eventId)
+{
+    for (int i = 0; i < rowCount(); i++) {
+        if (data(index(i, 0), SocialItem::Id).toString() == eventId) {
+            setData(index(i, 0), QVariant(audioId), SocialItem::AudioId);
+            setData(index(i, 0), QVariant(audioOwnerId), SocialItem::AudioOwnerId);
+            setData(index(i, 0), QVariant(audioUrl), SocialItem::AudioUrl);
+        }
+    }
+}
+
+void SocialDayModel::updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &eventId)
+{
+    for (int i = 0; i < rowCount(); i++) {
+        if (data(index(i, 0), SocialItem::Id).toString() == eventId) {
+            setData(index(i, 0), QVariant(videoId), SocialItem::VideoId);
+            setData(index(i, 0), QVariant(videoOwnerId), SocialItem::VideoOwnerId);
+            setData(index(i, 0), QVariant(videoUrl), SocialItem::VideoUrl);
+        }
+    }
+}
+
 void SocialDayModel::addComments(QString id, QList<CommentItem *> list)
 {
     for (int i = 0; i < rowCount(); i++) {
@@ -162,6 +184,21 @@ QString SocialDayFilterModel::imageUrl(int row) const
 QString SocialDayFilterModel::audio(int row) const
 {
     return data(index(row, 0), SocialItem::Audio).toString();
+}
+
+QString SocialDayFilterModel::audioUrl(int row) const
+{
+    return data(index(row, 0), SocialItem::AudioUrl).toString();
+}
+
+QString SocialDayFilterModel::video(int row) const
+{
+    return data(index(row, 0), SocialItem::Video).toString();
+}
+
+QString SocialDayFilterModel::videoUrl(int row) const
+{
+    return data(index(row, 0), SocialItem::VideoUrl).toString();
 }
 
 QString SocialDayFilterModel::text(int row) const

@@ -30,6 +30,8 @@ public:
     virtual Request *queryWall(const QDate &beginDate, const QDate &endDate) = 0;
     virtual Request *queryUserId() = 0;
     virtual Request *queryImage(const QString &id) = 0;
+    virtual Request *queryAudio(const QString &aid, const QString &ownerId) = 0;
+    virtual Request *queryVideo(const QString &vid, const QString &ownerId) = 0;
     virtual Request *postComment(const QByteArray &message, const QString &parentId) = 0;
 
     /**

@@ -8,31 +8,6 @@
 #include <listitem.h>
 
 
-struct AudioDesc {
-    int id;
-    int ownerId;
-    QString url;
-    QString title;
-    QString duration;
-    QString performer;
-
-};
-
-struct VideoDesc {
-    int id;
-    int ownerId;
-    QString title;
-    QString duration;
-    QString url;
-};
-
-struct ImageDesc {
-    int id;
-    int ownerId;
-    QString url;
-};
-
-
 class SocialItem : public ListItem
 {
 public:
@@ -46,6 +21,13 @@ public:
         Comments,
         CommentCount,
         Audio,
+        AudioId,
+        AudioUrl,
+        AudioOwnerId,
+        Video,
+        VideoId,
+        VideoUrl,
+        VideoOwnerId,
         PluginName,
         Count,
         ItemsCount,
@@ -78,6 +60,13 @@ public:
         roles.insert(Text, "message");
         roles.insert(ImageUrl, "picture");
         roles.insert(Audio, "audio");
+        roles.insert(AudioId, "audioId");
+        roles.insert(AudioUrl, "audioUrl");
+        roles.insert(AudioOwnerId, "audioOwnerId");
+        roles.insert(Video, "video");
+        roles.insert(VideoId, "videoId");
+        roles.insert(VideoUrl, "videoUrl");
+        roles.insert(VideoOwnerId, "videoOwnerId");
         roles.insert(Like, "like");
         roles.insert(Likes, "likes");
         roles.insert(LikeUrl, "likeUrl");

@@ -22,6 +22,8 @@ public:
     virtual Request *queryWall(const QDate &beginDate, const QDate &endDate);
     virtual Request *queryUserId();
     virtual Request *queryImage(const QString &id);
+    virtual Request *queryAudio(const QString &aid, const QString &ownerId);
+    virtual Request *queryVideo(const QString &vid, const QString &ownerId);
     virtual Request *queryComments(const QString &postId);
     virtual Request *queryLikes(const QString &postId);
     virtual Request *postComment(const QByteArray &message, const QString &postId);
@@ -38,6 +40,8 @@ private slots:
     void commentReply(QByteArray reply);
     void likesReply(QByteArray reply);
     void imageReply(QByteArray reply);
+    void audioReply(QByteArray reply);
+    void videoReply(QByteArray reply);
     void postCommentReply(QByteArray reply);
 
 signals:
@@ -49,6 +53,8 @@ signals:
     void newComments(QString postId, QList<CommentItem *> items);
     void gotUserImage(QString postId, QString url);
     void gotUserName(QString postId, QString name);
+    void gotAudioUrl(QString aid, QString ownerId, QString audioUrl);
+    void gotVideoUrl(QString vid, QString ownerId, QString videoUrl);
     void searchComplete();
 
 private:

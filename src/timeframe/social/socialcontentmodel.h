@@ -35,6 +35,8 @@ public slots:
     void removeItems(const QString &type);
     void updateUserImage(const QString &userId, const QString &userImageUrl, const QString &eventId);
     void updateUserName(const QString &userId, const QString &userName, const QString &eventId);
+    void updateAudioUrl(const QString &audioId, const QString &audioOwnerId, const QString &audioUrl, const QString &eventId);
+    void updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &eventId);
 
 private slots:
     void handleItemChange();
