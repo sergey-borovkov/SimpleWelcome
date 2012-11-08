@@ -5,7 +5,7 @@ Item{
 
     property alias likesCount : likesCountText.text
     property alias commentsCount:  commentsCountText.text
-    property int isLiked: 0
+    property variant isLiked: 0
     property bool commentsShow: false
 
     property alias commentsShowText: commentsShowAreaText

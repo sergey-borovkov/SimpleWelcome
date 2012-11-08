@@ -69,7 +69,7 @@ Item{
                 if (galleryRect.state === "comments")
                     height: 300 + 60 * (commentsCount + 1)
                 else
-                    Math.max( 120, ( column.height + bottomLine.height ) )
+                    Math.max( 120, ( column.height + bottomLine.height + topLine.height) )
             }
             //anchors.fill: parent
             //clip: true
@@ -79,129 +79,33 @@ Item{
                 }
             }
 
+            SocialTopBar {
+                id: topLine
+
+                anchors.top: parent.top
+                width: parent.width
+                height: 26
+
+                dateText : date
+                likesCount : likes
+                commentsCount: commentCount
+                pluginIcon: "image://plugin/" + pluginName + "/small"
+
+
+                onExitClicked: {
+                    modal.parent = galleryRect
+                    modal.z = -1
+                    galleryRect.state = ""
+                }
+            }
+
             Column {
                 id: column
-                width: parent.width
-                anchors.bottomMargin: 10
-                anchors.top: parent.top
-                spacing: 10
 
-                Item {
-                    id: topLine
-                    width: parent.width
-                    height: Math.max( icon.height, dateArea.paintedHeight )
-                    Image {
-                        id: icon
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
-                        width: 22
-                        height: 22
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        source: "image://plugin/" + pluginName + "/small"
-                    }
-                    Text {
-                        id: dateArea
-                        anchors.centerIn: parent
-                        wrapMode: Text.WordWrap
-                        horizontalAlignment: Text.AlignLeft
-                        verticalAlignment: Text.AlignVCenter
-                        text: Qt.formatDateTime(datetime, "d MMM yyyy ")
-                        color: "white"
-                        visible: false
-                    }
-                    Item {
-                        id: likesCountArea
-                        anchors.right: parent.right
-                        anchors.top: parent.top
-                        anchors.topMargin: 3
-                        anchors.leftMargin: 5
-                        width: 40
-                        height: 22
-                        Image {
-                            id: smallLikeIcon
-                            anchors.left: parent.left
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 22
-                            height: 22
-                            fillMode: Image.PreserveAspectFit
-                            smooth: true
-                            source: "images/like.png"
-                        }
-                        Text {
-                            anchors.left: smallLikeIcon.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.leftMargin: 5
-                            horizontalAlignment: Text.AlignRight
-                            verticalAlignment: Text.AlignVCenter
-                            text: likes
-                            color: "white"
-                        }
-                    }
-                    Item {
-                        id: commentsCountArea
-                        anchors.right: likesCountArea.left
-                        anchors.rightMargin: 5
-                        anchors.top: parent.top
-                        anchors.topMargin: 3
-                        width: 40
-                        height: 22
-                        Image {
-                            id: smallCommentIcon
-                            anchors.left: parent.left
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 22
-                            height: 22
-                            fillMode: Image.PreserveAspectFit
-                            smooth: true
-                            source: "images/comment.png"
-                        }
-                        Text {
-                            anchors.left: smallCommentIcon.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            horizontalAlignment: Text.AlignRight
-                            verticalAlignment: Text.AlignVCenter
-                            anchors.leftMargin: 5
-                            text: commentCount
-                            color: "white"
-                        }
-                    }
-                    Item {
-                        id: detailsOffArea
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: parent.right
-                        anchors.rightMargin: 5
-                        width: 12
-                        height: 12
-                        visible: false
-                        Image{
-                            id: closeIcon
-                            anchors.centerIn: parent
-                            fillMode: Image.PreserveAspectFit
-                            smooth: true
-                            source: "images/x.png"
-                            width: 8
-                            height: 8
-                        }
-                        MouseArea{
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onClicked: {
-                                modal.parent = galleryRect
-                                modal.z= -1
-                                galleryRect.state = ""
-                            }
-                            onEntered: {
-                                closeIcon.width = 10
-                                closeIcon.height = 10
-                            }
-                            onExited:{
-                                closeIcon.width = 8
-                                closeIcon.height = 8
-                            }
-                        }
-                    }
-                }
+                anchors { top: topLine.bottom; bottomMargin: 10 }
+                width: parent.width
+
+                spacing: 10
 
                 Image { //Main image
                     id: img
@@ -324,161 +228,40 @@ Item{
                         visible: false
                     }
                 }
-
             }
-            Item {
+
+            SocialBottomBar {
                 id: bottomLine
-                width: parent.width
+
+                anchors {bottom: parent.bottom; topMargin: 3; right: parent.right; left: parent.left}
                 height: 0
-                anchors.bottom: parent.bottom
-                anchors.topMargin: 3
+
+                likesCount : likes
+                commentsCount: commentCount
+                isLiked: like
                 visible: false
 
-                Item {
-                    id: bottomCommentsCountArea
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    anchors.leftMargin: 5
-                    width: 40
-                    height: 22
-                    Image {
-                        id: bottomCommentIcon
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 22
-                        height: 22
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        source: "images/comment.png"
-                    }
-                    Text {
-                        anchors.left: bottomCommentIcon.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.leftMargin: 5
-                        text: commentCount
-                        color: "white"
+                onSendLikeClicked: {
+                    if (like) {
+                        socialProxy.unlikeItem(id, pluginName);
+                    } else {
+                        socialProxy.likeItem(id, pluginName);
                     }
                 }
-                Item {
-                    id: bottomLikesCountArea
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: bottomCommentsCountArea.right
-                    anchors.leftMargin: 5
-                    width: 40
-                    height: 22
-                    Image {
-                        id: bottomLikeIcon
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 22
-                        height: 22
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        source: "images/like.png"
+                onShowCommentsClicked: {
+                    if (galleryRect.state === "details") {
+                        //Set source on comments loader
+                        commentsEdit.source = "CommentsEditBox.qml"
+                        commentsEdit.item.edit.color = "grey"
+                        commentsEdit.item.edit.text = i18n_Write_Comment
+                        commentsEdit.item.userPhoto.source = socialProxy.selfPictureUrl(pluginName)
+                        commentsListView.view.positionViewAtEnd()
+                        galleryRect.state = "comments"
                     }
-                    Text {
-                        anchors.left: bottomLikeIcon.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.leftMargin: 5
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                        text: likes
-                        color: "white"
-                    }
-                }
-
-                Item {
-                    id: likeItem
-                    anchors.right:  parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.rightMargin: 10
-                    height: parent.height
-                    width: 100
-                    visible: false
-                    state: (like == 1)? "liked" : ""
-                    Text {
-                        id: likesText
-                        anchors.fill: parent
-                        wrapMode: Text.WordWrap
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        text: i18n_Like
-                        color: "white"
-                    }
-                    MouseArea{
-                        id: likeSendArea
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onEntered: likesText.font.bold = true
-                        onExited: likesText.font.bold = false
-                        onClicked: {
-                            if (likeItem.state === "") {
-                                console.log("add like to item, item id: " + id)
-                                socialProxy.likeItem(id, pluginName);
-                            } else {
-                                console.log("dislike item, item id: " + id)
-                                socialProxy.unlikeItem(id, pluginName);
-                            }
-                        }
-                    }
-                    states: [
-                        State {
-                            name: "liked"
-                            PropertyChanges { target: likesText; text: i18n_Unlike }
-                            //PropertyChanges { target: likeSendArea; enabled: false }
-                        }
-                    ]
-                }
-                Item {
-                    id: commentsShowArea
-                    anchors.centerIn: parent
-                    width: 140
-                    height: parent.height
-                    visible: false
-                    Image {
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.left: parent.left
-                        source: "images/arrow.png"
-                    }
-                    Text {
-                        id: commentsShowAreaText
-                        anchors.fill: parent
-                        anchors.leftMargin: 10
-                        anchors.rightMargin: 10
-                        wrapMode: Text.WordWrap
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        color: "white"
-                        text: (galleryRect.state === "comments") ? i18n_Hide_Comments : i18n_Show_Comments
-                    }
-                    Image {
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.right: parent.right
-                        source: "images/arrow.png"
-                    }
-                    MouseArea{
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onEntered: commentsShowAreaText.font.bold = true
-                        onExited: commentsShowAreaText.font.bold = false
-                        onClicked: {
-                            if (galleryRect.state === "details") {
-                                //Set source on comments loader
-                                commentsEdit.source = "CommentsEditBox.qml"
-                                commentsEdit.item.edit.color = "grey"
-                                commentsEdit.item.edit.text = i18n_Write_Comment
-                                commentsEdit.item.userPhoto.source = socialProxy.selfPictureUrl(pluginName)
-                                commentsListView.view.positionViewAtEnd()
-                                galleryRect.state = "comments"
-                            }
-                            else if (galleryRect.state === "comments")
-                            {
-                                commentsEdit.source = ""
-                                galleryRect.state = "details"
-                            }
-                        }
+                    else if (galleryRect.state === "comments")
+                    {
+                        commentsEdit.source = ""
+                        galleryRect.state = "details"
                     }
                 }
             }
@@ -516,22 +299,15 @@ Item{
             }
             Connections {
                 target: commentsEdit.item
-                onSend: {
-                    console.log("comment sending via text edit: " +comment)
-                    socialProxy.commentItem(comment, id, pluginName)
-                }
+                onSend: socialProxy.commentItem(comment, id, pluginName)
             }
         }
         MouseArea
         {
             id: detailsOnArea
-            anchors.fill: parent
-            //anchors.bottomMargin: 20
+            anchors.fill: parent            
             z: -2
-            onClicked: {
-                //console.log("details on")
-                popupDetailsWidget()
-            }
+            onClicked: popupDetailsWidget()
         }
     }
     states: [
@@ -560,7 +336,7 @@ Item{
 
             PropertyChanges { target: mainRect; width: 400; height: 300 }
 
-            PropertyChanges { target: bottomLine; height: Math.max( 26, commentsShowAreaText.paintedHeight ); visible: true }
+            PropertyChanges { target: bottomLine; height: Math.max( 26, commentsShowText.paintedHeight ); visible: true }
 
             PropertyChanges {
                 target: galleryRect;
@@ -571,19 +347,9 @@ Item{
             }
             PropertyChanges { target: galleryRect; z: 9000  }
 
-            PropertyChanges { target: timeFrameTab; enableWheel: false }
+            PropertyChanges { target: timeFrameTab; enableWheel: false }            
 
-            PropertyChanges { target: detailsOffArea; visible: true }
-
-            PropertyChanges { target: dateArea; visible: true; color: "lightgrey"; text: Qt.formatDateTime(datetime, "d MMM " + i18n_In + " hh:mm") }
-
-            PropertyChanges { target: likeItem; visible: true }
-
-            PropertyChanges { target: likesCountArea; visible: false }
-
-            PropertyChanges { target: commentsCountArea; visible: false }
-
-            PropertyChanges { target: commentsShowArea; visible: true }
+            PropertyChanges { target: topLine; state: "detailed"; dateText: Qt.formatDateTime(datetime, "d MMM " + i18n_In + " hh:mm") }
 
             PropertyChanges { target: modal; enabled: true }
 
@@ -597,7 +363,6 @@ Item{
 
             PropertyChanges { target: msg; horizontalAlignment: (msgView.contentHeight > msgView.height) ? Text.AlignLeft : Text.AlignHCenter }
 
-
         },
         State {
             name: "comments" ; extend: "details"
@@ -605,6 +370,7 @@ Item{
             PropertyChanges { target: galleryItem; height: 300 + 60 + commentsViewHeight() + 10 }
             PropertyChanges { target: mainRect; height: 300 }
             PropertyChanges { target: commentsRect; height: commentsViewHeight() + 60 + 10}
+            PropertyChanges { target: bottomLine; commentsShow: true }
 
             PropertyChanges {
                 target: commentsListView
