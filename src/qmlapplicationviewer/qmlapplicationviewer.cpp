@@ -36,9 +36,7 @@ void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
 void QmlApplicationViewer::updateWorkArea()
 {
     // if work area is changed, then change size of main window
-    QDesktopWidget *desktop = QApplication::desktop();
-    if (desktop)
-        setFixedSize(desktop->width(), desktop->height());
+    setFixedSize(QApplication::desktop()->size());
 }
 
 void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
