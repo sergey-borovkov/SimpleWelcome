@@ -266,10 +266,12 @@ MouseArea {
 
         function moveIconWhereAiming() {
 
-            if (gridMouseArea.dndDest > indexWaitingOn && gridMouseArea.gridMouseX >= itemWaitingOn.x + constants.cellWidth)
-                indexWaitingOn++;
-            else if (gridMouseArea.dndDest < indexWaitingOn && gridMouseArea.gridMouseX <= itemWaitingOn.x)
-                indexWaitingOn--;
+            if (gridMouseArea.dndDest !== grid.count - 1) { // <-- not the best way to check if item we move was not just a moment ago dragged from other page
+                if (gridMouseArea.dndDest > indexWaitingOn && gridMouseArea.gridMouseX >= itemWaitingOn.x + constants.cellWidth)
+                    indexWaitingOn++;
+                else if (gridMouseArea.dndDest < indexWaitingOn && gridMouseArea.gridMouseX <= itemWaitingOn.x)
+                    indexWaitingOn--;
+            }
 
             //if (gridMouseArea.dndDest > indexWaitingOn && gridMouseArea.gridMouseX <= item.x || gridMouseArea.dndDest < indexWaitingOn && gridMouseArea.gridMouseX >= item.x + constants.cellWidth) // if (!isAimingOnStacking && !grid.stackable || isDragginStack) // Hit outer part of item. Using for repositioning
                 //console.log("MOVING")
