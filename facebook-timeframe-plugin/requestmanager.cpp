@@ -5,7 +5,6 @@
 
 #include <qjson/parser.h>
 #include <QtCore/QStringList>
-#include <QtCore/QDebug>
 
 RequestManager::RequestManager(QObject *parent)
     : QObject(parent)
@@ -140,14 +139,11 @@ void RequestManager::feedReply(QByteArray reply)
         QVariantMap map = item.toMap();
         FeedItem *feedItem = new FeedItem(map, m_selfId);
 
-        // drop item without text and image
-        if (feedItem && feedItem->data(SocialItem::Text).toString().isEmpty() &&
-            feedItem->data(SocialItem::ImageUrl).toString().isEmpty()) {
+        if (feedItem->data(SocialItem::Text).isNull()
+                && feedItem->data(SocialItem::ImageUrl).isNull()) {
             delete feedItem;
-            continue;
-        }
-
-        feedItems.append(feedItem);
+        } else
+            feedItems.append(feedItem);
     }
 
     emit newSocialItems(feedItems);

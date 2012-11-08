@@ -27,7 +27,7 @@
 
 #include <KFile>
 #include <KIcon>
-#include <QDebug>
+
 PreviewGenerator *previewGenerator(const QString &type)
 {
     static PreviewGenerator *galleryInstance = 0;

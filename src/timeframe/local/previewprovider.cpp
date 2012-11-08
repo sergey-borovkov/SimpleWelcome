@@ -24,7 +24,7 @@
 
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
-#include <QDebug>
+
 PreviewProvider::PreviewProvider(const QString &type) :
     QDeclarativeImageProvider(Pixmap),
     m_type(type),

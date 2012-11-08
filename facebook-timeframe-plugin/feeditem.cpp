@@ -1,7 +1,6 @@
 #include "feeditem.h"
 
 #include <QtCore/QDate>
-#include <QtCore/QDebug>
 #include <QtCore/QUrl>
 #include <QtCore/QRegExp>
 #include <QtGui/QColor>

@@ -1,6 +1,6 @@
 #include "feeditem.h"
 
-#include <QtCore/QDebug>
+
 #include <QtCore/QDateTime>
 #include <QtCore/QUrl>
 #include <QtCore/QRegExp>
@@ -75,11 +75,9 @@ void FeedItem::fillFromMap(QVariantMap map)
         if (hasLink) {
             int pos = reUrl.indexIn(message);
             QString after = "<a href=\"\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";
-//            QString after = "<a href=\"\\1\">\\1</a>";
             if (pos > -1) {
                 if (reUrl.cap(1).startsWith("www", Qt::CaseInsensitive)) {
                     after = "<a href=\"http://\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";
-//                    after = "<a href=\"http://\\1\">\\1</a>";
                 }
             }
 
@@ -173,7 +171,6 @@ void FeedItem::fillFromMap(QVariantMap map)
                             videoStr += " (" + convertSecsToStr(videoMap.value("duration").toInt()) + ")";
                         }
 
-//                        qDebug() << "[VK]  FeedItem::fillFromMap:   videoStr =" << videoStr << videoMap.value("vid").toString() << videoMap.value("owner_id").toString();
                         m_data.insert(Video, videoStr);
                     }
                 }

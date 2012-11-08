@@ -91,8 +91,6 @@ QString SWApp::pathToRoot()
 
 int SWApp::newInstance()
 {
-    qDebug() << "New instance here";
-
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
     static bool isFirst = true;

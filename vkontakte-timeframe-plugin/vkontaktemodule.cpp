@@ -4,7 +4,6 @@
 
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QtCore/QDebug>
 #include <QtCore/QSettings>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
@@ -37,7 +36,7 @@ VkontakteModule::VkontakteModule()
 VkontakteModule::~VkontakteModule()
 {
     delete m_requestManager;
-    delete m_authorizer;    
+    delete m_authorizer;
 }
 
 ISocialRequestManager *VkontakteModule::requestManager()

@@ -7,7 +7,6 @@
 #include <Soprano/QueryResultIterator>
 
 #include <QtCore/QDate>
-#include <QtCore/QDebug>
 
 
 NepomukSource::NepomukSource(QObject *parent) :

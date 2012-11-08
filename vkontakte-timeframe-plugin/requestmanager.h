@@ -59,6 +59,7 @@ signals:
 
 private:
     QUrl constructUrl(const QString &id) const;
+    bool canBeDisplayed(const FeedItem &feedItem) const;
 
     OAuth2Authorizer *m_authorizer;
 

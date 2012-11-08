@@ -3,8 +3,6 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <qjson/parser.h>
 
-#include <QtCore/QDebug>
-
 QNetworkAccessManager *VkRequest::manager = 0;
 
 VkRequest::VkRequest(RequestType type, QObject *parent)

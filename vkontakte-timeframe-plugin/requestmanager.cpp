@@ -4,7 +4,6 @@
 #include "oauth2authorizer.h"
 
 #include <qjson/parser.h>
-#include <QtCore/QDebug>
 #include <QtCore/QStringList>
 
 RequestManager::RequestManager(QObject *parent)
@@ -75,7 +74,6 @@ Request *RequestManager::queryVideo(const QString &vid, const QString & ownerId)
     VkRequest *request = new VkRequest(VkRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(videoReply(QByteArray)));
 
-//    qDebug() << "[VK]   RequestManager::queryVideo:   url =" << url;
     request->setUrl(url);
     return request;
 }
@@ -202,17 +200,12 @@ void RequestManager::feedReply(QByteArray reply)
     foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
         FeedItem *feedItem = new FeedItem(map, m_selfId);
-
-        // drop item without text and image
-        if (feedItem && feedItem->data(SocialItem::Text).toString().isEmpty() &&
-            feedItem->data(SocialItem::ImageUrl).toString().isEmpty() &&
-            feedItem->data(SocialItem::Audio).toString().isEmpty() &&
-            feedItem->data(SocialItem::Video).toString().isEmpty() ) {
+        if(!canBeDisplayed(*feedItem)) {
             delete feedItem;
-            continue;
         }
-
-        feedItems.append(feedItem);
+        else {
+            feedItems.append(feedItem);
+        }
     }
 
     emit newSocialItems(feedItems);
@@ -255,17 +248,10 @@ void RequestManager::replyQueryWall(QByteArray reply)
         QVariantMap map = item.toMap();
         FeedItem *feedItem = new FeedItem(map, m_selfId);
 
-        // drop item without text and image
-        if (feedItem && feedItem->data(SocialItem::Text).toString().isEmpty() &&
-            feedItem->data(SocialItem::ImageUrl).toString().isEmpty() &&
-            feedItem->data(SocialItem::Audio).toString().isEmpty() &&
-            feedItem->data(SocialItem::Video).toString().isEmpty()) {
+        if (!canBeDisplayed(*feedItem))
             delete feedItem;
-            continue;
-        }
-
-        feedItems.append(feedItem);
-
+        else
+            feedItems.append(feedItem);
     }
 
     emit newSocialItems(feedItems);
@@ -521,4 +507,16 @@ QUrl RequestManager::constructUrl(const QString &id) const
     QUrl url = apiVkUrl + id;
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
     return url;
+}
+
+bool RequestManager::canBeDisplayed(const FeedItem &feedItem) const
+{
+    if (feedItem.data(SocialItem::Text).isNull()
+            && feedItem.data(SocialItem::ImageUrl).isNull()
+            && feedItem.data(SocialItem::Audio).isNull()
+            && feedItem.data(SocialItem::Video).isNull()) {
+        return false;
+    }
+    return true;
+
 }

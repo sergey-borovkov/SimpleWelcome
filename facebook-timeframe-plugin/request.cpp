@@ -3,7 +3,6 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <qjson/parser.h>
 
-#include <QtCore/QDebug>
 
 QNetworkAccessManager *FacebookRequest::manager = 0;
 

@@ -5,7 +5,6 @@
 #include <commentitem.h>
 
 #include <QtCore/QDate>
-#include <QtCore/QDebug>
 
 SocialDayModel::SocialDayModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)
@@ -72,7 +71,7 @@ void SocialDayModel::addComment(CommentItem *item, QString id)
             int commentCount = data(index(i, 0), SocialItem::CommentCount).toInt();
             bool result = setData(index(i, 0), ++commentCount, SocialItem::CommentCount);
             if (!result)
-                qDebug() << " error on set comments count";
+                qWarning("Error on set comments count");
             emit dataChanged(index(i, 0), index(i, 0));
         }
     }

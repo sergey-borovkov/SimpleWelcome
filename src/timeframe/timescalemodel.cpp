@@ -3,7 +3,6 @@
 #include <QtCore/QModelIndex>
 #include <QtCore/QRegExp>
 #include <QtCore/QStringList>
-#include <QtCore/QDebug>
 
 TimeScaleFilterModel::TimeScaleFilterModel(QObject * parent) :
     QSortFilterProxyModel(parent)
@@ -26,7 +25,6 @@ void TimeScaleFilterModel::resetModel()
 
 void TimeScaleFilterModel::setFilter(const QString &filter)
 {
-//    qDebug() << "TimeScaleFilterModel::setFilter:   " << filter;
     QRegExp filterRegExp;
     if (filter == "Local")
         filterRegExp = QRegExp("Image|Video|Document");
