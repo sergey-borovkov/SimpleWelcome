@@ -108,15 +108,7 @@ Item {
         Component.onCompleted: {
             isCompleted = true
             console.log("completed with: " + width + "x" + height + "")
-            mainWindow.windowHidden.connect(onWindowHid)
             bottomBar.wheelScroll.connect(tabListView.onWheelScroll)
-
-        }
-
-        function onWindowHid() {
-            topBar.searchText = ""
-            tabListView.currentIndex = 1
-            topBar.forceActiveFocus()
         }
 
         NumberAnimation on opacity { to: 1.0; duration: 500 }
@@ -234,6 +226,13 @@ Item {
         target: mainWindow
 
         onAvailableGeometryChanged: root.updateSize()
+
+        onWindowHidden: {
+            topBar.searchText = ""
+            tabListView.currentIndex = 1
+            topBar.forceActiveFocus()
+        }
+
     }
 
 }
