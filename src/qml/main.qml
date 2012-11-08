@@ -25,24 +25,21 @@ Item {
 
     Item {
         id: root
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors {
+            fill: parent
+            leftMargin: mainWindow.availableGeometry.x
+            topMargin: mainWindow.availableGeometry.y
+            rightMargin: rootWrapper.width - anchors.leftMargin - mainWindow.availableGeometry.width
+            bottomMargin: rootWrapper.height - anchors.topMargin - mainWindow.availableGeometry.height
+        }
+
 
         property bool isCompleted: false
 
-        function onWindowSizeChanged() {
+        function updateSize() {
             if (isCompleted)
             {
                 var wasCurrentIndex = tabListView.currentIndex
-                var margins = mainWindow.getAvailableGeometry()
-                anchors.leftMargin = margins.x
-                anchors.topMargin = margins.y
-                anchors.rightMargin = rootWrapper.width - (margins.x + margins.width)
-                anchors.bottomMargin = rootWrapper.height - (margins.y + margins.height)
-                console.log("resize to " + width + "x" + height + " [" + margins.x + "," + margins.y + "," + margins.width  + "," + margins.height + "]")
-
                 searchTab.tab.updateGridsContent()
                 welcomeTab.tab.updateGridsContent()
                 appsTab.tab.updateGridsContent() // FIX LATER
@@ -112,7 +109,6 @@ Item {
             isCompleted = true
             console.log("completed with: " + width + "x" + height + "")
             mainWindow.windowHidden.connect(onWindowHid)
-            mainWindow.windowSizeChanged.connect(onWindowSizeChanged)
             bottomBar.wheelScroll.connect(tabListView.onWheelScroll)
 
         }
@@ -233,4 +229,11 @@ Item {
         }
 
     }
+
+    Connections {
+        target: mainWindow
+
+        onAvailableGeometryChanged: root.updateSize()
+    }
+
 }

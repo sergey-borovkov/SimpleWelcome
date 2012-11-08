@@ -17,6 +17,7 @@ QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
     QDesktopWidget *desktop = QApplication::desktop();
     connect(engine(), SIGNAL(quit()), SLOT(close()));
     connect(desktop, SIGNAL(workAreaResized(int)), SLOT(updateWorkArea(int)));
+    connect(desktop, SIGNAL(resized(int)), SLOT(onScreenSizeChanged(int)));
     setResizeMode(QDeclarativeView::SizeRootObjectToView);
     setWindowFlags(Qt::FramelessWindowHint);
 
@@ -38,16 +39,31 @@ void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
     }
 
     QDeclarativeView::resizeEvent(event);
-    emit windowSizeChanged(); // notify QML about changed size
+    updateWorkArea(0);
 }
 
 
 void QmlApplicationViewer::updateWorkArea(int screen)
 {
     if (screen == 0) {
-        // if work area is changed, then change size of main window
-        QRect geom = QApplication::desktop()->screenGeometry(0);
-        setFixedSize(geom.size());
+        QRect screen_geom = QApplication::desktop()->screenGeometry(0);
+        QRect avail_geom = QApplication::desktop()->availableGeometry(0);
+
+        // compute rect relative to screen
+        avail_geom.translate(-screen_geom.left(), -screen_geom.top());
+
+        if (m_availGeometry != avail_geom) {
+            m_availGeometry = avail_geom;
+            emit availableGeometryChanged();
+        }
+    }
+}
+
+void QmlApplicationViewer::onScreenSizeChanged(int screen)
+{
+    if (screen == 0) {
+        // resize main window to fill all screen
+        setFixedSize(QApplication::desktop()->screenGeometry(0).size());
     }
 }
 
@@ -55,14 +71,6 @@ void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
 {
     if (!now && currentTabIndex != 3) // When not on TimeFrame tab
         close();
-}
-
-
-QRect QmlApplicationViewer::getAvailableGeometry() const
-{
-    qDebug() << "Screen geom: " << QApplication::desktop()->screenGeometry(0);
-    qDebug() << "Avail geom: " << QApplication::desktop()->availableGeometry(0);
-    return QApplication::desktop()->availableGeometry(0);
 }
 
 void QmlApplicationViewer::moveEvent(QMoveEvent *)

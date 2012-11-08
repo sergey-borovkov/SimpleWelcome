@@ -318,7 +318,7 @@ void SWApp::globalActionTriggered()
 QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
     : QObject(parent), viewer(inViewer)
 {
-    connect(viewer, SIGNAL(windowSizeChanged()), SIGNAL(iconSizeChanged()));
+    connect(viewer, SIGNAL(availableGeometryChanged()), SIGNAL(iconSizeChanged()));
 }
 
 int QMLConstants::cellWidth()
