@@ -9,18 +9,8 @@ class QmlApplicationViewer : public QDeclarativeView
 {
     Q_OBJECT
 
-    Q_PROPERTY(int updatableWidth READ updatableWidth NOTIFY windowSizeChanged)
-    Q_PROPERTY(int updatableHeight READ updatableHeight NOTIFY windowSizeChanged)
-
 public:
     explicit QmlApplicationViewer(QWidget *parent = 0);
-
-    int updatableWidth() {
-        return width();
-    }
-    int updatableHeight() {
-        return height();
-    }
 
     virtual void resizeEvent(QResizeEvent *event);
     virtual void closeEvent(QCloseEvent *event);

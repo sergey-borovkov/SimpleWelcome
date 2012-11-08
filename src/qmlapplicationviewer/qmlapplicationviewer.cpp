@@ -7,8 +7,8 @@
 #include <KConfigGroup>
 #include <QtDeclarative/QDeclarativeImageProvider>
 #include <QtDeclarative/QDeclarativeEngine>
-#include <QDesktopWidget>
-#include <QApplication>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QApplication>
 #include <KWindowSystem>
 
 QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
@@ -29,15 +29,16 @@ void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
     }
 
     QDeclarativeView::resizeEvent(event);
-    updateWorkArea();
+    emit windowSizeChanged(); // notify QML about changed size
 }
 
 
 void QmlApplicationViewer::updateWorkArea()
 {
-    qDebug() << "Work area update";
-
-    emit windowSizeChanged();
+    // if work area is changed, then change size of main window
+    QDesktopWidget *desktop = QApplication::desktop();
+    if (desktop)
+        setFixedSize(desktop->width(), desktop->height());
 }
 
 void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)

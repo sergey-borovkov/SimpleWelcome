@@ -329,38 +329,38 @@ QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
 
 int QMLConstants::cellWidth()
 {
-    return viewer->updatableHeight() >= 1080 ? 140 :
-           viewer->updatableHeight() >= 1024 ? 130 :
-           viewer->updatableHeight() >= 900 ? 120 :
-           viewer->updatableHeight() >= 850 ? 110 :
-           viewer->updatableHeight() >= 800 ? 110 :
-           viewer->updatableHeight() >= 750 ? 100 :
+    return viewer->height() >= 1080 ? 140 :
+           viewer->height() >= 1024 ? 130 :
+           viewer->height() >= 900 ? 120 :
+           viewer->height() >= 850 ? 110 :
+           viewer->height() >= 800 ? 110 :
+           viewer->height() >= 750 ? 100 :
            70;
 }
 
 int QMLConstants::cellHeight()
 {
     //return (viewer->updatableHeight() - 80 /*topBar*/ - 80 /*bottomBar*/ - (textToGridSpacing() + groupTextHeight())*3 - gridWithGroupsSpacing()*2) / 4 - 1;
-    return viewer->updatableHeight() >= 1080 ? 170 :
-           viewer->updatableHeight() >= 1024 ? 165 :
-           viewer->updatableHeight() >= 900 ? 130 :
-           viewer->updatableHeight() >= 850 ? 120 :
-           viewer->updatableHeight() >= 800 ? 110 :
-           viewer->updatableHeight() >= 750 ? 100 :
+    return viewer->height() >= 1080 ? 170 :
+           viewer->height() >= 1024 ? 165 :
+           viewer->height() >= 900 ? 130 :
+           viewer->height() >= 850 ? 120 :
+           viewer->height() >= 800 ? 110 :
+           viewer->height() >= 750 ? 100 :
            80;
     //return (viewer->updatableHeight() - 162) / 5 - 1;
 }
 
 int QMLConstants::iconTextSize()
 {
-    return viewer->updatableHeight() >= 1080 ? 10 : viewer->updatableHeight() >= 1024 ? 10 : viewer->updatableHeight() >= 600 ? 9 : 8;
+    return viewer->height() >= 1080 ? 10 : viewer->height() >= 1024 ? 10 : viewer->height() >= 600 ? 9 : 8;
 }
 
 int QMLConstants::iconSize()
 {
-    return viewer->updatableHeight() >= 1080 ? 96 :
-           viewer->updatableHeight() >= 1024 ? 80 :
-           viewer->updatableHeight() >= 900 ? 64 :
-           viewer->updatableHeight() >= 800 ? 56 :
-           viewer->updatableHeight() >= 768 ? 48 : 32;
+    return viewer->height() >= 1080 ? 96 :
+           viewer->height() >= 1024 ? 80 :
+           viewer->height() >= 900 ? 64 :
+           viewer->height() >= 800 ? 56 :
+           viewer->height() >= 768 ? 48 : 32;
 }

@@ -6,9 +6,6 @@ import "timeframe"
 Item {
     id: rootWrapper
 
-    width: mainWindow.updatableWidth
-    height: mainWindow.updatableHeight
-
     /*Image {
         anchors.fill: parent
         fillMode: Image.PreserveAspectCrop
