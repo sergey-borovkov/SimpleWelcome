@@ -154,10 +154,10 @@ Column {
             property int moveDuration: moveDurationConst
             opacity: myActiveFocus ? 1 : 0
 
-            width: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.width : 0
-            height: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.height : 0
-            x: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.x : 0
-            y: iconGridView.currentIndex !== -1 ? iconGridView.currentItem.y : 0
+            width: iconGridView.currentItem ? iconGridView.currentItem.width : 0
+            height: iconGridView.currentItem ? iconGridView.currentItem.height : 0
+            x: iconGridView.currentItem ? iconGridView.currentItem.x : 0
+            y: iconGridView.currentItem ? iconGridView.currentItem.y : 0
 
             BorderImage {
                 border.left: 5

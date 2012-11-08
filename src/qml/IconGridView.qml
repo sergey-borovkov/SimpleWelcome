@@ -170,11 +170,13 @@ GridView {
     }
 
     function selectOtherGrid(gridWorkingWith, newCurrentIndex) {
-
-        gridWorkingWith.highlightItem.moveDuration = 0
-        gridWorkingWith.currentIndex = newCurrentIndex
+        if (gridWorkingWith.highlightItem) {
+            gridWorkingWith.highlightItem.moveDuration = 0
+            gridWorkingWith.currentIndex = newCurrentIndex
+        }
         gridWorkingWith.forceMyFocus()
-        gridWorkingWith.highlightItem.moveDuration = gridWorkingWith.highlightItem.moveDurationConst
+        if (gridWorkingWith.highlightItem)
+            gridWorkingWith.highlightItem.moveDuration = gridWorkingWith.highlightItem.moveDurationConst
         return gridWorkingWith.currentItem
     }
 
