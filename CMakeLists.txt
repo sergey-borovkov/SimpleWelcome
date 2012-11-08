@@ -43,7 +43,7 @@ include(KDE4Defaults)
 find_package(Qt4 REQUIRED QtCore QtGui QtWebkit QtNetwork QtDeclarative)
 include(${QT_USE_FILE})
 
-add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+add_definitions(${KDE4_DEFINITIONS})
 include_directories(${KDE4_INCLUDES})
 
 # Special target for assets
