@@ -9,43 +9,41 @@ class QmlApplicationViewer : public QDeclarativeView
 {
     Q_OBJECT
 
-    Q_PROPERTY(int updatableWidth READ updatableWidth NOTIFY windowSizeChanged)
-    Q_PROPERTY(int updatableHeight READ updatableHeight NOTIFY windowSizeChanged)
+    Q_PROPERTY(QRect availableGeometry READ availableGeometry NOTIFY availableGeometryChanged)
 
 public:
     explicit QmlApplicationViewer(QWidget *parent = 0);
 
-    int updatableWidth() {
-        return width();
-    }
-    int updatableHeight() {
-        return height();
-    }
+    /// @return available space in screen (relative to screen)
+    QRect availableGeometry() const { return m_availGeometry; }
 
     virtual void resizeEvent(QResizeEvent *event);
     virtual void closeEvent(QCloseEvent *event);
     virtual void moveEvent(QMoveEvent *);
 
-    Q_INVOKABLE QRect getMargins();
     Q_INVOKABLE void activateDragAndDrop(QString url, QString image_path, int image_size);
 
     Q_INVOKABLE void saveStacks(QVariantList setting);
     Q_INVOKABLE void saveIconPositions(QVariantMap setting);
-    Q_INVOKABLE QVariantMap loadStacks();
-    Q_INVOKABLE QVariantMap loadIconPositions();
+    Q_INVOKABLE QVariantMap loadStacks() const;
+    Q_INVOKABLE QVariantMap loadIconPositions() const;
 
     Q_INVOKABLE void currentTabChanged(int newCurrentIndex);
 
 signals:
-    void windowSizeChanged();
+    void availableGeometryChanged();
     void windowHidden();
     void windowShown();
 
 public slots:
     void restore();
-    void updateWorkArea();
+    void updateWorkArea(int screen);
+    void onScreenSizeChanged(int screen);
     void focusChanged(QWidget *, QWidget *now);
+
 
 private:
     int currentTabIndex;
+    int m_screen;
+    QRect m_availGeometry;
 };

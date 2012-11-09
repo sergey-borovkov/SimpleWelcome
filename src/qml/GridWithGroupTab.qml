@@ -156,14 +156,14 @@ Item {
                     gridsListModel.append( { defaultGroup: groupData } )
                     gridsListView.currentIndex = count - 1
                 }
-                else
+                else if (gridsListView.currentItem)
                 {
                     gridsListView.currentItem.addGridGroup(groupData)
                 }
 
-                var newGridGroup = gridsListView.currentItem.activeGridGroup
                 if (gridsListView.currentItem)
                 {
+                    var newGridGroup = gridsListView.currentItem.activeGridGroup
                     newGridGroup.gridView.itemStackingChanged.connect(saveStacks)
 
                     if (newGridGroup.gridView.stackable)

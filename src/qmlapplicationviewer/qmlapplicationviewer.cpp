@@ -7,16 +7,30 @@
 #include <KConfigGroup>
 #include <QtDeclarative/QDeclarativeImageProvider>
 #include <QtDeclarative/QDeclarativeEngine>
-#include <QDesktopWidget>
-#include <QApplication>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QApplication>
+#include <QtGui/QCursor>
 #include <KWindowSystem>
 
 QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
-    QDeclarativeView(parent), currentTabIndex(0)
+    QDeclarativeView(parent),
+    currentTabIndex(0),
+    m_screen(0)
 {
+    QDesktopWidget *desktop = QApplication::desktop();
     connect(engine(), SIGNAL(quit()), SLOT(close()));
-    connect(QApplication::desktop(), SIGNAL(workAreaResized(int)), SLOT(updateWorkArea()));
+    connect(desktop, SIGNAL(workAreaResized(int)), SLOT(updateWorkArea(int)));
+    connect(desktop, SIGNAL(resized(int)), SLOT(onScreenSizeChanged(int)));
     setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    setWindowFlags(Qt::FramelessWindowHint);
+
+    m_screen = desktop->screenNumber(QCursor::pos());
+    setGeometry(desktop->screenGeometry(m_screen));
+    setFixedSize(size());
+
+    // Window transparency
+    setAttribute(Qt::WA_TranslucentBackground);
+    setStyleSheet("background:transparent;");
 }
 
 void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
@@ -29,15 +43,34 @@ void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
     }
 
     QDeclarativeView::resizeEvent(event);
-    updateWorkArea();
+    updateWorkArea(m_screen);
 }
 
 
-void QmlApplicationViewer::updateWorkArea()
+void QmlApplicationViewer::updateWorkArea(int screen)
 {
-    qDebug() << "Work area update";
+    if (screen == m_screen) {
+        QRect screen_geom = QApplication::desktop()->screenGeometry(screen);
+        QRect avail_geom = QApplication::desktop()->availableGeometry(screen);
 
-    emit windowSizeChanged();
+        // compute rect relative to screen
+        avail_geom.translate(-screen_geom.left(), -screen_geom.top());
+
+        if (m_availGeometry != avail_geom) {
+            m_availGeometry = avail_geom;
+            emit availableGeometryChanged();
+        }
+    }
+}
+
+void QmlApplicationViewer::onScreenSizeChanged(int screen)
+{
+    if (screen == m_screen) {
+        // resize main window to fill all screen
+        QRect geom = QApplication::desktop()->screenGeometry(screen);
+        move(geom.topLeft());
+        setFixedSize(geom.size()); // we should fix size of window
+    }
 }
 
 void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
@@ -46,30 +79,28 @@ void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
         close();
 }
 
-QRect QmlApplicationViewer::getMargins()
-{
-    QRect result(QApplication::desktop()->availableGeometry().left(), QApplication::desktop()->availableGeometry().top(),
-                 QApplication::desktop()->width() - QApplication::desktop()->availableGeometry().right(),
-                 QApplication::desktop()->height() - QApplication::desktop()->availableGeometry().bottom());
-    return result;
-}
-
 void QmlApplicationViewer::moveEvent(QMoveEvent *)
 {
-    //qDebug() << "-- Move to " << event->pos().x() << ":" << event->pos().y();
-    move(0, 0);
+    QPoint required_pos = QApplication::desktop()->screenGeometry(m_screen).topLeft();
+    if (required_pos != pos())
+        move(required_pos); // disallow moving of window by user
 }
 
 void QmlApplicationViewer::restore()
 {
+    // compute screen index
+    int new_screen = QApplication::desktop()->screenNumber(QCursor::pos());
+    if (new_screen != m_screen) {
+        // resize if SW should be shown on another screen
+        m_screen = new_screen;
+        onScreenSizeChanged(m_screen);
+    }
+
     emit windowShown();
 
-    //setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
     KWindowSystem::setState(winId(), NET::SkipTaskbar);
     show();
     activateWindow();
-    //showFullScreen();
-    //move(/*896*/0, 0);
 }
 
 void QmlApplicationViewer::closeEvent(QCloseEvent *event)
@@ -143,7 +174,7 @@ void QmlApplicationViewer::saveIconPositions(QVariantMap setting)
     configGroup.sync();
 }
 
-QVariantMap QmlApplicationViewer::loadStacks()
+QVariantMap QmlApplicationViewer::loadStacks() const
 {
     QVariantMap list;
 
@@ -159,7 +190,7 @@ QVariantMap QmlApplicationViewer::loadStacks()
 }
 
 
-QVariantMap QmlApplicationViewer::loadIconPositions()
+QVariantMap QmlApplicationViewer::loadIconPositions() const
 {
     QVariantMap out;
 
