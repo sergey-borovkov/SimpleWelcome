@@ -115,7 +115,9 @@ void FeedItem::fillFromMap(QVariantMap map)
                 // add image
                 if (typeAttachment == "photo") {
                     QVariantMap photoMap = map[ "photo" ].toMap();
-                    if (photoMap.contains("src"))
+                    if (photoMap.contains("src_big"))
+                        m_data.insert(ImageUrl, QUrl::fromPercentEncoding(photoMap.value("src_big").toByteArray()));
+                    else if (photoMap.contains("src"))
                         m_data.insert(ImageUrl, QUrl::fromPercentEncoding(photoMap.value("src").toByteArray()));
                 }
 

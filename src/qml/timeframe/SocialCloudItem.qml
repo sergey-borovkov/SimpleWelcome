@@ -153,8 +153,8 @@ Item {
 
                             fillMode: Image.PreserveAspectFit
                             smooth: true
-                            source: picture
                             clip: true
+                            source: picture
                         }
                     }
 
