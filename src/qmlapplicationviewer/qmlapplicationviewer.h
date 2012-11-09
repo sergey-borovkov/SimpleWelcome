@@ -44,5 +44,6 @@ public slots:
 
 private:
     int currentTabIndex;
+    int m_screen;
     QRect m_availGeometry;
 };

@@ -9,10 +9,13 @@
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QApplication>
+#include <QtGui/QCursor>
 #include <KWindowSystem>
 
 QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
-    QDeclarativeView(parent), currentTabIndex(0)
+    QDeclarativeView(parent),
+    currentTabIndex(0),
+    m_screen(0)
 {
     QDesktopWidget *desktop = QApplication::desktop();
     connect(engine(), SIGNAL(quit()), SLOT(close()));
@@ -21,7 +24,8 @@ QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
     setResizeMode(QDeclarativeView::SizeRootObjectToView);
     setWindowFlags(Qt::FramelessWindowHint);
 
-    setGeometry(desktop->screenGeometry(0));
+    m_screen = desktop->screenNumber(QCursor::pos());
+    setGeometry(desktop->screenGeometry(m_screen));
     setFixedSize(size());
 
     // Window transparency
@@ -39,15 +43,15 @@ void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
     }
 
     QDeclarativeView::resizeEvent(event);
-    updateWorkArea(0);
+    updateWorkArea(m_screen);
 }
 
 
 void QmlApplicationViewer::updateWorkArea(int screen)
 {
-    if (screen == 0) {
-        QRect screen_geom = QApplication::desktop()->screenGeometry(0);
-        QRect avail_geom = QApplication::desktop()->availableGeometry(0);
+    if (screen == m_screen) {
+        QRect screen_geom = QApplication::desktop()->screenGeometry(screen);
+        QRect avail_geom = QApplication::desktop()->availableGeometry(screen);
 
         // compute rect relative to screen
         avail_geom.translate(-screen_geom.left(), -screen_geom.top());
@@ -61,9 +65,11 @@ void QmlApplicationViewer::updateWorkArea(int screen)
 
 void QmlApplicationViewer::onScreenSizeChanged(int screen)
 {
-    if (screen == 0) {
+    if (screen == m_screen) {
         // resize main window to fill all screen
-        setFixedSize(QApplication::desktop()->screenGeometry(0).size());
+        QRect geom = QApplication::desktop()->screenGeometry(screen);
+        move(geom.topLeft());
+        setFixedSize(geom.size()); // we should fix size of window
     }
 }
 
@@ -75,20 +81,26 @@ void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
 
 void QmlApplicationViewer::moveEvent(QMoveEvent *)
 {
-    //qDebug() << "-- Move to " << event->pos().x() << ":" << event->pos().y();
-    move(0, 0);
+    QPoint required_pos = QApplication::desktop()->screenGeometry(m_screen).topLeft();
+    if (required_pos != pos())
+        move(required_pos); // disallow moving of window by user
 }
 
 void QmlApplicationViewer::restore()
 {
+    // compute screen index
+    int new_screen = QApplication::desktop()->screenNumber(QCursor::pos());
+    if (new_screen != m_screen) {
+        // resize if SW should be shown on another screen
+        m_screen = new_screen;
+        onScreenSizeChanged(m_screen);
+    }
+
     emit windowShown();
 
-    //setGeometry(896, 0, 1600, 900);//1280, 1024); // 1000); //
     KWindowSystem::setState(winId(), NET::SkipTaskbar);
     show();
     activateWindow();
-    //showFullScreen();
-    //move(/*896*/0, 0);
 }
 
 void QmlApplicationViewer::closeEvent(QCloseEvent *event)
