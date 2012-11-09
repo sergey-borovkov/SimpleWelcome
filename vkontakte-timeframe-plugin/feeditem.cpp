@@ -7,6 +7,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 #include <QtCore/QMap>
+#include <QtCore/QDebug>
 #include <QtGui/QColor>
 #include <QtGui/QPalette>
 
@@ -146,7 +147,9 @@ void FeedItem::fillFromMap(QVariantMap map)
                         if (audioMap.contains("duration")) {
                             audioStr += " (" + convertSecsToStr(audioMap.value("duration").toInt()) + ")";
                         }
-                        m_data.insert(Audio, audioStr);
+                        if (!audioStr.isEmpty()) {
+                            m_data.insert(Audio, audioStr);
+                        }
                     }
                 }
 
@@ -171,7 +174,9 @@ void FeedItem::fillFromMap(QVariantMap map)
                             videoStr += " (" + convertSecsToStr(videoMap.value("duration").toInt()) + ")";
                         }
 
-                        m_data.insert(Video, videoStr);
+                        if (!videoStr.isEmpty()) {
+                            m_data.insert(Video, videoStr);
+                        }
                     }
                 }
 

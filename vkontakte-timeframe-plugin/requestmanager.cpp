@@ -5,6 +5,7 @@
 
 #include <qjson/parser.h>
 #include <QtCore/QStringList>
+#include <QtCore/QDebug>
 
 RequestManager::RequestManager(QObject *parent)
     : QObject(parent)
@@ -466,7 +467,7 @@ void RequestManager::videoReply(QByteArray reply)
     }
 
     // video fields: vid, owner_id, title, description, duration, link, image, date, player
-    QString videoId, videoOwnerId, videoUrl;
+    QString videoId, videoOwnerId, videoUrl, videoImage;
 
     if (result.contains(QLatin1String("response"))) {
         QVariantList list = result.value(QLatin1String("response")).toList();
@@ -474,16 +475,22 @@ void RequestManager::videoReply(QByteArray reply)
         foreach(QVariant item, list) {
             QVariantMap map = item.toMap();
 
-            if (map.contains(QLatin1String("aid"))) {
-                videoId = map.value(QLatin1String("aid")).toString();
+            if (map.contains(QLatin1String("vid"))) {
+                videoId = map.value(QLatin1String("vid")).toString();
             }
             if (map.contains(QLatin1String("owner_id"))) {
                 videoOwnerId = map.value(QLatin1String("owner_id")).toString();
             }
             if (map.contains(QLatin1String("player"))) {
-                videoUrl = map.value(QLatin1String("player")).toString();
+                videoUrl = QUrl::fromPercentEncoding(map.value(QLatin1String("player")).toByteArray());
             }
-            emit gotVideoUrl(videoId, videoOwnerId, videoUrl);
+            if (map.contains(QLatin1String("image"))) {
+                videoImage = map.value(QLatin1String("image")).toString();
+            }
+            if (!videoId.isEmpty() && !videoOwnerId.isEmpty()
+                    && !videoId.isEmpty() && !videoImage.isEmpty()) {
+                emit gotVideoUrl(videoId, videoOwnerId, videoUrl, videoImage);
+            }
         }
     }
 }
@@ -511,12 +518,8 @@ QUrl RequestManager::constructUrl(const QString &id) const
 
 bool RequestManager::canBeDisplayed(const FeedItem &feedItem) const
 {
-    if (feedItem.data(SocialItem::Text).isNull()
-            && feedItem.data(SocialItem::ImageUrl).isNull()
-            && feedItem.data(SocialItem::Audio).isNull()
-            && feedItem.data(SocialItem::Video).isNull()) {
-        return false;
-    }
-    return true;
-
+    return !(feedItem.data(SocialItem::Text).toString().isEmpty() &&
+             feedItem.data(SocialItem::ImageUrl).toString().isEmpty() &&
+             feedItem.data(SocialItem::Audio).toString().isEmpty() &&
+             feedItem.data(SocialItem::Video).toString().isEmpty());
 }

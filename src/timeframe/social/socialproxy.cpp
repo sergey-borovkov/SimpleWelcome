@@ -274,8 +274,6 @@ void SocialProxy::getPictureSuccess(PluginRequestReply *reply)
 void SocialProxy::getSelfPictureSuccess(PluginRequestReply *reply)
 {
     Q_UNUSED(reply)
-//    m_selfPictureUrl = reply->userPictureUrl();
-//    qDebug() << "SocialProxy::getSelfPictureSuccess";
 }
 
 void SocialProxy::authorized()
@@ -459,8 +457,8 @@ PluginRequestReply *SocialProxy::videoUrl(const QString &parentId, const QString
 
     Request *request = plugin->requestManager()->queryVideo(vid, ownerId);
     PluginRequestReply *reply = new PluginRequestReply(request, parentId, pluginName, this);
-    QObject *obj = dynamic_cast<QObject *>(plugin->requestManager());
-    connect(obj, SIGNAL(gotVideoUrl(QString, QString, QString)), reply, SLOT(gotVideoUrl(QString, QString, QString)));
+    QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
+    connect(obj, SIGNAL(gotVideoUrl(QString, QString, QString, QString)), reply, SLOT(gotVideoUrl(QString, QString, QString, QString)));
 
     request->start();
 
@@ -469,7 +467,7 @@ PluginRequestReply *SocialProxy::videoUrl(const QString &parentId, const QString
 
 void SocialProxy::getVideoSuccess(PluginRequestReply *reply)
 {
-    m_socialModel->updateVideoUrl(reply->videoId(), reply->videoOwnerId(), reply->videoUrl(), reply->sourceId());
+    m_socialModel->updateVideoUrl(reply->videoId(), reply->videoOwnerId(), reply->videoUrl(), reply->videoImage(), reply->sourceId());
 }
 
 void SocialProxy::getVideo(const QString &parentId, const QString &vid, const QString &ownerId, const QString &pluginName)

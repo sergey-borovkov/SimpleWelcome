@@ -54,7 +54,7 @@ signals:
     void gotUserImage(QString postId, QString url);
     void gotUserName(QString postId, QString name);
     void gotAudioUrl(QString aid, QString ownerId, QString audioUrl);
-    void gotVideoUrl(QString vid, QString ownerId, QString videoUrl);
+    void gotVideoUrl(QString vid, QString ownerId, QString videoUrl, QString videoImage);
     void searchComplete();
 
 private:

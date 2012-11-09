@@ -1,6 +1,8 @@
 #include "pluginrequestreply.h"
 #include "socialplugin.h"
 
+#include <QtCore/QDebug>
+
 PluginRequestReply::PluginRequestReply(Request *request, const QString &sourceId, const QString &pluginName, QObject *parent)
     : QObject(parent)
     , m_sourceId(sourceId)
@@ -81,6 +83,11 @@ QString PluginRequestReply::videoUrl() const
     return m_videoUrl;
 }
 
+QString PluginRequestReply::videoImage() const
+{
+    return m_videoImage;
+}
+
 QString PluginRequestReply::pluginName() const
 {
     return m_pluginName;
@@ -104,11 +111,12 @@ void PluginRequestReply::gotAudioUrl(QString aid, QString ownerId, QString url)
     m_audioUrl = url;
 }
 
-void PluginRequestReply::gotVideoUrl(QString vid, QString ownerId, QString url)
+void PluginRequestReply::gotVideoUrl(QString vid, QString ownerId, QString url, QString image)
 {
     m_videoId = vid;
     m_videoOwnerId = ownerId;
     m_videoUrl = url;
+    m_videoImage = image;
 }
 
 void PluginRequestReply::gotUserName(QString id, QString name)

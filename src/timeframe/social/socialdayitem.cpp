@@ -88,9 +88,9 @@ void SocialContentItem::updateAudioUrl(const QString &audioId, const QString &au
     m_model->update();
 }
 
-void SocialContentItem::updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &eventId)
+void SocialContentItem::updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &videoImage, const QString &eventId)
 {
-    m_itemModel->updateVideoUrl(videoId, videoOwnerId, videoUrl, eventId);
+    m_itemModel->updateVideoUrl(videoId, videoOwnerId, videoUrl, videoImage, eventId);
     m_model->update();
 }
 

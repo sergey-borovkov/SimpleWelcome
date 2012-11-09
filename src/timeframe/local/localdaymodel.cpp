@@ -185,7 +185,6 @@ void LocalDayModel::addActivityItemToCloud(Activity *item, int pos)
     // count items diffrenet types (maybe count when add items???)
     int lastRow = (-1);
     for (int row = 0; row < cloudItemCount; ++row) {
-        qDebug() << m_items.at(row)->type();
         if (m_items.at(row)->type() == typeItem) {
             lastRow = row;
         }

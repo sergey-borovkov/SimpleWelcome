@@ -152,7 +152,7 @@ Item{
                 Text {
                     function getVideo()
                     {
-                        if(typeof video === "undefined")
+                        if(typeof videoUrl === "undefined")
                             return ""
                         else
                             return i18n_VideoUrl + " <a href=\"" + videoUrl + "\">" + video + "</a>"
@@ -177,7 +177,6 @@ Item{
                         Qt.openUrlExternally(link)
                     }
                 }
-
 
                 Item {
                     width: parent.width

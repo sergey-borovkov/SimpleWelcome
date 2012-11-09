@@ -28,6 +28,7 @@ public:
         VideoId,
         VideoUrl,
         VideoOwnerId,
+        VideoImage,
         PluginName,
         Count,
         ItemsCount,
@@ -67,6 +68,7 @@ public:
         roles.insert(VideoId, "videoId");
         roles.insert(VideoUrl, "videoUrl");
         roles.insert(VideoOwnerId, "videoOwnerId");
+        roles.insert(VideoImage, "videoImage");
         roles.insert(Like, "like");
         roles.insert(Likes, "likes");
         roles.insert(LikeUrl, "likeUrl");
