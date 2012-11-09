@@ -179,7 +179,8 @@ Item{
                 }
 
                 Item {
-                    width: parent.width
+                    x: 10
+                    width: parent.width - 20
                     height: msgView.height + 10
 
                     Flickable {
