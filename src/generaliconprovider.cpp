@@ -67,19 +67,21 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
 
         // Outline
         const int outlineWidth = 4;//constants->iconSize() / 19;
-//        p.setPen(QPen(Qt::gray, outlineWidth));
-//        p.setBrush(QBrush(QColor(64, 64, 64, 128)));
-//        p.drawRoundedRect(outlineWidth, outlineWidth, pix.width() - outlineWidth*2, pix.height() - outlineWidth*2, outlineWidth*2, outlineWidth*2);
 
-        QSize subIconSize = (pix.size() - QSize(outlineWidth * 4, outlineWidth * 4)) / 2;
-        for (int i = 0; i < qMin(4, icons.size()); i++) {
+        int iconsInRow = constants->iconSize() >= 96 ? 3 : 2;
+        int subIconsMargin = 2;
+        QSize subIconSize = (pix.size() - QSize(outlineWidth * 4, outlineWidth * 4) - QSize(subIconsMargin, subIconsMargin) * (iconsInRow - 1)) / iconsInRow;
+        for (int i = 0; i < qMin(iconsInRow * iconsInRow, icons.size()); i++) {
             KIcon subIcon = KIcon(icons[icons.size() - i - 1]);
             QPixmap subPixmap = subIcon.pixmap(subIconSize);
 
-            int x = i & 1 ? (pix.width() / 2 - subIconSize.width()) : pix.width() / 2;
-            int y = i / 2 ? (pix.height() / 2 - subIconSize.height()) : pix.height() / 2;
+            int row = i % iconsInRow;
+            int col = i / iconsInRow;
+            int x = outlineWidth * 2 + row * subIconSize.width() + row * subIconsMargin;
+            int y = outlineWidth * 2 + col * subIconSize.height() + col * subIconsMargin;
             p.drawPixmap(x, y, subPixmap);
         }
+
         p.end();
 
 
