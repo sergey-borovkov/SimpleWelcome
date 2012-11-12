@@ -137,6 +137,10 @@ SWApp::SWApp()
 
     m_viewer = new QmlApplicationViewer();
 
+    m_kdeclarative.setDeclarativeEngine(m_viewer->engine());
+    m_kdeclarative.initialize();
+    m_kdeclarative.setupBindings();
+
     m_viewer->rootContext()->setContextProperty("mainWindow", m_viewer);
     m_viewer->rootContext()->setContextProperty("sessionProvider", new SessionProvider(this));
 
@@ -168,47 +172,6 @@ SWApp::SWApp()
     connect(searchDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
 
     m_viewer->rootContext()->setContextProperty("constants", constants);
-    m_viewer->rootContext()->setContextProperty("i18n_Welcome", i18n("Welcome"));
-    m_viewer->rootContext()->setContextProperty("i18n_Applications", i18n("Applications"));
-    m_viewer->rootContext()->setContextProperty("i18n_TimeFrame", i18n("TimeFrame"));
-
-    m_viewer->rootContext()->setContextProperty("i18n_Recent_Applications", i18n("Recent Applications"));
-    m_viewer->rootContext()->setContextProperty("i18n_Favorites", i18n("Places"));
-    m_viewer->rootContext()->setContextProperty("i18n_Recent_Documents", i18n("Recent Documents"));
-
-    m_viewer->rootContext()->setContextProperty("i18n_All", i18n("All"));
-    m_viewer->rootContext()->setContextProperty("i18n_Photo", i18n("Images"));
-    m_viewer->rootContext()->setContextProperty("i18n_Video", i18n("Video"));
-    m_viewer->rootContext()->setContextProperty("i18n_Documents", i18n("Documents"));
-    m_viewer->rootContext()->setContextProperty("i18n_Manage_networks", i18n("Manage Networks"));
-    m_viewer->rootContext()->setContextProperty("i18n_My_Local_Documents", i18n("My Local Documents"));
-    m_viewer->rootContext()->setContextProperty("i18n_Local", i18n("Local"));
-    m_viewer->rootContext()->setContextProperty("i18n_Write_Comment", i18n("Write comment..."));
-    m_viewer->rootContext()->setContextProperty("i18n_Audio", i18n("Audio: "));
-    m_viewer->rootContext()->setContextProperty("i18n_VideoUrl", i18n("Video: "));
-    m_viewer->rootContext()->setContextProperty("i18n_Like", i18n("Like"));
-    m_viewer->rootContext()->setContextProperty("i18n_Unlike", i18n("Unlike"));
-    m_viewer->rootContext()->setContextProperty("i18n_Social_networkong_sites", i18n("Social Networking Sites"));
-    m_viewer->rootContext()->setContextProperty("i18n_Show_Comments", i18n("Show comments"));
-    m_viewer->rootContext()->setContextProperty("i18n_Hide_Comments", i18n("Hide comments"));
-    m_viewer->rootContext()->setContextProperty("i18n_Login", i18n("Login"));
-    m_viewer->rootContext()->setContextProperty("i18n_Logout", i18n("Logout"));
-    m_viewer->rootContext()->setContextProperty("i18n_Enable", i18n("Enable..."));
-    m_viewer->rootContext()->setContextProperty("i18n_Nepomuk_disabled", i18n("Nepomuk is disabled. You can enable it in the KDE Control Centre"));
-    m_viewer->rootContext()->setContextProperty("i18n_In", i18n("in"));
-
-    m_viewer->rootContext()->setContextProperty("i18n_JAN", i18n("JAN"));
-    m_viewer->rootContext()->setContextProperty("i18n_FEB", i18n("FEB"));
-    m_viewer->rootContext()->setContextProperty("i18n_MAR", i18n("MAR"));
-    m_viewer->rootContext()->setContextProperty("i18n_APR", i18n("APR"));
-    m_viewer->rootContext()->setContextProperty("i18n_MAY", i18n("MAY"));
-    m_viewer->rootContext()->setContextProperty("i18n_JUN", i18n("JUN"));
-    m_viewer->rootContext()->setContextProperty("i18n_JUL", i18n("JUL"));
-    m_viewer->rootContext()->setContextProperty("i18n_AUG", i18n("AUG"));
-    m_viewer->rootContext()->setContextProperty("i18n_SEP", i18n("SEP"));
-    m_viewer->rootContext()->setContextProperty("i18n_OCT", i18n("OCT"));
-    m_viewer->rootContext()->setContextProperty("i18n_NOV", i18n("NOV"));
-    m_viewer->rootContext()->setContextProperty("i18n_DEC", i18n("DEC"));
 
     qmlRegisterType<QGraphicsDropShadowEffect>("Effects", 1, 0, "DropShadow");
 

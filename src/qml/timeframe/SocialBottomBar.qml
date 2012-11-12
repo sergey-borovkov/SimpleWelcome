@@ -86,7 +86,7 @@ Item{
             wrapMode: Text.WordWrap
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            text: i18n_Like
+            text: i18n("Like")
             color: "white"
         }
         MouseArea{
@@ -102,7 +102,7 @@ Item{
         states: [
             State {
                 name: "liked"
-                PropertyChanges { target: likesText; text: i18n_Unlike }
+                PropertyChanges { target: likesText; text: i18n("Unlike") }
             }
         ]
     }
@@ -126,7 +126,7 @@ Item{
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: "white"
-            text: (commentsShow) ? i18n_Hide_Comments : i18n_Show_Comments
+            text: (commentsShow) ? i18n("Hide comments") : i18n("Show comments")
         }
         Image {
             anchors.verticalCenter: parent.verticalCenter

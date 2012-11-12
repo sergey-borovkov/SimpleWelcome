@@ -1,4 +1,5 @@
 #pragma once
+#include <kdeclarative.h>
 #include <KUniqueApplication>
 #include <KShortcut>
 #include <QTimer>
@@ -51,4 +52,5 @@ private:
 
     QTimer m_periodicTimer;
     KAction *m_globalAction;
+    KDeclarative m_kdeclarative;
 };

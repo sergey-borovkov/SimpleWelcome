@@ -31,6 +31,7 @@
 #include <KLocale>
 #include <KIcon>
 #include <KDebug>
+#include <kdeclarative.h>
 
 #include "swapp.h"
 
@@ -71,6 +72,9 @@ int main(int argc, char *argv[])
         qDebug() << "SimpleWelcome2 is already running!";
         return 0;
     }
+
+    // Try to setup debugger if special Qt option is passed
+    KDeclarative::setupQmlJsDebugger();
 
     SWApp *app = SWApp::self();
     int rc = app->exec();

@@ -242,7 +242,7 @@ Column {
                     gridView.myActiveFocus = false
                     return
                 }
-                if (groupName == i18n_Recent_Applications || groupName == i18n_Recent_Documents)
+                if (groupName == i18n("Recent Applications") || groupName == i18n("Recent Documents"))
                 {
                     dndSrcId = realIndex
                     model.move(newIndex, 0, 1)

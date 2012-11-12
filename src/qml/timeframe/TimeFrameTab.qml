@@ -45,15 +45,15 @@ Item {
     {
         var txt = id
         if (id === "All")
-            txt = i18n_All
+            txt = i18n("All")
         if (id === "Images")
-            txt = i18n_Photo
+            txt = i18n("Images")
         if (id === "Video")
-            txt = i18n_Video
+            txt = i18n("Video")
         if (id === "Documents")
-            txt = i18n_Documents
+            txt = i18n("Documents")
         if (id === "Manage Networks")
-            txt = i18n_Manage_networks
+            txt = i18n("Manage Networks")
 
         var count = socialProxy.authorizedPluginCount()
         for(var i = 0; i < count; i++) {
@@ -69,15 +69,15 @@ Item {
     function getMenuFilterText(str)
     {
         var txt = str
-        if (str === i18n_All)
+        if (str === i18n("All"))
             txt = "ALL"
-        if (str === i18n_Photo)
+        if (str === i18n("Images"))
             txt = "Images"
-        if (str === i18n_Video)
+        if (str === i18n("Video"))
             txt = "Video"
-        if (str === i18n_Documents)
+        if (str === i18n("Documents"))
             txt = "Documents"
-        if (str === i18n_Manage_networks)
+        if (str === i18n("Manage Networks"))
             txt = "Manage Networks"
 
         var count = socialProxy.authorizedPluginCount()
@@ -251,7 +251,7 @@ Item {
         DropFilterBox{
             id: localFilterBox
             model: menuDocItems
-            name: i18n_My_Local_Documents
+            name: i18n("My Local Documents")
             state: "current"
 
             onStateChanged: {
@@ -323,7 +323,7 @@ Item {
         DropFilterBox{
             id: socialFilterBox
             model: menuSocialItems
-            name: i18n_Social_networkong_sites
+            name: i18n("Social Networking Sites")
             onStateChanged: {
                 if ((socialFilterBox.state === "current") && ((localFilterBox.state === "current") || (localFilterBox.state === "open"))) {
                     if (socialFilterBox.view.count < 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
@@ -418,7 +418,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: warningTabButton.top
                 anchors.margins: 20
-                text: i18n_Nepomuk_disabled
+                text: i18n("Nepomuk is disabled. You can enable it in the KDE Control Centre")
                 color: "white"
                 font.pointSize: 12
             }
@@ -452,7 +452,7 @@ Item {
             TabButton {
                 id: warningTabButton
                 anchors.centerIn: parent
-                label: i18n_Enable
+                label: i18n("Enable...")
                 pressable: true
                 active: true
 

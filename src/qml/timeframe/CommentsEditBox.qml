@@ -63,7 +63,7 @@ Rectangle {
                 onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
 
                 Keys.onPressed: {
-                    if (edit.text === i18n_Write_Comment)
+                    if (edit.text === i18n("Write comment..."))
                     {
                         edit.color = "black"
                         edit.text = ""
@@ -75,7 +75,7 @@ Rectangle {
                             comment = comment.slice(0, 4096)
                         commentBox.send(comment)
                         edit.color = "grey"
-                        edit.text = i18n_Write_Comment
+                        edit.text = i18n("Write comment...")
                         event.accepted = true
                     }
                 }

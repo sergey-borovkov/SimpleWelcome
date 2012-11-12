@@ -5,35 +5,13 @@ Item {
     property variant list: timeScaleList
     //property variant  model: monthModel
 
-    function getMonthStr(index) {
+    property variant monthsStrs: [ i18n("JAN"), i18n("FEB"), i18n("MAR"), i18n("APR"), i18n("MAY"),
+        i18n("JUN"), i18n("JUL"), i18n("AUG"), i18n("SEP"), i18n("OCT"), i18n("NOV"), i18n("DEC") ]
 
-        switch (index) {
-        case 1:
-            return i18n_JAN
-        case 2:
-            return i18n_FEB
-        case 3:
-            return i18n_MAR
-        case 4:
-            return i18n_APR
-        case 5:
-            return i18n_MAY
-        case 6:
-            return i18n_JUN
-        case 7:
-            return i18n_JUL
-        case 8:
-            return i18n_AUG
-        case 9:
-            return i18n_SEP
-        case 10:
-            return i18n_OCT
-        case 11:
-            return i18n_NOV
-        case 12:
-            return i18n_DEC
-        }
-        return "UND"
+    function getMonthStr(index) {
+        if (index > 0 && index <= 12)
+            return monthsStrs[index - 1]
+        return i18n("UND")
     }
 
     Component {

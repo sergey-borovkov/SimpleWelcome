@@ -60,7 +60,7 @@ Item {
 
             TabButton {
                 id: welcomeTabButton
-                label: i18n_Welcome
+                label: i18n("Welcome")
                 onButtonClick: { tabListView.currentIndex = 1; }
                 active: tabListView.currentIndex == 1
                 width: parent.width / 3
@@ -68,7 +68,7 @@ Item {
 
             TabButton {
                 id: applicationsTabButton
-                label: i18n_Applications
+                label: i18n("Applications")
                 onButtonClick: { tabListView.currentIndex = 2; }
                 active: tabListView.currentIndex == 2
                 width: parent.width / 3
@@ -76,7 +76,7 @@ Item {
 
             TabButton {
                 id: timeFrameTabButton
-                label: i18n_TimeFrame
+                label: i18n("TimeFrame")
                 onButtonClick: { tabListView.currentIndex = 3; }
                 active: tabListView.currentIndex == 3
                 width: parent.width / 3

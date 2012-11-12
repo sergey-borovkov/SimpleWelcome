@@ -125,7 +125,7 @@ Item{
                         if(typeof audio === "undefined")
                             return ""
                         else
-                            return i18n_Audio + " <a href=\"" + audioUrl + "\">" + audio + "</a>"
+                            return i18n("Audio: ") + " <a href=\"" + audioUrl + "\">" + audio + "</a>"
                     }
 
                     id: audioItem
@@ -155,7 +155,7 @@ Item{
                         if(typeof videoUrl === "undefined")
                             return ""
                         else
-                            return i18n_VideoUrl + " <a href=\"" + videoUrl + "\">" + video + "</a>"
+                            return i18n("Video: ") + " <a href=\"" + videoUrl + "\">" + video + "</a>"
                     }
 
                     id: videoItem
@@ -253,7 +253,7 @@ Item{
                         //Set source on comments loader
                         commentsEdit.source = "CommentsEditBox.qml"
                         commentsEdit.item.edit.color = "grey"
-                        commentsEdit.item.edit.text = i18n_Write_Comment
+                        commentsEdit.item.edit.text = i18n("Write comment...")
                         commentsEdit.item.userPhoto.source = socialProxy.selfPictureUrl(pluginName)
                         commentsListView.view.positionViewAtEnd()
                         galleryRect.state = "comments"
@@ -349,7 +349,7 @@ Item{
 
             PropertyChanges { target: timeFrameTab; enableWheel: false }            
 
-            PropertyChanges { target: topLine; state: "detailed"; dateText: Qt.formatDateTime(datetime, "d MMM " + i18n_In + " hh:mm") }
+            PropertyChanges { target: topLine; state: "detailed"; dateText: Qt.formatDateTime(datetime, "d MMM " + i18n("in") + " hh:mm") }
 
             PropertyChanges { target: modal; enabled: true }
 

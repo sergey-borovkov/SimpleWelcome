@@ -12,21 +12,21 @@ FocusScope {
         property int tabCellHeight: (tabListView.height - (constants.textToGridSpacing + constants.groupTextHeight)*3 - constants.gridWithGroupsSpacing*2) / 4
         groups: [
             {
-                groupName: i18n_Recent_Applications,
+                groupName: i18n("Recent Applications"),
                 dataSource: dataSource_RecentApps,
                 draggable: true,
                 enabledSystemDnD: true,
                 groupCellHeight: tabCellHeight
             },
             {
-                groupName: i18n_Favorites,
+                groupName: i18n("Places"),
                 dataSource: dataSource_Favorites,
                 //draggable: true,
                 enabledSystemDnD: true,
                 groupCellHeight: tabCellHeight
             },
             {
-                groupName: i18n_Recent_Documents,
+                groupName: i18n("Recent Documents"),
                 dataSource: dataSource_Documents,
                 enabledSystemDnD: true,
                 groupCellHeight: tabCellHeight

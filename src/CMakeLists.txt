@@ -28,6 +28,7 @@ target_link_libraries(rosa-launcher
                         ${NEPOMUK_LIBRARIES}
                         ${NEPOMUK_QUERY_LIBRARIES}
                         ${SOPRANO_LIBRARIES}
+                        kdeclarative
                         timeframe)
 
 add_custom_command(TARGET rosa-launcher POST_BUILD
