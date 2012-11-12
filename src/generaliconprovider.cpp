@@ -26,9 +26,8 @@
 #include "userinfoprovider.h"
 #include "datasource_search.h"
 #include "datasource_documents.h"
-#include "swapp.h"
+#include "sizescalculator.h"
 
-#include <KDebug>
 #include <KIcon>
 
 #include <QPainter>

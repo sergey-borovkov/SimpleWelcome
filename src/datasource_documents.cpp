@@ -5,7 +5,7 @@
 #include <QFile>
 #include <KFilePlacesModel>
 #include <KIO/PreviewJob>
-#include "swapp.h"
+#include "sizescalculator.h"
 #include <QPainter>
 
 DataSource_Documents::DataSource_Documents(QObject *parent, SizesCalculator *inConstants)
