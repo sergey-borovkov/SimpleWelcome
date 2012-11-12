@@ -15,13 +15,18 @@ class SizesCalculator : public QObject
     Q_PROPERTY(int gridColumns READ gridColumns CONSTANT)
 
     // Calculated
-    Q_PROPERTY(int cellWidth READ cellWidth NOTIFY iconSizeChanged) int cellWidth() const;
-    Q_PROPERTY(int cellHeight READ cellHeight NOTIFY iconSizeChanged) int cellHeight() const;
-    Q_PROPERTY(int iconTextSize READ iconTextSize NOTIFY iconSizeChanged) int iconTextSize() const;
-    Q_PROPERTY(int iconSize READ iconSize NOTIFY iconSizeChanged) int iconSize() const;
+    Q_PROPERTY(int cellWidth READ cellWidth NOTIFY iconSizeChanged)
+    Q_PROPERTY(int cellHeight READ cellHeight NOTIFY iconSizeChanged)
+    Q_PROPERTY(int iconTextSize READ iconTextSize NOTIFY iconSizeChanged)
+    Q_PROPERTY(int iconSize READ iconSize NOTIFY iconSizeChanged)
 
 public:
     SizesCalculator(QObject *parent, QmlApplicationViewer *inViewer);
+
+    int cellWidth() const;
+    int cellHeight() const;
+    int iconTextSize() const;
+    int iconSize() const;
 
     int textToGridSpacing() const
     {
