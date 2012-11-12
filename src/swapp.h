@@ -53,31 +53,31 @@ private:
     KAction *m_globalAction;
 };
 
-class QMLConstants : public QObject
+class SizesCalculator : public QObject
 {
     Q_OBJECT
 
 public:
-    QMLConstants(QObject *parent, QmlApplicationViewer *inViewer);
+    SizesCalculator(QObject *parent, QmlApplicationViewer *inViewer);
 
-    Q_PROPERTY(int textToGridSpacing READ textToGridSpacing CONSTANT) int textToGridSpacing() {
+    Q_PROPERTY(int textToGridSpacing READ textToGridSpacing CONSTANT) int textToGridSpacing() const {
         return 16;
     }
-    Q_PROPERTY(int groupTextHeight READ groupTextHeight CONSTANT) int groupTextHeight() {
+    Q_PROPERTY(int groupTextHeight READ groupTextHeight CONSTANT) int groupTextHeight() const {
         return 24;
     }
-    Q_PROPERTY(int gridWithGroupsSpacing READ gridWithGroupsSpacing CONSTANT) int gridWithGroupsSpacing() {
+    Q_PROPERTY(int gridWithGroupsSpacing READ gridWithGroupsSpacing CONSTANT) int gridWithGroupsSpacing() const {
         return 32;
     }
-    Q_PROPERTY(int gridColumns READ gridColumns CONSTANT) int gridColumns() {
+    Q_PROPERTY(int gridColumns READ gridColumns CONSTANT) int gridColumns() const {
         return 7;
     }
-    Q_PROPERTY(int cellWidth READ cellWidth NOTIFY iconSizeChanged) int cellWidth();
-    Q_PROPERTY(int cellHeight READ cellHeight NOTIFY iconSizeChanged) int cellHeight();
-    Q_PROPERTY(int iconTextSize READ iconTextSize NOTIFY iconSizeChanged) int iconTextSize();
-    Q_PROPERTY(int iconSize READ iconSize NOTIFY iconSizeChanged) int iconSize();
+    Q_PROPERTY(int cellWidth READ cellWidth NOTIFY iconSizeChanged) int cellWidth() const;
+    Q_PROPERTY(int cellHeight READ cellHeight NOTIFY iconSizeChanged) int cellHeight() const;
+    Q_PROPERTY(int iconTextSize READ iconTextSize NOTIFY iconSizeChanged) int iconTextSize() const;
+    Q_PROPERTY(int iconSize READ iconSize NOTIFY iconSizeChanged) int iconSize() const;
 
-    int availableHeight();
+    int availableHeight() const;
 
 signals:
     void iconSizeChanged();

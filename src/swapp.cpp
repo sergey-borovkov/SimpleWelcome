@@ -139,7 +139,7 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("mainWindow", m_viewer);
     m_viewer->rootContext()->setContextProperty("sessionProvider", new SessionProvider(this));
 
-    QMLConstants *constants = new QMLConstants(this, m_viewer);
+    SizesCalculator *constants = new SizesCalculator(this, m_viewer);
 
     UserInfoProvider *userInfoProvider = new UserInfoProvider(this);
     m_viewer->rootContext()->setContextProperty("userInfoProvider", userInfoProvider);
@@ -315,13 +315,13 @@ void SWApp::globalActionTriggered()
         m_viewer->close();
 }
 
-QMLConstants::QMLConstants(QObject *parent, QmlApplicationViewer *inViewer)
+SizesCalculator::SizesCalculator(QObject *parent, QmlApplicationViewer *inViewer)
     : QObject(parent), viewer(inViewer)
 {
     connect(viewer, SIGNAL(availableGeometryChanged()), SIGNAL(iconSizeChanged()));
 }
 
-int QMLConstants::cellWidth()
+int SizesCalculator::cellWidth() const
 {
     return availableHeight() >= 1080 ? 140 :
            availableHeight() >= 1024 ? 130 :
@@ -332,7 +332,7 @@ int QMLConstants::cellWidth()
            70;
 }
 
-int QMLConstants::cellHeight()
+int SizesCalculator::cellHeight() const
 {
     //return (viewer->updatableHeight() - 80 /*topBar*/ - 80 /*bottomBar*/ - (textToGridSpacing() + groupTextHeight())*3 - gridWithGroupsSpacing()*2) / 4 - 1;
     return availableHeight() >= 1080 ? 170 :
@@ -345,12 +345,12 @@ int QMLConstants::cellHeight()
     //return (viewer->updatableHeight() - 162) / 5 - 1;
 }
 
-int QMLConstants::iconTextSize()
+int SizesCalculator::iconTextSize() const
 {
     return availableHeight() >= 1080 ? 10 : availableHeight() >= 1024 ? 10 : availableHeight() >= 600 ? 9 : 8;
 }
 
-int QMLConstants::iconSize()
+int SizesCalculator::iconSize() const
 {
     return availableHeight() >= 1080 ? 96 :
            availableHeight() >= 1024 ? 80 :
@@ -359,7 +359,7 @@ int QMLConstants::iconSize()
            availableHeight() >= 768 ? 48 : 32;
 }
 
-int QMLConstants::availableHeight()
+int SizesCalculator::availableHeight() const
 {
      return viewer->availableGeometry().height() + 55;
 }

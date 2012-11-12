@@ -34,7 +34,7 @@
 #include <QPainter>
 #include <KIO/PreviewJob>
 
-GeneralIconProvider::GeneralIconProvider(QString path_to_assets, QMLConstants *inConstants)
+GeneralIconProvider::GeneralIconProvider(QString path_to_assets, SizesCalculator *inConstants)
     : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap),
       m_userInfoProvider(NULL),
       m_searchDataSource(NULL),

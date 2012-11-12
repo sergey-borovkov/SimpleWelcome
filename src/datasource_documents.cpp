@@ -8,7 +8,7 @@
 #include "swapp.h"
 #include <QPainter>
 
-DataSource_Documents::DataSource_Documents(QObject *parent, QMLConstants *inConstants)
+DataSource_Documents::DataSource_Documents(QObject *parent, SizesCalculator *inConstants)
     : DataSource(parent),
       m_previewJobPlugins(KIO::PreviewJob::availablePlugins()),
       constants(inConstants)

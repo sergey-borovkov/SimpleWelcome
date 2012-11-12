@@ -7,12 +7,12 @@
 class UserInfoProvider;
 class DataSource_Search;
 class DataSource_Documents;
-class QMLConstants;
+class SizesCalculator;
 
 class GeneralIconProvider : public QDeclarativeImageProvider
 {
 public:
-    GeneralIconProvider(QString path_to_assets, QMLConstants *constants);
+    GeneralIconProvider(QString path_to_assets, SizesCalculator *constants);
 
     void setUserInfoProvider(UserInfoProvider *userInfoProvider) {
         m_userInfoProvider = userInfoProvider;
@@ -30,6 +30,6 @@ private:
     UserInfoProvider *m_userInfoProvider;
     DataSource_Search *m_searchDataSource;
     DataSource_Documents *m_documentsDataSource;
-    QMLConstants *constants;
+    SizesCalculator *constants;
     QString m_pathToAssets;
 };
