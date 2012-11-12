@@ -77,6 +77,8 @@ public:
     Q_PROPERTY(int iconTextSize READ iconTextSize NOTIFY iconSizeChanged) int iconTextSize();
     Q_PROPERTY(int iconSize READ iconSize NOTIFY iconSizeChanged) int iconSize();
 
+    int availableHeight();
+
 signals:
     void iconSizeChanged();
 
