@@ -76,7 +76,9 @@ int main(int argc, char *argv[])
     }
 
     // Try to setup debugger if special Qt option is passed
+
     // TODO: uncomment in the future
+
     //KDeclarative::setupQmlJsDebugger();
 
     SWApp *app = SWApp::self();

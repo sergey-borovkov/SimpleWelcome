@@ -139,23 +139,38 @@ Item {
 
                     Item {
                         id: imageAnchor
-
                         width: parent.width
                         height: socialImage.height
 
-                        Image { //Main image
+                        SocialImage { //Main image
                             id: socialImage
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            width: Math.min( sourceSize.width, mainRect.width - 20)
-                            height: Math.min( sourceSize.height, mainRect.height - topLine.height - bottomLine.height)
-                            anchors.leftMargin: 5
-                            anchors.rightMargin: 5
+                            anchors {
+                                horizontalCenter: parent.horizontalCenter
+                                leftMargin: 5
+                                rightMargin: 5
+                            }
+                            width: getWidth(); height: getHeight()
 
                             fillMode: Image.PreserveAspectFit
                             smooth: true
                             clip: true
                             source: picture
+                            function getWidth() {
+                                if (status === Image.Null)
+                                    return 0
+                                if ((status===Image.Loading) || (status===Image.Error))
+                                    return 55
+                                return Math.min( sourceSize.width, mainRect.width - 20)
+                            }
+                            function getHeight() {
+                                if (status === Image.Null)
+                                    return 0
+                                if ((status===Image.Loading) || (status===Image.Error))
+                                    return 55
+                                return Math.min( sourceSize.height, mainRect.height - topLine.height - bottomLine.height)
+                            }
                         }
+
                     }
 
                     Text {
@@ -351,7 +366,6 @@ Item {
             anchors.fill: parent
             z: -2
             onClicked: {
-                //console.log("details on")
                 popupDetailsWidget()
             }
         }
