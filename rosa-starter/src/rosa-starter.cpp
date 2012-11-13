@@ -33,9 +33,10 @@
 #include <QtGui/QGraphicsLinearLayout>
 
 // KDE
-#include <Plasma/IconWidget>
-#include <KLocalizedString>
-#include <KRun>
+#include <KDE/Plasma/IconWidget>
+#include <KDE/KRun>
+#include <KDE/KGlobal>
+#include <KDE/KLocale>
 
 
 QString ROSA_Starter::pathToRoot()
@@ -47,6 +48,9 @@ QString ROSA_Starter::pathToRoot()
 
 void ROSA_Starter::init()
 {
+    // We must add translations from SimpleWelcome
+    KGlobal::locale()->insertCatalog("ROSA_Launcher");
+
     setHasConfigurationInterface(false);
     setAspectRatioMode(Plasma::Square);
 
