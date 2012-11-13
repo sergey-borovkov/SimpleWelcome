@@ -24,12 +24,22 @@ GridView {
     property int columns: constants.gridColumns
     property int cellHorizontalSpacing: Math.max(0, (parent.width - constants.cellWidth * columns) / (columns + 1))
 
+    property bool myActiveFocus: false
+    signal myActiveFocusChanged(int containerIndex)
+
+    width: parent.width
+    height: groupName == "Apps" ? gridsListView.height : Math.ceil(count / columns) * groupCellHeight
+    interactive: false
+
+    highlight: highlightComponent
+    highlightFollowsCurrentItem: false
+
     anchors {
         left: parent.left
         leftMargin: cellHorizontalSpacing
     }
     cellWidth: (width - cellHorizontalSpacing) / columns - 1
-    cellHeight: constants.cellHeight
+    cellHeight: groupCellHeight ? groupCellHeight : constants.cellHeight
 
     delegate: Cell {}
 
@@ -40,13 +50,69 @@ GridView {
 
     model: appsModel
 
+
+
+    function newItemData(itemData)
+    {
+        // This is needed for delegate to not blaming unknown variable
+        if (itemData.pinned === undefined)
+            itemData.pinned = undefined
+
+        if (itemData.stack === undefined)
+            itemData.stack = undefined
+        model.append(itemData)
+    }
+
+    function newItemDataAt(pos, itemData) {
+        // This is needed for delegate to not blaming unknown variable
+        if (itemData.pinned === undefined)
+            itemData.pinned = undefined
+
+        if (itemData.stack === undefined)
+            itemData.stack = undefined
+        model.insert(pos, itemData)
+    }
+
+    function onItemClicked(newIndex)
+    {
+        if (newIndex != -1)
+        {
+            var realIndex = model.get(newIndex).id
+            if (model.get(newIndex).stack !== undefined)
+            {
+                //console.log("onItemClicked::showPopupGroup from: " + newIndex)
+                var iconCoords = mapToItem(groupTab, currentItem.x + currentItem.width / 2 - 8, currentItem.y + currentItem.height)
+                showPopupGroup(newIndex, model.get(newIndex), iconCoords)
+                gridView.myActiveFocus = false
+                return
+            }
+            if (groupName == i18n("Recent Applications") || groupName == i18n("Recent Documents"))
+            {
+                dndSrcId = realIndex
+                model.move(newIndex, 0, 1)
+
+                for (var i = 0; i < model.count; i++)
+                    model.setProperty(i, "id", i)
+
+                dndSrcId = -1
+                gridView.currentIndex = 0
+            }
+        }
+        if (newIndex == -1)
+            dataSource.itemClicked(-1)
+        else
+            dataSource.itemClicked(realIndex, groupName)
+    }
+
+    function forceMyFocus() {
+        myActiveFocus = true
+        myActiveFocusChanged(containerIndex)
+        //console.log("myActiveFocusChanged to " + containerIndex)
+    }
+
     function resetContent() {
         if(typeof model !== 'undefined')
             model.clear()
-    }
-
-    function onItemClicked(newIndex) {
-        dataSource.itemClicked(newIndex == -1 ? newIndex : model.get(newIndex).id)
     }
 
     function getCellIndex(inX, inY) {
@@ -159,6 +225,9 @@ GridView {
                 dataSource.updateItemData.connect(updateItemContent)
         }
         model.itemClicked.connect(onItemClicked)
+
+        if ('group' in model)
+            model.group = groupName
     }
 
     function updateItemContent(id, field, data) {

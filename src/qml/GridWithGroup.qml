@@ -11,6 +11,7 @@ Column {
     property alias stackable: iconGridView.stackable
     property alias mouseDragChangesGrids: iconGridView.mouseDragChangesGrids
 
+    // iconGridView aliases
     property alias prevGridGroup: iconGridView.prevGridGroup
     property alias nextGridGroup: iconGridView.nextGridGroup
     property alias maxCount: iconGridView.maxCount
@@ -196,79 +197,5 @@ Column {
 
     IconGridView {
         id: iconGridView
-
-        width: parent.width
-        height: groupName == "Apps" ? gridsListView.height : Math.ceil(count / columns) * groupCellHeight
-        cellHeight: groupCellHeight
-        interactive: false
-
-        highlight: highlightComponent
-        highlightFollowsCurrentItem: false
-
-        property bool myActiveFocus: false
-        signal myActiveFocusChanged(int containerIndex)
-
-        function newItemData(itemData)
-        {
-            // This is needed for delegate to not blaming unknown variable
-            if (itemData.pinned === undefined)
-                itemData.pinned = undefined
-
-            if (itemData.stack === undefined)
-                itemData.stack = undefined
-            model.append(itemData)
-        }
-
-        function newItemDataAt(pos, itemData) {
-            // This is needed for delegate to not blaming unknown variable
-            if (itemData.pinned === undefined)
-                itemData.pinned = undefined
-
-            if (itemData.stack === undefined)
-                itemData.stack = undefined
-            model.insert(pos, itemData)
-        }
-
-        function onItemClicked(newIndex)
-        {
-            if (newIndex != -1)
-            {
-                var realIndex = model.get(newIndex).id
-                if (model.get(newIndex).stack !== undefined)
-                {
-                    //console.log("onItemClicked::showPopupGroup from: " + newIndex)
-                    var iconCoords = mapToItem(groupTab, currentItem.x + currentItem.width / 2 - 8, currentItem.y + currentItem.height)
-                    showPopupGroup(newIndex, model.get(newIndex), iconCoords)
-                    gridView.myActiveFocus = false
-                    return
-                }
-                if (groupName == i18n("Recent Applications") || groupName == i18n("Recent Documents"))
-                {
-                    dndSrcId = realIndex
-                    model.move(newIndex, 0, 1)
-
-                    for (var i = 0; i < model.count; i++)
-                        model.setProperty(i, "id", i)
-
-                    dndSrcId = -1
-                    gridView.currentIndex = 0
-                }
-            }
-            if (newIndex == -1)
-                dataSource.itemClicked(-1)
-            else
-                dataSource.itemClicked(realIndex, groupName)
-        }
-
-        function forceMyFocus() {
-            myActiveFocus = true
-            myActiveFocusChanged(containerIndex)
-            //console.log("myActiveFocusChanged to " + containerIndex)
-        }
-
-        Component.onCompleted: {
-            if ('group' in model)
-                model.group = groupName
-        }
     }
 }
