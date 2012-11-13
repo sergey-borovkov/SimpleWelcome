@@ -125,6 +125,13 @@ void PluginRequestReply::gotUserName(QString id, QString name)
     m_userName = name;
 }
 
+void PluginRequestReply::gotUserInfo(QString id, QString name, QString url)
+{
+    m_userId = id;
+    m_userName = name;
+    m_userPictureUrl = url;
+}
+
 void PluginRequestReply::error(QString error)
 {
     m_errorString = error;

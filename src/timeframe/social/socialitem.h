@@ -32,6 +32,9 @@ public:
         PluginName,
         Count,
         ItemsCount,
+        FromId,
+        FromName,
+        FromImageUrl,
         Id
     };
 
@@ -56,6 +59,9 @@ public:
     static const QHash<int, QByteArray> roleNames() {
         QHash<int, QByteArray> roles;
         roles.insert(Id, "id");
+        roles.insert(FromId, "fromId");
+        roles.insert(FromName, "fromName");
+        roles.insert(FromImageUrl, "fromImageUrl");
         roles.insert(Count, "count");
         roles.insert(PluginName, "pluginName");
         roles.insert(Text, "message");

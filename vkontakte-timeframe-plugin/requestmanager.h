@@ -24,6 +24,7 @@ public:
     virtual Request *queryImage(const QString &id);
     virtual Request *queryAudio(const QString &aid, const QString &ownerId);
     virtual Request *queryVideo(const QString &vid, const QString &ownerId);
+    virtual Request *queryUserInfo(const QString &fromId);
     virtual Request *queryComments(const QString &postId);
     virtual Request *queryLikes(const QString &postId);
     virtual Request *postComment(const QByteArray &message, const QString &postId);
@@ -42,6 +43,7 @@ private slots:
     void imageReply(QByteArray reply);
     void audioReply(QByteArray reply);
     void videoReply(QByteArray reply);
+    void userInfoReply(QByteArray reply);
     void postCommentReply(QByteArray reply);
 
 signals:
@@ -55,6 +57,7 @@ signals:
     void gotUserName(QString postId, QString name);
     void gotAudioUrl(QString aid, QString ownerId, QString audioUrl);
     void gotVideoUrl(QString vid, QString ownerId, QString videoUrl, QString videoImage);
+    void gotUserInfo(QString id, QString name, QString url);
     void searchComplete();
 
 private:

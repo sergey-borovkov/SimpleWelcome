@@ -79,6 +79,19 @@ Request *RequestManager::queryVideo(const QString &vid, const QString &ownerId)
     return request;
 }
 
+Request *RequestManager::queryUserInfo(const QString &fromId)
+{
+    QUrl url = constructUrl(QLatin1String("users.get"));
+    url.addQueryItem(QLatin1String("uids"), fromId);
+    url.addQueryItem(QLatin1String("fields"), QLatin1String("photo,first_name,last_name,nickname"));
+
+    VkRequest *request = new VkRequest(VkRequest::Get, this);
+    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(userInfoReply(QByteArray)));
+
+    request->setUrl(url);
+    return request;
+}
+
 Request *RequestManager::postComment(const QByteArray &message, const QString &postId)
 {
     QUrl url = constructUrl(QLatin1String("wall.addComment"));
@@ -490,6 +503,50 @@ void RequestManager::videoReply(QByteArray reply)
             if (!videoId.isEmpty() && !videoOwnerId.isEmpty()
                     && !videoId.isEmpty() && !videoImage.isEmpty()) {
                 emit gotVideoUrl(videoId, videoOwnerId, videoUrl, videoImage);
+            }
+        }
+    }
+}
+
+void RequestManager::userInfoReply(QByteArray reply)
+{
+    QJson::Parser parser;
+    QVariantMap result = parser.parse(reply).toMap();
+
+    if (result.contains(QLatin1String("error"))) {
+        m_authorizer->logout();
+        return;
+    }
+
+    // video fields: vid, owner_id, title, description, duration, link, image, date, player
+    QString userId, userName, userImageUrl;
+
+    if (result.contains(QLatin1String("response"))) {
+        QVariantList list = result.value(QLatin1String("response")).toList();
+
+        foreach(QVariant item, list) {
+            QVariantMap map = item.toMap();
+
+            if (map.contains(QLatin1String("uid"))) {
+                userId = map.value(QLatin1String("uid")).toString();
+            }
+            if (map.contains(QLatin1String("first_name"))) {
+                userName = map.value(QLatin1String("first_name")).toString();
+            }
+            if (map.contains(QLatin1String("last_name"))) {
+                if (!userName.isEmpty())
+                    userName += " ";
+                userName += map.value(QLatin1String("last_name")).toString();
+            }
+            if (userName.isEmpty() && map.contains(QLatin1String("nickname"))) {
+                userName = map.value(QLatin1String("nickname")).toString();
+            }
+            if (map.contains(QLatin1String("photo"))) {
+                userImageUrl = map.value(QLatin1String("photo")).toString();
+            }
+            if (!userId.isEmpty() && !userName.isEmpty()&& !userImageUrl.isEmpty()) {
+//                qDebug() << "[VK]   RequestManager::userInfoReply:   OK - " << userId << userName << userImageUrl;
+                emit gotUserInfo(userId, userName, userImageUrl);
             }
         }
     }
