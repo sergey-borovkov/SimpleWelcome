@@ -35,9 +35,8 @@ msgid "julia.mineeva@osinit.ru"
 msgstr ""
 
 #: rosa-starter/src/rosa-starter.cpp:76
-#, fuzzy
 msgid "Edit Applications..."
-msgstr "Приложения"
+msgstr "Изменить приложения..."
 
 #: src/main.cpp:37 src/main.cpp:44
 msgid "ROSA Desktop Application Launcher"
