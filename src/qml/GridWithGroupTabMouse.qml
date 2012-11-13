@@ -264,9 +264,9 @@ MouseArea {
 
         }
 
-        function moveIconWhereAiming() {
+        function moveIconWhereAiming(isUnstacking) {
 
-            if (gridMouseArea.dndDest !== grid.count - 1) { // <-- not the best way to check if item we move was not just a moment ago dragged from other page
+            if (gridMouseArea.dndDest !== grid.count - 1 || isUnstacking === true) { // <-- not the best way to check if item we move was not just a moment ago dragged from other page
                 if (gridMouseArea.dndDest > indexWaitingOn && gridMouseArea.gridMouseX >= itemWaitingOn.x + constants.cellWidth)
                     indexWaitingOn++;
                 else if (gridMouseArea.dndDest < indexWaitingOn && gridMouseArea.gridMouseX <= itemWaitingOn.x)
@@ -318,7 +318,7 @@ MouseArea {
                     gridMouseArea.draggedItemStackedAt = undefined
 
                     if (!isHitInnerIcon)
-                        moveIconWhereAiming()
+                        moveIconWhereAiming(true)
                     else if (indexWaitingOn != gridMouseArea.dndDest)
                         stackIconWhereAiming()
                 }
