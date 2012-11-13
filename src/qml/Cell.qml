@@ -42,6 +42,7 @@ Item {
         Image {
             id: cellIcon
             source: imagePath
+            cache: false
             width: constants.iconSize
             height: constants.iconSize
             anchors.top: parent.top
@@ -56,6 +57,14 @@ Item {
                 }*/
 
             smooth: true
+
+            Connections {
+                target: mainWindow
+                onIconSizeChanged: {
+                    cellIcon.sourceSize.width = constants.iconSize
+                    cellIcon.sourceSize.height = constants.iconSize
+                }
+            }
         }
 
         Image {

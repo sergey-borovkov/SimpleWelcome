@@ -107,7 +107,7 @@ Item {
 
         Component.onCompleted: {
             isCompleted = true
-            console.log("completed with: " + width + "x" + height + "")
+            //console.log("completed with: " + width + "x" + height + "")
             bottomBar.wheelScroll.connect(tabListView.onWheelScroll)
         }
 

@@ -234,6 +234,11 @@ GridView {
         for (var i = 0; i < model.count; i++)
             if (model.get(i).id === id) {
                 model.setProperty(i, field, data)
+
+                // Updating icon cache
+                var pathWas = model.get(i).imagePath
+                model.setProperty(i, "imagePath", "")
+                model.setProperty(i, "imagePath", pathWas)
                 break
             }
     }

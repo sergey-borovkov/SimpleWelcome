@@ -145,6 +145,7 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("sessionProvider", new SessionProvider(this));
 
     SizesCalculator *constants = new SizesCalculator(this, m_viewer);
+    m_viewer->setSizesCalculator(constants);
 
     UserInfoProvider *userInfoProvider = new UserInfoProvider(this);
     m_viewer->rootContext()->setContextProperty("userInfoProvider", userInfoProvider);
@@ -166,6 +167,7 @@ SWApp::SWApp()
     m_viewer->rootContext()->setContextProperty("dataSource_Documents", docsDataSource);
     connect(docsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
     connect(m_viewer, SIGNAL(windowShown()), docsDataSource, SLOT(updateContent()));
+    connect(m_viewer, SIGNAL(iconSizeChanged()), docsDataSource, SLOT(iconSizeChanged()));
 
     DataSource_Search *searchDataSource = new DataSource_Search(this, recentAppsDataSource);
     m_viewer->rootContext()->setContextProperty("searchGridModel", searchDataSource);

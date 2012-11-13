@@ -11,11 +11,13 @@
 #include <QtGui/QApplication>
 #include <QtGui/QCursor>
 #include <KWindowSystem>
+#include "../sizescalculator.h"
 
 QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
     QDeclarativeView(parent),
     currentTabIndex(0),
-    m_screen(0)
+    m_screen(0),
+    constants(NULL)
 {
     QDesktopWidget *desktop = QApplication::desktop();
     connect(engine(), SIGNAL(quit()), SLOT(close()));
@@ -59,6 +61,14 @@ void QmlApplicationViewer::updateWorkArea(int screen)
         if (m_availGeometry != avail_geom) {
             m_availGeometry = avail_geom;
             emit availableGeometryChanged();
+
+            if (constants) {
+                static int iconSizeWas = 0;
+                if (iconSizeWas != constants->iconSize()) {
+                    iconSizeWas = constants->iconSize();
+                    emit iconSizeChanged();
+                }
+            }
         }
     }
 }
@@ -207,4 +217,9 @@ QVariantMap QmlApplicationViewer::loadIconPositions() const
 void QmlApplicationViewer::currentTabChanged(int newCurrentIndex)
 {
     currentTabIndex = newCurrentIndex;
+}
+
+void QmlApplicationViewer::setSizesCalculator(SizesCalculator *consts)
+{
+    constants = consts;
 }

@@ -4,6 +4,7 @@
 #include <QVariantList>
 
 class QResizeEvent;
+class SizesCalculator;
 
 class QmlApplicationViewer : public QDeclarativeView
 {
@@ -30,10 +31,13 @@ public:
 
     Q_INVOKABLE void currentTabChanged(int newCurrentIndex);
 
+    void setSizesCalculator(SizesCalculator *consts);
+
 signals:
     void availableGeometryChanged();
     void windowHidden();
     void windowShown();
+    void iconSizeChanged();
 
 public slots:
     void restore();
@@ -46,4 +50,5 @@ private:
     int currentTabIndex;
     int m_screen;
     QRect m_availGeometry;
+    SizesCalculator *constants;
 };

@@ -57,7 +57,6 @@ void DataSource_Documents::updateContent()
         favoritesList.append(places->index(i, 0).data(KFilePlacesModel::UrlRole).toString());
 
     QStringList recentDocsList = KRecentDocument::recentDocuments();
-    KFileItemList previewRequestList;
 
     AppItemList newDocsList;
     for (int i = 0; i < recentDocsList.size() && newDocsList.count() < 7; i++) {
@@ -79,12 +78,30 @@ void DataSource_Documents::updateContent()
         newItem["desktopEntry"] = desktopFile.fileName();
         newItem["destination"] = KUrl(desktopFile.readUrl()).url();
 
-        bool thumbnailAvailable = m_pixmaps.contains(newItem["destination"].toString());
-        if (thumbnailAvailable)
+        if (m_pixmaps.contains(newItem["destination"].toString()))
             newItem["imagePath"] = QString("image://generalicon/docicon/%1").arg(newItem["destination"].toString());
 
         if (!newItem["caption"].toString().isEmpty())
             newDocsList.append(newItem);
+    }
+
+    if (newDocsList != docsList) {
+        docsList = newDocsList;
+        updateThumbnails();
+        emit resetContent();
+    }
+}
+
+void DataSource_Documents::updateThumbnails()
+{
+    KFileItemList previewRequestList;
+
+    for (int i = 0; i < docsList.size(); i++) {
+        AppItem &newItem = docsList[i];
+
+        bool thumbnailAvailable = m_pixmaps.contains(newItem["destination"].toString());
+        if (thumbnailAvailable)
+            newItem["imagePath"] = QString("image://generalicon/docicon/%1").arg(newItem["destination"].toString());
 
         if (!thumbnailAvailable) {
             KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, newItem["destination"].toString(), false);
@@ -92,11 +109,21 @@ void DataSource_Documents::updateContent()
         }
     }
 
-    if (newDocsList != docsList) {
-        docsList = newDocsList;
-        createDocumentsPreviews(previewRequestList);
-        emit resetContent();
+    createDocumentsPreviews(previewRequestList);
+}
+
+void DataSource_Documents::iconSizeChanged()
+{
+    m_pixmaps.clear();
+    for (int i = 0; i < docsList.size(); i++) {
+        KDesktopFile desktopFile(docsList[i]["desktopEntry"].toString());
+        QString newIcon = QString("image://generalicon/appicon/%1").arg(desktopFile.readIcon());
+        if (newIcon != docsList[i]["imagePath"]) {
+            docsList[i]["imagePath"] = newIcon;
+            emit updateItemData(i, "imagePath", docsList[i]["imagePath"].toString());
+        }
     }
+    updateThumbnails();
 }
 
 void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap &pixmap)
@@ -120,6 +147,7 @@ void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap
     p.drawRoundedRect(0, 0, pixmap.width() - 1, pixmap.height() - 1, 7, 7, Qt::AbsoluteSize);
 
     m_pixmaps[item.url().url()] = pix;
+
     for (int i = 0; i < docsList.size(); i++) {
         if (docsList[i]["destination"].toString() == item.url().url()) {
             docsList[i]["imagePath"] = QString("image://generalicon/docicon/%1").arg(docsList[i]["destination"].toString());

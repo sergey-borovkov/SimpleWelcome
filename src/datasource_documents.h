@@ -29,6 +29,8 @@ signals:
 public slots:
     virtual void itemClicked(int newIndex);
     void updateContent();
+    void updateThumbnails();
+    void iconSizeChanged();
 
 private slots:
     void resultPreviewJob(const KFileItem &item, const QPixmap &pixmap);
