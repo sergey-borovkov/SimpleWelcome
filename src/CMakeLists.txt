@@ -17,6 +17,7 @@ add_custom_target(build-qml ALL
 kde4_add_executable(rosa-launcher ${HEADERS} ${SOURCES} ${QML} ${QRC_SOURCES})
 
 find_package(Nepomuk REQUIRED)
+find_package(KDeclarative REQUIRED)
 
 SET(QT_USE_QDECLARATIVE TRUE)
 
@@ -28,7 +29,7 @@ target_link_libraries(rosa-launcher
                         ${NEPOMUK_LIBRARIES}
                         ${NEPOMUK_QUERY_LIBRARIES}
                         ${SOPRANO_LIBRARIES}
-                        kdeclarative
+                        ${KDECLARATIVE_LIBRARIES}
                         timeframe)
 
 add_custom_command(TARGET rosa-launcher POST_BUILD
