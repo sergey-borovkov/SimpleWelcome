@@ -70,8 +70,9 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
         int iconsInRow = constants->iconSize() >= 96 ? 3 : 2;
         int subIconsMargin = 2;
         QSize subIconSize = (pix.size() - QSize(outlineWidth * 4, outlineWidth * 4) - QSize(subIconsMargin, subIconsMargin) * (iconsInRow - 1)) / iconsInRow;
-        for (int i = 0; i < qMin(iconsInRow * iconsInRow, icons.size()); i++) {
-            KIcon subIcon = KIcon(icons[icons.size() - i - 1]);
+        int displayIconsCount = qMin(iconsInRow * iconsInRow, icons.size());
+        for (int i = 0; i < displayIconsCount; i++) {
+            KIcon subIcon = KIcon(icons[icons.size() - displayIconsCount + i]);
             QPixmap subPixmap = subIcon.pixmap(subIconSize);
 
             int row = i % iconsInRow;
