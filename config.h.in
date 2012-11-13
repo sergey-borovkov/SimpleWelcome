@@ -19,3 +19,6 @@
 /// Defines path to QML files directory from root directory of installation
 #define SW_QML_PATH "${_qml_install_path}"
 
+/// Defines name of application (it isn't a name of executable file)
+#define SW_APPLICATION_NAME "${APPLICATION_NAME}"
+

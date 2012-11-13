@@ -49,7 +49,7 @@ QString ROSA_Starter::pathToRoot()
 void ROSA_Starter::init()
 {
     // We must add translations from SimpleWelcome
-    KGlobal::locale()->insertCatalog("ROSA_Launcher");
+    KGlobal::locale()->insertCatalog(SW_APPLICATION_NAME);
 
     setHasConfigurationInterface(false);
     setAspectRatioMode(Plasma::Square);
@@ -98,7 +98,7 @@ void ROSA_Starter::resetIconSize()
 void ROSA_Starter::buttonClicked()
 {
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
-    QDBusInterface interface("org.kde.ROSA_Launcher", "/MainApplication", "org.kde.KUniqueApplication", sessionBus, this);
+    QDBusInterface interface("org.kde." SW_APPLICATION_NAME, "/MainApplication", "org.kde.KUniqueApplication", sessionBus, this);
 
     if (interface.isValid()) // if SW is launched
         interface.call("newInstance");

@@ -26,6 +26,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#include "config.h"
+
 #include <KAboutData>
 #include <KCmdLineArgs>
 #include <KLocale>
@@ -42,7 +44,7 @@ extern "C"
 //KDE_EXPORT int kdemain(int argc, char **argv)
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData("ROSA_Launcher", 0, ki18n("ROSA Desktop Application Launcher"),
+    KAboutData aboutData(SW_APPLICATION_NAME, 0, ki18n("ROSA Desktop Application Launcher"),
                          version, ki18n(description), KAboutData::License_GPL_V3,
                          ki18n("Copyright 2010-2012, ROSALab"));
     aboutData.addAuthor(ki18n("Alexander Skakov"),

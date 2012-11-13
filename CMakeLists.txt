@@ -5,6 +5,7 @@ project(rosa-launcher)
 #set(CMAKE_MODULE_PATH /usr/share/kde4/apps/cmake/modules/)
 
 # Some constants
+set(APPLICATION_NAME "ROSA_Launcher" CACHE STRING "A name of application (it isn't a name of executable file)")
 set(_bin_dir_name "bin")
 set(_share_dir_name "share") # name of system share directory
 set(_assets_dir_path "assets") # path to assets directory from share directory
@@ -15,6 +16,7 @@ set(_share_dir_install_path "${_share_dir_name}/${_share_dir_path}") # path wher
 set(_timeframe_plugins_install_path "${_share_dir_name}/${_timeframe_plugins_path}") # path where plugins have to be installed to
 set(_assets_install_path "${_share_dir_install_path}/${_assets_dir_path}") # path where assets have to be installed to
 set(_qml_install_path "${_share_dir_install_path}/${_qml_dir_path}") # path where qml files have to be installed to
+set(pot_file "${CMAKE_BINARY_DIR}/${APPLICATION_NAME}.pot")
 
 # the library install dir
 set(LIBRARY_INSTALL_DIR "${_DEFAULT_LIBRARY_INSTALL_DIR}" CACHE PATH "Installation directory for libraries")
@@ -51,6 +53,37 @@ add_custom_target(build-assets ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_BINARY_DIR}/${_assets_install_path}"
     COMMENT "Building/copying the assets"
 )
+
+# Special target for creating pot
+find_program(XGETTEXT_EXECUTABLE xgettext DOC "Path to xgettext program")
+if(XGETTEXT_EXECUTABLE)
+    message(STATUS "Found xgettext: ${XGETTEXT_EXECUTABLE}")
+    message(STATUS "Target 'build-pot' will be available for creating pot file")
+
+    set(filelist "${CMAKE_BINARY_DIR}/all_src_filelist")
+
+    # collect names of files
+    set(dirs "src" "rosa-starter" "timeframelib" "facebook-timeframe-plugin" "vkontakte-timeframe-plugin")
+    file(WRITE ${filelist} "")
+    foreach(d ${dirs})
+        file(GLOB_RECURSE files_src RELATIVE ${CMAKE_SOURCE_DIR} "${d}/*.cpp" "${d}/*.h" "${d}/*.c" "${d}/*.qml" "${d}/*.js")
+        foreach(f ${files_src})
+            file(APPEND ${filelist} "${f}\n")
+        endforeach(f)
+    endforeach(d)
+
+    # generate pot file
+    add_custom_target(build-pot
+        COMMAND ${XGETTEXT_EXECUTABLE} -from-code=UTF-8 -C -kde -ci18n -ki18n:1 -ki18nc:1c,2
+            -ki18np:1,2 -ki18ncp:1c,2,3 -ktr2i18n:1 -kI18N_NOOP:1 -kI18N_NOOP2:1c,2 -kaliasLocale
+            -kki18n:1 -kki18nc:1c,2 -kki18np:1,2 -kki18ncp:1c,2,3
+            --files-from=${filelist} -D ${CMAKE_SOURCE_DIR} -o ${pot_file}
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+        COMMENT "Building pot file"
+        VERBATIM
+    )
+endif()
+
 
 add_subdirectory(timeframelib)
 add_subdirectory(facebook-timeframe-plugin)
