@@ -107,16 +107,31 @@ Item{
 
                 spacing: 10
 
-                Image { //Main image
+                SocialImage { //Main image
                     id: img
                     anchors.horizontalCenter: parent.horizontalCenter
                     fillMode: Image.PreserveAspectFit
-                    width: Math.min(200 - 20, sourceSize.width)
-                    height: Math.min(150, sourceSize.height)
+                    width: getWidth()
+                    height: getHeight()
                     anchors.leftMargin: 5
                     anchors.rightMargin: 5
                     smooth: true
                     source: picture
+
+                    function getWidth() {
+                        if (status === Image.Null)
+                            return 0
+                        if ((status===Image.Loading) || (status===Image.Error))
+                            return 55
+                        return Math.min(200 - 20, sourceSize.width)
+                    }
+                    function getHeight() {
+                        if (status === Image.Null)
+                            return 0
+                        if ((status===Image.Loading) || (status===Image.Error))
+                            return 55
+                        return Math.min(150, sourceSize.height)
+                    }
                 }
 
                 Text {

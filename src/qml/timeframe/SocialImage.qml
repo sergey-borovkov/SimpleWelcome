@@ -7,7 +7,7 @@ Image{
         id: waitIndicator
         anchors.centerIn: parent
         source: "images/indicator-shadow.png"
-        opacity: 0
+        visible: false
         Image {
             id: can
             source: "images/can2.png"
@@ -20,6 +20,12 @@ Image{
         interval: 10; running: false; repeat: true
         onTriggered: can.rotation = can.rotation +10
     }
+    Image {
+        id: errorIcon
+        anchors.centerIn: parent
+        source: "images/file_broken.png"
+        visible: false
+    }
 
     states: [
         State {
@@ -29,7 +35,7 @@ Image{
         },
         State {
             name: "error"; when: mainImage.status === Image.Error
-            PropertyChanges { target: mainImage; source: 'images/file_broken.png' }
+            PropertyChanges { target: errorIcon; visible: true }
         }
     ]
 }
