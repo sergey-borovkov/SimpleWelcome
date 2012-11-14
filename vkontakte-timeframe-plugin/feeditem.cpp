@@ -9,7 +9,6 @@
 #include <QtCore/QMap>
 #include <QtCore/QDebug>
 #include <QtGui/QColor>
-#include <QtGui/QPalette>
 
 #include <qjson/parser.h>
 
@@ -74,7 +73,7 @@ void FeedItem::fillFromMap(QVariantMap map)
     if (map.contains("text")) {
         message = map.value("text").toString();
 
-        QColor colorLink = QPalette().color(QPalette::Link);
+        QColor colorLink("#84c0ea");
         // if user posts a link
         QRegExp reUrl("(((?:https?|ftp)://|www)\\S+)");
         bool hasLink = message.contains(reUrl);

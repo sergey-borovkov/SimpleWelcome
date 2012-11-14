@@ -148,7 +148,7 @@ Item{
                         if(typeof audio === "undefined")
                             return ""
                         else
-                            return i18n("Audio: ") + " <a href=\"" + audioUrl + "\">" + audio + "</a>"
+                            return i18n("Audio: ") + " <a href=\"" + audioUrl + "\"><font color=\"#84c0ea\">" + audio + "</font></a>"
                     }
 
                     id: audioItem
@@ -178,7 +178,7 @@ Item{
                         if(typeof videoUrl === "undefined")
                             return ""
                         else
-                            return i18n("Video: ") + " <a href=\"" + videoUrl + "\">" + video + "</a>"
+                            return i18n("Video: ") + " <a href=\"" + videoUrl + "\"><font color=\"#84c0ea\">" + video + "</font></a>"
                     }
 
                     id: videoItem

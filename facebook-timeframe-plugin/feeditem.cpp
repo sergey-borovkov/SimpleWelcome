@@ -5,7 +5,6 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QDebug>
 #include <QtGui/QColor>
-#include <QtGui/QPalette>
 
 #include <qjson/parser.h>
 
@@ -57,7 +56,7 @@ void FeedItem::fillFromMap(const QVariantMap &map)
     m_id = map.value("id").toString();
     QString message = map.value("message").toString();
 
-    QColor colorLink = QPalette().color(QPalette::Link);
+    QColor colorLink("#84c0ea");
 
     // if user posts a link
     QRegExp reUrl("(((?:https?|ftp)://|www)\\S+)");
