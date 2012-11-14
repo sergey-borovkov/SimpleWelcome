@@ -165,7 +165,6 @@ Item {
 
                             fillMode: Image.PreserveAspectFit
                             smooth: true
-                            clip: true
                             source: picture
                             function getWidth() {
                                 if (status === Image.Null)
