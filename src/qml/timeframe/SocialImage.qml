@@ -20,11 +20,22 @@ Image{
         interval: 10; running: false; repeat: true
         onTriggered: can.rotation = can.rotation +10
     }
-    Image {
-        id: errorIcon
+    Column {
+        id: errorItem
         anchors.centerIn: parent
-        source: "images/file_broken.png"
+
         visible: false
+
+        Image {
+            id: errorIcon
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: "images/error-icon.png"
+        }
+        Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: "white"
+            text: i18n("Image is currently not available")
+        }
     }
 
     states: [
@@ -35,7 +46,7 @@ Image{
         },
         State {
             name: "error"; when: mainImage.status === Image.Error
-            PropertyChanges { target: errorIcon; visible: true }
+            PropertyChanges { target: errorItem; visible: true }
         }
     ]
 }
