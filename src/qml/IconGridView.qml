@@ -209,9 +209,8 @@ GridView {
         // Fixing stacked item ID to match it's first element
         if (removeIndex == 0)
         {
-            console.log("Fixing stacked item ID: indexUnstackingFrom: " + indexUnstackingFrom + " to " + stackArray[0].id)
+            //console.log("Fixing stacked item ID: indexUnstackingFrom: " + indexUnstackingFrom + " to " + stackArray[0].id)
             model.setProperty(indexUnstackingFrom, "id", stackArray[0].id)
-            model.setProperty(indexUnstackingFrom, "caption", stackArray[0].caption)
         }
         itemStackingChanged()
         return true
