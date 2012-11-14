@@ -434,7 +434,8 @@ PluginRequestReply *SocialProxy::audioUrl(const QString &parentId, const QString
     QObject *obj = dynamic_cast<QObject *>(plugin->requestManager());
     connect(obj, SIGNAL(gotAudioUrl(QString, QString, QString)), reply, SLOT(gotAudioUrl(QString, QString, QString)));
 
-    request->start();
+    if (request != 0)
+        request->start();
 
     return reply;
 }
@@ -463,7 +464,8 @@ PluginRequestReply *SocialProxy::videoUrl(const QString &parentId, const QString
     QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
     connect(obj, SIGNAL(gotVideoUrl(QString, QString, QString, QString)), reply, SLOT(gotVideoUrl(QString, QString, QString, QString)));
 
-    request->start();
+    if (request != 0)
+        request->start();
 
     return reply;
 }
