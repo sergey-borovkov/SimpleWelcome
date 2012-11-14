@@ -32,6 +32,7 @@ public:
     virtual Request *queryImage(const QString &id) = 0;
     virtual Request *queryAudio(const QString &aid, const QString &ownerId) = 0;
     virtual Request *queryVideo(const QString &vid, const QString &ownerId) = 0;
+    virtual Request *queryUserInfo(const QString &fromId) = 0;
     virtual Request *postComment(const QByteArray &message, const QString &parentId) = 0;
 
     /**
@@ -75,13 +76,6 @@ public:
 
     virtual QString selfPictureUrl() const = 0;
     virtual void setSelfPictureUrl(const QString &url) = 0;
-
-protected:
-    // User info
-    QString m_selfId;
-    QString m_selfName;
-    QString m_selfPictureUrl;
-
 };
 
 Q_DECLARE_INTERFACE(ISocialPlugin, "Timeframe_Library.SocialModule/1.0")

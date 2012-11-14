@@ -78,6 +78,7 @@ public:
     void getSelfUserPicture(const QString &pluginName);
     void getAudio(const QString &parentId, const QString &aid, const QString &ownerId, const QString &pluginName);
     void getVideo(const QString &parentId, const QString &vid, const QString &ownerId, const QString &pluginName);
+    void getUserInfo(const QString &parentId, const QString &fromId, const QString &pluginName);
 
     /**
      * @brief Request all comments of item
@@ -106,6 +107,7 @@ private slots:
     void getSelfPictureSuccess(PluginRequestReply *);
     void getAudioSuccess(PluginRequestReply *);
     void getVideoSuccess(PluginRequestReply *);
+    void getUserInfoSuccess(PluginRequestReply *);
 
     /**
      * @brief Slot called on social network deauthorization
@@ -172,6 +174,8 @@ private:
     PluginRequestReply *audioUrl(const QString &parentId, const QString &aid, const QString &ownerId, const QString &pluginName);
 
     PluginRequestReply *videoUrl(const QString &parentId, const QString &vid, const QString &ownerId, const QString &pluginName);
+
+    PluginRequestReply *userInfo(const QString &parentId, const QString &fromId, const QString &pluginName);
 
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;

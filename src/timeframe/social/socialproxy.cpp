@@ -390,6 +390,9 @@ void SocialProxy::newItems(QList<SocialItem *> items)
                 // get video url
                 if (!item->data(SocialItem::VideoId).toString().isEmpty() && !item->data(SocialItem::VideoOwnerId).toString().isEmpty())
                     getVideo(item->data(SocialItem::Id).toString(), item->data(SocialItem::VideoId).toString(), item->data(SocialItem::VideoOwnerId).toString(), plugin->name());
+
+                if (!item->data(SocialItem::FromId).toString().isEmpty())
+                    getUserInfo(item->data(SocialItem::Id).toString(), item->data(SocialItem::FromId).toString(), plugin->name());
             }
         }
 
@@ -431,7 +434,8 @@ PluginRequestReply *SocialProxy::audioUrl(const QString &parentId, const QString
     QObject *obj = dynamic_cast<QObject *>(plugin->requestManager());
     connect(obj, SIGNAL(gotAudioUrl(QString, QString, QString)), reply, SLOT(gotAudioUrl(QString, QString, QString)));
 
-    request->start();
+    if (request != 0)
+        request->start();
 
     return reply;
 }
@@ -460,7 +464,8 @@ PluginRequestReply *SocialProxy::videoUrl(const QString &parentId, const QString
     QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
     connect(obj, SIGNAL(gotVideoUrl(QString, QString, QString, QString)), reply, SLOT(gotVideoUrl(QString, QString, QString, QString)));
 
-    request->start();
+    if (request != 0)
+        request->start();
 
     return reply;
 }
@@ -475,6 +480,34 @@ void SocialProxy::getVideo(const QString &parentId, const QString &vid, const QS
     PluginRequestReply *reply = videoUrl(parentId, vid, ownerId, pluginName);
     connect(reply, SIGNAL(success(PluginRequestReply *)), this, SLOT(getVideoSuccess(PluginRequestReply *)));
     /*TO-DO: process error replies*/
+    connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
+}
+
+PluginRequestReply *SocialProxy::userInfo(const QString &parentId, const QString &fromId, const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    if (!plugin)
+        return 0;
+
+    Request *request = plugin->requestManager()->queryUserInfo(fromId);
+    PluginRequestReply *reply = new PluginRequestReply(request, parentId, pluginName, this);
+    QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
+    connect(obj, SIGNAL(gotUserInfo(QString, QString, QString)), reply, SLOT(gotUserInfo(QString, QString, QString)));
+
+    request->start();
+
+    return reply;
+}
+
+void SocialProxy::getUserInfoSuccess(PluginRequestReply *reply)
+{
+    m_socialModel->updateUserInfo(reply->userName(), reply->userPictureUrl(), reply->sourceId());
+}
+
+void SocialProxy::getUserInfo(const QString &parentId, const QString &fromId, const QString &pluginName)
+{
+    PluginRequestReply *reply = userInfo(parentId, fromId, pluginName);
+    connect(reply, SIGNAL(success(PluginRequestReply *)), this, SLOT(getUserInfoSuccess(PluginRequestReply *)));
     connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 }
 

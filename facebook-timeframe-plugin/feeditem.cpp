@@ -3,6 +3,7 @@
 #include <QtCore/QDate>
 #include <QtCore/QUrl>
 #include <QtCore/QRegExp>
+#include <QtCore/QDebug>
 #include <QtGui/QColor>
 #include <QtGui/QPalette>
 
@@ -76,8 +77,14 @@ void FeedItem::fillFromMap(const QVariantMap &map)
     else
         m_data.insert(Text, message);
 
-    m_data.insert(ImageUrl, QUrl::fromPercentEncoding(map.value("picture").toByteArray()));
+    // get information about user who posted the message
+    if (map.contains("from")) {
+        QVariantMap fromInfo = map.value("from").toMap();
+        m_data.insert(FromId, fromInfo.value("id").toString());
+        m_data.insert(FromName, fromInfo.value("name").toString());
+    }
 
+    m_data.insert(ImageUrl, QUrl::fromPercentEncoding(map.value("picture").toByteArray()));
 
     // get video if possible
     if (map.value("type").toString() == QLatin1String(QLatin1String("video")) &&

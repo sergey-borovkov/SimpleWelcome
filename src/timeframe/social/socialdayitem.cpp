@@ -94,6 +94,12 @@ void SocialContentItem::updateVideoUrl(const QString &videoId, const QString &vi
     m_model->update();
 }
 
+void SocialContentItem::updateUserInfo(const QString &name, const QString &url, const QString &eventId)
+{
+    m_itemModel->updateUserInfo(name, url, eventId);
+    m_model->update();
+}
+
 void SocialContentItem::addComments(QString id, QList<CommentItem *> list)
 {
     m_itemModel->addComments(id, list);

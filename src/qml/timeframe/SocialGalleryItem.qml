@@ -3,7 +3,7 @@ import Private 0.1
 
 Item{
     id: galleryRect
-    width: 200 //galleryItem.width
+    width: 230 //galleryItem.width
     height: galleryItem.height
 
     property alias commentsListView: commentsListView
@@ -24,7 +24,7 @@ Item{
     }
 
     function msgViewHeight() {
-        var h = mainRect.height - bottomLine.height - topLine.height - 10
+        var h = mainRect.height - bottomLine.height - topLine.height - fromItem.height - 10
         if (img.height)
             h = h - img.height - 10
         if (audioItem.height)
@@ -56,7 +56,7 @@ Item{
         id: galleryItem
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
-        width: 200
+        width: galleryRect.width
         height: (__notDetailed) ? childrenRect.height : __height  //we dont want futher increase height after initial state
 
         objectName: "SocialGalleryItem"
@@ -64,12 +64,12 @@ Item{
 
         ItemRectangle {
             id: mainRect
-            width: 200
+            width: parent.width
             height: {
                 if (galleryRect.state === "comments")
                     height: 300 + 60 * (commentsCount + 1)
                 else
-                    Math.max( 120, ( column.height + bottomLine.height + topLine.height) )
+                    Math.max( 120, ( column.height + bottomLine.height + topLine.height + fromItem.height) )
             }
             //anchors.fill: parent
             //clip: true
@@ -99,10 +99,18 @@ Item{
                 }
             }
 
+            FromItem {
+                id: fromItem
+                userName: fromName
+                userImage: fromImageUrl
+                width: parent.width - 20
+                anchors { top: topLine.bottom; bottomMargin: 10 }
+            }
+
             Column {
                 id: column
 
-                anchors { top: topLine.bottom; bottomMargin: 10 }
+                anchors { top: fromItem.bottom; bottomMargin: 10 }
                 width: parent.width
 
                 spacing: 10

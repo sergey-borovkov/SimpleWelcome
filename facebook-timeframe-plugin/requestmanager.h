@@ -23,6 +23,7 @@ public:
     virtual Request *queryImage(const QString &id);
     virtual Request *queryAudio(const QString &aid, const QString &ownerId);
     virtual Request *queryVideo(const QString &vid, const QString &ownerId);
+    virtual Request *queryUserInfo(const QString &fromId);
     virtual Request *queryComments(const QString &postId);
     virtual Request *queryLikes(const QString &postId);
     virtual Request *postComment(const QByteArray &message, const QString &parentId);
@@ -48,6 +49,7 @@ signals:
     void newComments(QString postId, QList<CommentItem *> items);
     void gotUserImage(QString id, QString url);
     void gotUserName(QString postId, QString name);
+    void gotUserInfo(QString id, QString name, QString url);
 
 private:
     QUrl constructUrl(const QString &id, const QString &type) const;

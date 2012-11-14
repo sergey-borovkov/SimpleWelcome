@@ -59,6 +59,11 @@ Request *RequestManager::queryVideo(const QString &vid, const QString &ownerId)
     return 0;
 }
 
+Request *RequestManager::queryUserInfo(const QString &fromId)
+{
+    return queryImage(fromId);
+}
+
 Request *RequestManager::postComment(const QByteArray &message, const QString &parentId)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
@@ -230,11 +235,13 @@ void RequestManager::imageReply(QByteArray reply)
             if (map.contains("url")) {
                 userImageUrl = map.value(QLatin1String("url")).toString();
                 emit gotUserImage(userId, userImageUrl);
+                emit gotUserInfo(userId, "", userImageUrl);
             }
         } else {
             userImageUrl = result.value(QLatin1String("picture")).toString();
             userId = result.value(QLatin1String("id")).toString();
             emit gotUserImage(userId, userImageUrl);
+            emit gotUserInfo(userId, "", userImageUrl);
         }
     }
 }

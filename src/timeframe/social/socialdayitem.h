@@ -62,6 +62,7 @@ public slots:
     void updateUserName(const QString &userId, const QString &userName, const QString &id);
     void updateAudioUrl(const QString &audioId, const QString &audioOwnerId, const QString &audioUrl, const QString &eventId);
     void updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &videoImage, const QString &eventId);
+    void updateUserInfo(const QString &name, const QString &url, const QString &eventId);
     void addComments(QString id, QList<CommentItem*> list);
     void setSelfLiked(QString id);
 

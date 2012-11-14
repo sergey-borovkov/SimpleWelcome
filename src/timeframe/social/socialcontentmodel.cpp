@@ -90,6 +90,14 @@ void SocialContentModel::updateVideoUrl(const QString &videoId, const QString &v
         item->updateVideoUrl(videoId, videoOwnerId, videoUrl, videoImage, eventId);
 }
 
+void SocialContentModel::updateUserInfo(const QString &name, const QString &url, const QString &eventId)
+{
+    QDate date = m_idHash.value(eventId);
+    SocialContentItem *item = findItemByDate(date);
+    if (item)
+        item->updateUserInfo(name, url, eventId);
+}
+
 void SocialContentModel::addComments(QString id, QList<CommentItem *> list)
 {
     QDate date = m_idHash.value(id);

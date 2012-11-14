@@ -28,6 +28,7 @@ public slots:
     void updateUserName(const QString &userId, const QString &userName, const QString &id);
     void updateAudioUrl(const QString &audioId, const QString &audioOwnerId, const QString &audioUrl, const QString &eventId);
     void updateVideoUrl(const QString &videoId, const QString &videoOwnerId, const QString &videoUrl, const QString &videoImage, const QString &eventId);
+    void updateUserInfo(const QString &name, const QString &url, const QString &eventId);
 
 private:
     QSet<QString> m_idSet;
@@ -52,6 +53,8 @@ public slots:
     QString audioUrl(int row) const;
     QString video(int row) const;
     QString videoUrl(int row) const;
+    QString fromName(int row) const;
+    QString fromImageUrl(int row) const;
     QString text(int row) const;
     QDateTime datetime(int row) const;
     int likesCount(int row) const;

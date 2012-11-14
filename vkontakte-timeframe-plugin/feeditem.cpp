@@ -65,6 +65,11 @@ void FeedItem::fillFromMap(QVariantMap map)
         m_id = map.value("id").toString();
     }
 
+    // get id for user who posted the message
+    if (map.contains("from_id")) {
+        m_data.insert(FromId, map.value("from_id").toString());
+    }
+
     QString message;
     if (map.contains("text")) {
         message = map.value("text").toString();

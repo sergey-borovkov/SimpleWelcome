@@ -18,6 +18,8 @@ Item {
     property string audioUrl: ""
     property string video: ""
     property string videoUrl: ""
+    property string fromName: ""
+    property string fromImageUrl: ""
     property alias commentsView : commentsListView
     property int index: -1
 
@@ -43,6 +45,8 @@ Item {
         videoUrl = model.videoUrl(index)
         like = model.like(index)
         likes = model.likesCount(index)
+        fromName = model.fromName(index)
+        fromImageUrl = model.fromImageUrl(index)
         commentCount = model.commentsCount(index)
         pluginName = model.pluginName(index)
         topLine.pluginIcon =  "image://plugin/" + pluginName + "/small"
@@ -61,7 +65,7 @@ Item {
     }
 
     function msgViewHeight() {
-        var h = mainRect.height - bottomLine.height - topLine.height - 10
+        var h = mainRect.height - bottomLine.height - topLine.height - fromItem.height - 10
         if (socialImage.height)
             h = h - socialImage.height - 10
         if (audioItem.visible)
@@ -124,10 +128,18 @@ Item {
                 }
             }
 
+            FromItem {
+                id: fromItem
+                userName: fromName
+                userImage: fromImageUrl
+                width: parent.width - 20
+                anchors { top: topLine.bottom; bottomMargin: 10 }
+            }
+
             Item{
                 id: bodyItem
 
-                anchors { top: topLine.bottom; bottom: bottomLine.top; left: parent.left; right: parent.right }
+                anchors { top: fromItem.bottom; bottom: bottomLine.top; left: parent.left; right: parent.right }
 
                 Column {
                     id: column
@@ -259,7 +271,12 @@ Item {
                                 clip: true
                                 textFormat: Text.StyledText
                                 elide: Text.ElideRight
-                                maximumLineCount: { var lines = ( mainRect.height - topLine.height - (audioItem.visible ? audioItem.height : 0) -  - (videoItem.visible ? videoItem.height : 0)) / font.pixelSize / 1.5; return lines }
+                                maximumLineCount: {
+                                    var lines = (mainRect.height - topLine.height - fromItem.height -
+                                                 (audioItem.visible ? audioItem.height : 0) -
+                                                 (videoItem.visible ? videoItem.height : 0)) / font.pixelSize / 1.5;
+                                    return lines
+                                }
 
                                 onLinkActivated: {
                                     Qt.openUrlExternally(link)
@@ -433,7 +450,7 @@ Item {
             PropertyChanges {
                 target: socialImage
                 width: Math.min(mainRect.width - 20, sourceSize.width)
-                height: Math.min( mainRect.height - topLine.height - bottomLine.height - Math.min(70, msgViewRect.height) - audioItem.height - 20, sourceSize.height)
+                height: Math.min( mainRect.height - topLine.height - bottomLine.height - fromItem.height - Math.min(70, msgViewRect.height) - audioItem.height - 20, sourceSize.height)
             }
         },
         State {

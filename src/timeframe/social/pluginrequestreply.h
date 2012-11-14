@@ -71,6 +71,7 @@ private slots:
     void gotAudioUrl(QString aid, QString ownerId, QString url);
     void gotVideoUrl(QString vid, QString ownerId, QString url, QString image);
     void gotUserName(QString id, QString name);
+    void gotUserInfo(QString id, QString name, QString url);
     void error(QString error);
 
 private:
