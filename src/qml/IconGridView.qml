@@ -80,6 +80,7 @@ GridView {
             var realIndex = model.get(newIndex).id
             if (model.get(newIndex).stack !== undefined)
             {
+                currentIndex = newIndex
                 //console.log("onItemClicked::showPopupGroup from: " + newIndex)
                 var iconCoords = mapToItem(groupTab, currentItem.x + currentItem.width / 2 - 8, currentItem.y + currentItem.height)
                 showPopupGroup(newIndex, model.get(newIndex), iconCoords)

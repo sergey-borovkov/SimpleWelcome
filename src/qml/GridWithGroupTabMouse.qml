@@ -209,6 +209,12 @@ MouseArea {
 
             root.appendItemWithStack(nextPageModel, itemMoved)
 
+            // Needed to correctly display current element on tab with single icon
+            if (nextPageModel.count === 1) {
+                nextPageGrid.currentIndex = 1
+                nextPageGrid.currentIndex = 0
+            }
+
             gridMouseArea.skipMoveAnimation = false
         }
     }
