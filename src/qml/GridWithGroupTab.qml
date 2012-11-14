@@ -531,7 +531,7 @@ Item {
                 return appsList
             }
 
-            function fetchItemsFromDataSources() {
+            function insertItemsFromDataSources() {
                 var appsList = fetchApps()
                 var dataSourcesVar = dataSources
 
@@ -592,7 +592,7 @@ Item {
             function updateGridsContent() {
                 gridsListModel.clear()
                 createTabsFromGroups()
-                fetchItemsFromDataSources()
+                insertItemsFromDataSources()
             }
 
             function groupNameChanged(newName) {
