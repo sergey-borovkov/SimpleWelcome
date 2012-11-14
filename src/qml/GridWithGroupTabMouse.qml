@@ -171,7 +171,6 @@ MouseArea {
             dndDest = dndSrc
             dndSrcId = itemMoved.id
 
-            // FIXME: Add logic to append new page when current one is overflown
             if (isForward)
                 tabListView.incrementCurrentIndex()
             else
@@ -493,7 +492,7 @@ MouseArea {
 
         // Adding icon to stack
         if (draggedItemStackedAt !== undefined && grid.model.get(dndDest).stack === undefined) {
-            console.log("STACK UPPED")
+            //console.log("STACK UPPED")
 
             var container = grid.model.get(draggedItemStackedAt)
             if (container.stack.length === 2) { // First time stacking

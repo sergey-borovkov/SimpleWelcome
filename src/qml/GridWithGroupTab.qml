@@ -38,12 +38,22 @@ Item {
         function draggedOut(item) {
             gridsListView.hideGroup(false)
             //console.log(item.caption + " GOT")
-            if (gridsListView.currentItem)
-                gridsListView.currentItem.activeGridGroup.state = "clipped"
-            gridsListView.activeGridView.newItemData(item)
-            gridsListView.activeGridView.unstackItemInItem(popupFrame.stackedIconIndex, gridsListView.activeGridView.count - 1)
+
+            var gridView = gridsListView.activeGridView
+            gridView.newItemData(item)
+            gridView.unstackItemInItem(popupFrame.stackedIconIndex, gridView.count - 1)
+
             gridMouseArea.skipMoveAnimation = true
+            // If new page needed
+            if (gridView.maxCount !== -1 && gridView.count > gridView.maxCount) {
+
+                gridView.model.move(gridView.count - 2, gridView.count - 1, 1)
+
+                //console.log("Drag OUT and push pop is here")
+                gridsListView.gridIconPushPop("Apps")
+            }
             gridMouseArea.updateCurrentGrid()
+
             gridMouseArea.startDragging(gridsListView.activeGridView.count - 1)
             popupFrame.stackedIconIndex = -1
         }
@@ -91,42 +101,64 @@ Item {
             }
 
             function gridIconPushPop(groupName) {
-                //console.log("REINITING " + groupName)
+                //console.log("gridIconPushPop " + groupName)
 
                 var currentIndexWas = gridsListView.currentIndex
                 var prevPageModel = activeGridView.model
                 var isPushingFurther = activeGridView.count > activeGridView.maxCount
-                if (currentItem)
-                    currentItem.activeGridGroup.state = isPushingFurther ? "unclipped" : "clipped"
+                //console.log("isPushingFurther", isPushingFurther)
+                if (currentItem && !isPushingFurther)
+                    currentItem.activeGridGroup.state = "clipped"
+
+                gridsListView.currentIndex = gridsListView.count - 1
+                // When pushing further and there is no next page - create new page
+                var lastPage = gridsListView.currentItem
+                for (var child = 0; child < lastPage.children.length; child++) {
+                    if ('gridView' in lastPage.children[child] && lastPage.children[child].groupName === groupName) {
+                        if (isPushingFurther && lastPage.children[child].count > lastPage.children[child].maxCount) {
+                            //console.log("OVERFLOW. ")
+                            insertGrid(lastPage.defaultGroupData, true)
+                        }
+                    }
+                }
+
 
                 // Iterating by all GridWithGroupContainers
                 for (var currentView = currentIndexWas + 1; currentView < gridsListView.count; currentView++) {
                     gridsListView.currentIndex = currentView
+                    var isRemoveEmptyPage = false
 
-                    if (gridsListView.currentItem) {
-                        var childs = gridsListView.currentItem.children
+                    if (gridsListView.currentItem === undefined)
+                        continue
 
-                        // Iterating by it's GridWithGroups
-                        for (var child = 0; child < childs.length; child++) {
-                            if ('gridView' in childs[child] && childs[child].groupName === groupName)
-                            {
-                                var nextPageModel = childs[child].gridView.model
+                    var childs = gridsListView.currentItem.children
 
-                                var itemMoved, itemMovedStack
-                                if (isPushingFurther) {
-                                    root.prependItemWithStack(nextPageModel, root.cloneObject(prevPageModel.get(prevPageModel.count - 1)))
-                                    prevPageModel.remove(prevPageModel.count - 1)
+                    // Iterating by it's GridWithGroups
+                    for (child = 0; child < childs.length; child++) {
+                        if ('gridView' in childs[child] && childs[child].groupName === groupName)
+                        {
+                            var nextPageModel = childs[child].gridView.model
 
-                                    // FIXME: Add logic to append new page when current one is overflown
-                                }
-                                else if (nextPageModel.count) {
-                                    root.appendItemWithStack(prevPageModel, root.cloneObject(nextPageModel.get(0)))
-                                    nextPageModel.remove(0)
-                                }
-
-                                prevPageModel = nextPageModel
+                            var itemMoved, itemMovedStack
+                            if (isPushingFurther) {
+                                root.prependItemWithStack(nextPageModel, root.cloneObject(prevPageModel.get(prevPageModel.count - 1)))
+                                prevPageModel.remove(prevPageModel.count - 1)
                             }
+                            else if (nextPageModel.count) {
+                                root.appendItemWithStack(prevPageModel, root.cloneObject(nextPageModel.get(0)))
+                                nextPageModel.remove(0)
+
+                                if (!nextPageModel.count)
+                                    isRemoveEmptyPage = true
+                            }
+
+                            prevPageModel = nextPageModel
                         }
+                    }
+
+                    if (isRemoveEmptyPage) {
+                        gridsListModel.remove(currentView)
+                        currentView--;
                     }
                 }
                 gridsListView.currentIndex = currentIndexWas
@@ -579,10 +611,15 @@ Item {
                                     }
                                 }
                             }
+                        }
 
-
+                        // Removing unnecessary empty pages
+                        if (childs.length === 1 && childs[0].groupName === "Apps" && !childs[0].count) {
+                            gridsListModel.remove(currentView)
+                            currentView--;
                         }
                     }
+
                     gridsListView.currentItem.gridsConnectionChanged()
                 }
 
