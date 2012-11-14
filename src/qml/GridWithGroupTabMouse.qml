@@ -251,6 +251,7 @@ MouseArea {
         property variant itemWaitingOn: undefined
         property variant indexWaitingOn: undefined
         property bool isAimingOnStacking
+        property bool isFromOtherTab: false
         property real xWaiting
         property real yWaiting
 
@@ -270,9 +271,9 @@ MouseArea {
 
         }
 
-        function moveIconWhereAiming(isUnstacking) {
+        function moveIconWhereAiming() {
 
-            if (gridMouseArea.dndDest !== grid.count - 1 || isUnstacking === true) { // <-- not the best way to check if item we move was not just a moment ago dragged from other page
+            if (!isFromOtherTab) {
                 if (gridMouseArea.dndDest > indexWaitingOn && gridMouseArea.gridMouseX >= itemWaitingOn.x + constants.cellWidth)
                     indexWaitingOn++;
                 else if (gridMouseArea.dndDest < indexWaitingOn && gridMouseArea.gridMouseX <= itemWaitingOn.x)
@@ -324,7 +325,7 @@ MouseArea {
                     gridMouseArea.draggedItemStackedAt = undefined
 
                     if (!isHitInnerIcon)
-                        moveIconWhereAiming(true)
+                        moveIconWhereAiming()
                     else if (indexWaitingOn != gridMouseArea.dndDest)
                         stackIconWhereAiming()
                 }
@@ -339,6 +340,7 @@ MouseArea {
 
                 itemWaitingOn = undefined
             }
+            isFromOtherTab = false
         }
     }
 
@@ -438,6 +440,7 @@ MouseArea {
             mouseHoverTimer.itemWaitingOn = item
             mouseHoverTimer.indexWaitingOn = index
             mouseHoverTimer.calculateExpectations(gridMouseX, gridMouseY)
+            mouseHoverTimer.isFromOtherTab = !gridMouseXBinding.enabled
             mouseHoverTimer.start()
         }
     }
