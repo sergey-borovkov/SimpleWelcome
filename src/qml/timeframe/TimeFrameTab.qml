@@ -729,7 +729,7 @@ Item {
         id: waitIndicator
         anchors.centerIn: parent        
         source: "images/indicator-shadow.png"
-        opacity: 0
+        visible: false
         Image {
             id: can
             source: "images/can2.png"
@@ -849,7 +849,7 @@ Item {
         State {
             name: "timeLineSearch"
 
-            PropertyChanges { target: waitIndicator; opacity: 1 }
+            PropertyChanges { target: waitIndicator; visible: true }
 
             PropertyChanges { target: waitTimer; running: true }
 
@@ -900,7 +900,7 @@ Item {
 
             PropertyChanges { target: socialTimeLine; visible: false; opacity: 0; }
 
-            PropertyChanges { target: waitIndicator; opacity: 1 }
+            PropertyChanges { target: waitIndicator; visible: true }
 
             PropertyChanges { target: waitTimer; running: true }
 
