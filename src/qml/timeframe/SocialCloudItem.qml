@@ -130,7 +130,7 @@ Item {
 
             FromItem {
                 id: fromItem
-                userName: fromName + " " + i18n("posted:")
+                userName: fromName
                 userImage: fromImageUrl
                 width: parent.width - 20
                 anchors { top: topLine.bottom; bottomMargin: 10 }
