@@ -179,7 +179,7 @@ Item {
                                     return 0
                                 if ((status===Image.Loading) || (status===Image.Error))
                                     return 55
-                                return Math.min( sourceSize.height, mainRect.height - topLine.height - bottomLine.height)
+                                return Math.min( sourceSize.height, mainRect.height - topLine.height - bottomLine.height - fromItem.height)
                             }
                         }
 
