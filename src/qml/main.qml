@@ -87,6 +87,12 @@ Item {
             var itemStack = item.stack
             item.stack = undefined
 
+            // This is needed for delegate to not blaming unknown variables
+            if (item.pinned === undefined)
+                item.pinned = undefined
+            if (item.stack === undefined)
+                item.stack = undefined
+
             model.insert(0, item)
 
             if (itemStack !== undefined)
@@ -97,6 +103,12 @@ Item {
             // This is needed to prevent ListModel.append from converting JsObject to ListModel
             var itemStack = item.stack
             item.stack = undefined
+
+            // This is needed for delegate to not blaming unknown variables
+            if (item.pinned === undefined)
+                item.pinned = undefined
+            if (item.stack === undefined)
+                item.stack = undefined
 
             model.append(item)
 

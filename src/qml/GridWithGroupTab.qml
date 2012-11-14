@@ -569,13 +569,8 @@ Item {
 
                                                 //console.log("++ " + gridWithGroup.groupName + "[" + dataSourcesVar[ds].index + "] - " + itemToAdd.caption + " / " + itemToAdd.id)
 
-                                                // This is needed to prevent ListModel.append from converting JsObject to ListModel
-                                                var stack = itemToAdd.stack
-                                                itemToAdd.stack = undefined
-                                                if (itemToAdd.caption)
-                                                    gridWithGroup.gridView.newItemData(itemToAdd)
-                                                if (stack !== undefined)
-                                                    gridWithGroup.gridView.model.setProperty(gridWithGroup.gridView.model.count - 1, "stack", stack)
+                                                if (itemToAdd.caption) // Caption becomes empty when we stack item to other item
+                                                    root.appendItemWithStack(gridWithGroup.gridView.model, itemToAdd)
                                             }
                                             else
                                                 gridWithGroup.gridView.newItemData(dataSourcesVar[ds].dataSource.getContent(dataSourcesVar[ds].index, gridWithGroup.groupName))
