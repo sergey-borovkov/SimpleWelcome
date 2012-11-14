@@ -76,13 +76,6 @@ public:
 
     virtual QString selfPictureUrl() const = 0;
     virtual void setSelfPictureUrl(const QString &url) = 0;
-
-protected:
-    // User info
-    QString m_selfId;
-    QString m_selfName;
-    QString m_selfPictureUrl;
-
 };
 
 Q_DECLARE_INTERFACE(ISocialPlugin, "Timeframe_Library.SocialModule/1.0")

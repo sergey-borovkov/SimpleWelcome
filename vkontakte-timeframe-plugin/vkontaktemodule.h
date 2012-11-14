@@ -50,6 +50,10 @@ private:
     QPixmap m_pixmap;
     QPixmap m_smallPixmap;
 
+    // User info
+    QString m_selfId;
+    QString m_selfName;
+    QString m_selfPictureUrl;
 };
 
 #endif
