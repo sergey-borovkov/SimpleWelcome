@@ -50,7 +50,7 @@ Item {
                 gridView.model.move(gridView.count - 2, gridView.count - 1, 1)
 
                 //console.log("Drag OUT and push pop is here")
-                gridsListView.gridIconPushPop("Apps")
+                gridsListView.gridIconPushPop("Apps", true)
             }
             gridMouseArea.updateCurrentGrid()
 
@@ -100,7 +100,7 @@ Item {
                 interactive = !isDrag
             }
 
-            function gridIconPushPop(groupName) {
+            function gridIconPushPop(groupName, oneGridOverflowHint) {
                 //console.log("gridIconPushPop " + groupName)
 
                 var currentIndexWas = gridsListView.currentIndex
@@ -115,13 +115,14 @@ Item {
                 var lastPage = gridsListView.currentItem
                 for (var child = 0; child < lastPage.children.length; child++) {
                     if ('gridView' in lastPage.children[child] && lastPage.children[child].groupName === groupName) {
-                        if (isPushingFurther && lastPage.children[child].count > lastPage.children[child].maxCount) {
+                        if (isPushingFurther && (lastPage.children[child].count > lastPage.children[child].maxCount ||
+                                                 lastPage.children[child].count === lastPage.children[child].maxCount && oneGridOverflowHint === true)) {
                             //console.log("OVERFLOW. ")
                             insertGrid(lastPage.defaultGroupData, true)
+                            break
                         }
                     }
                 }
-
 
                 // Iterating by all GridWithGroupContainers
                 for (var currentView = currentIndexWas + 1; currentView < gridsListView.count; currentView++) {
