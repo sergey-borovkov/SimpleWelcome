@@ -679,26 +679,30 @@ Item {
                 dataSources = dataSourcesArr
 
                 //console.log("}")
+                mainWindow.windowHidden.connect(hideGroup)
             }
 
             function hideGroup(isNullifyStackedIndex)
             {
-                //gridsListView.dndStateChanged(false)
-                stackCellOpenedId = -1
+                if (popupFrame.state === "OPEN") {
+                    //gridsListView.dndStateChanged(false)
+                    stackCellOpenedId = -1
 
-                popupFrame.state = "CLOSED"
-                topBar.forceActiveFocus()
-                activeGridView.myActiveFocus = true
-                gridsListView.saveStacks()
-                gridsListView.saveIconPositions()
+                    popupFrame.state = "CLOSED"
+                    topBar.forceActiveFocus()
+                    if (activeGridView)
+                        activeGridView.myActiveFocus = true
+                    gridsListView.saveStacks()
+                    gridsListView.saveIconPositions()
 
-                if (isNullifyStackedIndex !== false)
-                    popupFrame.stackedIconIndex = -1
+                    if (isNullifyStackedIndex !== false)
+                        popupFrame.stackedIconIndex = -1
+                }
             }
 
             function showGroup(index, item, iconCoords)
             {
-                if (popupFrame.state == "CLOSED")
+                if (popupFrame.state === "CLOSED")
                 {
                     gridsListView.dndStateChanged(true)
 
