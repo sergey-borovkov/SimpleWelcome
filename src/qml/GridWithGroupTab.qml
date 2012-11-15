@@ -107,8 +107,6 @@ Item {
                 var prevPageModel = activeGridView.model
                 var isPushingFurther = activeGridView.count > activeGridView.maxCount
                 //console.log("isPushingFurther", isPushingFurther)
-                if (currentItem && !isPushingFurther)
-                    currentItem.activeGridGroup.state = "clipped"
 
                 gridsListView.currentIndex = gridsListView.count - 1
                 // When pushing further and there is no next page - create new page
@@ -123,6 +121,8 @@ Item {
                         }
                     }
                 }
+
+                var isItemAddedRemoved = false
 
                 // Iterating by all GridWithGroupContainers
                 for (var currentView = currentIndexWas + 1; currentView < gridsListView.count; currentView++) {
@@ -144,10 +144,12 @@ Item {
                             if (isPushingFurther) {
                                 root.prependItemWithStack(nextPageModel, root.cloneObject(prevPageModel.get(prevPageModel.count - 1)))
                                 prevPageModel.remove(prevPageModel.count - 1)
+                                isItemAddedRemoved = true
                             }
                             else if (nextPageModel.count) {
                                 root.appendItemWithStack(prevPageModel, root.cloneObject(nextPageModel.get(0)))
                                 nextPageModel.remove(0)
+                                isItemAddedRemoved = true
 
                                 if (!nextPageModel.count)
                                     isRemoveEmptyPage = true
@@ -163,6 +165,10 @@ Item {
                     }
                 }
                 gridsListView.currentIndex = currentIndexWas
+
+                if (isItemAddedRemoved)
+                    if (currentItem && !isPushingFurther)
+                        currentItem.activeGridGroup.state = "clipped"
 
 
 //                var wasCurrent = gridsListView.currentIndex
