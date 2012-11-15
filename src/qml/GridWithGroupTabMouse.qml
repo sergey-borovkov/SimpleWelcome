@@ -167,6 +167,7 @@ MouseArea {
 
             var dndDestWas = dndDest
             var gridWas = grid
+            var currentIndexInGridWas = grid.currentIndex
             dndSrc = nextPageModel.count - 1
             dndDest = dndSrc
             dndSrcId = itemMoved.id
@@ -207,6 +208,7 @@ MouseArea {
             }
 
             root.appendItemWithStack(nextPageModel, itemMoved)
+            nextPageGrid.currentIndex = currentIndexInGridWas
 
             // Needed to correctly display current element on tab with single icon
             if (nextPageModel.count === 1) {
