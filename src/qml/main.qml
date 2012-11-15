@@ -82,16 +82,19 @@ Item {
             return newObj
         }
 
-        function prependItemWithStack(model, item) {
-            // This is needed to prevent ListModel.append from converting JsObject to ListModel
-            var itemStack = item.stack
-            item.stack = undefined
-
+        function initDefaultProperties(item) {
             // This is needed for delegate to not blaming unknown variables
             if (item.pinned === undefined)
                 item.pinned = undefined
             if (item.stack === undefined)
                 item.stack = undefined
+        }
+
+        function prependItemWithStack(model, item) {
+            // This is needed to prevent ListModel.append from converting JsObject to ListModel
+            var itemStack = item.stack
+            item.stack = undefined
+            initDefaultProperties(item)
 
             model.insert(0, item)
 
@@ -103,17 +106,25 @@ Item {
             // This is needed to prevent ListModel.append from converting JsObject to ListModel
             var itemStack = item.stack
             item.stack = undefined
-
-            // This is needed for delegate to not blaming unknown variables
-            if (item.pinned === undefined)
-                item.pinned = undefined
-            if (item.stack === undefined)
-                item.stack = undefined
+            initDefaultProperties(item)
 
             model.append(item)
 
             if (itemStack !== undefined)
                 model.setProperty(model.count - 1, "stack", itemStack)
+        }
+
+
+        function setItemWithStack(model, item, index) {
+            // This is needed to prevent ListModel.append from converting JsObject to ListModel
+            var itemStack = item.stack
+            item.stack = undefined
+            initDefaultProperties(item)
+
+            model.set(index, item)
+
+            if (itemStack !== undefined)
+                model.setProperty(index, "stack", itemStack)
         }
 
 

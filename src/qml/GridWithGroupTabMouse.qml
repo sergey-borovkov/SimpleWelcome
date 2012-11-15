@@ -396,6 +396,18 @@ MouseArea {
                     grid.model.move(dndDest, dndSrc, 1)
 
                     var imagePath = grid.model.get(dndSrc).imagePath
+
+                    if (mousePosChanged.stackIndexOpenedWhenLongPressed !== -1 && mousePosChanged.stackIndexOpenedWhenLongPressed !== undefined) {
+                        grid.model.remove(dndSrc)
+                        gridsListView.gridIconPushPop("Apps")
+                        root.setItemWithStack(mousePosChanged.gridActiveWhenLongPressed.model, mousePosChanged.stackItemOpenedWhenLongPressed, mousePosChanged.stackIndexOpenedWhenLongPressed)
+                        gridsListView.saveStacks()
+                        gridsListView.saveIconPositions()
+                        mousePosChanged.stackIndexOpenedWhenLongPressed = -1
+                    }
+                    gridsListView.activeGridGroup.state = "unclipped"
+
+
                     if (!grid.isPopupGroup)
                         gridsListView.interactive = true
                     dndSrcId = -1
@@ -465,8 +477,14 @@ MouseArea {
         if (grid.draggable)
         {
             var index = getItemUnderCursor(true).index
-            if (pressedOnIndex === index)
+            if (pressedOnIndex === index) {
+                // Remembering which stack on which page was opened in case item will be dragged out of SW afterwards and it'll be needed to restore everything to the way it was
+                mousePosChanged.gridActiveWhenLongPressed = gridsListView.activeGridView
+                mousePosChanged.stackIndexOpenedWhenLongPressed = popupFrame.stackedIconIndex
+                mousePosChanged.stackItemOpenedWhenLongPressed = root.cloneObject(gridsListView.activeGridView.model.get(popupFrame.stackedIconIndex))
+
                 startDragging(index)
+            }
         }
         else if (grid.enabledSystemDnD)
         {

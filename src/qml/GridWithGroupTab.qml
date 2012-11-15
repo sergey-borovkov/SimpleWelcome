@@ -62,6 +62,7 @@ Item {
             id: gridsListView
 
             property variant activeGridView: currentItem ? currentItem.activeGridGroup.gridView : undefined
+            property variant activeGridGroup: currentItem ? currentItem.activeGridGroup : undefined
 
             anchors.top: parent.top
             anchors.topMargin: 16
