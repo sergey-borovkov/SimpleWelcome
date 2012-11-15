@@ -3,6 +3,12 @@
 #include "appitem.h"
 #include "datasource.h"
 
+#include <QtCore/QModelIndex>
+#include <QtCore/QBasicTimer>
+
+// Forward declarations
+class KFilePlacesModel;
+
 class DataSource_Favorites : public DataSource
 {
     Q_OBJECT
@@ -10,6 +16,7 @@ class DataSource_Favorites : public DataSource
 
 public:
     explicit DataSource_Favorites(QObject *parent = 0);
+
     Q_INVOKABLE virtual int getItemCount();
     Q_INVOKABLE virtual QVariantMap getContent(int index);
 
@@ -23,6 +30,16 @@ signals:
 public slots:
     virtual void itemClicked(int newIndex);
 
+
+private slots:
+    void placesChanged();
+
 private:
+    virtual void timerEvent(QTimerEvent *event);
+
+    void reloadItems();
+
     AppItemList favoritesList;
+    QBasicTimer m_timer; // we use timer to skip dataChanged events and don't reload items very often
+    KFilePlacesModel *m_placesModel;
 };

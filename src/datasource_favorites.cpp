@@ -1,31 +1,27 @@
 #include "datasource_favorites.h"
-#include <KFilePlacesModel>
+#include <KDE/KFilePlacesModel>
+
+#include <QtCore/QTimerEvent>
+
+
+namespace
+{
+static const int _UPDATE_DELAY = 1000; // msec
+static const int _MAX_ITEMS_NUMBER = 14; // maximum number of items
+}
+
 
 DataSource_Favorites::DataSource_Favorites(QObject *parent)
     : DataSource(parent)
+    , m_placesModel(new KFilePlacesModel(this))
 {
-    KFilePlacesModel *places = new KFilePlacesModel();
+    reloadItems();
 
-    QList<AppItem> list;
-    for (int i = 0; i < places->rowCount(); i++) {
-        KBookmark bm = places->bookmarkForIndex(places->index(i, 0));
-        AppItem newItem;
-
-        newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(bm.icon());
-        newItem["caption"] = bm.fullText();
-        newItem["id"] = list.count();
-        newItem["desktopEntry"] = places->index(i, 0).data(KFilePlacesModel::UrlRole);
-
-        list.append(newItem);
-    }
-
-    QSet<AppItem> set = QSet<AppItem>::fromList(list);
-
-    for (int i = 0; i < list.size() && favoritesList.size() < 14; i++)  // Limiting favorites item count to two rows (14 items)
-        if (set.contains(list[i])) {
-            set.remove(list[i]);
-            favoritesList.append(list[i]);
-        }
+    connect(m_placesModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(placesChanged()));
+    connect(m_placesModel, SIGNAL(modelReset()), SLOT(placesChanged()));
+    connect(m_placesModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(placesChanged()));
+    connect(m_placesModel, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), SLOT(placesChanged()));
+    connect(m_placesModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(placesChanged()));
 }
 
 int DataSource_Favorites::getItemCount()
@@ -50,4 +46,38 @@ void DataSource_Favorites::itemClicked(int newIndex)
 {
     if (newIndex != -1)
         emit runDesktopFile(favoritesList[newIndex]["desktopEntry"].toString());
+}
+
+void DataSource_Favorites::placesChanged()
+{
+    m_timer.start(_UPDATE_DELAY, this);
+}
+
+void DataSource_Favorites::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == m_timer.timerId()) {
+        m_timer.stop();
+        reloadItems();
+        return;
+    }
+    DataSource::timerEvent(event);
+}
+
+void DataSource_Favorites::reloadItems()
+{
+    QList<AppItem> new_list;
+    for (int i = 0; i < m_placesModel->rowCount() && new_list.size() < _MAX_ITEMS_NUMBER; i++) {
+        KBookmark bm = m_placesModel->bookmarkForIndex(m_placesModel->index(i, 0));
+        if (!bm.isNull()) {
+            AppItem newItem;
+            newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(bm.icon());
+            newItem["caption"] = bm.fullText();
+            newItem["id"] = new_list.size();
+            newItem["desktopEntry"] = m_placesModel->index(i, 0).data(KFilePlacesModel::UrlRole);
+            new_list.append(newItem);
+        }
+    }
+
+    favoritesList = new_list;
+    emit resetContent();
 }
