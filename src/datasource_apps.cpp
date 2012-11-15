@@ -1,7 +1,11 @@
+
 #include "datasource_apps.h"
-#include <KServiceGroup>
-#include <KConfigGroup>
 #include "datasource_recentapps.h"
+
+#include <KDE/KServiceGroup>
+#include <KDE/KConfigGroup>
+#include <KDE/KSycoca>
+
 
 AppItemList GetFlatList(QString group)
 {
@@ -70,9 +74,10 @@ AppItemList GetFlatList(QString group)
 }
 
 DataSource_Apps::DataSource_Apps(QObject *parent, DataSource_RecentApps *inRecentApps)
-    : DataSource(parent), prevCurrentGroup("-1"), recentApps(inRecentApps)
+    : DataSource(parent), prevCurrentGroup("-1"), recentApps(inRecentApps), m_isDbChanged(false)
 {
     updateItems(false);
+    connect(KSycoca::self(), SIGNAL(databaseChanged(QStringList)), this, SLOT(ksycocaChanged(QStringList)));
 }
 
 int DataSource_Apps::getItemCount()
@@ -114,6 +119,12 @@ void DataSource_Apps::updateItems(bool isResetContent/* = true*/)
     }
 }
 
+void DataSource_Apps::ksycocaChanged(const QStringList &changes)
+{
+    if (changes.contains("apps"))
+        m_isDbChanged = true;
+}
+
 void DataSource_Apps::itemClicked(int newIndex)
 {
     if (currentGroup == "" && newIndex == -1)
@@ -137,4 +148,12 @@ void DataSource_Apps::itemClicked(int newIndex)
         updateItems(false);
 
     emit resetContent();
+}
+
+void DataSource_Apps::updateIfChanged()
+{
+    if (m_isDbChanged) {
+        m_isDbChanged = false;
+        updateItems(true);
+    }
 }

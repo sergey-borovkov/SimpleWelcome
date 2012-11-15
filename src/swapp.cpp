@@ -157,7 +157,7 @@ SWApp::SWApp()
     DataSource_Apps *appsDataSource = new DataSource_Apps(this, recentAppsDataSource);
     m_viewer->rootContext()->setContextProperty("dataSource_Apps", appsDataSource);
     connect(appsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
-    connect(m_viewer, SIGNAL(windowShown()), appsDataSource, SLOT(updateItems()));
+    connect(m_viewer, SIGNAL(windowShown()), appsDataSource, SLOT(updateIfChanged()));
 
     DataSource_Favorites *favoritesDataSource = new DataSource_Favorites(this);
     m_viewer->rootContext()->setContextProperty("dataSource_Favorites", favoritesDataSource);

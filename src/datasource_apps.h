@@ -24,9 +24,13 @@ signals:
 
 public slots:
     virtual void itemClicked(int newIndex);
-    void updateItems(bool isResetContent = true);
+    void updateIfChanged();
+
+private slots:
+    void ksycocaChanged(const QStringList &changes);
 
 private:
+    void updateItems(bool isResetContent = true);
     void saveData();
 
     AppItemList appsList;
@@ -34,4 +38,5 @@ private:
     QString prevCurrentGroup;
 
     DataSource_RecentApps *recentApps;
+    bool m_isDbChanged;
 };
