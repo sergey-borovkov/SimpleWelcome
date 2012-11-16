@@ -6,22 +6,22 @@ import "timeframe"
 Item {
     id: rootWrapper
 
-    /*Image {
+    Image {
         anchors.fill: parent
         fillMode: Image.PreserveAspectCrop
         smooth: true
-        source: "image://generalicon/asset/bubbles.jpg"
+        source: "image://generalicon/asset/background.jpg"
         z: -10
-    }*/
+    }
 
-    Rectangle {
+    /*Rectangle {
         anchors.fill: parent
         //        color: "black"
         //        opacity: 0.7
         color: "#263C50"
         opacity: 0.9
 
-    }
+    }*/
 
     Item {
         id: root
@@ -178,6 +178,20 @@ Item {
 //            color: Qt.rgba(0, 0, 0, 0.2)
 //            anchors.fill: tabListView
 //        }
+
+        Rectangle{
+            color: Qt.rgba(0, 0, 0, 0.2)
+            anchors.fill: topBar
+        }
+
+        Rectangle{
+            color: Qt.rgba(0, 0, 0, 0.1)
+            anchors.top: bottomBar.top
+            anchors.left: bottomBar.left
+            anchors.right: bottomBar.right
+            anchors.bottom: root.bottom
+            anchors.bottomMargin: -root.anchors.bottomMargin
+        }
 
         ListView {
             id: tabListView

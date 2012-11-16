@@ -88,13 +88,13 @@ Item {
             anchors.topMargin: constants.iconSize / 5 //24
             anchors.horizontalCenter: parent.horizontalCenter
 
-            /*effect: DropShadow {
+            effect: DropShadow {
                     blurRadius: 3
                     color: Qt.rgba(0, 0, 0, 1)
                     xOffset: 0.3
                     yOffset: 0.7
-                }*/
-            style: Text.Sunken
+                }
+            //style: Text.Sunken
             styleColor: "#000"
             color: "#eee"
             font.bold: true
