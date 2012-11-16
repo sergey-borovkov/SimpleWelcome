@@ -66,7 +66,7 @@ FocusScope {
     Item {
         id: searchField
         x: Math.max(parent.width/2 - width/2, userNameItem.x + userNameItem.width + 30)
-        width: Math.max(40, Math.min(600, sessionButtons.x - (userNameItem.x + userNameItem.width) - 30*2))
+        width: Math.max(40, Math.min(400, sessionButtons.x - (userNameItem.x + userNameItem.width) - 30*2))
         height: 35//26
 
         visible: tabListView.currentIndex !== 3
