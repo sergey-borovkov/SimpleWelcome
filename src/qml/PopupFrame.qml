@@ -61,5 +61,13 @@ FocusScope {
                 //groupNameVisible:
             }
         }
+
+        Image {
+            source: "image://generalicon/asset/popup_group_shadow.png"
+            anchors.top: groupBorder.bottom
+            anchors.topMargin: 1
+            width: groupBorder.width
+            z: 1
+        }
     }
 }
