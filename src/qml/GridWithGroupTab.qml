@@ -843,7 +843,7 @@ Item {
                     PropertyChanges {
                         target: popupFrame
                         height: childrenRect.height
-                        slideHeight: y + height < tabRoot.height ? 0 : -(tabRoot.height - (y + height))
+                        slideHeight: y + height < tabRoot.height ? 0 : -(tabRoot.height - (y + height - 6))
                     }
                 }
             ]
