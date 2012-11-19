@@ -179,19 +179,19 @@ Item {
 //            anchors.fill: tabListView
 //        }
 
-        Rectangle{
-            color: Qt.rgba(0, 0, 0, 0.2)
-            anchors.fill: topBar
-        }
+//        Rectangle{
+//            color: Qt.rgba(0, 0, 0, 0.2)
+//            anchors.fill: topBar
+//        }
 
-        Rectangle{
-            color: Qt.rgba(0, 0, 0, 0.1)
-            anchors.top: bottomBar.top
-            anchors.left: bottomBar.left
-            anchors.right: bottomBar.right
-            anchors.bottom: root.bottom
-            anchors.bottomMargin: -root.anchors.bottomMargin
-        }
+//        Rectangle{
+//            color: Qt.rgba(0, 0, 0, 0.1)
+//            anchors.top: bottomBar.top
+//            anchors.left: bottomBar.left
+//            anchors.right: bottomBar.right
+//            anchors.bottom: root.bottom
+//            anchors.bottomMargin: -root.anchors.bottomMargin
+//        }
 
         ListView {
             id: tabListView
