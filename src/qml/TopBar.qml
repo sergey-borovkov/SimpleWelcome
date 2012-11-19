@@ -22,8 +22,8 @@ FocusScope {
         Image {
             id: userIcon
             source: "image://generalicon/general/usericon"
-            width: 64
-            height: 64
+            sourceSize.width: 64
+            sourceSize.height: 64
             smooth: true
         }
     }
