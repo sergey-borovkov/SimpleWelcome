@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QtDeclarative/QDeclarativeView>
-#include <QVariantList>
+#include <QtCore/QVariantList>
 
 class QResizeEvent;
 class SizesCalculator;

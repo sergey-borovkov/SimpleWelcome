@@ -23,19 +23,14 @@
  */
 
 #include "datasource_search.h"
+
 #include "datasource_recentapps.h"
 
-#include <KUrl>
-
-
-#include <Plasma/RunnerManager>
-#include <KDE/Plasma/QueryMatch>
+#include <KDE/Plasma/RunnerManager>
 #include <KDE/KDesktopFile>
 #include <KDE/KStandardDirs>
-#include <QStringList>
-#include <QFile>
+
 #include <QtCore/QDir>
-#include <KRecentDocument>
 
 
 namespace

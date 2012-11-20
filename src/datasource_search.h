@@ -1,10 +1,10 @@
 #pragma once
 
-#include <QHash>
-#include <QSet>
-#include <QIcon>
 #include "appitem.h"
 #include "datasource.h"
+
+#include <QtGui/QIcon>
+
 
 namespace Plasma
 {
