@@ -67,13 +67,14 @@ void DataSource_Favorites::reloadItems()
 {
     QList<AppItem> new_list;
     for (int i = 0; i < m_placesModel->rowCount() && new_list.size() < _MAX_ITEMS_NUMBER; i++) {
-        KBookmark bm = m_placesModel->bookmarkForIndex(m_placesModel->index(i, 0));
-        if (!bm.isNull()) {
+        QModelIndex index = m_placesModel->index(i, 0);
+        KBookmark bm = m_placesModel->bookmarkForIndex(index);
+        if (!bm.isNull() && !m_placesModel->isHidden(index)) {
             AppItem newItem;
             newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(bm.icon());
             newItem["caption"] = bm.fullText();
             newItem["id"] = new_list.size();
-            newItem["desktopEntry"] = m_placesModel->index(i, 0).data(KFilePlacesModel::UrlRole);
+            newItem["desktopEntry"] = index.data(KFilePlacesModel::UrlRole);
             new_list.append(newItem);
         }
     }
