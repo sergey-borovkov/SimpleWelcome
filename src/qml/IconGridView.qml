@@ -46,6 +46,7 @@ GridView {
     ListModel {
         id: appsModel
         signal itemClicked(int newIndex)
+        signal itemPinnedToggle(int index)
     }
 
     model: appsModel
@@ -103,6 +104,10 @@ GridView {
             dataSource.itemClicked(-1)
         else
             dataSource.itemClicked(realIndex, groupName)
+    }
+
+    function onitemPinnedToggle(index) {
+        dataSource.itemPinnedToggle(index)
     }
 
     function forceMyFocus() {
@@ -225,6 +230,7 @@ GridView {
                 dataSource.updateItemData.connect(updateItemContent)
         }
         model.itemClicked.connect(onItemClicked)
+        model.itemPinnedToggle.connect(onitemPinnedToggle)
 
         if ('group' in model)
             model.group = groupName

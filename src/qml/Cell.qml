@@ -67,18 +67,6 @@ Item {
             }
         }
 
-        Image {
-            id: icon
-            anchors.top: cellIcon.top
-            anchors.right: cellIcon.right
-            width: 16
-            height: 16
-            z: 1
-            source: {
-                pinned === true ? "image://generalicon/asset/pinned.png" : ""
-            }
-        }
-
         Text {
             id: cellText
             text: caption
@@ -105,6 +93,23 @@ Item {
             elide: Text.ElideRight
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
+        }
+
+        Image {
+            id: pinIcon
+            anchors.top: cellIcon.top
+            anchors.right: cellIcon.right
+            anchors.topMargin: -25
+            anchors.rightMargin: -28
+            z: 1
+            opacity: pinned !== undefined && pinned ? 1 : gridMouseArea.grid === grid && gridMouseArea.hoveredId === id ? 0.5 : 0
+            source: {
+                 gridMouseArea.pinHovered && gridMouseArea.hoveredId === id ? "image://generalicon/asset/pin_hover.png" : "image://generalicon/asset/pin.png"
+            }
+
+            Behavior on opacity {
+                NumberAnimation { duration: 300 }
+            }
         }
 
         Behavior on x { enabled: wrapper.state == "gridInDrag"; NumberAnimation { duration: 150; easing.type: Easing.InOutQuad } }

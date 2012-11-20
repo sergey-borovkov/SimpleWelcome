@@ -23,6 +23,9 @@ MouseArea {
     property bool isPressedAndHolded: false
 
     property int gridMouseXWas // used when dragging icon between tabs
+    property int hoveredId: -1
+    property variant hoveredItem
+    property bool pinHovered: false
 
     function getGridMouseX() {
         return grid ? mapToItem(grid, mouseX, 0).x : 0
@@ -247,7 +250,7 @@ MouseArea {
     }
 
     Timer {
-        id: mouseHoverTimer
+        id: mousePressHoverTimer
         interval: grid === undefined || grid.stackable ? 200 : 0
         property variant itemWaitingOn: undefined
         property variant indexWaitingOn: undefined
@@ -355,6 +358,39 @@ MouseArea {
         }
     }
 
+    Timer {
+        id: mouseHoverTimer
+        interval: 800
+        property int aimingAt: -1
+
+        onTriggered: {
+            if (gridMouseArea.grid === undefined || !gridMouseArea.grid)
+                return
+
+            if (!gridMouseArea.grid.moving && gridMouseArea.dndSrcId === -1) {
+
+                var newCurrentPair = gridMouseArea.getItemUnderCursor(true)
+                var newCurrentItem = newCurrentPair.item
+                var newCurrentIndex = newCurrentPair.index
+                if (newCurrentIndex !== -1) {
+                    var hoveredId = gridMouseArea.grid.model.get(newCurrentIndex).id
+                    if (hoveredId === aimingAt) {
+                        gridMouseArea.hoveredId = hoveredId
+                        gridMouseArea.hoveredItem = newCurrentItem
+                        if (gridMouseArea.isHoveredOnPin())
+                            gridMouseArea.pinHovered = true
+                    }
+                }
+                else
+                    gridMouseArea.hoveredId = -1
+            }
+        }
+    }
+
+    function isHoveredOnPin() {
+        return hoveredId !== -1 && gridMouseX > hoveredItem.x + hoveredItem.width - 35 + 3/* + 28*/ && gridMouseY < hoveredItem.y + 31 - 5/* - 25*/
+    }
+
     function mousePosChanged() {
         updateCurrentGrid()
         if (grid === undefined || !grid)
@@ -371,13 +407,45 @@ MouseArea {
         {
             // Optimize later to lesser use of getItemUnderCursor(true)
             var newCurrentIndex = getItemUnderCursor(!grid.myActiveFocus).index
-            if (newCurrentIndex !== -1 && (newCurrentIndex !== grid.currentIndex || !grid.myActiveFocus))
-            {
+            var currentIndexWas = grid.currentIndex
+            var gridWasActive = grid.myActiveFocus
+
+            if (newCurrentIndex !== -1 && (newCurrentIndex !== grid.currentIndex || !grid.myActiveFocus)) {
                 if (!grid.myActiveFocus)
                     grid.selectOtherGrid(grid, newCurrentIndex)
                 else
                     grid.currentIndex = newCurrentIndex
             }
+
+            // Displaying overlay pin icon
+            if (grid.draggable) {
+                var realCurrentIndex = getItemUnderCursor(true).index
+
+                if (realCurrentIndex === -1) {
+                    hoveredId = -1
+                    mouseHoverTimer.stop()
+                }
+                else if (!mouseHoverTimer.running && hoveredId === -1 || currentIndexWas !== realCurrentIndex || gridWasActive !== grid.myActiveFocus) {
+                    hoveredId = -1
+                    var realCurrentItem = grid.model.get(realCurrentIndex)
+                    mouseHoverTimer.aimingAt = realCurrentItem.id
+                    if (realCurrentItem.pinned)
+                        mouseHoverTimer.interval = 0
+                    mouseHoverTimer.start()
+                    if (realCurrentItem.pinned)
+                        mouseHoverTimer.interval = 800
+                }
+
+                if (isHoveredOnPin())
+                    pinHovered = true
+                else
+                    pinHovered = false
+            }
+            else {
+                hoveredId = -1
+                pinHovered = false
+            }
+
         }
         else if (dndSrcId != -1)
         {
@@ -450,11 +518,11 @@ MouseArea {
             var item = grid.currentItem
             grid.currentIndex = wasCurrent
 
-            mouseHoverTimer.itemWaitingOn = item
-            mouseHoverTimer.indexWaitingOn = index
-            mouseHoverTimer.calculateExpectations(gridMouseX, gridMouseY)
-            mouseHoverTimer.isFromOtherTab = !gridMouseXBinding.enabled
-            mouseHoverTimer.start()
+            mousePressHoverTimer.itemWaitingOn = item
+            mousePressHoverTimer.indexWaitingOn = index
+            mousePressHoverTimer.calculateExpectations(gridMouseX, gridMouseY)
+            mousePressHoverTimer.isFromOtherTab = !gridMouseXBinding.enabled
+            mousePressHoverTimer.start()
         }
     }
 
@@ -474,6 +542,7 @@ MouseArea {
 
     function pressAndHoldEvent() {
         isPressedAndHolded = true
+        hoveredId = -1
         if (grid.draggable)
         {
             var index = getItemUnderCursor(true).index
@@ -506,6 +575,7 @@ MouseArea {
     onReleased: {
         skipMoveAnimation = false
         tabsSwitchingTimer.stop()
+        mousePressTimer.stop()
 
         var dndSrcIdSaved = dndSrcId
         //console.log("RELEASED")
@@ -621,7 +691,11 @@ MouseArea {
 
         if (!grid.moving) {
             var indexClicked = getItemUnderCursor(true).index
-            grid.model.itemClicked(indexClicked)
+            if (hoveredId !== -1 || grid.model.get(indexClicked).pinned === true) {// Clicked on pin
+                grid.model.itemPinnedToggle(indexClicked)
+            }
+            else // Clicked on icon
+                grid.model.itemClicked(indexClicked)
         }
     }
 }

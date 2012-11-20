@@ -20,9 +20,11 @@ signals:
     void newItemData(QVariantMap itemData, QString group) const;
     void resetContent();
     void runDesktopFile(QString desktopFile);
+    void updateItemData(int id, QString field, QVariant data);
 
 public slots:
     virtual void itemClicked(int newIndex);
+    void itemPinnedToggle(int index);
     void itemDragged(int fromIndex, int toIndex);
 
 private:

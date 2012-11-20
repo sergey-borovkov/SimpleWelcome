@@ -84,6 +84,13 @@ void DataSource_RecentApps::itemClicked(int newIndex)
     }
 }
 
+void DataSource_RecentApps::itemPinnedToggle(int index)
+{
+    bool pinned = !recentAppsList[index]["pinned"].toBool();
+    recentAppsList[index]["pinned"] = pinned;
+    emit updateItemData(index, "pinned", pinned);
+}
+
 QVariantMap DataSource_RecentApps::getContent(int index)
 {
     return recentAppsList[index];

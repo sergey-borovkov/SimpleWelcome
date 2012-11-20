@@ -24,7 +24,7 @@ signals:
     void newItemData(QVariantMap itemData, QString group);
     void resetContent();
     void runDesktopFile(QString desktopFile);
-    void updateItemData(int id, QString field, QString data);
+    void updateItemData(int id, QString field, QVariant data);
 
 public slots:
     virtual void itemClicked(int newIndex);
