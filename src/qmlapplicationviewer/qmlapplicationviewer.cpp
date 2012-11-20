@@ -1,17 +1,17 @@
+
 #include "qmlapplicationviewer.h"
-#include <QResizeEvent>
-#include <Plasma/WindowEffects>
-#include <Plasma/Theme>
-#include <KWindowSystem>
-#include <QDebug>
-#include <KConfigGroup>
+#include "../sizescalculator.h"
+
+#include <KDE/KWindowSystem>
+#include <KDE/Plasma/WindowEffects>
+#include <KDE/Plasma/Theme>
+
 #include <QtDeclarative/QDeclarativeImageProvider>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QApplication>
-#include <QtGui/QCursor>
-#include <KWindowSystem>
-#include "../sizescalculator.h"
+#include <QtGui/QResizeEvent>
+
 
 QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
     QDeclarativeView(parent),

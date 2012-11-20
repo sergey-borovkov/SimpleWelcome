@@ -1,12 +1,17 @@
+
 #include "datasource_documents.h"
-#include <KRecentDocument>
-#include <KDE/KDesktopFile>
-#include <QStringList>
-#include <QFile>
-#include <KFilePlacesModel>
-#include <KIO/PreviewJob>
+
 #include "sizescalculator.h"
-#include <QPainter>
+
+#include <KDE/KRecentDocument>
+#include <KDE/KDesktopFile>
+#include <KDE/KFilePlacesModel>
+#include <KDE/KIO/PreviewJob>
+
+#include <QtCore/QFile>
+#include <QtGui/QPainter>
+
+
 
 DataSource_Documents::DataSource_Documents(QObject *parent, SizesCalculator *inConstants)
     : DataSource(parent),
