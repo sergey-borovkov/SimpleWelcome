@@ -98,7 +98,7 @@ QString DataSource_Search::itemUrlDnd(int id, QString group)
     if (matches.contains(group) && id < matches[group].size()) {
         Plasma::QueryMatch &match = *matches[group][id]["plasmaMatch"].value<Plasma::QueryMatch *>();
         QString runner_id = match.runner()->id();
-        QString value = match.data().toString().toUtf8();
+        QString value = match.data().toString();
 
         if (runner_id == QString::fromAscii("recentdocuments")) {
             // RecentDocuments runner give us path to temporary desktop file
