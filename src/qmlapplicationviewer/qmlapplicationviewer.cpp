@@ -125,9 +125,9 @@ void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, 
     QDeclarativeEngine *eng = engine();
 
     QMimeData *mime = new QMimeData;
-    QList<QUrl> urls;
-    urls.append(QUrl(url));
-    mime->setUrls(urls);
+    KUrl::List urls;
+    urls.append(KUrl(url));
+    urls.populateMimeData(mime);
     QDrag *drag = new QDrag(this);
     drag->setMimeData(mime);
 
