@@ -636,23 +636,13 @@ MouseArea {
                     //console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + grid.model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest + " | " + grid.indexStartAt)
                 }
 
-                // Sync icons order in C++ model to QML model. Used in Recent Apps
+                // Sync icons order after DnD in C++ model to QML model. Used in Recent Apps
                 if (typeof grid.dataSource.itemDragged !== "undefined" && dndDest != -1) {
-                    //console.log("REARRANGING C++")
                     //console.log("dndSrc, dndSrcId, dndDest: " + dndSrc + " " + dndSrcId + " " + dndDest)
 
                     grid.dataSource.itemDragged(dndSrcIdSaved, dndDest)
-                    grid.model.setProperty(dndDest, "id", dndDest)
-
-                    var i
-                    if (dndDest < dndSrc) {
-                        for (i = dndDest + 1; i <= dndSrc; i++)
-                            grid.model.setProperty(i, "id", grid.model.get(i).id + 1)
-                    }
-                    else {
-                        for (i = dndSrc; i < dndDest; i++)
-                            grid.model.setProperty(i, "id", grid.model.get(i).id - 1)
-                    }
+                    for (var id = 0; id < grid.model.count; id++)
+                        grid.model.setProperty(id, "id", id)
                 }
             }
         }

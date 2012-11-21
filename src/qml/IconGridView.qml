@@ -88,22 +88,17 @@ GridView {
                 gridView.myActiveFocus = false
                 return
             }
-            if (groupName == i18n("Recent Applications") || groupName == i18n("Recent Documents"))
-            {
-                dndSrcId = realIndex
-                model.move(newIndex, 0, 1)
-
-                for (var i = 0; i < model.count; i++)
-                    model.setProperty(i, "id", i)
-
-                dndSrcId = -1
-                gridView.currentIndex = 0
-            }
         }
         if (newIndex == -1)
             dataSource.itemClicked(-1)
         else
             dataSource.itemClicked(realIndex, groupName)
+
+        if (groupName === i18n("Recent Applications"))
+        {
+            resetContent()
+            dataSource.updateContent()
+        }
     }
 
     function onitemPinnedToggle(index) {
