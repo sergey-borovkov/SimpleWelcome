@@ -418,7 +418,7 @@ MouseArea {
             }
 
             // Displaying overlay pin icon
-            if (grid.draggable) {
+            if (grid.draggable && !grid.stackable && !grid.isPopupGroup) { // Apply this only to Recent Apps
                 var realCurrentIndex = getItemUnderCursor(true).index
 
                 if (realCurrentIndex === -1) {

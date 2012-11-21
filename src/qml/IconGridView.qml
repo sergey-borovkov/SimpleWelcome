@@ -107,7 +107,8 @@ GridView {
     }
 
     function onitemPinnedToggle(index) {
-        dataSource.itemPinnedToggle(index)
+        if (dataSource.itemPinnedToggle)
+            dataSource.itemPinnedToggle(index)
     }
 
     function forceMyFocus() {
