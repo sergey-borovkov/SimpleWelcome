@@ -641,6 +641,42 @@ Item {
             }
 
             function groupNameChanged(newName) {
+                var groupNameExist = false
+
+                // A very dirty hack to check is new group name already used somewhere
+                var currentIndexWas = gridsListView.currentIndex
+                // Iterating by all GridWithGroupContainers
+                do {
+                    groupNameExist = false
+                    outerLoop:
+                    for (var currentView = 0; currentView < gridsListView.count; currentView++) {
+                        gridsListView.currentIndex = currentView
+                        if (gridsListView.currentItem) {
+                            var childs = gridsListView.currentItem.children
+                            // Iterating by it's GridWithGroups
+                            for (var child = 0; child < childs.length; child++) {
+                                if ('gridView' in childs[child] && childs[child].groupName === "Apps")
+                                {
+                                    var model = childs[child].gridView.model
+                                    //console.log("SAVING stacking")
+                                    for (var i = 0; i < model.count; i++) {
+                                        if (model.get(i).caption === newName || !newName.length) {
+                                            groupNameExist = true
+                                            break outerLoop
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    gridsListView.currentIndex = currentIndexWas
+                    if (groupNameExist)
+                        newName = String.fromCharCode(8203) + newName // Hack to make group names unique
+
+                } while (groupNameExist)
+
+
+
                 var itemWas = activeGridView.model.get(popupFrame.stackedIconIndex)
                 if (popupFrame.stackedIconIndex !== -1 && itemWas !== undefined) {
                     var nameWas = itemWas.caption
