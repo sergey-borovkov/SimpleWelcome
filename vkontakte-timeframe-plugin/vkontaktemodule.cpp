@@ -19,7 +19,7 @@ VkontakteModule::VkontakteModule()
     QSettings settings("ROSA", "vkontakte-timeframe-plugin");
     QString accessToken = settings.value("accessToken").toString();
 
-    m_requestManager = new RequestManager;
+    m_requestManager = new RequestManager();
     m_requestManager->setAuthorizer(m_authorizer);
 
     connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SLOT(onAcessTokenChanged()));

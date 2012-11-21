@@ -1,9 +1,9 @@
-#include "pluginrequestreply.h"
+#include "pluginreply.h"
 #include "socialplugin.h"
 
 #include <QtCore/QDebug>
 
-PluginRequestReply::PluginRequestReply(Request *request, const QString &sourceId, const QString &pluginName, QObject *parent)
+PluginReply::PluginReply(Request *request, const QString &sourceId, const QString &pluginName, QObject *parent)
     : QObject(parent)
     , m_sourceId(sourceId)
     , m_pluginName(pluginName)
@@ -18,100 +18,100 @@ PluginRequestReply::PluginRequestReply(Request *request, const QString &sourceId
     }
 }
 
-bool PluginRequestReply::isFinished() const
+bool PluginReply::isFinished() const
 {
     return m_finished;
 }
 
-QString PluginRequestReply::id() const
+QString PluginReply::id() const
 {
     return m_id;
 }
 
-QString PluginRequestReply::errorString() const
+QString PluginReply::errorString() const
 {
     return m_errorString;
 }
 
-QString PluginRequestReply::sourceId()
+QString PluginReply::sourceId()
 {
     return m_sourceId;
 }
 
-QString PluginRequestReply::userPictureUrl() const
+QString PluginReply::userPictureUrl() const
 {
     return m_userPictureUrl;
 }
 
-QString PluginRequestReply::userId() const
+QString PluginReply::userId() const
 {
     return m_userId;
 }
 
-QString PluginRequestReply::userName() const
+QString PluginReply::userName() const
 {
     return m_userName;
 }
 
-QString PluginRequestReply::audioId() const
+QString PluginReply::audioId() const
 {
     return m_audioId;
 }
 
-QString PluginRequestReply::audioOwnerId() const
+QString PluginReply::audioOwnerId() const
 {
     return m_audioOwnerId;
 }
 
-QString PluginRequestReply::audioUrl() const
+QString PluginReply::audioUrl() const
 {
     return m_audioUrl;
 }
 
-QString PluginRequestReply::videoId() const
+QString PluginReply::videoId() const
 {
     return m_videoId;
 }
 
-QString PluginRequestReply::videoOwnerId() const
+QString PluginReply::videoOwnerId() const
 {
     return m_videoOwnerId;
 }
 
-QString PluginRequestReply::videoUrl() const
+QString PluginReply::videoUrl() const
 {
     return m_videoUrl;
 }
 
-QString PluginRequestReply::videoImage() const
+QString PluginReply::videoImage() const
 {
     return m_videoImage;
 }
 
-QString PluginRequestReply::pluginName() const
+QString PluginReply::pluginName() const
 {
     return m_pluginName;
 }
 
-void PluginRequestReply::newItemId(QString id)
+void PluginReply::newItemId(QString id)
 {
     m_id = id;
 }
 
-void PluginRequestReply::gotUserPictureUrl(QString id, QString url)
+void PluginReply::gotUserPictureUrl(QString id, QString url)
 {
     m_userId = id;
     m_userPictureUrl = url;
 }
 
-void PluginRequestReply::gotAudioUrl(QString aid, QString ownerId, QString url)
+void PluginReply::gotAudioUrl(QString aid, QString ownerId, QString url)
 {
     m_audioId = aid;
     m_audioOwnerId = ownerId;
     m_audioUrl = url;
 }
 
-void PluginRequestReply::gotVideoUrl(QString vid, QString ownerId, QString url, QString image)
+void PluginReply::gotVideoUrl(QString vid, QString ownerId, QString url, QString image)
 {
     m_videoId = vid;
     m_videoOwnerId = ownerId;
@@ -119,27 +119,27 @@ void PluginRequestReply::gotVideoUrl(QString vid, QString ownerId, QString url, 
     m_videoImage = image;
 }
 
-void PluginRequestReply::gotUserName(QString id, QString name)
+void PluginReply::gotUserName(QString id, QString name)
 {
     m_userId = id;
     m_userName = name;
 }
 
-void PluginRequestReply::gotUserInfo(QString id, QString name, QString url)
+void PluginReply::gotUserInfo(QString id, QString name, QString url)
 {
     m_userId = id;
     m_userName = name;
     m_userPictureUrl = url;
 }
 
-void PluginRequestReply::error(QString error)
+void PluginReply::error(QString error)
 {
     m_errorString = error;
     m_finished = true;
     emit failure(this);
     emit finished();
 }
-void PluginRequestReply::requestSuccess()
+void PluginReply::requestSuccess()
 {
     m_finished = true;
     emit success(this);
