@@ -14,7 +14,6 @@ RequestManager::RequestManager(QObject *parent)
 
 Request *RequestManager::queryWall()
 {
-
     QUrl url = constructUrl(QLatin1String("me"), QLatin1String("feed"));
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
