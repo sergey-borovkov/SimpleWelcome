@@ -135,7 +135,7 @@ void SocialProxy::startSearch()
         if (m_enabledPlugins.contains(plugin->name())) {
             Request *requestId = plugin->requestManager()->queryUserId();
             requestId->start();
-            Request *request = plugin->requestManager()->queryWall(QDate(), QDate());
+            Request *request = plugin->requestManager()->queryWall();
             m_searchInProgressCount++;
             request->start();
             start = true;
@@ -286,7 +286,7 @@ void SocialProxy::authorized()
     requestId->start();
 
     // update wall
-    Request *request = plugin->requestManager()->queryWall(QDate(), QDate());
+    Request *request = plugin->requestManager()->queryWall();
     m_searchInProgressCount++;
     request->start();
 

@@ -19,7 +19,7 @@ class RequestManager : public QObject, public ISocialRequestManager
     Q_OBJECT
 public:
     explicit RequestManager(QObject *parent = 0);
-    virtual Request *queryWall(const QDate &beginDate, const QDate &endDate);
+    virtual Request *queryWall();
     virtual Request *queryUserId();
     virtual Request *queryImage(const QString &id);
     virtual Request *queryAudio(const QString &aid, const QString &ownerId);

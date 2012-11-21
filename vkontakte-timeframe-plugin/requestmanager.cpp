@@ -17,11 +17,8 @@ RequestManager::RequestManager(QObject *parent)
 {
 }
 
-Request *RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
+Request *RequestManager::queryWall()
 {
-    Q_UNUSED(beginDate)
-    Q_UNUSED(endDate)
-
     QUrl url = constructUrl(QLatin1String("wall.get"));
     url.addQueryItem(QLatin1String("offset"), QLatin1String("0"));
     url.addQueryItem(QLatin1String("count"), QString("%1").arg(m_requestItemCount));

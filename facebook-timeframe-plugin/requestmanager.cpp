@@ -12,10 +12,8 @@ RequestManager::RequestManager(QObject *parent)
 {
 }
 
-Request *RequestManager::queryWall(const QDate &beginDate, const QDate &endDate)
+Request *RequestManager::queryWall()
 {
-    Q_UNUSED(beginDate)
-    Q_UNUSED(endDate)
 
     QUrl url = constructUrl(QLatin1String("me"), QLatin1String("feed"));
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
