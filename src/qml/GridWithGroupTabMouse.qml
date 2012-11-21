@@ -614,7 +614,7 @@ MouseArea {
                     gridsListView.interactive = true
 
                 if (dndAbsoluteSrc !== dndDest + grid.indexStartAt) {
-                    if (grid.isPopupGroup) {
+                    if (grid.isPopupGroup) { // If moved icon in popup group
 
                         var model = gridsListView.activeGridView.model
                         var item = model.get(popupFrame.stackedIconIndex)
@@ -631,7 +631,7 @@ MouseArea {
                         gridsListView.saveStacks()
                         //console.log("POPUP DRAG", item)
                     }
-                    else
+                    else if (grid.mouseDragChangesGrids)// If moved icon in Apps tab
                         gridsListView.itemMoved(grid.model.get(dndDest).caption, dndAbsoluteSrc, grid.indexStartAt + dndDest)
                     //console.log("SAVING ICON POSITION: #" + dndSrcIdSaved + " - " + grid.model.get(dndDest).caption + " in " + dndDest + "; dndSrc:" + dndSrc + "; dndDest: " + dndDest + " | " + grid.indexStartAt)
                 }
