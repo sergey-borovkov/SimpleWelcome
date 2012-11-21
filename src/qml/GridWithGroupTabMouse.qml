@@ -691,7 +691,7 @@ MouseArea {
 
         if (!grid.moving) {
             var indexClicked = getItemUnderCursor(true).index
-            if (hoveredId !== -1 || grid.model.get(indexClicked).pinned === true) {// Clicked on pin
+            if (pinHovered && (hoveredId !== -1 || grid.model.get(indexClicked).pinned === true)) {// Clicked on pin
                 grid.model.itemPinnedToggle(indexClicked)
             }
             else // Clicked on icon
