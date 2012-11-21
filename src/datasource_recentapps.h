@@ -14,7 +14,7 @@ public:
     Q_INVOKABLE virtual QVariantMap getContent(int index);
 
     Q_INVOKABLE QString itemUrlDnd(int id);
-    void addRecentApp(QString desktopFile);
+    void addRecentApp(QString desktopFile, bool isPinned = false);
 
 signals:
     void newItemData(QVariantMap itemData, QString group) const;

@@ -8,9 +8,11 @@ DataSource_RecentApps::DataSource_RecentApps(QObject *parent)
 {
     KConfigGroup configGroup(KGlobal::config(), "General");
     QStringList recentAppsStringList = configGroup.readEntry("Recent applications", QStringList());
+    QStringList pinnedRecentApps = configGroup.readEntry("Pinned recent applications", QStringList());
 
-    foreach(QString recentApp, recentAppsStringList)
-    addRecentApp(recentApp);
+    foreach(QString recentApp, recentAppsStringList) {
+        addRecentApp(recentApp, pinnedRecentApps.contains(recentApp));
+    }
 }
 
 int DataSource_RecentApps::getItemCount()
@@ -28,15 +30,20 @@ QString DataSource_RecentApps::itemUrlDnd(int id)
 void DataSource_RecentApps::saveData()
 {
     QStringList desktopFiles;
-    for (int i = 0; i < recentAppsList.size(); i++)
+    QStringList pinnedApps;
+    for (int i = 0; i < recentAppsList.size(); i++) {
         desktopFiles.prepend(recentAppsList[i]["desktopEntry"].toString());
+        if (recentAppsList[i]["pinned"].toBool())
+            pinnedApps.append(recentAppsList[i]["desktopEntry"].toString());
+    }
 
     KConfigGroup configGroup(KGlobal::config(), "General");
     configGroup.writeEntry("Recent applications", desktopFiles);
+    configGroup.writeEntry("Pinned recent applications", pinnedApps);
     configGroup.sync();
 }
 
-void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
+void DataSource_RecentApps::addRecentApp(QString desktopFilePath, bool isPinned)
 {
     if (!KDesktopFile::isDesktopFile(desktopFilePath))
         return;
@@ -57,7 +64,7 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath)
 
         newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(desktopFile.readIcon());
         newItem["caption"] = desktopFile.readName();
-        newItem["pinned"] = /*i < 4 ? true :*/ false;
+        newItem["pinned"] = isPinned;
         newItem["desktopEntry"] = desktopFilePath;
 
         if (!newItem["caption"].toString().isEmpty())
@@ -88,6 +95,7 @@ void DataSource_RecentApps::itemPinnedToggle(int index)
 {
     bool pinned = !recentAppsList[index]["pinned"].toBool();
     recentAppsList[index]["pinned"] = pinned;
+    saveData();
     emit updateItemData(index, "pinned", pinned);
 }
 
