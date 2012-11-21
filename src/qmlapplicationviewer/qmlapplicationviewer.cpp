@@ -37,12 +37,12 @@ QmlApplicationViewer::QmlApplicationViewer(QWidget *parent) :
 
 void QmlApplicationViewer::resizeEvent(QResizeEvent *event)
 {
-    if (KWindowSystem::compositingActive()) { // && Plasma::Theme::defaultTheme()->windowTranslucencyEnabled())
-        QRegion mask(QRect(QPoint(), size()));
+//    if (KWindowSystem::compositingActive()) { // && Plasma::Theme::defaultTheme()->windowTranslucencyEnabled())
+//        QRegion mask(QRect(QPoint(), size()));
 
-        Plasma::WindowEffects::enableBlurBehind(winId(), true, mask);
-        Plasma::WindowEffects::overrideShadow(winId(), true);
-    }
+//        Plasma::WindowEffects::enableBlurBehind(winId(), true, mask);
+//        Plasma::WindowEffects::overrideShadow(winId(), true);
+//    }
 
     QDeclarativeView::resizeEvent(event);
     updateWorkArea(m_screen);
