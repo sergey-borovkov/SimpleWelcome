@@ -1,10 +1,8 @@
 #pragma once
 #include <kdeclarative.h>
-#include <KUniqueApplication>
-#include <KShortcut>
-#include <QTimer>
-
-#include <QtCore/QString>
+#include <KDE/KUniqueApplication>
+#include <KDE/KShortcut>
+#include <QtCore/QTimer>
 
 class QmlApplicationViewer;
 class GeneralIconProvider;

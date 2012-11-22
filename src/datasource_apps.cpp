@@ -44,7 +44,6 @@ AppItemList GetFlatList(QString group)
             if (serviceGroup->noDisplay() || serviceGroup->childCount() == 0)
                 continue;
 
-            //if (serviceGroup->relPath().indexOf("/") != serviceGroup->relPath().size() - 1)
             AppItemList temp = GetFlatList(serviceGroup->relPath());
             for (int i = 0; i < temp.size(); i++) {
                 bool isFound = false;
@@ -56,15 +55,6 @@ AppItemList GetFlatList(QString group)
                 if (!isFound)
                     out.append(temp[i]);
             }
-            //out.append(temp);
-            /*else
-            {
-                AppItem newItem;
-                newItem.icon = QString("image://generalicon/appicon/%1").arg(serviceGroup->icon());
-                newItem.caption = serviceGroup->caption();
-                newItem.relPath = serviceGroup->relPath();
-                out.append(newItem);
-            }*/
         } else {
             qDebug() << "KServiceGroup: Unexpected object in list!";
             continue;

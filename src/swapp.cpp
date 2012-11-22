@@ -24,16 +24,9 @@
 
 #include "swapp.h"
 
-#include "wheelarea.h"
-
-#include <QDeclarativeEngine>
-#include <QDeclarativeContext>
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
-#include <QDesktopWidget>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtDeclarative/QtDeclarative>
-#include <KServiceGroup>
+
+#include "wheelarea.h"
 
 #include "generaliconprovider.h"
 #include "sessionprovider.h"
@@ -62,16 +55,18 @@
 #include "timeframe/social/socialcontentmodel.h"
 #include "timeframe/social/socialdayitem.h"
 
-#include <listitem.h>
+#include <QtGui/QGraphicsDropShadowEffect>
+#include <QtDeclarative/QtDeclarative>
+#include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeContext>
+
+#include <KDE/KCmdLineArgs>
+#include <KDE/KRun>
+#include <KDE/KGlobalAccel>
+
 
 #include "config.h"
-#include <KCmdLineArgs>
-#include <KRun>
-#include <KConfigGroup>
-#include <KAction>
-#include <QGraphicsDropShadowEffect>
 
-#include <klocalizedstring.h>
 
 SWApp *SWApp::self()
 {
@@ -110,8 +105,6 @@ int SWApp::newInstance()
     return 0;
 }
 
-#include <kglobalaccel.h>
-
 
 void SWApp::loadShortcut()
 {
@@ -124,7 +117,6 @@ void SWApp::loadShortcut()
     m_globalAction->setGlobalShortcut(m_globalShortcut, KAction::ActiveShortcut, KAction::NoAutoloading);
 }
 
-#include <QMainWindow>
 
 SWApp::SWApp()
     : KUniqueApplication()
