@@ -122,7 +122,6 @@ void SWApp::loadShortcut()
     connect(m_globalAction, SIGNAL(triggered(bool)), SLOT(newInstance()));
     m_globalAction->setObjectName("Activate A ROSA Launcher Widget");
     m_globalAction->setGlobalShortcut(m_globalShortcut, KAction::ActiveShortcut, KAction::NoAutoloading);
-    //qDebug() << m_globalShortcut.toString() << " is " << m_globalAction->isGlobalShortcutEnabled();
 }
 
 #include <QMainWindow>
