@@ -9,7 +9,7 @@ Item {
     property variant groups
     property bool isForceOnOneScreen: false
     property alias tabListView: gridsListView
-    property string isPopupOpened: popupFrame.state === "OPEN"
+    property bool isPopupOpened: popupFrame.state === "OPEN"
     property int stackCellOpenedId: -1
 
     property variant dataSources
@@ -26,6 +26,10 @@ Item {
         }
         else if (gridsListView.currentItem)
             gridsListView.currentItem.processKeyboard(key)
+    }
+
+    function closePopup() {
+        gridsListView.hideGroup()
     }
 
     Item {

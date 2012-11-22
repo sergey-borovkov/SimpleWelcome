@@ -388,7 +388,7 @@ MouseArea {
     }
 
     function isHoveredOnPin() {
-        return hoveredId !== -1 && gridMouseX > hoveredItem.x + hoveredItem.width - 35 + 3/* + 28*/ && gridMouseY < hoveredItem.y + 31 - 5/* - 25*/
+        return hoveredItem && hoveredId !== -1 && gridMouseX > hoveredItem.x + hoveredItem.width - 35 + 3/* + 28*/ && gridMouseY < hoveredItem.y + 31 - 5/* - 25*/
     }
 
     function mousePosChanged() {

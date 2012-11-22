@@ -51,7 +51,11 @@ Item {
         Keys.onPressed: {
             if(event.key == Qt.Key_Escape) {
                 event.accepted = true;
-                mainWindow.close();
+                var currentTab = tabListView.currentItem
+                if (currentTab && currentTab.tab && currentTab.tab.isPopupOpened)
+                    currentTab.tab.closePopup()
+                else
+                    mainWindow.close();
             }
             else if (event.key == Qt.Key_Space) {
                 event.accepted = true
