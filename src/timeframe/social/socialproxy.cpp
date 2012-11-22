@@ -3,7 +3,7 @@
 #include "pluginreply.h"
 #include "socialcontentmodel.h"
 #include "socialitem.h"
-#include "socialplugin.h"
+#include <socialplugin.h>
 #include "socialproxy.h"
 
 #include <commentitem.h>

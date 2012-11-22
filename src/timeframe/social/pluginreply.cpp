@@ -1,5 +1,5 @@
 #include "pluginreply.h"
-#include "socialplugin.h"
+#include <socialplugin.h>
 
 #include <QtCore/QDebug>
 

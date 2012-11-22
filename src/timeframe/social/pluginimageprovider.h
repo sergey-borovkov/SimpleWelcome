@@ -1,7 +1,7 @@
 #ifndef PLUGINIMAGEPROVIDER_H
 #define PLUGINIMAGEPROVIDER_H
 
-#include "socialplugin.h"
+#include <socialplugin.h>
 
 #include <QtDeclarative/QDeclarativeImageProvider>
 
