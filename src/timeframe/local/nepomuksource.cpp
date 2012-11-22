@@ -40,7 +40,7 @@ void NepomukSource::startSearch()
 
         QString type;
         int imageWidth = 0, imageHeight = 0;
-        if (path.contains(".svg"))
+        if (path.contains(".svg") || path.contains(".mng"))
             type = "Image";
         else if (mimeType.contains("video"))
             type = "Video";
