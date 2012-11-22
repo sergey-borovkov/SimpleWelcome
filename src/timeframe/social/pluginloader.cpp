@@ -1,5 +1,5 @@
 #include "pluginloader.h"
-#include "socialplugin.h"
+#include <socialplugin.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
