@@ -3,8 +3,6 @@
 // Includes
 #include "datasource.h"
 
-#include <QtCore/QDebug>
-
 
 DataSource::DataSource(QObject *parent)
     : QObject(parent)
