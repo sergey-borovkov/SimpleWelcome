@@ -98,9 +98,9 @@ int SWApp::newInstance()
     if (!args->isSet("silent") || !isFirst) {
         if (m_viewer) {
             if (!m_viewer->isVisible())
-                m_viewer->restore();
+                m_viewer->show();
             else
-                m_viewer->close();
+                m_viewer->hide();
         }
     }
     else if (!isFirst)
@@ -271,5 +271,5 @@ void SWApp::runDesktopFile(QString desktopFile)
 {
     if (!desktopFile.isEmpty())
         new KRun(KUrl(desktopFile), QApplication::activeWindow());
-    m_viewer->close();
+    m_viewer->hide();
 }

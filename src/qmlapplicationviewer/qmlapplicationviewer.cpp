@@ -86,7 +86,32 @@ void QmlApplicationViewer::onScreenSizeChanged(int screen)
 void QmlApplicationViewer::focusChanged(QWidget *, QWidget *now)
 {
     if (!now && currentTabIndex != 3) // When not on TimeFrame tab
-        close();
+        hide();
+}
+
+void QmlApplicationViewer::showEvent(QShowEvent *event)
+{
+    QDeclarativeView::showEvent(event);
+
+    // compute screen index
+    int new_screen = QApplication::desktop()->screenNumber(QCursor::pos());
+    if (new_screen != m_screen) {
+        // resize if SW should be shown on another screen
+        m_screen = new_screen;
+        onScreenSizeChanged(m_screen);
+    }
+
+    KWindowSystem::setState(winId(), NET::SkipTaskbar);
+
+    activateWindow();
+
+    emit windowShown();
+}
+
+void QmlApplicationViewer::hideEvent(QHideEvent *event)
+{
+    QDeclarativeView::hideEvent(event);
+    emit windowHidden();
 }
 
 void QmlApplicationViewer::moveEvent(QMoveEvent *)
@@ -96,28 +121,12 @@ void QmlApplicationViewer::moveEvent(QMoveEvent *)
         move(required_pos); // disallow moving of window by user
 }
 
-void QmlApplicationViewer::restore()
-{
-    // compute screen index
-    int new_screen = QApplication::desktop()->screenNumber(QCursor::pos());
-    if (new_screen != m_screen) {
-        // resize if SW should be shown on another screen
-        m_screen = new_screen;
-        onScreenSizeChanged(m_screen);
-    }
-
-    emit windowShown();
-
-    KWindowSystem::setState(winId(), NET::SkipTaskbar);
-    show();
-    activateWindow();
-}
 
 void QmlApplicationViewer::closeEvent(QCloseEvent *event)
 {
+    // doesn't close the window, instead hide it
     event->ignore();
     hide();
-    emit windowHidden();
 }
 
 void QmlApplicationViewer::activateDragAndDrop(QString url, QString image_path, int image_size)

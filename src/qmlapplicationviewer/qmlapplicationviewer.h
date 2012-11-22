@@ -40,13 +40,15 @@ signals:
     void iconSizeChanged();
 
 public slots:
-    void restore();
     void updateWorkArea(int screen);
     void onScreenSizeChanged(int screen);
     void focusChanged(QWidget *, QWidget *now);
 
 
 private:
+    virtual void showEvent(QShowEvent *);
+    virtual void hideEvent(QHideEvent *);
+
     int currentTabIndex;
     int m_screen;
     QRect m_availGeometry;
