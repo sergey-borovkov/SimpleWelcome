@@ -6,6 +6,10 @@
 #include <KDE/KFileItemList>
 
 class SizesCalculator;
+namespace KIO {
+    class PreviewJob;
+}
+class KJob;
 
 class DataSource_Documents : public DataSource
 {
@@ -35,6 +39,7 @@ public slots:
 private slots:
     void resultPreviewJob(const KFileItem &item, const QPixmap &pixmap);
     void previewFailed(const KFileItem &item);
+    void previewJobFinished(KJob *job);
 
 private:
     void createDocumentsPreviews(KFileItemList list);
@@ -43,4 +48,5 @@ private:
     QStringList m_previewJobPlugins;
     SizesCalculator *constants;
     QMap<QString, QPixmap> m_pixmaps;
+    KIO::PreviewJob* runningJob;
 };

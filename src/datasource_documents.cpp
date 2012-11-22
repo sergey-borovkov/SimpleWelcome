@@ -16,7 +16,8 @@
 DataSource_Documents::DataSource_Documents(QObject *parent, SizesCalculator *inConstants)
     : DataSource(parent),
       m_previewJobPlugins(KIO::PreviewJob::availablePlugins()),
-      constants(inConstants)
+      constants(inConstants),
+      runningJob(NULL)
 {
     updateContent();
 }
@@ -167,13 +168,24 @@ void DataSource_Documents::previewFailed(const KFileItem &/*item*/)
     //qDebug() << "Preview failed" << item.url();
 }
 
+void DataSource_Documents::previewJobFinished(KJob */*job*/)
+{
+    runningJob = NULL;
+}
+
 void DataSource_Documents::createDocumentsPreviews(KFileItemList list)
 {
+    if (runningJob)
+        runningJob->kill();
+
     KIO::PreviewJob *job = KIO::filePreview(list, QSize(constants->iconSize(), constants->iconSize()), &m_previewJobPlugins);
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
+    runningJob = job;
+
     connect(job, SIGNAL(gotPreview(const KFileItem &, const QPixmap &)), SLOT(resultPreviewJob(KFileItem, QPixmap)));
     connect(job, SIGNAL(failed(const KFileItem &)), SLOT(previewFailed(const KFileItem &)));
+    connect(job, SIGNAL(result(KJob*)), SLOT(previewJobFinished(KJob*)));
 }
 
 void DataSource_Documents::itemClicked(int newIndex)
