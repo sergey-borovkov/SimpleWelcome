@@ -32,7 +32,6 @@ public Q_SLOTS:
     virtual int newInstance();
     bool event(QEvent *event);
     void runDesktopFile(QString desktopFile);
-    void globalActionTriggered();
 
 private:
     void loadShortcut();

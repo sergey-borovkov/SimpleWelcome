@@ -273,11 +273,3 @@ void SWApp::runDesktopFile(QString desktopFile)
         new KRun(KUrl(desktopFile), QApplication::activeWindow());
     m_viewer->close();
 }
-
-void SWApp::globalActionTriggered()
-{
-    if (m_viewer->isHidden())
-        m_viewer->restore();
-    else
-        m_viewer->close();
-}
