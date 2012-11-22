@@ -16,6 +16,8 @@ class ActivityProxy;
 
 class KAction;
 
+class DataSource_Apps;
+
 class SWApp : public KUniqueApplication
 {
     Q_OBJECT
@@ -32,6 +34,10 @@ public Q_SLOTS:
     virtual int newInstance();
     bool event(QEvent *event);
     void runDesktopFile(QString desktopFile);
+
+private slots:
+    void windowHidden();
+    void windowShown();
 
 private:
     void loadShortcut();
@@ -52,4 +58,6 @@ private:
     QTimer m_periodicTimer;
     KAction *m_globalAction;
     KDeclarative m_kdeclarative;
+
+    DataSource_Apps *m_dataSourceApps;
 };

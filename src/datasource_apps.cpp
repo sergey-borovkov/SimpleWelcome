@@ -92,6 +92,15 @@ QString DataSource_Apps::itemUrlDnd(int id)
     return QString("file://%1").arg(appsList[id]["desktopEntry"].toString());
 }
 
+void DataSource_Apps::setUpdateAllowed(bool allow)
+{
+    m_isUpdateAllowed = allow;
+    if (allow && m_isDbChanged) {
+        m_isDbChanged = false;
+        updateItems(true);
+    }
+}
+
 QVariantMap DataSource_Apps::getContent(int index)
 {
     return appsList[index];
@@ -121,8 +130,11 @@ void DataSource_Apps::updateItems(bool isResetContent/* = true*/)
 
 void DataSource_Apps::ksycocaChanged(const QStringList &changes)
 {
-    if (changes.contains("apps"))
-        m_isDbChanged = true;
+    if (changes.contains("apps")) {
+        if (m_isUpdateAllowed)
+            updateItems(true);  // if allowed => update now
+        m_isDbChanged = !m_isUpdateAllowed;  // delay update until it is allowed
+    }
 }
 
 void DataSource_Apps::itemClicked(int newIndex)
@@ -148,12 +160,4 @@ void DataSource_Apps::itemClicked(int newIndex)
         updateItems(false);
 
     emit resetContent();
-}
-
-void DataSource_Apps::updateIfChanged()
-{
-    if (m_isDbChanged) {
-        m_isDbChanged = false;
-        updateItems(true);
-    }
 }
