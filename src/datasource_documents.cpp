@@ -87,7 +87,17 @@ void DataSource_Documents::updateContent()
         if (m_pixmaps.contains(newItem["destination"].toString()))
             newItem["imagePath"] = QString("image://generalicon/docicon/%1").arg(newItem["destination"].toString());
 
-        if (!newItem["caption"].toString().isEmpty())
+        // Filtering unneeded documents
+        bool isAdding = true;
+        if (newItem["caption"].toString().isEmpty())
+            continue;
+        for (int j = 0; j < newDocsList.size(); j++)
+            if (newDocsList[j]["destination"].toString() == newItem["destination"].toString()) {
+                isAdding = false;
+                break;
+            }
+
+        if (isAdding)
             newDocsList.append(newItem);
     }
 
