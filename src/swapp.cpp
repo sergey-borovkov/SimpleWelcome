@@ -120,7 +120,6 @@ void SWApp::loadShortcut()
 
 SWApp::SWApp()
     : KUniqueApplication()
-    , m_dataSourceApps(0)
 {
     // First of all, we have to register type to make it available from QML
     qmlRegisterType<WheelArea>("Private", 0, 1, "WheelArea");
@@ -128,9 +127,6 @@ SWApp::SWApp()
     m_globalAction = new KAction(this);
 
     m_viewer = new QmlApplicationViewer();
-
-    connect(m_viewer, SIGNAL(windowHidden()), SLOT(windowHidden()));
-    connect(m_viewer, SIGNAL(windowShown()), SLOT(windowShown()));
 
     m_kdeclarative.setDeclarativeEngine(m_viewer->engine());
     m_kdeclarative.initialize();
@@ -150,9 +146,9 @@ SWApp::SWApp()
     connect(recentAppsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
     connect(m_viewer, SIGNAL(windowShown()), recentAppsDataSource, SLOT(checkApps()));
 
-    m_dataSourceApps = new DataSource_Apps(this, recentAppsDataSource);
-    m_viewer->rootContext()->setContextProperty("dataSource_Apps", m_dataSourceApps);
-    connect(m_dataSourceApps, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
+    DataSource_Apps *appsDataSource = new DataSource_Apps(this, recentAppsDataSource);
+    m_viewer->rootContext()->setContextProperty("dataSource_Apps", appsDataSource);
+    connect(appsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
 
     DataSource_Favorites *favoritesDataSource = new DataSource_Favorites(this);
     m_viewer->rootContext()->setContextProperty("dataSource_Favorites", favoritesDataSource);
@@ -266,14 +262,4 @@ void SWApp::runDesktopFile(QString desktopFile)
     if (!desktopFile.isEmpty())
         new KRun(KUrl(desktopFile), QApplication::activeWindow());
     m_viewer->hide();
-}
-
-void SWApp::windowHidden()
-{
-    m_dataSourceApps->setUpdateAllowed(true);
-}
-
-void SWApp::windowShown()
-{
-    m_dataSourceApps->setUpdateAllowed(false);
 }

@@ -82,10 +82,9 @@ QString DataSource_Apps::itemUrlDnd(int id)
     return QString("file://%1").arg(appsList[id]["desktopEntry"].toString());
 }
 
-void DataSource_Apps::setUpdateAllowed(bool allow)
+void DataSource_Apps::onUpdateAllowedChanged()
 {
-    m_isUpdateAllowed = allow;
-    if (allow && m_isDbChanged) {
+    if (isUpdateAllowed() && m_isDbChanged) {
         m_isDbChanged = false;
         updateItems(true);
     }
@@ -121,9 +120,9 @@ void DataSource_Apps::updateItems(bool isResetContent/* = true*/)
 void DataSource_Apps::ksycocaChanged(const QStringList &changes)
 {
     if (changes.contains("apps")) {
-        if (m_isUpdateAllowed)
+        if (isUpdateAllowed())
             updateItems(true);  // if allowed => update now
-        m_isDbChanged = !m_isUpdateAllowed;  // delay update until it is allowed
+        m_isDbChanged = !isUpdateAllowed();  // delay update until it is allowed
     }
 }
 

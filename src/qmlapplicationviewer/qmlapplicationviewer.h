@@ -11,6 +11,7 @@ class QmlApplicationViewer : public QDeclarativeView
     Q_OBJECT
 
     Q_PROPERTY(QRect availableGeometry READ availableGeometry NOTIFY availableGeometryChanged)
+    Q_PROPERTY(bool visible READ isVisible NOTIFY visibleChanged)
 
 public:
     explicit QmlApplicationViewer(QWidget *parent = 0);
@@ -38,6 +39,7 @@ signals:
     void windowHidden();
     void windowShown();
     void iconSizeChanged();
+    void visibleChanged();
 
 public slots:
     void updateWorkArea(int screen);

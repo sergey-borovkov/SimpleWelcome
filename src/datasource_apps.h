@@ -17,11 +17,8 @@ public:
 
     Q_INVOKABLE QString itemUrlDnd(int id);
 
-    void setUpdateAllowed(bool allow);
-
 signals:
     void newItemData(QVariantMap itemData, QString group);
-    void resetContent();
     void runDesktopFile(QString desktopFile);
 
 public slots:
@@ -31,6 +28,8 @@ private slots:
     void ksycocaChanged(const QStringList &changes);
 
 private:
+    virtual void onUpdateAllowedChanged();
+
     void updateItems(bool isResetContent = true);
     void saveData();
 
@@ -40,5 +39,4 @@ private:
 
     DataSource_RecentApps *recentApps;
     bool m_isDbChanged;  // indicates that DB of application is changed
-    bool m_isUpdateAllowed; // allows updates of application (initially: to disallow update while window is shown)
 };

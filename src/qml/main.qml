@@ -276,4 +276,16 @@ Item {
 
     }
 
+    Binding {
+        target: dataSource_Apps
+        property: "isUpdateAllowed"
+        value: !mainWindow.visible
+    }
+
+    Binding {
+        target: dataSource_Favorites
+        property: "isUpdateAllowed"
+        value: !mainWindow.visible
+    }
+
 }

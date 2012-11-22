@@ -18,7 +18,6 @@ public:
 
 signals:
     void newItemData(QVariantMap itemData, QString group) const;
-    void resetContent();
     void runDesktopFile(QString desktopFile);
     void updateItemData(int id, QString field, QVariant data);
 

@@ -50,7 +50,6 @@ public slots:
 
 signals:
     void newItemData(QVariantMap itemData, QString group);
-    void resetContent();
     void runDesktopFile(QString desktopFile);
 
 

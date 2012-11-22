@@ -96,14 +96,16 @@ void QmlApplicationViewer::showEvent(QShowEvent *event)
 
     KWindowSystem::setState(winId(), NET::SkipTaskbar);
 
-    activateWindow();
-
+    emit visibleChanged();
     emit windowShown();
+
+    activateWindow();
 }
 
 void QmlApplicationViewer::hideEvent(QHideEvent *event)
 {
     QDeclarativeView::hideEvent(event);
+    emit visibleChanged();
     emit windowHidden();
 }
 

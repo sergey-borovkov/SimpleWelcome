@@ -24,7 +24,6 @@ public:
 
 signals:
     void newItemData(QVariantMap itemData, QString group);
-    void resetContent();
     void runDesktopFile(QString desktopFile);
 
 public slots:
@@ -36,10 +35,12 @@ private slots:
 
 private:
     virtual void timerEvent(QTimerEvent *event);
+    virtual void onUpdateAllowedChanged();
 
     void reloadItems();
 
     AppItemList favoritesList;
     QBasicTimer m_timer; // we use timer to skip dataChanged events and don't reload items very often
     KFilePlacesModel *m_placesModel;
+    bool m_isPlacesChanged;
 };
