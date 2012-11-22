@@ -2,9 +2,11 @@
 #include <kservicegroup.h>
 #include <KConfigGroup>
 #include <KDesktopFile>
+#include <KDE/KSycoca>
+#include <QFile>
 
 DataSource_RecentApps::DataSource_RecentApps(QObject *parent)
-    : DataSource(parent)
+    : DataSource(parent), m_isDbChanged(true)
 {
     KConfigGroup configGroup(KGlobal::config(), "General");
     QStringList recentAppsStringList = configGroup.readEntry("Recent applications", QStringList());
@@ -13,6 +15,35 @@ DataSource_RecentApps::DataSource_RecentApps(QObject *parent)
     foreach(QString recentApp, recentAppsStringList) {
         addRecentApp(recentApp, pinnedRecentApps.contains(recentApp), true);
     }
+
+    connect(KSycoca::self(), SIGNAL(databaseChanged(QStringList)), SLOT(ksycocaChanged(QStringList)));
+}
+
+void DataSource_RecentApps::ksycocaChanged(const QStringList changes)
+{
+    if (changes.contains("apps")) {
+
+        m_isDbChanged = true;
+    }
+}
+
+bool DataSource_RecentApps::checkApps()
+{
+    bool isChanged = false;
+    if (m_isDbChanged) {
+        m_isDbChanged = false;
+
+        for (int i = 0; i < recentAppsList.size(); i++)
+            if (!QFile::exists(recentAppsList[i]["desktopEntry"].toString())) {
+                recentAppsList.removeAt(i);
+                i--;
+                isChanged = true;
+            }
+
+        if (isChanged)
+            updateContent();
+    }
+    return isChanged;
 }
 
 int DataSource_RecentApps::getItemCount()
@@ -90,6 +121,7 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath, bool isPinned,
 
     if (recentAppsList.size() > 7)
         recentAppsList.removeAt(7);
+
     updateContent();
 }
 
@@ -104,6 +136,10 @@ void DataSource_RecentApps::itemClicked(int newIndex)
 
 void DataSource_RecentApps::updateContent()
 {
+    if (m_isDbChanged)
+        if (checkApps())
+            return;
+
     for (int i = 0; i < recentAppsList.size(); i++)
         recentAppsList[i]["id"] = i;
 

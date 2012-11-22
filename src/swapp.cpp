@@ -153,6 +153,7 @@ SWApp::SWApp()
     DataSource_RecentApps *recentAppsDataSource = new DataSource_RecentApps(this);
     m_viewer->rootContext()->setContextProperty("dataSource_RecentApps", recentAppsDataSource);
     connect(recentAppsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
+    connect(m_viewer, SIGNAL(windowShown()), recentAppsDataSource, SLOT(checkApps()));
 
     DataSource_Apps *appsDataSource = new DataSource_Apps(this, recentAppsDataSource);
     m_viewer->rootContext()->setContextProperty("dataSource_Apps", appsDataSource);

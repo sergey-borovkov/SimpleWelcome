@@ -27,10 +27,13 @@ public slots:
     void updateContent();
     void itemPinnedToggle(int index);
     void itemDragged(int fromIndex, int toIndex);
+    void ksycocaChanged(const QStringList changes);
+    bool checkApps();
 
 private:
     void saveData();
     void moveIconSkippingPinned(int id);
+    bool m_isDbChanged;
 
     AppItemList recentAppsList;
 };
