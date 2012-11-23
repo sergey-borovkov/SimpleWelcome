@@ -48,5 +48,5 @@ int SizesCalculator::iconSize() const
 
 int SizesCalculator::availableHeight() const
 {
-     return viewer->availableGeometry().height() + 55;
+     return viewer->availableGeometry().height() + 60;
 }
