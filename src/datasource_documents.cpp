@@ -11,6 +11,7 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QTimerEvent>
+#include <QtCore/QDir>
 #include <QtGui/QPainter>
 
 
@@ -89,7 +90,13 @@ void DataSource_Documents::updateContent()
         if (desktopFile.noDisplay())
             continue;
 
-        if (favorites.contains(desktopFile.readUrl()))
+        QString url_value = desktopFile.readUrl();
+        if (favorites.contains(url_value))
+            continue;
+
+        // skip directories
+        KUrl url = KUrl(url_value);
+        if (url.isLocalFile() && QDir(url.toLocalFile()).exists())
             continue;
 
         AppItem newItem;
@@ -98,7 +105,7 @@ void DataSource_Documents::updateContent()
         newItem["id"] = newDocsList.count();
         newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(desktopFile.readIcon());
         newItem["desktopEntry"] = desktopFile.fileName();
-        newItem["destination"] = KUrl(desktopFile.readUrl()).url();
+        newItem["destination"] = url.url();
 
         if (m_pixmaps.contains(newItem["destination"].toString()))
             newItem["imagePath"] = QString("image://generalicon/docicon/%1").arg(newItem["destination"].toString());
