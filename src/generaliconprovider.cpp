@@ -100,6 +100,9 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     else if (iconType == "asset") {
         iconPixmap.load(m_pathToAssets + iconName);
 
+        if (!requestedSize.isEmpty())
+            iconPixmap = iconPixmap.scaled(requestedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
         // TODO: Fill size struct
 
         return iconPixmap;

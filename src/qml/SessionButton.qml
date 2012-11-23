@@ -10,12 +10,16 @@ Item {
     Image {
         id: normalButton
         anchors.centerIn: parent
+        sourceSize.width: parent.width
+        sourceSize.height: parent.height
     }
 
     Image {
         id: hoverButton
         anchors.centerIn: parent
         opacity: 0
+        sourceSize.width: parent.width
+        sourceSize.height: parent.height
 
         Behavior on opacity {
             NumberAnimation { duration: 100; }
@@ -26,6 +30,8 @@ Item {
         id: pressedButton
         anchors.centerIn: parent
         opacity: 0
+        sourceSize.width: parent.width
+        sourceSize.height: parent.height
     }
 
     states: [

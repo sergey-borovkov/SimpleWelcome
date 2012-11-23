@@ -7,7 +7,7 @@ FocusScope {
 
     anchors.top: parent.top
     width: parent.width
-    height: 80
+    height: root.height > 768 ? 80 : 60
     focus: true
     Keys.forwardTo: [searchInputFilter, searchInput]
 
@@ -22,8 +22,8 @@ FocusScope {
         Image {
             id: userIcon
             source: "image://generalicon/general/usericon"
-            sourceSize.width: 64
-            sourceSize.height: 64
+            sourceSize.width: topBar.height - 16
+            sourceSize.height: topBar.height - 16
             smooth: true
         }
     }
@@ -142,21 +142,21 @@ FocusScope {
 
     Image {
         id: sessionButtons
-        width: 114
-        height: 68
+        sourceSize.width: root.height > 768 ? 114 : 85
+        sourceSize.height: root.height > 768 ? 68 : 51
         anchors.right: parent.right
         anchors.rightMargin: 10
-        anchors.topMargin: 10
+        anchors.topMargin: root.height > 768 ? 10 : 5
         anchors.top: parent.top
         source: "image://generalicon/asset/session_buttons_bg.png"
 
         SessionButton {
-            width: 41
-            height: 41
+            width: root.height > 768 ? 41 : 30
+            height: root.height > 768 ? 41 : 30
             anchors.left: parent.left
-            anchors.leftMargin: 7
+            anchors.leftMargin: root.height > 768 ? 7 : 5.5
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 9
+            anchors.bottomMargin: root.height > 768 ? 9 : 7
 
             imgNormal: "image://generalicon/asset/lock.png"
             imgHover: "image://generalicon/asset/lock_hover.png"
@@ -167,12 +167,12 @@ FocusScope {
         }
 
         SessionButton {
-            width: 55
-            height: 55
+            width: root.height > 768 ? 55 : 41
+            height: root.height > 768 ? 55 : 41
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 6
+            anchors.bottomMargin: root.height > 768 ? 6 : 5
             anchors.right: parent.right
-            anchors.rightMargin: 7
+            anchors.rightMargin: root.height > 768 ? 7 : 5
 
             imgNormal: "image://generalicon/asset/shutdown.png"
             imgHover: "image://generalicon/asset/shutdown_hover.png"
