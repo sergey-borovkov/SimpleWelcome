@@ -288,4 +288,10 @@ Item {
         value: !mainWindow.visible
     }
 
+    Binding {
+        target: dataSource_Documents
+        property: "isUpdateAllowed"
+        value: !mainWindow.visible
+    }
+
 }

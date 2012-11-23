@@ -5,6 +5,8 @@
 
 #include <KDE/KFileItemList>
 
+#include <QtCore/QBasicTimer>
+
 class SizesCalculator;
 namespace KIO {
     class PreviewJob;
@@ -39,8 +41,11 @@ private slots:
     void resultPreviewJob(const KFileItem &item, const QPixmap &pixmap);
     void previewFailed(const KFileItem &item);
     void previewJobFinished(KJob *job);
+    void onRecentsChanged(QString name);
 
 private:
+    virtual void onUpdateAllowedChanged();
+    virtual void timerEvent(QTimerEvent *);
     void createDocumentsPreviews(KFileItemList list);
 
     AppItemList docsList;
@@ -48,4 +53,6 @@ private:
     SizesCalculator *constants;
     QMap<QString, QPixmap> m_pixmaps;
     KIO::PreviewJob* runningJob;
+    QBasicTimer m_updateDelayTimer; // delay update to skip numerous notifications about changes
+    bool m_recentsChanged; // indicates that recent documents is changed
 };

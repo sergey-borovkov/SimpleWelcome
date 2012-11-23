@@ -157,7 +157,6 @@ SWApp::SWApp()
     DataSource_Documents *docsDataSource = new DataSource_Documents(this, constants);
     m_viewer->rootContext()->setContextProperty("dataSource_Documents", docsDataSource);
     connect(docsDataSource, SIGNAL(runDesktopFile(QString)), SLOT(runDesktopFile(QString)));
-    connect(m_viewer, SIGNAL(windowShown()), docsDataSource, SLOT(updateContent()));
     connect(m_viewer, SIGNAL(iconSizeChanged()), docsDataSource, SLOT(iconSizeChanged()));
 
     DataSource_Search *searchDataSource = new DataSource_Search(this, recentAppsDataSource);

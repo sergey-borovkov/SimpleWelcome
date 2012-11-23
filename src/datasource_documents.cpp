@@ -7,9 +7,18 @@
 #include <KDE/KDesktopFile>
 #include <KDE/KFilePlacesModel>
 #include <KDE/KIO/PreviewJob>
+#include <KDE/KDirWatch>
 
 #include <QtCore/QFile>
+#include <QtCore/QTimerEvent>
 #include <QtGui/QPainter>
+
+
+namespace
+{
+static const int _UPDATE_DELAY = 1000; // msec
+static const int _MAX_RECENT_DOC_NUMBER = 7;
+} //namespace
 
 
 
@@ -17,8 +26,15 @@ DataSource_Documents::DataSource_Documents(QObject *parent, SizesCalculator *inC
     : DataSource(parent),
       m_previewJobPlugins(KIO::PreviewJob::availablePlugins()),
       constants(inConstants),
-      runningJob(NULL)
+      runningJob(NULL),
+      m_recentsChanged(false)
 {
+    KDirWatch *recents_watch = new KDirWatch(this);
+    recents_watch->addDir(KRecentDocument::recentDocumentDirectory(), KDirWatch::WatchFiles);
+    connect(recents_watch, SIGNAL(created(QString)), SLOT(onRecentsChanged(QString)));
+    connect(recents_watch, SIGNAL(deleted(QString)), SLOT(onRecentsChanged(QString)));
+    connect(recents_watch, SIGNAL(dirty(QString)), SLOT(onRecentsChanged(QString)));
+
     updateContent();
 }
 
@@ -58,14 +74,14 @@ void DataSource_Documents::updateContent()
 {
     // Fix someday, ugly solution
     KFilePlacesModel *places = new KFilePlacesModel();
-    QStringList favoritesList;
+    QSet<QString> favorites;
     for (int i = 0; i < places->rowCount(); i++)
-        favoritesList.append(places->index(i, 0).data(KFilePlacesModel::UrlRole).toString());
+        favorites.insert(places->index(i, 0).data(KFilePlacesModel::UrlRole).toString());
 
     QStringList recentDocsList = KRecentDocument::recentDocuments();
 
     AppItemList newDocsList;
-    for (int i = 0; i < recentDocsList.size() && newDocsList.count() < 7; i++) {
+    for (int i = 0; i < recentDocsList.size() && newDocsList.count() < _MAX_RECENT_DOC_NUMBER; i++) {
         if (!QFile::exists(recentDocsList[i]) || !KDesktopFile::isDesktopFile(recentDocsList[i]))
             continue;
 
@@ -73,7 +89,7 @@ void DataSource_Documents::updateContent()
         if (desktopFile.noDisplay())
             continue;
 
-        if (favoritesList.contains(desktopFile.readUrl()))
+        if (favorites.contains(desktopFile.readUrl()))
             continue;
 
         AppItem newItem;
@@ -145,7 +161,6 @@ void DataSource_Documents::iconSizeChanged()
 void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap &pixmap)
 {
     int iconSize = constants->iconSize();
-    //qDebug() << item.url().url();
     QPixmap pix(iconSize, iconSize);
     pix.fill(Qt::transparent);
     QPainter p(&pix);
@@ -170,7 +185,6 @@ void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap
             emit updateItemData(i, "imagePath", docsList[i]["imagePath"].toString());
         }
     }
-    //emit resetContent();
 }
 
 void DataSource_Documents::previewFailed(const KFileItem &/*item*/)
@@ -181,6 +195,32 @@ void DataSource_Documents::previewFailed(const KFileItem &/*item*/)
 void DataSource_Documents::previewJobFinished(KJob */*job*/)
 {
     runningJob = NULL;
+}
+
+void DataSource_Documents::onRecentsChanged(QString name)
+{
+    // start time to skip numerous events about changes (to descrease number of updates)
+    m_updateDelayTimer.start(_UPDATE_DELAY, this);
+}
+
+void DataSource_Documents::onUpdateAllowedChanged()
+{
+    if (m_recentsChanged && isUpdateAllowed()) {
+        updateContent();
+        m_recentsChanged = false;
+    }
+}
+
+void DataSource_Documents::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == m_updateDelayTimer.timerId()) {
+        m_updateDelayTimer.stop();
+        if (isUpdateAllowed())
+            updateContent();
+        m_recentsChanged = !isUpdateAllowed();
+        return;
+    }
+    DataSource::timerEvent(event);
 }
 
 void DataSource_Documents::createDocumentsPreviews(KFileItemList list)
