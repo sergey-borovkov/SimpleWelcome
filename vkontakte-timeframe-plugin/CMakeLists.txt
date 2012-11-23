@@ -9,7 +9,7 @@ add_definitions(-DQT_SHARED)
 
 find_library(QJSON qjson)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/timeframe/social ${CMAKE_CURRENT_SOURCE_DIR}/../timeframelib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../timeframelib)
 
 set (RESOURCES  ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc)
 qt4_add_resources(QRC_SOURCES ${RESOURCES})
