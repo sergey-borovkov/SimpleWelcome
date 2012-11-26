@@ -204,7 +204,7 @@ void DataSource_Documents::previewJobFinished(KJob */*job*/)
     runningJob = NULL;
 }
 
-void DataSource_Documents::onRecentsChanged(QString name)
+void DataSource_Documents::onRecentsChanged(QString /*name*/)
 {
     // start time to skip numerous events about changes (to descrease number of updates)
     m_updateDelayTimer.start(_UPDATE_DELAY, this);
