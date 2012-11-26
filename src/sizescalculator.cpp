@@ -34,7 +34,7 @@ int SizesCalculator::cellHeight() const
 
 int SizesCalculator::iconTextSize() const
 {
-    return availableHeight() >= 1080 ? 10 : availableHeight() >= 1024 ? 10 : availableHeight() >= 600 ? 9 : 8;
+    return availableHeight() >= 1080 ? 10 : availableHeight() >= 1024 ? 10 : availableHeight() >= 768 ? 9 : availableHeight() >= 600 ? 8 : 7;
 }
 
 int SizesCalculator::iconSize() const

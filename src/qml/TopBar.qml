@@ -4,10 +4,11 @@ FocusScope {
     id: topBar
 
     property alias searchText: searchInput.text
+    property bool largeVariant: root.height > 800
 
     anchors.top: parent.top
     width: parent.width
-    height: root.height > 768 ? 80 : 60
+    height: largeVariant ? 80 : 60
     focus: true
     Keys.forwardTo: [searchInputFilter, searchInput]
 
@@ -66,8 +67,8 @@ FocusScope {
     Item {
         id: searchField
         x: Math.max(parent.width/2 - width/2, userNameItem.x + userNameItem.width + 30)
-        width: Math.max(40, Math.min(400, sessionButtons.x - (userNameItem.x + userNameItem.width) - 30*2))
-        height: 35//26
+        width: Math.max(40, Math.min(topBar.width > 1024 ? 400 : 250, sessionButtons.x - (userNameItem.x + userNameItem.width) - 30*2))
+        height: largeVariant ? 35 : 30
 
         visible: tabListView.currentIndex !== 3
 
@@ -121,17 +122,20 @@ FocusScope {
 
         TextInput {
             id: searchInput
+            anchors {
+                verticalCenter: parent.verticalCenter
+                verticalCenterOffset: -2
+                horizontalCenter: parent.horizontalCenter
+            }
             width: parent.width - 20
-            anchors.top: parent.top
-            anchors.topMargin: 6
-            anchors.horizontalCenter: parent.horizontalCenter
+
             selectByMouse: true
             activeFocusOnPress: false
             cursorVisible: true
             font.family: "Bitstream Vera Sans"
             color: "white"
             //font.italic: true
-            font.pixelSize: 16
+            font.pixelSize: largeVariant ? 16 : 14
         }
         Binding {
             target: searchGridModel
@@ -142,21 +146,21 @@ FocusScope {
 
     Image {
         id: sessionButtons
-        sourceSize.width: root.height > 768 ? 114 : 85
-        sourceSize.height: root.height > 768 ? 68 : 51
+        sourceSize.width: largeVariant ? 114 : 85
+        sourceSize.height: largeVariant ? 68 : 51
         anchors.right: parent.right
         anchors.rightMargin: 10
-        anchors.topMargin: root.height > 768 ? 10 : 5
+        anchors.topMargin: largeVariant ? 10 : 5
         anchors.top: parent.top
         source: "image://generalicon/asset/session_buttons_bg.png"
 
         SessionButton {
-            width: root.height > 768 ? 41 : 30
-            height: root.height > 768 ? 41 : 30
+            width: largeVariant ? 41 : 30
+            height: largeVariant ? 41 : 30
             anchors.left: parent.left
-            anchors.leftMargin: root.height > 768 ? 7 : 5.5
+            anchors.leftMargin: largeVariant ? 7 : 5.5
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: root.height > 768 ? 9 : 7
+            anchors.bottomMargin: largeVariant ? 9 : 7
 
             imgNormal: "image://generalicon/asset/lock.png"
             imgHover: "image://generalicon/asset/lock_hover.png"
@@ -167,12 +171,12 @@ FocusScope {
         }
 
         SessionButton {
-            width: root.height > 768 ? 55 : 41
-            height: root.height > 768 ? 55 : 41
+            width: largeVariant ? 55 : 41
+            height: largeVariant ? 55 : 41
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: root.height > 768 ? 6 : 5
+            anchors.bottomMargin: largeVariant ? 6 : 5
             anchors.right: parent.right
-            anchors.rightMargin: root.height > 768 ? 7 : 5
+            anchors.rightMargin: largeVariant ? 7 : 5
 
             imgNormal: "image://generalicon/asset/shutdown.png"
             imgHover: "image://generalicon/asset/shutdown_hover.png"
