@@ -3,7 +3,6 @@ import Private 0.1
 
 Item {
     id: tabBar
-
     anchors.bottom: parent.bottom
     width: parent.width
     height: 50

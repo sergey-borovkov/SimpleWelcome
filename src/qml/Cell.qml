@@ -4,7 +4,6 @@ import Effects 1.0
 Item {
     id: cell
 
-    // constants
     property int cellWidth: constants.cellWidth
 
     width: cellWidth
@@ -23,15 +22,21 @@ Item {
         height: childrenRect.height
 
         BorderImage {
-            anchors.left: cellIcon.left
-            anchors.top: cellIcon.top
+            id: stackedIconBg
+            anchors{
+                left: cellIcon.left
+                top: cellIcon.top
+            }
+            border {
+                left: 11
+                top: 11
+                right: 16
+                bottom: 15
+            }
             width: cellIcon.width + 5
             height: cellIcon.height + 4
+
             source: "image://generalicon/asset/stacked_icon_bg.png"
-            border.left: 11
-            border.top: 11
-            border.right: 16
-            border.bottom: 15
             visible: {
                 if (stack !== undefined)
                     return true
@@ -41,13 +46,14 @@ Item {
 
         Image {
             id: cellIcon
+            anchors {
+                top: parent.top
+                topMargin: constants.iconSize / 5 //20
+                horizontalCenter: parent.horizontalCenter
+            }
+
             source: imagePath
             cache: false
-            width: constants.iconSize
-            height: constants.iconSize
-            anchors.top: parent.top
-            anchors.topMargin: constants.iconSize / 5 //20
-            anchors.horizontalCenter: parent.horizontalCenter
 
             /*effect: DropShadow {
                     blurRadius: 50
@@ -55,8 +61,6 @@ Item {
                     xOffset: 0.5
                     yOffset: 0.5
                 }*/
-
-            smooth: true
 
             Connections {
                 target: mainWindow
@@ -69,12 +73,14 @@ Item {
 
         Text {
             id: cellText
-            text: caption
-
+            anchors {
+                top: cellIcon.bottom
+                topMargin: constants.iconSize / 5 //24
+                horizontalCenter: parent.horizontalCenter
+            }
             width: parent.width - 10
-            anchors.top: cellIcon.bottom
-            anchors.topMargin: constants.iconSize / 5 //24
-            anchors.horizontalCenter: parent.horizontalCenter
+
+            text: caption
 
 //            effect: DropShadow {
 //                    blurRadius: 3
@@ -82,7 +88,7 @@ Item {
 //                    xOffset: 0.3
 //                    yOffset: 0.7
 //                }
-            style: Text.Sunken
+            style: Text.Raised
             styleColor: "#000"
             color: "#eee"
             font.bold: true
@@ -97,11 +103,14 @@ Item {
 
         Image {
             id: pinIcon
-            anchors.top: cellIcon.top
-            anchors.right: cellIcon.right
-            anchors.topMargin: -25
-            anchors.rightMargin: -28
+            anchors {
+                top: cellIcon.top
+                right: cellIcon.right
+                topMargin: -25
+                rightMargin: -28
+            }
             z: 1
+
             opacity: pinned !== undefined && pinned ? 1 : gridMouseArea.grid === grid && gridMouseArea.hoveredId === id ? 0.5 : 0
             source: {
                  gridMouseArea.pinHovered && gridMouseArea.hoveredId === id ? "image://generalicon/asset/pin_hover.png" : "image://generalicon/asset/pin.png"
@@ -110,6 +119,11 @@ Item {
             Behavior on opacity {
                 NumberAnimation { duration: 300 }
             }
+        }
+
+        // Necessary for correct highlight height
+        Item {
+            height: cellIcon.anchors.topMargin + cellIcon.height + cellText.anchors.topMargin + cellText.height + cellIcon.anchors.topMargin/2
         }
 
         Behavior on x { enabled: wrapper.state == "gridInDrag"; NumberAnimation { duration: 150; easing.type: Easing.InOutQuad } }
@@ -201,9 +215,5 @@ Item {
 
             }
         ]
-
-        Item { // Necessary for correct highlight height
-            height: cellIcon.anchors.topMargin + cellIcon.height + cellText.anchors.topMargin + cellText.height + cellIcon.anchors.topMargin/2
-        }
-    }
-}
+    } // wrapper
+} // cell

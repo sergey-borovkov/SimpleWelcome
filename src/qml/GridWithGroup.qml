@@ -2,6 +2,21 @@ import QtQuick 1.1
 
 Column {
     id: groupRoot
+
+    width: parent.width
+    height: childrenRect.height
+
+    signal gridCurrentItemChanged(variant newCurrentItem)
+    signal showPopupGroup(int index, variant stackItemData, variant iconCoords)
+    signal gridMyFocusChanged(int containerIndex)
+    signal groupNameChanged(string newName)
+
+    // constants
+    property int groupCellHeight: constants.cellHeight
+    property int textToGridSpacing: constants.textToGridSpacing
+    property int textHeight: constants.groupTextHeight
+    property int containerIndex: 0
+
     // Dict-defined properties
     property alias groupName: groupLabel.text
     property alias dataSource: iconGridView.dataSource
@@ -10,88 +25,41 @@ Column {
     property alias groupNameVisible: groupLabelWrapper.visible
     property alias stackable: iconGridView.stackable
     property alias mouseDragChangesGrids: iconGridView.mouseDragChangesGrids
-
     // iconGridView aliases
     property alias prevGridGroup: iconGridView.prevGridGroup
     property alias nextGridGroup: iconGridView.nextGridGroup
     property alias maxCount: iconGridView.maxCount
     property alias indexStartAt: iconGridView.indexStartAt
-
     property alias count: iconGridView.count
     property alias gridView: iconGridView
-
     property alias dragOutTopMargin: iconGridView.dragOutTopMargin
     property alias dragOutBottomMargin: iconGridView.dragOutBottomMargin
     property alias myActiveFocus: iconGridView.myActiveFocus
-
     property alias isPopupGroup: iconGridView.isPopupGroup
-    property int groupCellHeight: constants.cellHeight
-
-    signal gridCurrentItemChanged(variant newCurrentItem)
-    signal showPopupGroup(int index, variant stackItemData, variant iconCoords)
-    signal gridMyFocusChanged(int containerIndex)
-    signal groupNameChanged(string newName)
-
-    property int containerIndex: 0
-
-    states: [
-        State {
-            name: "clipped"
-            PropertyChanges {
-                target: groupRoot
-                clip: true
-            }
-        },
-
-        State {
-            name: "unclipped"
-            PropertyChanges {
-                target: groupRoot
-                clip: false
-            }
-        }
-    ]
-
-    transitions: Transition {
-        from: "clipped"
-        to: "unclipped"
-        PropertyAnimation { target: groupRoot; properties: "clip"; duration: 300 }
-    }
-
-
-    // constants
-    property int textToGridSpacing: constants.textToGridSpacing
-    property int textHeight: constants.groupTextHeight
 
     spacing: textToGridSpacing
-    width: parent.width
-    height: childrenRect.height
     //visible: iconGridView.count != 0
-
-    Component.onCompleted: {
-        iconGridView.selectionChangedByKeyboard.connect(gridCurrentItemChanged)
-        iconGridView.myActiveFocusChanged.connect(gridMyFocusChanged)
-    }
 
     Item {
         id: groupLabelWrapper
+        anchors.left: parent.left
         width: parent.width
         height: groupLabel.text || isPopupGroup ? textHeight : 0
-        anchors.left: parent.left
 
         TextInput {
             id: groupLabel
+            anchors {
+                left: parent.left
+                leftMargin: 39
+            }
             height: parent.height
-            anchors.left: parent.left
-            anchors.leftMargin: 39//16
+
             readOnly: !isPopupGroup
             activeFocusOnPress: isPopupGroup
-
             font.family: "Bitstream Vera Sans"
             font.bold: true
             font.pixelSize: 14//18
             color: "#eee"
-            //styleColor: "#000"
 
             onTextChanged: {
                 if (isPopupGroup)
@@ -118,57 +86,77 @@ Column {
             }
 
             BorderImage {
-                visible: !groupLabel.readOnly
-                border.left: 6
-                border.right: 6
-                border.top: 6
-                border.bottom: 6
-                anchors.left: parent.left
-                anchors.leftMargin: -10
-                anchors.top: parent.top
-                anchors.topMargin: -7
+                id: textBackground
+                anchors {
+                    left: parent.left
+                    leftMargin: -10
+                    top: parent.top
+                    topMargin: -7
+                }
+                border {
+                    left: 6
+                    right: 6
+                    top: 6
+                    bottom: 6
+                }
                 width: groupLabel.width + 20
                 height: 30
-                source: "image://generalicon/asset/search_bar_bg.png"
                 z: -1
+
+                visible: !groupLabel.readOnly
+                source: "image://generalicon/asset/search_bar_bg.png"
             }
         }
 
         Image {
-            source: "image://generalicon/asset/group_line.png"
+            id: lineDecoration
+            anchors {
+                left: parent.left
+                leftMargin: 3
+                bottom: parent.bottom
+                bottomMargin: -2
+            }
             width: parent.width - 3 - 42 - 22
             height: 3
-            anchors.left: parent.left
-            anchors.leftMargin: 3
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: -2
             z: 1
+
+            source: "image://generalicon/asset/group_line.png"
         }
+    }
+
+    IconGridView {
+        id: iconGridView
     }
 
     Component {
         id: highlightComponent
+
         Item {
             id: gridSelection
+            x: iconGridView.currentItem ? iconGridView.currentItem.x : 0
+            y: iconGridView.currentItem ? iconGridView.currentItem.y : 0
+            width: iconGridView.currentItem ? iconGridView.currentItem.width : 0
+            height: iconGridView.currentItem ? iconGridView.currentItem.height : 0
+
             property int animationDuration: 150
             property int moveDurationConst: 150
             property int moveDuration: moveDurationConst
+
             opacity: myActiveFocus ? 1 : 0
 
-            width: iconGridView.currentItem ? iconGridView.currentItem.width : 0
-            height: iconGridView.currentItem ? iconGridView.currentItem.height : 0
-            x: iconGridView.currentItem ? iconGridView.currentItem.x : 0
-            y: iconGridView.currentItem ? iconGridView.currentItem.y : 0
-
             BorderImage {
-                border.left: 5
-                border.right: 7
-                border.top: 5
-                border.bottom: 7
-
-                anchors.fill: parent
-                anchors.rightMargin: -2
-                anchors.bottomMargin: -2
+                id: gridSelectionPic
+                anchors {
+                    fill: parent
+                    rightMargin: -2
+                    bottomMargin: -2
+                }
+                border {
+                    left: 5
+                    right: 7
+                    top: 5
+                    bottom: 7
+                }
 
                 source: "image://generalicon/asset/grid_selection.png"
             }
@@ -195,7 +183,32 @@ Column {
         }
     }
 
-    IconGridView {
-        id: iconGridView
+    states: [
+        State {
+            name: "clipped"
+            PropertyChanges {
+                target: groupRoot
+                clip: true
+            }
+        },
+
+        State {
+            name: "unclipped"
+            PropertyChanges {
+                target: groupRoot
+                clip: false
+            }
+        }
+    ]
+
+    transitions: Transition {
+        from: "clipped"
+        to: "unclipped"
+        PropertyAnimation { target: groupRoot; properties: "clip"; duration: 300 }
     }
-}
+
+    Component.onCompleted: {
+        iconGridView.selectionChangedByKeyboard.connect(gridCurrentItemChanged)
+        iconGridView.myActiveFocusChanged.connect(gridMyFocusChanged)
+    }
+} // groupRoot

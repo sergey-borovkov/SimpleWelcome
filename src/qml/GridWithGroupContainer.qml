@@ -2,44 +2,36 @@ import QtQuick 1.1
 
 Column {
     id: gridsContainer
+    anchors.bottom: parent.bottom
+    width: parent.width
+    height: childrenRect.height
+
+    signal gridCurrentItemChanged(variant newCurrentItem)
 
     property variant defaultGroupData
     property variant activeGridGroup
     property variant prevGridGroup: activeGridGroup.prevGridGroup
     property variant nextGridGroup: activeGridGroup.nextGridGroup
-
-    signal gridCurrentItemChanged(variant newCurrentItem)
+    property int gridContainersSpacing: constants.gridWithGroupsSpacing
     property int currentIndex: -1
 
-    // constants
-    property int gridContainersSpacing: constants.gridWithGroupsSpacing
-
-    width: parent.width
-    height: childrenRect.height
-    anchors.bottom: parent.bottom
     spacing: gridContainersSpacing
 
-
-    function gridsConnectionChanged()
-    {
+    function gridsConnectionChanged() {
         var visibleGrids = []
         var i
 
         for (i = 0; i < children.length; i++)
-            if ('gridView' in children[i])
-            {
+            if ('gridView' in children[i]) {
                 if (children[i].count)
                     visibleGrids.push(i)
-                else
-                {
+                else {
                     children[i].prevGridGroup = children[i]
                     children[i].nextGridGroup = children[i]
                 }
             }
 
-
-        for (i = 0; i < visibleGrids.length; i++)
-        {
+        for (i = 0; i < visibleGrids.length; i++) {
             var prevIndex = i - 1 < 0 ? visibleGrids.length - 1 : i - 1
             var nextIndex = i + 1 >= visibleGrids.length ? 0 : i + 1
 
@@ -47,19 +39,16 @@ Column {
             children[visibleGrids[i]].nextGridGroup = children[visibleGrids[nextIndex]]
         }
 
-        if (visibleGrids.length)
-        {
+        if (visibleGrids.length) {
             activeGridGroup = children[visibleGrids[0]]
             activeGridGroup.gridView.forceMyFocus()
             topBar.forceActiveFocus()
         }
     }
 
-    function addGridGroup(groupData)
-    {
+    function addGridGroup(groupData) {
         var prevGridGroup = activeGridGroup
         var groupComponent = Qt.createComponent("GridWithGroup.qml");
-        //console.log("ADDING GRID WITH GROUP OF " + groupData)
 
         groupData['containerIndex'] = children.length
 
@@ -76,14 +65,10 @@ Column {
 
         for (var i = 0; i < children.length; i++)
             if ('gridView' in children[i]) {
-                if (children[i].containerIndex === index) {
+                if (children[i].containerIndex === index)
                     children[i].myActiveFocus = true
-                    //console.log("CHANGED IN " + children[i].groupName + " TO true")
-                }
-                else {
+                else
                     children[i].myActiveFocus = false
-                    //console.log("CHANGED IN " + children[i].groupName + " TO false")
-                }
             }
     }
 
@@ -100,7 +85,6 @@ Column {
         if (activeItem !== undefined)
             activeItem.gridView.processKeyboard(key)
     }
-
 
     Component.onCompleted: {
         if (defaultGroupData !== undefined)

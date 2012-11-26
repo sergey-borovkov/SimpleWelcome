@@ -1,7 +1,18 @@
-import QtQuick 1.0
+import QtQuick 1.1
 
 GridView {
     id: grid
+    anchors {
+        left: parent.left
+        leftMargin: cellHorizontalSpacing
+    }
+    width: parent.width
+    height: groupName == "Apps" ? gridsListView.height : Math.ceil(count / columns) * groupCellHeight
+
+    signal selectionChangedByKeyboard(variant newCurrentItem)
+    signal itemStackingChanged()
+    signal myActiveFocusChanged(int containerIndex)
+
     property variant dataSource
     property variant prevGridGroup
     property variant nextGridGroup
@@ -12,49 +23,30 @@ GridView {
     property bool stackable: false // set true to enable icons stacking while Drag&Dropping
     property bool mouseDragChangesGrids: false
     property bool isPopupGroup: false
-
     property int dndSrcId: gridMouseArea.dndSrcId
     property int dragOutTopMargin: -1
     property int dragOutBottomMargin: -1
-
-    signal selectionChangedByKeyboard(variant newCurrentItem)
-    signal itemStackingChanged()
-
-    // constants
     property int columns: constants.gridColumns
     property int cellHorizontalSpacing: Math.max(0, (parent.width - constants.cellWidth * columns) / (columns + 1))
-
     property bool myActiveFocus: false
-    signal myActiveFocusChanged(int containerIndex)
 
-    width: parent.width
-    height: groupName == "Apps" ? gridsListView.height : Math.ceil(count / columns) * groupCellHeight
     interactive: false
-
     highlight: highlightComponent
     highlightFollowsCurrentItem: false
-
-    anchors {
-        left: parent.left
-        leftMargin: cellHorizontalSpacing
-    }
     cellWidth: (width - cellHorizontalSpacing) / columns - 1
     cellHeight: groupCellHeight ? groupCellHeight : constants.cellHeight
-
     delegate: Cell {}
 
-    ListModel {
-        id: appsModel
+    model: ListModel {
         signal itemClicked(int newIndex)
         signal itemPinnedToggle(int index)
     }
 
-    model: appsModel
+    Keys.onPressed: {
+        processKeyboard(event.key)
+    }
 
-
-
-    function newItemData(itemData)
-    {
+    function newItemData(itemData) {
         // This is needed for delegate to not blaming unknown variable
         if (itemData.pinned === undefined)
             itemData.pinned = undefined
@@ -74,13 +66,10 @@ GridView {
         model.insert(pos, itemData)
     }
 
-    function onItemClicked(newIndex)
-    {
-        if (newIndex != -1)
-        {
+    function onItemClicked(newIndex) {
+        if (newIndex !== -1) {
             var realIndex = model.get(newIndex).id
-            if (model.get(newIndex).stack !== undefined)
-            {
+            if (model.get(newIndex).stack !== undefined) {
                 currentIndex = newIndex
                 //console.log("onItemClicked::showPopupGroup from: " + newIndex)
                 var iconCoords = mapToItem(groupTab, currentItem.x + currentItem.width / 2 - 8, currentItem.y + currentItem.height)
@@ -94,8 +83,7 @@ GridView {
         else
             dataSource.itemClicked(realIndex, groupName)
 
-        if (groupName === i18n("Recent Applications"))
-        {
+        if (groupName === i18n("Recent Applications")) {
             resetContent()
             dataSource.updateContent()
         }
@@ -113,7 +101,7 @@ GridView {
     }
 
     function resetContent() {
-        if(typeof model !== 'undefined')
+        if (typeof model !== 'undefined')
             model.clear()
     }
 
@@ -137,8 +125,7 @@ GridView {
         else {
             //console.log("STACKING AGAIN")
             for (var i in stackArray) // Checking if item is already present in stack
-                if (stackArray[i].id === itemDragging.id)
-                {
+                if (stackArray[i].id === itemDragging.id) {
                     //console.log("Duplicate ignored")
                     return false
                 }
@@ -174,15 +161,12 @@ GridView {
         var stackIcon = "image://generalicon/stacked/"
 
         var removeIndex = -1
-        for (var i in stackArray) // If desired item occured - remove it. Otherwise recalculate stack icon
-        {
-            if (stackArray[i].id === itemDragging.id)
-            {
+        for (var i in stackArray) { // If desired item occured - remove it. Otherwise recalculate stack icon
+            if (stackArray[i].id === itemDragging.id) {
                 //console.log("Removing " +  stackArray[i].id + " - " + stackArray[i].caption + ", its == " + itemDragging.id + " - " + itemDragging.caption)
                 removeIndex = i
             }
-            else
-            {
+            else {
                 //console.log("Skipping " + stackArray[i].id + " - " + stackArray[i].caption)
                 stackIcon += stackArray[i].imagePath.slice(28) + "|"
             }
@@ -208,28 +192,12 @@ GridView {
         }
 
         // Fixing stacked item ID to match it's first element
-        if (removeIndex == 0)
-        {
+        if (removeIndex == 0) {
             //console.log("Fixing stacked item ID: indexUnstackingFrom: " + indexUnstackingFrom + " to " + stackArray[0].id)
             model.setProperty(indexUnstackingFrom, "id", stackArray[0].id)
         }
         itemStackingChanged()
         return true
-    }
-
-    Component.onCompleted: {
-        //console.log("COMPLETED " + dataSource + " VIEW")
-        if (dataSource)
-        {
-            dataSource.resetContent.connect(resetContent)
-            if (dataSource.updateItemData !== undefined)
-                dataSource.updateItemData.connect(updateItemContent)
-        }
-        model.itemClicked.connect(onItemClicked)
-        model.itemPinnedToggle.connect(onitemPinnedToggle)
-
-        if ('group' in model)
-            model.group = groupName
     }
 
     function updateItemContent(id, field, data) {
@@ -258,8 +226,7 @@ GridView {
 
     function processKeyboard(key) {
         var newCurrentItem
-        switch (key)
-        {
+        switch (key) {
         case Qt.Key_Left:
             if (currentIndex == 0 && prevGridGroup)
                 newCurrentItem = selectOtherGrid(prevGridGroup.gridView, prevGridGroup.count - 1)
@@ -275,8 +242,7 @@ GridView {
                 moveCurrentIndexRight()
             break
         case Qt.Key_Up:
-            if (currentIndex < columns && prevGridGroup)
-            {
+            if (currentIndex < columns && prevGridGroup) {
                 var roundCount = Math.floor((prevGridGroup.count) / columns) * columns
                 var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGridGroup.count - roundCount)))
 
@@ -288,9 +254,7 @@ GridView {
             break
         case Qt.Key_Down:
             if (currentIndex >= count - columns && nextGridGroup)
-            {
                 newCurrentItem = selectOtherGrid(nextGridGroup.gridView, currentIndex % columns)
-            }
 
             if (!interactive)
                 moveCurrentIndexDown()
@@ -312,9 +276,8 @@ GridView {
 
         case Qt.Key_Tab:
             console.log("KEY TAB")
-            if (isPopupGroup) {
+            if (isPopupGroup)
                 groupLabel.forceActiveFocus()
-            }
             break
         }
 
@@ -323,31 +286,22 @@ GridView {
             selectionChangedByKeyboard(newCurrentItem == null ? currentItem : newCurrentItem)
     }
 
-    Keys.onPressed: {
-        processKeyboard(event.key)
-    }
-
-
-    states: State {
-        name: "ShowBars"
-        when: grid.movingVertically
-        PropertyChanges { target: verticalScrollBar; opacity: 1 }
-    }
-
     transitions: Transition {
         NumberAnimation { properties: "opacity"; duration: 400 }
     }
 
-    ScrollBar {
-        id: verticalScrollBar
-        width: 12;
-        height: grid.height - 12
+    Component.onCompleted: {
+        //console.log("COMPLETED " + dataSource + " VIEW")
+        if (dataSource) {
+            dataSource.resetContent.connect(resetContent)
+            if (dataSource.updateItemData !== undefined)
+                dataSource.updateItemData.connect(updateItemContent)
+        }
+        model.itemClicked.connect(onItemClicked)
+        model.itemPinnedToggle.connect(onitemPinnedToggle)
 
-        anchors.right: grid.right
-        opacity: 0
-        orientation: Qt.Vertical
-        position: grid.visibleArea.yPosition
-        pageSize: grid.visibleArea.heightRatio
+        if ('group' in model)
+            model.group = groupName
     }
 }
 
