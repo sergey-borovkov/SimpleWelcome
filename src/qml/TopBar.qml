@@ -9,86 +9,81 @@ FocusScope {
     anchors.top: parent.top
     width: parent.width
     height: largeVariant ? 80 : 60
+
     focus: true
     Keys.forwardTo: [searchInputFilter, searchInput]
 
-    Item {
-        id: userIconItem
-        width: childrenRect.width
-        height: childrenRect.height
-
-        anchors.verticalCenter: parent.verticalCenter
-        x: 16
-
-        Image {
-            id: userIcon
-            source: "image://generalicon/general/usericon"
-            sourceSize.width: topBar.height - 16
-            sourceSize.height: topBar.height - 16
-            smooth: true
+    Image {
+        id: userIcon
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            leftMargin: 16
         }
+
+        source: "image://generalicon/general/usericon"
+        sourceSize.width: topBar.height - 16
+        sourceSize.height: topBar.height - 16
     }
 
-    Item {
-        id: userNameItem
-        width: childrenRect.width
-        height: childrenRect.height
-
-        anchors.left: userIconItem.right
-        anchors.leftMargin: 8
-
-        anchors.verticalCenter: parent.verticalCenter
-
-        Text {
-            id: usernameLabel
-
-            maximumLineCount: 1
-            elide: Text.ElideRight
-            clip: true
-            //horizontalAlignment: Text.AlignHCenter
-            wrapMode: Text.Wrap
-
-            font.pointSize: 18
-            //font.bold: true
-            font.family: "Bitstream Vera Sans"
-            style: Text.Raised
-            styleColor: "#000"
-            color: "#eee"
-
-            Component.onCompleted: {
-                text = userInfoProvider.userName
-            }
-
-            //text: userInfoProvider.userName
+    Text {
+        id: usernameLabel
+        anchors {
+            left: userIcon.right
+            leftMargin: 12
+            right: searchField.left
+            rightMargin: 12
+            verticalCenter: parent.verticalCenter
         }
 
+        maximumLineCount: 1
+        elide: Text.ElideRight
+        wrapMode: Text.Wrap
+        font.pointSize: 18
+        font.family: "Bitstream Vera Sans"
+        style: Text.Raised
+        styleColor: "#000"
+        color: "#eee"
+
+        Component.onCompleted: {
+            text = userInfoProvider.userName
+        }
     }
 
     Item {
         id: searchField
-        x: Math.max(parent.width/2 - width/2, userNameItem.x + userNameItem.width + 30)
-        width: Math.max(40, Math.min(topBar.width > 1024 ? 400 : 250, sessionButtons.x - (userNameItem.x + userNameItem.width) - 30*2))
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
+            verticalCenterOffset: 2
+        }
+        width: topBar.width > 1024 ? 400 : topBar.width > 800 ? 250 : 200
         height: largeVariant ? 35 : 30
 
         visible: tabListView.currentIndex !== 3
 
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: 2
-
         Image {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: -2
-            anchors.right: parent.right
-            anchors.rightMargin: 11
+            id: magnifyingGlassPic
+            anchors {
+                verticalCenter: parent.verticalCenter
+                verticalCenterOffset: -2
+                right: parent.right
+                rightMargin: 11
+            }
+
             source: "image://generalicon/asset/search_pic.png"
         }
 
         BorderImage {
-            border.left: 6
-            border.right: 6
-            border.top: 6
-            border.bottom: 6
+            id: searchBarBackground
+            border {
+                left: 6
+                right: 6
+                top: 6
+                bottom: 6
+            }
             anchors.fill: parent
+
             source: "image://generalicon/asset/search_bar_bg.png"
         }
 
@@ -97,12 +92,12 @@ FocusScope {
 
             Keys.onPressed: {
                 if (event.key == Qt.Key_Left ||
-                        event.key == Qt.Key_Right ||
-                        event.key == Qt.Key_Up ||
-                        event.key == Qt.Key_Down ||
-                        event.key == Qt.Key_Return ||
-                        event.key == Qt.Key_Enter ||
-                        event.key == Qt.Key_Tab)
+                    event.key == Qt.Key_Right ||
+                    event.key == Qt.Key_Up ||
+                    event.key == Qt.Key_Down ||
+                    event.key == Qt.Key_Return ||
+                    event.key == Qt.Key_Enter ||
+                    event.key == Qt.Key_Tab)
                 {
                     event.accepted = true
                     tabListView.processKeyboard(event.key)
@@ -134,9 +129,9 @@ FocusScope {
             cursorVisible: true
             font.family: "Bitstream Vera Sans"
             color: "white"
-            //font.italic: true
             font.pixelSize: largeVariant ? 16 : 14
         }
+
         Binding {
             target: searchGridModel
             property: "searchQuery"
@@ -146,21 +141,27 @@ FocusScope {
 
     Image {
         id: sessionButtons
+        anchors {
+            right: parent.right
+            rightMargin: 10
+            topMargin: largeVariant ? 10 : 5
+            top: parent.top
+        }
         sourceSize.width: largeVariant ? 114 : 85
         sourceSize.height: largeVariant ? 68 : 51
-        anchors.right: parent.right
-        anchors.rightMargin: 10
-        anchors.topMargin: largeVariant ? 10 : 5
-        anchors.top: parent.top
+
         source: "image://generalicon/asset/session_buttons_bg.png"
 
         SessionButton {
+            id: lockButton
+            anchors {
+                left: parent.left
+                leftMargin: largeVariant ? 7 : 5.5
+                bottom: parent.bottom
+                bottomMargin: largeVariant ? 9 : 7
+            }
             width: largeVariant ? 41 : 30
             height: largeVariant ? 41 : 30
-            anchors.left: parent.left
-            anchors.leftMargin: largeVariant ? 7 : 5.5
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: largeVariant ? 9 : 7
 
             imgNormal: "image://generalicon/asset/lock.png"
             imgHover: "image://generalicon/asset/lock_hover.png"
@@ -171,12 +172,15 @@ FocusScope {
         }
 
         SessionButton {
+            id: shutdownButton
+            anchors {
+                bottom: parent.bottom
+                bottomMargin: largeVariant ? 6 : 5
+                right: parent.right
+                rightMargin: largeVariant ? 7 : 5
+            }
             width: largeVariant ? 55 : 41
             height: largeVariant ? 55 : 41
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: largeVariant ? 6 : 5
-            anchors.right: parent.right
-            anchors.rightMargin: largeVariant ? 7 : 5
 
             imgNormal: "image://generalicon/asset/shutdown.png"
             imgHover: "image://generalicon/asset/shutdown_hover.png"
@@ -188,10 +192,14 @@ FocusScope {
     }
 
     Image {
-        source: "image://generalicon/asset/lines_up.png"
-        anchors.top: parent.bottom
-        anchors.topMargin: -1
+        id: linesDecoration
+        anchors {
+            top: parent.bottom
+            topMargin: -1
+        }
         width: parent.width
         height: 8
+
+        source: "image://generalicon/asset/lines_up.png"
     }
 }
