@@ -10,13 +10,12 @@ SizesCalculator::SizesCalculator(QObject *parent, QmlApplicationViewer *inViewer
 
 int SizesCalculator::cellWidth() const
 {
-    return availableHeight() >= 1080 ? 140 :
-           availableHeight() >= 1024 ? 130 :
-           availableHeight() >= 900 ? 120 :
-           availableHeight() >= 850 ? 110 :
-           availableHeight() >= 800 ? 110 :
-           availableHeight() >= 750 ? 100 :
-           70;
+    return availableWidth() >= 1920 ? 140 :
+           availableWidth() >= 1440 ? 130 :
+           availableWidth() >= 1280 && availableHeight() < 1024 ? 120 : availableWidth() >= 1280 ? 130 :
+           availableWidth() >= 1024 ? 112 :
+           availableWidth() >= 800 ? 102 :
+           86;
 }
 
 int SizesCalculator::cellHeight() const
@@ -34,7 +33,11 @@ int SizesCalculator::cellHeight() const
 
 int SizesCalculator::iconTextSize() const
 {
-    return availableHeight() >= 1080 ? 10 : availableHeight() >= 1024 ? 10 : availableHeight() >= 768 ? 9 : availableHeight() >= 600 ? 8 : 7;
+    return availableWidth() >= 1920 ? 10 :
+           availableWidth() >= 1280 ? 10 :
+           availableWidth() >= 1024 ? 9 :
+           availableWidth() >= 800 ? 8 :
+           7;
 }
 
 int SizesCalculator::iconSize() const
@@ -58,4 +61,9 @@ int SizesCalculator::thumbnailsSize() const
 int SizesCalculator::availableHeight() const
 {
      return viewer->availableGeometry().height() + 60;
+}
+
+int SizesCalculator::availableWidth() const
+{
+     return viewer->availableGeometry().width();
 }

@@ -57,4 +57,5 @@ private:
     QmlApplicationViewer *viewer;
 
     int availableHeight() const;
+    int availableWidth() const;
 };
