@@ -1,27 +1,49 @@
 import QtQuick 1.1
-
-import Qt 4.7
 import "timeframe"
 
 Item {
     id: rootWrapper
 
+    Connections {
+        target: mainWindow
+
+        onAvailableGeometryChanged: root.updateSize()
+
+        onWindowHidden: {
+            topBar.searchText = ""
+            tabListView.currentIndex = 1
+            topBar.forceActiveFocus()
+        }
+    }
+
+    Binding {
+        target: dataSource_Apps
+        property: "isUpdateAllowed"
+        value: !mainWindow.visible
+    }
+
+    Binding {
+        target: dataSource_Favorites
+        property: "isUpdateAllowed"
+        value: !mainWindow.visible
+    }
+
+    Binding {
+        target: dataSource_Documents
+        property: "isUpdateAllowed"
+        value: !mainWindow.visible
+    }
+
+
     Image {
+        id: backgroundImage
         anchors.fill: parent
+        z: -10
+
         fillMode: Image.PreserveAspectCrop
         smooth: true
         source: "image://generalicon/asset/background.jpg"
-        z: -10
     }
-
-    /*Rectangle {
-        anchors.fill: parent
-        //        color: "black"
-        //        opacity: 0.7
-        color: "#263C50"
-        opacity: 0.9
-
-    }*/
 
     Item {
         id: root
@@ -33,12 +55,25 @@ Item {
             bottomMargin: rootWrapper.height - anchors.topMargin - mainWindow.availableGeometry.height
         }
 
-
         property bool isCompleted: false
 
+        Keys.onPressed: {
+            if(event.key === Qt.Key_Escape) {
+                event.accepted = true;
+                var currentTab = tabListView.currentItem
+                if (currentTab && currentTab.tab && currentTab.tab.isPopupOpened)
+                    currentTab.tab.closePopup()
+                else
+                    mainWindow.close();
+            }
+            else if (event.key === Qt.Key_Space) {
+                event.accepted = true
+                tabListView.currentTabIndexChanged((tabListView.currentIndex + tabListView.count + 1) % tabListView.count + 1)
+            }
+        }
+
         function updateSize() {
-            if (isCompleted)
-            {
+            if (isCompleted) {
                 var wasCurrentIndex = tabListView.currentIndex
                 searchTab.tab.updateGridsContent()
                 welcomeTab.tab.updateGridsContent()
@@ -48,36 +83,9 @@ Item {
             }
         }
 
-        Keys.onPressed: {
-            if(event.key == Qt.Key_Escape) {
-                event.accepted = true;
-                var currentTab = tabListView.currentItem
-                if (currentTab && currentTab.tab && currentTab.tab.isPopupOpened)
-                    currentTab.tab.closePopup()
-                else
-                    mainWindow.close();
-            }
-            else if (event.key == Qt.Key_Space) {
-                event.accepted = true
-                tabListView.currentTabIndexChanged((tabListView.currentIndex + tabListView.count + 1) % tabListView.count + 1)
-            }
-        }
-
-        /*function cloneObject(obj) {
-            // Copying object by value
-            var newObj = new Object
-            for (var s in (obj)) {
-                //console.log("copying " + itemStackingTo[s])
-                newObj[s] = (obj)[s]
-            }
-            return newObj
-        }*/
-
-
         function cloneObject(inObj) {
             var newObj = (inObj instanceof Array) ? [] : {}
             for (var i in inObj) {
-
                 if (inObj[i] && typeof inObj[i] == "object")
                     newObj[i] = cloneObject(inObj[i])
                 else
@@ -132,14 +140,6 @@ Item {
         }
 
 
-        Component.onCompleted: {
-            isCompleted = true
-            //console.log("completed with: " + width + "x" + height + "")
-            bottomBar.wheelScroll.connect(tabListView.onWheelScroll)
-        }
-
-        NumberAnimation on opacity { to: 1.0; duration: 500 }
-
         VisualItemModel {
             id: tabListModel
 
@@ -161,56 +161,21 @@ Item {
                 height: tabListView.height
             }
 
-            /*Text {
-            text: "TimeFrame is disabled\nin this internal pre-alpha."
-            width: tabListView.width
-            height: tabListView.height
-            color: "gray"
-            font.pointSize: 30
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideMiddle
-
-        }*/
             TimeFrameTab {
                 width: tabListView.width
                 height: tabListView.height
             }
         }
 
-//        Rectangle{
-//            color: Qt.rgba(0, 0, 0, 0.2)
-//            anchors.fill: tabListView
-//        }
-
-//        Rectangle{
-//            color: Qt.rgba(0, 0, 0, 0.2)
-//            anchors.fill: topBar
-//        }
-
-//        Rectangle{
-//            color: Qt.rgba(0, 0, 0, 0.1)
-//            anchors.top: bottomBar.top
-//            anchors.left: bottomBar.left
-//            anchors.right: bottomBar.right
-//            anchors.bottom: root.bottom
-//            anchors.bottomMargin: -root.anchors.bottomMargin
-//        }
-
         ListView {
             id: tabListView
-
-            KeyNavigation.tab: topBar
-            KeyNavigation.backtab: topBar
-
-            interactive: false
-
             anchors.top: topBar.bottom
             width: parent.width
             height: parent.height - topBar.height - bottomBar.height
 
-            model: tabListModel
-
+            KeyNavigation.tab: topBar
+            KeyNavigation.backtab: topBar
+            interactive: false
             snapMode: ListView.SnapOneItem
             orientation: ListView.Horizontal
             boundsBehavior: Flickable.StopAtBounds
@@ -218,20 +183,20 @@ Item {
             highlightFollowsCurrentItem: true
             highlightMoveDuration: 240
             highlightRangeMode: ListView.StrictlyEnforceRange
-
             currentIndex: 1
 
-            function processKeyboard(key) {
-                if (currentItem)
-                    currentItem.tab.processKeyboard(key)
-
-            }
+            model: tabListModel
 
             onCurrentIndexChanged: {
                 if (currentItem && currentItem.grid)
                     currentItem.grid.forceMyFocus()
                 topBar.forceActiveFocus()
                 mainWindow.currentTabChanged(currentIndex)
+            }
+
+            function processKeyboard(key) {
+                if (currentItem)
+                    currentItem.tab.processKeyboard(key)
             }
 
             function currentTabIndexChanged(newCurrentIndex) {
@@ -261,37 +226,11 @@ Item {
             width: parent.width
         }
 
-    }
+        NumberAnimation on opacity { to: 1.0; duration: 500 }
 
-    Connections {
-        target: mainWindow
-
-        onAvailableGeometryChanged: root.updateSize()
-
-        onWindowHidden: {
-            topBar.searchText = ""
-            tabListView.currentIndex = 1
-            topBar.forceActiveFocus()
+        Component.onCompleted: {
+            isCompleted = true
+            bottomBar.wheelScroll.connect(tabListView.onWheelScroll)
         }
-
-    }
-
-    Binding {
-        target: dataSource_Apps
-        property: "isUpdateAllowed"
-        value: !mainWindow.visible
-    }
-
-    Binding {
-        target: dataSource_Favorites
-        property: "isUpdateAllowed"
-        value: !mainWindow.visible
-    }
-
-    Binding {
-        target: dataSource_Documents
-        property: "isUpdateAllowed"
-        value: !mainWindow.visible
-    }
-
+    } // root
 }

@@ -2,9 +2,10 @@ import QtQuick 1.1
 
 Item {
     id: button
-
     width: constants.iconSize >= 64 ? 200 : 180
     height: 27
+
+    signal buttonClick()
 
     property color buttonColor: "lightblue"
     property color onHoverColor: "gold"
@@ -17,10 +18,12 @@ Item {
 
     Text {
         id: buttonLabel
-        anchors.centerIn: parent
-        anchors.horizontalCenterOffset: pressable && pressedAndHovered ? 1 : 0
-        anchors.verticalCenterOffset: pressable && pressedAndHovered ? 1 : 0
-        text: "button label"
+        anchors {
+            centerIn: parent
+            horizontalCenterOffset: pressable && pressedAndHovered ? 1 : 0
+            verticalCenterOffset: pressable && pressedAndHovered ? 1 : 0
+        }
+
         color: active ? "black" : "white"
 
         Behavior on color {
@@ -28,22 +31,12 @@ Item {
         }
     }
 
-    signal buttonClick()
-
-    onButtonClick: {
-        //console.log(buttonLabel.text + " clicked")
-    }
-
     MouseArea {
         id: buttonMouseArea
-
         anchors.fill: parent
 
-        onClicked: buttonClick()
         hoverEnabled: true
-        //onEntered: parent.border.color = onHoverColor
-        //onExited:  parent.border.color = borderColor
-    }
 
-    //color: buttonMouseArea.pressed ? Qt.darker(buttonColor, 1.5) : buttonColor
+        onClicked: buttonClick()
+    }
 }

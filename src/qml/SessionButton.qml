@@ -2,9 +2,11 @@ import QtQuick 1.1
 
 Item {
     id: sessionButton
+
     property alias imgNormal: normalButton.source
     property alias imgHover: hoverButton.source
     property alias imgPressed: pressedButton.source
+
     function onButtonClicked() { }
 
     Image {
@@ -17,9 +19,10 @@ Item {
     Image {
         id: hoverButton
         anchors.centerIn: parent
-        opacity: 0
         sourceSize.width: parent.width
         sourceSize.height: parent.height
+
+        opacity: 0
 
         Behavior on opacity {
             NumberAnimation { duration: 100; }
@@ -29,9 +32,19 @@ Item {
     Image {
         id: pressedButton
         anchors.centerIn: parent
-        opacity: 0
         sourceSize.width: parent.width
         sourceSize.height: parent.height
+
+        opacity: 0
+    }
+
+    MouseArea {
+        id: sessionButtonMouseArea
+        anchors.fill: parent
+
+        hoverEnabled: true
+
+        onClicked: onButtonClicked()
     }
 
     states: [
@@ -53,12 +66,4 @@ Item {
             PropertyChanges { target: pressedButton; opacity: 1 }
         }
     ]
-
-    MouseArea {
-        id: sessionButtonMouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-
-        onClicked: onButtonClicked()
-    }
 }

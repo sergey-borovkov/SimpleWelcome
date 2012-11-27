@@ -9,7 +9,10 @@ FocusScope {
 
     GridWithGroupTab {
         id: groupTab
+
         property int tabCellHeight: (tabListView.height - (constants.textToGridSpacing + constants.groupTextHeight)*3 - constants.gridWithGroupsSpacing*2) / 4
+
+        isForceOnOneScreen: true
         groups: [
             {
                 groupName: i18n("Recent Applications"),
@@ -32,7 +35,5 @@ FocusScope {
                 groupCellHeight: tabCellHeight
             },
         ]
-
-        isForceOnOneScreen: true
     }
 }

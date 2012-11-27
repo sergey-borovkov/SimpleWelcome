@@ -2,13 +2,13 @@ import QtQuick 1.1
 
 FocusScope {
     id: topBar
-
-    property alias searchText: searchInput.text
-    property bool largeVariant: root.height > 800
-
     anchors.top: parent.top
     width: parent.width
     height: largeVariant ? 80 : 60
+
+    property bool largeVariant: root.height > 800
+
+    property alias searchText: searchInput.text
 
     focus: true
     Keys.forwardTo: [searchInputFilter, searchInput]
@@ -20,10 +20,10 @@ FocusScope {
             left: parent.left
             leftMargin: 16
         }
-
-        source: "image://generalicon/general/usericon"
         sourceSize.width: topBar.height - 16
         sourceSize.height: topBar.height - 16
+
+        source: "image://generalicon/general/usericon"
     }
 
     Text {
@@ -166,6 +166,7 @@ FocusScope {
             imgNormal: "image://generalicon/asset/lock.png"
             imgHover: "image://generalicon/asset/lock_hover.png"
             imgPressed: "image://generalicon/asset/lock_press.png"
+
             function onButtonClicked() {
                 sessionProvider.lock()
             }
@@ -185,6 +186,7 @@ FocusScope {
             imgNormal: "image://generalicon/asset/shutdown.png"
             imgHover: "image://generalicon/asset/shutdown_hover.png"
             imgPressed: "image://generalicon/asset/shutdown_press.png"
+
             function onButtonClicked() {
                 sessionProvider.shutdown()
             }

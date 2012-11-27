@@ -145,63 +145,8 @@ Item {
             }
         }
 
-        // Popup grid with stacked icons
         PopupFrame {
             id: popupFrame
-            width: parent.width
-            z: 1
-
-            property int slideHeight: 0
-            property int stackedIconIndex: -1
-
-            state: "CLOSED"
-
-            function groupCloseCompleted() {
-                if (gridMouseArea.dndSrcId === -1)
-                    gridsListView.dndStateChanged(false)
-            }
-
-            states: [
-                State {
-                    name: "CLOSED"
-                    PropertyChanges {
-                        target: popupFrame
-                        height: 0
-                        slideHeight: 0
-                    }
-                },
-
-                State {
-                    name: "OPEN"
-                    PropertyChanges {
-                        target: popupFrame
-                        height: childrenRect.height
-                        slideHeight: y + height < tabRoot.height ? 0 : -(tabRoot.height - (y + height - 6))
-                    }
-                }
-            ]
-
-            transitions: [
-                Transition {
-                    from: "CLOSED"
-                    to: "OPEN"
-
-                    NumberAnimation { properties: "height, slideHeight"; easing.type: Easing.InOutQuad }
-                },
-                Transition {
-                    from: "OPEN"
-                    to: "CLOSED"
-
-                    SequentialAnimation {
-                        NumberAnimation { properties: "height, slideHeight"; easing.type: Easing.InOutQuad }
-                        ScriptAction { script: popupFrame.groupCloseCompleted() }
-                    }
-                }
-            ]
-
-            Component.onCompleted: {
-                gridGroup.groupNameChanged.connect(gridsListView.groupNameChanged)
-            }
-        } // popupFrame
+        }
     } // tabWrapper
 } // tabRoot
