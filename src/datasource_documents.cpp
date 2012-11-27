@@ -167,7 +167,7 @@ void DataSource_Documents::iconSizeChanged()
 
 void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap &pixmap)
 {
-    int iconSize = constants->iconSize();
+    int iconSize = constants->thumbnailsSize();
     QPixmap pix(iconSize, iconSize);
     pix.fill(Qt::transparent);
     QPainter p(&pix);
@@ -235,7 +235,7 @@ void DataSource_Documents::createDocumentsPreviews(KFileItemList list)
     if (runningJob)
         runningJob->kill();
 
-    KIO::PreviewJob *job = KIO::filePreview(list, QSize(constants->iconSize(), constants->iconSize()), &m_previewJobPlugins);
+    KIO::PreviewJob *job = KIO::filePreview(list, QSize(constants->thumbnailsSize(), constants->thumbnailsSize()), &m_previewJobPlugins);
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
     runningJob = job;

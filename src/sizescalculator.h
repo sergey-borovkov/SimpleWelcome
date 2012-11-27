@@ -28,6 +28,8 @@ public:
     int iconTextSize() const;
     int iconSize() const;
 
+    int thumbnailsSize() const;
+
     int textToGridSpacing() const
     {
         return 16;

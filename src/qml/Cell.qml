@@ -44,29 +44,39 @@ Item {
             }
         }
 
-        Image {
+        Item {
             id: cellIcon
             anchors {
                 top: parent.top
                 topMargin: constants.iconSize / 5 //20
                 horizontalCenter: parent.horizontalCenter
             }
+            width: constants.iconSize
+            height: constants.iconSize
 
-            source: imagePath
-            cache: false
+            Image {
+                id: cellIconImage
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    horizontalCenter: parent.horizontalCenter
+                }
 
-            /*effect: DropShadow {
+                source: imagePath
+                cache: false
+
+                /*effect: DropShadow {
                     blurRadius: 50
                     color: Qt.rgba(0, 0, 0, 0.3)
                     xOffset: 0.5
                     yOffset: 0.5
                 }*/
 
-            Connections {
-                target: mainWindow
-                onIconSizeChanged: {
-                    cellIcon.sourceSize.width = constants.iconSize
-                    cellIcon.sourceSize.height = constants.iconSize
+                Connections {
+                    target: mainWindow
+                    onIconSizeChanged: {
+                        cellIconImage.sourceSize.width = constants.iconSize
+                        cellIconImage.sourceSize.height = constants.iconSize
+                    }
                 }
             }
         }

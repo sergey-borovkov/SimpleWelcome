@@ -46,6 +46,15 @@ int SizesCalculator::iconSize() const
            availableHeight() >= 768 ? 48 : 32;
 }
 
+int SizesCalculator::thumbnailsSize() const
+{
+    return availableHeight() >= 1080 ? 96 :
+           availableHeight() >= 1024 ? 80 :
+           availableHeight() >= 900 ? 64 :
+           availableHeight() >= 800 ? 56 :
+           availableHeight() >= 768 ? 48 : 32;
+}
+
 int SizesCalculator::availableHeight() const
 {
      return viewer->availableGeometry().height() + 60;

@@ -44,7 +44,6 @@ GeneralIconProvider::GeneralIconProvider(QString path_to_assets, SizesCalculator
 
 QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, const QSize &requestedSize)
 {
-//#define icons_size 128
     KIcon icon;
     QPixmap iconPixmap;
 
@@ -90,8 +89,14 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
     else if (iconType == "appicon")
         icon = KIcon(iconName);
     else if (iconType == "docicon") {
-        if (m_documentsDataSource)
+        if (m_documentsDataSource) {
             icon = KIcon(m_documentsDataSource->getPreview(iconName));
+            size->setWidth(constants->thumbnailsSize());
+            size->setHeight(constants->thumbnailsSize());
+            iconPixmap = icon.pixmap(*size, QIcon::Normal, QIcon::On);
+
+            return iconPixmap;
+        }
     }
     else if (iconType == "search") {
         if (m_searchDataSource)
