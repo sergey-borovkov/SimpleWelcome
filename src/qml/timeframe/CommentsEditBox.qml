@@ -62,6 +62,10 @@ Rectangle {
                 wrapMode: TextEdit.Wrap
                 onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
 
+                function trim(str) {
+                    return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+                }
+
                 Keys.onPressed: {
                     if (edit.text === i18n("Write comment..."))
                     {
@@ -70,10 +74,23 @@ Rectangle {
                         edit.cursorPosition = 0
                     }
                     if (event.key === Qt.Key_Return) {
+
+                        // add "shift+enter" process
+                        if (event.modifiers & Qt.ShiftModifier) {
+                            return;
+                        }
+
                         var comment = edit.text
-                        if (comment.length > 4096)
-                            comment = comment.slice(0, 4096)
-                        commentBox.send(comment)
+                        // exit if empty comment
+                        if (comment.length != 0 && comment.replace(/\s/g,"") != "") {
+
+                            if (comment.length > 4096)
+                                comment = comment.slice(0, 4096)
+
+                            // trim spaces from start and end of string
+                            comment = trim(comment)
+                            commentBox.send(comment)
+                        }
                         edit.color = "grey"
                         edit.text = i18n("Write comment...")
                         event.accepted = true
