@@ -117,6 +117,10 @@ GridView {
         var itemStackingTo = model.get(indexStackingTo)
 
         var stackArray = itemStackingTo.stack
+
+        if (stackArray.length >= 4*7) // Limiting stack icons count to 4*7
+            return false
+
         if (stackArray === undefined) {
             //console.log("FIRST TIME STACKING")
             stackArray = []
