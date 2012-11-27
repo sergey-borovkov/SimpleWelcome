@@ -90,7 +90,7 @@ int SWApp::newInstance()
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     static bool isFirst = true;
-    if (!args->isSet("silent") || !isFirst) {
+    if (!args->isSet("silent") || !args->isSet("s") || !isFirst) {
         if (m_viewer) {
             if (!m_viewer->isVisible())
                 m_viewer->show();

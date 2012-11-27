@@ -66,8 +66,7 @@ int main(int argc, char *argv[])
     KCmdLineArgs::init(argc, argv, &aboutData);
 
     KCmdLineOptions options;
-    options.add("s");
-    options.add("silent", ki18n("Silent run. Hide application window after start."));
+    options.add("s").add("silent", ki18n("Silent run. Hide application window after start."));
     KCmdLineArgs::addCmdLineOptions(options);
 
     if (!KUniqueApplication::start()) {
