@@ -7,7 +7,7 @@ Item {
     property int cellWidth: constants.cellWidth
 
     width: cellWidth
-    height: wrapper.height//140
+    height: wrapper.height
 
     GridView.onRemove: {
         wrapper.state = "REMOVING"
@@ -19,111 +19,124 @@ Item {
         x: cell.x
         y: cell.y
         width: cellWidth
-        height: childrenRect.height
-
-        BorderImage {
-            id: stackedIconBg
-            anchors{
-                left: cellIcon.left
-                top: cellIcon.top
-            }
-            border {
-                left: 11
-                top: 11
-                right: 16
-                bottom: 15
-            }
-            width: cellIcon.width + 5
-            height: cellIcon.height + 4
-
-            source: "image://generalicon/asset/stacked_icon_bg.png"
-            visible: {
-                if (stack !== undefined)
-                    return true
-                return false
-            }
-        }
+        height: innerWrapper.height
 
         Item {
-            id: cellIcon
+            id: innerWrapper
             anchors {
+                left: parent.left
                 top: parent.top
-                topMargin: constants.iconSize / 5 //20
-                horizontalCenter: parent.horizontalCenter
             }
-            width: constants.iconSize
-            height: constants.iconSize
 
-            Image {
-                id: cellIconImage
+            width: cellWidth
+            height: childrenRect.height
+
+            BorderImage {
+                id: stackedIconBg
+                anchors{
+                    left: cellIcon.left
+                    top: cellIcon.top
+                }
+                border {
+                    left: 11
+                    top: 11
+                    right: 16
+                    bottom: 15
+                }
+                width: cellIcon.width + 5
+                height: cellIcon.height + 4
+
+                source: "image://generalicon/asset/stacked_icon_bg.png"
+                visible: {
+                    if (stack !== undefined)
+                        return true
+                    return false
+                }
+            }
+
+            Item {
+                id: cellIcon
                 anchors {
-                    verticalCenter: parent.verticalCenter
+                    top: parent.top
+                    topMargin: constants.iconSize / 5 //20
                     horizontalCenter: parent.horizontalCenter
                 }
+                width: constants.iconSize
+                height: constants.iconSize
 
-                source: imagePath
-                cache: false
+                Image {
+                    id: cellIconImage
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        horizontalCenter: parent.horizontalCenter
+                    }
 
-                /*effect: DropShadow {
-                    blurRadius: 50
-                    color: Qt.rgba(0, 0, 0, 0.3)
-                    xOffset: 0.5
-                    yOffset: 0.5
-                }*/
+                    source: imagePath
+                    cache: false
 
-                Connections {
-                    target: mainWindow
-                    onIconSizeChanged: {
-                        cellIconImage.sourceSize.width = constants.iconSize
-                        cellIconImage.sourceSize.height = constants.iconSize
+                    /*effect: DropShadow {
+                        blurRadius: 50
+                        color: Qt.rgba(0, 0, 0, 0.3)
+                        xOffset: 0.5
+                        yOffset: 0.5
+                    }*/
+
+                    Connections {
+                        target: mainWindow
+                        onIconSizeChanged: {
+                            cellIconImage.sourceSize.width = constants.iconSize
+                            cellIconImage.sourceSize.height = constants.iconSize
+                        }
                     }
                 }
             }
-        }
 
-        Text {
-            id: cellText
-            anchors {
-                top: cellIcon.bottom
-                topMargin: constants.iconSize / 5 //24
-                horizontalCenter: parent.horizontalCenter
+            Text {
+                id: cellText
+                anchors {
+                    top: cellIcon.bottom
+                    topMargin: constants.iconSize / 5 //20
+                    horizontalCenter: parent.horizontalCenter
+                }
+                width: parent.width - 10
+
+                text: caption
+
+                /*effect: DropShadow {
+                    blurRadius: 3
+                    color: Qt.rgba(0, 0, 0, 1)
+                    xOffset: 0.3
+                    yOffset: 0.7
+                }*/
+                style: Text.Raised
+                styleColor: "#000"
+                color: "#eee"
+                font.bold: true
+                font.family: "Bitstream Vera Sans"
+                font.pointSize: constants.iconTextSize
+
+                maximumLineCount: 3
+                elide: Text.ElideRight
+                wrapMode: Text.Wrap
+                horizontalAlignment: Text.AlignHCenter
             }
-            width: parent.width - 10
 
-            text: caption
+            // Necessary for correct highlight height
+            Item {
+                height: cellIcon.anchors.topMargin + cellIcon.height + cellText.anchors.topMargin + cellText.height + cellIcon.anchors.topMargin/2
+            }
 
-//            effect: DropShadow {
-//                    blurRadius: 3
-//                    color: Qt.rgba(0, 0, 0, 1)
-//                    xOffset: 0.3
-//                    yOffset: 0.7
-//                }
-            style: Text.Raised
-            styleColor: "#000"
-            color: "#eee"
-            font.bold: true
-            font.family: "Bitstream Vera Sans"
-            font.pointSize: constants.iconTextSize
-
-            maximumLineCount: 3
-            elide: Text.ElideRight
-            wrapMode: Text.Wrap
-            horizontalAlignment: Text.AlignHCenter
-        }
+        } // innerWrapper
 
         Image {
             id: pinIcon
-            anchors {
-                top: cellIcon.top
-                right: cellIcon.right
-                topMargin: -25
-                rightMargin: -28
-            }
+            x: cellIcon.x + cellIcon.width - cellIcon.width/10
+            y: cellIcon.y - 25
             z: 1
 
             opacity: pinned !== undefined && pinned ? 1 : gridMouseArea.grid === grid && gridMouseArea.hoveredId === id ? 0.5 : 0
             source: {
-                 gridMouseArea.pinHovered && gridMouseArea.hoveredId === id ? "image://generalicon/asset/pin_hover.png" : "image://generalicon/asset/pin.png"
+                gridMouseArea.pinHovered && gridMouseArea.hoveredId === id ? "image://generalicon/asset/pin_hover.png" : "image://generalicon/asset/pin.png"
             }
 
             Behavior on opacity {
@@ -131,10 +144,6 @@ Item {
             }
         }
 
-        // Necessary for correct highlight height
-        Item {
-            height: cellIcon.anchors.topMargin + cellIcon.height + cellText.anchors.topMargin + cellText.height + cellIcon.anchors.topMargin/2
-        }
 
         Behavior on x { enabled: wrapper.state == "gridInDrag"; NumberAnimation { duration: 150; easing.type: Easing.InOutQuad } }
         Behavior on y { enabled: wrapper.state == "gridInDrag"; NumberAnimation { duration: 150; easing.type: Easing.InOutQuad } }
@@ -217,11 +226,11 @@ Item {
                 to: "REMOVING"
 
                 SequentialAnimation {
-                                 PropertyAction { target: cell; property: "GridView.delayRemove"; value: true }
-                                 NumberAnimation { target: wrapper; property: "scale"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
-                                 PropertyAction { target: cell; property: "GridView.delayRemove"; value: false }
-                                 PropertyAction { target: groupRoot; property: "state"; value: "unclipped" }
-                             }
+                    PropertyAction { target: cell; property: "GridView.delayRemove"; value: true }
+                    NumberAnimation { target: wrapper; property: "scale"; to: 0; duration: 250; easing.type: Easing.InOutQuad }
+                    PropertyAction { target: cell; property: "GridView.delayRemove"; value: false }
+                    PropertyAction { target: groupRoot; property: "state"; value: "unclipped" }
+                }
 
             }
         ]
