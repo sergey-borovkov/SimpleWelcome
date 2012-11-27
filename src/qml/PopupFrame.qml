@@ -63,6 +63,7 @@ FocusScope {
                 dragOutTopMargin: 72
                 dragOutBottomMargin: 33
                 mouseDragChangesGrids: true
+                groupCellHeight: (tabRoot.height - 75 - tabRoot.height / 5 - 10) / 4 - 1
                 dataSource: dataSource_Apps
             }
         }

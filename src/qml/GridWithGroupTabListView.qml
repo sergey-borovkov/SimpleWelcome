@@ -621,7 +621,7 @@ ListView {
             gridsListView.dndStateChanged(true)
 
             popupFrame.arrowX = iconCoords.x
-            popupFrame.y = iconCoords.y
+            popupFrame.y = iconCoords.y - constants.iconSize / 10
             popupFrame.groupTitle = item.caption
 
             popupFrame.gridGroup.gridView.model.clear()
