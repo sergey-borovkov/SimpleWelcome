@@ -14,7 +14,7 @@ Item {
         y: (index%2 === 1)? parent.height/2 + timeScale.height/2 : 0
         x: -100
         width: parent.width + 200
-        height: parent.height/2 - timeScale.height/2 - constants.iconTextSize
+        height: parent.height/2 - timeScale.height/2
 
         Component.onDestruction: {
             var m = localDayModel.itemsModel(date)

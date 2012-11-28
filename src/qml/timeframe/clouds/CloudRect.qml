@@ -23,23 +23,19 @@ Rectangle {
 
     Column {
         spacing: 5
-        width: image.paintedWidth - 2
-        height: image.paintedHeight - 2
         anchors.centerIn: parent
 
         Item {
-            width: parent.width
-            height: parent.height
+            width: image.paintedWidth - 2
+            height: image.paintedHeight - 2
+            anchors.horizontalCenter: parent.horizontalCenter
 
             ItemRectangle {
-                id:frame
                 anchors.fill: parent
             }
 
             Image {
                 id: image
-                anchors.centerIn: frame
-
                 sourceSize.width: cloudRect.width - 10
                 sourceSize.height: cloudRect.height - 10
 
