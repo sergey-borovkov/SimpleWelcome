@@ -1,6 +1,7 @@
 
 #include "datasource_documents.h"
 
+#include "shadowblur/shadowblur.h"
 #include "sizescalculator.h"
 
 #include <KDE/KRecentDocument>
@@ -167,6 +168,8 @@ void DataSource_Documents::iconSizeChanged()
 
 void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap &pixmap)
 {
+    int roundSize = 5;
+
     int iconSize = constants->thumbnailsSize();
     QPixmap pix(iconSize, iconSize);
     pix.fill(Qt::transparent);
@@ -182,7 +185,10 @@ void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap
     p.setBrush(brush);
     p.setPen(pen);
     p.translate((iconSize - pixmap.width()) / 2, (iconSize - pixmap.height()) / 2);
-    p.drawRoundedRect(0, 0, pixmap.width() - 1, pixmap.height() - 1, 7, 7, Qt::AbsoluteSize);
+    p.drawRoundedRect(0, 0, pixmap.width() - 1, pixmap.height() - 1, roundSize, roundSize, Qt::AbsoluteSize);
+    p.end();
+
+    pix = QPixmap::fromImage(drawShadowToPixmap(pix, 5, QColor(0, 0, 0, 80), 0, 2));
 
     m_pixmaps[item.url().url()] = pix;
 

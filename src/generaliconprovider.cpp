@@ -90,10 +90,9 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
         icon = KIcon(iconName);
     else if (iconType == "docicon") {
         if (m_documentsDataSource) {
-            icon = KIcon(m_documentsDataSource->getPreview(iconName));
-            size->setWidth(constants->thumbnailsSize());
-            size->setHeight(constants->thumbnailsSize());
-            iconPixmap = icon.pixmap(*size, QIcon::Normal, QIcon::On);
+            iconPixmap = m_documentsDataSource->getPreview(iconName);
+            size->setWidth(iconPixmap.width());
+            size->setHeight(iconPixmap.height());
 
             return iconPixmap;
         }
