@@ -118,15 +118,15 @@ GridView {
 
         var stackArray = itemStackingTo.stack
 
-        if (stackArray.length >= 4*7) // Limiting stack icons count to 4*7
-            return false
-
         if (stackArray === undefined) {
             //console.log("FIRST TIME STACKING")
             stackArray = []
             stackArray.push(root.cloneObject(itemStackingTo))
         }
         else {
+            if (stackArray.length >= 4*7) // Limiting stack icons count to 4*7
+                return false
+
             //console.log("STACKING AGAIN")
             for (var i in stackArray) // Checking if item is already present in stack
                 if (stackArray[i].id === itemDragging.id) {
