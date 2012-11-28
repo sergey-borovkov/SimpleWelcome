@@ -39,6 +39,7 @@ Item{
         anchors.right: parent.right
         anchors.left: cloudRect3.right
         anchors.leftMargin: margin
+        anchors.topMargin: 20
 
         Text {
             id: dateLabel
@@ -46,8 +47,14 @@ Item{
             width: 100
             height: labelHeight
             text: Qt.formatDate( cloudDate , "dd MMM yyyy")
-            color: "white"
             horizontalAlignment: Text.AlignHCenter
+
+            style: Text.Raised
+            styleColor: "#000"
+            color:  "white"
+            font.family: "Bitstream Vera Sans"
+            font.pointSize: constants.iconTextSize
+            font.bold: true
         }
     }
 }

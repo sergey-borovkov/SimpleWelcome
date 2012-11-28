@@ -1,6 +1,7 @@
 import QtQuick 1.1
 
 Column {
+    spacing: 5
     ItemRectangle {
         id: imageBackground
         width: itemGrid.cellWidth - 20
@@ -42,9 +43,17 @@ Column {
         width: parent.width
 
         text:  url.replace(/^.*[\\\/]/, '')
-        color: "white"
-        elide: Text.ElideLeft
-        verticalAlignment: Text.AlignHCenter
+
+        style: Text.Raised
+        styleColor: "#000"
+        color:  "white"
+        font.family: "Bitstream Vera Sans"
+        font.pointSize: constants.iconTextSize
+
+        elide: Text.ElideMiddle
+        maximumLineCount: 3
+        wrapMode: Text.Wrap
+        verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
     }
 }

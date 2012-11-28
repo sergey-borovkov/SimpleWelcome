@@ -21,20 +21,51 @@ Rectangle {
         }
     }
 
-    ItemRectangle {
-        anchors.centerIn: parent
+    Column {
+        spacing: 5
         width: image.paintedWidth - 2
         height: image.paintedHeight - 2
-    }
-
-    Image {
-        id: image
         anchors.centerIn: parent
 
-        sourceSize.width: parent.width - 10
-        sourceSize.height: parent.height - 10
+        Item {
+            width: parent.width
+            height: parent.height
 
-        cache: false
+            ItemRectangle {
+                id:frame
+                anchors.fill: parent
+            }
+
+            Image {
+                id: image
+                anchors.centerIn: frame
+
+                sourceSize.width: cloudRect.width - 10
+                sourceSize.height: cloudRect.height - 10
+
+                cache: false
+            }
+        }
+
+        Text {
+            id: fileName
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: cloudRect.width
+
+            text: url.replace(/^.*[\\\/]/, '')
+
+            style: Text.Raised
+            styleColor: "#000"
+            color:  "white"
+            font.family: "Bitstream Vera Sans"
+            font.pointSize: constants.iconTextSize
+
+            elide: Text.ElideMiddle
+//            maximumLineCount: 2
+//            wrapMode: Text.Wrap
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+        }
     }
 
     MouseArea {
