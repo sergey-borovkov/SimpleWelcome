@@ -107,6 +107,7 @@ void DataSource_Documents::updateContent()
         newItem["imagePath"] = QString("image://generalicon/appicon/%1").arg(desktopFile.readIcon());
         newItem["desktopEntry"] = desktopFile.fileName();
         newItem["destination"] = url.url();
+        newItem["description"] = QUrl(QUrl::fromPercentEncoding(desktopFile.readUrl().toUtf8())).toLocalFile();
 
         if (m_pixmaps.contains(newItem["destination"].toString()))
             newItem["imagePath"] = QString("image://generalicon/docicon/%1").arg(newItem["destination"].toString());

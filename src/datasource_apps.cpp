@@ -36,6 +36,10 @@ AppItemList GetFlatList(QString group)
             newItem["caption"] = service->name();
             newItem["desktopEntry"] = service->entryPath();
             newItem["group"] = group;
+            QString description = service->comment();
+            if(description.isEmpty())
+                description = service->genericName();
+            newItem["description"] = description;
 
             out.append(newItem);
         } else if (p->isType(KST_KServiceGroup)) {

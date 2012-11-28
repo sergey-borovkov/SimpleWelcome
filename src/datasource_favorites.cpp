@@ -88,6 +88,8 @@ void DataSource_Favorites::reloadItems()
             newItem["caption"] = bm.fullText();
             newItem["id"] = new_list.size();
             newItem["desktopEntry"] = index.data(KFilePlacesModel::UrlRole);
+            newItem["description"] = newItem["desktopEntry"].toUrl().toLocalFile();
+
             new_list.append(newItem);
         }
     }
