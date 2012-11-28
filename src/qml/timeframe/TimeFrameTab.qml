@@ -581,11 +581,13 @@ Item {
 
     Item {
         id: galleryButton
-        anchors.bottom: separator.top
-        anchors.bottomMargin: 5
-        anchors.left: parent.left
-        anchors.leftMargin: 20
-        width: 100
+        anchors {
+            bottom: separator.top
+            bottomMargin: 5
+            left: parent.left
+            leftMargin: 20
+        }
+        width: 60
         height: 32
         Image {
             id: galleryButtonImage
@@ -627,6 +629,32 @@ Item {
             }
         ]
 
+    }
+
+    Item {
+        id: sendMessageButton
+        anchors {
+            bottom: separator.top
+            bottomMargin: 5
+            left: galleryButton.right
+        }
+        width: 60
+        height: 32
+        visible: false
+        Image {
+            id: sendMessageButtonImage
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            source: "images/send-message.png"
+        }
+        MouseArea {
+            id: sendMessageButtonMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            onClicked: {
+                console.log("****   Press Send Message button...")
+            }
+        }
     }
 
     Component {
@@ -864,6 +892,7 @@ Item {
 
             PropertyChanges { target: timeFrameTab; currentView: socialTimeLine }
 
+            PropertyChanges { target: sendMessageButton; visible: true }
         },
         State {
             name: "socialGallery"; extend: "social"
@@ -894,6 +923,9 @@ Item {
             PropertyChanges { target: timeScale; visible: false; opacity: 0 }
 
             PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
+
+            PropertyChanges { target: sendMessageButton; visible: false; }
+
         },
         State {
             name: "socialSearching"; extend: "social"
@@ -905,6 +937,8 @@ Item {
             PropertyChanges { target: waitTimer; running: true }
 
             PropertyChanges { target: galleryButton; visible: false }
+
+            PropertyChanges { target: sendMessageButton; visible: false }
 
             PropertyChanges { target: timeScale; visible: false; opacity: 0 }
         }
