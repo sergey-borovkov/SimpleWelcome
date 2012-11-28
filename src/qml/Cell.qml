@@ -95,7 +95,7 @@ Item {
                 id: cellText
                 anchors {
                     top: cellIcon.bottom
-                    topMargin: constants.iconSize / 5 //20
+                    topMargin: constants.iconSize / 8
                     horizontalCenter: parent.horizontalCenter
                 }
                 width: parent.width - 10
@@ -123,7 +123,7 @@ Item {
 
             // Necessary for correct highlight height
             Item {
-                height: cellIcon.anchors.topMargin + cellIcon.height + cellText.anchors.topMargin + cellText.height + cellIcon.anchors.topMargin/2
+                height: cellIcon.anchors.topMargin + cellIcon.height + cellText.anchors.topMargin + cellText.height + cellText.anchors.topMargin
             }
 
         } // innerWrapper
