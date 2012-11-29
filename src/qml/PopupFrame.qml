@@ -43,7 +43,7 @@ FocusScope {
             }
             x: -1
             width: parent.width + 1
-            height: childrenRect.height + 64
+            height: childrenRect.height + 64 - 10
 
             color: "#505050"
             focus: true
