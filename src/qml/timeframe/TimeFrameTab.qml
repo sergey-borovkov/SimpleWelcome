@@ -465,6 +465,11 @@ Item {
         }
     }
 
+    SocialSendMessage {
+        id: socialSendMessageWindow
+        visible: false
+    }
+
     ListView {
         id: timeLine
         anchors.top: separator.bottom
@@ -652,7 +657,11 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
             onClicked: {
-                console.log("****   Press Send Message button...")
+                if (socialSendMessageWindow.state == "")
+                    socialSendMessageWindow.state = "showSendMessageWindow"
+                else
+                    socialSendMessageWindow.state = ""
+                console.log("****   Press Send Message button...    state is " + socialSendMessageWindow.state)
             }
         }
     }
