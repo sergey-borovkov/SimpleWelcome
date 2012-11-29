@@ -2,7 +2,8 @@ import QtQuick 1.1
 
 Column {
     spacing: 5
-    ItemRectangle {
+//    ItemRectangle {
+    Item {
         id: imageBackground
         width: itemGrid.cellWidth - 20
         height: itemGrid.cellHeight - 40

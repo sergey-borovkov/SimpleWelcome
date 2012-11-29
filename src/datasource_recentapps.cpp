@@ -108,6 +108,10 @@ void DataSource_RecentApps::addRecentApp(QString desktopFilePath, bool isPinned,
         newItem["caption"] = desktopFile.readName();
         newItem["pinned"] = isPinned;
         newItem["desktopEntry"] = desktopFilePath;
+        QString description = desktopFile.readComment();
+        if(description.isEmpty())
+            description = desktopFile.readGenericName();
+        newItem["description"] = description;
 
         if (!newItem["caption"].toString().isEmpty()) {
             if (isSimplyLoad)

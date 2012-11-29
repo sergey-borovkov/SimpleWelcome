@@ -31,8 +31,9 @@ class PreviewProvider : public QDeclarativeImageProvider
 public:
     PreviewProvider(const QString &type);
     QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
+    static QImage getRoundedImage(QImage image, int radius);
+
 private:
-    QImage getRoundedImage(QImage image, int radius);
     QString m_type;
     QPixmap m_defaultPreview;
     PreviewGenerator *m_generator;

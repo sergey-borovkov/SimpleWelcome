@@ -228,6 +228,7 @@ void DataSource_Search::newSearchMatches(const QList<Plasma::QueryMatch> &newMat
         newItem["id"] = counter;
         newItem["plasmaMatch"] = v;
         newItem["group"] = currentGroup;
+        newItem["description"] = newMatches.at(i).subtext();
 
         matches[currentGroup].append(newItem);
     }
