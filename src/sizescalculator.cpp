@@ -34,9 +34,9 @@ int SizesCalculator::cellHeight() const
 int SizesCalculator::iconTextSize() const
 {
     return availableWidth() >= 1920 ? 10 :
-           availableWidth() >= 1280 ? 10 :
-           availableWidth() >= 1024 ? 9 :
-           availableWidth() >= 800 ? 8 :
+           availableWidth() >= 1280 && availableHeight() >= 1024 ? 10 :
+           availableWidth() >= 1024 && availableHeight() >= 768 ? 9 :
+           availableWidth() >= 800 && availableHeight() >= 600 ? 8 :
            7;
 }
 
@@ -46,16 +46,26 @@ int SizesCalculator::iconSize() const
            availableHeight() >= 1024 ? 80 :
            availableHeight() >= 900 ? 64 :
            availableHeight() >= 800 ? 56 :
-           availableHeight() >= 768 ? 48 : 32;
+           availableHeight() >= 720 ? 48 :
+                                      32;
 }
 
-int SizesCalculator::thumbnailsSize() const
+QSize SizesCalculator::thumbnailsSize() const
 {
-    return availableHeight() >= 1080 ? 96 :
-           availableHeight() >= 1024 ? 80 :
-           availableHeight() >= 900 ? 64 :
-           availableHeight() >= 800 ? 56 :
-           availableHeight() >= 768 ? 48 : 32;
+    QSize res;
+    res.setWidth(availableWidth() >= 1920 ? 120 :
+                 availableWidth() >= 1440 ? 106 :
+                 availableWidth() >= 1280 ? 106 :
+                 availableWidth() >= 1024 ? 96 :
+                 availableWidth() >=  800 ? 80 :
+                                            32);
+    res.setHeight(availableHeight() >= 1080 ? 100 :
+                  availableHeight() >= 1024 ? 88 :
+                  availableHeight() >=  900 ? 64 :
+                  availableHeight() >=  800 ? 56 :
+                  availableHeight() >=  720 ? 48 :
+                                              32);
+    return res;
 }
 
 int SizesCalculator::availableHeight() const

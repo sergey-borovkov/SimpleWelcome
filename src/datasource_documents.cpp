@@ -171,8 +171,8 @@ void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap
 {
     int roundSize = 5;
 
-    int iconSize = constants->thumbnailsSize();
-    QPixmap pix(iconSize, iconSize);
+    QSize iconSize = constants->thumbnailsSize();
+    QPixmap pix(iconSize);
     pix.fill(Qt::transparent);
     QPainter p(&pix);
     QBrush brush(pixmap);
@@ -185,7 +185,7 @@ void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap
     p.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     p.setBrush(brush);
     p.setPen(pen);
-    p.translate((iconSize - pixmap.width()) / 2, (iconSize - pixmap.height()) / 2);
+    p.translate((iconSize.width() - pixmap.width()) / 2, (iconSize.height() - pixmap.height()) / 2);
     p.drawRoundedRect(0, 0, pixmap.width() - 1, pixmap.height() - 1, roundSize, roundSize, Qt::AbsoluteSize);
     p.end();
 
@@ -242,7 +242,7 @@ void DataSource_Documents::createDocumentsPreviews(KFileItemList list)
     if (runningJob)
         runningJob->kill();
 
-    KIO::PreviewJob *job = KIO::filePreview(list, QSize(constants->thumbnailsSize(), constants->thumbnailsSize()), &m_previewJobPlugins);
+    KIO::PreviewJob *job = KIO::filePreview(list, constants->thumbnailsSize(), &m_previewJobPlugins);
     job->setIgnoreMaximumSize();
     job->setAutoDelete(true);
     runningJob = job;
