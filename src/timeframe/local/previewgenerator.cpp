@@ -21,6 +21,7 @@
 
 #include "localcontentmodel.h"
 #include "previewgenerator.h"
+#include "previewprovider.h"
 
 #include <QtCore/QStringList>
 #include <QtGui/QPainter>
@@ -68,6 +69,8 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
     QPixmap pict = pixmap;
     if (item.mimetype() == "video/x-mng") { //Kde create incorect preview for mng files
         QPixmap p(item.localPath());
+        // add shadow
+        p = QPixmap::fromImage(PreviewProvider::getRoundedImage(p.toImage(), 5));
         m_previews.insert(item.localPath(), p);
         notifyModelAboutPreview(item.localPath());
         return;
@@ -76,6 +79,10 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
         QPixmap scaledPixmap = videoPixmap.scaled(pict.width() / 2, pict.height() / 2,  Qt::KeepAspectRatio, Qt::SmoothTransformation);
         p.drawPixmap(pict.width() / 2 - scaledPixmap.width() / 2, pict.height() / 2 - scaledPixmap.height() / 2 ,  scaledPixmap);
     }
+
+    // add shadow
+    pict = QPixmap::fromImage(PreviewProvider::getRoundedImage(pict.toImage(), 5));
+
     m_previews.insert(item.localPath(), pict);
     notifyModelAboutPreview(item.localPath());
 }

@@ -21,6 +21,7 @@
 
 #include "previewprovider.h"
 #include "previewgenerator.h"
+#include "shadowblur/shadowblur.h"
 
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
@@ -60,7 +61,7 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
     if (size)
         *size = pixmap.size();
     if (rounded)
-        return QPixmap::fromImage(getRoundedImage(pixmap.toImage(), 10));
+        return QPixmap::fromImage(getRoundedImage(pixmap.toImage(), 5));
 
     return pixmap;
 }
@@ -69,22 +70,23 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
 
 QImage PreviewProvider::getRoundedImage(QImage image, int radius)
 {
-    QImage out(image.width(), image.height(), QImage::Format_ARGB32);
-    out.fill(Qt::transparent);
-
-    QBrush brush(image);
-
+    QSize iconSize = image.size();
+    QPixmap pix(iconSize);
+    pix.fill(Qt::transparent);
+    QPainter p(&pix);
+    QBrush brush(QPixmap::fromImage(image));
     QPen pen;
+
     pen.setColor(Qt::transparent);
     pen.setJoinStyle(Qt::RoundJoin);
     pen.setWidth(0);
 
-    QPainter painter(&out);
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    p.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    p.setBrush(brush);
+    p.setPen(pen);
+    p.translate((iconSize.width() - image.width()) / 2, (iconSize.height() - image.height()) / 2);
+    p.drawRoundedRect(0, 0, image.width() - 1, image.height() - 1, radius, radius, Qt::AbsoluteSize);
+    p.end();
 
-    painter.setBrush(brush);
-    painter.setPen(pen);
-    painter.drawRoundedRect(0, 0, image.width() - 1, image.height() - 1, radius, radius, Qt::AbsoluteSize);
-
-    return out;
+    return drawShadowToPixmap(pix, 5, QColor(0, 0, 0, 80), 0, 2);
 }

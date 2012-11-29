@@ -21,46 +21,41 @@ Rectangle {
         }
     }
 
-    Column {
-        spacing: 5
-        anchors.centerIn: parent
+    Item {
+        anchors {
+            centerIn: parent
+        }
+        width: Math.min(image.paintedWidth, cloudRect.width)
+        height: Math.min(column.height, cloudRect.height)
 
-        Item {
-            width: image.paintedWidth - 2
-            height: image.paintedHeight - 2
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            ItemRectangle {
-                anchors.fill: parent
+        Column {
+            id: column
+            anchors {
+                centerIn: parent
+                horizontalCenter: parent.horizontalCenter
             }
-
             Image {
                 id: image
-                sourceSize.width: cloudRect.width - 10
-                sourceSize.height: cloudRect.height - 10
+                sourceSize.width: cloudRect.width
+                sourceSize.height: cloudRect.height - fileName.height
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                }
 
                 cache: false
             }
-        }
 
-        Text {
-            id: fileName
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: cloudRect.width
-
-            text: url.replace(/^.*[\\\/]/, '')
-
-            style: Text.Raised
-            styleColor: "#000"
-            color:  "white"
-            font.family: "Bitstream Vera Sans"
-            font.pointSize: constants.iconTextSize
-
-            elide: Text.ElideMiddle
-//            maximumLineCount: 2
-//            wrapMode: Text.Wrap
-            verticalAlignment: Text.AlignVCenter
-            horizontalAlignment: Text.AlignHCenter
+            Label {
+                id: fileName
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                }
+                width: cloudRect.width
+                text: url.replace(/^.*[\\\/]/, '')
+                elide: Text.ElideMiddle
+                font.bold: false
+                verticalAlignment: Text.AlignTop
+            }
         }
     }
 

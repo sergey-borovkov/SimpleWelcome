@@ -16,15 +16,13 @@ Item {
         return x
     }
 
-    Text {
+    Label {
         id: dateLabel
         anchors.top: parent.top
         anchors.left: parent.left
         width: 100
         height: labelHeight
         text: (size === 0) ? Qt.formatDate( date , "MMM yyyy") : Qt.formatDate( date , "dd MMM yyyy")
-        color: "white"
-        horizontalAlignment: Text.AlignHCenter
     }
 
     GridView {
