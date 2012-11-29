@@ -29,7 +29,7 @@ Item{
         anchors.rightMargin: 10
         anchors.bottom: cloudRect1.top
 
-        Text {
+        Label {
             id: dateLabel
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 10
