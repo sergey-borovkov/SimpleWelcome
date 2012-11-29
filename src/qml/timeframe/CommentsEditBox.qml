@@ -10,33 +10,39 @@ Rectangle {
     clip: true
     Image {
         id: userPhoto
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
+        anchors {
+            left: parent.left
+            verticalCenter: parent.verticalCenter
+            leftMargin: 5
+        }
         fillMode: Image.PreserveAspectFit
         width: 55
-        anchors.leftMargin: 5
     }
 
     Rectangle {
         id: editBorder
-        anchors.left: userPhoto.right
-        anchors.right: parent.right
-        anchors.top : parent.top
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: 5
-        anchors.topMargin: 5
-        anchors.bottomMargin: 5
-        anchors.rightMargin:  5
+        anchors {
+            left: userPhoto.right
+            right: parent.right
+            top : parent.top
+            bottom: parent.bottom
+            leftMargin: 5
+            topMargin: 5
+            bottomMargin: 5
+            rightMargin:  5
+        }
         color: "white"
         border.color: "#BDC7D8"
 
         Flickable {
             id: flick
-            anchors.fill: parent
-            anchors.topMargin: 3
-            anchors.leftMargin: 3
-            anchors.rightMargin: 3
-            anchors.bottomMargin: 3
+            anchors {
+                fill: parent
+                topMargin: 3
+                leftMargin: 3
+                rightMargin: 3
+                bottomMargin: 3
+            }
             contentWidth: edit.paintedWidth
             contentHeight: edit.paintedHeight
             clip: true
