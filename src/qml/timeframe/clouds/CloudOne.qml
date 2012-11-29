@@ -1,11 +1,12 @@
 import QtQuick 1.1
+import "../"
 
 Item {
     id: cloudOne
     property date cloudDate
     property variant model
 
-    Text {
+    Label {
         id: dateLabel
         anchors.top : parent.top
         anchors.topMargin: 10
@@ -13,14 +14,6 @@ Item {
         width: 100
         height: labelHeight
         text: Qt.formatDate( cloudDate , "dd MMM yyyy")
-        horizontalAlignment: Text.AlignHCenter
-
-        style: Text.Raised
-        styleColor: "#000"
-        color:  "white"
-        font.family: "Bitstream Vera Sans"
-        font.pointSize: constants.iconTextSize
-        font.bold: true
     }
 
     CloudRect {

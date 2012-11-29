@@ -1,4 +1,5 @@
 import QtQuick 1.0
+import "../"
 
 Item{
     id: cloudSix
@@ -14,19 +15,11 @@ Item{
         anchors.left: parent.left
         height: parent.height/10
         width: parent.width/3
-        Text{
+        Label{
             anchors.centerIn: parent
             width: 100
             height: dateLabel.height
             text: Qt.formatDate( cloudDate , "dd MMM yyyy")
-            horizontalAlignment: Text.AlignHCenter
-
-            style: Text.Raised
-            styleColor: "#000"
-            color:  "white"
-            font.family: "Bitstream Vera Sans"
-            font.pointSize: constants.iconTextSize
-            font.bold: true
         }
     }
 

@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import "../"
 
 Item{
     id: cloudNone
@@ -9,21 +10,13 @@ Item{
         anchors.centerIn: parent
         width: parent.width
         height: 200
-        Text{
+        Label{
             id: dateLabel
             anchors.top : parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             width: 100
             height: 60
             text: Qt.formatDate( cloudDate , "MMM yyyy")
-            horizontalAlignment: Text.AlignHCenter
-
-            style: Text.Raised
-            styleColor: "#000"
-            color:  "white"
-            font.family: "Bitstream Vera Sans"
-            font.pointSize: constants.iconTextSize
-            font.bold: true
         }
         AnimatedImage {
             id: waitIndicator
