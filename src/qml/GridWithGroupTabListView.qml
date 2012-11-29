@@ -601,6 +601,8 @@ ListView {
 
     function hideGroup(isNullifyStackedIndex) {
         if (popupFrame.state === "OPEN") {
+            gridMouseArea.hideTooltip()
+
             //gridsListView.dndStateChanged(false)
             stackCellOpenedId = -1
 
@@ -618,6 +620,7 @@ ListView {
 
     function showGroup(index, item, iconCoords) {
         if (popupFrame.state === "CLOSED") {
+            gridMouseArea.hideTooltip()
             gridsListView.dndStateChanged(true)
 
             popupFrame.arrowX = iconCoords.x
