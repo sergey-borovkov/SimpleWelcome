@@ -29,34 +29,35 @@
 PreviewProvider::PreviewProvider(const QString &type) :
     QDeclarativeImageProvider(Pixmap),
     m_type(type),
+    m_defaultPreview(":/pla-empty-box.png"),
     m_generator(previewGenerator(m_type))
 {
-    m_defaultPreview.load(":/pla-empty-box.png");
 }
 
 QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
-    QString str = id.left(id.lastIndexOf('%'));
+    QString path = id.left(id.lastIndexOf('%'));
     bool rounded = false;
-    QString round = str.right(8);
+    QString round = path.right(8);
     if (round == "/rounded") {
         rounded = true;
-        str.chop(8);
+        path.chop(8);
     }
 
-    QPixmap pixmap = m_generator->takePreviewPixmap(str);
+    QPixmap pixmap = m_generator->takePreviewPixmap(path);
 
     if (pixmap.isNull()) {
-        QSize size = requestedSize.isValid() ? requestedSize : QSize(512, 512);
-        m_generator->request(str, size);
+        const QSize size = requestedSize.isValid() ? requestedSize : QSize(512, 512);
+        m_generator->request(path, size);
+
         return m_defaultPreview;
     }
 
+    if (rounded)
+        pixmap = QPixmap::fromImage(getRoundedImage(pixmap.toImage(), 5));
 
     if (size)
         *size = pixmap.size();
-    if (rounded)
-        return QPixmap::fromImage(getRoundedImage(pixmap.toImage(), 5));
 
     return pixmap;
 }
@@ -83,5 +84,5 @@ QImage PreviewProvider::getRoundedImage(QImage image, int radius)
     p.drawRoundedRect(0, 0, image.width() - 1, image.height() - 1, radius, radius, Qt::AbsoluteSize);
     p.end();
 
-    return drawShadowToPixmap(pix, 5, QColor(0, 0, 0, 80), 0, 2);
+    return drawShadowToPixmap(pix, 5, QColor(0, 0, 0, 80), 0, 2);;
 }
