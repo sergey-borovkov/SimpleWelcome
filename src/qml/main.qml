@@ -192,7 +192,7 @@ Item {
                     currentItem.grid.forceMyFocus()
                 topBar.forceActiveFocus()
                 mainWindow.currentTabChanged(currentIndex)
-                if (currentItem)
+                if (currentItem && currentItem.tab)
                     currentItem.tab.gridMouseArea.hideTooltip()
             }
 
