@@ -29,7 +29,7 @@
 PreviewProvider::PreviewProvider(const QString &type) :
     QDeclarativeImageProvider(Pixmap),
     m_type(type),
-    m_defaultPreview(":/pla-empty-box.png"),
+    m_defaultPreview(":/item-placeholder.png"),
     m_generator(previewGenerator(m_type))
 {
 }
@@ -47,10 +47,16 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
     QPixmap pixmap = m_generator->takePreviewPixmap(path);
 
     if (pixmap.isNull()) {
-        const QSize size = requestedSize.isValid() ? requestedSize : QSize(512, 512);
-        m_generator->request(path, size);
+        const QSize previewSize = requestedSize.isValid() ? requestedSize : QSize(512, 512);
+        m_generator->request(path, previewSize);
 
-        return m_defaultPreview;
+        if (size) {
+            pixmap = m_defaultPreview.scaled(previewSize, Qt::KeepAspectRatio,
+                                             Qt::SmoothTransformation);
+            *size = pixmap.size();
+        }
+
+        return pixmap;
     }
 
     if (rounded)
