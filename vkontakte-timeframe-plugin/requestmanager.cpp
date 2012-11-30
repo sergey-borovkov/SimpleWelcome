@@ -102,6 +102,19 @@ Request *RequestManager::postComment(const QByteArray &message, const QString &p
     return request;
 }
 
+Request *RequestManager::postToWall(const QByteArray &message)
+{
+    QUrl url = constructUrl(QLatin1String("wall.post"));
+   url.addEncodedQueryItem("message", message);
+
+    VkRequest *request = new VkRequest(VkRequest::Post, this);
+    // TODO: proper error handling
+    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(postCommentReply(QByteArray)));
+    request->setUrl(url);
+
+    return request;
+}
+
 Request *RequestManager::like(const QString &id)
 {
     VkRequest *request = new VkRequest(VkRequest::Post, this);
@@ -553,13 +566,11 @@ void RequestManager::postCommentReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
+    qDebug() << result;
 
     if (result.contains(QLatin1String("error"))) {
         m_authorizer->logout();
         return;
-    }
-
-    if (result.contains(QLatin1String("response"))) {
     }
 }
 

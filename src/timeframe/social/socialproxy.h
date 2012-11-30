@@ -153,7 +153,6 @@ private:
      */
     PluginReply *like(const QString &id, const QString &pluginName);
 
-
     PluginReply *dislike(const QString &id, const QString &pluginName);
 
     PluginReply *getComments(const QString &id, const QString &pluginName);
