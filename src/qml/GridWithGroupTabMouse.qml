@@ -75,6 +75,9 @@ MouseArea {
     }
 
     function getItemUnderCursor(isForceRecheck) {
+        if (grid === undefined)
+            return -1
+
         var wasCurrentIndex = grid.currentIndex
         var mouseXReal = gridMouseX + grid.contentX, mouseYReal = gridMouseY + grid.contentY
         var wasContentX = grid.contentX, wasContentY = grid.contentY
@@ -394,11 +397,18 @@ MouseArea {
 
     onMousePositionChanged: mousePosChanged()
 
+    onContainsMouseChanged: {
+        if (!containsMouse)
+            mouseHoverTooltipTimer.hideTooltip()
+    }
+
     onPressed: {
         mouseHoverTooltipTimer.hideTooltip()
 
         isPressedAndHolded = false
-        pressedOnIndex = getItemUnderCursor(true).index
+        var itemUnderCursor = getItemUnderCursor(true)
+        if (itemUnderCursor !== -1)
+        pressedOnIndex = itemUnderCursor.index
 
         gridMouseXPressedAt = gridMouseX
         gridMouseYPressedAt = gridMouseY
@@ -483,6 +493,9 @@ MouseArea {
 
         draggedItemStackedAt = undefined
 
+        if (grid === undefined)
+            return
+
         if (grid.maxCount !== -1 && dndSrcIdSaved !== -1 && grid.count !== grid.maxCount) {
             gridsListView.gridIconPushPop("Apps")
         }
@@ -520,6 +533,16 @@ MouseArea {
             }
             else // Clicked on icon
                 grid.model.itemClicked(indexClicked)
+        }
+
+        if (!grid.moving) { // Clicked on broom
+            var broomItem = grid.parent.broomIcon
+            var broomCoords = mapFromItem(broomItem, 0, 0)
+            if (grid.parent.broomIcon.opacity &&
+                mouseX > broomCoords.x && mouseX < broomCoords.x + broomItem.width &&
+                mouseY > broomCoords.y && mouseY < broomCoords.y + broomItem.height) {
+                broomItem.click()
+            }
         }
     }
 
@@ -712,7 +735,7 @@ MouseArea {
         }
 
         function showTooltip() {
-            if (gridMouseArea.grid === undefined || !gridMouseArea.grid)
+            if (gridMouseArea.grid === undefined || !gridMouseArea.grid || !gridMouseArea.containsMouse)
                 return
 
             if (!gridMouseArea.grid.moving && gridMouseArea.dndSrcId === -1) {

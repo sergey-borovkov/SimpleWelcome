@@ -171,6 +171,13 @@ void DataSource_Documents::iconSizeChanged()
     updateThumbnails();
 }
 
+void DataSource_Documents::clearClicked()
+{
+    KRecentDocument::clear();
+
+    updateContent();
+}
+
 void DataSource_Documents::resultPreviewJob(const KFileItem &item, const QPixmap &pixmap)
 {
     int roundSize = 5;

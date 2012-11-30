@@ -32,7 +32,8 @@ FocusScope {
                 groupName: i18n("Recent Documents"),
                 dataSource: dataSource_Documents,
                 enabledSystemDnD: true,
-                groupCellHeight: tabCellHeight
+                groupCellHeight: tabCellHeight,
+                isClearAvailable: true
             },
         ]
     }

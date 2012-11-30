@@ -25,6 +25,7 @@ public:
 
     Q_INVOKABLE QString itemUrlDnd(int id) const;
     QPixmap getPreview(QString destination) const;
+    Q_INVOKABLE void clearClicked();
 
 signals:
     void newItemData(QVariantMap itemData, QString group);

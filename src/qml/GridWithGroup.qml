@@ -25,6 +25,7 @@ Column {
     property alias groupNameVisible: groupLabelWrapper.visible
     property alias stackable: iconGridView.stackable
     property alias mouseDragChangesGrids: iconGridView.mouseDragChangesGrids
+    property bool  isClearAvailable: false
     // iconGridView aliases
     property alias prevGridGroup: iconGridView.prevGridGroup
     property alias nextGridGroup: iconGridView.nextGridGroup
@@ -36,6 +37,8 @@ Column {
     property alias dragOutBottomMargin: iconGridView.dragOutBottomMargin
     property alias myActiveFocus: iconGridView.myActiveFocus
     property alias isPopupGroup: iconGridView.isPopupGroup
+
+    property alias broomIcon: broomIcon
 
     spacing: textToGridSpacing
     //visible: iconGridView.count != 0
@@ -52,7 +55,6 @@ Column {
                 left: parent.left
                 leftMargin: 39
             }
-            height: parent.height
 
             readOnly: !isPopupGroup
             activeFocusOnPress: isPopupGroup
@@ -123,6 +125,58 @@ Column {
             z: 1
 
             source: "image://generalicon/asset/group_line.png"
+        }
+
+        Image {
+            id: broomIcon
+            anchors {
+                //right: parent.right
+                //rightMargin: 39
+                left: groupLabel.right
+                leftMargin: 10
+                verticalCenter: groupLabel.verticalCenter
+                verticalCenterOffset: -2
+            }
+            sourceSize {
+                width: 24
+                height: 24
+            }
+
+            opacity: isClearAvailable && myActiveFocus
+            source: "image://generalicon/appicon/edit-clear-history.png"
+
+            function click() {
+                state = "CLICKED"
+            }
+
+            function clickClear() {
+                if (dataSource.clearClicked !== undefined)
+                    dataSource.clearClicked()
+            }
+
+
+            Behavior on opacity {
+                NumberAnimation { duration: 300 }
+            }
+
+            states: [
+                State {
+                    name: "CLICKED"
+                }
+            ]
+            transitions: Transition {
+                to: "CLICKED"
+
+                SequentialAnimation {
+                    NumberAnimation { target: broomIcon; property: "rotation"; to: 15; duration: 250/2; easing.type: Easing.InOutQuad }
+                    NumberAnimation { target: broomIcon; property: "rotation"; to: -45; duration: 250; easing.type: Easing.InOutQuad }
+                    NumberAnimation { target: broomIcon; property: "rotation"; to: 0; duration: 250/2; easing.type: Easing.InOutQuad }
+                    NumberAnimation { target: broomIcon; property: "rotation"; to: 15; duration: 250/2; easing.type: Easing.InOutQuad }
+                    NumberAnimation { target: broomIcon; property: "rotation"; to: -45; duration: 250; easing.type: Easing.InOutQuad }
+                    NumberAnimation { target: broomIcon; property: "rotation"; to: 0; duration: 250/2; easing.type: Easing.InOutQuad }
+                    ScriptAction { script: broomIcon.clickClear() }
+                }
+            }
         }
     }
 
