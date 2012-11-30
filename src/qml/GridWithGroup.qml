@@ -56,9 +56,11 @@ Column {
 
             readOnly: !isPopupGroup
             activeFocusOnPress: isPopupGroup
-            font.family: "Bitstream Vera Sans"
-            font.bold: true
-            font.pixelSize: 14//18
+            font {
+                family: "Bitstream Vera Sans"
+                bold: true
+                pixelSize: 14//18
+            }
             color: "#eee"
 
             onTextChanged: {

@@ -20,8 +20,10 @@ FocusScope {
             left: parent.left
             leftMargin: 16
         }
-        sourceSize.width: topBar.height - 16
-        sourceSize.height: topBar.height - 16
+        sourceSize {
+            width: topBar.height - 16
+            height: topBar.height - 16
+        }
 
         source: "image://generalicon/general/usericon"
     }
@@ -39,8 +41,10 @@ FocusScope {
         maximumLineCount: 1
         elide: Text.ElideRight
         wrapMode: Text.Wrap
-        font.pointSize: 18
-        font.family: "Bitstream Vera Sans"
+        font {
+            pointSize: 18
+            family: "Bitstream Vera Sans"
+        }
         style: Text.Raised
         styleColor: "#000"
         color: "#eee"
@@ -127,9 +131,11 @@ FocusScope {
             selectByMouse: true
             activeFocusOnPress: false
             cursorVisible: true
-            font.family: "Bitstream Vera Sans"
             color: "white"
-            font.pixelSize: largeVariant ? 16 : 14
+            font {
+                family: "Bitstream Vera Sans"
+                pixelSize: largeVariant ? 16 : 14
+            }
         }
 
         Binding {
@@ -147,8 +153,10 @@ FocusScope {
             topMargin: largeVariant ? 10 : 5
             top: parent.top
         }
-        sourceSize.width: largeVariant ? 114 : 85
-        sourceSize.height: largeVariant ? 68 : 51
+        sourceSize {
+            width: largeVariant ? 114 : 85
+            height: largeVariant ? 68 : 51
+        }
 
         source: "image://generalicon/asset/session_buttons_bg.png"
 

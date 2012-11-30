@@ -111,9 +111,11 @@ Item {
                 style: Text.Raised
                 styleColor: "#000"
                 color: "#eee"
-                font.bold: true
-                font.family: "Bitstream Vera Sans"
-                font.pointSize: constants.iconTextSize
+                font {
+                    bold: true
+                    family: "Bitstream Vera Sans"
+                    pointSize: constants.iconTextSize
+                }
 
                 maximumLineCount: 3
                 elide: Text.ElideRight

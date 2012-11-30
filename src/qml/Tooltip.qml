@@ -53,8 +53,10 @@ Item {
             elide: Text.ElideRight
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
-            font.bold: true
-            font.family: "Bitstream Vera Sans"
+            font {
+                bold: true
+                family: "Bitstream Vera Sans"
+            }
         }
 
         Text {

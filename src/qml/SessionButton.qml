@@ -12,15 +12,19 @@ Item {
     Image {
         id: normalButton
         anchors.centerIn: parent
-        sourceSize.width: parent.width
-        sourceSize.height: parent.height
+        sourceSize {
+            width: parent.width
+            height: parent.height
+        }
     }
 
     Image {
         id: hoverButton
         anchors.centerIn: parent
-        sourceSize.width: parent.width
-        sourceSize.height: parent.height
+        sourceSize {
+            width: parent.width
+            height: parent.height
+        }
 
         opacity: 0
 
@@ -32,8 +36,10 @@ Item {
     Image {
         id: pressedButton
         anchors.centerIn: parent
-        sourceSize.width: parent.width
-        sourceSize.height: parent.height
+        sourceSize {
+            width: parent.width
+            height: parent.height
+        }
 
         opacity: 0
     }
