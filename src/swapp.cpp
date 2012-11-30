@@ -50,7 +50,6 @@
 #include "timeframe/social/pluginloader.h"
 #include "timeframe/social/socialproxy.h"
 #include "timeframe/social/pluginimageprovider.h"
-#include "timeframe/social/socialitem.h"
 #include "timeframe/social/pluginmodel.h"
 #include "timeframe/social/socialcontentmodel.h"
 #include "timeframe/social/socialdayitem.h"
@@ -64,6 +63,9 @@
 #include <KDE/KRun>
 #include <KDE/KGlobalAccel>
 
+
+#include <listitem.h>
+#include <socialitem.h>
 
 #include "config.h"
 

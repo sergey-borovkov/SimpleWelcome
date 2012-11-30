@@ -65,6 +65,22 @@ Item {
             popupFrame.stackedIconIndex = -1
         }
 
+        function showTooltip(itemData, item) {
+            tooltip.title = itemData.caption
+            tooltip.content = itemData.description
+            tooltip.x = mapFromItem(item, item.width/2, 0).x - tooltip.width / 2
+            tooltip.y = mapFromItem(item, 0, item.height).y + 4 + 3
+            if (tooltip.y + tooltip.height > tabWrapper.height)
+                tooltip.y = mapFromItem(item, 0, 0).y - tooltip.height - 5 + 6
+            if (tooltip.y < 0)
+                tooltip.y = 0
+            tooltip.opacity = 1
+        }
+
+        function hideTooltip() {
+            tooltip.opacity = 0
+        }
+
         GridWithGroupTabListView {
             id: gridsListView
         }
@@ -148,5 +164,10 @@ Item {
         PopupFrame {
             id: popupFrame
         }
+
+        Tooltip {
+            id: tooltip
+        }
+
     } // tabWrapper
 } // tabRoot

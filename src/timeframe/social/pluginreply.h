@@ -1,17 +1,17 @@
-#ifndef PLUGINREQUESTREPLY_H
-#define PLUGINREQUESTREPLY_H
+#ifndef PLUGINREPLY_H
+#define PLUGINREPLY_H
 
 #include <QtCore/QObject>
 
 class Request;
 
 /**
- * @brief The PluginRequestReply class encapsulates replies from social plugins
+ * @brief The PluginReply class encapsulates replies from social plugins
  *        and allows to read those replies from QML. This class is necessary because
  *        Request is interface and can not be used from QML (and it does not have signals
  *        plugins are supposed to emit for the same reasons).
  */
-class PluginRequestReply : public QObject
+class PluginReply : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool finished READ isFinished NOTIFY finished)
@@ -22,7 +22,7 @@ public:
      * @param request Pointer to Request
      * @param parent
      */
-    explicit PluginRequestReply(Request *request, const QString &sourceId, const QString &pluginName, QObject *parent = 0);
+    PluginReply(Request *request, const QString &sourceId, const QString &pluginName, QObject *parent = 0);
 
     /**
      * @brief isComplete Check if request already completed
@@ -60,8 +60,8 @@ public:
     Q_INVOKABLE QString pluginName() const;
 
 signals:
-    void success(PluginRequestReply *);
-    void failure(PluginRequestReply *);
+    void success(PluginReply *);
+    void failure(PluginReply *);
     void finished();
 
 private slots:

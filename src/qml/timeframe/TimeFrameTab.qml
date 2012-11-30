@@ -657,6 +657,7 @@ Item {
         width: 60
         height: 32
         visible: false
+
         Image {
             id: sendMessageButtonImage
             anchors.verticalCenter: parent.verticalCenter
@@ -669,7 +670,6 @@ Item {
             hoverEnabled: true
             onClicked: {
                 socialSendMessageWindow.popupSendMessageWidget()
-                console.log("****   Press Send Message button...    state is " + socialSendMessageWindow.state)
             }
         }
     }

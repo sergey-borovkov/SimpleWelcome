@@ -14,7 +14,6 @@ RequestManager::RequestManager(QObject *parent)
 
 Request *RequestManager::queryWall()
 {
-
     QUrl url = constructUrl(QLatin1String("me"), QLatin1String("feed"));
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
@@ -66,6 +65,16 @@ Request *RequestManager::postComment(const QByteArray &message, const QString &p
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
     QUrl url = constructUrl(parentId, QLatin1String("comments"));
+    url.addEncodedQueryItem("message", message);
+    request->setUrl(url);
+
+    return request;
+}
+
+Request *RequestManager::postToWall(const QByteArray &message)
+{
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
+    QUrl url = constructUrl(QLatin1String("me"), QLatin1String("feed"));
     url.addEncodedQueryItem("message", message);
     request->setUrl(url);
 

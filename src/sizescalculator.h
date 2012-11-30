@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QSize>
 
 class QmlApplicationViewer;
 
@@ -28,7 +29,7 @@ public:
     int iconTextSize() const;
     int iconSize() const;
 
-    int thumbnailsSize() const;
+    QSize thumbnailsSize() const;
 
     int textToGridSpacing() const
     {

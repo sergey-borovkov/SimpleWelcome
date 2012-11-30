@@ -26,6 +26,10 @@ MouseArea {
 
     hoverEnabled: true
 
+    function hideTooltip() {
+        mouseHoverTooltipTimer.hideTooltip()
+    }
+
     function getGridMouseX() {
         return grid ? mapToItem(grid, mouseX, 0).x : 0
     }
@@ -266,6 +270,18 @@ MouseArea {
                 pinHovered = false
             }
 
+            // Displaying tooltip
+            if (true) {
+                var tooltipItemIndex = getItemUnderCursor(true).index
+
+                if (tooltipItemIndex === -1 || mouseHoverTooltipTimer.tooltipOpenedAt !== -1 && mouseHoverTooltipTimer.tooltipOpenedAt !== tooltipItemIndex)
+                    mouseHoverTooltipTimer.hideTooltip()
+                else {
+                    mouseHoverTooltipTimer.aimingAt = tooltipItemIndex
+                    mouseHoverTooltipTimer.restart()
+                }
+            }
+
         }
         else if (dndSrcId != -1)
         {
@@ -379,6 +395,8 @@ MouseArea {
     onMousePositionChanged: mousePosChanged()
 
     onPressed: {
+        mouseHoverTooltipTimer.hideTooltip()
+
         isPressedAndHolded = false
         pressedOnIndex = getItemUnderCursor(true).index
 
@@ -676,4 +694,40 @@ MouseArea {
             }
         }
     }
+
+    Timer {
+        id: mouseHoverTooltipTimer
+
+        property int aimingAt: -1
+        property int tooltipOpenedAt: -1
+
+        interval: 600
+
+        onTriggered: showTooltip()
+
+        function hideTooltip() {
+            tabWrapper.hideTooltip()
+            stop()
+            tooltipOpenedAt = -1
+        }
+
+        function showTooltip() {
+            if (gridMouseArea.grid === undefined || !gridMouseArea.grid)
+                return
+
+            if (!gridMouseArea.grid.moving && gridMouseArea.dndSrcId === -1) {
+                var newCurrentPair = gridMouseArea.getItemUnderCursor(true)
+                var newCurrentItem = newCurrentPair.item
+                var newCurrentIndex = newCurrentPair.index
+                if (newCurrentIndex !== -1) {
+                    var hoveredItem = gridMouseArea.grid.model.get(newCurrentIndex)
+                    var hoveredId = hoveredItem.id
+                    if (newCurrentIndex === aimingAt) {
+                        tabWrapper.showTooltip(hoveredItem, newCurrentItem)
+                        tooltipOpenedAt = newCurrentIndex
+                    }
+                }
+            }
+        }
+    } // mouseHoverTooltipTimer
 }

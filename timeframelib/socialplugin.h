@@ -34,6 +34,7 @@ public:
     virtual Request *queryVideo(const QString &vid, const QString &ownerId) = 0;
     virtual Request *queryUserInfo(const QString &fromId) = 0;
     virtual Request *postComment(const QByteArray &message, const QString &parentId) = 0;
+    virtual Request *postToWall(const QByteArray &message) = 0;
 
     /**
      * @brief Query comments to post. You need to connect to SocialRequestManager

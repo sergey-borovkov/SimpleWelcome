@@ -1,16 +1,11 @@
 import QtQuick 1.1
 import ".."
 
-Rectangle {
+Item {
+    id: cloudRect
+
     property string url
     property alias image: image
-
-    id: cloudRect
-    color: "transparent"
-    radius: 10
-
-    function gotThumbnail() {
-    }
 
     Connections {
         target: localDayModel.itemsModel(date)
@@ -22,41 +17,32 @@ Rectangle {
     }
 
     Item {
-        anchors {
-            centerIn: parent
-        }
-        width: Math.min(image.paintedWidth, cloudRect.width)
-        height: Math.min(column.height, cloudRect.height)
+        id: imageWrapper
+        width: cloudRect.width
+        height: cloudRect.height - fileName.font.pixelSize - 5
 
-        Column {
-            id: column
+        Image {
+            id: image
             anchors {
                 centerIn: parent
-                horizontalCenter: parent.horizontalCenter
+                verticalCenterOffset: -2
             }
-            Image {
-                id: image
-                sourceSize.width: cloudRect.width
-                sourceSize.height: cloudRect.height - fileName.height
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                }
-
-                cache: false
+            sourceSize {
+                width: parent.width
+                height: parent.height
             }
 
-            Label {
-                id: fileName
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                }
-                width: cloudRect.width
-                text: url.replace(/^.*[\\\/]/, '')
-                elide: Text.ElideMiddle
-                font.bold: false
-                verticalAlignment: Text.AlignTop
-            }
+            cache: false
         }
+    }
+    Label {
+        id: fileName
+        anchors.bottom: cloudRect.bottom
+        width: cloudRect.width
+
+        text: url.replace(/^.*[\\\/]/, '')
+        elide: Text.ElideMiddle
+        font.bold: false
     }
 
     MouseArea {

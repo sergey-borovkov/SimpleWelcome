@@ -1,6 +1,6 @@
 #include "pluginitem.h"
 #include "pluginmodel.h"
-#include "socialplugin.h"
+#include <socialplugin.h>
 
 PluginModel::PluginModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)

@@ -1,7 +1,7 @@
 #ifndef SOCIALPROXY_H
 #define SOCIALPROXY_H
 
-#include "pluginrequestreply.h"
+#include "pluginreply.h"
 #include "socialitem.h"
 
 #include <QtCore/QList>
@@ -16,7 +16,7 @@ class PluginModel;
 class SocialItem;
 class CommentItem;
 class SocialContentModel;
-class PluginRequestReply;
+class PluginReply;
 
 class SocialProxy : public QObject
 {
@@ -85,9 +85,9 @@ public:
      * @param id of item
      * @param plugin name
      */
-    Q_INVOKABLE PluginRequestReply *getAllComments(const QString &id, const QString &pluginName);
+    Q_INVOKABLE PluginReply *getAllComments(const QString &id, const QString &pluginName);
 
-    Q_INVOKABLE PluginRequestReply *getAllLikes(const QString &id, const QString &pluginName);
+    Q_INVOKABLE PluginReply *getAllLikes(const QString &id, const QString &pluginName);
 
 public slots:
     void newItem(SocialItem *item);
@@ -101,13 +101,13 @@ public slots:
     void startSearch();
 
 private slots:
-    void likeSuccess(PluginRequestReply *);
-    void commentSuccess(PluginRequestReply *);
-    void getPictureSuccess(PluginRequestReply *);
-    void getSelfPictureSuccess(PluginRequestReply *);
-    void getAudioSuccess(PluginRequestReply *);
-    void getVideoSuccess(PluginRequestReply *);
-    void getUserInfoSuccess(PluginRequestReply *);
+    void likeSuccess(PluginReply *);
+    void commentSuccess(PluginReply *);
+    void getPictureSuccess(PluginReply *);
+    void getSelfPictureSuccess(PluginReply *);
+    void getAudioSuccess(PluginReply *);
+    void getVideoSuccess(PluginReply *);
+    void getUserInfoSuccess(PluginReply *);
 
     /**
      * @brief Slot called on social network deauthorization
@@ -151,12 +151,11 @@ private:
      * @param id Id of object you want to like
      * @param pluginName Name of social plugin object originates from
      */
-    PluginRequestReply *like(const QString &id, const QString &pluginName);
+    PluginReply *like(const QString &id, const QString &pluginName);
 
+    PluginReply *dislike(const QString &id, const QString &pluginName);
 
-    PluginRequestReply *dislike(const QString &id, const QString &pluginName);
-
-    PluginRequestReply *getComments(const QString &id, const QString &pluginName);
+    PluginReply *getComments(const QString &id, const QString &pluginName);
 
     /**
      * @brief postComment
@@ -165,17 +164,17 @@ private:
      * @param pluginName
      * @return pointer to PluginRequestReply
      */
-    PluginRequestReply *postComment(const QString &message, const QString &parentId, const QString &pluginName);
+    PluginReply *postComment(const QString &message, const QString &parentId, const QString &pluginName);
 
-    PluginRequestReply *userPicture(const QString &id, const QString &parentId, const QString &pluginName);
+    PluginReply *userPicture(const QString &id, const QString &parentId, const QString &pluginName);
 
-    PluginRequestReply *selfPicture(const QString &pluginName);
+    PluginReply *selfPicture(const QString &pluginName);
 
-    PluginRequestReply *audioUrl(const QString &parentId, const QString &aid, const QString &ownerId, const QString &pluginName);
+    PluginReply *audioUrl(const QString &parentId, const QString &aid, const QString &ownerId, const QString &pluginName);
 
-    PluginRequestReply *videoUrl(const QString &parentId, const QString &vid, const QString &ownerId, const QString &pluginName);
+    PluginReply *videoUrl(const QString &parentId, const QString &vid, const QString &ownerId, const QString &pluginName);
 
-    PluginRequestReply *userInfo(const QString &parentId, const QString &fromId, const QString &pluginName);
+    PluginReply *userInfo(const QString &parentId, const QString &fromId, const QString &pluginName);
 
     QList<ISocialPlugin *> m_plugins;
     PluginModel *m_pluginModel;

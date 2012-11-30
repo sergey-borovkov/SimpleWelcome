@@ -192,6 +192,8 @@ Item {
                     currentItem.grid.forceMyFocus()
                 topBar.forceActiveFocus()
                 mainWindow.currentTabChanged(currentIndex)
+                if (currentItem && currentItem.tab)
+                    currentItem.tab.gridMouseArea.hideTooltip()
             }
 
             function processKeyboard(key) {
