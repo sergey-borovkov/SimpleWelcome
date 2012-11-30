@@ -37,8 +37,8 @@ Item {
     }
     Label {
         id: fileName
-        anchors.bottom: cloudRect.bottom
-        width: cloudRect.width
+        anchors.bottom: parent.bottom
+        width: image.sourceSize.width
 
         text: url.replace(/^.*[\\\/]/, '')
         elide: Text.ElideMiddle

@@ -19,7 +19,7 @@ Item {
     CloudRect {
         id: cloudRect1
         anchors.top: dateLabel.bottom
-        width: parent.width
+        width: parent.width * 1 / 3
         height: parent.height * 4 / 5
     }
 
