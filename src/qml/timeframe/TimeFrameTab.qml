@@ -641,6 +641,8 @@ Item {
         width: 60
         height: 32
         visible: false
+        opacity: 0
+
         Image {
             id: sendMessageButtonImage
             anchors.verticalCenter: parent.verticalCenter
@@ -652,7 +654,7 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
             onClicked: {
-                console.log("****   Press Send Message button...")
+                // open send message widget
             }
         }
     }
