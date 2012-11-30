@@ -27,6 +27,7 @@ public:
     virtual Request *queryComments(const QString &postId);
     virtual Request *queryLikes(const QString &postId);
     virtual Request *postComment(const QByteArray &message, const QString &parentId);
+    virtual Request *postToWall(const QByteArray &message);
     virtual Request *like(const QString &id);
     virtual Request *unlike(const QString &id);
 

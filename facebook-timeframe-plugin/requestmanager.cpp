@@ -71,6 +71,16 @@ Request *RequestManager::postComment(const QByteArray &message, const QString &p
     return request;
 }
 
+Request *RequestManager::postToWall(const QByteArray &message)
+{
+    FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
+    QUrl url = constructUrl(QLatin1String("me"), QLatin1String("feed"));
+    url.addEncodedQueryItem("message", message);
+    request->setUrl(url);
+
+    return request;
+}
+
 Request *RequestManager::like(const QString &id)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);

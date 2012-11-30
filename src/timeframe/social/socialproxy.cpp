@@ -34,7 +34,6 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
             connect(object, SIGNAL(newComments(QString, QList<CommentItem *>)), SLOT(newComments(QString, QList<CommentItem *>)));
             connect(object, SIGNAL(searchComplete()), SLOT(searchComplete()));
             connect(object, SIGNAL(selfLiked(QString)), SLOT(onSelfLiked(QString)));
-            connect(object, SIGNAL(selfLiked(QString)), SLOT(onSelfLiked(QString)));
         }
         if ((object = dynamic_cast<QObject *>(plugin)) != 0) {
             connect(object, SIGNAL(authorized()), SLOT(authorized()));
