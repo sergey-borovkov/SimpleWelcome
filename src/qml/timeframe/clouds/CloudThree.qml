@@ -7,7 +7,6 @@ Item{
     property variant model
     property int margin: 10
 
-
     CloudRect {
         id: cloudRect1
         anchors.top: parent.top
