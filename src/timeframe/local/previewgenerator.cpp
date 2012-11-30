@@ -89,8 +89,12 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
 
 void PreviewGenerator::previewJobFailed(const KFileItem &item)
 {
+    KIO::PreviewJob *job = qobject_cast<KIO::PreviewJob *>(sender());
+    QSize size(512, 512);
+    if(job)
+        size = job->property("requestedSize").toSize();
     KIcon icon(item.iconName(), 0, item.overlays());
-    QPixmap pixmap = icon.pixmap(500);
+    QPixmap pixmap = icon.pixmap(size);
     m_previews.insert(item.localPath(), pixmap);
     notifyModelAboutPreview(item.localPath());
 }
@@ -114,8 +118,8 @@ void PreviewGenerator::request(const QString &path, const QSize &size)
     fileList.append(fileItem);
 
     KIO::PreviewJob *job = KIO::filePreview(fileList, size, &m_plugins);
+    job->setProperty("requestedSize", size);
     job->setIgnoreMaximumSize();
-    job->setAutoDelete(true);
 
     connect(job, SIGNAL(gotPreview(const KFileItem &, const QPixmap &)), SLOT(previewJobResult(const KFileItem &, const QPixmap &)));
     connect(job, SIGNAL(failed(const KFileItem &)), SLOT(previewJobFailed(const KFileItem &)));

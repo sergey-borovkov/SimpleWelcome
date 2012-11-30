@@ -52,11 +52,6 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
         return m_defaultPreview;
     }
 
-    // only scale down
-    if (requestedSize.isValid() && (requestedSize.width() < pixmap.width() || requestedSize.height() < pixmap.height())) {
-        pixmap = pixmap.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-    }
 
     if (size)
         *size = pixmap.size();
