@@ -72,14 +72,14 @@ Item {
             h = h - audioItem.height - 10;
         if (videoItem.visible)
             h = h - videoItem.height - 10;
-        return Math.min(socialMessage.height, h)
+        return Math.min(msgView.socialMessage.height, h)
     }
 
     function textVisible()
     {
         if (picture === "")
         {
-            socialMessage.text = ""
+            msgView.socialMessage.text = ""
             return false
         }
         return true
@@ -152,10 +152,15 @@ Item {
                 anchors { top: topLine.bottom; bottomMargin: 10 }
             }
 
-            Item{
+            Item {
                 id: bodyItem
 
-                anchors { top: fromItem.bottom; bottom: bottomLine.top; left: parent.left; right: parent.right }
+                anchors {
+                    top: fromItem.bottom
+                    bottom: bottomLine.top
+                    left: parent.left
+                    right: parent.right
+                }
 
                 Column {
                     id: column
@@ -168,8 +173,8 @@ Item {
                     Item {
                         id: imageAnchor
                         width: parent.width
-                        height: socialImage.height
-
+                        height: mainRect.height - topLine.height - bottomLine.height - fromItem.height
+                        visible: picture !== ""
                         SocialImage { //Main image
                             id: socialImage
                             anchors {
@@ -189,15 +194,16 @@ Item {
                                     return 0
                                 if (status === Image.Loading || status === Image.Error)
                                     return 55
-                                return Math.min(sourceSize.width, mainRect.width - 20)
+                                return Math.min(sourceSize.width, parent.width - 20)
                             }
 
                             function getHeight() {
                                 if (status === Image.Null)
                                     return 0
-                                if ((status===Image.Loading) || (status===Image.Error))
+                                if (status === Image.Loading || status === Image.Error)
                                     return 55
-                                return Math.min(sourceSize.height, mainRect.height - topLine.height - bottomLine.height - fromItem.height)
+
+                                return Math.min(sourceSize.height, parent.height)
                             }
                         }
                     }
@@ -266,67 +272,12 @@ Item {
                         visible: (picture === "") && (video !== "")
                     }
 
-                    Item {
-                        id: msgViewRect
+                    SocialMessageView {
+                        id: msgView
                         x: 10
                         width: parent.width - 20
-                        height: msgView.height
+                        height: childrenRect.height
                         visible: (picture === "")
-
-                        Flickable {
-                            id: msgView
-                            width: parent.width
-                            height: socialMessage.paintedHeight
-                            contentHeight: socialMessage.paintedHeight
-
-                            clip: true
-
-                            Text {
-                                id: socialMessage
-                                width: msgView.width - 20
-                                anchors {
-                                    bottomMargin: 3
-                                    horizontalCenter: parent.horizontalCenter
-                                }
-
-                                onLinkActivated: {
-                                    Qt.openUrlExternally(link)
-                                }
-
-                                wrapMode: Text.Wrap
-                                horizontalAlignment: truncated ? Text.AlignLeft : Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                text: (picture === "") ? message : ""
-                                color: "white"
-                                clip: true
-                                textFormat: Text.StyledText
-                                elide: Text.ElideRight
-                                maximumLineCount: {
-                                    var lines = (mainRect.height - topLine.height - fromItem.height -
-                                                 (audioItem.visible ? audioItem.height : 0) -
-                                                 (videoItem.visible ? videoItem.height : 0)) / font.pixelSize / 1.5;
-                                    return lines
-                                }
-
-                                MouseArea {
-                                    id: msgMouseArea
-                                    anchors.fill: parent
-
-                                    onClicked: {
-                                        popupDetailsWidget()
-                                    }
-
-                                    hoverEnabled: true
-                                }
-                            }
-                        }
-                        ScrollBar {
-                            id: msgScrollBar
-                            flickable: msgView
-                            vertical: true
-                            hideScrollBarsWhenStopped: false
-                            visible: false
-                        }
                     }
                 }
             }
@@ -468,24 +419,24 @@ Item {
             PropertyChanges { target: modal; enabled: true }
 
             PropertyChanges {
-                target: socialMessage;
-                text: message;
-                textFormat: Text.RichText;
-                visible: true;
-                horizontalAlignment: (msgView.contentHeight > msgView.height) ? Text.AlignLeft : Text.AlignHCenter;
+                target: msgView.socialMessage
+                text: message
+                textFormat: Text.RichText
+                visible: true
+                horizontalAlignment: (msgView.contentHeight > msgView.height) ? Text.AlignLeft : Text.AlignHCenter
             }
 
             PropertyChanges { target: audioItem; visible: audio !== "" }
 
             PropertyChanges { target: videoItem; visible: video !== "" }
 
-            PropertyChanges { target: msgMouseArea; enabled: false; z: -1 }
+            PropertyChanges { target: msgView.msgMouseArea; enabled: false; z: -1 }
 
-            PropertyChanges { target: msgViewRect; visible: true }
+            PropertyChanges { target: msgView; visible: true }
 
             PropertyChanges { target: msgView; height: msgViewHeight() }
 
-            PropertyChanges { target: msgScrollBar; visible: (msgView.contentHeight > msgView.height) }
+            PropertyChanges { target: msgView.scrollBar; visible: (msgView.view.contentHeight > msgView.view.height) }
 
             PropertyChanges { target: cloudRect; z: 9000; height: { var y = cloudRect.height; return y } }
 
@@ -498,7 +449,7 @@ Item {
             PropertyChanges {
                 target: socialImage
                 width: Math.min(mainRect.width - 20, sourceSize.width)
-                height: Math.min( mainRect.height - topLine.height - bottomLine.height - fromItem.height - Math.min(70, msgViewRect.height) - audioItem.height - 20, sourceSize.height)
+                height: Math.min( mainRect.height - topLine.height - bottomLine.height - fromItem.height - Math.min(70, msgView.height) - audioItem.height - 20, sourceSize.height)
             }
         },
         State {
