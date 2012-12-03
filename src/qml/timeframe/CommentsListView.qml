@@ -4,38 +4,43 @@ Item {
     property alias model: commentsListView.model
     property alias view: commentsListView
 
-    Component{
+    Component {
         id: commentsDelegate
         Item {
-            width: 354; height: ((textField.paintedHeight + nameField.paintedHeight) > userPhoto.height) ? textField.paintedHeight + nameField.paintedHeight : 55
+            width: 354
+            height: ((textField.paintedHeight + nameField.paintedHeight) > userPhoto.height) ? textField.paintedHeight + nameField.paintedHeight : 55
+
             Image
             {
                 id: userPhoto
-
                 width: 55
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.rightMargin: 5
+                anchors {
+                    left: parent.left
+                    top: parent.top
+                    rightMargin: 5
+                }
 
-                fillMode: Image.PreserveAspectFit                
+                fillMode: Image.PreserveAspectFit
                 source: fromPictureUrl
             }
             Text {
                 id: nameField;
-
-                anchors.left: userPhoto.right
-                anchors.top: parent.top
-                anchors.leftMargin: 10
+                anchors {
+                    left: userPhoto.right
+                    top: parent.top
+                    leftMargin: 10
+                }
 
                 text: from
                 color: "grey"
             }
             Text {
                 id: textField;
-
-                anchors.left: userPhoto.right
-                anchors.top: nameField.bottom
-                anchors.leftMargin: 10
+                anchors {
+                    left: userPhoto.right
+                    top: nameField.bottom
+                    leftMargin: 10
+                }
                 width: parent.width - userPhoto.width - 40
 
                 text: messageText
@@ -49,10 +54,11 @@ Item {
         id: commentsListView
         anchors.fill: parent
 
-        clip: true       
         property string parentId: ""
         property string pluginName: ""
+
         delegate: commentsDelegate
+        clip: true
 
         ScrollBar{
             id: scrollBar
