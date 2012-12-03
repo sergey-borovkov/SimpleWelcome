@@ -75,6 +75,20 @@ Item {
         return Math.min(socialMessage.height, h)
     }
 
+    function textVisible()
+    {
+        if (picture === "")
+        {
+            socialMessage.text = ""
+            return false
+        }
+        return true
+    }
+
+    function commentsViewHeight() {
+        return commentCount < 3 ? commentCount * 60 : 180
+    }
+
     MouseArea {
         id: modal
         anchors.fill: parent
@@ -94,8 +108,10 @@ Item {
 
     Item {
         id: socialCloudItem
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
+        }
         width: parent.width
         height: parent.height
 
@@ -161,84 +177,93 @@ Item {
                                 leftMargin: 5
                                 rightMargin: 5
                             }
-                            width: getWidth(); height: getHeight()
+                            width: getWidth()
+                            height: getHeight()
 
+                            source: picture
                             fillMode: Image.PreserveAspectFit
                             smooth: true
-                            source: picture
+
                             function getWidth() {
                                 if (status === Image.Null)
                                     return 0
-                                if ((status===Image.Loading) || (status===Image.Error))
+                                if (status === Image.Loading || status === Image.Error)
                                     return 55
-                                return Math.min( sourceSize.width, mainRect.width - 20)
+                                return Math.min(sourceSize.width, mainRect.width - 20)
                             }
+
                             function getHeight() {
                                 if (status === Image.Null)
                                     return 0
                                 if ((status===Image.Loading) || (status===Image.Error))
                                     return 55
-                                return Math.min( sourceSize.height, mainRect.height - topLine.height - bottomLine.height - fromItem.height)
+                                return Math.min(sourceSize.height, mainRect.height - topLine.height - bottomLine.height - fromItem.height)
                             }
                         }
-
                     }
 
                     Text {
                         id: audioItem
                         width: parent.width - 20
-                        anchors.bottomMargin: 3
-
-                        wrapMode: Text.Wrap
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-                        maximumLineCount: 2
-                        text: getAudio()
-                        color: "lightblue"
-                        visible: (picture === "") && (audio !== "")
+                        anchors {
+                            bottomMargin: 3
+                            horizontalCenter: parent.horizontalCenter
+                        }
 
                         function getAudio()
                         {
                             if(typeof audio === "undefined")
                                 return ""
                             else
-                                return i18n("Audio: ") + " <a href=\"" + audioUrl + "\"><font color=\"#84c0ea\">" + audio + "</font></a>"
+                                return i18n("Audio: ") + " <a href=\""
+                                        + audioUrl + "\"><font color=\"#84c0ea\">"
+                                        + audio + "</font></a>"
                         }
 
                         onLinkActivated: {
                             Qt.openUrlExternally(link)
                         }
+
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        wrapMode: Text.Wrap
+                        elide: Text.ElideRight
+                        maximumLineCount: 2
+                        text: getAudio()
+                        color: "lightblue"
+                        visible: (picture === "") && (audio !== "")
                     }
 
                     Text {
                         id: videoItem
                         width: parent.width - 20
-                        anchors.bottomMargin: 3
-
-                        wrapMode: Text.Wrap
-                        //                        textFormat: Text.StyledText
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-                        maximumLineCount: 2
-                        text: getVideo()
-                        color: "lightblue"
-                        visible: (picture === "") && (video !== "")
+                        anchors {
+                            bottomMargin: 3
+                            horizontalCenter: parent.horizontalCenter
+                        }
 
                         function getVideo()
                         {
                             if(typeof videoUrl === "undefined")
                                 return ""
                             else
-                                return i18n("Video: ") + " <a href=\"" + videoUrl + "\"><font color=\"#84c0ea\">" + video + "</font></a>"
+                                return i18n("Video: ") + " <a href=\""
+                                        + videoUrl + "\"><font color=\"#84c0ea\">"
+                                        + video + "</font></a>"
                         }
 
                         onLinkActivated: {
                             Qt.openUrlExternally(link)
                         }
+
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        wrapMode: Text.Wrap
+                        elide: Text.ElideRight
+                        maximumLineCount: 2
+                        text: getVideo()
+                        color: "lightblue"
+                        visible: (picture === "") && (video !== "")
                     }
 
                     Item {
@@ -252,15 +277,21 @@ Item {
                             id: msgView
                             width: parent.width
                             height: socialMessage.paintedHeight
-
                             contentHeight: socialMessage.paintedHeight
+
                             clip: true
 
                             Text {
                                 id: socialMessage
                                 width: msgView.width - 20
-                                anchors.bottomMargin: 3
-                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors {
+                                    bottomMargin: 3
+                                    horizontalCenter: parent.horizontalCenter
+                                }
+
+                                onLinkActivated: {
+                                    Qt.openUrlExternally(link)
+                                }
 
                                 wrapMode: Text.Wrap
                                 horizontalAlignment: truncated ? Text.AlignLeft : Text.AlignHCenter
@@ -277,17 +308,15 @@ Item {
                                     return lines
                                 }
 
-                                onLinkActivated: {
-                                    Qt.openUrlExternally(link)
-                                }
-
                                 MouseArea {
                                     id: msgMouseArea
                                     anchors.fill: parent
-                                    hoverEnabled: true
+
                                     onClicked: {
                                         popupDetailsWidget()
                                     }
+
+                                    hoverEnabled: true
                                 }
                             }
                         }
@@ -305,13 +334,12 @@ Item {
             SocialBottomBar {
                 id: bottomLine
 
-                anchors {bottom: parent.bottom; right: parent.right; left: parent.left}
+                anchors {
+                    bottom: parent.bottom
+                    right: parent.right
+                    left: parent.left
+                }
                 height: 5
-
-                likesCount : likes
-                commentsCount: commentCount
-                isLiked: like
-                visible: false
 
                 onSendLikeClicked: {
                     if (like) {
@@ -336,38 +364,58 @@ Item {
                         cloudRect.state = "details"
                     }
                 }
+
+                likesCount : likes
+                commentsCount: commentCount
+                isLiked: like
+                visible: false
             }
         }
         ItemRectangle {
             id: commentsRect
+            anchors {
+                top: mainRect.bottom
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+                leftMargin: 30
+                topMargin: -10
+                rightMargin: 30
+                bottomMargin: 8
+            }
             height: 0
-            anchors.top: mainRect.bottom
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors { leftMargin: 30; topMargin: -10; rightMargin: 30; bottomMargin: 8}
+
             z: -1
 
             CommentsListView {
                 id: commentsListView
-                anchors.top : parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: commentsEdit.top
-                anchors { topMargin: 15; leftMargin: 3; rightMargin: 3; bottomMargin: 5}
+                anchors {
+                    top : parent.top
+                    left: parent.left
+                    right: parent.right
+                    bottom: commentsEdit.top
+                    topMargin: 15
+                    leftMargin: 3
+                    rightMargin: 3
+                    bottomMargin: 5
+                }
                 visible: false
             }
 
             Loader {
                 id: commentsEdit
                 height: 0
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 1 //3
-                anchors.rightMargin: 1 //3
-                anchors.right: parent.right
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                    leftMargin: 1
+                    rightMargin: 1
+                }
+
                 visible: false
             }
+
             Connections {
                 target: commentsEdit.item
                 onSend: {
@@ -376,6 +424,7 @@ Item {
                 }
             }
         }
+
         MouseArea
         {
             id: detailsOnArea
@@ -482,20 +531,4 @@ Item {
         }
     ]
 
-    function textVisible()
-    {
-        if (picture === "")
-        {
-            socialMessage.text = ""
-            return false
-        }
-        return true
-    }
-
-    function commentsViewHeight() {
-        if (commentCount < 3)
-            return commentCount * 60
-        else
-            return 180
-    }
 }
