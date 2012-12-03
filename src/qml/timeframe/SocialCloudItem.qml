@@ -92,9 +92,11 @@ Item {
     MouseArea {
         id: modal
         anchors.fill: parent
+
         onClicked:  {
             cloudRect.state = ""
         }
+
         enabled: false
     }
 
@@ -120,28 +122,28 @@ Item {
 
         ItemRectangle {
             id: mainRect
-
-            anchors.top: parent.top
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors {
+                top: parent.top
+                horizontalCenter: parent.horizontalCenter
+            }
             width: parent.width
             height: parent.height
 
             SocialTopBar {
                 id: topLine
-
                 anchors.top: parent.top
                 width: parent.width
                 height: 26
-
-                dateText : date
-                likesCount : likes
-                commentsCount: commentCount
 
                 onExitClicked: {
                     modal.parent = cloudRect
                     modal.z = -1
                     cloudRect.state = ""
                 }
+
+                dateText : date
+                likesCount : likes
+                commentsCount: commentCount
             }
 
             FromItem {
@@ -154,7 +156,6 @@ Item {
 
             Item {
                 id: bodyItem
-
                 anchors {
                     top: fromItem.bottom
                     bottom: bottomLine.top
@@ -164,7 +165,6 @@ Item {
 
                 Column {
                     id: column
-
                     anchors.centerIn: parent
                     width: parent.width
 
@@ -175,6 +175,7 @@ Item {
                         width: parent.width
                         height: mainRect.height - topLine.height - bottomLine.height - fromItem.height
                         visible: picture !== ""
+
                         SocialImage { //Main image
                             id: socialImage
                             anchors {
@@ -322,6 +323,7 @@ Item {
                 visible: false
             }
         }
+
         ItemRectangle {
             id: commentsRect
             anchors {
@@ -335,7 +337,6 @@ Item {
                 bottomMargin: 8
             }
             height: 0
-
             z: -1
 
             CommentsListView {
