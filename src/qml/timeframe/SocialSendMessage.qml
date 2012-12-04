@@ -52,8 +52,8 @@ Item{
             msg = trim(msg)
             // send MSG....
             for (var i=0; i<networkButtonsRepeater.count; i++) {
-                if (networkButtonsRepeater.itemAt(i).pluginChecked) {
-                    console.log("Plugin " + networkButtonsRepeater.itemAt(i).pluginName + " is checked - post message \"" + msg + "\"")
+                if (networkButtonsRepeater.itemAt(i).pluginChecked && networkButtonsRepeater.itemAt(i).pluginAuthorized) {
+//                    console.log("Plugin " + networkButtonsRepeater.itemAt(i).pluginName + " is checked - post message \"" + msg + "\"")
                     socialProxy.postMessage(msg, networkButtonsRepeater.itemAt(i).pluginName)
                 }
             }
@@ -248,13 +248,14 @@ Item{
                     height: networkIconHeight
 
                     property bool pluginChecked: true
+                    property bool pluginAuthorized: authorized
                     property string pluginName: name
 
                     Image {
                         id: iconPluginButton
                         anchors.centerIn: parent
-                        width: parent.width
-                        height: parent.height
+                        width: visible ? parent.width : 0
+                        height: visible ? parent.height : 0
                         fillMode: Image.PreserveAspectFit
                         source: "image://plugin/" + name + "/small"
                         smooth: true

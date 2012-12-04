@@ -283,20 +283,21 @@ void SocialProxy::postToWallSuccess(PluginReply *reply)
 
     // NEED ADD MESSAGE TO MODEL!!!!
 
-//    QList<SocialItem *> items;
-//!!!!! it is virtual    SocialItem *item = new SocialItem();
-//    FeedItem *feedItem = new FeedItem(map, m_selfId);
+    SocialItem *item = new SocialItem(plugin->selfId());
+    item->setId(reply->id());
+    item->setData(SocialItem::Id, reply->id());
+    item->setData(SocialItem::FromId, plugin->selfId());
+    item->setData(SocialItem::FromName, plugin->selfName());
+    item->setData(SocialItem::Text, m_cachedComment);
+    item->setData(SocialItem::DateTime, QDateTime::currentDateTime());
+    item->setData(SocialItem::ImageUrl, QUrl(""));
+    item->setData(SocialItem::FromImageUrl, plugin->selfPictureUrl());
+    item->setData(SocialItem::PluginName, reply->pluginName());
+    item->setData(SocialItem::Like, false);
+    item->setData(SocialItem::Likes, 0);
+    item->setData(SocialItem::CommentCount, 0);
 
-//    item->setData(SocialItem::Id, reply->id());
-//    item->setData(SocialItem::FromId, plugin->selfId());
-//    item->setData(SocialItem::FromName, plugin->selfName());
-//    item->setData(SocialItem::Text, m_cachedComment);
-//    item->setData(SocialItem::DateTime, QDateTime::currentDateTime());
-//    item->setData(SocialItem::ImageUrl, QUrl(""));
-//    item->setData(SocialItem::PluginName, reply->pluginName());
-
-//    items.append(item);
-//    m_socialModel->newItems(items);
+    newItem(item);
 }
 
 void SocialProxy::getPictureSuccess(PluginReply *reply)
@@ -415,7 +416,7 @@ void SocialProxy::newItems(QList<SocialItem *> items)
     QSettings settings("ROSA", "Timeframe");
 
     foreach(SocialItem * item, items) {
-        emit newMonth(item->datetime().date().year(), item->datetime().date().month(), item->pluginName());
+        emit newMonth(item->datetime().date().year(), item->datetime().date().month(), item->data(SocialItem::PluginName).toString());
 
         foreach(ISocialPlugin * plugin, m_plugins) {
             bool isEnabled = settings.value(plugin->name()).toBool();
@@ -427,11 +428,11 @@ void SocialProxy::newItems(QList<SocialItem *> items)
                 if (!item->data(SocialItem::VideoId).toString().isEmpty() && !item->data(SocialItem::VideoOwnerId).toString().isEmpty())
                     getVideo(item->data(SocialItem::Id).toString(), item->data(SocialItem::VideoId).toString(), item->data(SocialItem::VideoOwnerId).toString(), plugin->name());
 
-                if (!item->data(SocialItem::FromId).toString().isEmpty())
+                if (!item->data(SocialItem::FromId).toString().isEmpty()) {
                     getUserInfo(item->data(SocialItem::Id).toString(), item->data(SocialItem::FromId).toString(), plugin->name());
+                }
             }
         }
-
     }
     m_socialModel->newSocialItems(items);
 }
@@ -623,5 +624,3 @@ ISocialPlugin *SocialProxy::pluginFromName(const QString &pluginName)
 
     return plugin;
 }
-
-

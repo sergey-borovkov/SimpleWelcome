@@ -5,9 +5,10 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QMap>
+#include <QtCore/QVariant>
 
 class OAuth2Authorizer;
-class FeedItem;
+class SocialItem;
 class CommentItem;
 class QNetworkAccessManager;
 
@@ -34,6 +35,8 @@ public:
     void setAuthorizer(OAuth2Authorizer *authorizer);
     virtual Request *logout();
 
+    virtual QString pluginName() const;
+
 private slots:
     void feedReply(QByteArray feedReply);
     void idReply(QByteArray reply);
@@ -54,6 +57,7 @@ signals:
 
 private:
     QUrl constructUrl(const QString &id, const QString &type) const;
+    void fillFromMap(SocialItem *item, const QVariantMap &map);
 
     OAuth2Authorizer *m_authorizer;
 
@@ -64,5 +68,7 @@ private:
     // so we need to keed partial results between calls somewhere
     QMap<QString, QList<CommentItem *> >m_comments;
 };
+
+void fillCommentFromMap(CommentItem *item, const QVariantMap &map);
 
 #endif // REQUESTMANAGER_H

@@ -8,6 +8,7 @@ class QVariant;
 class TIMEFRAMELIB_EXPORT ListItem
 {
 public:
+    ListItem() {}
     virtual ~ListItem() {}
     virtual QString id() const = 0;
     virtual QVariant data(int role) const = 0;

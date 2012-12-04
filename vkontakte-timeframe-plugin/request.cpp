@@ -1,6 +1,7 @@
 #include "request.h"
 
 #include <QtNetwork/QNetworkAccessManager>
+#include <QtCore/QDebug>
 #include <qjson/parser.h>
 
 QNetworkAccessManager *VkRequest::manager = 0;
@@ -68,9 +69,19 @@ void VkRequest::postFinished()
 
     QVariantMap result = parser.parse(answer).toMap();
 
-    QString id =  result.value("id").toString();
+    QString id;
+
+    if (result.contains(QLatin1String("response"))) {
+        QVariantMap map = result.value(QLatin1String("response")).toMap();
+
+        if (map.contains(QLatin1String("post_id"))) {
+            id = map.value(QLatin1String("post_id")).toString();
+        }
+    }
+
     if (!id.isEmpty())
         emit newItemId(id);
+
     emit success();
 }
 

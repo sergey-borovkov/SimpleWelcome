@@ -50,8 +50,8 @@ void SocialContentItem::setDate(const QDate &d)
 
 void SocialContentItem::addSocialItem(SocialItem *item)
 {
-    if (!m_types.contains(item->pluginName())) {
-        m_types += (item->pluginName() + ";");
+    if (!m_types.contains(item->data(SocialItem::PluginName).toString())) {
+        m_types += (item->data(SocialItem::PluginName).toString() + ";");
     }
     m_itemModel->addSocialItem(item);
     emit dataChanged();

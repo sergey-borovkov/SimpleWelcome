@@ -1,7 +1,9 @@
 #include "request.h"
-#include "feeditem.h"
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
+
+#include <socialitem.h>
+#include <commentitem.h>
 
 #include <qjson/parser.h>
 #include <QtCore/QStringList>
@@ -109,7 +111,7 @@ Request *RequestManager::postToWall(const QByteArray &message)
 
     VkRequest *request = new VkRequest(VkRequest::Post, this);
     // TODO: proper error handling
-    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(postCommentReply(QByteArray)));
+    connect(request, SIGNAL(replyReady(QByteArray)), SLOT(postMessageReply(QByteArray)));
     request->setUrl(url);
 
     return request;
@@ -220,19 +222,20 @@ void RequestManager::feedReply(QByteArray reply)
 
     m_gotMessagesCount += list.size();
 
-    QList<SocialItem *> feedItems;
+    QList<SocialItem *> socialItems;
     foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
-        FeedItem *feedItem = new FeedItem(map, m_selfId);
-        if (!canBeDisplayed(*feedItem)) {
-            delete feedItem;
+        SocialItem *socialItem = new SocialItem(m_selfId);
+        fillFromMap(socialItem, map);
+        if (!canBeDisplayed(*socialItem)) {
+            delete socialItem;
         }
         else {
-            feedItems.append(feedItem);
+            socialItems.append(socialItem);
         }
     }
 
-    emit newSocialItems(feedItems);
+    emit newSocialItems(socialItems);
 
     if (messagesCount > m_gotMessagesCount) {
         QUrl url = constructUrl(QLatin1String("wall.get"));
@@ -266,19 +269,20 @@ void RequestManager::replyQueryWall(QByteArray reply)
         list.takeFirst();   // it's "count"
     }
 
-    QList<SocialItem *> feedItems;
+    QList<SocialItem *> socialItems;
 
     foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
-        FeedItem *feedItem = new FeedItem(map, m_selfId);
+        SocialItem *socialItem = new SocialItem(m_selfId);
+        fillFromMap(socialItem, map);
 
-        if (!canBeDisplayed(*feedItem))
-            delete feedItem;
+        if (!canBeDisplayed(*socialItem))
+            delete socialItem;
         else
-            feedItems.append(feedItem);
+            socialItems.append(socialItem);
     }
 
-    emit newSocialItems(feedItems);
+    emit newSocialItems(socialItems);
 }
 
 void RequestManager::commentReply(QByteArray reply)
@@ -555,7 +559,6 @@ void RequestManager::userInfoReply(QByteArray reply)
                 userImageUrl = map.value(QLatin1String("photo")).toString();
             }
             if (!userId.isEmpty() && !userName.isEmpty()&& !userImageUrl.isEmpty()) {
-//                qDebug() << "[VK]   RequestManager::userInfoReply:   OK - " << userId << userName << userImageUrl;
                 emit gotUserInfo(userId, userName, userImageUrl);
             }
         }
@@ -566,7 +569,17 @@ void RequestManager::postCommentReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-    qDebug() << result;
+
+    if (result.contains(QLatin1String("error"))) {
+        m_authorizer->logout();
+        return;
+    }
+}
+
+void RequestManager::postMessageReply(QByteArray reply)
+{
+    QJson::Parser parser;
+    QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
         m_authorizer->logout();
@@ -581,10 +594,219 @@ QUrl RequestManager::constructUrl(const QString &id) const
     return url;
 }
 
-bool RequestManager::canBeDisplayed(const FeedItem &feedItem) const
+bool RequestManager::canBeDisplayed(const SocialItem &socialItem) const
 {
-    return !(feedItem.data(SocialItem::Text).toString().isEmpty() &&
-             feedItem.data(SocialItem::ImageUrl).toString().isEmpty() &&
-             feedItem.data(SocialItem::Audio).toString().isEmpty() &&
-             feedItem.data(SocialItem::Video).toString().isEmpty());
+    return !(socialItem.data(SocialItem::Text).toString().isEmpty() &&
+             socialItem.data(SocialItem::ImageUrl).toString().isEmpty() &&
+             socialItem.data(SocialItem::Audio).toString().isEmpty() &&
+             socialItem.data(SocialItem::Video).toString().isEmpty());
+}
+
+static QRegExp rx_user_link("\\[(id\\d+)\\|(\\S*)\\]");
+
+void RequestManager::fillFromMap(SocialItem *socialItem, QVariantMap map)
+{
+    // http://vk.com/developers.php?oid=-1&p=%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5_%D0%BC%D0%B5%D1%82%D0%BE%D0%B4%D0%BE%D0%B2_API
+    if (map.contains("id")) {
+        socialItem->setId(map.value("id").toString());
+    }
+
+    // get id for user who posted the message
+    if (map.contains("from_id")) {
+        socialItem->setData(SocialItem::FromId, map.value("from_id").toString());
+    }
+
+    QString message;
+    if (map.contains("text")) {
+        message = map.value("text").toString();
+
+        QColor colorLink("#84c0ea");
+        // if user posts a link
+        QRegExp reUrl("(((?:https?|ftp)://|www)\\S+)");
+        bool hasLink = message.contains(reUrl);
+        if (hasLink) {
+            int pos = reUrl.indexIn(message);
+            QString after = "<a href=\"\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";
+            if (pos > -1) {
+                if (reUrl.cap(1).startsWith("www", Qt::CaseInsensitive)) {
+                    after = "<a href=\"http://\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";
+                }
+            }
+
+            message = message.replace(reUrl, after);
+        }
+
+        // if there is message with [user_id|user_name] string...
+        int pos = rx_user_link.indexIn(message);
+        if (pos != (-1)) {
+            // get only user name
+            message = rx_user_link.cap(2) + message.remove(rx_user_link.cap(0));
+        }
+
+        socialItem->setData(SocialItem::Text, message);
+    }
+
+    if (map.contains("date")) {
+        uint t  = map.value("date").toUInt();
+        QDateTime dt;
+        dt.setTime_t(t);
+        socialItem->setData(SocialItem::DateTime, dt);
+    }
+
+    socialItem->setData(SocialItem::ImageUrl, QUrl(""));
+    if (map.contains("attachments")) {
+        QVariantList attachmentList = map[ "attachments" ].toList();
+
+        foreach(QVariant item, attachmentList) {
+            QVariantMap map = item.toMap();
+
+            if (map.contains("type")) {
+                QString typeAttachment = map.value("type").toString();
+
+                // add image
+                if (typeAttachment == "photo") {
+                    QVariantMap photoMap = map[ "photo" ].toMap();
+                    if (photoMap.contains("src_big"))
+                        socialItem->setData(SocialItem::ImageUrl, QUrl::fromPercentEncoding(photoMap.value("src_big").toByteArray()));
+                    else if (photoMap.contains("src"))
+                        socialItem->setData(SocialItem::ImageUrl, QUrl::fromPercentEncoding(photoMap.value("src").toByteArray()));
+                }
+
+                // add graffiti as image
+                if (socialItem->data(SocialItem::ImageUrl).toString().isEmpty() && typeAttachment == "graffiti") {
+                    QVariantMap graffitiMap = map[ "graffiti" ].toMap();
+                    if (graffitiMap.contains("src"))
+                        socialItem->setData(SocialItem::ImageUrl, QUrl::fromPercentEncoding(graffitiMap.value("src").toByteArray()));
+                }
+
+                // add audio info
+                if (typeAttachment == "audio") {
+                    QVariantMap audioMap = map[ "audio" ].toMap();
+
+                    if (audioMap.contains("aid")) {
+                        socialItem->setData(SocialItem::AudioId, audioMap.value("aid").toString());
+                    }
+
+                    if (audioMap.contains("owner_id")) {
+                        socialItem->setData(SocialItem::AudioOwnerId, audioMap.value("owner_id").toString());
+                    }
+
+                    if (audioMap.contains("title")) {
+
+                        QString audioStr = audioMap.value("performer").toString() + " - " +
+                                           audioMap.value("title").toString();
+
+                        // add duration info (if possible)
+                        if (audioMap.contains("duration")) {
+                            audioStr += " (" + convertSecsToStr(audioMap.value("duration").toInt()) + ")";
+                        }
+                        if (!audioStr.isEmpty()) {
+                            socialItem->setData(SocialItem::Audio, audioStr);
+                        }
+                    }
+                }
+
+                // add video info
+                if (typeAttachment == "video") {
+                    QVariantMap videoMap = map[ "video" ].toMap();
+
+                    if (videoMap.contains("vid")) {
+                        socialItem->setData(SocialItem::VideoId, videoMap.value("vid").toString());
+                    }
+
+                    if (videoMap.contains("owner_id")) {
+                        socialItem->setData(SocialItem::VideoOwnerId, videoMap.value("owner_id").toString());
+                    }
+
+                    if (videoMap.contains("title")) {
+
+                        QString videoStr = videoMap.value("title").toString();
+
+                        // add duration info (if possible)
+                        if (videoMap.contains("duration")) {
+                            videoStr += " (" + convertSecsToStr(videoMap.value("duration").toInt()) + ")";
+                        }
+
+                        if (!videoStr.isEmpty()) {
+                            socialItem->setData(SocialItem::Video, videoStr);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (map.contains("likes")) {
+        QVariantMap likesMap = map[ "likes" ].toMap();
+        if (likesMap.contains("count")) {
+            socialItem->setData(SocialItem::Likes, likesMap.value("count").toString());
+        }
+    }
+    else
+        socialItem->setData(SocialItem::Likes, 0);
+    socialItem->setData(SocialItem::Like, SocialItem::NotLiked);
+
+    if (map.contains("comments")) {
+        QVariantMap commentsMap = map[ "comments" ].toMap();
+        if (commentsMap.contains("count"))
+            socialItem->setData(SocialItem::CommentCount, commentsMap.value("count").toString());
+    }
+    else
+        socialItem->setData(SocialItem::CommentCount, 0);
+
+    socialItem->setData(SocialItem::PluginName, pluginName());
+}
+
+QString convertSecsToStr(int secs)
+{
+    QTime tm;
+    tm = tm.addSecs(secs);
+    QString str = "h:mm:ss";
+
+    if (tm.hour() == 0) {
+        str = "mm:ss";
+        if (tm.minute() == 0) {
+            str = "ss";
+            if (tm.second() < 10)
+                str = "s";
+        }
+        else if (tm.minute() < 10)
+            str = "m:ss";
+    }
+
+    return tm.toString(str);
+}
+
+void fillCommentFromMap(CommentItem *item, const QVariantMap &map)
+{
+    uint t  = map.value("date").toUInt();
+    QDateTime dt;
+    dt.setTime_t(t);
+    QDate date = dt.date();
+
+    if (map.contains("reply_to_uid") && map.contains("reply_to_cid")) {
+        QString str = map.value("text").toString();
+        int pos = rx_user_link.indexIn(str);
+        if (pos != (-1)) {
+//            s = rx.cap(1); // user id
+            // get only user name
+            str = rx_user_link.cap(2) + str.remove(rx_user_link.cap(0));
+        }
+        item->setData(CommentItem::Message, str);
+    }
+    else {
+        item->setData(CommentItem::Message, map.value("text"));
+    }
+
+    item->setData(CommentItem::Id, map.value("cid"));
+    item->setData(CommentItem::CreatedTime, date.toString("d MM yyyy"));
+    item->setData(CommentItem::FromId, map.value("uid"));
+    item->setData(CommentItem::Type, "VKontakte");
+    item->setData(CommentItem::From, "");
+}
+
+
+QString RequestManager::pluginName()
+{
+    return QLatin1String("VKontakte");
 }

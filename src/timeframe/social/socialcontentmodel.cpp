@@ -121,8 +121,8 @@ void SocialContentModel::removeItems(const QString &type)
         SocialDayModel *model = static_cast<SocialContentItem *>(itemAt(i))->m_itemModel;
         for (int j = 0; j < model->rowCount(); j++) {
             SocialItem *item = static_cast<SocialItem *>(model->itemAt(j));
-            QString uniqueId = item->pluginName() + item->id();
-            if (item->pluginName() == type) {
+            QString uniqueId = item->data(SocialItem::PluginName).toString() + item->id();
+            if (item->data(SocialItem::PluginName).toString() == type) {
                 model->removeRow(j);
                 m_idSet.remove(uniqueId);
                 m_idHash.remove(uniqueId);
@@ -159,7 +159,7 @@ void SocialContentModel::newSocialItems(QList < SocialItem * > list)
 {
     for (int i = 0; i < list.size() ; i++) {
         SocialItem *newItem = list.at(i);
-        QString uniqueId = newItem->pluginName() + newItem->id();
+        QString uniqueId = newItem->data(SocialItem::PluginName).toString() + newItem->id();
         if (m_idSet.contains(uniqueId))
             continue;
         m_idSet.insert(uniqueId);

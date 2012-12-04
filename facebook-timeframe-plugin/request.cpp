@@ -1,5 +1,6 @@
 #include "request.h"
 
+#include <QtCore/QDebug>
 #include <QtNetwork/QNetworkAccessManager>
 #include <qjson/parser.h>
 
@@ -72,6 +73,7 @@ void FacebookRequest::postFinished()
     QString id =  result.value("id").toString();
     if (!id.isEmpty())
         emit newItemId(id);
+
     emit success();
 }
 

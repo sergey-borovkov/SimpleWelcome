@@ -4,11 +4,15 @@
 #include <QtCore/QHash>
 #include <QtCore/QMetaType>
 #include <QtCore/QVariant>
+#include <QtCore/QMap>
+#include <QtCore/QDateTime>
 
 #include <listitem.h>
 
+class CommentItem;
+class ListModel;
 
-class SocialItem : public ListItem
+class TIMEFRAMELIB_EXPORT SocialItem : public ListItem
 {
 public:
     enum Role {
@@ -49,12 +53,20 @@ public:
         LikeNotAvailable
     };
 
+    SocialItem(const QString & selfId);
     virtual ~SocialItem() {}
-    virtual QString pluginName() const = 0;
-    virtual Type type() const = 0;
-    virtual QString id() const = 0;
-    virtual QVariant data(int role) const = 0;
-    virtual QDateTime datetime() const = 0;
+
+    Type type() const;
+
+    virtual QString id() const;
+    void setId(const QString & id);
+
+    virtual QVariant data(int role) const;
+    virtual bool setData(int role, const QVariant & value);
+
+    ListModel* commentsModel();
+
+    QDateTime datetime() const;
 
     static const QHash<int, QByteArray> roleNames() {
         QHash<int, QByteArray> roles;
@@ -86,6 +98,13 @@ public:
 
         return roles;
     }
+
+private:
+    QString m_id;
+    QMap<int, QVariant> m_data;
+    ListModel *m_commentsModel;
+    QString m_selfId;
+
 };
 
 #endif // SOCIALITEM_H

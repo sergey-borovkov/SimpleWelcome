@@ -1,10 +1,14 @@
 #include "request.h"
-#include "feeditem.h"
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
 
+#include "socialitem.h"
+#include <commentitem.h>
+#include <listmodel.h>
+
 #include <qjson/parser.h>
 #include <QtCore/QStringList>
+#include <QtCore/QDateTime>
 
 RequestManager::RequestManager(QObject *parent)
     : QObject(parent)
@@ -136,6 +140,11 @@ Request *RequestManager::logout()
     return request;
 }
 
+QString RequestManager::pluginName() const
+{
+    return QLatin1String("Facebook");
+}
+
 void RequestManager::feedReply(QByteArray reply)
 {
     QJson::Parser parser;
@@ -145,20 +154,21 @@ void RequestManager::feedReply(QByteArray reply)
         return;
     }
     QVariantList list = result.value(QLatin1String("data")).toList();
-    QList<SocialItem *> feedItems;
+    QList<SocialItem *> socialItems;
 
     foreach(QVariant item, list) {
         QVariantMap map = item.toMap();
-        FeedItem *feedItem = new FeedItem(map, m_selfId);
+        SocialItem *socialItem = new SocialItem(m_selfId);
+        fillFromMap(socialItem, map);
 
-        if (feedItem->data(SocialItem::Text).isNull()
-                && feedItem->data(SocialItem::ImageUrl).isNull()) {
-            delete feedItem;
+        if (socialItem->data(SocialItem::Text).isNull()
+                && socialItem->data(SocialItem::ImageUrl).isNull()) {
+            delete socialItem;
         } else
-            feedItems.append(feedItem);
+            socialItems.append(socialItem);
     }
 
-    emit newSocialItems(feedItems);
+    emit newSocialItems(socialItems);
 
     QVariantMap paging = result.value(QLatin1String("paging")).toMap();
     if (paging.contains("next")) {
@@ -258,4 +268,117 @@ QUrl RequestManager::constructUrl(const QString &id, const QString &type) const
     QUrl url = openGraphUrl + id + "/" + type;
     url.addQueryItem(QLatin1String("access_token"), m_authorizer->accessToken());
     return url;
+}
+
+void RequestManager::fillFromMap(SocialItem *item, const QVariantMap &map)
+{
+    // http://developers.facebook.com/docs/reference/api/post/
+    item->setId(map.value("id").toString());
+    QString message = map.value("message").toString();
+
+    QColor colorLink("#84c0ea");
+
+    // if user posts a link
+    QRegExp reUrl("(((?:https?|ftp)://|www)\\S+)");
+    bool hasLink = message.contains(reUrl);
+    if (hasLink) {
+        int pos = reUrl.indexIn(message);
+
+        QString after = "<a href=\"\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";
+        if (pos > -1) {
+            if (reUrl.cap(1).indexOf("www", Qt::CaseInsensitive) != (-1)) {
+                after = "<a href=\"http://\\1\"><font color=\"" + colorLink.name() + "\">\\1</font></a>";
+            }
+        }
+
+        item->setData(SocialItem::Text, message.replace(reUrl, after));
+    }
+    else
+        item->setData(SocialItem::Text, message);
+
+    // get information about user who posted the message
+    if (map.contains("from")) {
+        QVariantMap fromInfo = map.value("from").toMap();
+        item->setData(SocialItem::FromId, fromInfo.value("id").toString());
+        item->setData(SocialItem::FromName, fromInfo.value("name").toString());
+    }
+
+    item->setData(SocialItem::ImageUrl, QUrl::fromPercentEncoding(map.value("picture").toByteArray()));
+
+    // get video if possible
+    if (map.value("type").toString() == QLatin1String(QLatin1String("video")) &&
+        !map.value(QLatin1String("source")).isNull()) {
+        QString src = QUrl::fromPercentEncoding(map.value(QLatin1String("source")).toByteArray());
+        if (!src.isEmpty()) {
+            item->setData(SocialItem::VideoUrl, src);
+            QString name = map.value("name").toString();
+            if (!name.isEmpty())
+                item->setData(SocialItem::Video, name);
+            else
+                item->setData(SocialItem::Video, src);
+            item->setData(SocialItem::VideoImage, QUrl::fromPercentEncoding(map.value(QLatin1String("picture")).toByteArray()));
+        }
+    }
+
+    if (map.contains("created_time")) {
+        QDateTime dt = map.value("created_time").toDateTime();
+        item->setData(SocialItem::DateTime, dt);
+    }
+
+    if (map.contains("comments")) {
+        QVariantMap commentsMap = map.value("comments").toMap();
+        item->setData(SocialItem::CommentCount, commentsMap.value("count").toInt());
+        if (commentsMap.value("count").toInt() > 0)  {
+            QVariantList commentsList = commentsMap.value("data").toList();
+
+            QList<CommentItem *> comments;
+            foreach(QVariant v, commentsList) {
+                CommentItem *commentItem = new CommentItem();
+                fillCommentFromMap(commentItem, v.toMap());
+                comments.append(commentItem);
+            }
+
+            QVariant var = item->data(SocialItem::Comments);
+            ListModel *commentsModel = qvariant_cast<ListModel * >(var);
+            if (commentsModel) {
+                QList<ListItem *> t;
+                foreach(CommentItem * item, comments)
+                    t.append(item);
+                commentsModel->appendRows(t);
+            }
+        }
+    }
+
+    if (map.contains("likes")) {
+        QVariantMap likes = map.value("likes").toMap();
+        if (likes.value("count").toInt() > 0) {
+            QVariantList likesList = likes.value("data").toList();
+            SocialItem::LikeType like = SocialItem::NotLiked;
+            foreach(QVariant v, likesList) {
+                QMap<QString, QVariant> map = v.toMap();
+                if (map.value("id") == m_selfId)  {
+                    like = SocialItem::Liked;
+                    break;
+                }
+            }
+            item->setData(SocialItem::Like, like);
+        }
+        item->setData(SocialItem::Likes, likes.value("count").toInt());
+    } else
+        item->setData(SocialItem::Likes, 0);
+
+    item->setData(SocialItem::PluginName, pluginName());
+}
+
+void fillCommentFromMap(CommentItem *item, const QVariantMap &map)
+{
+    item->setData(CommentItem::Id, map.value("id"));
+    item->setData(CommentItem::Message, map.value("message"));
+    item->setData(CommentItem::CreatedTime, map.value("created_time"));
+    item->setData(CommentItem::Type, "Facebook");
+    if (map.contains("from")) {
+        QVariantMap fromMap = map.value("from").toMap();
+        item->setData(CommentItem::FromId, fromMap.value("id"));
+        item->setData(CommentItem::From, fromMap.value("name"));
+    }
 }

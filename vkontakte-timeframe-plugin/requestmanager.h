@@ -5,10 +5,11 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QMap>
+#include <QtCore/QVariant>
 
 class OAuth2Authorizer;
-class FeedItem;
 class CommentItem;
+class SocialItem;
 class QNetworkAccessManager;
 
 // response http://oauth.vk.com/oauth/authorize?&_hash=0&success=1
@@ -35,6 +36,8 @@ public:
     void setAuthorizer(OAuth2Authorizer *authorizer);
     virtual Request *logout();
 
+    QString pluginName();
+
 private slots:
     void feedReply(QByteArray feedReply);
     void replyQueryWall(QByteArray reply);
@@ -46,10 +49,12 @@ private slots:
     void videoReply(QByteArray reply);
     void userInfoReply(QByteArray reply);
     void postCommentReply(QByteArray reply);
+    void postMessageReply(QByteArray reply);
 
 signals:
     void authorizationComplete();
     void newSocialItems(QList<SocialItem *> items);
+    void newPostMessageId(QString id);
     void selfId(QString id);
     void selfName(QString name);
     void selfLiked(QString postId);
@@ -63,7 +68,8 @@ signals:
 
 private:
     QUrl constructUrl(const QString &id) const;
-    bool canBeDisplayed(const FeedItem &feedItem) const;
+    bool canBeDisplayed(const SocialItem &socialItem) const;
+    void fillFromMap(SocialItem* socialItem, QVariantMap map);
 
     OAuth2Authorizer *m_authorizer;
 
@@ -80,5 +86,9 @@ private:
     const int m_requestItemCount;
 
 };
+
+void fillCommentFromMap(CommentItem *item, const QVariantMap &map);
+QString convertSecsToStr(int secs);
+
 
 #endif // REQUESTMANAGER_H
