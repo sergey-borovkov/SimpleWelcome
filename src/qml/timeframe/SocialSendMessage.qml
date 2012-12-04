@@ -244,8 +244,9 @@ Item{
                 model: pluginModel
 
                 Item {
-                    width: networkIconWidth
-                    height: networkIconHeight
+                    width: authorized ? networkIconWidth : 0
+                    height: authorized ? networkIconHeight : 0
+                    visible: authorized
 
                     property bool pluginChecked: true
                     property bool pluginAuthorized: authorized
@@ -254,12 +255,11 @@ Item{
                     Image {
                         id: iconPluginButton
                         anchors.centerIn: parent
-                        width: visible ? parent.width : 0
-                        height: visible ? parent.height : 0
+                        width: parent.width
+                        height: parent.height
                         fillMode: Image.PreserveAspectFit
                         source: "image://plugin/" + name + "/small"
                         smooth: true
-                        visible: authorized
                     }
 
                     MouseArea {
@@ -268,7 +268,7 @@ Item{
                         onClicked: {
                             pluginChecked = !pluginChecked
                             iconPluginButton.opacity = (pluginChecked ? 1 : 0.5)
-                            console.log("button of " + name + "pressed...")
+                            console.log("button of " + name + " pressed...")
                         }
                     }
                 }
