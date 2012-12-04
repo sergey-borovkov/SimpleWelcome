@@ -31,7 +31,6 @@ Item {
                     var subChildren = cloud.item.children[i].children
                     for(var j = 0; j < subChildren.length; j++) {
                         if(subChildren[j].objectName === "cloudRect") {
-                            subChildren[j].index = c
                             subChildren[j].model = model
                             subChildren[j].initialize(c)
                             model.updateData.connect(subChildren[j].update)

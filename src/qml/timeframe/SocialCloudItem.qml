@@ -33,8 +33,9 @@ Item {
         like = model.like(index)
     }
 
-    function initialize(index)
+    function initialize(idx)
     {
+        index = idx
         id = model.id(index)
         message = model.text(index)
         datetime = model.datetime(index)
