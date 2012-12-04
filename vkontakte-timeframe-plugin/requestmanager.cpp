@@ -105,7 +105,7 @@ Request *RequestManager::postComment(const QByteArray &message, const QString &p
 Request *RequestManager::postToWall(const QByteArray &message)
 {
     QUrl url = constructUrl(QLatin1String("wall.post"));
-   url.addEncodedQueryItem("message", message);
+    url.addEncodedQueryItem("message", message);
 
     VkRequest *request = new VkRequest(VkRequest::Post, this);
     // TODO: proper error handling

@@ -51,6 +51,12 @@ Item{
             // trim spaces from start and end of string
             msg = trim(msg)
             // send MSG....
+            for (var i=0; i<networkButtonsRepeater.count; i++) {
+                if (networkButtonsRepeater.itemAt(i).pluginChecked) {
+                    console.log("Plugin " + networkButtonsRepeater.itemAt(i).pluginName + " is checked - post message \"" + msg + "\"")
+                    socialProxy.postMessage(msg, networkButtonsRepeater.itemAt(i).pluginName)
+                }
+            }
         }
 
         hideSendMessageWidget()
@@ -241,7 +247,8 @@ Item{
                     width: networkIconWidth
                     height: networkIconHeight
 
-                    property bool checked: true
+                    property bool pluginChecked: true
+                    property string pluginName: name
 
                     Image {
                         id: iconPluginButton
@@ -258,8 +265,8 @@ Item{
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: {
-                            checked = !checked
-                            iconPluginButton.opacity = (checked ? 1 : 0.5)
+                            pluginChecked = !pluginChecked
+                            iconPluginButton.opacity = (pluginChecked ? 1 : 0.5)
                             console.log("button of " + name + "pressed...")
                         }
                     }

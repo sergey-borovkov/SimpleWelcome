@@ -64,6 +64,8 @@ public:
      */
     Q_INVOKABLE void commentItem(const QString &message, const QString &parentId, const QString &pluginName);
 
+    Q_INVOKABLE void postMessage(const QString &message, const QString &pluginName);
+
     Q_INVOKABLE void getUserPicture(const QString &id, const QString &parentId, const QString &pluginName);
 
     Q_INVOKABLE int authorizedPluginCount() const;
@@ -103,6 +105,7 @@ public slots:
 private slots:
     void likeSuccess(PluginReply *);
     void commentSuccess(PluginReply *);
+    void postToWallSuccess(PluginReply *);
     void getPictureSuccess(PluginReply *);
     void getSelfPictureSuccess(PluginReply *);
     void getAudioSuccess(PluginReply *);
@@ -165,6 +168,8 @@ private:
      * @return pointer to PluginRequestReply
      */
     PluginReply *postComment(const QString &message, const QString &parentId, const QString &pluginName);
+
+    PluginReply *postToWall(const QString &message, const QString &pluginName);
 
     PluginReply *userPicture(const QString &id, const QString &parentId, const QString &pluginName);
 

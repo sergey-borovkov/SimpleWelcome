@@ -113,6 +113,14 @@ void SocialProxy::commentItem(const QString &message, const QString &parentId, c
     connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
 }
 
+void SocialProxy::postMessage(const QString &message, const QString &pluginName)
+{
+    PluginReply *reply = postToWall(message, pluginName);
+    m_cachedComment = message;
+    connect(reply, SIGNAL(success(PluginReply *)), this, SLOT(postToWallSuccess(PluginReply *)));
+    connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
+}
+
 void SocialProxy::getUserPicture(const QString &id, const QString &parentId, const QString &pluginName)
 {
     PluginReply *reply = userPicture(id, parentId, pluginName);
@@ -171,6 +179,19 @@ PluginReply *SocialProxy::postComment(const QString &message, const QString &par
 
     Request *request = plugin->requestManager()->postComment(QUrl::toPercentEncoding(message), parentId);
     PluginReply *reply = new PluginReply(request, parentId, pluginName, this);
+    request->start();
+
+    return reply;
+}
+
+PluginReply *SocialProxy::postToWall(const QString &message, const QString &pluginName)
+{
+    ISocialPlugin *plugin = pluginFromName(pluginName);
+    if (!plugin)
+        return 0;
+
+    Request *request = plugin->requestManager()->postToWall(QUrl::toPercentEncoding(message));
+    PluginReply *reply = new PluginReply(request, 0, pluginName, this);
     request->start();
 
     return reply;
@@ -254,6 +275,28 @@ void SocialProxy::commentSuccess(PluginReply *reply)
     item->setData(CommentItem::FromPictureUrl, plugin ? plugin->selfPictureUrl() : "images/user.png");
     item->setData(CommentItem::CreatedTime, QDateTime::currentDateTime());
     m_socialModel->addCommentToItem(item, reply->sourceId());
+}
+
+void SocialProxy::postToWallSuccess(PluginReply *reply)
+{
+    ISocialPlugin *plugin = pluginFromName(reply->pluginName());
+
+    // NEED ADD MESSAGE TO MODEL!!!!
+
+//    QList<SocialItem *> items;
+//!!!!! it is virtual    SocialItem *item = new SocialItem();
+//    FeedItem *feedItem = new FeedItem(map, m_selfId);
+
+//    item->setData(SocialItem::Id, reply->id());
+//    item->setData(SocialItem::FromId, plugin->selfId());
+//    item->setData(SocialItem::FromName, plugin->selfName());
+//    item->setData(SocialItem::Text, m_cachedComment);
+//    item->setData(SocialItem::DateTime, QDateTime::currentDateTime());
+//    item->setData(SocialItem::ImageUrl, QUrl(""));
+//    item->setData(SocialItem::PluginName, reply->pluginName());
+
+//    items.append(item);
+//    m_socialModel->newItems(items);
 }
 
 void SocialProxy::getPictureSuccess(PluginReply *reply)
