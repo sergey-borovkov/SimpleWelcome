@@ -101,6 +101,15 @@ Item {
         }
     }
 
+    function closeSendMessageWindow()
+    {
+        for (var i = 0; i < timeFrameTab.children.length; i++) {
+            if (timeFrameTab.children[i].objectName === "sendMessageItem" ) {
+                timeFrameTab.children[i].mainParent.state = ""
+            }
+        }
+    }
+
     function initTimeFrame()
     {
         timeFrameTab.state = ""
@@ -189,6 +198,9 @@ Item {
             else {
                 // if need close cloud social item
                 closeSocialCloudItem()
+
+                // if need close window of sending message
+                closeSendMessageWindow()
             }
         }
     }
@@ -465,6 +477,10 @@ Item {
         }
     }
 
+    SocialSendMessage {
+        id: socialSendMessageWindow
+    }
+
     ListView {
         id: timeLine
         anchors.top: separator.bottom
@@ -641,7 +657,6 @@ Item {
         width: 60
         height: 32
         visible: false
-        opacity: 0
 
         Image {
             id: sendMessageButtonImage
@@ -654,7 +669,7 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
             onClicked: {
-                // open send message widget
+                socialSendMessageWindow.popupSendMessageWidget()
             }
         }
     }
@@ -852,12 +867,14 @@ Item {
 
             PropertyChanges { target: galleryButton; visible: false }
         },
+
         State {
             name: "timeline"
             PropertyChanges { target: timeLine;  visible : true; model: localDayModel; opacity: 1 }
 
             PropertyChanges { target: timeFrameTab;  currentView: timeLine }
         },
+
         State {
             name: "gallery"
 
@@ -874,8 +891,8 @@ Item {
             PropertyChanges { target: galleryView; model: localDayModel }
 
             PropertyChanges { target: timeFrameTab; currentView: galleryView }
-
         },
+
         State {
             name: "timeLineSearch"
 
@@ -887,6 +904,7 @@ Item {
 
             PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
         },
+
         State {
             name: "social"
 
@@ -896,6 +914,7 @@ Item {
 
             PropertyChanges { target: sendMessageButton; visible: true }
         },
+
         State {
             name: "socialGallery"; extend: "social"
 
@@ -915,6 +934,7 @@ Item {
 
             PropertyChanges { target: timeFrameTab; currentView: socialGalleryView }
         },
+
         State {
             name: "socialAuthorization"; extend: "social"
 
@@ -926,9 +946,9 @@ Item {
 
             PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
 
-            PropertyChanges { target: sendMessageButton; visible: false; }
-
+            PropertyChanges { target: sendMessageButton; visible: false }
         },
+
         State {
             name: "socialSearching"; extend: "social"
 
@@ -940,9 +960,9 @@ Item {
 
             PropertyChanges { target: galleryButton; visible: false }
 
-            PropertyChanges { target: sendMessageButton; visible: false }
-
             PropertyChanges { target: timeScale; visible: false; opacity: 0 }
+
+            PropertyChanges { target: sendMessageButton; visible: false }
         }
     ]
 }

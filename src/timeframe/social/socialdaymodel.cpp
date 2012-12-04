@@ -4,7 +4,8 @@
 
 #include <commentitem.h>
 
-#include <QtCore/QDate>
+#include <QtCore/QDateTime>
+#include <QtCore/QDebug>
 
 SocialDayModel::SocialDayModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)
@@ -14,7 +15,7 @@ SocialDayModel::SocialDayModel(QHash<int, QByteArray> roles, QObject *parent)
 bool SocialDayModel::removeRow(int row, const QModelIndex &parent)
 {
     SocialItem *item = static_cast<SocialItem *>(itemAt(row));
-    QString id = QString("%1-%2").arg(item->pluginName()).arg(item->id());
+    QString id = QString("%1-%2").arg(item->data(SocialItem::PluginName).toString()).arg(item->id());
     m_idSet.remove(id);
     return ListModel::removeRow(row, parent);
 }
@@ -28,13 +29,17 @@ void SocialDayModel::addSocialItem(SocialItem *item)
         return;
     }
     /* Check duplicates */
-    QString strId = QString("%1-%2").arg(item->pluginName()).arg(item->id());
+    QString strId = QString("%1-%2").arg(item->data(SocialItem::PluginName).toString()).arg(item->id());
     if (m_idSet.contains(strId)) {
         return;
     }
     m_idSet.insert(strId);
 
-    prependRow(item);
+    // add sorted items (new item to the end of list)
+    if (rowCount() > 0 && item->datetime() <= data(index(0, 0), SocialItem::DateTime).toDateTime())
+        prependRow(item);
+    else
+        appendRow(item);
 }
 
 void SocialDayModel::like(QString id)

@@ -5,6 +5,7 @@ Item{
     id: cloudTwo
     property date cloudDate
     property variant model
+    property int margin: 10
 
     CloudRect {
         id: cloudRect1
@@ -18,7 +19,7 @@ Item{
         id: cloudRect2
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-        width: parent.width*2/3 -20
+        width: parent.width*2/3 - 20
         height: parent.height*4/5
     }
 
@@ -26,13 +27,13 @@ Item{
         anchors.top : parent.top
         anchors.left: parent.left
         anchors.right: cloudRect2.left
-        anchors.rightMargin: 10
+        anchors.rightMargin: margin
         anchors.bottom: cloudRect1.top
 
         Label {
             id: dateLabel
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 10
+            anchors.bottomMargin: margin
             anchors.horizontalCenter: parent.horizontalCenter
             height: labelHeight
             text: Qt.formatDate( cloudDate , "dd MMM yyyy")

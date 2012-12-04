@@ -60,7 +60,7 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
     }
 
     if (rounded)
-        pixmap = QPixmap::fromImage(getRoundedImage(pixmap.toImage(), 5));
+        pixmap = QPixmap::fromImage(getRoundedImage(pixmap.toImage(), 3));
 
     if (size)
         *size = pixmap.size();

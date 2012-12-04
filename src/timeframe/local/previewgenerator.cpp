@@ -70,18 +70,21 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
     if (item.mimetype() == "video/x-mng") { //Kde create incorect preview for mng files
         QPixmap p(item.localPath());
         // add shadow
-        p = QPixmap::fromImage(PreviewProvider::getRoundedImage(p.toImage(), 5));
+        p = QPixmap::fromImage(PreviewProvider::getRoundedImage(p.toImage(), 3));
         m_previews.insert(item.localPath(), p);
         notifyModelAboutPreview(item.localPath());
         return;
     } else if (item.mimetype().startsWith("video/")) {
         QPainter p(&pict);
         QPixmap scaledPixmap = videoPixmap.scaled(pict.width() / 2, pict.height() / 2,  Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        if (scaledPixmap.size().width() > videoPixmap.size().width() &&
+            scaledPixmap.size().height() > videoPixmap.size().height())
+            scaledPixmap = videoPixmap;
         p.drawPixmap(pict.width() / 2 - scaledPixmap.width() / 2, pict.height() / 2 - scaledPixmap.height() / 2 ,  scaledPixmap);
     }
 
     // add shadow
-    pict = QPixmap::fromImage(PreviewProvider::getRoundedImage(pict.toImage(), 5));
+    pict = QPixmap::fromImage(PreviewProvider::getRoundedImage(pict.toImage(), 3));
 
     m_previews.insert(item.localPath(), pict);
     notifyModelAboutPreview(item.localPath());

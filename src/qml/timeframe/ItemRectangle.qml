@@ -7,7 +7,7 @@ Item {
     Rectangle {
         id: rectangle;
         anchors.fill: parent;
-        radius: 10;
+        radius: 3;
         color: "#172634"
         border.color: "#687584"
         border.width: 1
