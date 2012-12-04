@@ -59,7 +59,6 @@ Item {
 
     function getSourceComponent(count)
     {
-
         if (count === 0)
             return ""
         if (count === 1)
@@ -70,8 +69,6 @@ Item {
             return "clouds/SocialCloudThree.qml"
         else if (count > 3)
             return "clouds/SocialCloudFour.qml"
-        else
-            return "clouds/SocialCloudOne.qml"
     }
 
 }
