@@ -6,10 +6,12 @@ Item{
     id: socialSendMessageRect
 
     x: sendMessageButton.x
-    y: sendMessageButton.y + sendMessageButton.height + 10
-    width: 0
-    height: 0
+    y: sendMessageButton.y + sendMessageButton.height
+
+    width: 50
+    height: 30
     opacity: 0
+    clip: true
 
     objectName: "sendMessageItem"
     property Item mainParent: socialSendMessageRect
@@ -74,14 +76,16 @@ Item{
     BorderImage {
         id: innerShadow
         anchors.fill: parent
-        border { left: 23; top: 23; right: 23; bottom: 23 }
-        source: "images/shadow-inverse.png"
+        source: "images/write-message-body.png"
+        anchors { topMargin: -36; leftMargin: -11 }
+        border { left: 124; top: 56; right: 49; bottom: 47 }
         smooth: true
+        z: -1
     }
 
-    ItemRectangle {
+    Item {
         id: sendMessageItem
-        anchors.fill: parent
+        anchors { fill: parent; topMargin: 24; leftMargin: 40; rightMargin: 54; bottomMargin: 48 }
 
         MouseArea {
             id: mouseArea
@@ -99,9 +103,6 @@ Item{
                 top: parent.top
                 left: parent.left
                 right: windowCloseButton.left
-                topMargin: 10
-                leftMargin: 10
-                rightMargin: 10
             }
         }
 
@@ -112,10 +113,9 @@ Item{
             anchors {
                 verticalCenter: label.verticalCenter
                 right: parent.right
-                rightMargin: 5
             }
-            width: 12
-            height: 12
+            width: 10
+            height: label.height
 
             Image{
                 id: closeIcon
@@ -156,10 +156,8 @@ Item{
                 bottom: sendButton.top
                 left: parent.left
                 right: parent.right
-                topMargin: 10
+                topMargin: 7
                 bottomMargin: 10
-                leftMargin: 10
-                rightMargin: 10
             }
 
             color: "white"
@@ -202,6 +200,7 @@ Item{
                     color: "grey"
                     cursorPosition: 0
                     clip: true
+                    visible: false
 
                     Keys.onPressed: {
                         if (edit.text === i18n("What do you think about?"))
@@ -220,8 +219,6 @@ Item{
                             // send message to network
                             sendMessage()
 
-//                            edit.color = "grey"
-//                            edit.text = i18n("What do you think about?")
                             event.accepted = true
                         }
                     }
@@ -236,7 +233,6 @@ Item{
             anchors {
                 verticalCenter: sendButton.verticalCenter
                 left: parent.left
-                leftMargin: 10
             }
 
             Repeater {
@@ -284,8 +280,6 @@ Item{
             anchors {
                 right: parent.right
                 bottom: parent.bottom
-                rightMargin: 10
-                bottomMargin: 10
             }
 
             Item {
@@ -334,8 +328,8 @@ Item{
                 opacity: 1
                 width: wndWidth
                 height: wndHeight
-                x: galleryButton.x
-                y: sendMessageButton.y + sendMessageButton.height + 10
+                clip: false
+                x: sendMessageButton.x - 60
             }
 
             ParentChange { target: modal; parent: timeFrameTab }
@@ -344,7 +338,8 @@ Item{
 
             PropertyChanges { target: timeFrameTab; enableWheel: false }
 
-            PropertyChanges { target: edit; text: i18n("What do you think about?"); color: "grey"; cursorPosition: 0 }
+            PropertyChanges { target: edit; text: i18n("What do you think about?"); color: "grey"; cursorPosition: 0; visible: true }
+
         }
     ]
 
