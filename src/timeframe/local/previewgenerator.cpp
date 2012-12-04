@@ -77,6 +77,9 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
     } else if (item.mimetype().startsWith("video/")) {
         QPainter p(&pict);
         QPixmap scaledPixmap = videoPixmap.scaled(pict.width() / 2, pict.height() / 2,  Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        if (scaledPixmap.size().width() > videoPixmap.size().width() &&
+            scaledPixmap.size().height() > videoPixmap.size().height())
+            scaledPixmap = videoPixmap;
         p.drawPixmap(pict.width() / 2 - scaledPixmap.width() / 2, pict.height() / 2 - scaledPixmap.height() / 2 ,  scaledPixmap);
     }
 
