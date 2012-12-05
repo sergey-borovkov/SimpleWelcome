@@ -24,15 +24,19 @@ Item {
     property alias commentsView : commentsListView
     property int index: -1
 
-    function update() {
-        if(index === -1) {
-            return;
-        }
+    Connections {
+        target: socialDayModel.itemsModel(date)
+        onUpdateData: {
+            if(index === -1) {
+                return;
+            }
 
-        likes = model.likesCount(index)
-        commentCount = model.commentsCount(index)
-        like = model.like(index)
+            likes = model.likesCount(index)
+            commentCount = model.commentsCount(index)
+            like = model.like(index)
+        }
     }
+
 
     function initialize(idx)
     {

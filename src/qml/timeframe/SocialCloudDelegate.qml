@@ -33,29 +33,13 @@ Item {
                         if(subChildren[j].objectName === "cloudRect") {
                             subChildren[j].model = model
                             subChildren[j].initialize(c)
-                            model.updateData.connect(subChildren[j].update)
                             c--
                         }
                     }
                 }
             }
         }
-
-        Component.onDestruction: {
-            var model = socialDayModel.itemsModel(date)
-            var c = size - 1
-            for(var i = 0; i < cloud.item.children.length; i++) {
-                var subChildren = cloud.item.children[i].children
-                for(var j = 0; j < subChildren.length; j++) {
-                    if(subChildren[j].objectName === "cloudRect") {
-                        model.updateData.disconnect(subChildren[j].update)
-                        c--
-                    }
-                }
-            }
-        }
     }
-
 
     function getSourceComponent(count)
     {
