@@ -457,8 +457,8 @@ Item {
 
             PropertyChanges {
                 target: socialImage
-                width: Math.min(mainRect.width - 20, sourceSize.width)
-                height: Math.min(mainRect.height - topLine.height - bottomLine.height - fromItem.height - Math.min(70, msgView.height) - audioItem.height - 20, sourceSize.height)
+                width: Math.min(socialImage.parent.width - 20, sourceSize.width)
+                height: Math.min(socialImage.parent.height - Math.min(70, msgView.height) - audioItem.height - 20, sourceSize.height)
             }
         },
         State {
