@@ -449,7 +449,7 @@ Item {
 
             PropertyChanges { target: msgView; height: msgViewHeight() }
 
-            PropertyChanges { target: msgView.scrollBar; visible: (msgView.view.contentHeight >= msgView.view.height) }
+            PropertyChanges { target: msgView.scrollBar; visible: (msgView.view.contentHeight > msgView.view.height) }
 
             PropertyChanges { target: cloudRect; z: 9000; height: { var y = cloudRect.height; return y } }
 
