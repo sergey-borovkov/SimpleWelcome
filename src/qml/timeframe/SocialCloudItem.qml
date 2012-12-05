@@ -4,6 +4,7 @@ import Private 0.1
 Item {
     id: cloudRect
     objectName: "cloudRect"
+
     property string id
     property date datetime
     property date cloudDate
@@ -54,6 +55,15 @@ Item {
         commentsView.model = model.comments(index)
     }
 
+    function msgViewHeight() {
+        var h = msgView.parent.height - 10
+        h -= (socialImage.height - 10) * socialImage.visible
+        h -= (audioItem.height - 10) * audioItem.visible
+        h -= (videoItem.height - 10) * videoItem.visible
+
+        return Math.min(msgView.socialMessage.height, h)
+    }
+
     function popupDetailsWidget()
     {
         if (cloudRect.state === "") {
@@ -63,17 +73,6 @@ Item {
             socialProxy.getAllComments(id, pluginName)
             socialProxy.getAllLikes(id, pluginName)
         }
-    }
-
-    function msgViewHeight() {
-        var h = mainRect.height - bottomLine.height - topLine.height - fromItem.height - 10
-        if (socialImage.height)
-            h = h - socialImage.height - 10
-        if (audioItem.visible)
-            h = h - audioItem.height - 10;
-        if (videoItem.visible)
-            h = h - videoItem.height - 10;
-        return Math.min(msgView.socialMessage.height, h)
     }
 
     function textVisible()
@@ -167,14 +166,13 @@ Item {
                 Column {
                     id: column
                     anchors.centerIn: parent
-                    width: parent.width
-
+                    anchors.fill: parent
                     spacing: 10
 
                     Item {
                         id: imageAnchor
                         width: parent.width
-                        height: mainRect.height - topLine.height - bottomLine.height - fromItem.height
+                        height: parent.height
                         visible: picture !== ""
 
                         SocialImage { //Main image
@@ -184,12 +182,9 @@ Item {
                                 leftMargin: 5
                                 rightMargin: 5
                             }
+
                             width: getWidth()
                             height: getHeight()
-
-                            source: picture
-                            fillMode: Image.PreserveAspectFit
-                            smooth: true
 
                             function getWidth() {
                                 if (status === Image.Null)
@@ -207,6 +202,10 @@ Item {
 
                                 return Math.min(sourceSize.height, parent.height)
                             }
+
+                            source: picture
+                            fillMode: Image.PreserveAspectFit
+                            smooth: true
                         }
                     }
 
@@ -276,11 +275,22 @@ Item {
 
                     SocialMessageView {
                         id: msgView
-                        x: 10
                         width: parent.width - 20
-                        height: childrenRect.height
-                        visible: (picture === "")
+                        height: parent.height
+                        x: 10
+
+                        visible: picture === ""
                     }
+                }
+
+                MouseArea {
+                    id: msgMouseArea
+                    anchors.fill: parent
+                    onClicked: {
+                        popupDetailsWidget()
+                    }
+
+                    hoverEnabled: true
                 }
             }
 
@@ -311,8 +321,7 @@ Item {
                         commentsListView.view.positionViewAtEnd()
                         cloudRect.state = "comments"
                     }
-                    else if (cloudRect.state === "comments")
-                    {
+                    else if (cloudRect.state === "comments") {
                         commentsEdit.source = ""
                         cloudRect.state = "details"
                     }
@@ -432,13 +441,11 @@ Item {
 
             PropertyChanges { target: videoItem; visible: video !== "" }
 
-            PropertyChanges { target: msgView.msgMouseArea; enabled: false; z: -1 }
-
-            PropertyChanges { target: msgView; visible: true }
+            PropertyChanges { target: msgMouseArea; enabled: false; z: -1 }
 
             PropertyChanges { target: msgView; height: msgViewHeight() }
 
-            PropertyChanges { target: msgView.scrollBar; visible: (msgView.view.contentHeight > msgView.view.height) }
+            PropertyChanges { target: msgView.scrollBar; visible: (msgView.view.contentHeight >= msgView.view.height) }
 
             PropertyChanges { target: cloudRect; z: 9000; height: { var y = cloudRect.height; return y } }
 
@@ -451,7 +458,7 @@ Item {
             PropertyChanges {
                 target: socialImage
                 width: Math.min(mainRect.width - 20, sourceSize.width)
-                height: Math.min( mainRect.height - topLine.height - bottomLine.height - fromItem.height - Math.min(70, msgView.height) - audioItem.height - 20, sourceSize.height)
+                height: Math.min(mainRect.height - topLine.height - bottomLine.height - fromItem.height - Math.min(70, msgView.height) - audioItem.height - 20, sourceSize.height)
             }
         },
         State {

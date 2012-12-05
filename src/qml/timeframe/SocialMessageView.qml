@@ -4,18 +4,19 @@ Item {
     property alias view: msgView
     property alias scrollBar: msgScrollBar
     property alias socialMessage: socialMessage
-    property alias msgMouseArea: msgMouseArea
+
     Flickable {
         id: msgView
-        width: parent.width
-        height: socialMessage.paintedHeight
-        contentHeight: socialMessage.paintedHeight
+        anchors.fill: parent
+        contentHeight: socialMessage.height
+        contentWidth: socialMessage.width
 
         clip: true
 
         Text {
             id: socialMessage
             width: msgView.width - 20
+
             anchors {
                 bottomMargin: 3
                 horizontalCenter: parent.horizontalCenter
@@ -34,21 +35,12 @@ Item {
             textFormat: Text.StyledText
             elide: Text.ElideRight
             maximumLineCount: {
-                var lines = (mainRect.height - topLine.height - fromItem.height -
-                             (audioItem.visible ? audioItem.height : 0) -
-                             (videoItem.visible ? videoItem.height : 0)) / font.pixelSize / 1.5;
+                var h = msgView.parent.height - 10
+                h -= (socialImage.height - 10) * socialImage.visible
+                h -= (audioItem.height - 10) * audioItem.visible
+                h -= (videoItem.height - 10) * videoItem.visible
+                var lines = h / font.pixelSize / 1.5;
                 return lines
-            }
-
-            MouseArea {
-                id: msgMouseArea
-                anchors.fill: parent
-
-                onClicked: {
-                    popupDetailsWidget()
-                }
-
-                hoverEnabled: true
             }
         }
     }
