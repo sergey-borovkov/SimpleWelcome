@@ -7,16 +7,16 @@ Item {
 
     Flickable {
         id: msgView
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height
         contentHeight: socialMessage.height
         contentWidth: socialMessage.width
-
+        boundsBehavior: Flickable.StopAtBounds
         clip: true
 
         Text {
             id: socialMessage
             width: msgView.width - 20
-
             anchors {
                 bottomMargin: 3
                 horizontalCenter: parent.horizontalCenter
@@ -31,7 +31,6 @@ Item {
             verticalAlignment: Text.AlignVCenter
             text: (picture === "") ? message : ""
             color: "white"
-            clip: true
             textFormat: Text.StyledText
             elide: Text.ElideRight
             maximumLineCount: {
