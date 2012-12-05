@@ -97,8 +97,9 @@ void PreviewGenerator::previewJobFailed(const KFileItem &item)
     if(job)
         size = job->property("requestedSize").toSize();
     KIcon icon(item.iconName(), 0, item.overlays());
-    QPixmap pixmap = icon.pixmap(size);
+    QPixmap pixmap = icon.pixmap(icon.actualSize(size));
     m_previews.insert(item.localPath(), pixmap);
+
     notifyModelAboutPreview(item.localPath());
 }
 
