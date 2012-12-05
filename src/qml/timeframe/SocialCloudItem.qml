@@ -25,6 +25,9 @@ Item {
     property int index: -1
 
     Connections {
+        // while specifying socialDayModel here is ugly any other way generates warnings
+        // either about non-existent properties or in case of dynamic connection about
+        // unknown property index
         target: socialDayModel.itemsModel(date)
         onUpdateData: {
             if(index === -1) {
