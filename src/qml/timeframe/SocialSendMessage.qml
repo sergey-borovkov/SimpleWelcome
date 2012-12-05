@@ -58,6 +58,19 @@ Item{
         hideSendMessageWidget()
     }
 
+    function findCurrentPlugin()
+    {
+        var idx = 0
+        for (var i = 0; i < socialNetworksView.count; i++) {
+            if (socialNetworksView.model.isAuthorized(i)) {
+                idx = i
+                break
+            }
+        }
+
+        return idx
+    }
+
     MouseArea {
         id: modal
         anchors.fill: parent
@@ -229,15 +242,18 @@ Item{
 
             Item {
                 id: wrapper
-                width: authorized ? networkIconWidth : 0
-                height: authorized ? networkIconHeight : 0
+                width: authorized ? pluginImage.width + 10 : 0
+                height: pluginImage.height
                 visible: authorized
 
                 property string pluginName: name
+                property bool pluginAuthorized: authorized
 
                 Image {
                     id: pluginImage
-                    anchors.fill: parent
+                    anchors.left: parent.left
+                    width: authorized ? networkIconWidth : 0
+                    height: authorized ? networkIconHeight : 0
                     fillMode: Image.PreserveAspectFit
                     source: "image://plugin/" + name + "/small"
                     smooth: true
@@ -271,10 +287,8 @@ Item{
                 left: parent.left
                 right: sendButton.left
             }
-            height: sendButton.height
+            height: networkIconHeight
             orientation: ListView.Horizontal
-            spacing: 10
-            currentIndex: 0
             interactive: false
             focus: true
 
@@ -358,6 +372,7 @@ Item{
                 pressedKey: false
             }
 
+            PropertyChanges { target: socialNetworksView; currentIndex: findCurrentPlugin() }
         }
     ]
 

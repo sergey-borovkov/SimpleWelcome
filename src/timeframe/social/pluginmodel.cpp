@@ -17,6 +17,12 @@ void PluginModel::appendRows(const QList<ListItem *> &items)
     ListModel::appendRows(items);
 }
 
+bool PluginModel::isAuthorized(int i) const
+{
+    QModelIndex idx = ListModel::index(i);
+    return ListModel::data(idx, PluginItem::Authorized).toBool();
+}
+
 void PluginModel::itemChanged()
 {
     PluginItem *item = static_cast<PluginItem *>(sender());

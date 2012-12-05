@@ -10,6 +10,8 @@ public:
     PluginModel(QHash<int, QByteArray> roles, QObject *parent = 0);
     virtual void appendRows(const QList<ListItem *> &items);
 
+    Q_INVOKABLE bool isAuthorized(int i) const;
+
 private slots:
     void itemChanged();
 };
