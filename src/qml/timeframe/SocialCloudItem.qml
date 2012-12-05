@@ -186,6 +186,7 @@ Item {
                             id: socialImage
                             anchors {
                                 horizontalCenter: parent.horizontalCenter
+                                verticalCenter: parent.verticalCenter
                                 leftMargin: 5
                                 rightMargin: 5
                             }
