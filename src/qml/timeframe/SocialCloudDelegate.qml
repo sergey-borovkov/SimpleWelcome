@@ -31,7 +31,6 @@ Item {
                     var subChildren = cloud.item.children[i].children
                     for(var j = 0; j < subChildren.length; j++) {
                         if(subChildren[j].objectName === "cloudRect") {
-                            subChildren[j].index = c
                             subChildren[j].model = model
                             subChildren[j].initialize(c)
                             model.updateData.connect(subChildren[j].update)
@@ -60,7 +59,6 @@ Item {
 
     function getSourceComponent(count)
     {
-
         if (count === 0)
             return ""
         if (count === 1)
@@ -71,8 +69,6 @@ Item {
             return "clouds/SocialCloudThree.qml"
         else if (count > 3)
             return "clouds/SocialCloudFour.qml"
-        else
-            return "clouds/SocialCloudOne.qml"
     }
 
 }

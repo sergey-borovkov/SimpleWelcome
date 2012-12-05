@@ -4,6 +4,7 @@ import Private 0.1
 Item {
     id: cloudRect
     objectName: "cloudRect"
+
     property string id
     property date datetime
     property date cloudDate
@@ -33,8 +34,9 @@ Item {
         like = model.like(index)
     }
 
-    function initialize(index)
+    function initialize(idx)
     {
+        index = idx
         id = model.id(index)
         message = model.text(index)
         datetime = model.datetime(index)
@@ -53,6 +55,15 @@ Item {
         commentsView.model = model.comments(index)
     }
 
+    function msgViewHeight() {
+        var h = msgView.parent.height - 10
+        h -= (socialImage.height - 10) * socialImage.visible
+        h -= (audioItem.height - 10) * audioItem.visible
+        h -= (videoItem.height - 10) * videoItem.visible
+
+        return Math.min(msgView.socialMessage.height, h)
+    }
+
     function popupDetailsWidget()
     {
         if (cloudRect.state === "") {
@@ -64,22 +75,11 @@ Item {
         }
     }
 
-    function msgViewHeight() {
-        var h = mainRect.height - bottomLine.height - topLine.height - fromItem.height - 10
-        if (socialImage.height)
-            h = h - socialImage.height - 10
-        if (audioItem.visible)
-            h = h - audioItem.height - 10;
-        if (videoItem.visible)
-            h = h - videoItem.height - 10;
-        return Math.min(socialMessage.height, h)
-    }
-
     function textVisible()
     {
         if (picture === "")
         {
-            socialMessage.text = ""
+            msgView.socialMessage.text = ""
             return false
         }
         return true
@@ -92,9 +92,11 @@ Item {
     MouseArea {
         id: modal
         anchors.fill: parent
+
         onClicked:  {
             cloudRect.state = ""
         }
+
         enabled: false
     }
 
@@ -120,28 +122,28 @@ Item {
 
         ItemRectangle {
             id: mainRect
-
-            anchors.top: parent.top
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors {
+                top: parent.top
+                horizontalCenter: parent.horizontalCenter
+            }
             width: parent.width
             height: parent.height
 
             SocialTopBar {
                 id: topLine
-
                 anchors.top: parent.top
                 width: parent.width
                 height: 26
-
-                dateText : date
-                likesCount : likes
-                commentsCount: commentCount
 
                 onExitClicked: {
                     modal.parent = cloudRect
                     modal.z = -1
                     cloudRect.state = ""
                 }
+
+                dateText : date
+                likesCount : likes
+                commentsCount: commentCount
             }
 
             FromItem {
@@ -152,23 +154,26 @@ Item {
                 anchors { top: topLine.bottom; bottomMargin: 10 }
             }
 
-            Item{
+            Item {
                 id: bodyItem
-
-                anchors { top: fromItem.bottom; bottom: bottomLine.top; left: parent.left; right: parent.right }
+                anchors {
+                    top: fromItem.bottom
+                    bottom: bottomLine.top
+                    left: parent.left
+                    right: parent.right
+                }
 
                 Column {
                     id: column
-
                     anchors.centerIn: parent
-                    width: parent.width
-
+                    anchors.fill: parent
                     spacing: 10
 
                     Item {
                         id: imageAnchor
                         width: parent.width
-                        height: socialImage.height
+                        height: parent.height
+                        visible: picture !== ""
 
                         SocialImage { //Main image
                             id: socialImage
@@ -177,28 +182,30 @@ Item {
                                 leftMargin: 5
                                 rightMargin: 5
                             }
+
                             width: getWidth()
                             height: getHeight()
-
-                            source: picture
-                            fillMode: Image.PreserveAspectFit
-                            smooth: true
 
                             function getWidth() {
                                 if (status === Image.Null)
                                     return 0
                                 if (status === Image.Loading || status === Image.Error)
                                     return 55
-                                return Math.min(sourceSize.width, mainRect.width - 20)
+                                return Math.min(sourceSize.width, parent.width - 20)
                             }
 
                             function getHeight() {
                                 if (status === Image.Null)
                                     return 0
-                                if ((status===Image.Loading) || (status===Image.Error))
+                                if (status === Image.Loading || status === Image.Error)
                                     return 55
-                                return Math.min(sourceSize.height, mainRect.height - topLine.height - bottomLine.height - fromItem.height)
+
+                                return Math.min(sourceSize.height, parent.height)
                             }
+
+                            source: picture
+                            fillMode: Image.PreserveAspectFit
+                            smooth: true
                         }
                     }
 
@@ -266,68 +273,24 @@ Item {
                         visible: (picture === "") && (video !== "")
                     }
 
-                    Item {
-                        id: msgViewRect
-                        x: 10
+                    SocialMessageView {
+                        id: msgView
                         width: parent.width - 20
-                        height: msgView.height
-                        visible: (picture === "")
+                        height: parent.height
+                        x: 10
 
-                        Flickable {
-                            id: msgView
-                            width: parent.width
-                            height: socialMessage.paintedHeight
-                            contentHeight: socialMessage.paintedHeight
-
-                            clip: true
-
-                            Text {
-                                id: socialMessage
-                                width: msgView.width - 20
-                                anchors {
-                                    bottomMargin: 3
-                                    horizontalCenter: parent.horizontalCenter
-                                }
-
-                                onLinkActivated: {
-                                    Qt.openUrlExternally(link)
-                                }
-
-                                wrapMode: Text.Wrap
-                                horizontalAlignment: truncated ? Text.AlignLeft : Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                text: (picture === "") ? message : ""
-                                color: "white"
-                                clip: true
-                                textFormat: Text.StyledText
-                                elide: Text.ElideRight
-                                maximumLineCount: {
-                                    var lines = (mainRect.height - topLine.height - fromItem.height -
-                                                 (audioItem.visible ? audioItem.height : 0) -
-                                                 (videoItem.visible ? videoItem.height : 0)) / font.pixelSize / 1.5;
-                                    return lines
-                                }
-
-                                MouseArea {
-                                    id: msgMouseArea
-                                    anchors.fill: parent
-
-                                    onClicked: {
-                                        popupDetailsWidget()
-                                    }
-
-                                    hoverEnabled: true
-                                }
-                            }
-                        }
-                        ScrollBar {
-                            id: msgScrollBar
-                            flickable: msgView
-                            vertical: true
-                            hideScrollBarsWhenStopped: false
-                            visible: false
-                        }
+                        visible: picture === ""
                     }
+                }
+
+                MouseArea {
+                    id: msgMouseArea
+                    anchors.fill: parent
+                    onClicked: {
+                        popupDetailsWidget()
+                    }
+
+                    hoverEnabled: true
                 }
             }
 
@@ -358,8 +321,7 @@ Item {
                         commentsListView.view.positionViewAtEnd()
                         cloudRect.state = "comments"
                     }
-                    else if (cloudRect.state === "comments")
-                    {
+                    else if (cloudRect.state === "comments") {
                         commentsEdit.source = ""
                         cloudRect.state = "details"
                     }
@@ -371,6 +333,7 @@ Item {
                 visible: false
             }
         }
+
         ItemRectangle {
             id: commentsRect
             anchors {
@@ -384,7 +347,6 @@ Item {
                 bottomMargin: 8
             }
             height: 0
-
             z: -1
 
             CommentsListView {
@@ -453,8 +415,8 @@ Item {
             ParentChange {
                 target: socialCloudItem
                 parent: timeFrameTab
-                x: timeFrameTab.width/2 - socialCloudItem.width/2
-                y: timeFrameTab.height/2 - socialCloudItem.height/2
+                x: timeFrameTab.width / 2 - socialCloudItem.width / 2
+                y: timeFrameTab.height / 2 - socialCloudItem.height / 2
                 width: 400
                 height: 300
             }
@@ -468,11 +430,11 @@ Item {
             PropertyChanges { target: modal; enabled: true }
 
             PropertyChanges {
-                target: socialMessage;
-                text: message;
-                textFormat: Text.RichText;
-                visible: true;
-                horizontalAlignment: (msgView.contentHeight > msgView.height) ? Text.AlignLeft : Text.AlignHCenter;
+                target: msgView.socialMessage
+                text: message
+                textFormat: Text.RichText
+                visible: true
+                horizontalAlignment: (msgView.contentHeight > msgView.height) ? Text.AlignLeft : Text.AlignHCenter
             }
 
             PropertyChanges { target: audioItem; visible: audio !== "" }
@@ -481,11 +443,9 @@ Item {
 
             PropertyChanges { target: msgMouseArea; enabled: false; z: -1 }
 
-            PropertyChanges { target: msgViewRect; visible: true }
-
             PropertyChanges { target: msgView; height: msgViewHeight() }
 
-            PropertyChanges { target: msgScrollBar; visible: (msgView.contentHeight > msgView.height) }
+            PropertyChanges { target: msgView.scrollBar; visible: (msgView.view.contentHeight >= msgView.view.height) }
 
             PropertyChanges { target: cloudRect; z: 9000; height: { var y = cloudRect.height; return y } }
 
@@ -497,8 +457,8 @@ Item {
 
             PropertyChanges {
                 target: socialImage
-                width: Math.min(mainRect.width - 20, sourceSize.width)
-                height: Math.min( mainRect.height - topLine.height - bottomLine.height - fromItem.height - Math.min(70, msgViewRect.height) - audioItem.height - 20, sourceSize.height)
+                width: Math.min(socialImage.parent.width - 20, sourceSize.width)
+                height: Math.min(socialImage.parent.height - Math.min(70, msgView.height) - audioItem.height - 20, sourceSize.height)
             }
         },
         State {
