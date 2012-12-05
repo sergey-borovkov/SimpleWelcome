@@ -40,12 +40,10 @@ Item{
 
     function sendMessage()
     {
-        console.log("!!!!!   SEND button clicked...")
-
         var msg = edit.text
 
         // exit if empty message
-        if (msg.length != 0 && msg.replace(/\s/g,"") != "") {
+        if (edit.pressedKey && msg.length != 0 && msg.replace(/\s/g,"") != "") {
 
             if (msg.length > 4096)
                 msg = msg.slice(0, 4096)
@@ -53,12 +51,8 @@ Item{
             // trim spaces from start and end of string
             msg = trim(msg)
             // send MSG....
-            for (var i=0; i<networkButtonsRepeater.count; i++) {
-                if (networkButtonsRepeater.itemAt(i).pluginChecked && networkButtonsRepeater.itemAt(i).pluginAuthorized) {
-//                    console.log("Plugin " + networkButtonsRepeater.itemAt(i).pluginName + " is checked - post message \"" + msg + "\"")
-                    socialProxy.postMessage(msg, networkButtonsRepeater.itemAt(i).pluginName)
-                }
-            }
+            console.log("Send message to " + socialNetworksView.currentItem.pluginName)
+            socialProxy.postMessage(msg, socialNetworksView.currentItem.pluginName)
         }
 
         hideSendMessageWidget()
@@ -202,12 +196,15 @@ Item{
                     clip: true
                     visible: false
 
+                    property bool pressedKey: false
+
                     Keys.onPressed: {
                         if (edit.text === i18n("What do you think about?"))
                         {
                             edit.color = "black"
                             edit.text = ""
                             edit.cursorPosition = 0
+                            pressedKey = true
                         }
                         if (event.key === Qt.Key_Return) {
 
@@ -226,49 +223,63 @@ Item{
             }
         }
 
+
+        Component {
+            id: pluginDelegate
+
+            Item {
+                id: wrapper
+                width: authorized ? networkIconWidth : 0
+                height: authorized ? networkIconHeight : 0
+                visible: authorized
+
+                property string pluginName: name
+
+                Image {
+                    id: pluginImage
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectFit
+                    source: "image://plugin/" + name + "/small"
+                    smooth: true
+                    opacity: 0.5
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        socialNetworksView.currentIndex = index
+                    }
+                }
+
+                // change opacity of the item if it is the current item
+                states: State {
+                    name: "Current"
+                    when: wrapper.ListView.isCurrentItem
+                    PropertyChanges { target: pluginImage; opacity: 1 }
+                }
+                transitions: Transition {
+                    NumberAnimation { properties: "opacity"; duration: 200 }
+                }
+            }
+        }
+
         // plugin buttons
-        Row {
+        ListView {
             id: socialNetworksView
-            spacing: 10
             anchors {
                 verticalCenter: sendButton.verticalCenter
                 left: parent.left
+                right: sendButton.left
             }
+            height: sendButton.height
+            orientation: ListView.Horizontal
+            spacing: 10
+            currentIndex: 0
+            interactive: false
+            focus: true
 
-            Repeater {
-                id: networkButtonsRepeater
-                model: pluginModel
-
-                Item {
-                    width: authorized ? networkIconWidth : 0
-                    height: authorized ? networkIconHeight : 0
-                    visible: authorized
-
-                    property bool pluginChecked: true
-                    property bool pluginAuthorized: authorized
-                    property string pluginName: name
-
-                    Image {
-                        id: iconPluginButton
-                        anchors.centerIn: parent
-                        width: parent.width
-                        height: parent.height
-                        fillMode: Image.PreserveAspectFit
-                        source: "image://plugin/" + name + "/small"
-                        smooth: true
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: {
-                            pluginChecked = !pluginChecked
-                            iconPluginButton.opacity = (pluginChecked ? 1 : 0.5)
-                            console.log("button of " + name + " pressed...")
-                        }
-                    }
-                }
-            }
+            model: pluginModel
+            delegate: pluginDelegate
         }
 
         // "send" button
@@ -338,7 +349,14 @@ Item{
 
             PropertyChanges { target: timeFrameTab; enableWheel: false }
 
-            PropertyChanges { target: edit; text: i18n("What do you think about?"); color: "grey"; cursorPosition: 0; visible: true }
+            PropertyChanges {
+                target: edit;
+                text: i18n("What do you think about?");
+                color: "grey";
+                cursorPosition: 0;
+                visible: true;
+                pressedKey: false
+            }
 
         }
     ]
