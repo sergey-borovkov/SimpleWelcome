@@ -76,11 +76,14 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
         return;
     } else if (item.mimetype().startsWith("video/")) {
         QPainter p(&pict);
-        QPixmap scaledPixmap = videoPixmap.scaled(pict.width() / 2, pict.height() / 2,  Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        if (scaledPixmap.size().width() > videoPixmap.size().width() &&
-            scaledPixmap.size().height() > videoPixmap.size().height())
+        QPixmap scaledPixmap = videoPixmap.scaled(pict.width() / 2, pict.height() / 2,
+                                                  Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        if (scaledPixmap.size().width() > videoPixmap.size().width()
+                && scaledPixmap.size().height() > videoPixmap.size().height())
             scaledPixmap = videoPixmap;
-        p.drawPixmap(pict.width() / 2 - scaledPixmap.width() / 2, pict.height() / 2 - scaledPixmap.height() / 2 ,  scaledPixmap);
+
+        p.drawPixmap(pict.width() / 2 - scaledPixmap.width() / 2,
+                     pict.height() / 2 - scaledPixmap.height() / 2 ,  scaledPixmap);
     }
 
     // add shadow
@@ -103,7 +106,18 @@ void PreviewGenerator::previewJobFailed(const KFileItem &item)
     notifyModelAboutPreview(item.localPath());
 }
 
-QPixmap PreviewGenerator::takePreviewPixmap(QString filePath)
+void PreviewGenerator::previewJobFinished(KJob *job)
+{
+    for(QHash<QString, KJob*>::iterator it = m_runningJobs.begin(),
+        end = m_runningJobs.end(); it != end; ++it) {
+        if(it.value() == job) {
+            m_runningJobs.erase(it);
+            return;
+        }
+    }
+}
+
+QPixmap PreviewGenerator::takePreviewPixmap(const QString &filePath)
 {
     QHash<QString, QPixmap>::iterator it = m_previews.find(filePath);
     if (it != m_previews.end()) {
@@ -121,12 +135,30 @@ void PreviewGenerator::request(const QString &path, const QSize &size)
     KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
     fileList.append(fileItem);
 
+    QHash<QString, KJob*>::iterator it(m_runningJobs.find(path));
+    if(it != m_runningJobs.end()) {
+        // ok, we found job for this path, let's check if we still can use it
+        const QSize jobRequestedSize = it.value()->property("requestedSize").toSize();
+        if(jobRequestedSize != size) {
+            it.value()->kill();
+            m_runningJobs.erase(it);
+            m_previews.remove(path);
+        }
+        else {
+            //ok, let's just wait for this result
+            return;
+        }
+    }
+
     KIO::PreviewJob *job = KIO::filePreview(fileList, size, &m_plugins);
     job->setProperty("requestedSize", size);
+    job->setProperty("previewTaken", false);
     job->setIgnoreMaximumSize();
+    m_runningJobs.insert(path, job);
 
-    connect(job, SIGNAL(gotPreview(const KFileItem &, const QPixmap &)), SLOT(previewJobResult(const KFileItem &, const QPixmap &)));
-    connect(job, SIGNAL(failed(const KFileItem &)), SLOT(previewJobFailed(const KFileItem &)));
+    connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), SLOT(previewJobResult(KFileItem,QPixmap)));
+    connect(job, SIGNAL(failed(KFileItem)), SLOT(previewJobFailed(KFileItem)));
+    connect(job, SIGNAL(result(KJob*)), SLOT(previewJobFinished(KJob*)));
 }
 
 void PreviewGenerator::cancel(const QString &path)

@@ -40,25 +40,23 @@ class PreviewGenerator : public QObject
 public:
     void setModel(LocalContentModel *model);
 
-    QPixmap takePreviewPixmap(QString filePath);
+    QPixmap takePreviewPixmap(const QString &filePath);
 
     /**
-     * @brief modelShown is called in QML after "cloud" is loaded. It generates
-     *        previews and notifies model when previews are generated
-     * @param dayModel
+     * @brief requests preview to be generated
      */
     Q_INVOKABLE void request(const QString &path, const QSize &size);
 
     /**
-     * @brief modelHidden is in QML when cloud component gets destroyed. It removes
-     *        unused  images generated for model
-     * @param dayModel
+     * @brief cancel is called in QML when cloud component gets destroyed. It removes
+     *        unused  images generated for model and cancels running job associated with path
      */
     Q_INVOKABLE void cancel(const QString &path);
 
 private slots:
     void previewJobResult(const KFileItem &, const QPixmap &);
     void previewJobFailed(const KFileItem &item);
+    void previewJobFinished(KJob *job);
 
 private:
     friend PreviewGenerator *previewGenerator(const QString &type);
@@ -67,7 +65,7 @@ private:
     void notifyModelAboutPreview(const QString &url);
 
     QHash<QString, QPixmap> m_previews;
-
+    QHash<QString, KJob*> m_runningJobs;
     QPixmap videoPixmap;
     QStringList m_plugins;
     LocalContentModel *m_model;
