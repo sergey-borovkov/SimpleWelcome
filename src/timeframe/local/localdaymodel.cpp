@@ -22,7 +22,6 @@ LocalDayModel::~LocalDayModel()
     m_items.clear();
 }
 
-
 QVariant LocalDayModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
@@ -52,15 +51,6 @@ int LocalDayModel::rowCount(const QModelIndex &parent) const
         return m_items.size();
 }
 
-/**
-  * @brief LocalDayModel::getImageInsertPosition - return position of inserted
-  *        image item, items must be sorted by descending of dimension image
-  * @param item - item which add to model
-  * @param from - start position in the list of items
-  * @param to - end position in the list of items
-  * @return -1 - need append item to the list
-  *         pos - need insert item to the position pos in the list
-  */
 int LocalDayModel::getImageInsertPosition(Activity *item, int from, int to) const
 {
     if (item->type() != "Image")
