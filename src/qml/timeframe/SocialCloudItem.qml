@@ -429,9 +429,9 @@ Item {
                 height: 300
             }
 
-            PropertyChanges { target: timeFrameTab; enableWheel: false }
-
             PropertyChanges { target: socialCloudItem; z: 400 }
+
+            PropertyChanges { target: timeFrameTab; enableWheel: false }
 
             PropertyChanges { target: bottomLine; height: Math.max( 26, commentsShowText.paintedHeight ); visible: true }
 
@@ -482,7 +482,11 @@ Item {
                 height: commentsViewHeight()
             }
 
-            PropertyChanges { target: commentsEdit; height: 60; visible: true }
+            PropertyChanges {
+                target: commentsEdit
+                height: 60
+                visible: true
+            }
 
             PropertyChanges { target: bottomLine; commentsShow: true }
         }
