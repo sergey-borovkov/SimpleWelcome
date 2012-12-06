@@ -72,7 +72,7 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
 
 QImage PreviewProvider::getRoundedImage(QImage image, int radius)
 {
-    QSize iconSize = image.size();
+    const QSize iconSize = image.size();
     QPixmap pix(iconSize);
     pix.fill(Qt::transparent);
     QPainter p(&pix);

@@ -136,10 +136,10 @@ void PreviewGenerator::request(const QString &path, const QSize &size)
     fileList.append(fileItem);
 
     QHash<QString, KJob*>::iterator it(m_runningJobs.find(path));
-    if(it != m_runningJobs.end()) {
+    if (it != m_runningJobs.end()) {
         // ok, we found job for this path, let's check if we still can use it
         const QSize jobRequestedSize = it.value()->property("requestedSize").toSize();
-        if(jobRequestedSize != size) {
+        if (jobRequestedSize != size) {
             it.value()->kill();
             m_runningJobs.erase(it);
             m_previews.remove(path);
@@ -163,5 +163,15 @@ void PreviewGenerator::request(const QString &path, const QSize &size)
 
 void PreviewGenerator::cancel(const QString &path)
 {
-    m_previews.remove(path);
+    QHash<QString, KJob*>::iterator it(m_runningJobs.find(path));
+    if(it != m_runningJobs.end()) {
+        qDebug("remove job for path");
+        it.value()->kill();
+        m_runningJobs.erase(it);
+    }
+    QHash<QString, QPixmap>::iterator previewIterator(m_previews.find(path));
+    if(previewIterator != m_previews.end()) {
+        qDebug("remove preview for path");
+        m_previews.erase(previewIterator);
+    }
 }
