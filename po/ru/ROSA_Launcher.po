@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Evgeniy Auzhin <evgeniy.augin@osinit.ru>, 2012.
+# Julia Mineeva <julia.mineeva@osinit.ru>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Simple Welcome\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-14 17:13+0400\n"
-"PO-Revision-Date: 2012-11-14 13:19+0000\n"
-"Last-Translator: Evgeniy Auzhin <evgeniy.augin@osinit.ru>\n"
+"POT-Creation-Date: 2012-12-06 11:27+0400\n"
+"PO-Revision-Date: 2012-12-06 07:41+0000\n"
+"Last-Translator: Julia Mineeva <julia.mineeva@osinit.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,9 +52,115 @@ msgstr ""
 msgid "Aleksey Yermakov"
 msgstr ""
 
-#: src/main.cpp:70
+#: src/main.cpp:69
 msgid "Silent run. Hide application window after start."
 msgstr ""
+
+#: src/qml/WelcomeTab.qml:18 src/qml/IconGridView.qml:86
+msgid "Recent Applications"
+msgstr "Недавние приложения"
+
+#: src/qml/WelcomeTab.qml:25
+msgid "Places"
+msgstr "Точки входа"
+
+#: src/qml/WelcomeTab.qml:32
+msgid "Recent Documents"
+msgstr "Недавние документы"
+
+#: src/qml/BottomBar.qml:80
+msgid "Welcome"
+msgstr "Приветствие"
+
+#: src/qml/BottomBar.qml:90
+msgid "Applications"
+msgstr "Приложения"
+
+#: src/qml/BottomBar.qml:100
+msgid "TimeFrame"
+msgstr ""
+
+#: src/qml/timeframe/SocialSendMessage.qml:109
+msgid "Write message"
+msgstr "Написать сообщение"
+
+#: src/qml/timeframe/SocialSendMessage.qml:209
+#: src/qml/timeframe/SocialSendMessage.qml:218
+#: src/qml/timeframe/SocialSendMessage.qml:372
+msgid "What do you think about?"
+msgstr "О чем вы думаете?"
+
+#: src/qml/timeframe/SocialSendMessage.qml:337
+msgid "Send"
+msgstr "Отправить"
+
+#: src/qml/timeframe/SocialGalleryItem.qml:151
+#: src/qml/timeframe/SocialCloudItem.qml:233
+msgid "Audio: "
+msgstr "Аудио: "
+
+#: src/qml/timeframe/SocialGalleryItem.qml:181
+#: src/qml/timeframe/SocialCloudItem.qml:265
+msgid "Video: "
+msgstr "Видео: "
+
+#: src/qml/timeframe/SocialGalleryItem.qml:279
+#: src/qml/timeframe/SocialCloudItem.qml:327
+#: src/qml/timeframe/CommentsEditBox.qml:76
+#: src/qml/timeframe/CommentsEditBox.qml:101
+msgid "Write comment..."
+msgstr "Написать комментарий..."
+
+#: src/qml/timeframe/SocialGalleryItem.qml:375
+#: src/qml/timeframe/SocialCloudItem.qml:463
+msgid "in"
+msgstr "в"
+
+#: src/qml/timeframe/TimeFrameTab.qml:48 src/qml/timeframe/TimeFrameTab.qml:72
+msgid "All"
+msgstr "Все"
+
+#: src/qml/timeframe/TimeFrameTab.qml:50 src/qml/timeframe/TimeFrameTab.qml:74
+msgid "Images"
+msgstr "Изображения"
+
+#: src/qml/timeframe/TimeFrameTab.qml:52 src/qml/timeframe/TimeFrameTab.qml:76
+msgid "Video"
+msgstr "Видео"
+
+#: src/qml/timeframe/TimeFrameTab.qml:54 src/qml/timeframe/TimeFrameTab.qml:78
+msgid "Documents"
+msgstr "Документы"
+
+#: src/qml/timeframe/TimeFrameTab.qml:56 src/qml/timeframe/TimeFrameTab.qml:80
+msgid "Manage Networks"
+msgstr "Управление сетями"
+
+#: src/qml/timeframe/TimeFrameTab.qml:266
+msgid "My Local Documents"
+msgstr "Мои локальные документы"
+
+#: src/qml/timeframe/TimeFrameTab.qml:338
+msgid "Social Networking Sites"
+msgstr "Социальные сети"
+
+#: src/qml/timeframe/TimeFrameTab.qml:433
+msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
+msgstr ""
+"Служба \"Поиск по меткам и содержимому\" выключена. Вы можете включить ее в "
+"параметрах системы."
+
+#: src/qml/timeframe/TimeFrameTab.qml:467
+msgid "Enable..."
+msgstr "Включить..."
+
+#: src/qml/timeframe/SocialAuthorization.qml:68
+msgid "Logout"
+msgstr "Выход"
+
+#: src/qml/timeframe/SocialAuthorization.qml:68
+msgid "Login"
+msgstr "Вход"
 
 #: src/qml/timeframe/TimeScale.qml:8
 msgid "JAN"
@@ -107,70 +214,6 @@ msgstr "ДЕК"
 msgid "UND"
 msgstr ""
 
-#: src/qml/timeframe/TimeFrameTab.qml:48 src/qml/timeframe/TimeFrameTab.qml:72
-msgid "All"
-msgstr "Все"
-
-#: src/qml/timeframe/TimeFrameTab.qml:50 src/qml/timeframe/TimeFrameTab.qml:74
-msgid "Images"
-msgstr "Изображения"
-
-#: src/qml/timeframe/TimeFrameTab.qml:52 src/qml/timeframe/TimeFrameTab.qml:76
-msgid "Video"
-msgstr "Видео"
-
-#: src/qml/timeframe/TimeFrameTab.qml:54 src/qml/timeframe/TimeFrameTab.qml:78
-msgid "Documents"
-msgstr "Документы"
-
-#: src/qml/timeframe/TimeFrameTab.qml:56 src/qml/timeframe/TimeFrameTab.qml:80
-msgid "Manage Networks"
-msgstr "Управление сетями"
-
-#: src/qml/timeframe/TimeFrameTab.qml:254
-msgid "My Local Documents"
-msgstr "Мои локальные документы"
-
-#: src/qml/timeframe/TimeFrameTab.qml:326
-msgid "Social Networking Sites"
-msgstr "Социальные сети"
-
-#: src/qml/timeframe/TimeFrameTab.qml:421
-msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
-msgstr ""
-"Служба \"Поиск по меткам и содержимому\" выключена. Вы можете включить ее в "
-"параметрах системы."
-
-#: src/qml/timeframe/TimeFrameTab.qml:455
-msgid "Enable..."
-msgstr "Включить..."
-
-#: src/qml/timeframe/SocialImage.qml:37
-msgid "Image is currently not available"
-msgstr "Изображение временно недоступно"
-
-#: src/qml/timeframe/SocialCloudItem.qml:195
-#: src/qml/timeframe/SocialGalleryItem.qml:143
-msgid "Audio: "
-msgstr "Аудио: "
-
-#: src/qml/timeframe/SocialCloudItem.qml:224
-#: src/qml/timeframe/SocialGalleryItem.qml:173
-msgid "Video: "
-msgstr "Видео: "
-
-#: src/qml/timeframe/SocialCloudItem.qml:311
-#: src/qml/timeframe/SocialGalleryItem.qml:271
-#: src/qml/timeframe/CommentsEditBox.qml:66
-#: src/qml/timeframe/CommentsEditBox.qml:78
-msgid "Write comment..."
-msgstr "Написать комментарий..."
-
-#: src/qml/timeframe/SocialCloudItem.qml:429
-#: src/qml/timeframe/SocialGalleryItem.qml:367
-msgid "in"
-msgstr "в"
-
 #: src/qml/timeframe/SocialBottomBar.qml:89
 msgid "Like"
 msgstr "Мне нравится"
@@ -187,37 +230,9 @@ msgstr "Скрыть комментарии"
 msgid "Show comments"
 msgstr "Показать комментарии"
 
-#: src/qml/timeframe/SocialAuthorization.qml:68
-msgid "Logout"
-msgstr "Выход"
-
-#: src/qml/timeframe/SocialAuthorization.qml:68
-msgid "Login"
-msgstr "Вход"
-
-#: src/qml/BottomBar.qml:63
-msgid "Welcome"
-msgstr "Приветствие"
-
-#: src/qml/BottomBar.qml:71
-msgid "Applications"
-msgstr "Приложения"
-
-#: src/qml/BottomBar.qml:79
-msgid "TimeFrame"
-msgstr ""
-
-#: src/qml/WelcomeTab.qml:15 src/qml/IconGridView.qml:89
-msgid "Recent Applications"
-msgstr "Недавние приложения"
-
-#: src/qml/WelcomeTab.qml:22
-msgid "Places"
-msgstr "Точки входа"
-
-#: src/qml/WelcomeTab.qml:29 src/qml/IconGridView.qml:89
-msgid "Recent Documents"
-msgstr "Недавние документы"
+#: src/qml/timeframe/SocialImage.qml:37
+msgid "Image is currently not available"
+msgstr "Изображение временно недоступно"
 
 #: rosa-starter/src/rosa-starter.cpp:80
 msgid "Edit Applications..."

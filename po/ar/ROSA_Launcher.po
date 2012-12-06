@@ -1,311 +1,246 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+# Translators:
 #   <almusalimalmusalimah@gmail.com>, 2011.
 msgid ""
 msgstr ""
-"Project-Id-Version: SimpleWelcome\n"
-"Report-Msgid-Bugs-To: http://bugs.rosalinux.ru/buglist.cgi?"
-"quicksearch=simplewelcome&list_id=4395\n"
-"POT-Creation-Date: 2012-11-08 11:09+0400\n"
-"PO-Revision-Date: 2011-06-19 11:10+0000\n"
-"Last-Translator: Mandriva Linux <almusalimalmusalimah@gmail.com>\n"
-"Language-Team: Arabic (http://transifex.mandriva.com/projects/p/"
-"mandriva_i18n/team/ar/)\n"
-"Language: ar\n"
+"Project-Id-Version: Simple Welcome\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-12-06 11:27+0400\n"
+"PO-Revision-Date: 2012-12-06 07:35+0000\n"
+"Last-Translator: Julia Mineeva <julia.mineeva@osinit.ru>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5\n"
+
+#: src/main.cpp:40 src/main.cpp:47
+msgid "ROSA Desktop Application Launcher"
+msgstr "مطلق - تطبيقات سطح المكتب - روسا"
+
+#: src/main.cpp:49
+msgid "Copyright 2010-2012, ROSALab"
+msgstr ""
+
+#: src/main.cpp:50
+msgid "Alexander Skakov"
+msgstr ""
+
+#: src/main.cpp:51 src/main.cpp:54 src/main.cpp:57 src/main.cpp:60
+#: src/main.cpp:63
+msgid "Author"
+msgstr "المؤلف"
+
+#: src/main.cpp:53
+msgid "Evgeniy Augin"
+msgstr ""
+
+#: src/main.cpp:56
+msgid "Sergey Borovkov"
+msgstr ""
+
+#: src/main.cpp:59
+msgid "Julia Mineeva"
+msgstr ""
+
+#: src/main.cpp:62
+msgid "Aleksey Yermakov"
+msgstr "Aleksey Yermakov"
+
+#: src/main.cpp:69
+msgid "Silent run. Hide application window after start."
+msgstr ""
+
+#: src/qml/WelcomeTab.qml:18 src/qml/IconGridView.qml:86
+msgid "Recent Applications"
+msgstr "التطبيقات المستعملة مؤخرا"
+
+#: src/qml/WelcomeTab.qml:25
+msgid "Places"
+msgstr "اﻷماكن"
+
+#: src/qml/WelcomeTab.qml:32
+msgid "Recent Documents"
+msgstr "المستندات المستخدمة مؤخرا"
+
+#: src/qml/BottomBar.qml:80
+msgid "Welcome"
+msgstr "مرحبا"
+
+#: src/qml/BottomBar.qml:90
+msgid "Applications"
+msgstr "التطبيقات"
+
+#: src/qml/BottomBar.qml:100
+msgid "TimeFrame"
+msgstr "الخط الزمني"
+
+#: src/qml/timeframe/SocialSendMessage.qml:109
+msgid "Write message"
+msgstr ""
+
+#: src/qml/timeframe/SocialSendMessage.qml:209
+#: src/qml/timeframe/SocialSendMessage.qml:218
+#: src/qml/timeframe/SocialSendMessage.qml:372
+msgid "What do you think about?"
+msgstr ""
+
+#: src/qml/timeframe/SocialSendMessage.qml:337
+msgid "Send"
+msgstr ""
+
+#: src/qml/timeframe/SocialGalleryItem.qml:151
+#: src/qml/timeframe/SocialCloudItem.qml:233
+msgid "Audio: "
+msgstr ""
+
+#: src/qml/timeframe/SocialGalleryItem.qml:181
+#: src/qml/timeframe/SocialCloudItem.qml:265
+msgid "Video: "
+msgstr ""
+
+#: src/qml/timeframe/SocialGalleryItem.qml:279
+#: src/qml/timeframe/SocialCloudItem.qml:327
+#: src/qml/timeframe/CommentsEditBox.qml:76
+#: src/qml/timeframe/CommentsEditBox.qml:101
+msgid "Write comment..."
+msgstr ""
+
+#: src/qml/timeframe/SocialGalleryItem.qml:375
+#: src/qml/timeframe/SocialCloudItem.qml:463
+msgid "in"
+msgstr ""
+
+#: src/qml/timeframe/TimeFrameTab.qml:48 src/qml/timeframe/TimeFrameTab.qml:72
+msgid "All"
+msgstr ""
+
+#: src/qml/timeframe/TimeFrameTab.qml:50 src/qml/timeframe/TimeFrameTab.qml:74
+msgid "Images"
+msgstr ""
+
+#: src/qml/timeframe/TimeFrameTab.qml:52 src/qml/timeframe/TimeFrameTab.qml:76
+msgid "Video"
+msgstr "الفيديو"
+
+#: src/qml/timeframe/TimeFrameTab.qml:54 src/qml/timeframe/TimeFrameTab.qml:78
+msgid "Documents"
+msgstr ""
+
+#: src/qml/timeframe/TimeFrameTab.qml:56 src/qml/timeframe/TimeFrameTab.qml:80
+msgid "Manage Networks"
+msgstr ""
+
+#: src/qml/timeframe/TimeFrameTab.qml:266
+msgid "My Local Documents"
+msgstr ""
+
+#: src/qml/timeframe/TimeFrameTab.qml:338
+msgid "Social Networking Sites"
+msgstr ""
+
+#: src/qml/timeframe/TimeFrameTab.qml:433
+msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
+msgstr ""
+
+#: src/qml/timeframe/TimeFrameTab.qml:467
+msgid "Enable..."
+msgstr ""
+
+#: src/qml/timeframe/SocialAuthorization.qml:68
+msgid "Logout"
+msgstr ""
+
+#: src/qml/timeframe/SocialAuthorization.qml:68
+msgid "Login"
+msgstr ""
+
+#: src/qml/timeframe/TimeScale.qml:8
+msgid "JAN"
+msgstr "يناير"
+
+#: src/qml/timeframe/TimeScale.qml:8
+msgid "FEB"
+msgstr "فبراير"
+
+#: src/qml/timeframe/TimeScale.qml:8
+msgid "MAR"
+msgstr "مارس"
+
+#: src/qml/timeframe/TimeScale.qml:8
+msgid "APR"
+msgstr "إبريل"
+
+#: src/qml/timeframe/TimeScale.qml:8
+msgid "MAY"
+msgstr "مايو"
+
+#: src/qml/timeframe/TimeScale.qml:9
+msgid "JUN"
+msgstr ""
+
+#: src/qml/timeframe/TimeScale.qml:9
+msgid "JUL"
+msgstr ""
+
+#: src/qml/timeframe/TimeScale.qml:9
+msgid "AUG"
+msgstr "أغسطس"
+
+#: src/qml/timeframe/TimeScale.qml:9
+msgid "SEP"
+msgstr "سبتمبر"
+
+#: src/qml/timeframe/TimeScale.qml:9
+msgid "OCT"
+msgstr "أُكتوبر"
+
+#: src/qml/timeframe/TimeScale.qml:9
+msgid "NOV"
+msgstr "نوفمبر"
+
+#: src/qml/timeframe/TimeScale.qml:9
+msgid "DEC"
+msgstr "ديسمبر"
+
+#: src/qml/timeframe/TimeScale.qml:14
+msgid "UND"
+msgstr ""
+
+#: src/qml/timeframe/SocialBottomBar.qml:89
+msgid "Like"
+msgstr ""
+
+#: src/qml/timeframe/SocialBottomBar.qml:105
+msgid "Unlike"
+msgstr ""
+
+#: src/qml/timeframe/SocialBottomBar.qml:129
+msgid "Hide comments"
+msgstr ""
+
+#: src/qml/timeframe/SocialBottomBar.qml:129
+msgid "Show comments"
+msgstr ""
+
+#: src/qml/timeframe/SocialImage.qml:37
+msgid "Image is currently not available"
+msgstr ""
+
+#: rosa-starter/src/rosa-starter.cpp:80
+msgid "Edit Applications..."
+msgstr ""
 
 #: facebook-timeframe-plugin/facebookmodule.cpp:64
 msgid "Facebook"
 msgstr ""
 
-#: po/rc.cpp:1 rc.cpp:1
-msgctxt "Julia Mineeva"
-msgid "Julia Mineeva"
-msgstr ""
-
-#: po/rc.cpp:2 rc.cpp:2
-msgctxt "julia.mineeva@osinit.ru"
-msgid "julia.mineeva@osinit.ru"
-msgstr ""
-
-#: rosa-starter/src/rosa-starter.cpp:76
-#, fuzzy
-msgid "Edit Applications..."
-msgstr "التطبيقات"
-
-#: src/main.cpp:37 src/main.cpp:44
-msgid "ROSA Desktop Application Launcher"
-msgstr "مطلق - تطبيقات سطح المكتب - روسا"
-
-#: src/main.cpp:46
-#, fuzzy
-msgid "Copyright 2010-2012, ROSALab"
-msgstr "حقوق الطبع 2010-2011 ، مختبرات روسا ROSALab"
-
-#: src/main.cpp:47
-msgid "Alexander Skakov"
-msgstr ""
-
-#: src/main.cpp:48 src/main.cpp:51 src/main.cpp:54 src/main.cpp:57
-#: src/main.cpp:60
-msgid "Author"
-msgstr "المؤلف"
-
-#: src/main.cpp:50
-msgid "Evgeniy Augin"
-msgstr ""
-
-#: src/main.cpp:53
-msgid "Sergey Borovkov"
-msgstr ""
-
-#: src/main.cpp:56
-msgid "Julia Mineeva"
-msgstr ""
-
-#: src/main.cpp:59
-msgid "Aleksey Yermakov"
-msgstr "Aleksey Yermakov"
-
-#: src/main.cpp:67
-msgid "Silent run. Hide application window after start."
-msgstr ""
-
-#: src/swapp.cpp:178
-msgid "Welcome"
-msgstr "مرحبا"
-
-#: src/swapp.cpp:179
-msgid "Applications"
-msgstr "التطبيقات"
-
-#: src/swapp.cpp:180
-msgid "TimeFrame"
-msgstr "الخط الزمني"
-
-#: src/swapp.cpp:182
-msgid "Recent Applications"
-msgstr "التطبيقات المستعملة مؤخرا"
-
-#: src/swapp.cpp:183
-msgid "Places"
-msgstr "اﻷماكن"
-
-#: src/swapp.cpp:184
-msgid "Recent Documents"
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: src/swapp.cpp:186
-msgid "All"
-msgstr ""
-
-#: src/swapp.cpp:187
-msgid "Images"
-msgstr ""
-
-#: src/swapp.cpp:188
-msgid "Video"
-msgstr "الفيديو"
-
-#: src/swapp.cpp:189
-#, fuzzy
-msgid "Documents"
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: src/swapp.cpp:190
-msgid "Manage Networks"
-msgstr ""
-
-#: src/swapp.cpp:191
-#, fuzzy
-msgid "My Local Documents"
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: src/swapp.cpp:192
-msgid "Local"
-msgstr ""
-
-#: src/swapp.cpp:193
-#, fuzzy
-msgid "Write comment..."
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: src/swapp.cpp:194
-msgid "Audio: "
-msgstr ""
-
-#: src/swapp.cpp:195
-#, fuzzy
-msgid "Video: "
-msgstr "الفيديو"
-
-#: src/swapp.cpp:196
-msgid "Like"
-msgstr ""
-
-#: src/swapp.cpp:197
-msgid "Unlike"
-msgstr ""
-
-#: src/swapp.cpp:198
-msgid "Social Networking Sites"
-msgstr ""
-
-#: src/swapp.cpp:199
-#, fuzzy
-msgid "Show comments"
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: src/swapp.cpp:200
-#, fuzzy
-msgid "Hide comments"
-msgstr "المستندات المستخدمة مؤخرا"
-
-#: src/swapp.cpp:201
-msgid "Login"
-msgstr ""
-
-#: src/swapp.cpp:202
-msgid "Logout"
-msgstr ""
-
-#: src/swapp.cpp:203
-msgid "Enable..."
-msgstr ""
-
-#: src/swapp.cpp:204
-msgid "Nepomuk is disabled. You can enable it in the KDE Control Centre"
-msgstr ""
-
-#: src/swapp.cpp:205
-msgid "in"
-msgstr ""
-
-#: src/swapp.cpp:207
-msgid "JAN"
-msgstr "يناير"
-
-#: src/swapp.cpp:208
-msgid "FEB"
-msgstr "فبراير"
-
-#: src/swapp.cpp:209
-msgid "MAR"
-msgstr "مارس"
-
-#: src/swapp.cpp:210
-msgid "APR"
-msgstr "إبريل"
-
-#: src/swapp.cpp:211
-msgid "MAY"
-msgstr "مايو"
-
-#: src/swapp.cpp:212
-#, fuzzy
-msgid "JUN"
-msgstr "يونيو"
-
-#: src/swapp.cpp:213
-#, fuzzy
-msgid "JUL"
-msgstr "يوليو"
-
-#: src/swapp.cpp:214
-msgid "AUG"
-msgstr "أغسطس"
-
-#: src/swapp.cpp:215
-msgid "SEP"
-msgstr "سبتمبر"
-
-#: src/swapp.cpp:216
-msgid "OCT"
-msgstr "أُكتوبر"
-
-#: src/swapp.cpp:217
-msgid "NOV"
-msgstr "نوفمبر"
-
-#: src/swapp.cpp:218
-msgid "DEC"
-msgstr "ديسمبر"
-
-#: vkontakte-timeframe-plugin/vkontaktemodule.cpp:65
+#: vkontakte-timeframe-plugin/vkontaktemodule.cpp:64
 msgid "VKontakte"
 msgstr ""
 
-#, fuzzy
-#~ msgid "Photo"
-#~ msgstr "الصور"
 
-#~ msgid ""
-#~ "%1\n"
-#~ "rating: %2"
-#~ msgstr ""
-#~ "%1\n"
-#~ "النسبة: %2"
-
-#~ msgid "Home"
-#~ msgstr "المنزل"
-
-#~ msgid "PHOTO"
-#~ msgstr "الصور"
-
-#~ msgid "VIDEO"
-#~ msgstr "59b66c91d53ec2c32023fb3e7483714c_tr"
-
-#~ msgid ""
-#~ "\n"
-#~ "rating: "
-#~ msgstr ""
-#~ "\n"
-#~ "النسبة: "
-
-#~ msgctxt "Items in a folder"
-#~ msgid "1 item"
-#~ msgid_plural "%1 items"
-#~ msgstr[0] "لا يوجد عنصر"
-#~ msgstr[1] "1 عنصر"
-#~ msgstr[2] "عنصرين %1 "
-#~ msgstr[3] "%1 عناصر"
-#~ msgstr[4] "%1 عنصرا"
-#~ msgstr[5] "%1 عنصرا"
-
-#~ msgctxt "@info mimetype"
-#~ msgid "Unknown"
-#~ msgstr "غير معروف"
-
-#~ msgid "D"
-#~ msgstr "يوم"
-
-#~ msgid "M"
-#~ msgstr "شهر"
-
-#~ msgid "Show window decorations around the widget"
-#~ msgstr "اعرض زينة النافذة حول اﻷداة/اﻹضافة"
-
-#~ msgid "Do not show window decorations around the widget"
-#~ msgstr "لا تعرض زينة النافذة حول اﻷداة/اﻹضافة"
-
-#~ msgid "Display the widget fullscreen"
-#~ msgstr "اعرض اﻷداة/اﻹضافة ملء الشاشة"
-
-#~ msgid ""
-#~ "Name of applet to view; may refer to the plugin name or be a path "
-#~ "(absolute or relative) to a package. If not provided, then an attempt is "
-#~ "made to load a package from the current directory."
-#~ msgstr ""
-#~ "اسم البريمج لعرضه : قد يشير إلى اسم ملحق أو أن يكون مسارا (مطلق أو نسبي) "
-#~ "إلى حزمة. إذا لم يُحدد ، فسوف يتم إجراء محاولة لتحميل الحزمة من الدليل "
-#~ "الحالي."
-
-#~ msgid "Optional arguments for the applet to add"
-#~ msgstr "معطيات اختيارية ﻹضافتها للبريمج "
