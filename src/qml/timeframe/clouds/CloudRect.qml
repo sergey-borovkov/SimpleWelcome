@@ -11,7 +11,9 @@ Item {
         target: localDayModel.itemsModel(date)
         onGotThumbnail: {
             if(path === url) {
-                image.source += "1"
+                var oldSource = image.source
+                image.source = ""
+                image.source = oldSource
             }
         }
     }

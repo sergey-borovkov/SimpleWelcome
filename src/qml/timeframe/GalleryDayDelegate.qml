@@ -13,7 +13,7 @@ Column {
 
             anchors.centerIn: parent
 
-            source: "image://gallery/" + url + "%"
+            source: "image://gallery/" + url
             sourceSize.width: parent.width - 4
             sourceSize.height: parent.height - 4
             cache: false
@@ -26,7 +26,9 @@ Column {
                 target: localDayModel.itemsModel(date)
                 onGotThumbnail: {
                     if(path === url) {
-                        image.source += "1"
+                        var oldSource = image.source
+                        image.source = ""
+                        image.source = oldSource
                     }
                 }
             }

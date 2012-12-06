@@ -36,7 +36,7 @@ PreviewProvider::PreviewProvider(const QString &type) :
 
 QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
-    QString path = id.left(id.lastIndexOf('%'));
+    QString path = id;
     bool rounded = false;
     const QString round = path.right(8);
     if (round == "/rounded") {

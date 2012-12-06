@@ -38,7 +38,7 @@ Item {
                 for(i = 0; i < objects.length; ++i) {
                     if('url' in objects[i]) {
                         objects[i].url = model.url(c)
-                        objects[i].image.source = "image://timeline/" + model.url(c) + "/rounded" +"%"
+                        objects[i].image.source = "image://timeline/" + model.url(c) + "/rounded"
                         c++
                     }
                 }
