@@ -199,9 +199,9 @@ void DataSource_Search::itemClicked(int newIndex, QString group)
     }
 }
 
-QVariantMap DataSource_Search::getContent(int index, QString group)
+QVariantMap DataSource_Search::getContent(int index, const QString &group) const
 {
-    QMap<QString, AppItemList>::iterator it = matches.find(group);
+    QMap<QString, AppItemList>::const_iterator it = matches.constFind(group);
     if (it != matches.end())
         return it.value()[index];
     return QVariantMap();
