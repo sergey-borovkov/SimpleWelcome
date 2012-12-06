@@ -185,6 +185,7 @@ Item {
                         SocialImage { //Main image
                             id: socialImage
                             anchors {
+                                fill: parent
                                 horizontalCenter: parent.horizontalCenter
                                 verticalCenter: parent.verticalCenter
                                 leftMargin: 5
