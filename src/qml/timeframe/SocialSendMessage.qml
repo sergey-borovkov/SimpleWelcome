@@ -5,13 +5,14 @@ import ".."
 Item{
     id: socialSendMessageRect
 
-    x: sendMessageButton.x
+    x: sendMessageButton.x - 60
     y: sendMessageButton.y + sendMessageButton.height
 
-    width: 50
-    height: 30
+    width: wndWidth
+    height: 0
     opacity: 0
     clip: true
+    z: 500
 
     objectName: "sendMessageItem"
     property Item mainParent: socialSendMessageRect
@@ -20,6 +21,8 @@ Item{
     property int wndHeight: 300
     property int networkIconWidth: 22
     property int networkIconHeight: 22
+    property int moveDuration: 150
+    property int animationDuration: 150
 
     function popupSendMessageWidget()
     {
@@ -300,7 +303,7 @@ Item{
         Item {
             id: sendButton
             width: 80
-            height: 27
+            height: 0
 
             anchors {
                 right: parent.right
@@ -349,7 +352,6 @@ Item{
 
             PropertyChanges {
                 target: socialSendMessageRect;
-                z: 500
                 opacity: 1
                 width: wndWidth
                 height: wndHeight
@@ -362,6 +364,8 @@ Item{
             PropertyChanges { target: modal; enabled: true; z: 300 }
 
             PropertyChanges { target: timeFrameTab; enableWheel: false }
+
+            PropertyChanges { target: sendButton; height: 27 }
 
             PropertyChanges {
                 target: edit;
