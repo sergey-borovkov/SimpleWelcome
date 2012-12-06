@@ -442,7 +442,6 @@ Item {
                 target: msgView.socialMessage
                 text: message
                 textFormat: Text.RichText
-                visible: true
                 horizontalAlignment: (msgView.contentHeight > msgView.height) ? Text.AlignLeft : Text.AlignHCenter
             }
 
@@ -452,7 +451,11 @@ Item {
 
             PropertyChanges { target: msgMouseArea; enabled: false; z: -1 }
 
-            PropertyChanges { target: msgView; height: msgViewHeight() }
+            PropertyChanges {
+                target: msgView
+                height: msgViewHeight()
+                visible: true
+            }
 
             PropertyChanges { target: msgView.scrollBar; visible: (msgView.view.contentHeight > msgView.view.height) }
 
@@ -465,9 +468,15 @@ Item {
             }
 
             PropertyChanges {
-                target: socialImage
-                width: Math.min(socialImage.parent.width - 20, sourceSize.width)
-                height: Math.min(socialImage.parent.height - Math.min(70, msgView.height) - audioItem.height - 20, sourceSize.height)
+                target: imageAnchor
+                height: {
+                    var h = parent.height
+                    if(msgView.socialMessage.text !== "" || audioItem.visible
+                            || videoItem.visible) {
+                        h *= 2 / 3
+                    }
+                    return h
+                }
             }
         },
         State {
