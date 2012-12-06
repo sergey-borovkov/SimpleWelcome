@@ -180,8 +180,8 @@ void QmlApplicationViewer::saveIconPositions(QVariantMap setting)
     KConfigGroup configGroup(KGlobal::config(), "Apps positions");
     configGroup.deleteGroup();
 
-    QVariantMap::iterator it = setting.begin();
-    for (; it != setting.end(); ++it) {
+    QVariantMap::const_iterator it = setting.constBegin();
+    for (; it != setting.constEnd(); ++it) {
         configGroup.writeEntry(it.key(), it.value());
     }
 

@@ -202,7 +202,7 @@ void DataSource_Search::itemClicked(int newIndex, QString group)
 QVariantMap DataSource_Search::getContent(int index, const QString &group) const
 {
     QMap<QString, AppItemList>::const_iterator it = matches.constFind(group);
-    if (it != matches.end())
+    if (it != matches.constEnd())
         return it.value()[index];
     return QVariantMap();
 }
