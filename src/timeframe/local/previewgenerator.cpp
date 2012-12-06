@@ -165,13 +165,11 @@ void PreviewGenerator::cancel(const QString &path)
 {
     QHash<QString, KJob*>::iterator it(m_runningJobs.find(path));
     if(it != m_runningJobs.end()) {
-        qDebug("remove job for path");
         it.value()->kill();
         m_runningJobs.erase(it);
     }
     QHash<QString, QPixmap>::iterator previewIterator(m_previews.find(path));
     if(previewIterator != m_previews.end()) {
-        qDebug("remove preview for path");
         m_previews.erase(previewIterator);
     }
 }
