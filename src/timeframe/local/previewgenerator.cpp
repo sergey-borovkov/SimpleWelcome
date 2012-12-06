@@ -50,7 +50,7 @@ PreviewGenerator::PreviewGenerator()
     : m_plugins(KIO::PreviewJob::availablePlugins())
     , m_model(0)
 {
-    videoPixmap.load(":/play-empty.png");
+    m_videoPixmap.load(":/play-empty.png");
 }
 
 void PreviewGenerator::setModel(LocalContentModel *model)
@@ -67,7 +67,7 @@ void PreviewGenerator::notifyModelAboutPreview(const QString &url)
 void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pixmap)
 {
     QPixmap pict = pixmap;
-    if (item.mimetype() == "video/x-mng") { //Kde create incorect preview for mng files
+    if (item.mimetype() == "video/x-mng") { //Kde creates incorect preview for mng files
         QPixmap p(item.localPath());
         // add shadow
         p = QPixmap::fromImage(PreviewProvider::getRoundedImage(p.toImage(), 3));
@@ -76,11 +76,11 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
         return;
     } else if (item.mimetype().startsWith("video/")) {
         QPainter p(&pict);
-        QPixmap scaledPixmap = videoPixmap.scaled(pict.width() / 2, pict.height() / 2,
+        QPixmap scaledPixmap = m_videoPixmap.scaled(pict.width() / 2, pict.height() / 2,
                                                   Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        if (scaledPixmap.size().width() > videoPixmap.size().width()
-                && scaledPixmap.size().height() > videoPixmap.size().height())
-            scaledPixmap = videoPixmap;
+        if (scaledPixmap.size().width() > m_videoPixmap.size().width()
+                && scaledPixmap.size().height() > m_videoPixmap.size().height())
+            scaledPixmap = m_videoPixmap;
 
         p.drawPixmap(pict.width() / 2 - scaledPixmap.width() / 2,
                      pict.height() / 2 - scaledPixmap.height() / 2 ,  scaledPixmap);
@@ -152,7 +152,6 @@ void PreviewGenerator::request(const QString &path, const QSize &size)
 
     KIO::PreviewJob *job = KIO::filePreview(fileList, size, &m_plugins);
     job->setProperty("requestedSize", size);
-    job->setProperty("previewTaken", false);
     job->setIgnoreMaximumSize();
     m_runningJobs.insert(path, job);
 

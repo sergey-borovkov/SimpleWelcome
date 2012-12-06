@@ -66,7 +66,7 @@ private:
 
     QHash<QString, QPixmap> m_previews;
     QHash<QString, KJob*> m_runningJobs;
-    QPixmap videoPixmap;
+    QPixmap m_videoPixmap;
     QStringList m_plugins;
     LocalContentModel *m_model;
 };
