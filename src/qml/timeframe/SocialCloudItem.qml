@@ -24,6 +24,9 @@ Item {
     property alias commentsView : commentsListView
     property int index: -1
 
+    property int viewWidth: 450
+    property int viewHeight: 300
+
     Connections {
         // while specifying socialDayModel here is ugly any other way generates warnings
         // either about non-existent properties or in case of dynamic connection about
@@ -39,7 +42,6 @@ Item {
             like = model.like(index)
         }
     }
-
 
     function initialize(idx)
     {
@@ -63,10 +65,11 @@ Item {
     }
 
     function msgViewHeight() {
-        var h = msgView.parent.height - 10
-        h -= (socialImage.height - 10) * socialImage.visible
-        h -= (audioItem.height - 10) * audioItem.visible
-        h -= (videoItem.height - 10) * videoItem.visible
+//        var h = msgView.parent.height - 10
+        var h = bodyItem.height - 20
+        h -= socialImage.height * socialImage.visible
+        h -= audioItem.height * audioItem.visible
+        h -= videoItem.height * videoItem.visible
 
         return Math.min(msgView.socialMessage.height, h)
     }
@@ -172,7 +175,6 @@ Item {
 
                 Column {
                     id: column
-                    anchors.centerIn: parent
                     anchors.fill: parent
                     spacing: 10
 
@@ -426,8 +428,8 @@ Item {
                 parent: timeFrameTab
                 x: timeFrameTab.width / 2 - socialCloudItem.width / 2
                 y: timeFrameTab.height / 2 - socialCloudItem.height / 2
-                width: 400
-                height: 300
+                width: viewWidth
+                height: viewHeight
             }
 
             PropertyChanges { target: socialCloudItem; z: 400 }
@@ -482,8 +484,8 @@ Item {
         State {
             name: "comments" ; extend: "details"
 
-            PropertyChanges { target: socialCloudItem; height: 300 + commentsViewHeight() + 60 + 10}
-            PropertyChanges { target: mainRect; height: 300 }
+            PropertyChanges { target: socialCloudItem; height: viewHeight + commentsViewHeight() + 60 + 10}
+            PropertyChanges { target: mainRect; height: viewHeight }
             PropertyChanges { target: commentsRect; height: commentsViewHeight() + 60 + 10}
 
             PropertyChanges {

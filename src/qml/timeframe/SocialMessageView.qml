@@ -16,7 +16,7 @@ Item {
 
         Text {
             id: socialMessage
-            width: msgView.width - 20
+            width: msgView.width
             anchors {
                 bottomMargin: 3
                 horizontalCenter: parent.horizontalCenter
