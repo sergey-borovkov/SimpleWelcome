@@ -1,7 +1,6 @@
 #include "request.h"
 
 #include <QtNetwork/QNetworkAccessManager>
-#include <QtCore/QDebug>
 #include <qjson/parser.h>
 
 QNetworkAccessManager *VkRequest::manager = 0;

@@ -18,9 +18,14 @@ Item {
 
         Component.onDestruction: {
             var m = localDayModel.itemsModel(date)
-            var l = Math.min(7, m.count())
-            for(var i = 0; i < l; ++i) {
-                timelinePreviewGenerator.cancel(m.url(i))
+            var c = 0
+            var objects = (m.count() >= 7) ? cloud.item.children[0].children : cloud.item.children
+            for(i = 0; i < objects.length; ++i) {
+                if('url' in objects[i]) {
+                    objects[i].url = m.url(c)
+                    timelinePreviewGenerator.cancel(objects[i].image)
+                    c++
+                }
             }
         }
 
@@ -38,7 +43,7 @@ Item {
                 for(i = 0; i < objects.length; ++i) {
                     if('url' in objects[i]) {
                         objects[i].url = model.url(c)
-                        objects[i].image.source = "image://timeline/" + model.url(c) + "/rounded"
+                        objects[i].image.source = "image://timeline/" + model.url(c) + "/rounded" + "%" + objects[i].image
                         c++
                     }
                 }

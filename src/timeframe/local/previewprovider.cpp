@@ -36,7 +36,18 @@ PreviewProvider::PreviewProvider(const QString &type) :
 
 QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
+
     QString path = id;
+    const int index = path.indexOf('%');
+    quintptr componentId = 0;
+    if(index != -1) {
+        QString component = path.mid(index + 1);
+        component = component.mid(component.indexOf('(') + 1);
+        component.chop(1);
+        path = path.left(index);
+        componentId = component.toULongLong(0, 16);
+    }
+
     bool rounded = false;
     const QString round = path.right(8);
     if (round == "/rounded") {
@@ -44,11 +55,11 @@ QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSi
         path.chop(8);
     }
 
-    QPixmap pixmap = m_generator->takePreviewPixmap(path);
+    QPixmap pixmap = m_generator->takePreviewPixmap(componentId);
 
     if (pixmap.isNull()) {
         const QSize previewSize = requestedSize.isValid() ? requestedSize : QSize(512, 512);
-        m_generator->request(path, previewSize);
+        m_generator->request(path, previewSize, componentId);
 
         if (size) {
             pixmap = m_defaultPreview.scaled(previewSize, Qt::KeepAspectRatio,

@@ -13,13 +13,13 @@ Column {
 
             anchors.centerIn: parent
 
-            source: "image://gallery/" + url
+            source: "image://gallery/" + url + "%" + image
             sourceSize.width: parent.width - 4
             sourceSize.height: parent.height - 4
             cache: false
 
             Component.onDestruction: {
-                galleryPreviewGenerator.cancel(url)
+                galleryPreviewGenerator.cancel(image)
             }
 
             Connections {

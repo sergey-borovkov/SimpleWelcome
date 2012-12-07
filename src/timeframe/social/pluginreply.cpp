@@ -1,8 +1,6 @@
 #include "pluginreply.h"
 #include <socialplugin.h>
 
-#include <QtCore/QDebug>
-
 PluginReply::PluginReply(Request *request, const QString &sourceId, const QString &pluginName, QObject *parent)
     : QObject(parent)
     , m_sourceId(sourceId)
