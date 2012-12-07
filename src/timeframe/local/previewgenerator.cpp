@@ -66,12 +66,13 @@ void PreviewGenerator::notifyModelAboutPreview(const QString &url)
 
 void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pixmap)
 {
+    const quintptr id = qobject_cast<KJob *>(sender())->property("id").toULongLong();
     QPixmap pict = pixmap;
     if (item.mimetype() == "video/x-mng") { //Kde creates incorect preview for mng files
         QPixmap p(item.localPath());
         // add shadow
         p = QPixmap::fromImage(PreviewProvider::getRoundedImage(p.toImage(), 3));
-        m_previews.insert(item.localPath(), p);
+        m_previews.insert(id, p);
         notifyModelAboutPreview(item.localPath());
         return;
     } else if (item.mimetype().startsWith("video/")) {
@@ -89,26 +90,26 @@ void PreviewGenerator::previewJobResult(const KFileItem &item, const QPixmap &pi
     // add shadow
     pict = QPixmap::fromImage(PreviewProvider::getRoundedImage(pict.toImage(), 3));
 
-    m_previews.insert(item.localPath(), pict);
+    m_previews.insert(id, pict);
     notifyModelAboutPreview(item.localPath());
 }
 
 void PreviewGenerator::previewJobFailed(const KFileItem &item)
 {
     KIO::PreviewJob *job = qobject_cast<KIO::PreviewJob *>(sender());
-    QSize size(512, 512);
-    if(job)
-        size = job->property("requestedSize").toSize();
+    const QSize size = job->property("requestedSize").toSize();
     KIcon icon(item.iconName(), 0, item.overlays());
     QPixmap pixmap = icon.pixmap(icon.actualSize(size));
-    m_previews.insert(item.localPath(), pixmap);
+
+    const quintptr id = job->property("id").toInt();
+    m_previews.insert(id, pixmap);
 
     notifyModelAboutPreview(item.localPath());
 }
 
 void PreviewGenerator::previewJobFinished(KJob *job)
 {
-    for(QHash<QString, KJob*>::iterator it = m_runningJobs.begin(),
+    for(QHash<quintptr, KJob*>::iterator it = m_runningJobs.begin(),
         end = m_runningJobs.end(); it != end; ++it) {
         if(it.value() == job) {
             m_runningJobs.erase(it);
@@ -117,9 +118,9 @@ void PreviewGenerator::previewJobFinished(KJob *job)
     }
 }
 
-QPixmap PreviewGenerator::takePreviewPixmap(const QString &filePath)
+QPixmap PreviewGenerator::takePreviewPixmap(quintptr requestId)
 {
-    QHash<QString, QPixmap>::iterator it = m_previews.find(filePath);
+    QHash<quintptr, QPixmap>::iterator it = m_previews.find(requestId);
     if (it != m_previews.end()) {
         QPixmap pixmap = it.value();
         m_previews.erase(it);
@@ -129,47 +130,53 @@ QPixmap PreviewGenerator::takePreviewPixmap(const QString &filePath)
     return QPixmap();
 }
 
-void PreviewGenerator::request(const QString &path, const QSize &size)
+void PreviewGenerator::request(const QString &path, const QSize &size, quintptr id)
 {
     KFileItemList fileList;
     KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
     fileList.append(fileItem);
-/*
-    QHash<QString, KJob*>::iterator it(m_runningJobs.find(path));
+
+    QHash<quintptr, KJob*>::iterator it(m_runningJobs.find(id));
     if (it != m_runningJobs.end()) {
-        // ok, we found job for this path, let's check if we still can use it
+        //  we found job for this path, let's check if we still can use it
         const QSize jobRequestedSize = it.value()->property("requestedSize").toSize();
         if (jobRequestedSize != size) {
             it.value()->kill();
             m_runningJobs.erase(it);
-            m_previews.remove(path);
+            m_previews.remove(id);
         }
         else {
-            //ok, let's just wait for this result
+            // let's just wait for this result
             return;
         }
     }
-*/
+
     KIO::PreviewJob *job = KIO::filePreview(fileList, size, &m_plugins);
     job->setProperty("requestedSize", size);
+    job->setProperty("id", id);
     job->setIgnoreMaximumSize();
-    m_runningJobs.insert(path, job);
+    m_runningJobs.insert(id, job);
 
     connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), SLOT(previewJobResult(KFileItem,QPixmap)));
     connect(job, SIGNAL(failed(KFileItem)), SLOT(previewJobFailed(KFileItem)));
-    //connect(job, SIGNAL(result(KJob*)), SLOT(previewJobFinished(KJob*)));
+    connect(job, SIGNAL(result(KJob*)), SLOT(previewJobFinished(KJob*)));
 }
 
-void PreviewGenerator::cancel(const QString &path)
+void PreviewGenerator::cancel(const QString &requestId)
 {
-    /*QHash<QString, KJob*>::iterator it(m_runningJobs.find(path));
+    QString component = requestId;
+    //remove ')'
+    component.chop(1);
+    component = component.mid(component.indexOf('(') + 1);
+
+    const quintptr id = component.toULongLong(0, 16);
+    QHash<quintptr, KJob*>::iterator it(m_runningJobs.find(id));
     if(it != m_runningJobs.end()) {
         it.value()->kill();
         m_runningJobs.erase(it);
     }
-    QHash<QString, QPixmap>::iterator previewIterator(m_previews.find(path));
+    QHash<quintptr, QPixmap>::iterator previewIterator(m_previews.find(id));
     if(previewIterator != m_previews.end()) {
         m_previews.erase(previewIterator);
     }
-    */
 }

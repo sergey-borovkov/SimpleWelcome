@@ -40,18 +40,18 @@ class PreviewGenerator : public QObject
 public:
     void setModel(LocalContentModel *model);
 
-    QPixmap takePreviewPixmap(const QString &filePath);
+    QPixmap takePreviewPixmap(quintptr requestId);
 
     /**
      * @brief requests preview to be generated
      */
-    Q_INVOKABLE void request(const QString &path, const QSize &size);
+    Q_INVOKABLE void request(const QString &path, const QSize &size, quintptr id);
 
     /**
      * @brief cancel is called in QML when cloud component gets destroyed. It removes
      *        unused  images generated for model and cancels running job associated with path
      */
-    Q_INVOKABLE void cancel(const QString &path);
+    Q_INVOKABLE void cancel(const QString &requestId);
 
 private slots:
     void previewJobResult(const KFileItem &, const QPixmap &);
@@ -64,8 +64,8 @@ private:
     explicit PreviewGenerator();
     void notifyModelAboutPreview(const QString &url);
 
-    QHash<QString, QPixmap> m_previews;
-    QHash<QString, KJob*> m_runningJobs;
+    QHash<quintptr, QPixmap> m_previews;
+    QHash<quintptr, KJob*> m_runningJobs;
     QPixmap m_videoPixmap;
     QStringList m_plugins;
     LocalContentModel *m_model;
