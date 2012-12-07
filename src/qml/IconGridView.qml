@@ -234,8 +234,11 @@ GridView {
         case Qt.Key_Left:
             if (currentIndex == 0) {
 		if (prevGridGroup === nextGridGroup) {
-		    gridsListView.decrementCurrentIndex()
-		    gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - 1
+		    if (gridsListView.currentIndex != 0) {
+			gridsListView.decrementCurrentIndex()
+			gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - 1
+		    }
+		    break
 		}
         	else {
         	    if (prevGridGroup) {
@@ -249,8 +252,11 @@ GridView {
         case Qt.Key_Right:
             if (currentIndex == count - 1) {
 		if (prevGridGroup === nextGridGroup) {
-		    gridsListView.incrementCurrentIndex()
-		    gridsListView.activeGridView.currentIndex = 0
+		    if (gridsListView.currentIndex != gridsListView.count - 1) {
+			gridsListView.incrementCurrentIndex()
+			gridsListView.activeGridView.currentIndex = 0
+		    }
+		    break
 		}
         	else {
         	    if (nextGridGroup) {
@@ -264,8 +270,11 @@ GridView {
         case Qt.Key_Up:
             if (currentIndex < columns) {
 		if (prevGridGroup === nextGridGroup) {
-		    gridsListView.decrementCurrentIndex()
-		    gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - columns + currentIndex % columns
+		    if (gridsListView.currentIndex != 0) {
+			gridsListView.decrementCurrentIndex()
+			gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - columns + currentIndex % columns
+		    }
+		    break
 		}
         	else {
         	    if (prevGridGroup) {
@@ -276,28 +285,22 @@ GridView {
             	    }
             	}
             }
-            if (currentIndex < columns && prevGridGroup) {
-                var roundCount = Math.floor((prevGridGroup.count) / columns) * columns
-                var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGridGroup.count - roundCount)))
-
-                newCurrentItem = selectOtherGrid(prevGridGroup.gridView, newCur)
-            }
-
-	    if (currentIndex < columns && prevGridGroup === nextGridGroup)
-		gridsListView.decrementCurrentIndex()
-
             if (!interactive)
                 moveCurrentIndexUp()
             break
         case Qt.Key_Down:
             if (currentIndex >= count - columns) {
 		if (prevGridGroup === nextGridGroup) {
-		    gridsListView.incrementCurrentIndex()
-		    if (gridsListView.activeGridView.currentIndex < currentIndex % columns)
-			gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count -1
-		    else
-			gridsListView.activeGridView.currentIndex = currentIndex % columns
-
+		    if (gridsListView.currentIndex != gridsListView.count - 1) {
+			gridsListView.incrementCurrentIndex()
+			if (gridsListView.activeGridView.currentIndex < currentIndex % columns) {
+			    gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count -1
+			}
+			else {
+			    gridsListView.activeGridView.currentIndex = currentIndex % columns
+			}
+		    }
+		    break
 		}
         	else {
         	    if (nextGridGroup) {
