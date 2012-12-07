@@ -5,7 +5,6 @@
 #include <commentitem.h>
 
 #include <QtCore/QDateTime>
-#include <QtCore/QDebug>
 
 SocialDayModel::SocialDayModel(QHash<int, QByteArray> roles, QObject *parent)
     : ListModel(roles, parent)
