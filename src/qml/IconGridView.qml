@@ -232,20 +232,50 @@ GridView {
         var newCurrentItem
         switch (key) {
         case Qt.Key_Left:
-            if (currentIndex == 0 && prevGridGroup)
-                newCurrentItem = selectOtherGrid(prevGridGroup.gridView, prevGridGroup.count - 1)
-
+            if (currentIndex == 0) {
+		if (prevGridGroup === nextGridGroup) {
+		    gridsListView.decrementCurrentIndex()
+		    gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - 1
+		}
+        	else {
+        	    if (prevGridGroup) {
+            		newCurrentItem = selectOtherGrid(prevGridGroup.gridView, prevGridGroup.count - 1)
+            	    }
+            	}
+            }
             if (!interactive)
                 moveCurrentIndexLeft()
             break
         case Qt.Key_Right:
-            if (currentIndex == count - 1 && nextGridGroup)
-                newCurrentItem = selectOtherGrid(nextGridGroup.gridView, 0)
-
+            if (currentIndex == count - 1) {
+		if (prevGridGroup === nextGridGroup) {
+		    gridsListView.incrementCurrentIndex()
+		    gridsListView.activeGridView.currentIndex = 0
+		}
+        	else {
+        	    if (nextGridGroup) {
+            		newCurrentItem = selectOtherGrid(nextGridGroup.gridView, 0)
+            	    }
+            	}
+            }
             if (!interactive)
                 moveCurrentIndexRight()
             break
         case Qt.Key_Up:
+            if (currentIndex < columns) {
+		if (prevGridGroup === nextGridGroup) {
+		    gridsListView.decrementCurrentIndex()
+		    gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - columns + currentIndex % columns
+		}
+        	else {
+        	    if (prevGridGroup) {
+        		var roundCount = Math.floor((prevGridGroup.count) / columns) * columns
+        		var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGridGroup.count - roundCount)))
+
+        		newCurrentItem = selectOtherGrid(prevGridGroup.gridView, newCur)
+            	    }
+            	}
+            }
             if (currentIndex < columns && prevGridGroup) {
                 var roundCount = Math.floor((prevGridGroup.count) / columns) * columns
                 var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGridGroup.count - roundCount)))
@@ -253,13 +283,28 @@ GridView {
                 newCurrentItem = selectOtherGrid(prevGridGroup.gridView, newCur)
             }
 
+	    if (currentIndex < columns && prevGridGroup === nextGridGroup)
+		gridsListView.decrementCurrentIndex()
+
             if (!interactive)
                 moveCurrentIndexUp()
             break
         case Qt.Key_Down:
-            if (currentIndex >= count - columns && nextGridGroup)
-                newCurrentItem = selectOtherGrid(nextGridGroup.gridView, currentIndex % columns)
+            if (currentIndex >= count - columns) {
+		if (prevGridGroup === nextGridGroup) {
+		    gridsListView.incrementCurrentIndex()
+		    if (gridsListView.activeGridView.currentIndex < currentIndex % columns)
+			gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count -1
+		    else
+			gridsListView.activeGridView.currentIndex = currentIndex % columns
 
+		}
+        	else {
+        	    if (nextGridGroup) {
+        		newCurrentItem = selectOtherGrid(nextGridGroup.gridView, currentIndex % columns)
+            	    }
+            	}
+            }
             if (!interactive)
                 moveCurrentIndexDown()
             break
