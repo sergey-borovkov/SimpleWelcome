@@ -134,7 +134,7 @@ void PreviewGenerator::request(const QString &path, const QSize &size)
     KFileItemList fileList;
     KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(path), true);
     fileList.append(fileItem);
-
+/*
     QHash<QString, KJob*>::iterator it(m_runningJobs.find(path));
     if (it != m_runningJobs.end()) {
         // ok, we found job for this path, let's check if we still can use it
@@ -149,7 +149,7 @@ void PreviewGenerator::request(const QString &path, const QSize &size)
             return;
         }
     }
-
+*/
     KIO::PreviewJob *job = KIO::filePreview(fileList, size, &m_plugins);
     job->setProperty("requestedSize", size);
     job->setIgnoreMaximumSize();
@@ -157,12 +157,12 @@ void PreviewGenerator::request(const QString &path, const QSize &size)
 
     connect(job, SIGNAL(gotPreview(KFileItem,QPixmap)), SLOT(previewJobResult(KFileItem,QPixmap)));
     connect(job, SIGNAL(failed(KFileItem)), SLOT(previewJobFailed(KFileItem)));
-    connect(job, SIGNAL(result(KJob*)), SLOT(previewJobFinished(KJob*)));
+    //connect(job, SIGNAL(result(KJob*)), SLOT(previewJobFinished(KJob*)));
 }
 
 void PreviewGenerator::cancel(const QString &path)
 {
-    QHash<QString, KJob*>::iterator it(m_runningJobs.find(path));
+    /*QHash<QString, KJob*>::iterator it(m_runningJobs.find(path));
     if(it != m_runningJobs.end()) {
         it.value()->kill();
         m_runningJobs.erase(it);
@@ -171,4 +171,5 @@ void PreviewGenerator::cancel(const QString &path)
     if(previewIterator != m_previews.end()) {
         m_previews.erase(previewIterator);
     }
+    */
 }
