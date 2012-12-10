@@ -561,28 +561,6 @@ Item {
         }
     }
 
-    ToolButton {
-        id: prevButton
-        width: 60
-        imageUrl: "images/go-previous.png"
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.left: parent.left
-        z:100
-        onButtonClick: {
-            galleryView.decrementCurrentIndex()
-        }
-    }
-    ToolButton {
-        id: nextButton
-        width: 60
-        imageUrl: "images/go-next.png"
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.right: parent.right
-        z:100
-        onButtonClick: {
-            galleryView.incrementCurrentIndex()
-        }
-    }
     Keys.onLeftPressed: {
         console.log( "left key pressed..." )
         prevMonth()
