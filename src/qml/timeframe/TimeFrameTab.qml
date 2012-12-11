@@ -163,7 +163,7 @@ Item {
             } else {
                 timeFrameTab.state = "timeline"
                 //Set views on current date
-                timeScale.list.currentIndex = timeScale.list.count -1
+                timeScale.list.currentIndex = timeScale.list.count - 1
                 timeLine.currentIndex = timeLine.count -1
                 timeLine.positionViewAtEnd()
                 galleryView.positionViewAtEnd()
@@ -210,6 +210,8 @@ Item {
         currentView.positionViewAtIndex(index, ListView.Center)
         saveCurrentDate()
         //set timeScale properly index
+        timeScale.model = undefined
+        timeScale.model = timeScaleModel
         timeScale.list.currentIndex = getTSIndex(timeFrameTab.date.getFullYear(), timeFrameTab.date.getMonth())
     }
 
@@ -267,6 +269,7 @@ Item {
         target: socialProxy
         onSearchFinished: {
             isSocialSearching = false
+
             if (timeFrameTab.state === "socialSearching") {
                 timeFrameTab.state = "social"
                 timeScale.list.currentIndex = timeScale.list.count -1
