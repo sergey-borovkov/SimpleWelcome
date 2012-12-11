@@ -21,11 +21,12 @@ Item {
         id: tabButtons
         anchors {
             horizontalCenter: parent.horizontalCenter
+            horizontalCenterOffset: -1
             bottom: parent.bottom
             bottomMargin: 11
         }
-        width: parent.width - 20 * 2
-        height: 48
+        width: parent.width - 20 * 2 + 1
+        height: 49
 
         source: "image://generalicon/asset/tab_buttons_bg.png"
 
@@ -38,8 +39,8 @@ Item {
             x: welcomeTabButton.active ? welcomeTabButton.x + 2
                                        : applicationsTabButton.active ? applicationsTabButton.x
                                        : timeFrameTabButton.x
-            width: (parent.width-4) / 3
-            height: 27
+            width: (parent.width-4) / 3 - 1
+            height: 29
 
             visible: tabListView.currentIndex != 0
 
