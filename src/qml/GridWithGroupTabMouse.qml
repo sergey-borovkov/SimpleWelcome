@@ -215,7 +215,9 @@ MouseArea {
     }
 
     function isHoveredOnPin() {
-        return hoveredItem && hoveredId !== -1 && gridMouseX > hoveredItem.x + hoveredItem.width - (hoveredItem.width - constants.iconSize)/2 - constants.iconSize / 10 && gridMouseY < hoveredItem.y - 25 + 31 + constants.iconSize / 5
+        return hoveredItem && hoveredId !== -1 &&
+                gridMouseX > hoveredItem.x + hoveredItem.width - (hoveredItem.width - constants.iconSize)/2 - constants.iconSize / 10 &&
+                gridMouseY < hoveredItem.y + constants.iconSize / 5
     }
 
     function mousePosChanged() {
@@ -724,7 +726,7 @@ MouseArea {
         property int aimingAt: -1
         property int tooltipOpenedAt: -1
 
-        interval: 600
+        interval: 1000
 
         onTriggered: showTooltip()
 

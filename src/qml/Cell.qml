@@ -136,14 +136,44 @@ Item {
             y: cellIcon.y - 25
             z: 1
 
-            opacity: pinned !== undefined && pinned ? 1 : gridMouseArea.grid === grid && gridMouseArea.hoveredId === id ? 0.5 : 0
-            source: {
-                gridMouseArea.pinHovered && gridMouseArea.hoveredId === id ? "image://generalicon/asset/pin_hover.png" : "image://generalicon/asset/pin.png"
-            }
+            opacity: pinned !== undefined && pinned || gridMouseArea.grid === grid && gridMouseArea.hoveredId === id ? 1 : 0
+            source: "image://generalicon/asset/clip_icon_hover.png"
 
             Behavior on opacity {
                 NumberAnimation { duration: 300 }
             }
+
+            states: [
+                State {
+                    name: "iconHover"
+                    when: gridMouseArea.grid === grid && gridMouseArea.hoveredId === id && !gridMouseArea.pinHovered && pinned !== true
+                    PropertyChanges { target: pinIcon; source: "image://generalicon/asset/clip_icon_hover.png" }
+                },
+
+                State {
+                    name: "buttonHover"
+                    when: gridMouseArea.grid === grid && gridMouseArea.hoveredId === id && gridMouseArea.pinHovered && !gridMouseArea.pressed && pinned !== true
+                    PropertyChanges { target: pinIcon; source: "image://generalicon/asset/clip_button_hover.png" }
+                },
+
+                State {
+                    name: "clipPressed"
+                    when: gridMouseArea.grid === grid && gridMouseArea.hoveredId === id && gridMouseArea.pinHovered && gridMouseArea.pressed
+                    PropertyChanges { target: pinIcon; source: "image://generalicon/asset/clip_pressed.png" }
+                },
+
+                State {
+                    name: "clipActiveHover"
+                    when: gridMouseArea.grid === grid && gridMouseArea.hoveredId === id && gridMouseArea.pinHovered && pinned !== undefined && pinned
+                    PropertyChanges { target: pinIcon; source: "image://generalicon/asset/clip_active_hover.png" }
+                },
+
+                State {
+                    name: "clipActive"
+                    when: pinned !== undefined && pinned
+                    PropertyChanges { target: pinIcon; source: "image://generalicon/asset/clip_active.png" }
+                }
+            ]
         }
 
 
