@@ -188,6 +188,28 @@ Item {
         timeScale.list.currentIndex = getTSIndex(timeFrameTab.date.getFullYear(), timeFrameTab.date.getMonth())
     }
 
+    /**
+     * Processes scroll using mouse wheel
+     * @param delta A delta
+     * @param listView An instance of ListView which will be updated
+    */
+    function _processScroll(delta, listView) {
+        // See Qt documentation of QGraphicsSceneWheelEvent
+        // Most mice report delta = 120
+        var index_delta = Math.round(delta / 120)
+        if (index_delta === 0)
+            index_delta = (delta > 0 ? 1 : -1)
+        // we have to pass point over list item otherwise indexAt() will return -1, so, we add small offset
+        var index = listView.indexAt(listView.contentX + 3, listView.contentY + 3)
+        index -= index_delta
+        if (index < 0)
+            listView.positionViewAtBeginning()
+        else if (index >= listView.count)
+            listView.positionViewAtEnd()
+        else
+            listView.positionViewAtIndex(index, ListView.Beginning)
+        updateTimeScale()
+    }
 
     //Start initial search
     Connections {
@@ -805,32 +827,6 @@ Item {
     Item {
         id: foreground
         anchors.fill: parent
-    }
-
-    // Functions
-    /**
-     * Processes scroll using mouse wheel
-     * @param delta A delta
-     * @param listView An instance of ListView which will be updated
-    */
-    function _processScroll(delta, listView) {
-        // See Qt documentation of QGraphicsSceneWheelEvent
-        // Most mice report delta = 120
-        var index_delta = Math.round(delta / 120)
-        if (index_delta === 0)
-            index_delta = (delta > 0 ? 1 : -1)
-        // we have to pass point over list item otherwise indexAt() will return -1, so, we add small offset
-        var index = listView.indexAt(listView.contentX + 3, listView.contentY + 3);
-        if (index < 0)
-            return
-        index -= index_delta;
-        if (index < 0)
-            listView.positionViewAtBeginning()
-        else if (index >= listView.count)
-            listView.positionViewAtEnd()
-        else
-            listView.positionViewAtIndex(index, ListView.Beginning)
-        updateTimeScale()
     }
 
     // States
