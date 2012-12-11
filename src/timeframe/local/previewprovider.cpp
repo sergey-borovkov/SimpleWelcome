@@ -1,6 +1,9 @@
-/* KLook
- * Copyright (c) 2011-2012 ROSA  <support@rosalab.ru>
- * Authors: Julia Mineeva, Evgeniy Auzhin, Sergey Borovkov.
+/* Timeframe
+ * Copyright (c) 2012 ROSA  <support@rosalab.ru>
+ * Authors:
+ *  Sergey Borovkov <sergey.borovkov@osinit.ru>
+ *  Evgeniy Auzhin <evgeniy.augin@osinit.ru>
+ *  Julia Mineeva <julia.mineeca@osinit.ru>
  * License: GPLv3
  *
  *   This program is free software; you can redistribute it and/or modify

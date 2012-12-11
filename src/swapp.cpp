@@ -4,7 +4,8 @@
  *
  * Authors:
  * Alexey Yermakov <alexey.yermakov@rosalab.ru>
- *
+ * Alexander Skakov <alexander.skakov@osinit.ru>
+ * Sergey Borovkov <sergey.borovkov@osinit.ru>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as
