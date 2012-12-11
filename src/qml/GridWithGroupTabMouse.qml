@@ -23,6 +23,7 @@ MouseArea {
     property int hoveredId: -1
     property variant hoveredItem
     property bool pinHovered: false
+    property bool broomHovered: false
 
     hoverEnabled: true
 
@@ -220,6 +221,19 @@ MouseArea {
                 gridMouseY < hoveredItem.y + constants.iconSize / 5
     }
 
+    function isHoveredOnBroom() {
+        var broomItem = grid.parent.broomIcon
+        var broomCoords = mapFromItem(broomItem, 0, 0)
+        if (grid.parent.broomIcon.opacity &&
+                mouseX > broomCoords.x && mouseX < broomCoords.x + broomItem.width &&
+                mouseY > broomCoords.y && mouseY < broomCoords.y + broomItem.height) {
+            broomHovered = true
+            return
+        }
+        broomHovered = false
+    }
+
+
     function mousePosChanged() {
         updateCurrentGrid()
         if (grid === undefined || !grid)
@@ -274,6 +288,8 @@ MouseArea {
                 hoveredId = -1
                 pinHovered = false
             }
+
+            isHoveredOnBroom()
 
             // Displaying tooltip
             if (true) {
@@ -537,14 +553,10 @@ MouseArea {
                 grid.model.itemClicked(indexClicked)
         }
 
-        if (!grid.moving) { // Clicked on broom
+        if (!grid.moving && broomHovered) {
             var broomItem = grid.parent.broomIcon
-            var broomCoords = mapFromItem(broomItem, 0, 0)
-            if (grid.parent.broomIcon.opacity &&
-                mouseX > broomCoords.x && mouseX < broomCoords.x + broomItem.width &&
-                mouseY > broomCoords.y && mouseY < broomCoords.y + broomItem.height) {
+            if (broomItem)
                 broomItem.click()
-            }
         }
     }
 

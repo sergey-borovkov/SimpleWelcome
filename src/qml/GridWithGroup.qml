@@ -135,25 +135,15 @@ Column {
                 left: groupLabel.right
                 leftMargin: 10
                 verticalCenter: groupLabel.verticalCenter
-                verticalCenterOffset: -2
-            }
-            sourceSize {
-                width: 24
-                height: 24
             }
 
-            opacity: isClearAvailable && myActiveFocus
-            source: "image://generalicon/appicon/edit-clear-history.png"
+            opacity: isClearAvailable && myActiveFocus && gridMouseArea.grid === iconGridView
+            source: "image://generalicon/asset/clear.png"
 
             function click() {
-                state = "CLICKED"
-            }
-
-            function clickClear() {
                 if (dataSource.clearClicked !== undefined)
                     dataSource.clearClicked()
             }
-
 
             Behavior on opacity {
                 NumberAnimation { duration: 300 }
@@ -161,22 +151,17 @@ Column {
 
             states: [
                 State {
-                    name: "CLICKED"
+                    name: "broomHovered"
+                    when: gridMouseArea.broomHovered && !gridMouseArea.pressed
+                    PropertyChanges {target: broomIcon; source: "image://generalicon/asset/clear_hover.png"}
+                },
+
+                State {
+                    name: "broomPressed"
+                    when: gridMouseArea.broomHovered && gridMouseArea.pressed
+                    PropertyChanges {target: broomIcon; source: "image://generalicon/asset/clear_pressed.png"}
                 }
             ]
-            transitions: Transition {
-                to: "CLICKED"
-
-                SequentialAnimation {
-                    NumberAnimation { target: broomIcon; property: "rotation"; to: 15; duration: 250/2; easing.type: Easing.InOutQuad }
-                    NumberAnimation { target: broomIcon; property: "rotation"; to: -45; duration: 250; easing.type: Easing.InOutQuad }
-                    NumberAnimation { target: broomIcon; property: "rotation"; to: 0; duration: 250/2; easing.type: Easing.InOutQuad }
-                    NumberAnimation { target: broomIcon; property: "rotation"; to: 15; duration: 250/2; easing.type: Easing.InOutQuad }
-                    NumberAnimation { target: broomIcon; property: "rotation"; to: -45; duration: 250; easing.type: Easing.InOutQuad }
-                    NumberAnimation { target: broomIcon; property: "rotation"; to: 0; duration: 250/2; easing.type: Easing.InOutQuad }
-                    ScriptAction { script: broomIcon.clickClear() }
-                }
-            }
         }
     }
 
