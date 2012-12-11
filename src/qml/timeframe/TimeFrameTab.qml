@@ -5,6 +5,7 @@ import ".."
 Item {
     id: timeFrameTab
     clip: true
+
     property variant date: new Date()
     property bool isLocalSearching: true              //New search in process
     property bool isSocialSearching: true
@@ -94,8 +95,8 @@ Item {
     function closeSocialCloudItem()
     {
         for (var i = 0; i < timeFrameTab.children.length; i++) {
-            if (timeFrameTab.children[i].objectName === "SocialCloudItem" ||
-                    timeFrameTab.children[i].objectName === "SocialGalleryItem" ) {
+            if (timeFrameTab.children[i].objectName === "SocialCloudItem"
+                    || timeFrameTab.children[i].objectName === "SocialGalleryItem" ) {
                 timeFrameTab.children[i].mainParent.state = ""
             }
         }
@@ -750,7 +751,7 @@ Item {
 
     Image {
         id: waitIndicator
-        anchors.centerIn: parent        
+        anchors.centerIn: parent
         source: "images/indicator-shadow.png"
         visible: false
         Image {
@@ -841,14 +842,23 @@ Item {
 
             PropertyChanges { target: warningButton; visible: true }
 
-            PropertyChanges { target: timeScale; visible: false; opacity: 0 }
+            PropertyChanges {
+                target: timeScale
+                visible: false
+                opacity: 0
+            }
 
             PropertyChanges { target: galleryButton; visible: false }
         },
 
         State {
             name: "timeline"
-            PropertyChanges { target: timeLine;  visible : true; model: localDayModel; opacity: 1 }
+            PropertyChanges {
+                target: timeLine
+                visible : true
+                model: localDayModel
+                opacity: 1
+            }
 
             PropertyChanges { target: timeFrameTab;  currentView: timeLine }
         },
@@ -878,15 +888,28 @@ Item {
 
             PropertyChanges { target: waitTimer; running: true }
 
-            PropertyChanges { target: timeScale; visible: false; opacity: 0 }
+            PropertyChanges {
+                target: timeScale
+                visible: false
+                opacity: 0
+            }
 
-            PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
+            PropertyChanges {
+                target: galleryButton
+                visible: false
+                opacity: 0
+            }
         },
 
         State {
             name: "social"
 
-            PropertyChanges { target: socialTimeLine; visible: true; opacity: 1; model: socialDayModel }
+            PropertyChanges {
+                target: socialTimeLine
+                visible: true
+                opacity: 1
+                model: socialDayModel
+            }
 
             PropertyChanges { target: timeFrameTab; currentView: socialTimeLine }
 
@@ -896,9 +919,18 @@ Item {
         State {
             name: "socialGallery"; extend: "social"
 
-            PropertyChanges { target: socialTimeLine; visible: false; opacity: 0 }
+            PropertyChanges {
+                target: socialTimeLine
+                visible: false
+                opacity: 0
+            }
 
-            PropertyChanges { target: socialGalleryView; visible: true; model: socialDayModel }
+            PropertyChanges
+            {
+                target: socialGalleryView
+                visible: true
+                model: socialDayModel
+            }
 
             AnchorChanges {
                 target: timeScale
@@ -916,7 +948,11 @@ Item {
         State {
             name: "socialAuthorization"; extend: "social"
 
-            PropertyChanges { target: socialTimeLine; visible: false; opacity: 0 }
+            PropertyChanges {
+                target: socialTimeLine
+                visible: false
+                opacity: 0
+            }
 
             PropertyChanges { target: authorizationView; visible: true }
 

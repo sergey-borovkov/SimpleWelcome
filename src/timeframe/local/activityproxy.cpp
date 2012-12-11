@@ -31,4 +31,3 @@ void ActivityProxy::setModel(LocalContentModel *model)
     if (m_model)
         m_model = model;
 }
-

@@ -149,7 +149,6 @@ void TimeScaleModel::newItem(int year, int month, QString type)
             item->addType(type);
         }
     } else { //add new item (with sorting)
-
         bool findItem = false;
         int j = 0;
         TimeScaleItem *newItem = new TimeScaleItem(year, month, type, this);
