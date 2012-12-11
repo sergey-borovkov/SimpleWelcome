@@ -67,7 +67,7 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
         const int outlineWidth = 4;//constants->iconSize() / 19;
 
         int iconsInRow = constants->iconSize() >= 96 ? 3 : 2;
-        int subIconsMargin = 2;
+        int subIconsMargin = 3;
         QSize subIconSize = (pix.size() - QSize(outlineWidth * 4, outlineWidth * 4) - QSize(subIconsMargin, subIconsMargin) * (iconsInRow - 1)) / iconsInRow;
         int displayIconsCount = qMin(iconsInRow * iconsInRow, icons.size());
         for (int i = 0; i < displayIconsCount; i++) {
