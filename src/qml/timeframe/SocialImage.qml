@@ -28,20 +28,30 @@ Image{
     Image {
         id: waitIndicator
         anchors.centerIn: parent
+
         source: "images/indicator-shadow.png"
         visible: false
+
         Image {
             id: can
+
             source: "images/can2.png"
             smooth: true
         }
+
         Behavior on opacity { NumberAnimation{ duration: 1000 }}
     }
+
     Timer {
         id: waitTimer
-        interval: 10; running: false; repeat: true
+
+        interval: 10
+        running: false
+        repeat: true
+
         onTriggered: can.rotation = can.rotation +10
     }
+
     Column {
         id: errorItem
         anchors.centerIn: parent
@@ -53,8 +63,10 @@ Image{
             anchors.horizontalCenter: parent.horizontalCenter
             source: "images/error-icon.png"
         }
+
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
+
             color: "white"
             text: i18n("Image is currently not available")
         }

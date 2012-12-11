@@ -23,18 +23,22 @@
 import QtQuick 1.1
 
 Text {
-    anchors.verticalCenter: parent.verticalCenter
-    anchors.leftMargin: 16
-    anchors.rightMargin: 16
-    anchors.topMargin: 8
+    anchors {
+        verticalCenter: parent.verticalCenter
+        leftMargin: 16
+        rightMargin: 16
+        topMargin: 8
+    }
 
     maximumLineCount: 1
     clip: true
     elide: Text.ElideRight
     wrapMode: Text.Wrap
 
-    font.pointSize: 14
-    font.family: "Bitstream Vera Sans"
+    font {
+        pointSize: 14
+        family: "Bitstream Vera Sans"
+    }
 
     style: Text.Raised
     styleColor: "#000"

@@ -32,6 +32,7 @@ Item {
         id: msgView
         width: parent.width
         height: parent.height
+
         contentHeight: socialMessage.height
         contentWidth: socialMessage.width
         boundsBehavior: Flickable.StopAtBounds
@@ -43,10 +44,6 @@ Item {
             anchors {
                 bottomMargin: 3
                 horizontalCenter: parent.horizontalCenter
-            }
-
-            onLinkActivated: {
-                Qt.openUrlExternally(link)
             }
 
             wrapMode: Text.Wrap
@@ -64,11 +61,16 @@ Item {
                 var lines = h / font.pixelSize / 1.5;
                 return lines
             }
+
+            onLinkActivated: {
+                Qt.openUrlExternally(link)
+            }
         }
     }
 
     ScrollBar {
         id: msgScrollBar
+
         flickable: msgView
         vertical: true
         hideScrollBarsWhenStopped: false

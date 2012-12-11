@@ -33,20 +33,25 @@ ListView {
 
         Text {
             id: msg
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
+            width: 200
+
             wrapMode: Text.Wrap
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            width: 200
             text: message
         }
+
         Image {
             anchors.centerIn: parent
+            width: Math.min(sourceSize.width, parent.width)
+            height: Math.min(sourceSize.height, parent.height)
+
             fillMode: Image.PreserveAspectFit
-            width: Math.min( sourceSize.width, parent.width)
-            height: Math.min( sourceSize.height, parent.height)
             smooth: true
             source: picture
         }

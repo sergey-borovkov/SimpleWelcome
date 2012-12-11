@@ -23,8 +23,9 @@
 import QtQuick 1.1
 import "../"
 
-Item{
+Item {
     id: cloudThree
+
     property date cloudDate
     property variant model
     property int margin: 10

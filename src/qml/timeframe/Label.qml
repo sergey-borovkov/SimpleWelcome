@@ -26,9 +26,11 @@ Text {
     style: Text.Raised
     styleColor: "#000"
     color:  "white"
-    font.family: "Bitstream Vera Sans"
-    font.pointSize: constants.iconTextSize
-    font.bold: true
+    font {
+        family: "Bitstream Vera Sans"
+        pointSize: constants.iconTextSize
+        bold: true
+    }
 
     verticalAlignment: Text.AlignVCenter
     horizontalAlignment: Text.AlignHCenter

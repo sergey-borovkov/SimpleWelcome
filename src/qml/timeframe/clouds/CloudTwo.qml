@@ -23,42 +23,52 @@
 import QtQuick 1.1
 import "../"
 
-Item{
+Item {
     id: cloudTwo
+
     property date cloudDate
     property variant model
     property int margin: 10
 
     CloudRect {
         id: cloudRect1
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        width: parent.width*1/3
-        height: parent.height/2
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+        }
+        width: parent.width * 1 / 3
+        height: parent.height / 2
     }
 
     CloudRect {
         id: cloudRect2
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.right: parent.right
-        width: parent.width*2/3 - 20
-        height: parent.height*4/5
+        anchors {
+            verticalCenter: parent.verticalCenter
+            right: parent.right
+        }
+        width: parent.width * 2 / 3 - 20
+        height: parent.height * 4 / 5
     }
 
     Item {
-        anchors.top : parent.top
-        anchors.left: parent.left
-        anchors.right: cloudRect2.left
-        anchors.rightMargin: margin
-        anchors.bottom: cloudRect1.top
+        anchors {
+            top : parent.top
+            left: parent.left
+            right: cloudRect2.left
+            bottom: cloudRect1.top
+            rightMargin: margin
+        }
 
         Label {
             id: dateLabel
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: margin
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors {
+                bottom: parent.bottom
+                bottomMargin: margin
+                horizontalCenter: parent.horizontalCenter
+            }
             height: labelHeight
-            text: Qt.formatDate( cloudDate , "dd MMM yyyy")
+
+            text: Qt.formatDate(cloudDate , "dd MMM yyyy")
         }
     }
 }

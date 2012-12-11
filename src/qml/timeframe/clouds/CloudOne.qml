@@ -33,11 +33,14 @@ Item {
 
     Label {
         id: dateLabel
-        anchors.top : parent.top
-        anchors.topMargin: margin
-        anchors.left: parent.left
+        anchors {
+            top: parent.top
+            topMargin: margin
+            left: parent.left
+        }
         width: 100
         height: labelHeight
+
         text: Qt.formatDate( cloudDate , "dd MMM yyyy")
     }
 

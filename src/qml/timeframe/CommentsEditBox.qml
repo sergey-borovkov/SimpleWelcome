@@ -25,12 +25,16 @@ import QtQuick 1.1
 
 Rectangle {
     id: commentBox
+
     property alias edit: edit
     property alias userPhoto: userPhoto
+
+    signal send(string comment)
+
     color: "#172634"
     radius: 10
-    signal send(string comment)
     clip: true
+
     Image {
         id: userPhoto
         anchors {
@@ -38,8 +42,9 @@ Rectangle {
             verticalCenter: parent.verticalCenter
             leftMargin: 5
         }
-        fillMode: Image.PreserveAspectFit
         width: 55
+
+        fillMode: Image.PreserveAspectFit
     }
 
     Rectangle {
@@ -66,10 +71,10 @@ Rectangle {
                 rightMargin: 3
                 bottomMargin: 3
             }
+
             contentWidth: edit.paintedWidth
             contentHeight: edit.paintedHeight
             clip: true
-
 
             function ensureVisible(r)
             {
@@ -87,6 +92,7 @@ Rectangle {
                 id: edit
                 width: flick.width
                 height: flick.height
+
                 focus: true
                 wrapMode: TextEdit.Wrap
                 onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
@@ -96,14 +102,12 @@ Rectangle {
                 }
 
                 Keys.onPressed: {
-                    if (edit.text === i18n("Write comment..."))
-                    {
+                    if (edit.text === i18n("Write comment...")) {
                         edit.color = "black"
                         edit.text = ""
                         edit.cursorPosition = 0
                     }
                     if (event.key === Qt.Key_Return) {
-
                         // add "shift+enter" process
                         if (event.modifiers & Qt.ShiftModifier) {
                             return;

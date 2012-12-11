@@ -36,16 +36,19 @@ Item {
     // using Rectangle because with Item there is painting bug...
     Rectangle {
         id: cloudBorder
-        color: "transparent"
-        y: (index%2 === 1) ? parent.height/2 + timeScale.height/2 : 0
-        x: -100
         width: parent.width + 200
-        height: parent.height/2 - timeScale.height/2 - 10
+        height: parent.height / 2 - timeScale.height / 2 - 10
+        x: -100
+        y: (index % 2 === 1) ? parent.height / 2 + timeScale.height / 2 : 0
+
+        color: "transparent"
 
         Loader {
             id: cloud
             anchors.fill: parent
+
             source: getSourceComponent(size)
+
             onLoaded: {
                 var model = socialDayModel.itemsModel(date)
                 cloud.item.cloudDate = date

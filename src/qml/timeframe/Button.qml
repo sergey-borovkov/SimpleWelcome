@@ -29,8 +29,10 @@ Rectangle {
     state: ""
 
     color: "transparent"
-    border.color: "transparent"
-    border.width: 1
+    border {
+        color: "transparent"
+        width: 1
+    }
     radius: 5
     opacity: 0.8
 

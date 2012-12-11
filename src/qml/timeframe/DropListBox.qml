@@ -41,11 +41,12 @@ Item {
 
     Button {
         id: dropboxButtonBody
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
         z: 100
 
         ButtonText {
@@ -66,19 +67,21 @@ Item {
 
         Button {
             id: dropboxDrop
+            anchors.right: parent.right
             height: parent.height
             width: parent.height
-            anchors.right: parent.right
 
             Image {
-                source: "images/drop-down.png"
                 anchors.centerIn: parent
+
+                source: "images/drop-down.png"
                 smooth: true
                 fillMode: Image.PreserveAspectFit
             }
 
             MouseArea {
                 anchors.fill: parent
+
                 onClicked: {
                     dropboxListBody.toggle()
                     dropListBox.clicked()
@@ -89,16 +92,17 @@ Item {
 
     Button {
         id: dropboxListBody
-
+        anchors {
+            top: dropboxButtonBody.bottom
+            left: dropboxButtonBody.left
+        }
         width: dropboxButtonBody.width
         height: 0
         z: 200
-        enabled: false
+
         property int unfoldedHeight: dropboxButtonBody.height * dropboxListSelection.count
 
-        anchors.top: dropboxButtonBody.bottom
-        anchors.left: dropboxButtonBody.left
-
+        enabled: false
         clip: true
         focus: true
 
@@ -123,6 +127,7 @@ Item {
         ListView {
             id: dropboxListSelection
             anchors.fill: parent
+
             currentIndex: 0
             focus: true
 
@@ -132,10 +137,13 @@ Item {
                 z: 1000
 
                 ButtonText {
-                    text: getMenuItemText(itemText)
                     anchors.fill: parent
-                    font.bold: ( itemText == selectedText )
-                    font.pointSize: 12
+
+                    text: getMenuItemText(itemText)
+                    font {
+                        bold: itemText == selectedText
+                        pointSize: 12
+                    }
                 }
 
                 MouseArea {
@@ -143,9 +151,9 @@ Item {
 
                     onClicked: {
                         var prevSelection = selectedText
-                        if ( dropboxListSelection.model.get( index ).itemText != prevSelection ) {
+                        if (dropboxListSelection.model.get(index).itemText != prevSelection) {
                             dropboxListSelection.currentIndex = index;
-                            selectedText = dropboxListSelection.model.get( index ).itemText
+                            selectedText = dropboxListSelection.model.get(index).itemText
                             dropboxListSelection.focus = true
                             dropboxListBody.hide()
                             selectedIndexChanged()
@@ -159,10 +167,13 @@ Item {
 
     MouseArea {
         id: componentMouseArea
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.top: parent.top
+        anchors {
+            right: parent.right
+            left: parent.left
+            top: parent.top
+        }
         height: (dropboxListBody.enabled * dropboxListBody.height) + parent.height
+
         hoverEnabled: true
         onExited: dropboxListBody.hide()
     }

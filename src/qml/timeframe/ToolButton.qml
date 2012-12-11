@@ -26,6 +26,8 @@ import QtQuick 1.1
 
 Rectangle {
     id: button
+    width: 100
+    height: 100
 
     property string  imageUrl;
     property color onHoverColor: Qt.darker( borderColor, 1.3 )
@@ -34,15 +36,14 @@ Rectangle {
 
     //set appearance properties
     smooth: true
-    width: 100
-    height: 100
     clip: true
     color: "#00000000"
 
     Image {
         id: buttonImage
-        source: imageUrl
         anchors.centerIn: parent
+
+        source: imageUrl
         smooth: true
         fillMode: Image.PreserveAspectFit
         opacity: 0
@@ -50,14 +51,13 @@ Rectangle {
         Behavior on opacity { NumberAnimation{ duration: 300} }
     }
 
-    //buttonClick() is callable and a signal handler, onButtonClick is automatically created
     signal buttonClick()
 
-    //define the clickable area to be the whole rectangle
     MouseArea {
         id: buttonMouseArea
+        anchors.fill: parent
+
         smooth: true
-        anchors.fill: parent    //stretch the area to the parent's dimension
         onClicked: buttonClick()
         hoverEnabled: true
 
@@ -70,7 +70,6 @@ Rectangle {
         }
     }
 
-    //scale the button when pressed
     scale: buttonMouseArea.pressed ? 1.05 : 1.00
     Behavior on scale { NumberAnimation { duration: 50 } }
 }

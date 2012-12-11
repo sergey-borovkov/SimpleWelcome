@@ -26,20 +26,26 @@ import ".."
 
 Item {
     id: cloudFour
+
     property date cloudDate
     property variant model
     property int margin: 10
 
     Item {
         id: cloudRect1
-        anchors.top: parent.top
-        anchors.right: parent.right
-        width: parent.width*4/7
-        height: parent.height*3/5
+        anchors {
+            top: parent.top
+            right: parent.right
+        }
+        width: parent.width * 4 / 7
+        height: parent.height * 3 / 5
+
         SocialCloudItem {
             id: rect1
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter:  parent.verticalCenter
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                verticalCenter:  parent.verticalCenter
+            }
             width: parent.width
             height: parent.height
         }
@@ -47,25 +53,30 @@ Item {
 
     Item {
         id: dateLabel
-        anchors.top : parent.top
-        anchors.left: parent.left
-        anchors.right: cloudRect1.left
-        anchors.rightMargin: margin
-        height: parent.height/10
-        Text{
+        anchors {
+            top : parent.top
+            left: parent.left
+            right: cloudRect1.left
+            rightMargin: margin
+        }
+        height: parent.height / 10
+
+        Text {
             anchors.centerIn: parent
             width: 100
             height: dateLabel.height
-            text: Qt.formatDate( cloudDate , "dd MMM yyyy")
+
+            text: Qt.formatDate(cloudDate , "dd MMM yyyy")
             horizontalAlignment: Text.AlignHCenter
 
             style: Text.Raised
             styleColor: "#000"
             color:  "white"
-            font.family: "Bitstream Vera Sans"
-            font.pointSize: constants.iconTextSize
-            font.bold: true
-
+            font {
+                family: "Bitstream Vera Sans"
+                pointSize: constants.iconTextSize
+                bold: true
+            }
         }
     }
 

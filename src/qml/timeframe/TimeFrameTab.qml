@@ -28,7 +28,6 @@ import ".."
 
 Item {
     id: timeFrameTab
-    clip: true
 
     property variant date: new Date()
     property bool isLocalSearching: true              //New search in process
@@ -40,6 +39,8 @@ Item {
     property variant currentView: undefined
     property bool enableWheel: true
     property bool isReset: true
+
+    clip: true
 
     Component.onCompleted: {
         mainWindow.windowHidden.connect(resetModels)
@@ -292,9 +293,11 @@ Item {
 
     Row {
         id: menuBar
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top
-        anchors.margins: 16
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+            margins: 16
+        }
         height: 30
         spacing: 10
         z: 100
@@ -309,6 +312,7 @@ Item {
 
         DropFilterBox{
             id: localFilterBox
+
             model: menuDocItems
             name: i18n("My Local Documents")
             state: "current"
@@ -363,6 +367,7 @@ Item {
 
         ListModel {
             id: menuSocialItems
+
             Component.onCompleted: {
                 fillModel()
             }
@@ -381,6 +386,7 @@ Item {
 
         DropFilterBox{
             id: socialFilterBox
+
             model: menuSocialItems
             name: i18n("Social Networking Sites")
             onStateChanged: {
@@ -388,8 +394,7 @@ Item {
                     if (socialFilterBox.view.count < 2) { //check accounts count: if no ones is loggin in show SocialAuthorization page
                         timeFrameTab.state = "socialAuthorization"
                         socialFilterBox.view.currentIndex = 0
-                    } else
-                    {
+                    } else {
                         setSocialState()
                     }
                     localFilterBox.state = ""
@@ -432,6 +437,7 @@ Item {
                     socialDayModel.setFilter(getMenuFilterText(selectedText))
                 }
             }
+
             Connections {
                 target: socialProxy
                 // simply reset model if authorized plugins changed
@@ -447,14 +453,17 @@ Item {
 
     Rectangle {
         id: separator
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: menuBar.bottom
-        anchors.leftMargin: 10
-        anchors.rightMargin: 10
-        anchors.topMargin: 2
-        anchors.bottomMargin: 10
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: menuBar.bottom
+            leftMargin: 10
+            rightMargin: 10
+            topMargin: 2
+            bottomMargin: 10
+        }
         height: 3
+
         color: "grey"
         radius: 1
         visible: false
@@ -462,21 +471,28 @@ Item {
 
     Item {
         id: warningButton
-        visible: false
-        anchors.top: separator.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
+        anchors {
+            top: separator.bottom
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
+            bottomMargin: 10
+            topMargin: 10
+        }
         width: parent.width
-        anchors.bottomMargin: 10
-        anchors.topMargin: 10
+
+        visible: false
 
         Item {
             anchors.centerIn: parent
+
             Text {
                 id: messageInfo
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom: warningTabButton.top
-                anchors.margins: 20
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    bottom: warningTabButton.top
+                    margins: 20
+                }
+
                 text: i18n("Nepomuk is disabled. You can enable it in the KDE Control Centre")
                 color: "white"
                 font.pointSize: 12
@@ -484,22 +500,27 @@ Item {
 
             Item {
                 id: warningTabButtonBg
-
-                width: (parent.width-4) / 3
-                height: 27
-                visible: tabListView.currentIndex != 0
                 anchors.fill: warningTabButton
-                //z: -1
+                width: (parent.width - 4) / 3
+                height: 27
 
                 property alias pressedAndHovered: warningTabButton.pressedAndHovered
 
+                visible: tabListView.currentIndex != 0
+
                 BorderImage {
-                    border.left: 6
-                    border.right: 7
-                    border.top: 0
-                    border.bottom: 0
-                    anchors.fill: parent
-                    anchors.rightMargin: -3
+                    anchors {
+                        fill: parent
+                        rightMargin: -3
+                    }
+
+                    border {
+                        left: 6
+                        right: 7
+                        top: 0
+                        bottom: 0
+                    }
+
                     source: warningTabButtonBg.pressedAndHovered ? "image://generalicon/asset/tab_button_pressed.png" : "image://generalicon/asset/tab_button.png"
                 }
 
@@ -511,6 +532,7 @@ Item {
             TabButton {
                 id: warningTabButton
                 anchors.centerIn: parent
+
                 label: i18n("Enable...")
                 pressable: true
                 active: true
@@ -519,7 +541,6 @@ Item {
                     nepomukSource.nepomukConfigure()
                     mainWindow.close()
                 }
-                //buttonWidth: warningButton.width / 8
             }
         }
     }
@@ -530,19 +551,21 @@ Item {
 
     ListView {
         id: timeLine
-        anchors.top: separator.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
+        anchors {
+            top: separator.bottom
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
+            bottomMargin: 10
+            topMargin: 10
+        }
         width: parent.width
-        anchors.bottomMargin: 10
-        anchors.topMargin: 10
+
         visible: false
         delegate: TimeLineDelegate {}
         orientation: Qt.Horizontal
         highlightFollowsCurrentItem: true
         highlightRangeMode: ListView.StrictlyEnforceRange
-
-        preferredHighlightBegin : timeLine.width /3
+        preferredHighlightBegin : timeLine.width / 3
         preferredHighlightEnd : timeLine.width*2/3
         boundsBehavior : Flickable.StopAtBounds
         cacheBuffer: desktopWidth
@@ -561,21 +584,21 @@ Item {
 
     ListView {
         id: socialTimeLine
-
-        anchors.top: separator.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors {
+            top: separator.bottom
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
+            bottomMargin: 10
+            topMargin: 10
+        }
         width: parent.width
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 10
-        anchors.topMargin: 10
 
         delegate: SocialCloudDelegate {}
-
         orientation: Qt.Horizontal
         highlightFollowsCurrentItem: true
         highlightRangeMode: ListView.StrictlyEnforceRange
         preferredHighlightBegin : timeLine.width /3
-        preferredHighlightEnd : timeLine.width*2/3
+        preferredHighlightEnd : timeLine.width * 2 / 3
         boundsBehavior : Flickable.StopAtBounds
         visible: false
         cacheBuffer: desktopWidth
@@ -587,7 +610,8 @@ Item {
             onScrollVert: _processScroll(delta, socialTimeLine)
             enabled: enableWheel
         }
-        Rectangle{
+
+        Rectangle {
             anchors.fill: parent
             color: "transparent"
         }
@@ -595,8 +619,10 @@ Item {
 
     TimeScale {
         id: timeScale
-        anchors.verticalCenter: timeLine.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors {
+            verticalCenter: timeLine.verticalCenter
+            horizontalCenter: parent.horizontalCenter
+        }
         height: 80
         width: parent.width - 100
 
@@ -609,11 +635,9 @@ Item {
     }
 
     Keys.onLeftPressed: {
-        console.log( "left key pressed..." )
         prevMonth()
     }
     Keys.onRightPressed: {
-        console.log( "right key pressed..." )
         nextMonth()
     }
     Keys.onEscapePressed: {
@@ -630,20 +654,24 @@ Item {
         }
         width: 60
         height: 32
+
         Image {
             id: galleryButtonImage
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.left
+            }
             source: "images/gallery.png"
         }
         MouseArea {
             id: galleryButtonMouseArea
             anchors.fill: parent
+
             hoverEnabled: true
+
             onClicked: {
                 var index
-                if (inGallery)
-                {
+                if (inGallery) {
                     index = currentView.indexAt(currentView.x + currentView.width/2 + currentView.contentX,
                                                 currentView.y + currentView.height/2 + currentView.contentY)
                     if (isSocial)
@@ -681,18 +709,24 @@ Item {
         }
         width: 60
         height: 32
+
         visible: false
 
         Image {
             id: sendMessageButtonImage
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.left: parent.left
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.left
+            }
+
             source: "images/send-message.png"
         }
         MouseArea {
             id: sendMessageButtonMouseArea
             anchors.fill: parent
+
             hoverEnabled: true
+
             onClicked: {
                 socialSendMessageWindow.popupSendMessageWidget()
             }
@@ -701,13 +735,15 @@ Item {
 
     Component {
         id: highlight
+
         Rectangle {
             width: galleryView.currentItem.width;
             height: galleryView.currentItem.height
-            color: "#c8b0c4de"; radius: 5
             x: (photosGridView.currentIndex !== -1) ? photosGridView.currentItem.x : 0
             y: (photosGridView.currentIndex !== -1) ? photosGridView.currentItem.y : 0
             z: 0
+
+            color: "#c8b0c4de"; radius: 5
             Behavior on x { SpringAnimation { spring: 1; damping: 0.2 } }
             Behavior on y { SpringAnimation { spring: 1; damping: 0.2 } }
         }
@@ -715,12 +751,15 @@ Item {
 
     ListView {
         id: galleryView
-        anchors.top: separator.bottom
-        anchors.bottom: timeScale.top
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.leftMargin: 20
-        anchors.rightMargin: 20
+        anchors {
+            top: separator.bottom
+            bottom: timeScale.top
+            right: parent.right
+            left: parent.left
+            leftMargin: 20
+            rightMargin: 20
+        }
+
         visible: false
         delegate: GalleryDelegate { }
         orientation: ListView.Horizontal
@@ -734,16 +773,16 @@ Item {
 
     ListView {
         id: socialGalleryView
-
-        anchors.top: separator.bottom
-        anchors.bottom: timeScale.top
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.leftMargin: 20
-        anchors.rightMargin: 20
+        anchors {
+            top: separator.bottom
+            bottom: timeScale.top
+            right: parent.right
+            left: parent.left
+            leftMargin: 20
+            rightMargin: 20
+        }
 
         delegate: SocialGalleryDelegate {}
-
         visible: false
         spacing: 10
         orientation: ListView.Horizontal
@@ -752,6 +791,7 @@ Item {
         WheelArea {
             id: socialGalleryViewWhellArea
             anchors.fill: parent
+
             onScrollVert: _processScroll(delta, socialGalleryView)
             enabled: enableWheel
         }
@@ -760,7 +800,9 @@ Item {
     /*Timer starts wnen user starts dragging gallery or timeline*/
     Timer {
         id: flickableTimer
-        interval: 100; running: false; repeat: true
+        interval: 100
+        running: false
+        repeat: true
         onTriggered: updateTimeScale()
     }
 
@@ -770,8 +812,8 @@ Item {
 
         var index = 0
         var date = new Date()
-        index = currentView.indexAt(currentView.x + currentView.width/2 + currentView.contentX,
-                                    currentView.y + currentView.height/2 + currentView.contentY)
+        index = currentView.indexAt(currentView.x + currentView.width / 2 + currentView.contentX,
+                                    currentView.y + currentView.height / 2 + currentView.contentY)
 
         date = isSocial ? socialDayModel.getDateOfIndex(index) : localDayModel.getDateOfIndex(index)
 
@@ -783,10 +825,13 @@ Item {
 
     SocialAuthorization {
         id: authorizationView
+        anchors {
+            top: separator.bottom
+            bottom: parent.bottom
+        }
+
         visible: false
         model: pluginModel
-        anchors.top: separator.bottom
-        anchors.bottom: parent.bottom
 
         //Rectangle to force repaint
         Rectangle {
@@ -798,19 +843,25 @@ Item {
     Image {
         id: waitIndicator
         anchors.centerIn: parent
+
         source: "images/indicator-shadow.png"
         visible: false
+
         Image {
             id: can
             source: "images/can2.png"
             smooth: true
         }
+
         Behavior on opacity { NumberAnimation{ duration: 1000 }}
     }
 
     Timer {
         id: waitTimer
-        interval: 10; running: false; repeat: true
+        interval: 10
+        running: false
+        repeat: true
+
         onTriggered: can.rotation = can.rotation +10
     }
 
@@ -888,9 +939,11 @@ Item {
 
             AnchorChanges {
                 target: timeScale
-                anchors.verticalCenter: undefined
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom:  timeFrameTab.bottom
+                anchors {
+                    verticalCenter: undefined
+                    horizontalCenter: parent.horizontalCenter
+                    bottom:  timeFrameTab.bottom
+                }
             }
             PropertyChanges { target: timeScale; anchors.bottomMargin: 20 }
 
@@ -954,9 +1007,11 @@ Item {
 
             AnchorChanges {
                 target: timeScale
-                anchors.verticalCenter: undefined
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom:  timeFrameTab.bottom
+                anchors {
+                    verticalCenter: undefined
+                    horizontalCenter: parent.horizontalCenter
+                    bottom:  timeFrameTab.bottom
+                }
             }
             PropertyChanges { target: timeScale; anchors.bottomMargin: 20 }
 
@@ -976,9 +1031,17 @@ Item {
 
             PropertyChanges { target: authorizationView; visible: true }
 
-            PropertyChanges { target: timeScale; visible: false; opacity: 0 }
+            PropertyChanges {
+                target: timeScale
+                visible: false
+                opacity: 0
+            }
 
-            PropertyChanges { target: galleryButton; visible: false; opacity: 0 }
+            PropertyChanges {
+                target: galleryButton
+                visible: false
+                opacity: 0
+            }
 
             PropertyChanges { target: sendMessageButton; visible: false }
         },
@@ -986,7 +1049,11 @@ Item {
         State {
             name: "socialSearching"; extend: "social"
 
-            PropertyChanges { target: socialTimeLine; visible: false; opacity: 0; }
+            PropertyChanges {
+                target: socialTimeLine
+                visible: false
+                opacity: 0
+            }
 
             PropertyChanges { target: waitIndicator; visible: true }
 
@@ -994,7 +1061,11 @@ Item {
 
             PropertyChanges { target: galleryButton; visible: false }
 
-            PropertyChanges { target: timeScale; visible: false; opacity: 0 }
+            PropertyChanges {
+                target: timeScale
+                visible: false
+                opacity: 0
+            }
 
             PropertyChanges { target: sendMessageButton; visible: false }
         }

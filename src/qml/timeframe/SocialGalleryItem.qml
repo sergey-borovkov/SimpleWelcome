@@ -26,7 +26,7 @@ import Private 0.1
 
 Item{
     id: galleryRect
-    width: 230 //galleryItem.width
+    width: 230
     height: galleryItem.height
 
     property alias commentsListView: commentsListView
@@ -58,10 +58,19 @@ Item{
         return Math.min(msg.height, h)
     }
 
+    function commentsViewHeight() {
+        if (commentCount < 3)
+            return commentCount * 60
+        else
+            return 180
+    }
+
     MouseArea {
         id: modal
         anchors.fill: parent
+
         enabled: false
+
         onClicked:  {
             galleryRect.state = ""
         }
@@ -70,20 +79,29 @@ Item{
     BorderImage {
         id: innerShadow
         anchors.fill: parent
-        border { left: 23; top: 23; right: 23; bottom: 23 }
+
+        border {
+            left: 23
+            top: 23
+            right: 23
+            bottom: 23
+        }
         source: "images/shadow-inverse.png"
         smooth: true
     }
 
     Item {
         id: galleryItem
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            verticalCenter: parent.verticalCenter
+        }
         width: galleryRect.width
         height: (__notDetailed) ? childrenRect.height : __height  //we dont want futher increase height after initial state
 
-        objectName: "SocialGalleryItem"
         property Item mainParent: galleryRect
+
+        objectName: "SocialGalleryItem"
 
         ItemRectangle {
             id: mainRect
@@ -94,8 +112,7 @@ Item{
                 else
                     Math.max( 120, ( column.height + bottomLine.height + topLine.height + fromItem.height) )
             }
-            //anchors.fill: parent
-            //clip: true
+
             Behavior on height {
                 NumberAnimation {
                     duration: 150
@@ -104,7 +121,6 @@ Item{
 
             SocialTopBar {
                 id: topLine
-
                 anchors.top: parent.top
                 width: parent.width
                 height: 26
@@ -113,7 +129,6 @@ Item{
                 likesCount : likes
                 commentsCount: commentCount
                 pluginIcon: "image://plugin/" + pluginName + "/small"
-
 
                 onExitClicked: {
                     modal.parent = galleryRect
@@ -124,28 +139,37 @@ Item{
 
             FromItem {
                 id: fromItem
+                anchors {
+                    top: topLine.bottom
+                    bottomMargin: 10
+                }
+                width: parent.width - 20
+
                 userName: fromName
                 userImage: fromImageUrl
-                width: parent.width - 20
-                anchors { top: topLine.bottom; bottomMargin: 10 }
             }
 
             Column {
                 id: column
-
-                anchors { top: fromItem.bottom; bottomMargin: 10 }
+                anchors {
+                    top: fromItem.bottom
+                    bottomMargin: 10
+                }
                 width: parent.width
 
                 spacing: 10
 
                 SocialImage { //Main image
                     id: img
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    fillMode: Image.PreserveAspectFit
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                        leftMargin: 5
+                        rightMargin: 5
+                    }
                     width: getWidth()
                     height: getHeight()
-                    anchors.leftMargin: 5
-                    anchors.rightMargin: 5
+
+                    fillMode: Image.PreserveAspectFit
                     smooth: true
                     source: picture
 
@@ -166,18 +190,11 @@ Item{
                 }
 
                 Text {
-                    function getAudio()
-                    {
-                        if(typeof audio === "undefined")
-                            return ""
-                        else
-                            return i18n("Audio: ") + " <a href=\"" + audioUrl + "\"><font color=\"#84c0ea\">" + audio + "</font></a>"
-                    }
-
                     id: audioItem
-                    width: parent.width - 20
-                    wrapMode: Text.Wrap
                     anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width - 20
+
+                    wrapMode: Text.Wrap
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     text: getAudio()
@@ -189,6 +206,14 @@ Item{
                         return vis
                     }
 
+                    function getAudio()
+                    {
+                        if(typeof audio === "undefined")
+                            return ""
+                        else
+                            return i18n("Audio: ") + " <a href=\"" + audioUrl + "\"><font color=\"#84c0ea\">" + audio + "</font></a>"
+                    }
+
                     onLinkActivated: {
                         Qt.openUrlExternally(link)
                     }
@@ -196,18 +221,11 @@ Item{
                 }
 
                 Text {
-                    function getVideo()
-                    {
-                        if(typeof videoUrl === "undefined")
-                            return ""
-                        else
-                            return i18n("Video: ") + " <a href=\"" + videoUrl + "\"><font color=\"#84c0ea\">" + video + "</font></a>"
-                    }
-
                     id: videoItem
-                    width: parent.width - 20
-                    wrapMode: Text.Wrap
                     anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width - 20
+
+                    wrapMode: Text.Wrap
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     text: getVideo()
@@ -217,6 +235,14 @@ Item{
                         if (!vis)
                             height = 0;
                         return vis
+                    }
+
+                    function getVideo()
+                    {
+                        if(typeof videoUrl === "undefined")
+                            return ""
+                        else
+                            return i18n("Video: ") + " <a href=\"" + videoUrl + "\"><font color=\"#84c0ea\">" + video + "</font></a>"
                     }
 
                     onLinkActivated: {
@@ -233,19 +259,22 @@ Item{
                         id: msgView
                         width: parent.width
                         height: msg.height
+
                         contentHeight: msg.paintedHeight
                         clip: true
 
                         Text {
                             id: msg
+                            anchors {
+                                bottomMargin: 5
+                                horizontalCenter: parent.horizontalCenter
+                            }
                             width: msgView.width - 20
-                            anchors.bottomMargin: 5
-                            anchors.horizontalCenter: parent.horizontalCenter
+
                             wrapMode: Text.Wrap
                             horizontalAlignment: truncated ? Text.AlignLeft : Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             text: message
-
                             color: "white"
                             clip: true
                             textFormat: Text.StyledText
@@ -259,15 +288,19 @@ Item{
                             MouseArea {
                                 id: msgMouseArea
                                 anchors.fill: parent
+
                                 hoverEnabled: true
+
                                 onClicked: {
                                     popupDetailsWidget()
                                 }
                             }
                         }
                     }
+
                     ScrollBar {
                         id: msgScrollBar
+
                         flickable: msgView
                         vertical: true
                         hideScrollBarsWhenStopped: false
@@ -278,8 +311,12 @@ Item{
 
             SocialBottomBar {
                 id: bottomLine
-
-                anchors {bottom: parent.bottom; topMargin: 3; right: parent.right; left: parent.left}
+                anchors {
+                    bottom: parent.bottom
+                    topMargin: 3
+                    right: parent.right
+                    left: parent.left
+                }
                 height: 0
 
                 likesCount : likes
@@ -294,6 +331,7 @@ Item{
                         socialProxy.likeItem(id, pluginName);
                     }
                 }
+
                 onShowCommentsClicked: {
                     if (galleryRect.state === "details") {
                         //Set source on comments loader
@@ -304,58 +342,76 @@ Item{
                         commentsListView.view.positionViewAtEnd()
                         galleryRect.state = "comments"
                     }
-                    else if (galleryRect.state === "comments")
-                    {
+                    else if (galleryRect.state === "comments") {
                         commentsEdit.source = ""
                         galleryRect.state = "details"
                     }
                 }
             }
         }
+
         ItemRectangle {
             id: commentsRect
+            anchors {
+                top: mainRect.bottom
+                bottom: parent.bottom
+                left: parent.left
+                right: parent.right
+                leftMargin: 30
+                topMargin: -10
+                rightMargin: 30
+                bottomMargin: 8
+            }
             height: 0
-            anchors.top: mainRect.bottom
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors { leftMargin: 30; topMargin: -10; rightMargin: 30; bottomMargin: 8}
+
             z: -1
 
             CommentsListView {
                 id: commentsListView
-                anchors.top : parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: commentsEdit.top
-                anchors { topMargin: 15; leftMargin: 3; rightMargin: 3; bottomMargin: 5}
+                anchors {
+                    top : parent.top
+                    left: parent.left
+                    right: parent.right
+                    bottom: commentsEdit.top
+                    topMargin: 15
+                    leftMargin: 3
+                    rightMargin: 3
+                    bottomMargin: 5
+                }
+
                 visible: false
                 model: repeater.model.comments(index)
             }
 
             Loader {
                 id: commentsEdit
+                anchors {
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                    leftMargin: 3
+                    rightMargin: 3
+                }
                 height: 0
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 3
-                anchors.rightMargin: 3
-                anchors.right: parent.right
+
                 visible: false
             }
+
             Connections {
                 target: commentsEdit.item
                 onSend: socialProxy.commentItem(comment, id, pluginName)
             }
         }
-        MouseArea
-        {
+
+        MouseArea  {
             id: detailsOnArea
             anchors.fill: parent
             z: -2
+
             onClicked: popupDetailsWidget()
         }
     }
+
     states: [
         State {
             name: "details"
@@ -380,9 +436,17 @@ Item{
 
             PropertyChanges { target: galleryItem; z: 400}
 
-            PropertyChanges { target: mainRect; width: 400; height: 300 }
+            PropertyChanges {
+                target: mainRect
+                width: 400
+                height: 300
+            }
 
-            PropertyChanges { target: bottomLine; height: Math.max( 26, commentsShowText.paintedHeight ); visible: true }
+            PropertyChanges {
+                target: bottomLine
+                height: Math.max(26, commentsShowText.paintedHeight )
+                visible: true
+            }
 
             PropertyChanges {
                 target: galleryRect;
@@ -391,11 +455,16 @@ Item{
                     return y
                 }
             }
+
             PropertyChanges { target: galleryRect; z: 9000  }
 
             PropertyChanges { target: timeFrameTab; enableWheel: false }
 
-            PropertyChanges { target: topLine; state: "detailed"; dateText: Qt.formatDateTime(datetime, "d MMM " + i18n("in") + " hh:mm") }
+            PropertyChanges {
+                target: topLine
+                state: "detailed"
+                dateText: Qt.formatDateTime(datetime, "d MMM " + i18n("in") + " hh:mm")
+            }
 
             PropertyChanges { target: modal; enabled: true }
 
@@ -440,11 +509,4 @@ Item{
             }
         }
     ]
-
-    function commentsViewHeight() {
-        if (commentCount < 3)
-            return commentCount * 60
-        else
-            return 180
-    }
 }

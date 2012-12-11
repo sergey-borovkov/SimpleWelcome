@@ -27,7 +27,6 @@ import Private 0.1
 
 Item {
     id: cloudRect
-    objectName: "cloudRect"
 
     property string id
     property date datetime
@@ -50,6 +49,8 @@ Item {
 
     property int viewWidth: 450
     property int viewHeight: 300
+
+    objectName: "cloudRect"
 
     Connections {
         // while specifying socialDayModel here is ugly any other way generates warnings
@@ -89,7 +90,6 @@ Item {
     }
 
     function msgViewHeight() {
-//        var h = msgView.parent.height - 10
         var h = bodyItem.height - 20
         h -= socialImage.height * socialImage.visible
         h -= audioItem.height * audioItem.visible
@@ -137,7 +137,13 @@ Item {
     BorderImage {
         id: innerShadow
         anchors.fill: parent
-        border { left: 23; top: 23; right: 23; bottom: 23 }
+
+        border {
+            left: 23
+            top: 23
+            right: 23
+            bottom: 23
+        }
         source: "images/shadow-inverse.png"
         smooth: true
     }
@@ -151,8 +157,9 @@ Item {
         width: parent.width
         height: parent.height
 
-        objectName: "SocialCloudItem"
         property Item mainParent: cloudRect
+
+        objectName: "SocialCloudItem"
 
         ItemRectangle {
             id: mainRect
@@ -169,23 +176,28 @@ Item {
                 width: parent.width
                 height: 26
 
+                dateText : date
+                likesCount : likes
+                commentsCount: commentCount
+
                 onExitClicked: {
                     modal.parent = cloudRect
                     modal.z = -1
                     cloudRect.state = ""
                 }
 
-                dateText : date
-                likesCount : likes
-                commentsCount: commentCount
             }
 
             FromItem {
                 id: fromItem
+                anchors {
+                    top: topLine.bottom
+                    bottomMargin: 10
+                }
+                width: parent.width - 20
+
                 userName: fromName
                 userImage: fromImageUrl
-                width: parent.width - 20
-                anchors { top: topLine.bottom; bottomMargin: 10 }
             }
 
             Item {
@@ -206,6 +218,7 @@ Item {
                         id: imageAnchor
                         width: parent.width
                         height: parent.height
+
                         visible: picture !== ""
 
                         SocialImage { //Main image
@@ -217,9 +230,12 @@ Item {
                                 leftMargin: 5
                                 rightMargin: 5
                             }
-
                             width: getWidth()
                             height: getHeight()
+
+                            source: picture
+                            fillMode: Image.PreserveAspectFit
+                            smooth: true
 
                             function getWidth() {
                                 if (status === Image.Null)
@@ -237,20 +253,25 @@ Item {
 
                                 return Math.min(sourceSize.height, parent.height)
                             }
-
-                            source: picture
-                            fillMode: Image.PreserveAspectFit
-                            smooth: true
                         }
                     }
 
                     Text {
                         id: audioItem
-                        width: parent.width - 20
                         anchors {
                             bottomMargin: 3
                             horizontalCenter: parent.horizontalCenter
                         }
+                        width: parent.width - 20
+
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        wrapMode: Text.Wrap
+                        elide: Text.ElideRight
+                        maximumLineCount: 2
+                        text: getAudio()
+                        color: "lightblue"
+                        visible: (picture === "") && (audio !== "")
 
                         function getAudio()
                         {
@@ -265,24 +286,24 @@ Item {
                         onLinkActivated: {
                             Qt.openUrlExternally(link)
                         }
+                    }
+
+                    Text {
+                        id: videoItem
+                        anchors {
+                            bottomMargin: 3
+                            horizontalCenter: parent.horizontalCenter
+                        }
+                        width: parent.width - 20
 
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         wrapMode: Text.Wrap
                         elide: Text.ElideRight
                         maximumLineCount: 2
-                        text: getAudio()
+                        text: getVideo()
                         color: "lightblue"
-                        visible: (picture === "") && (audio !== "")
-                    }
-
-                    Text {
-                        id: videoItem
-                        width: parent.width - 20
-                        anchors {
-                            bottomMargin: 3
-                            horizontalCenter: parent.horizontalCenter
-                        }
+                        visible: (picture === "") && (video !== "")
 
                         function getVideo()
                         {
@@ -297,15 +318,6 @@ Item {
                         onLinkActivated: {
                             Qt.openUrlExternally(link)
                         }
-
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        wrapMode: Text.Wrap
-                        elide: Text.ElideRight
-                        maximumLineCount: 2
-                        text: getVideo()
-                        color: "lightblue"
-                        visible: (picture === "") && (video !== "")
                     }
 
                     SocialMessageView {
@@ -321,23 +333,28 @@ Item {
                 MouseArea {
                     id: msgMouseArea
                     anchors.fill: parent
+
+                    hoverEnabled: true
+
                     onClicked: {
                         popupDetailsWidget()
                     }
-
-                    hoverEnabled: true
                 }
             }
 
             SocialBottomBar {
                 id: bottomLine
-
                 anchors {
                     bottom: parent.bottom
                     right: parent.right
                     left: parent.left
                 }
                 height: 5
+
+                likesCount : likes
+                commentsCount: commentCount
+                isLiked: like
+                visible: false
 
                 onSendLikeClicked: {
                     if (like) {
@@ -361,11 +378,6 @@ Item {
                         cloudRect.state = "details"
                     }
                 }
-
-                likesCount : likes
-                commentsCount: commentCount
-                isLiked: like
-                visible: false
             }
         }
 
@@ -396,6 +408,7 @@ Item {
                     rightMargin: 3
                     bottomMargin: 5
                 }
+
                 visible: false
             }
 
@@ -427,6 +440,7 @@ Item {
             id: detailsOnArea
             anchors.fill: parent
             z: -2
+
             onClicked: {
                 popupDetailsWidget()
             }
@@ -460,7 +474,11 @@ Item {
 
             PropertyChanges { target: timeFrameTab; enableWheel: false }
 
-            PropertyChanges { target: bottomLine; height: Math.max( 26, commentsShowText.paintedHeight ); visible: true }
+            PropertyChanges {
+                target: bottomLine
+                height: Math.max( 26, commentsShowText.paintedHeight )
+                visible: true
+            }
 
             PropertyChanges { target: modal; enabled: true }
 
@@ -508,7 +526,10 @@ Item {
         State {
             name: "comments" ; extend: "details"
 
-            PropertyChanges { target: socialCloudItem; height: viewHeight + commentsViewHeight() + 60 + 10}
+            PropertyChanges {
+                target: socialCloudItem
+                height: viewHeight + commentsViewHeight() + 60 + 10
+            }
             PropertyChanges { target: mainRect; height: viewHeight }
             PropertyChanges { target: commentsRect; height: commentsViewHeight() + 60 + 10}
 

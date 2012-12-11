@@ -30,6 +30,7 @@ Item {
     Rectangle {
         id: rectangle;
         anchors.fill: parent;
+
         radius: 3;
         color: "#172634"
         border {
@@ -38,22 +39,25 @@ Item {
         }
 
         BorderImage {
-            z: -1
             anchors {
                 bottomMargin: -8
                 fill: parent
             }
             width: rectangle.width
             height: rectangle.height
+            z: -1
+
             border {
                 left: 10
                 top: 10
                 right: 10
                 bottom: 10
             }
-            source: "images/shadow.png"; smooth: true
+            source: "images/shadow.png"
+            smooth: true
         }
     }
+
     states: [
         State {
             name: "notEnabled"

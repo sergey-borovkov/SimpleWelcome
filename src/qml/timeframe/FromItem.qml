@@ -23,13 +23,13 @@
 import QtQuick 1.1
 
 Item {
+    height: fromImage.height
+
     property alias userImage: fromImage.source
     property alias userName: fromName.text
 
-    height: fromImage.height
     Image {
         id: fromImage
-        source: "images/user.png"
         width: 24
         height: 24
         anchors {
@@ -38,22 +38,23 @@ Item {
             rightMargin: 5
         }
 
+        source: "images/user.png"
         smooth: true
         fillMode: Image.PreserveAspectFit
     }
 
     Text {
         id: fromName
-        color: "white"
-//        font.pointSize: 9
-        horizontalAlignment: Text.AlignLeft
-        verticalAlignment: Text.AlignVCenter
         anchors {
             left: fromImage.right
             right: parent.right
             leftMargin: 5
             rightMargin: 5
         }
+
+        color: "white"
+        horizontalAlignment: Text.AlignLeft
+        verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
     }
 }

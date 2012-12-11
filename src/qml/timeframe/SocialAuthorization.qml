@@ -33,11 +33,11 @@ PathView {
     property int itemWidth: 140
 
     path: Path {
-        startX: (parent.width - itemWidth * (itemCount - 1))/2
-        startY: height/2
+        startX: (parent.width - itemWidth * (itemCount - 1)) / 2
+        startY: height / 2
         PathLine {
-            x: (parent.width + itemWidth * (itemCount + 1))/2
-            y: height/2
+            x: (parent.width + itemWidth * (itemCount + 1)) / 2
+            y: height / 2
         }
     }
 
@@ -49,46 +49,55 @@ PathView {
 
         Item {
             id: authorizationItem
-            //width: Math.max(img.width,  ) + 10
+            anchors.centerIn: parent
             width: childrenRect.width
             height: img.height + button.height + 10
-            anchors.centerIn: parent
 
             Image {
                 // get icon for this plugin
                 id: img
-                smooth: true
-                z: -1
                 width: 128
                 height: 128
+                z: -1
+
+                smooth: true
                 source: "image://plugin/" + name
             }
 
             Item {
                 id: button
-                anchors.top: img.bottom
-                anchors.left: img.left
-                anchors.right: img.right
-                anchors.leftMargin: 5
-                anchors.rightMargin: 5
+                anchors {
+                    top: img.bottom
+                    left: img.left
+                    right: img.right
+                    leftMargin: 5
+                    rightMargin: 5
+                }
                 height: 28
+
                 Image {
                     id: buttonImage
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    anchors.leftMargin: authorized ? 15 : 20
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        left: parent.left
+                        leftMargin: authorized ? 15 : 20
+                    }
                     width: 22
                     height: 22
+
                     smooth: true
                     source: authorized ? "images/logout.png" : "images/login.png"
-
                 }
+
                 Text {
                     id: buttonText
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: buttonImage.right
-                    anchors.leftMargin: 5
-                    anchors.right: parent.right
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        left: buttonImage.right
+                        leftMargin: 5
+                        right: parent.right
+                    }
+
                     text: authorized ? i18n("Logout") : i18n("Login")
                     color: "white"
                     font.pointSize: 12
@@ -96,7 +105,9 @@ PathView {
             }
             MouseArea {
                 anchors.fill: parent
+
                 hoverEnabled: true
+
                 onEntered: authorizationItem.state = "hover"
                 onExited:  authorizationItem.state = ""
                 onPressed: authorizationItem.state = ""
@@ -113,8 +124,17 @@ PathView {
             states: [
                 State {
                     name: "hover"
-                    PropertyChanges { target: img; width: 134; height: 134 }
-                    PropertyChanges { target: buttonImage; width: 24; height: 24 }
+                    PropertyChanges {
+                        target: img
+                        width: 134
+                        height: 134
+                    }
+
+                    PropertyChanges {
+                        target: buttonImage
+                        width: 24
+                        height: 24
+                    }
                 }
             ]
             transitions: [

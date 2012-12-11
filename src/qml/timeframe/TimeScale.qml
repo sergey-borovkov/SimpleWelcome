@@ -24,9 +24,8 @@ import QtQuick 1.1
 
 Item {
     id: timeScale
-    property variant list: timeScaleList
-    //property variant  model: monthModel
 
+    property variant list: timeScaleList
     property variant monthsStrs: [ i18n("JAN"), i18n("FEB"), i18n("MAR"), i18n("APR"), i18n("MAY"),
         i18n("JUN"), i18n("JUL"), i18n("AUG"), i18n("SEP"), i18n("OCT"), i18n("NOV"), i18n("DEC") ]
 
@@ -36,66 +35,96 @@ Item {
         return i18n("UND")
     }
 
+    function getListViewItemsCount() {
+        var y = Math.floor((timeScale.width - yearLabel.paintedWidth) / 110)
+        return y
+    }
+
     Component {
         id: monthDelegate
+
         Item {
             id: listItem
             width: 110
             height: 80
+
             Image {
                 id: scaleImage
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                source: "images/month1.png"
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                }
 
+                source: "images/month1.png"
             }
+
             Text {
-                color: "white"
                 id: monthLabel
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    bottom: parent.bottom
+                }
+
+                color: "white"
                 text: getMonthStr(month)// + ' ' + year
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom: parent.bottom
-                //anchors.bottomMargin: 1
                 font.pixelSize: 15
             }
         }
     }
+
     Component {
         id: highlight
-        Item{
+
+        Item {
             width: 112
             height: 32
             x: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.x -1
             y: (timeScaleList.currentIndex === -1)? 0 : timeScaleList.currentItem.y + timeScaleList.currentItem.height/2 - 16
+
             Image {
                 id: activeLeft
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors {
+                    left: parent.left
+                    verticalCenter: parent.verticalCenter
+                }
+
                 source: "images/active-left.png"
             }
+
             Image {
                 id: activeRight
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
+                anchors {
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
+
                 source: "images/active-right.png"
             }
+
             Image {
-                anchors.left: activeLeft.right
-                anchors.right: activeRight.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors {
+                    left: activeLeft.right
+                    right: activeRight.left
+                    verticalCenter: parent.verticalCenter
+                }
+
                 source: "images/active-center.png"
                 smooth: true
             }
+
             Behavior on x { NumberAnimation{duration: 300 } }
         }
     }
 
     Text {
         id: yearLabel
+        anchors {
+            left: parent.left
+            right: listViewAnchor.left
+            verticalCenter: parent.verticalCenter
+        }
+
         color: "white"
-        anchors.left: parent.left
-        anchors.right: listViewAnchor.left
-        anchors.verticalCenter: parent.verticalCenter
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 15
 
@@ -107,38 +136,48 @@ Item {
         }
     }
 
-    function getListViewItemsCount() {
-        var y = Math.floor((timeScale.width - yearLabel.paintedWidth)/ 110)
-        return y
-    }
-
     Item {
         id: listViewAnchor
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
+        anchors {
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+        }
+
         height: parent.height
-        clip: true
         width: getListViewItemsCount()*110
+
+        clip: true
 
         Item {
             id: scaleBackground
             anchors.fill: parent
+
             Image {
                 id: scaleLeft
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors {
+                    left: parent.left
+                    verticalCenter: parent.verticalCenter
+                }
+
                 source: "images/scale-left.png"
             }
+
             Image {
                 id: scaleRight
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
+                anchors {
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
+
                 source: "images/scale-right.png"
             }
             Image {
-                anchors.left: scaleLeft.right
-                anchors.right: scaleRight.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors {
+                    left: scaleLeft.right
+                    right: scaleRight.left
+                    verticalCenter: parent.verticalCenter
+                }
+
                 source: "images/scale-center.png"
                 smooth: true
             }
@@ -146,29 +185,31 @@ Item {
 
         ListView {
             id: timeScaleList
+            anchors {
+                fill: parent
+                rightMargin: 3
+                leftMargin: 3
+            }
+            height: 80
+
             model: timeScaleModel
             delegate: monthDelegate
             highlight: highlight
             highlightFollowsCurrentItem: false
             boundsBehavior: Flickable.StopAtBounds
-            //layoutDirection: Qt.RightToLeft
-            anchors.fill: parent
-            anchors.rightMargin: 3
-            anchors.leftMargin: 3
-            height: 80
             focus: true
             orientation: Qt.Horizontal
             snapMode: ListView.SnapToItem
-            preferredHighlightBegin: 0; preferredHighlightEnd: 0
+            preferredHighlightBegin: 0
+            preferredHighlightEnd: 0
 
             MouseArea {
                 id: mouseArea
                 anchors.fill: parent
+
                 onClicked: {
                     var mouseIndex = timeScaleList.indexAt(mouseX + timeScaleList.contentX, mouseY + timeScaleList.contentY)
                     var oldIndex = timeScaleList.currentIndex
-//                    console.log("-------------    model = " + timeScaleModel.count() + "     list = " + timeScaleList.count)
-
                     if ((mouseIndex !== -1) && (oldIndex !== mouseIndex))
                     {
                         //change current index
@@ -181,10 +222,11 @@ Item {
                         else
                             timeFrameTab.currentView.currentIndex = localDayModel.getIndexByDate(date)
 
-                        timeFrameTab.currentView.positionViewAtIndex(timeFrameTab.currentView.currentIndex, ListView.Center )
+                        timeFrameTab.currentView.positionViewAtIndex(timeFrameTab.currentView.currentIndex, ListView.Center)
                     }
                 }
             }
+
             Behavior on contentX {
                 NumberAnimation { duration: 300 }
             }

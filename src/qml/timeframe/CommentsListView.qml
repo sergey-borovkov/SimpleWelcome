@@ -29,12 +29,12 @@ Item {
 
     Component {
         id: commentsDelegate
+
         Item {
             width: 354
             height: ((textField.paintedHeight + nameField.paintedHeight) > userPhoto.height) ? textField.paintedHeight + nameField.paintedHeight : 55
 
-            Image
-            {
+            Image {
                 id: userPhoto
                 width: 55
                 anchors {
@@ -46,6 +46,7 @@ Item {
                 fillMode: Image.PreserveAspectFit
                 source: fromPictureUrl
             }
+
             Text {
                 id: nameField;
                 anchors {
@@ -57,6 +58,7 @@ Item {
                 text: from
                 color: "grey"
             }
+
             Text {
                 id: textField;
                 anchors {

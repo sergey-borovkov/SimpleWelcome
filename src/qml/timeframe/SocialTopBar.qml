@@ -34,17 +34,20 @@ Item {
 
     Image {
         id: iconPlugin
-
-        anchors { top: parent.top; left: parent.left; leftMargin: 10 }
+        anchors {
+            top: parent.top
+            left: parent.left
+            leftMargin: 10
+        }
         width: 22
         height: 22
 
         fillMode: Image.PreserveAspectFit
         smooth: true
     }
+
     Text {
         id: dateArea
-
         anchors.centerIn: parent
 
         wrapMode: Text.WordWrap
@@ -53,17 +56,24 @@ Item {
         color: "lightgrey";
         visible: false
     }
+
     Item {
         id: likesCountArea
-
-        anchors { top: parent.top; right: parent.right; leftMargin: 5; topMargin: 3 }
+        anchors {
+            top: parent.top
+            right: parent.right
+            leftMargin: 5
+            topMargin: 3
+        }
         width: 40
         height: 22
 
         Image {
             id: smallLikeIcon
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
+            anchors {
+                left: parent.left
+                verticalCenter: parent.verticalCenter
+            }
             width: 22
             height: 22
 
@@ -73,26 +83,35 @@ Item {
         }
         Text {
             id: likesCountText
-
-            anchors { left: smallLikeIcon.right; verticalCenter: parent.verticalCenter; leftMargin: 5 }
+            anchors {
+                left: smallLikeIcon.right
+                verticalCenter: parent.verticalCenter
+                leftMargin: 5
+            }
 
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
             color: "white"
         }
     }
+
     Item {
         id: commentsCountArea
-
-        anchors { right: likesCountArea.left; top: parent.top; rightMargin: 5; topMargin: 3 }
+        anchors {
+            right: likesCountArea.left
+            top: parent.top
+            rightMargin: 5
+            topMargin: 3
+        }
         width: 40
         height: 22
 
         Image {
             id: smallCommentIcon
-
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
+            anchors {
+                left: parent.left
+                verticalCenter: parent.verticalCenter
+            }
             width: 22
             height: 22
 
@@ -100,12 +119,14 @@ Item {
             smooth: true
             source: "images/comment.png"
         }
+
         Text {
             id: commentsCountText
-
-            anchors.left: smallCommentIcon.right
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin: 5
+            anchors {
+                left: smallCommentIcon.right
+                verticalCenter: parent.verticalCenter
+                leftMargin: 5
+            }
 
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
@@ -115,28 +136,32 @@ Item {
 
     Item {
         id: detailsOffArea
-
-        anchors {verticalCenter: parent.verticalCenter; right: parent.right; rightMargin: 5 }
+        anchors {
+            verticalCenter: parent.verticalCenter
+            right: parent.right
+            rightMargin: 5
+        }
         width: 12
         height: 12
 
         visible: false
 
-        Image{
+        Image {
             id: closeIcon
-
             anchors.centerIn: parent
+            width: 8
+            height: 8
 
             fillMode: Image.PreserveAspectFit
             smooth: true
             source: "images/x.png"
-            width: 8
-            height: 8
         }
+
         MouseArea{
             anchors.fill: parent
 
             hoverEnabled: true
+
             onClicked: {
                 exitClicked()
             }

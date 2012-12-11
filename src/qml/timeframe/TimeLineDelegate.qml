@@ -26,19 +26,19 @@ import QtQuick 1.1
 import "clouds"
 
 Item {
-    property int margin: 10
-    property int labelHeight: 20
-
     id: timeLineItem
     height: parent.height
     width: timeLine.width/3
 
+    property int margin: 10
+    property int labelHeight: 20
+
     Item {
         id: cloudBorder
-        y: (index%2 === 1)? parent.height/2 + timeScale.height/2 : 0
-        x: -100
         width: parent.width + 200
-        height: parent.height/2 - timeScale.height/2
+        height: parent.height / 2 - timeScale.height / 2
+        y: (index % 2 === 1) ? parent.height / 2 + timeScale.height / 2 : 0
+        x: -100
 
         Component.onDestruction: {
             var m = localDayModel.itemsModel(date)
@@ -56,6 +56,7 @@ Item {
         Loader {
             id: cloud
             anchors.fill: parent
+
             source: getSourceComponent(size)
 
             function getSourceComponent(count)

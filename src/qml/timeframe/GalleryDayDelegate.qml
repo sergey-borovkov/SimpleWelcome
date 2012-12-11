@@ -34,7 +34,6 @@ Column {
 
         Image {
             id: image
-
             anchors.centerIn: parent
 
             source: "image://gallery/" + url + "%" + image
@@ -65,7 +64,6 @@ Column {
     }
     Text {
         id: label
-
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width
 
@@ -74,8 +72,10 @@ Column {
         style: Text.Raised
         styleColor: "#000"
         color:  "white"
-        font.family: "Bitstream Vera Sans"
-        font.pointSize: constants.iconTextSize
+        font {
+            family: "Bitstream Vera Sans"
+            pointSize: constants.iconTextSize
+        }
 
         elide: Text.ElideMiddle
         maximumLineCount: 3
