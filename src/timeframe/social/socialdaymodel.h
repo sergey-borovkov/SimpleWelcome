@@ -77,9 +77,10 @@ public slots:
     QString audioUrl(int row) const;
     QString video(int row) const;
     QString videoUrl(int row) const;
+    QString videoImage(int row) const;
     QString fromName(int row) const;
     QString fromImageUrl(int row) const;
-    QString text(int row) const;
+    QString text(int row) const;    
     QDateTime datetime(int row) const;
     int likesCount(int row) const;
     int like(int row);

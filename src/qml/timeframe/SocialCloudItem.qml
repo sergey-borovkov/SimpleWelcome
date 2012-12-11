@@ -19,6 +19,7 @@ Item {
     property string audioUrl: ""
     property string video: ""
     property string videoUrl: ""
+    property string videoImage: ""
     property string fromName: ""
     property string fromImageUrl: ""
     property alias commentsView : commentsListView
@@ -54,6 +55,7 @@ Item {
         audioUrl = model.audioUrl(index)
         video = model.video(index)
         videoUrl = model.videoUrl(index)
+        videoImage = model.videoImage(index)
         like = model.like(index)
         likes = model.likesCount(index)
         fromName = model.fromName(index)
@@ -214,7 +216,7 @@ Item {
                                 return Math.min(sourceSize.height, parent.height)
                             }
 
-                            source: picture
+                            source: (picture === "")? videoImage : picture
                             fillMode: Image.PreserveAspectFit
                             smooth: true
                         }
@@ -251,37 +253,70 @@ Item {
                         color: "lightblue"
                         visible: (picture === "") && (audio !== "")
                     }
-
-                    Text {
+                    Item {
                         id: videoItem
-                        width: parent.width - 20
-                        anchors {
-                            bottomMargin: 3
-                            horizontalCenter: parent.horizontalCenter
-                        }
 
-                        function getVideo()
-                        {
-                            if(typeof videoUrl === "undefined")
-                                return ""
-                            else
-                                return i18n("Video: ") + " <a href=\""
-                                        + videoUrl + "\"><font color=\"#84c0ea\">"
-                                        + video + "</font></a>"
-                        }
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: childrenRect.width
+                        height: childrenRect.height
 
-                        onLinkActivated: {
-                            Qt.openUrlExternally(link)
-                        }
-
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        wrapMode: Text.Wrap
-                        elide: Text.ElideRight
-                        maximumLineCount: 2
-                        text: getVideo()
-                        color: "lightblue"
                         visible: (picture === "") && (video !== "")
+                        Column {
+
+                            Image {
+                                id: videoPreview
+
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                width: Math.min(sourceSize.width, bodyItem.width)
+                                height: Math.min(sourceSize.height, bodyItem.height)
+
+                                source: videoImage
+                                fillMode: Image.PreserveAspectFit
+
+                                Image { //Overlay play icon
+                                    id: playIcon
+
+                                    anchors.centerIn: parent
+                                    source: "images/play-empty.png"
+                                    visible: videoPreview.status === Image.Ready
+                                }
+                                MouseArea{
+                                    anchors.fill: parent
+
+                                    onClicked: Qt.openUrlExternally(videoUrl)
+                                }
+                            }
+                            Text {
+
+                                id: videoCaption
+                                width: bodyItem.width - 20
+                                anchors.horizontalCenter: parent.horizontalCenter
+
+                                function getVideo()
+                                {
+                                    if(typeof videoUrl === "undefined")
+                                        return ""
+                                    else
+                                        return " <a href=\""
+                                                + videoUrl + "\"><font color=\"#84c0ea\">"
+                                                + video + "</font></a>"
+                                }
+
+                                onLinkActivated: {
+                                    Qt.openUrlExternally(link)
+                                }
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                wrapMode: Text.Wrap
+                                elide: Text.ElideRight
+                                maximumLineCount: 2
+                                text: getVideo()
+                                color: "lightblue"
+                                visible: false //caption visible only in "detailed" state
+
+                            }
+                        }
                     }
 
                     SocialMessageView {
@@ -290,7 +325,7 @@ Item {
                         height: parent.height
                         x: 10
 
-                        visible: picture === ""
+                        visible: ((picture === "") && (videoImage === ""))
                     }
                 }
 
@@ -462,6 +497,18 @@ Item {
             PropertyChanges { target: msgView.scrollBar; visible: (msgView.view.contentHeight > msgView.view.height) }
 
             PropertyChanges { target: cloudRect; z: 9000; height: { var y = cloudRect.height; return y } }
+
+            PropertyChanges { target: videoCaption; visible: true }
+
+            PropertyChanges {
+                target: videoPreview
+                height: {
+                    if (message === "")
+                        return Math.min(sourceSize.height, bodyItem.height - videoCaption.height)
+                    else
+                        return Math.min(sourceSize.height, (bodyItem.height*2)/3 - videoCaption.height)
+                }
+            }
 
             PropertyChanges {
                 target: topLine
