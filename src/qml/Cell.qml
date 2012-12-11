@@ -132,7 +132,7 @@ Item {
 
         Image {
             id: pinIcon
-            x: cellIcon.x + cellIcon.width - cellIcon.width/10
+            x: cellIcon.x + cellIcon.width/2 + constants.iconSize / 2
             y: cellIcon.y - 25
             z: 1
 
