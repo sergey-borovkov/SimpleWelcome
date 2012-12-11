@@ -57,6 +57,24 @@ Item {
             id: cloud
             anchors.fill: parent
             source: getSourceComponent(size)
+
+            function getSourceComponent(count)
+            {
+                if (count === 1)
+                    return "clouds/CloudOne.qml"
+                else if (count === 2)
+                    return "clouds/CloudTwo.qml"
+                else if (count === 3)
+                    return "clouds/CloudThree.qml"
+                else if (count === 4)
+                    return "clouds/CloudFour.qml"
+                else if (count === 5)
+                    return "clouds/CloudFive.qml"
+                else if (count === 6)
+                    return "clouds/CloudSix.qml"
+                return "clouds/CloudSeven.qml"
+            }
+
             onLoaded: {
                 cloud.item.cloudDate = date
                 cloud.item.model = localDayModel.itemsModel(date)
@@ -73,24 +91,5 @@ Item {
                 }
             }
         }
-    }
-
-    function getSourceComponent(count)
-    {
-        if (count === 0)
-            return "clouds/CloudNull.qml"
-        else if (count === 1)
-            return "clouds/CloudOne.qml"
-        else if (count === 2)
-            return "clouds/CloudTwo.qml"
-        else if (count === 3)
-            return "clouds/CloudThree.qml"
-        else if (count === 4)
-            return "clouds/CloudFour.qml"
-        else if (count === 5)
-            return "clouds/CloudFive.qml"
-        else if (count === 6)
-            return "clouds/CloudSix.qml"
-        return "clouds/CloudSeven.qml"
     }
 }
