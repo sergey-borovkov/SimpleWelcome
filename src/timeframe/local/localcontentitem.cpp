@@ -20,10 +20,6 @@ LocalContentItem::LocalContentItem(const QDate &date, QObject *parent) :
         m_model->setFilterRegExp(model->filter());
 }
 
-LocalContentItem::~LocalContentItem()
-{
-}
-
 QString LocalContentItem::id() const
 {
     return "";

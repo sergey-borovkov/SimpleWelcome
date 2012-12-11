@@ -28,7 +28,6 @@ public:
     };
 
     explicit LocalContentItem(const QDate &date, QObject *parent = 0);
-    ~LocalContentItem();
 
     QString id() const;
     virtual QVariant data(int role) const;
