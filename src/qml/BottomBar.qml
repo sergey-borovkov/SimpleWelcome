@@ -69,7 +69,7 @@ Item {
             id: buttonsRow
             anchors {
                 bottom: parent.bottom
-                bottomMargin: 3
+                bottomMargin: 4
             }
             width: parent.width
             height: 27
