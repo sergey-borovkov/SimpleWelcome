@@ -36,7 +36,7 @@ Item {
     Item {
         id: cloudBorder
         width: parent.width + 200
-        height: parent.height / 2 - timeScale.height / 2
+        height: parent.height / 2 - timeScale.height / 2 - 20
         y: (index % 2 === 1) ? parent.height / 2 + timeScale.height / 2 : 0
         x: -100
 

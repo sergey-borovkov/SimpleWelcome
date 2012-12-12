@@ -44,18 +44,18 @@ Item {
 
     Item {
         id: imageWrapper
-        width: cloudRect.width
-        height: cloudRect.height - fileName.font.pixelSize
         anchors.horizontalCenter: parent.horizontalCenter
+        width: cloudRect.width
+        height: cloudRect.height - fileName.font.pixelSize - 10
 
         Image {
             id: image
-            fillMode: Image.PreserveAspectFit
             anchors {
                 horizontalCenter: parent.horizontalCenter
             }
+            y: imageWrapper.y + (imageWrapper.height - height) / 2 - fileName.font.pixelSize + 20
 
-            y: imageWrapper.y + (imageWrapper.height - height)/2 - fileName.font.pixelSize + 20
+            fillMode: Image.PreserveAspectFit
 
             sourceSize {
                 width: parent.width
@@ -68,7 +68,7 @@ Item {
     Label {
         id: fileName
         anchors.horizontalCenter: parent.horizontalCenter
-        y: image.y + image.paintedHeight - 15
+        y: image.y + image.paintedHeight
         width: parent.width
 
         text: url.replace(/^.*[\\\/]/, '')

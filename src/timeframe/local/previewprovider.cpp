@@ -39,7 +39,6 @@ PreviewProvider::PreviewProvider(const QString &type) :
 
 QPixmap PreviewProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
-
     QString path = id;
     const int index = path.indexOf('%');
     quintptr componentId = 0;
