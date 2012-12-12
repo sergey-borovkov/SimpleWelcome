@@ -623,7 +623,7 @@ ListView {
             gridMouseArea.hideTooltip()
             gridsListView.dndStateChanged(true)
 
-            popupFrame.arrowX = iconCoords.x
+            popupFrame.arrowX = iconCoords.x - 7
             popupFrame.y = iconCoords.y - constants.iconSize / 10
             popupFrame.groupTitle = item.caption
 

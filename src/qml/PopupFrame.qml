@@ -43,11 +43,11 @@ FocusScope {
             }
             x: -1
             width: parent.width + 1
-            height: childrenRect.height + 64 - 10
+            height: childrenRect.height + 64 - 10 + (popupFrame.y + childrenRect.height + 64 - 10 + 3 + 20 < tabRoot.height ? 20 : 0)
 
-            color: "#505050"
+            color: Qt.rgba(0.078, 0.125, 0.172, 0.97)
             focus: true
-            border.color: "#A0A0A0"
+            border.color: Qt.rgba(1, 1, 1, 0.31)
 
             GridWithGroup {
                 id: appsGrid
