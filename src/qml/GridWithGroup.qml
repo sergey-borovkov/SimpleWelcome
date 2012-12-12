@@ -78,6 +78,7 @@ Column {
                 left: parent.left
                 leftMargin: 39
             }
+            width: dummyTextInput.width + 2
 
             readOnly: !isPopupGroup
             activeFocusOnPress: isPopupGroup
@@ -112,7 +113,15 @@ Column {
                 event.accepted = false
             }
 
-            /*BorderImage {
+            TextInput {
+                id: dummyTextInput
+
+                visible: false
+                font: parent.font
+                text: parent.text
+            }
+
+            BorderImage {
                 id: textBackground
                 anchors {
                     left: parent.left
@@ -127,12 +136,25 @@ Column {
                     bottom: 6
                 }
                 width: groupLabel.width + 20
-                height: 30
+                height: 40
                 z: -1
 
-                visible: !groupLabel.readOnly
+                visible: !groupLabel.readOnly && groupLabel.activeFocus
                 source: "image://generalicon/asset/search_bar_bg.png"
-            }*/
+            }
+        }
+
+        MouseArea {
+            anchors {
+                left: groupLabel.right
+                top: groupLabel.top
+                bottom: groupLabel.bottom
+            }
+            width: 30
+
+            onClicked: {
+                groupLabel.forceActiveFocus()
+            }
         }
 
         Image {
