@@ -219,11 +219,36 @@ Item {
 
         TopBar {
             id: topBar
+
+            Rectangle {
+                id: topBarDarkener
+                anchors.fill: parent
+
+                color: Qt.rgba(0, 0, 0, 0.6)
+                opacity: tabListView.currentItem && tabListView.currentItem.tab && tabListView.currentItem.tab.isPopupOpened ? 1 : 0
+
+                Behavior on opacity {
+                    NumberAnimation { duration: 200; /*easing.type: Easing.OutQuint*/ }
+                }
+            }
         }
 
         BottomBar {
             id: bottomBar
             width: parent.width
+
+            Rectangle {
+                id: bottomBarDarkener
+                width: parent.width
+                height: parent.height + root.anchors.bottomMargin
+
+                color: Qt.rgba(0, 0, 0, 0.6)
+                opacity: tabListView.currentItem && tabListView.currentItem.tab && tabListView.currentItem.tab.isPopupOpened ? 1 : 0
+
+                Behavior on opacity {
+                    NumberAnimation { duration: 200; /*easing.type: Easing.OutQuint*/ }
+                }
+            }
         }
 
         NumberAnimation on opacity { to: 1.0; duration: 500 }

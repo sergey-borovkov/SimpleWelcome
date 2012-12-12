@@ -59,9 +59,9 @@ Column {
             readOnly: !isPopupGroup
             activeFocusOnPress: isPopupGroup
             font {
-                family: "Bitstream Vera Sans"
-                bold: true
-                pixelSize: 14//18
+                family: isPopupGroup ? "Arial, Helvetica, Nimbus Sans L, Liberation Sans, FreeSans, Sans-serif" : "Bitstream Vera Sans"
+                weight: isPopupGroup ? Font.DemiBold : Font.Bold
+                pixelSize: isPopupGroup ? 23 : 14
             }
             color: "#eee"
 
@@ -89,7 +89,7 @@ Column {
                 event.accepted = false
             }
 
-            BorderImage {
+            /*BorderImage {
                 id: textBackground
                 anchors {
                     left: parent.left
@@ -109,7 +109,20 @@ Column {
 
                 visible: !groupLabel.readOnly
                 source: "image://generalicon/asset/search_bar_bg.png"
+            }*/
+        }
+
+        Image {
+            id: pen
+            anchors {
+                left: groupLabel.right
+                leftMargin: 15
+                verticalCenter: groupLabel.verticalCenter
+                verticalCenterOffset: 2
             }
+
+            visible: isPopupGroup
+            source: "image://generalicon/asset/pen.png"
         }
 
         Image {
@@ -124,6 +137,7 @@ Column {
             height: 3
             z: 1
 
+            visible: !isPopupGroup
             source: "image://generalicon/asset/group_line.png"
         }
 
