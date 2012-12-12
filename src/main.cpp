@@ -3,12 +3,11 @@
  * License: GPLv3
  *
  * Authors:
+ * Alexander Skakov <alexander.skakov@osinit.ru>
  * Alexey Yermakov <alexey.yermakov@rosalab.ru>
- *
- * Based on plasma-windowed by:
- * 2006-2008 Aaron Seigo <aseigo@kde.org>
- * 2009 Marco Martin <notmart@gmail.com>
- *
+ * Sergey Borovkov <sergey.borovkov@osinit.ru>
+ * Evgeniy Auzhin <evgeniy.augin@osinit.ru>
+ * Dmitry Ashkadov <dmitry.ashkadov@rosalab.ru>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as
@@ -40,8 +39,6 @@
 static const char description[] = I18N_NOOP("ROSA Desktop Application Launcher");
 static const char version[] = "2.0";
 
-extern "C"
-//KDE_EXPORT int kdemain(int argc, char **argv)
 int main(int argc, char *argv[])
 {
     KAboutData aboutData(SW_APPLICATION_NAME, 0, ki18n("ROSA Desktop Application Launcher"),
@@ -78,9 +75,6 @@ int main(int argc, char *argv[])
     }
 
     // Try to setup debugger if special Qt option is passed
-
-    // TODO: uncomment in the future
-
     //KDeclarative::setupQmlJsDebugger();
 
     SWApp *app = SWApp::self();

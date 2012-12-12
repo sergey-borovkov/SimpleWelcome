@@ -3,6 +3,7 @@
  * License: GPLv3
  *
  * Authors:
+ * Alexander Skakov <alexander.skakov@osinit.ru>
  * Alexey Yermakov <alexey.yermakov@rosalab.ru>
  *
  *

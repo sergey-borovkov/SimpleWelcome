@@ -1,8 +1,10 @@
 /*
- * Copyright (c) ROSA Laboratory 2011
+ * Copyright (c) ROSA Laboratory 2011-2012
  * License: GPLv3
  *
  * Authors:
+ * Alexander Skakov <alexander.skakov@osinit.ru>
+ * Dmitry Ashkadov <dmitry.ashkadov@rosalab.ru>
  * Alexey Yermakov <alexey.yermakov@rosalab.ru>
  *
  *

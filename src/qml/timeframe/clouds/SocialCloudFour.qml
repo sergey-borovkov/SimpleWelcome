@@ -2,7 +2,7 @@
  * Copyright (c) 2012 ROSA  <support@rosalab.ru>
  * Authors:
  *  Evgeniy Auzhin <evgeniy.augin@osinit.ru>
- *  Julia Mineeva <julia.mineeca@osinit.ru>
+ *  Julia Mineeva <julia.mineeva@osinit.ru>
  * License: GPLv3
  *
  *   This program is free software; you can redistribute it and/or modify

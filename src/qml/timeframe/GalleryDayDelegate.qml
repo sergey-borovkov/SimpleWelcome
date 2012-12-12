@@ -3,7 +3,7 @@
  * Authors:
  *  Sergey Borovkov <sergey.borovkov@osinit.ru>
  *  Evgeniy Auzhin <evgeniy.augin@osinit.ru>
- *  Julia Mineeva <julia.mineeca@osinit.ru>
+ *  Julia Mineeva <julia.mineeva@osinit.ru>
  * License: GPLv3
  *
  *   This program is free software; you can redistribute it and/or modify

@@ -1,11 +1,14 @@
 /*
- * Copyright (c) ROSA Laboratory 2011
+ * Copyright (c) ROSA Laboratory 2011-2012
  * License: GPLv3
  *
  * Authors:
- * Alexey Yermakov <alexey.yermakov@rosalab.ru>
  * Alexander Skakov <alexander.skakov@osinit.ru>
+ * Alexey Yermakov <alexey.yermakov@rosalab.ru>
  * Sergey Borovkov <sergey.borovkov@osinit.ru>
+ * Evgeniy Auzhin <evgeniy.augin@osinit.ru>
+ * Julia Mineeva <julia.mineeva@osinit.ru>
+ * Dmitry Ashkadov <dmitry.ashkadov@rosalab.ru>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as

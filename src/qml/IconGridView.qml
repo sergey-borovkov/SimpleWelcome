@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) ROSA Laboratory 2012
+ * License: GPLv3
+ *
+ * Authors:
+ * Alexander Skakov <alexander.skakov@osinit.ru>
+ * Ural Mullabaev <ural.mullabaev@rosalab.ru>
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as
+ *   published by the Free Software Foundation; either version 3,
+ *   or (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details
+ *
+ *   You should have received a copy of the GNU General Public
+ *   License along with this program; if not, write to the
+ *   Free Software Foundation, Inc.,
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 import QtQuick 1.1
 
 GridView {
@@ -233,80 +257,80 @@ GridView {
         switch (key) {
         case Qt.Key_Left:
             if (currentIndex == 0) {
-		if (prevGridGroup === nextGridGroup) {
-		    if (gridsListView.currentIndex != 0) {
-			gridsListView.decrementCurrentIndex()
-			gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - 1
-		    }
-		    break
-		}
-        	else {
-        	    if (prevGridGroup) {
-            		newCurrentItem = selectOtherGrid(prevGridGroup.gridView, prevGridGroup.count - 1)
-            	    }
-            	}
+                if (prevGridGroup === nextGridGroup) {
+                    if (gridsListView.currentIndex != 0) {
+                        gridsListView.decrementCurrentIndex()
+                        gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - 1
+                    }
+                    break
+                }
+                else {
+                    if (prevGridGroup) {
+                        newCurrentItem = selectOtherGrid(prevGridGroup.gridView, prevGridGroup.count - 1)
+                    }
+                }
             }
             if (!interactive)
                 moveCurrentIndexLeft()
             break
         case Qt.Key_Right:
             if (currentIndex == count - 1) {
-		if (prevGridGroup === nextGridGroup) {
-		    if (gridsListView.currentIndex != gridsListView.count - 1) {
-			gridsListView.incrementCurrentIndex()
-			gridsListView.activeGridView.currentIndex = 0
-		    }
-		    break
-		}
-        	else {
-        	    if (nextGridGroup) {
-            		newCurrentItem = selectOtherGrid(nextGridGroup.gridView, 0)
-            	    }
-            	}
+                if (prevGridGroup === nextGridGroup) {
+                    if (gridsListView.currentIndex != gridsListView.count - 1) {
+                        gridsListView.incrementCurrentIndex()
+                        gridsListView.activeGridView.currentIndex = 0
+                    }
+                    break
+                }
+                else {
+                    if (nextGridGroup) {
+                        newCurrentItem = selectOtherGrid(nextGridGroup.gridView, 0)
+                    }
+                }
             }
             if (!interactive)
                 moveCurrentIndexRight()
             break
         case Qt.Key_Up:
             if (currentIndex < columns) {
-		if (prevGridGroup === nextGridGroup) {
-		    if (gridsListView.currentIndex != 0) {
-			gridsListView.decrementCurrentIndex()
-			gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - columns + currentIndex % columns
-		    }
-		    break
-		}
-        	else {
-        	    if (prevGridGroup) {
-        		var roundCount = Math.floor((prevGridGroup.count) / columns) * columns
-        		var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGridGroup.count - roundCount)))
+                if (prevGridGroup === nextGridGroup) {
+                    if (gridsListView.currentIndex != 0) {
+                        gridsListView.decrementCurrentIndex()
+                        gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - columns + currentIndex % columns
+                    }
+                    break
+                }
+                else {
+                    if (prevGridGroup) {
+                        var roundCount = Math.floor((prevGridGroup.count) / columns) * columns
+                        var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGridGroup.count - roundCount)))
 
-        		newCurrentItem = selectOtherGrid(prevGridGroup.gridView, newCur)
-            	    }
-            	}
+                        newCurrentItem = selectOtherGrid(prevGridGroup.gridView, newCur)
+                    }
+                }
             }
             if (!interactive)
                 moveCurrentIndexUp()
             break
         case Qt.Key_Down:
             if (currentIndex >= count - columns) {
-		if (prevGridGroup === nextGridGroup) {
-		    if (gridsListView.currentIndex != gridsListView.count - 1) {
-			gridsListView.incrementCurrentIndex()
-			if (gridsListView.activeGridView.currentIndex < currentIndex % columns) {
-			    gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count -1
-			}
-			else {
-			    gridsListView.activeGridView.currentIndex = currentIndex % columns
-			}
-		    }
-		    break
-		}
-        	else {
-        	    if (nextGridGroup) {
-        		newCurrentItem = selectOtherGrid(nextGridGroup.gridView, currentIndex % columns)
-            	    }
-            	}
+                if (prevGridGroup === nextGridGroup) {
+                    if (gridsListView.currentIndex != gridsListView.count - 1) {
+                        gridsListView.incrementCurrentIndex()
+                        if (gridsListView.activeGridView.currentIndex < currentIndex % columns) {
+                            gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count -1
+                        }
+                        else {
+                            gridsListView.activeGridView.currentIndex = currentIndex % columns
+                        }
+                    }
+                    break
+                }
+                else {
+                    if (nextGridGroup) {
+                        newCurrentItem = selectOtherGrid(nextGridGroup.gridView, currentIndex % columns)
+                    }
+                }
             }
             if (!interactive)
                 moveCurrentIndexDown()
@@ -334,7 +358,7 @@ GridView {
         }
 
         if (key == Qt.Key_Left || key == Qt.Key_Right ||
-            key == Qt.Key_Up || key == Qt.Key_Down)
+                key == Qt.Key_Up || key == Qt.Key_Down)
             selectionChangedByKeyboard(newCurrentItem == null ? currentItem : newCurrentItem)
     }
 
