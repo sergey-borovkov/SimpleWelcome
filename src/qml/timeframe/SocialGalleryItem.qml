@@ -220,33 +220,69 @@ Item{
 
                 }
 
-                Text {
+                Item {
                     id: videoItem
+
                     anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width - 20
+                    width: childrenRect.width
+                    height: childrenRect.height
 
-                    wrapMode: Text.Wrap
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    text: getVideo()
-                    color: "lightblue"
-                    visible: {
-                        var vis = (typeof video !== "undefined")
-                        if (!vis)
-                            height = 0;
-                        return vis
-                    }
+                    Column {
 
-                    function getVideo()
-                    {
-                        if(typeof videoUrl === "undefined")
-                            return ""
-                        else
-                            return i18n("Video: ") + " <a href=\"" + videoUrl + "\"><font color=\"#84c0ea\">" + video + "</font></a>"
-                    }
+                        Image {
+                            id: videoPreview
 
-                    onLinkActivated: {
-                        Qt.openUrlExternally(link)
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            width: Math.min(200 - 20, sourceSize.width)
+                            height: Math.min(150, sourceSize.height)
+
+                            source: (videoImage === undefined)? "" : videoImage
+                            fillMode: Image.PreserveAspectFit
+
+                            Image { //Overlay play icon
+                                id: playIcon
+
+                                anchors.centerIn: parent
+                                source: "images/play-empty.png"
+                                visible: videoPreview.status === Image.Ready
+                            }
+                            MouseArea{
+                                id: videoPreviewMArea
+                                anchors.fill: parent
+                                enabled: false
+                                onClicked: Qt.openUrlExternally(videoUrl)
+                            }
+                        }
+                        Text {
+
+                            id: videoCaption
+                            width: galleryItem.width - 20
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            function getVideo()
+                            {
+                                if(typeof videoUrl === "undefined")
+                                    return ""
+                                else
+                                    return " <a href=\""
+                                            + videoUrl + "\"><font color=\"#84c0ea\">"
+                                            + video + "</font></a>"
+                            }
+
+                            onLinkActivated: {
+                                Qt.openUrlExternally(link)
+                            }
+
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            wrapMode: Text.Wrap
+                            elide: Text.ElideRight
+                            maximumLineCount: 2
+                            text: getVideo()
+                            color: "lightblue"
+                            visible: false //caption visible only in "detailed" state
+
+                        }
                     }
                 }
 
@@ -477,6 +513,22 @@ Item{
             PropertyChanges { target: msgScrollBar; visible: (msgView.contentHeight > msgView.height) }
 
             PropertyChanges { target: msg; horizontalAlignment: (msgView.contentHeight > msgView.height) ? Text.AlignLeft : Text.AlignHCenter }
+
+            PropertyChanges { target: videoCaption; visible: true }
+
+            PropertyChanges { target: videoPreviewMArea; enabled: true }
+
+            PropertyChanges {
+                target: videoPreview
+                width: Math.min(galleryItem.width - 20, sourceSize.width)
+                height: {
+                    var h = galleryItem.height - topBar.height - bottomBar.height - fromItem.height
+                    if (message === "")
+                        return Math.min(sourceSize.height, h - videoCaption.height)
+                    else
+                        return Math.min(sourceSize.height, 150)
+                }
+            }
 
         },
         State {

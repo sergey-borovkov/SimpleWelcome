@@ -248,6 +248,11 @@ QString SocialDayFilterModel::videoUrl(int row) const
     return data(index(row, 0), SocialItem::VideoUrl).toString();
 }
 
+QString SocialDayFilterModel::videoImage(int row) const
+{
+    return data(index(row, 0), SocialItem::VideoImage).toString();
+}
+
 QString SocialDayFilterModel::fromName(int row) const
 {
     return data(index(row, 0), SocialItem::FromName).toString();

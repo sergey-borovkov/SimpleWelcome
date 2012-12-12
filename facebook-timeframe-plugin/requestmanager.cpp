@@ -317,6 +317,7 @@ void RequestManager::fillFromMap(SocialItem *item, const QVariantMap &map)
             else
                 item->setData(SocialItem::Video, src);
             item->setData(SocialItem::VideoImage, QUrl::fromPercentEncoding(map.value(QLatin1String("picture")).toByteArray()));
+            item->setData(SocialItem::ImageUrl, ""); //Set null to common image
         }
     }
 
