@@ -365,6 +365,11 @@ Item {
                     timeScaleModel.setFilter(getMenuFilterText(selectedText))
                 }
             }
+            //disable dropFilterBox while searching
+            MouseArea {
+                anchors.fill: parent
+                enabled: timeFrameTab.state === "timeLineSearch"
+            }
         }
 
 
