@@ -241,10 +241,9 @@ void DataSource_Search::newSearchMatches(const QList<Plasma::QueryMatch> &newMat
 void DataSource_Search::launchSearch(const QString &text)
 {
     matches.clear();
+    m_runnerManager->reset();
 
     if (text.size() > 0)
         m_runnerManager->launchQuery(text);
-    else
-        m_runnerManager->reset();
 }
 
