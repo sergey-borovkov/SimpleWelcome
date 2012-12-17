@@ -45,6 +45,7 @@ MouseArea {
     property int gridMouseXWas // used when dragging icon between tabs
     property int hoveredId: -1
     property variant hoveredItem
+    property variant hoveredPinItem
     property bool pinHovered: false
     property bool broomHovered: false
 
@@ -98,12 +99,17 @@ MouseArea {
         grid = cachedGrid
     }
 
-    function getItemUnderCursor(isForceRecheck) {
+    function getItemUnderCursor(isForceRecheck, mouseXOverride, mouseYOverride) {
         if (grid === undefined)
             return -1
 
+        if (mouseXOverride === undefined)
+            mouseXOverride = gridMouseX
+        if (mouseYOverride === undefined)
+            mouseYOverride = gridMouseY
+
         var wasCurrentIndex = grid.currentIndex
-        var mouseXReal = gridMouseX + grid.contentX, mouseYReal = gridMouseY + grid.contentY
+        var mouseXReal = mouseXOverride + grid.contentX, mouseYReal = mouseYOverride + grid.contentY
         var wasContentX = grid.contentX, wasContentY = grid.contentY
         var indexUnderMouse = grid.indexAt(mouseXReal, mouseYReal)
         var result = new Object
@@ -239,9 +245,10 @@ MouseArea {
     }
 
     function isHoveredOnPin() {
-        return hoveredItem && hoveredId !== -1 &&
-                gridMouseX > hoveredItem.x + hoveredItem.width / 2 + constants.iconSize / 2 &&
-                gridMouseY < hoveredItem.y + constants.iconSize / 5
+        return hoveredPinItem && hoveredId !== -1 &&
+               gridMouseX > hoveredPinItem.x + hoveredPinItem.width - hoveredPinItem.pinIcon.width - hoveredPinItem.pinIcon.anchors.rightMargin &&
+               gridMouseX < hoveredPinItem.x + hoveredPinItem.width - hoveredPinItem.pinIcon.anchors.rightMargin &&
+               gridMouseY < hoveredPinItem.y + hoveredPinItem.pinIcon.height + hoveredPinItem.pinIcon.anchors.topMargin
     }
 
     function isHoveredOnBroom() {
@@ -285,7 +292,7 @@ MouseArea {
 
             // Displaying overlay pin icon
             if (grid.draggable && !grid.stackable && !grid.isPopupGroup) { // Apply this only to Recent Apps
-                var realCurrentIndex = getItemUnderCursor(true).index
+                var realCurrentIndex = getItemUnderCursor(true, gridMouseX, gridMouseY + 9).index
 
                 if (realCurrentIndex === -1) {
                     hoveredId = -1
@@ -570,7 +577,7 @@ MouseArea {
         if (!grid.moving) {
             var indexClicked = getItemUnderCursor(true).index
             if (pinHovered && (hoveredId !== -1 || grid.model.get(indexClicked).pinned === true)) {// Clicked on pin
-                grid.model.itemPinnedToggle(indexClicked)
+                grid.model.itemPinnedToggle(grid.currentIndex)
             }
             else // Clicked on icon
                 grid.model.itemClicked(indexClicked)
@@ -737,14 +744,13 @@ MouseArea {
                 return
 
             if (!gridMouseArea.grid.moving && gridMouseArea.dndSrcId === -1) {
-                var newCurrentPair = gridMouseArea.getItemUnderCursor(true)
-                var newCurrentItem = newCurrentPair.item
-                var newCurrentIndex = newCurrentPair.index
-                if (newCurrentIndex !== -1) {
+                var newCurrentItem = gridMouseArea.grid.currentItem
+                if (newCurrentItem) {
+                    var newCurrentIndex = gridMouseArea.grid.currentIndex
                     var hoveredId = gridMouseArea.grid.model.get(newCurrentIndex).id
                     if (hoveredId === aimingAt) {
                         gridMouseArea.hoveredId = hoveredId
-                        gridMouseArea.hoveredItem = newCurrentItem
+                        gridMouseArea.hoveredPinItem = newCurrentItem
                         if (gridMouseArea.isHoveredOnPin())
                             gridMouseArea.pinHovered = true
                     }

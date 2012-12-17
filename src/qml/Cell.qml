@@ -28,6 +28,7 @@ Item {
     id: cell
 
     property int cellWidth: constants.cellWidth
+    property alias pinIcon: pinIcon
 
     width: cellWidth
     height: wrapper.height
@@ -155,8 +156,13 @@ Item {
 
         Image {
             id: pinIcon
-            x: cellIcon.x + cellIcon.width/2 + constants.iconSize / 2
-            y: cellIcon.y - 25
+            anchors {
+                right: innerWrapper.right
+                top: innerWrapper.top
+                topMargin: -9
+                rightMargin: 6
+            }
+
             z: 1
 
             opacity: pinned !== undefined && pinned || gridMouseArea.grid === grid && gridMouseArea.hoveredId === id ? 1 : 0
