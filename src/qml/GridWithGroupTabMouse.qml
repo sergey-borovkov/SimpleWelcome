@@ -337,7 +337,7 @@ MouseArea {
         else if (dndSrcId != -1)
         {
             // activate system DnD if icons isn't group
-            if (grid.enabledSystemDnD && gridMouseY > height &&
+            if (grid.enabledSystemDnD && (mouseY < -15 || mouseY > height + 30 || mouseX > width || mouseX < 0) &&
                     grid.model.get(dndDest).stack === undefined) {
 
                 var url = grid.dataSource.itemUrlDnd(dndSrcId, grid.model.get(dndSrc).group)
@@ -368,6 +368,8 @@ MouseArea {
                     dndSrcId = -1
                     dndSrc = -1
                     dndDest = -1
+
+                    tabsSwitchingTimer.stop()
                     // start system DnD
                     mainWindow.close()
                     mainWindow.activateDragAndDrop(url, imagePath, constants.iconSize)
