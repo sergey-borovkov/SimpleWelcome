@@ -269,9 +269,16 @@ Item {
             Transition {
                 from: ""
                 to: "cellInDrag"
-                reversible: true
                 ParentAnimation {
                     via: tabRoot
+                    NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad; duration: 100 }
+                }
+            },
+            Transition {
+                from: "cellInDrag"
+                to: ""
+                ParentAnimation {
+                    via: grid
                     NumberAnimation { properties: "x,y"; easing.type: Easing.InOutQuad; duration: 100 }
                 }
             },
