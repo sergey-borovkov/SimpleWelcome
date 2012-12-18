@@ -184,7 +184,7 @@ Item {
             opacity: popupFrame.state == "OPEN"
 
             Behavior on opacity {
-                NumberAnimation { duration: 200; /*easing.type: Easing.OutQuint*/ }
+                NumberAnimation { duration: 200; }
             }
         }
 

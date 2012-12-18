@@ -247,13 +247,16 @@ Item {
 
             Rectangle {
                 id: topBarDarkener
-                anchors.fill: parent
+                anchors {
+                    fill: parent
+                    topMargin: -root.anchors.topMargin
+                }
 
                 color: Qt.rgba(0, 0, 0, 0.6)
                 opacity: tabListView.currentItem && tabListView.currentItem.tab && tabListView.currentItem.tab.isPopupOpened ? 1 : 0
 
                 Behavior on opacity {
-                    NumberAnimation { duration: 200; /*easing.type: Easing.OutQuint*/ }
+                    NumberAnimation { duration: 200; }
                 }
             }
         }
@@ -264,14 +267,16 @@ Item {
 
             Rectangle {
                 id: bottomBarDarkener
-                width: parent.width
-                height: parent.height + root.anchors.bottomMargin
+                anchors {
+                    fill: parent
+                    bottomMargin: -root.anchors.bottomMargin
+                }
 
                 color: Qt.rgba(0, 0, 0, 0.6)
                 opacity: tabListView.currentItem && tabListView.currentItem.tab && tabListView.currentItem.tab.isPopupOpened ? 1 : 0
 
                 Behavior on opacity {
-                    NumberAnimation { duration: 200; /*easing.type: Easing.OutQuint*/ }
+                    NumberAnimation { duration: 200; }
                 }
             }
         }
@@ -283,4 +288,38 @@ Item {
             bottomBar.wheelScroll.connect(tabListView.onWheelScroll)
         }
     } // root
+
+    Rectangle {
+        id: leftSpaceDarkener
+        anchors {
+            left: parent.left
+            top: parent.top
+            right: root.left
+            bottom: parent.bottom
+        }
+
+        color: Qt.rgba(0, 0, 0, 0.6)
+        opacity: tabListView.currentItem && tabListView.currentItem.tab && tabListView.currentItem.tab.isPopupOpened ? 1 : 0
+
+        Behavior on opacity {
+            NumberAnimation { duration: 200; }
+        }
+    }
+
+    Rectangle {
+        id: rightSpaceDarkener
+        anchors {
+            left: root.right
+            top: parent.top
+            right: parent.right
+            bottom: parent.bottom
+        }
+
+        color: Qt.rgba(0, 0, 0, 0.6)
+        opacity: tabListView.currentItem && tabListView.currentItem.tab && tabListView.currentItem.tab.isPopupOpened ? 1 : 0
+
+        Behavior on opacity {
+            NumberAnimation { duration: 200; }
+        }
+    }
 }
