@@ -95,7 +95,7 @@ Item {
             else
                 tooltip.content = ""
 
-            tooltip.x = mapFromItem(item, item.width/2, 0).x - tooltip.width / 2
+            tooltip.x = Math.max(1, Math.min(parent.width - tooltip.width - 1, mapFromItem(item, item.width/2, 0).x - tooltip.width / 2))
             tooltip.y = mapFromItem(item, 0, item.height).y + 4 + 3
             if (tooltip.y + tooltip.height > tabWrapper.height)
                 tooltip.y = mapFromItem(item, 0, 0).y - tooltip.height - 5 + 6
