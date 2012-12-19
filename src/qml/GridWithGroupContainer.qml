@@ -33,6 +33,8 @@ Column {
 
     property variant defaultGroupData
     property variant activeGridGroup
+    property variant firstGridGroup
+    property variant lastGridGroup
     property variant prevGridGroup: activeGridGroup.prevGridGroup
     property variant nextGridGroup: activeGridGroup.nextGridGroup
     property int gridContainersSpacing: constants.gridWithGroupsSpacing
@@ -80,6 +82,9 @@ Column {
 
         activeGridGroup.gridCurrentItemChanged.connect(gridCurrentItemChanged)
         activeGridGroup.gridMyFocusChanged.connect(gridMyFocusChanged)
+        if (prevGridGroup === undefined)
+            firstGridGroup = activeGridGroup
+        lastGridGroup = activeGridGroup
     }
 
     function gridMyFocusChanged(index) {
@@ -88,8 +93,10 @@ Column {
 
         for (var i = 0; i < children.length; i++)
             if ('gridView' in children[i]) {
-                if (children[i].containerIndex === index)
+                if (children[i].containerIndex === index) {
                     children[i].myActiveFocus = true
+                    activeGridGroup = children[i]
+                }
                 else
                     children[i].myActiveFocus = false
             }

@@ -256,84 +256,111 @@ GridView {
         var newCurrentItem
         switch (key) {
         case Qt.Key_Left:
-            if (currentIndex == 0) {
-                if (prevGridGroup === nextGridGroup) {
-                    if (gridsListView.currentIndex != 0) {
+            if (currentIndex === 0) { // Need to select other grid when we're at first item
+                if ('gridContainersSpacing' in groupRoot.parent && prevGridGroup === lastGridGroup && gridsListView.count > 1) { // Need to switch to other tab
+                    if (gridsListView.currentIndex != 0) // There's still some tabs before our current, switching to them
                         gridsListView.decrementCurrentIndex()
-                        gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - 1
-                    }
-                    break
+                    else // There's no tabs before our current, looping around
+                        gridsListView.currentIndex = gridsListView.count - 1
+
+                    gridsListView.currentItem.lastGridGroup.gridView.forceMyFocus()
+                    gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - 1
                 }
-                else {
-                    if (prevGridGroup) {
-                        newCurrentItem = selectOtherGrid(prevGridGroup.gridView, prevGridGroup.count - 1)
+                else { // No need to switch to other tab, selecting previous one from available in current container
+                    if (prevGridGroup === undefined || prevGridGroup === nextGridGroup && nextGridGroup === groupRoot) { // In case there's only one grid on page or we're in popup grid
+                        currentIndex = count - 1
+                        break
                     }
+                    else if (prevGridGroup) // Selecting previous grid in container
+                        newCurrentItem = selectOtherGrid(prevGridGroup.gridView, prevGridGroup.count - 1)
                 }
             }
-            if (!interactive)
-                moveCurrentIndexLeft()
+
+            moveCurrentIndexLeft()
             break
         case Qt.Key_Right:
-            if (currentIndex == count - 1) {
-                if (prevGridGroup === nextGridGroup) {
-                    if (gridsListView.currentIndex != gridsListView.count - 1) {
+            if (currentIndex === count - 1) { // Need to select other grid when we're at last item
+                if ('gridContainersSpacing' in groupRoot.parent && nextGridGroup === firstGridGroup && gridsListView.count > 1) {
+                    if (gridsListView.currentIndex != gridsListView.count - 1)
                         gridsListView.incrementCurrentIndex()
-                        gridsListView.activeGridView.currentIndex = 0
-                    }
-                    break
+                    else
+                        gridsListView.currentIndex = 0
+
+                    gridsListView.currentItem.firstGridGroup.gridView.forceMyFocus()
+                    gridsListView.activeGridView.currentIndex = 0
                 }
                 else {
-                    if (nextGridGroup) {
-                        newCurrentItem = selectOtherGrid(nextGridGroup.gridView, 0)
+                    if (nextGridGroup === undefined || prevGridGroup === nextGridGroup && nextGridGroup === groupRoot) { // In case there's only one grid on page or we're in popup grid
+                        currentIndex = 0
+                        break
                     }
+                    else if (nextGridGroup)
+                        newCurrentItem = selectOtherGrid(nextGridGroup.gridView, 0)
                 }
             }
-            if (!interactive)
-                moveCurrentIndexRight()
+
+            moveCurrentIndexRight()
             break
         case Qt.Key_Up:
-            if (currentIndex < columns) {
-                if (prevGridGroup === nextGridGroup) {
-                    if (gridsListView.currentIndex != 0) {
+            if (currentIndex < columns) { // Need to select other grid when we're at first row
+
+                var getPosInPrevGrid = function(prevGrid) {
+                    var roundCount = Math.floor((prevGrid.count) / columns) * columns
+                    var floor = prevGrid.count - roundCount ? Math.floor((currentIndex % columns) / Math.max(0.1, prevGrid.count - roundCount)) : 1
+                    var newCurrent = (currentIndex % columns) + roundCount - columns * Math.min(1, floor)
+                    return newCurrent < 0 ? prevGrid.count - 1 : newCurrent
+                }
+
+                if ('gridContainersSpacing' in groupRoot.parent && prevGridGroup === lastGridGroup && gridsListView.count > 1) {
+                    if (gridsListView.currentIndex != 0)
                         gridsListView.decrementCurrentIndex()
-                        gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count - columns + currentIndex % columns
-                    }
-                    break
+                    else
+                        gridsListView.currentIndex = gridsListView.count - 1
+
+                    gridsListView.currentItem.lastGridGroup.gridView.forceMyFocus()
+                    gridsListView.activeGridView.currentIndex = getPosInPrevGrid(gridsListView.activeGridView)
                 }
                 else {
-                    if (prevGridGroup) {
-                        var roundCount = Math.floor((prevGridGroup.count) / columns) * columns
-                        var newCur = (currentIndex % columns) + roundCount - columns * Math.min(1, Math.floor((currentIndex % columns) / (prevGridGroup.count - roundCount)))
-
-                        newCurrentItem = selectOtherGrid(prevGridGroup.gridView, newCur)
+                    if (prevGridGroup === undefined || prevGridGroup === nextGridGroup && nextGridGroup === groupRoot) {
+                        currentIndex = getPosInPrevGrid(grid)
+                        break
                     }
+                    else if (prevGridGroup)
+                        newCurrentItem = selectOtherGrid(prevGridGroup.gridView, getPosInPrevGrid(prevGridGroup.gridView))
                 }
             }
-            if (!interactive)
-                moveCurrentIndexUp()
+
+            moveCurrentIndexUp()
             break
         case Qt.Key_Down:
-            if (currentIndex >= count - columns) {
-                if (prevGridGroup === nextGridGroup) {
-                    if (gridsListView.currentIndex != gridsListView.count - 1) {
+            if (currentIndex >= count - columns) { // Need to select other grid when we're at last row
+                var getPosInNextGrid = function(nextGrid) {
+                    var newCurrent = currentIndex % columns
+                    console.log(newCurrent)
+                    return Math.min(nextGrid.count - 1, newCurrent)
+                }
+
+                if ('gridContainersSpacing' in groupRoot.parent && nextGridGroup === firstGridGroup && gridsListView.count > 1) {
+                    if (gridsListView.currentIndex != gridsListView.count - 1)
                         gridsListView.incrementCurrentIndex()
-                        if (gridsListView.activeGridView.currentIndex < currentIndex % columns) {
-                            gridsListView.activeGridView.currentIndex = gridsListView.activeGridView.count -1
-                        }
-                        else {
-                            gridsListView.activeGridView.currentIndex = currentIndex % columns
-                        }
-                    }
-                    break
+                    else
+                        gridsListView.currentIndex = 0
+
+                    gridsListView.currentItem.firstGridGroup.gridView.forceMyFocus()
+                    gridsListView.activeGridView.currentIndex = getPosInNextGrid(gridsListView.activeGridView)
                 }
                 else {
-                    if (nextGridGroup) {
-                        newCurrentItem = selectOtherGrid(nextGridGroup.gridView, currentIndex % columns)
+                    if (nextGridGroup === undefined || prevGridGroup === nextGridGroup && nextGridGroup === groupRoot) { // In case there's only one grid on page or we're in popup grid
+                        currentIndex = getPosInNextGrid(grid)
+                        break
+                    }
+                    else if (nextGridGroup) {
+                        newCurrentItem = selectOtherGrid(nextGridGroup.gridView, getPosInNextGrid(nextGridGroup.gridView))
                     }
                 }
             }
-            if (!interactive)
-                moveCurrentIndexDown()
+
+            moveCurrentIndexDown()
             break
 
         case Qt.Key_Return:
