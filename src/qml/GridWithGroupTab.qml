@@ -158,10 +158,16 @@ Item {
 
                     MouseArea {
                         id: mouse
+                        anchors.centerIn: parent
                         width: 26
                         height: 30
-                        anchors.centerIn: parent
-                        onClicked: gridsListView.currentIndex = index
+
+                        onClicked: {
+                            if (popupFrame.state === "CLOSED")
+                                gridsListView.currentIndex = index
+                            else
+                                closePopup()
+                        }
                     }
 
                     Behavior on color {
