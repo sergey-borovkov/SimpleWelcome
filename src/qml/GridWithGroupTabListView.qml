@@ -84,6 +84,7 @@ ListView {
                                          lastPage.children[child].count === lastPage.children[child].maxCount && oneGridOverflowHint === true)) {
                     //console.log("OVERFLOW. ")
                     insertGrid(lastPage.defaultGroupData, true)
+                    gridsListView.currentItem.gridsConnectionChanged()
                     break
                 }
             }

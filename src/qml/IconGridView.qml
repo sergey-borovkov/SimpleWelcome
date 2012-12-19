@@ -336,7 +336,6 @@ GridView {
             if (currentIndex >= count - columns) { // Need to select other grid when we're at last row
                 var getPosInNextGrid = function(nextGrid) {
                     var newCurrent = currentIndex % columns
-                    console.log(newCurrent)
                     return Math.min(nextGrid.count - 1, newCurrent)
                 }
 
