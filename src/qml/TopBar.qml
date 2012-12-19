@@ -119,23 +119,29 @@ FocusScope {
             id: searchInputFilter
 
             Keys.onPressed: {
-                if (event.key == Qt.Key_Left ||
-                    event.key == Qt.Key_Right ||
-                    event.key == Qt.Key_Up ||
-                    event.key == Qt.Key_Down ||
-                    event.key == Qt.Key_Return ||
-                    event.key == Qt.Key_Enter ||
-                    event.key == Qt.Key_Tab)
+                if (event.key === Qt.Key_Left ||
+                    event.key === Qt.Key_Right ||
+                    event.key === Qt.Key_Up ||
+                    event.key === Qt.Key_Down ||
+                    event.key === Qt.Key_Return ||
+                    event.key === Qt.Key_Enter ||
+                    event.key === Qt.Key_Tab ||
+                    event.key === Qt.Key_PageUp ||
+                    event.key === Qt.Key_PageDown)
                 {
                     event.accepted = true
                     tabListView.processKeyboard(event.key)
                 }
                 else if (!searchInput.text.length) {
-                    if (event.key == Qt.Key_Space) {
+                    if (event.key === Qt.Key_Home || event.key === Qt.Key_End) {
+                        event.accepted = true
+                        tabListView.processKeyboard(event.key)
+                    }
+                    else if (event.key === Qt.Key_Space) {
                         event.accepted = true
                         tabListView.currentTabIndexChanged((tabListView.currentIndex + tabListView.count) % tabListView.count + 1)
                     }
-                    else if (event.key == Qt.Key_Backspace) {
+                    else if (event.key === Qt.Key_Backspace) {
                         event.accepted = true
                         tabListView.processKeyboard(event.key)
                     }

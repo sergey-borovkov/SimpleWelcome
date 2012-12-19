@@ -355,11 +355,27 @@ GridView {
             if (isPopupGroup)
                 groupLabel.forceActiveFocus()
             break
+
+        case Qt.Key_PageUp:
+            gridsListView.decrementCurrentIndex()
+            break
+
+        case Qt.Key_PageDown:
+            gridsListView.incrementCurrentIndex()
+            break
+
+        case Qt.Key_Home:
+            gridsListView.currentIndex = 0
+            break
+
+        case Qt.Key_End:
+            gridsListView.currentIndex = gridsListView.count - 1
+            break
         }
 
-        if (key == Qt.Key_Left || key == Qt.Key_Right ||
-                key == Qt.Key_Up || key == Qt.Key_Down)
-            selectionChangedByKeyboard(newCurrentItem == null ? currentItem : newCurrentItem)
+        if (key === Qt.Key_Left || key === Qt.Key_Right ||
+                key === Qt.Key_Up || key === Qt.Key_Down)
+            selectionChangedByKeyboard(newCurrentItem === null ? currentItem : newCurrentItem)
     }
 
     transitions: Transition {
