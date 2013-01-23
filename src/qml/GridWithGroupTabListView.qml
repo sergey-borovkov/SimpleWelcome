@@ -41,7 +41,7 @@ ListView {
     flickDeceleration: 5000
     highlightFollowsCurrentItem: true
     highlightMoveDuration: 240
-    cacheBuffer: 20000
+    cacheBuffer: 200000
     highlightRangeMode: ListView.StrictlyEnforceRange
     interactive: true
 
