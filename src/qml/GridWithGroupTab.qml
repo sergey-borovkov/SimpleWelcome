@@ -128,6 +128,7 @@ Item {
                         else
                             gridsListView.incrementCurrentIndex()
                     }
+                    gridMouseArea.hideTooltip()
                 }
             }
         }
