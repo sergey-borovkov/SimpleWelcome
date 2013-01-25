@@ -113,10 +113,13 @@ QPixmap GeneralIconProvider::requestPixmap(const QString &name, QSize *size, con
         return iconPixmap;
     }
     else if (iconType == "general") {
-        if (iconName == "usericon" && m_userInfoProvider != NULL)
-            icon = KIcon(m_userInfoProvider->getIconPath());
-        else
-            return iconPixmap;
+        if (iconName == "usericon" && m_userInfoProvider != NULL) {
+            iconPixmap = m_userInfoProvider->getFaceIcon();
+            if (iconPixmap.isNull())
+                iconPixmap.load(m_pathToAssets + "default_user_pic.png");
+        }
+
+        return iconPixmap.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
     else {
         return iconPixmap;

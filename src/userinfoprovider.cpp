@@ -24,6 +24,7 @@
  */
 
 #include "userinfoprovider.h"
+#include <QProcessEnvironment>
 
 QString UserInfoProvider::getFullName()
 {
@@ -45,7 +46,38 @@ QString UserInfoProvider::getUserName()
     return username;
 }
 
-QString UserInfoProvider::getIconPath()
+QPixmap UserInfoProvider::getFaceIcon()
 {
-    return m_userInfo.faceIconPath();
+    QPixmap res;
+
+    // First trying to get user icon from KDE
+    QString facePath = m_userInfo.faceIconPath();
+    res = QPixmap(facePath);
+
+    if (res.isNull()) {
+        // If it fails, trying to get environment variable $XDG_DATA_DIRS
+        QString prefix;
+        const char *envVarStr = "XDG_DATA_DIRS="; // XDG_DATA_DIRS defaults to /usr/share in Rosa
+        QStringList envs = QProcessEnvironment::systemEnvironment().toStringList();
+        foreach(QString env, envs) {
+            if (env.startsWith(envVarStr)) {
+                QStringList xdgDirs = env.right(env.size() - strlen(envVarStr)).split(":");
+                if (xdgDirs.size())
+                    prefix = xdgDirs[0] + "/faces";
+            }
+        }
+
+        // Trying $XDG_DATA_DIRS/faces/$USER_LOGIN_NAME.png
+        facePath = QString("%1/%2.png").arg(prefix, m_userInfo.loginName());
+        res = QPixmap(facePath);
+
+        if (res.isNull()) {
+            // If this fails, trying $XDG_DATA_DIRS/faces/default.png
+            facePath = QString("%1/default.png").arg(prefix);
+            res = QPixmap(facePath);
+
+            // If even THIS fails, using default placeholder icon in generaliconprovider
+        }
+    }
+    return res;
 }

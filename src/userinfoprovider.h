@@ -26,6 +26,7 @@
 
 #include <QObject>
 #include <KUser>
+#include <QPixmap>
 
 class UserInfoProvider : public QObject
 {
@@ -41,7 +42,7 @@ public:
     QString getFullName();
     QString getLoginName();
     QString getUserName();
-    QString getIconPath();
+    QPixmap getFaceIcon();
 
 private:
     KUser m_userInfo;
