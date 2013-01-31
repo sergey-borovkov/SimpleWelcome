@@ -228,7 +228,7 @@ void RequestManager::feedReply(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
     if (result.contains(QLatin1String("error"))) {
-        m_authorizer->logout();
+//        m_authorizer->logout();
         return;
     }
 
@@ -283,7 +283,7 @@ void RequestManager::replyQueryWall(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains("error")) {
-        m_authorizer->logout();
+//        m_authorizer->logout();
         return;
     }
 
@@ -418,7 +418,7 @@ void RequestManager::idReply(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
     if (result.contains(QLatin1String("error"))) {
-        m_authorizer->logout();
+//        m_authorizer->logout();
         return;
     }
 
@@ -439,7 +439,7 @@ void RequestManager::imageReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-        m_authorizer->logout();
+//        m_authorizer->logout();
         return;
     }
 
@@ -479,7 +479,7 @@ void RequestManager::audioReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-        m_authorizer->logout();
+//        m_authorizer->logout();
         return;
     }
 
@@ -512,7 +512,7 @@ void RequestManager::videoReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-        m_authorizer->logout();
+//        m_authorizer->logout();
         return;
     }
 
@@ -551,7 +551,7 @@ void RequestManager::userInfoReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-        m_authorizer->logout();
+//        m_authorizer->logout();
         return;
     }
 
@@ -594,7 +594,7 @@ void RequestManager::postCommentReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-        m_authorizer->logout();
+//        m_authorizer->logout();
         return;
     }
 }
@@ -605,7 +605,7 @@ void RequestManager::postMessageReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-        m_authorizer->logout();
+//        m_authorizer->logout();
         return;
     }
 }
