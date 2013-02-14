@@ -27,8 +27,6 @@ import ".."
 
 Item {
     id: video
-    anchors.fill: image
-    anchors.margins: 10
 
     property alias loader: videoLoader
     property alias mouseArea: videoMouseArea

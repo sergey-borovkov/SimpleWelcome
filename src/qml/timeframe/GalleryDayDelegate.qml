@@ -56,10 +56,23 @@ Column {
                 }
             }
         }
+        Video {
+            id: video
+            anchors { fill: image; margins: 10 }
+        }
 
         MouseArea {
             anchors.fill: parent
-            onClicked: Qt.openUrlExternally(url)
+            onClicked: {
+                if (type === "Video") { //Start video preview
+                    enabled = false
+                    video.url = url
+                    video.load()
+                    image.visible = false
+                    return
+                }
+                Qt.openUrlExternally(url)
+            }
         }
     }
     Text {
