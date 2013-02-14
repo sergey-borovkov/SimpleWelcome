@@ -29,6 +29,7 @@ Item {
     id: cloudRect
 
     property string url
+    property string type
     property alias image: image
 
     Connections {
@@ -40,6 +41,10 @@ Item {
                 image.source = oldSource
             }
         }
+    }
+    Video {
+        id: videoDelegate
+
     }
 
     Item {
@@ -64,6 +69,49 @@ Item {
 
             cache: false
         }
+        Item {
+            id: video
+            anchors.fill: image
+            anchors.margins: 10
+            Loader {
+                id: videoLoader
+                anchors.fill: parent
+            }
+            Image {
+                id: controlImage
+                anchors.centerIn: parent
+                source: "../images/pause-empty.png"
+                opacity: 0
+                Behavior on opacity {
+                    NumberAnimation { duration: 300 }
+                }
+                function changeIcon()
+                {
+                    console.log("PAUSED? " + videoLoader.item.paused())
+                    if (videoLoader.item.paused())
+                        controlImage.source = "../images/play-empty.png"
+                    else
+                        controlImage.source = "../images/pause-empty.png"
+                }
+            }
+            MouseArea {
+                id: videoMouseArea
+                anchors.fill: parent
+                onEntered: {
+                    controlImage.opacity = 1
+                }
+                onExited: {
+                    controlImage.opacity = 0
+                }
+                onClicked: {
+                    if (videoLoader.item.playing())
+                        controlImage.source = "../images/play-empty.png"
+                    else
+                        controlImage.source = "../images/pause-empty.png"
+                    videoLoader.item.playOrPause()
+                }
+            }
+        }
     }
     Label {
         id: fileName
@@ -77,9 +125,20 @@ Item {
     }
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         onClicked: {
-            Qt.openUrlExternally(url)
+            // check of item type
+            if (type !== "Video") {
+                Qt.openUrlExternally(url)
+                return
+            }
+            image.visible = false
+            videoLoader.sourceComponent = videoDelegate
+            videoLoader.item.source = url
+            videoLoader.item.play()
+            mouseArea.enabled = false
+            videoMouseArea.hoverEnabled = true
         }
     }
 }

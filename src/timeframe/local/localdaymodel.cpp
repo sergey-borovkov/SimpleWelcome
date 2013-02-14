@@ -278,6 +278,11 @@ QString LocalDayFilterModel::url(int row) const
     return data(index(row, 0), LocalDayModel::UrlRole).toString();
 }
 
+QString LocalDayFilterModel::type(int row) const
+{
+    return data(index(row, 0), LocalDayModel::TypeRole).toString();
+}
+
 void LocalDayFilterModel::previewReady(const QString &url)
 {
     emit gotThumbnail(url);

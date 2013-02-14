@@ -119,6 +119,7 @@ public:
 
     Q_INVOKABLE int count() const;
     Q_INVOKABLE QString url(int row) const;
+    Q_INVOKABLE QString type(int row) const;
     void previewReady(const QString &url);
 
 signals:

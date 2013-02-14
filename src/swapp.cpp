@@ -29,7 +29,6 @@
 #include "swapp.h"
 
 #include "qmlapplicationviewer/qmlapplicationviewer.h"
-
 #include "wheelarea.h"
 
 #include "generaliconprovider.h"
@@ -51,6 +50,7 @@
 #include "timeframe/local/nepomuksource.h"
 #include "timeframe/local/previewgenerator.h"
 #include "timeframe/local/previewprovider.h"
+#include "timeframe/local/video.h"
 #include "timeframe/social/pluginloader.h"
 #include "timeframe/social/socialproxy.h"
 #include "timeframe/social/pluginimageprovider.h"
@@ -129,6 +129,8 @@ SWApp::SWApp()
 {
     // First of all, we have to register type to make it available from QML
     qmlRegisterType<WheelArea>("Private", 0, 1, "WheelArea");
+
+    qmlRegisterType<Video>("Private", 0, 1, "Video");
 
     m_globalAction = new KAction(this);
 
