@@ -23,6 +23,7 @@
  */
 
 import QtQuick 1.1
+//import Private 0.1
 import ".."
 
 Item {
@@ -41,10 +42,6 @@ Item {
                 image.source = oldSource
             }
         }
-    }
-    Video {
-        id: videoDelegate
-
     }
 
     Item {
@@ -69,46 +66,9 @@ Item {
 
             cache: false
         }
-        Item {
+        Video { //Preview video
             id: video
-            anchors.fill: image
-            anchors.margins: 10
-            Loader {
-                id: videoLoader
-                anchors.fill: parent
-            }
-            Image {
-                id: controlImage
-                anchors.centerIn: parent
-                source: "../images/pause-empty.png"
-                opacity: 0
-                Behavior on opacity {
-                    NumberAnimation { duration: 300 }
-                }
-            }
-            MouseArea {
-                id: videoMouseArea
-                anchors.fill: parent
-                onEntered: {
-                    controlImage.opacity = 1
-                }
-                onExited: {
-                    //Prevent hiding icon when video is paused
-                    if (!videoLoader.item.playing() && videoLoader.item.ready) {
-                        return
-                    }
-                    controlImage.opacity = 0
-                }
-                onClicked: {
-                    if (videoLoader.item.playing()) {
-                        controlImage.source = "../images/play-empty.png"
-                    }
-                    else {
-                        controlImage.source = "../images/pause-empty.png"
-                    }
-                    videoLoader.item.playOrPause()
-                }
-            }
+            anchors { fill: image; margins: 10 }
         }
     }
     Label {
@@ -132,11 +92,9 @@ Item {
                 return
             }
             image.visible = false
-            videoLoader.sourceComponent = videoDelegate
-            videoLoader.item.source = url
             mouseArea.enabled = false
-            videoMouseArea.hoverEnabled = true
-            videoLoader.item.play()
+            video.url = url
+            video.load()
         }
     }
 }
