@@ -85,14 +85,6 @@ Item {
                 Behavior on opacity {
                     NumberAnimation { duration: 300 }
                 }
-                function changeIcon()
-                {
-                    console.log("PAUSED? " + videoLoader.item.paused())
-                    if (videoLoader.item.paused())
-                        controlImage.source = "../images/play-empty.png"
-                    else
-                        controlImage.source = "../images/pause-empty.png"
-                }
             }
             MouseArea {
                 id: videoMouseArea
@@ -101,13 +93,19 @@ Item {
                     controlImage.opacity = 1
                 }
                 onExited: {
+                    //Prevent hiding icon when video is paused
+                    if (!videoLoader.item.playing() && videoLoader.item.ready) {
+                        return
+                    }
                     controlImage.opacity = 0
                 }
                 onClicked: {
-                    if (videoLoader.item.playing())
+                    if (videoLoader.item.playing()) {
                         controlImage.source = "../images/play-empty.png"
-                    else
+                    }
+                    else {
                         controlImage.source = "../images/pause-empty.png"
+                    }
                     videoLoader.item.playOrPause()
                 }
             }
@@ -136,10 +134,9 @@ Item {
             image.visible = false
             videoLoader.sourceComponent = videoDelegate
             videoLoader.item.source = url
-            videoLoader.item.play()
             mouseArea.enabled = false
             videoMouseArea.hoverEnabled = true
+            videoLoader.item.play()
         }
     }
 }
-
