@@ -66,7 +66,7 @@ Item {
 
             cache: false
         }
-        Video { //Preview video
+        Loader {
             id: video
             anchors { fill: image; margins: 10 }
         }
@@ -93,8 +93,9 @@ Item {
             }
             image.visible = false
             mouseArea.enabled = false
-            video.url = url
-            video.load()
+            video.source = "../Video.qml"
+            video.item.url = url
+            video.item.load()
         }
     }
 }

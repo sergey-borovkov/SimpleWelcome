@@ -56,7 +56,7 @@ Column {
                 }
             }
         }
-        Video {
+        Loader {
             id: video
             anchors { fill: image; margins: 10 }
         }
@@ -66,8 +66,9 @@ Column {
             onClicked: {
                 if (type === "Video") { //Start video preview
                     enabled = false
-                    video.url = url
-                    video.load()
+                    video.source = "Video.qml"
+                    video.item.url = url
+                    video.item.load()
                     image.visible = false
                     return
                 }

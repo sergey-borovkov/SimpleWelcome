@@ -28,19 +28,19 @@ import ".."
 Item {
     id: video
 
-    property alias loader: videoLoader
+    property alias loader: videoItem
     property alias mouseArea: videoMouseArea
     property string url
 
     function load(){
-        videoMouseArea.hoverEnabled = true
-        videoLoader.sourceComponent = videoDelegate
-        videoLoader.item.source = url
-        videoLoader.item.play()
+        videoMouseArea.hoverEnabled = true        
+        videoItem.source = url
+        videoItem.play()
     }
 
-    Loader {
-        id: videoLoader
+    Video
+    {
+        id: videoItem
         anchors.fill: parent
     }
 
@@ -62,28 +62,19 @@ Item {
         }
         onExited: {
             //Prevent hiding icon when video is paused
-            if (!videoLoader.item.playing() && videoLoader.item.ready) {
+            if (!videoItem.playing() && videoItem.ready) {
                 return
             }
             controlImage.opacity = 0
         }
         onClicked: {
-            if (videoLoader.item.playing()) {
+            if (videoItem.playing()) {
                 controlImage.source = "images/play-empty.png"
             }
             else {
                 controlImage.source = "images/pause-empty.png"
             }
-            videoLoader.item.playOrPause()
+            videoItem.playOrPause()
         }
     }
-
-    Component {
-        id: videoDelegate
-        Video
-        {
-            id: videoItem
-        }
-    }
-
 }
