@@ -66,11 +66,75 @@ Item {
 
             cache: false
         }
+
         Loader {
             id: video
-            anchors { fill: image; margins: 10 }
+            anchors {
+                fill: image
+                margins: 10
+            }
+        }
+
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+
+            hoverEnabled: true
+
+            onClicked: {
+                if(video.status === Loader.Ready) {
+                    video.item.clicked()
+                    return
+                }
+
+                if (type !== "Video") {
+                    Qt.openUrlExternally(url)
+                    return
+                }
+
+                image.visible = false
+                video.source = "../Video.qml"
+                video.item.url = url
+                video.item.load()
+            }
+
+            onEntered: {
+                if(video.status === Loader.Ready)
+                    video.item.entered()
+            }
+
+            onExited: {
+                if(video.status === Loader.Ready)
+                    video.item.exited()
+            }
+        }
+
+        Image {
+            id: klook
+            anchors {
+                top: image.top
+                right: image.right
+            }
+
+            source: "image://generalicon/appicon/klook"
+            sourceSize {
+                width: 24
+                height: 24
+            }
+
+            visible: mouseArea.containsMouse
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    var p = image.mapToItem(null, 0, 0)
+                    klookProcess.show(p.x, p.y, image.width,
+                                      image.height, url)
+                }
+            }
         }
     }
+
     Label {
         id: fileName
         anchors.horizontalCenter: parent.horizontalCenter
@@ -80,22 +144,5 @@ Item {
         text: url.replace(/^.*[\\\/]/, '')
         elide: Text.ElideMiddle
         font.bold: false
-    }
-
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        onClicked: {
-            // check of item type
-            if (type !== "Video") {
-                Qt.openUrlExternally(url)
-                return
-            }
-            image.visible = false
-            mouseArea.enabled = false
-            video.source = "../Video.qml"
-            video.item.url = url
-            video.item.load()
-        }
     }
 }

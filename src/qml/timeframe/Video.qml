@@ -29,17 +29,38 @@ Item {
     id: video
 
     property alias loader: videoItem
-    property alias mouseArea: videoMouseArea
     property string url
 
-    function load(){
-        videoMouseArea.hoverEnabled = true        
+    function load()
+    {
         videoItem.source = url
         videoItem.play()
     }
 
-    Video
-    {
+
+    function entered() {
+        controlImage.opacity = 1
+    }
+
+    function exited() {
+        //Prevent hiding icon when video is paused
+        if (!videoItem.playing() && videoItem.ready) {
+            return
+        }
+        controlImage.opacity = 0
+    }
+
+    function clicked() {
+        if (videoItem.playing()) {
+            controlImage.source = "images/play-empty.png"
+        }
+        else {
+            controlImage.source = "images/pause-empty.png"
+        }
+        videoItem.playOrPause()
+    }
+
+    Video {
         id: videoItem
         anchors.fill: parent
     }
@@ -47,34 +68,12 @@ Item {
     Image {
         id: controlImage
         anchors.centerIn: parent
+
         source: "images/pause-empty.png"
         opacity: 0
+
         Behavior on opacity {
             NumberAnimation { duration: 300 }
-        }
-    }
-
-    MouseArea {
-        id: videoMouseArea
-        anchors.fill: parent
-        onEntered: {
-            controlImage.opacity = 1
-        }
-        onExited: {
-            //Prevent hiding icon when video is paused
-            if (!videoItem.playing() && videoItem.ready) {
-                return
-            }
-            controlImage.opacity = 0
-        }
-        onClicked: {
-            if (videoItem.playing()) {
-                controlImage.source = "images/play-empty.png"
-            }
-            else {
-                controlImage.source = "images/pause-empty.png"
-            }
-            videoItem.playOrPause()
         }
     }
 }

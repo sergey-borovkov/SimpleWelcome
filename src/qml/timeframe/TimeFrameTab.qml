@@ -580,7 +580,10 @@ Item {
         WheelArea {
             id: timeLineWheelArea
             anchors.fill: parent
-            onScrollVert: _processScroll(delta, timeLine)
+            onScrollVert: {
+                klookProcess.hide()
+                _processScroll(delta, timeLine)
+            }
         }
         Rectangle{
             anchors.fill: parent
@@ -635,7 +638,10 @@ Item {
         WheelArea {
             id: timeScaleWheelArea
             anchors.fill: parent
-            onScrollVert: _processScroll(delta, timeScale.list)
+            onScrollVert: {
+                klookProcess.hide()
+                _processScroll(delta, timeScale.list)
+            }
             enabled: enableWheel
         }
     }
@@ -773,7 +779,10 @@ Item {
 
         WheelArea {
             anchors.fill: parent
-            onScrollVert: _processScroll(delta, galleryView)
+            onScrollVert: {
+                klookProcess.hide()
+                _processScroll(delta, galleryView)
+            }
         }
     }
 

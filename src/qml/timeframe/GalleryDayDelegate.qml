@@ -56,26 +56,79 @@ Column {
                 }
             }
         }
+
         Loader {
             id: video
-            anchors { fill: image; margins: 10 }
+            anchors {
+                fill: image
+                margins: 10
+            }
         }
 
         MouseArea {
+            id: imageMouseArea
             anchors.fill: parent
+
+            hoverEnabled: true
+
             onClicked: {
+                if(video.status === Loader.Ready) {
+                    video.item.clicked()
+                    return
+                }
+
                 if (type === "Video") { //Start video preview
-                    enabled = false
                     video.source = "Video.qml"
                     video.item.url = url
                     video.item.load()
                     image.visible = false
                     return
                 }
+
                 Qt.openUrlExternally(url)
+            }
+
+            onEntered: {
+                if(video.status === Loader.Ready)
+                    video.item.entered()
+            }
+
+            onExited: {
+                if(video.status === Loader.Ready)
+                    video.item.exited()
+            }
+        }
+
+
+        Image {
+            id: klook
+            anchors {
+                top: image.top
+                right: image.right
+            }
+
+            source: "image://generalicon/appicon/klook"
+            sourceSize {
+                width: 24
+                height: 24
+            }
+
+            visible: imageMouseArea.containsMouse
+
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: {
+                    var p = image.mapToItem(null, 0, 0)
+                    klookProcess.show(p.x,
+                                      p.y,
+                                      image.width,
+                                      image.height, url)
+                }
             }
         }
     }
+
     Text {
         id: label
         anchors.horizontalCenter: parent.horizontalCenter

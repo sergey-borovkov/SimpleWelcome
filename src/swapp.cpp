@@ -42,6 +42,7 @@
 #include "datasource_documents.h"
 #include "datasource_search.h"
 
+#include "timeframe/klookprocess.h"
 #include "timeframe/timescalemodel.h"
 #include "timeframe/local/localcontentitem.h"
 #include "timeframe/local/localcontentmodel.h"
@@ -213,6 +214,7 @@ void SWApp::initTimeframeLocalMode()
     QRect r = QDesktopWidget().screenGeometry(m_viewer);
     previewGenerator("gallery")->setModel(model);
     previewGenerator("timeline")->setModel(model);
+    m_viewer->rootContext()->setContextProperty("klookProcess", new KlookProcess(this));;
     m_viewer->rootContext()->setContextProperty("desktopWidth", r.width());
     m_viewer->rootContext()->setContextProperty("localDayModel", proxymodel);
     m_viewer->rootContext()->setContextProperty("activityProxy", m_proxy);
