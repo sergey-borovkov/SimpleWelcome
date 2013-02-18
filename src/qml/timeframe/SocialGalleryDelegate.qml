@@ -40,13 +40,6 @@ Item {
         return x
     }
 
-    function printRoles()
-    {
-        console.log("date " + date)
-        console.log("size " + size)
-        return Math.ceil(size /3)
-    }
-
     Text {
         id: dateLabel
         anchors {

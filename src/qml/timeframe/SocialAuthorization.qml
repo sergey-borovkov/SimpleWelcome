@@ -103,6 +103,7 @@ PathView {
                     font.pointSize: 12
                 }
             }
+
             MouseArea {
                 anchors.fill: parent
 
@@ -121,6 +122,7 @@ PathView {
                     }
                 }
             }
+
             states: [
                 State {
                     name: "hover"
@@ -137,6 +139,7 @@ PathView {
                     }
                 }
             ]
+
             transitions: [
                 Transition {
                     NumberAnimation { properties: "width,height"; duration: 100}

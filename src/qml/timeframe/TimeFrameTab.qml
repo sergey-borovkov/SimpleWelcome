@@ -186,8 +186,6 @@ Item {
         if (!isSocial) {
             if (typeof currentView !== "undefined")
                 timeFrameTab.date = localDayModel.getDateOfIndex(currentView.currentIndex)
-//            else
-//                timeFrameTab.date = new Date()
         }
         else
             timeFrameTab.date = socialDayModel.getDateOfIndex(currentView.currentIndex)

@@ -255,7 +255,6 @@ void LocalDayModel::setDate(QDate date)
     m_date = date;
 }
 
-
 LocalDayFilterModel::LocalDayFilterModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
