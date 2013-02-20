@@ -89,6 +89,15 @@ signals:
     void searchComplete();
 
 private:
+    enum Error {
+        NoError,
+        TooManyRequests,
+        OtherError
+    };
+
+    bool processError(const QVariantMap &map, Request *request);
+    Error checkForErrors(const QVariantMap &map);
+
     QUrl constructUrl(const QString &id) const;
     bool canBeDisplayed(const SocialItem &socialItem) const;
     void fillFromMap(SocialItem* socialItem, QVariantMap map);

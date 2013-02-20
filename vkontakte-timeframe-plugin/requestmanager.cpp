@@ -224,9 +224,8 @@ void RequestManager::feedReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-    if (result.contains(QLatin1String("error"))) {
+    if(!processError(result, dynamic_cast<VkRequest *>(sender())))
         return;
-    }
 
     int messagesCount = 0;
     QVariantList list = result.value(QLatin1String("response")).toList();
@@ -277,9 +276,8 @@ void RequestManager::commentReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-    if (result.contains(QLatin1String("error"))) {
+    if(!processError(result, dynamic_cast<VkRequest *>(sender())))
         return;
-    }
 
     int commentCount = 0;
     QVariantList list = result.value(QLatin1String("response")).toList();
@@ -333,9 +331,8 @@ void RequestManager::likesReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-    if (result.contains(QLatin1String("error"))) {
+    if(!processError(result, dynamic_cast<VkRequest *>(sender())))
         return;
-    }
 
     result = result.value(QLatin1String("response")).toMap();
 
@@ -382,9 +379,8 @@ void RequestManager::idReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-    if (result.contains(QLatin1String("error"))) {
+    if(!processError(result, dynamic_cast<VkRequest *>(sender())))
         return;
-    }
 
     if (result.contains(QLatin1String("response"))) {
         QVariantMap map = result.value(QLatin1String("response")).toMap();
@@ -401,10 +397,8 @@ void RequestManager::imageReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-
-    if (result.contains(QLatin1String("error"))) {
+    if(!processError(result, dynamic_cast<VkRequest *>(sender())))
         return;
-    }
 
     QString userId, userImageUrl, userName;
 
@@ -440,10 +434,8 @@ void RequestManager::audioReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-
-    if (result.contains(QLatin1String("error"))) {
+    if(!processError(result, dynamic_cast<VkRequest *>(sender())))
         return;
-    }
 
     QString audioId, audioOwnerId, audioUrl;
 
@@ -473,9 +465,8 @@ void RequestManager::videoReply(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
 
-    if (result.contains(QLatin1String("error"))) {
+    if(!processError(result, dynamic_cast<VkRequest *>(sender())))
         return;
-    }
 
     // video fields: vid, owner_id, title, description, duration, link, image, date, player
     QString videoId, videoOwnerId, videoUrl, videoImage;
@@ -511,9 +502,8 @@ void RequestManager::userInfoReply(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
 
-    if (result.contains(QLatin1String("error"))) {
+    if(!processError(result, dynamic_cast<VkRequest *>(sender())))
         return;
-    }
 
     // video fields: vid, owner_id, title, description, duration, link, image, date, player
     QString userId, userName, userImageUrl;
@@ -552,20 +542,17 @@ void RequestManager::postCommentReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-
-    if (result.contains(QLatin1String("error"))) {
+    if(!processError(result, dynamic_cast<VkRequest *>(sender())))
         return;
-    }
+
 }
 
 void RequestManager::postMessageReply(QByteArray reply)
 {
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
-
-    if (result.contains(QLatin1String("error"))) {
+    if(!processError(result, dynamic_cast<VkRequest *>(sender())))
         return;
-    }
 }
 
 QUrl RequestManager::constructUrl(const QString &id) const
@@ -785,8 +772,42 @@ void fillCommentFromMap(CommentItem *item, const QVariantMap &map)
     item->setData(CommentItem::From, "");
 }
 
-
 QString RequestManager::pluginName()
 {
     return QLatin1String("VKontakte");
+}
+
+RequestManager::Error RequestManager::checkForErrors(const QVariantMap &map)
+{
+    QVariantMap::const_iterator it = map.constFind(QLatin1String("error"));
+    if(it == map.constEnd())
+        return RequestManager::NoError;
+
+    const int errorCode = it.value().toMap().value(QLatin1String("error_code")).toInt();
+    // too many requests per second
+    if(errorCode == 6)
+        return RequestManager::TooManyRequests;
+    else
+        return RequestManager::OtherError;
+}
+
+
+bool RequestManager::processError(const QVariantMap &map, Request *request)
+{
+    const Error error = checkForErrors(map);
+    if(error != NoError) {
+        if(error == TooManyRequests) {
+            // put it in the queue again
+            if(request) {
+                RequestQueue::instance(pluginName())->enqueue(request, Request::High);
+                return false;
+            }
+        }
+        else {
+            // nothing we can do really
+            return false;
+        }
+    }
+
+    return true;
 }
