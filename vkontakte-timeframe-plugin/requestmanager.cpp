@@ -273,36 +273,6 @@ void RequestManager::feedReply(QByteArray reply)
     }
 }
 
-void RequestManager::replyQueryWall(QByteArray reply)
-{
-    QJson::Parser parser;
-    QVariantMap result = parser.parse(reply).toMap();
-
-    if (result.contains("error")) {
-        return;
-    }
-
-    QVariantList list = result.value("response").toList();
-    if (list.size() > 1) {
-        list.takeFirst();   // it's "count"
-    }
-
-    QList<SocialItem *> socialItems;
-
-    foreach(QVariant item, list) {
-        QVariantMap map = item.toMap();
-        SocialItem *socialItem = new SocialItem(m_selfId);
-        fillFromMap(socialItem, map);
-
-        if (!canBeDisplayed(*socialItem))
-            delete socialItem;
-        else
-            socialItems.append(socialItem);
-    }
-
-    emit newSocialItems(socialItems);
-}
-
 void RequestManager::commentReply(QByteArray reply)
 {
     QJson::Parser parser;

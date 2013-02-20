@@ -63,7 +63,6 @@ public:
 
 private slots:
     void feedReply(QByteArray feedReply);
-    void replyQueryWall(QByteArray reply);
     void idReply(QByteArray reply);
     void commentReply(QByteArray reply);
     void likesReply(QByteArray reply);

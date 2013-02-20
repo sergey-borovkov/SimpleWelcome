@@ -33,7 +33,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QSet>
 
-
 class ISocialPlugin;
 class ListModel;
 class PluginModel;
