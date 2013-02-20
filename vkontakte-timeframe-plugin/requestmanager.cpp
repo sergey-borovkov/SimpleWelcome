@@ -38,7 +38,6 @@ RequestManager::RequestManager(QObject *parent)
     , m_gotCommentsCount(0)
     , m_gotLikesCount(0)
     , m_gotMessagesCount(0)
-    , m_requestItemCount(100)
 {
 }
 

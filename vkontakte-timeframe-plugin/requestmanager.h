@@ -106,8 +106,7 @@ private:
     int m_gotLikesCount;
     int m_gotMessagesCount;
 
-    const int m_requestItemCount;
-
+    static const int m_requestItemCount = 100;
 };
 
 void fillCommentFromMap(CommentItem *item, const QVariantMap &map);
