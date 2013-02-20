@@ -87,6 +87,14 @@ QString FacebookModule::displayName() const
     return i18n("Facebook");
 }
 
+int FacebookModule::maximumRequestsPerSecond() const
+{
+    // google says facebook does not have limit per second
+    // but limit like 600 queries per 600 seconds, so there is no meaningful way to set this limit
+    // 10 is just an arbitrary number that seems sufficient
+    return 10;
+}
+
 QWidget *FacebookModule::authenticationWidget()
 {
     QWebView *authorizationView = new QWebView();

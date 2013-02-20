@@ -38,12 +38,21 @@ class QDate;
  */
 class Request
 {
+    friend class RequestQueue;
 public:
+    enum Priority {
+        Low,
+        Normal,
+        High
+    };
+
     virtual ~Request() {}
     /**
      * @brief start Start request. This method must be not blocking.
      */
-    virtual void start() = 0;
+
+protected:
+    virtual void run() = 0;
 };
 
 class ISocialRequestManager
@@ -91,6 +100,7 @@ public:
     virtual ISocialRequestManager *requestManager() = 0;
     virtual bool authorized() const = 0;
     virtual QString displayName() const = 0;
+    virtual int maximumRequestsPerSecond() const = 0;
 
     virtual QString selfId() const = 0;
     virtual void setSelfId(const QString &id) = 0;

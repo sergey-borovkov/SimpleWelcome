@@ -26,8 +26,6 @@
 #include "localdaymodel.h"
 
 #include <QtCore/QDate>
-#include <QtCore/QDebug>
-
 
 LocalDayModel::LocalDayModel(QDate date, QObject *parent) :
     QAbstractListModel(parent), m_date(date)

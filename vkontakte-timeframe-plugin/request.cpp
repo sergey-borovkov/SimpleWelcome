@@ -42,7 +42,7 @@ void VkRequest::setUrl(const QUrl &url)
     m_url = url;
 }
 
-void VkRequest::start()
+void VkRequest::run()
 {
     if (m_url.isEmpty())
         return;

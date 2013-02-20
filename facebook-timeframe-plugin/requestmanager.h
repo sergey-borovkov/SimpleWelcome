@@ -35,6 +35,7 @@ class OAuth2Authorizer;
 class SocialItem;
 class CommentItem;
 class QNetworkAccessManager;
+class RequestQueue;
 
 const QString openGraphUrl = QLatin1String("https://graph.facebook.com/");
 
@@ -90,7 +91,9 @@ private:
 
     // we return comments only when they are fully downloaded
     // so we need to keed partial results between calls somewhere
-    QMap<QString, QList<CommentItem *> >m_comments;
+    QMap<QString, QList<CommentItem *> > m_comments;
+
+    RequestQueue *m_requestQueue;
 };
 
 void fillCommentFromMap(CommentItem *item, const QVariantMap &map);

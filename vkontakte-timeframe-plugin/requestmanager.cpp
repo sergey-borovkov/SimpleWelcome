@@ -27,6 +27,7 @@
 
 #include <socialitem.h>
 #include <commentitem.h>
+#include <requestqueue.h>
 
 #include <qjson/parser.h>
 #include <QtCore/QStringList>
@@ -60,6 +61,7 @@ Request *RequestManager::queryUserId()
     VkRequest *request = new VkRequest(VkRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(idReply(QByteArray)));
     request->setUrl(constructUrl(QLatin1String("getUserInfoEx")));
+
     return request;
 }
 
@@ -73,6 +75,7 @@ Request *RequestManager::queryImage(const QString &id)
     VkRequest *request = new VkRequest(VkRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(imageReply(QByteArray)));
     request->setUrl(url);
+
     return request;
 }
 
@@ -83,8 +86,8 @@ Request *RequestManager::queryAudio(const QString &aid, const QString &ownerId)
 
     VkRequest *request = new VkRequest(VkRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(audioReply(QByteArray)));
-
     request->setUrl(url);
+
     return request;
 }
 
@@ -95,8 +98,8 @@ Request *RequestManager::queryVideo(const QString &vid, const QString &ownerId)
 
     VkRequest *request = new VkRequest(VkRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(videoReply(QByteArray)));
-
     request->setUrl(url);
+
     return request;
 }
 
@@ -108,8 +111,8 @@ Request *RequestManager::queryUserInfo(const QString &fromId)
 
     VkRequest *request = new VkRequest(VkRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(userInfoReply(QByteArray)));
-
     request->setUrl(url);
+
     return request;
 }
 
@@ -145,7 +148,6 @@ Request *RequestManager::like(const QString &id)
 
     QUrl url = constructUrl(QLatin1String("wall.addLike"));
     url.addQueryItem(QLatin1String("post_id"), id);
-
     request->setUrl(url);
 
     return request;
@@ -156,7 +158,6 @@ Request *RequestManager::unlike(const QString &id)
     VkRequest *request = new VkRequest(VkRequest::Delete, this);
     QUrl url = constructUrl(QLatin1String("wall.deleteLike"));
     url.addQueryItem(QLatin1String("post_id"), id);
-
     request->setUrl(url);
 
     return request;
@@ -189,12 +190,9 @@ Request *RequestManager::queryLikes(const QString &postId)
     url.addQueryItem(QLatin1String("post_id"), postId);
     url.addQueryItem(QLatin1String("offset"), QLatin1String("0"));
     url.addQueryItem(QLatin1String("count"), QString("%1").arg(m_requestItemCount));
-
     request->setUrl(url);
-
     // remember id so that slot can know it
     request->setProperty("postId", postId);
-
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(likesReply(QByteArray)));
 
     return request;
@@ -227,7 +225,6 @@ void RequestManager::feedReply(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
     if (result.contains(QLatin1String("error"))) {
-//        m_authorizer->logout();
         return;
     }
 
@@ -268,7 +265,7 @@ void RequestManager::feedReply(QByteArray reply)
         VkRequest *request = new VkRequest(VkRequest::Get, this);
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
         request->setUrl(url);
-        request->start();
+        RequestQueue::instance(pluginName())->enqueue(request, Request::High);
     }
     else {
         m_gotMessagesCount = 0;
@@ -282,7 +279,6 @@ void RequestManager::replyQueryWall(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains("error")) {
-//        m_authorizer->logout();
         return;
     }
 
@@ -354,7 +350,7 @@ void RequestManager::commentReply(QByteArray reply)
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(commentReply(QByteArray)));
         request->setProperty("postId", postId);
         request->setUrl(url);
-        request->start();
+        RequestQueue::instance(pluginName())->enqueue(request, Request::High);
     }
     else {
         m_comments.remove(postId);
@@ -405,7 +401,7 @@ void RequestManager::likesReply(QByteArray reply)
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(likesReply(QByteArray)));
         request->setProperty("postId", postId);
         request->setUrl(url);
-        request->start();
+        RequestQueue::instance(pluginName())->enqueue(request, Request::Normal);
     }
     else {
         m_gotLikesCount = 0;
@@ -417,7 +413,6 @@ void RequestManager::idReply(QByteArray reply)
     QJson::Parser parser;
     QVariantMap result = parser.parse(reply).toMap();
     if (result.contains(QLatin1String("error"))) {
-//        m_authorizer->logout();
         return;
     }
 
@@ -438,7 +433,6 @@ void RequestManager::imageReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-//        m_authorizer->logout();
         return;
     }
 
@@ -478,7 +472,6 @@ void RequestManager::audioReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-//        m_authorizer->logout();
         return;
     }
 
@@ -511,7 +504,6 @@ void RequestManager::videoReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-//        m_authorizer->logout();
         return;
     }
 
@@ -550,7 +542,6 @@ void RequestManager::userInfoReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-//        m_authorizer->logout();
         return;
     }
 
@@ -593,7 +584,6 @@ void RequestManager::postCommentReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-//        m_authorizer->logout();
         return;
     }
 }
@@ -604,7 +594,6 @@ void RequestManager::postMessageReply(QByteArray reply)
     QVariantMap result = parser.parse(reply).toMap();
 
     if (result.contains(QLatin1String("error"))) {
-//        m_authorizer->logout();
         return;
     }
 }
@@ -715,8 +704,8 @@ void RequestManager::fillFromMap(SocialItem *socialItem, QVariantMap map)
 
                     if (audioMap.contains("title")) {
 
-                        QString audioStr = audioMap.value("performer").toString() + " - " +
-                                           audioMap.value("title").toString();
+                        QString audioStr = audioMap.value("performer").toString() + " - "
+                                + audioMap.value("title").toString();
 
                         // add duration info (if possible)
                         if (audioMap.contains("duration")) {
@@ -810,7 +799,6 @@ void fillCommentFromMap(CommentItem *item, const QVariantMap &map)
         QString str = map.value("text").toString();
         int pos = rx_user_link.indexIn(str);
         if (pos != (-1)) {
-//            s = rx.cap(1); // user id
             // get only user name
             str = rx_user_link.cap(2) + str.remove(rx_user_link.cap(0));
         }

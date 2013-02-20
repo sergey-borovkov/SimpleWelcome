@@ -35,6 +35,7 @@ class QNetworkAccessManager;
 class FacebookRequest : public QObject, public Request
 {
     Q_OBJECT
+
 public:
     enum RequestType {
         Get,
@@ -44,7 +45,6 @@ public:
 
     explicit FacebookRequest(RequestType type, QObject *parent = 0);
     void setUrl(const QUrl &url);
-    void start();
 
 signals:
     void replyReady(QByteArray);
@@ -57,6 +57,9 @@ private slots:
     void replyFinished();
     void postFinished();
     void error(QNetworkReply::NetworkError error);
+
+protected:
+    void run();
 
 private:
     RequestType m_requestType;

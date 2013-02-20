@@ -26,6 +26,7 @@
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
 
+#include <requestqueue.h>
 #include "socialitem.h"
 #include <commentitem.h>
 #include <listmodel.h>
@@ -55,6 +56,7 @@ Request *RequestManager::queryUserId()
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(idReply(QByteArray)));
     request->setUrl(constructUrl(QLatin1String("me"), ""));
+
     return request;
 }
 
@@ -67,6 +69,7 @@ Request *RequestManager::queryImage(const QString &id)
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
     connect(request, SIGNAL(replyReady(QByteArray)), SLOT(imageReply(QByteArray)));
     request->setUrl(url);
+
     return request;
 }
 
@@ -113,6 +116,7 @@ Request *RequestManager::like(const QString &id)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Post, this);
     request->setUrl(constructUrl(id, QLatin1String("likes")));
+
     return request;
 }
 
@@ -120,6 +124,7 @@ Request *RequestManager::unlike(const QString &id)
 {
     FacebookRequest *request = new FacebookRequest(FacebookRequest::Delete, this);
     request->setUrl(constructUrl(id, QLatin1String("likes")));
+
     return request;
 }
 
@@ -199,7 +204,7 @@ void RequestManager::feedReply(QByteArray reply)
         FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
         request->setUrl(paging.value("next").toUrl());
-        request->start();
+        RequestQueue::instance(pluginName())->enqueue(request, Request::High);
     } else {
         emit searchComplete();
     }
@@ -233,7 +238,7 @@ void RequestManager::commentReply(QByteArray reply)
         request->setProperty("postId", id);
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(commentReply(QByteArray)));
         request->setUrl(paging.value("next").toUrl());
-        request->start();
+        RequestQueue::instance(pluginName())->enqueue(request);
     } else {
         m_comments.remove(id);
         emit newComments(id, cachedComments);

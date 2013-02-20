@@ -43,14 +43,13 @@ void FacebookRequest::setUrl(const QUrl &url)
     m_url = url;
 }
 
-void FacebookRequest::start()
+void FacebookRequest::run()
 {
     if (m_url.isEmpty())
         return;
-    QNetworkReply *reply = 0;
 
     QNetworkRequest request(m_url);
-
+    QNetworkReply *reply = 0;
     switch (m_requestType) {
     case Get:
         reply = manager->get(request);
@@ -73,7 +72,8 @@ void FacebookRequest::start()
         return;
     }
 
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
+            SLOT(error(QNetworkReply::NetworkError)));
 }
 
 void FacebookRequest::replyFinished()

@@ -42,7 +42,9 @@ public:
 
     explicit VkRequest(RequestType type, QObject *parent = 0);
     void setUrl(const QUrl &url);
-    void start();
+
+protected:
+    void run();
 
 signals:
     void replyReady(QByteArray);
@@ -50,6 +52,7 @@ signals:
     void newItemId(QString);
     void gotUserPictureUrl(QString, QString);
     void error(QString);
+
 
 private slots:
     void replyFinished();

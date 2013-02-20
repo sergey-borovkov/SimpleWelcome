@@ -25,13 +25,15 @@
 #include "pluginitem.h"
 #include "pluginmodel.h"
 #include "pluginreply.h"
+#include "requestqueue.h"
 #include "socialcontentmodel.h"
 #include "socialitem.h"
-#include <socialplugin.h>
 #include "socialproxy.h"
 
 #include <commentitem.h>
 #include <listmodel.h>
+#include <requestqueue.h>
+#include <socialplugin.h>
 
 #include <QtCore/QDate>
 #include <QtCore/QSettings>
@@ -70,6 +72,9 @@ SocialProxy::SocialProxy(QList<ISocialPlugin *> plugins, QObject *parent)
         if (isEnabled && plugin->authorized()) {
             m_enabledPlugins.insert(plugin->name());
         }
+
+        RequestQueue *requestQueue = RequestQueue::instance(plugin->name());
+        requestQueue->setMaximumRequestsPerSecond(plugin->maximumRequestsPerSecond());
     }
 }
 
@@ -158,10 +163,10 @@ void SocialProxy::startSearch()
     foreach(ISocialPlugin * plugin, m_plugins) {
         if (m_enabledPlugins.contains(plugin->name())) {
             Request *requestId = plugin->requestManager()->queryUserId();
-            requestId->start();
+            RequestQueue::instance(plugin->name())->enqueue(requestId, Request::High);
             Request *request = plugin->requestManager()->queryWall();
             m_searchInProgressCount++;
-            request->start();
+            RequestQueue::instance(plugin->name())->enqueue(request, Request::High);
             start = true;
         }
     }
@@ -176,8 +181,7 @@ PluginReply *SocialProxy::like(const QString &id, const QString &pluginName)
         return 0;
     Request *request = plugin->requestManager()->like(id);
     PluginReply *reply = new PluginReply(request, id, pluginName, this);
-    request->start();
-
+    RequestQueue::instance(plugin->name())->enqueue(request);
 
     return reply;
 }
@@ -189,7 +193,7 @@ PluginReply *SocialProxy::dislike(const QString &id, const QString &pluginName)
         return 0;
     Request *request = plugin->requestManager()->unlike(id);
     PluginReply *reply = new PluginReply(request, id, pluginName, this);
-    request->start();
+    RequestQueue::instance(plugin->name())->enqueue(request);
 
     return reply;
 }
@@ -202,7 +206,7 @@ PluginReply *SocialProxy::postComment(const QString &message, const QString &par
 
     Request *request = plugin->requestManager()->postComment(QUrl::toPercentEncoding(message), parentId);
     PluginReply *reply = new PluginReply(request, parentId, pluginName, this);
-    request->start();
+    RequestQueue::instance(plugin->name())->enqueue(request);
 
     return reply;
 }
@@ -215,7 +219,7 @@ PluginReply *SocialProxy::postToWall(const QString &message, const QString &plug
 
     Request *request = plugin->requestManager()->postToWall(QUrl::toPercentEncoding(message));
     PluginReply *reply = new PluginReply(request, 0, pluginName, this);
-    request->start();
+    RequestQueue::instance(plugin->name())->enqueue(request);
 
     return reply;
 }
@@ -228,7 +232,7 @@ PluginReply *SocialProxy::userPicture(const QString &id, const QString &parentId
     QObject *obj = dynamic_cast<QObject *>(plugin->requestManager());
     connect(obj, SIGNAL(gotUserImage(QString, QString)), reply, SLOT(gotUserPictureUrl(QString, QString)));
     connect(obj, SIGNAL(gotUserName(QString, QString)), reply, SLOT(gotUserName(QString, QString)));
-    request->start();
+    RequestQueue::instance(plugin->name())->enqueue(request);
 
     return reply;
 }
@@ -266,7 +270,7 @@ PluginReply *SocialProxy::getAllComments(const QString &id, const QString &plugi
         return 0;
     Request *request = plugin->requestManager()->queryComments(id);
     PluginReply *reply = new PluginReply(request, id, pluginName, this);
-    request->start();
+    RequestQueue::instance(plugin->name())->enqueue(request, Request::High);
     return reply;
 }
 
@@ -277,7 +281,7 @@ PluginReply *SocialProxy::getAllLikes(const QString &id, const QString &pluginNa
     if (request == 0)
         return 0;
     PluginReply *reply = new PluginReply(request, id, pluginName, this);
-    request->start();
+    RequestQueue::instance(plugin->name())->enqueue(request);
     return reply;
 }
 
@@ -343,12 +347,12 @@ void SocialProxy::authorized()
 
     // update self id
     Request *requestId = plugin->requestManager()->queryUserId();
-    requestId->start();
+    RequestQueue::instance(plugin->name())->enqueue(requestId, Request::High);
 
     // update wall
     Request *request = plugin->requestManager()->queryWall();
     m_searchInProgressCount++;
-    request->start();
+    RequestQueue::instance(plugin->name())->enqueue(request, Request::High);
 
     emit pluginAuthorized();
     emit searchStarted();
@@ -470,7 +474,7 @@ PluginReply *SocialProxy::selfPicture(const QString &pluginName)
     PluginReply *reply = new PluginReply(request, 0, pluginName, this);
     QObject *obj = dynamic_cast<QObject *>(plugin->requestManager());
     connect(obj, SIGNAL(gotUserImage(QString, QString)), SLOT(gotUserPictureUrl(QString, QString)));
-    request->start();
+    RequestQueue::instance(pluginName)->enqueue(request);
 
     return reply;
 }
@@ -495,7 +499,7 @@ PluginReply *SocialProxy::audioUrl(const QString &parentId, const QString &aid, 
     connect(obj, SIGNAL(gotAudioUrl(QString, QString, QString)), reply, SLOT(gotAudioUrl(QString, QString, QString)));
 
     if (request != 0)
-        request->start();
+        RequestQueue::instance(plugin->name())->enqueue(request);
 
     return reply;
 }
@@ -525,7 +529,7 @@ PluginReply *SocialProxy::videoUrl(const QString &parentId, const QString &vid, 
     connect(obj, SIGNAL(gotVideoUrl(QString, QString, QString, QString)), reply, SLOT(gotVideoUrl(QString, QString, QString, QString)));
 
     if (request != 0)
-        request->start();
+        RequestQueue::instance(plugin->name())->enqueue(request);
 
     return reply;
 }
@@ -554,7 +558,7 @@ PluginReply *SocialProxy::userInfo(const QString &parentId, const QString &fromI
     QObject *obj = dynamic_cast<QObject*>(plugin->requestManager());
     connect(obj, SIGNAL(gotUserInfo(QString, QString, QString)), reply, SLOT(gotUserInfo(QString, QString, QString)));
 
-    request->start();
+    RequestQueue::instance(plugin->name())->enqueue(request);
 
     return reply;
 }

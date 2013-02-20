@@ -45,6 +45,7 @@ public:
     QPixmap icon() const;
     QPixmap smallIcon() const;
     QString displayName() const;
+    int maximumRequestsPerSecond() const;
 
     QWidget *authenticationWidget();
     bool authorized() const {

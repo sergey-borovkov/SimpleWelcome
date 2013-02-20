@@ -87,6 +87,12 @@ QString VkontakteModule::displayName() const
     return i18n("VKontakte");
 }
 
+int VkontakteModule::maximumRequestsPerSecond() const
+{
+    // VK limits maximum amount of requests per second to 3
+    return 3;
+}
+
 QWidget *VkontakteModule::authenticationWidget()
 {
     QWebView *authorizationView = new QWebView();
