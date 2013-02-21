@@ -62,6 +62,8 @@ public:
 
     virtual QString pluginName() const;
 
+    void setRequestQueue(RequestQueue *requestQueue);
+
 private slots:
     void feedReply(QByteArray feedReply);
     void idReply(QByteArray reply);
@@ -92,6 +94,7 @@ private:
     // we return comments only when they are fully downloaded
     // so we need to keed partial results between calls somewhere
     QMap<QString, QList<CommentItem *> > m_comments;
+    RequestQueue *m_requestQueue;
 };
 
 void fillCommentFromMap(CommentItem *item, const QVariantMap &map);

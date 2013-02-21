@@ -38,6 +38,7 @@
 RequestManager::RequestManager(QObject *parent)
     : QObject(parent)
     , m_authorizer(0)
+    , m_requestQueue(0)
 {
 }
 
@@ -174,6 +175,11 @@ QString RequestManager::pluginName() const
     return QLatin1String("Facebook");
 }
 
+void RequestManager::setRequestQueue(RequestQueue *requestQueue)
+{
+    m_requestQueue = requestQueue;
+}
+
 void RequestManager::feedReply(QByteArray reply)
 {
     QJson::Parser parser;
@@ -204,7 +210,8 @@ void RequestManager::feedReply(QByteArray reply)
         FacebookRequest *request = new FacebookRequest(FacebookRequest::Get, this);
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
         request->setUrl(paging.value("next").toUrl());
-        RequestQueue::instance(pluginName())->enqueue(request, Request::High);
+        if(m_requestQueue)
+            m_requestQueue->enqueue(request, Request::High);
     } else {
         emit searchComplete();
     }
@@ -238,7 +245,8 @@ void RequestManager::commentReply(QByteArray reply)
         request->setProperty("postId", id);
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(commentReply(QByteArray)));
         request->setUrl(paging.value("next").toUrl());
-        RequestQueue::instance(pluginName())->enqueue(request);
+        if(m_requestQueue)
+            m_requestQueue->enqueue(request);
     } else {
         m_comments.remove(id);
         emit newComments(id, cachedComments);

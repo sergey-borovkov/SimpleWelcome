@@ -39,6 +39,7 @@ RequestManager::RequestManager(QObject *parent)
     , m_gotCommentsCount(0)
     , m_gotLikesCount(0)
     , m_gotMessagesCount(0)
+    , m_requestQueue(0)
 {
 }
 
@@ -220,6 +221,11 @@ Request *RequestManager::logout()
     return request;
 }
 
+void RequestManager::setRequestQueue(RequestQueue *requestQueue)
+{
+    m_requestQueue = requestQueue;
+}
+
 void RequestManager::feedReply(QByteArray reply)
 {
     QJson::Parser parser;
@@ -264,7 +270,8 @@ void RequestManager::feedReply(QByteArray reply)
         VkRequest *request = new VkRequest(VkRequest::Get, this);
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(feedReply(QByteArray)));
         request->setUrl(url);
-        RequestQueue::instance(pluginName())->enqueue(request, Request::High);
+        if(m_requestQueue)
+        m_requestQueue->enqueue(request, Request::High);
     }
     else {
         m_gotMessagesCount = 0;
@@ -318,7 +325,8 @@ void RequestManager::commentReply(QByteArray reply)
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(commentReply(QByteArray)));
         request->setProperty("postId", postId);
         request->setUrl(url);
-        RequestQueue::instance(pluginName())->enqueue(request, Request::High);
+        if(m_requestQueue)
+            m_requestQueue->enqueue(request, Request::High);
     }
     else {
         m_comments.remove(postId);
@@ -368,7 +376,8 @@ void RequestManager::likesReply(QByteArray reply)
         connect(request, SIGNAL(replyReady(QByteArray)), SLOT(likesReply(QByteArray)));
         request->setProperty("postId", postId);
         request->setUrl(url);
-        RequestQueue::instance(pluginName())->enqueue(request, Request::Normal);
+        if(m_requestQueue)
+            m_requestQueue->enqueue(request, Request::Normal);
     }
     else {
         m_gotLikesCount = 0;
@@ -725,6 +734,47 @@ void RequestManager::fillFromMap(SocialItem *socialItem, QVariantMap map)
     socialItem->setData(SocialItem::PluginName, pluginName());
 }
 
+QString RequestManager::pluginName()
+{
+    return QLatin1String("VKontakte");
+}
+
+RequestManager::Error RequestManager::checkForErrors(const QVariantMap &map)
+{
+    QVariantMap::const_iterator it = map.constFind(QLatin1String("error"));
+    if(it == map.constEnd())
+        return RequestManager::NoError;
+
+    const int errorCode = it.value().toMap().value(QLatin1String("error_code")).toInt();
+    // too many requests per second
+    if(errorCode == 6)
+        return RequestManager::TooManyRequests;
+    else
+        return RequestManager::OtherError;
+}
+
+
+bool RequestManager::processError(const QVariantMap &map, Request *request)
+{
+    const Error error = checkForErrors(map);
+    if(error != NoError) {
+        if(error == TooManyRequests) {
+            // put it in the queue again
+            if(request) {
+                if(m_requestQueue)
+                    m_requestQueue->enqueue(request, Request::High);
+                return false;
+            }
+        }
+        else {
+            // nothing we can do really
+            return false;
+        }
+    }
+
+    return true;
+}
+
 QString convertSecsToStr(int secs)
 {
     QTime tm;
@@ -770,44 +820,4 @@ void fillCommentFromMap(CommentItem *item, const QVariantMap &map)
     item->setData(CommentItem::FromId, map.value("uid"));
     item->setData(CommentItem::Type, "VKontakte");
     item->setData(CommentItem::From, "");
-}
-
-QString RequestManager::pluginName()
-{
-    return QLatin1String("VKontakte");
-}
-
-RequestManager::Error RequestManager::checkForErrors(const QVariantMap &map)
-{
-    QVariantMap::const_iterator it = map.constFind(QLatin1String("error"));
-    if(it == map.constEnd())
-        return RequestManager::NoError;
-
-    const int errorCode = it.value().toMap().value(QLatin1String("error_code")).toInt();
-    // too many requests per second
-    if(errorCode == 6)
-        return RequestManager::TooManyRequests;
-    else
-        return RequestManager::OtherError;
-}
-
-
-bool RequestManager::processError(const QVariantMap &map, Request *request)
-{
-    const Error error = checkForErrors(map);
-    if(error != NoError) {
-        if(error == TooManyRequests) {
-            // put it in the queue again
-            if(request) {
-                RequestQueue::instance(pluginName())->enqueue(request, Request::High);
-                return false;
-            }
-        }
-        else {
-            // nothing we can do really
-            return false;
-        }
-    }
-
-    return true;
 }

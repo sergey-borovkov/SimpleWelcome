@@ -4,25 +4,11 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QHash>
 
-RequestQueue::RequestQueue()
-    : m_requestsPerSecond(3), m_started(false)
+RequestQueue::RequestQueue(QObject *parent)
+    : QObject(parent), m_requestsPerSecond(3), m_started(false)
 {
     requestCountTimestamp.time = 0;
     requestCountTimestamp.requestCount = 0;
-}
-
-RequestQueue *RequestQueue::instance(const QString &pluginName)
-{
-    static QHash<QString, RequestQueue *> requestQueueHash;
-    QHash<QString, RequestQueue *>::const_iterator it = requestQueueHash.constFind(pluginName);
-
-    if (it != requestQueueHash.constEnd()) {
-        return it.value();
-    }
-
-    RequestQueue *requestQueue = new RequestQueue();
-    requestQueueHash.insert(pluginName, requestQueue);
-    return requestQueue;
 }
 
 void RequestQueue::enqueue(Request *request, Request::Priority priority)

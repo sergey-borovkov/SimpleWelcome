@@ -25,6 +25,8 @@
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
 
+#include <requestqueue.h>
+
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QtCore/QSettings>
@@ -36,13 +38,12 @@
 #include <KLocalizedString>
 
 VkontakteModule::VkontakteModule()
+    : m_authorizer(new OAuth2Authorizer())
+    , m_requestManager(new RequestManager())
 {
-    m_authorizer = new OAuth2Authorizer;
-
     QSettings settings("ROSA", "vkontakte-timeframe-plugin");
     QString accessToken = settings.value("accessToken").toString();
 
-    m_requestManager = new RequestManager();
     m_requestManager->setAuthorizer(m_authorizer);
 
     connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SLOT(onAcessTokenChanged()));
@@ -146,6 +147,18 @@ QString VkontakteModule::selfPictureUrl() const
 void VkontakteModule::setSelfPictureUrl(const QString &url)
 {
     m_selfPictureUrl = url;
+}
+
+void VkontakteModule::setRequestQueue(RequestQueue *requestQueue)
+{
+    m_requestQueue = requestQueue;
+    m_requestQueue->setMaximumRequestsPerSecond(maximumRequestsPerSecond());
+    m_requestManager->setRequestQueue(m_requestQueue);
+}
+
+RequestQueue *VkontakteModule::requestQueue()
+{
+    return m_requestQueue;
 }
 
 void VkontakteModule::onAcessTokenChanged()

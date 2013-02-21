@@ -40,6 +40,7 @@ class SocialItem;
 class CommentItem;
 class SocialContentModel;
 class PluginReply;
+class RequestQueue;
 
 class SocialProxy : public QObject
 {
@@ -212,6 +213,8 @@ private:
     QString m_cachedComment;
 
     int m_searchInProgressCount;
+
+    QMap<QString, RequestQueue*> m_requestQueueMap;
 };
 
 #endif // SOCIALPROXY_H

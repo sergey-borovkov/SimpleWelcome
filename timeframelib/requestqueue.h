@@ -12,7 +12,7 @@ class TIMEFRAMELIB_EXPORT RequestQueue : public QObject
 {
     Q_OBJECT
 public:
-    static RequestQueue *instance(const QString &pluginName);
+    RequestQueue(QObject *parent = 0);
     void enqueue(Request *request, Request::Priority priority = Request::Normal);
 
     void setMaximumRequestsPerSecond(int amount);
@@ -22,8 +22,6 @@ private slots:
 
 private:
     typedef std::pair<int, Request*> PriorityRequest;
-
-    RequestQueue();
 
     struct {
         uint time;

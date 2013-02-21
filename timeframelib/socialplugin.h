@@ -30,6 +30,7 @@
 
 class SocialItem;
 class QDate;
+class RequestQueue;
 
 /**
  * @brief The Request class encapsulates all write requests to social plugins .
@@ -47,9 +48,6 @@ public:
     };
 
     virtual ~Request() {}
-    /**
-     * @brief start Start request. This method must be not blocking.
-     */
 
 protected:
     virtual void run() = 0;
@@ -100,7 +98,6 @@ public:
     virtual ISocialRequestManager *requestManager() = 0;
     virtual bool authorized() const = 0;
     virtual QString displayName() const = 0;
-    virtual int maximumRequestsPerSecond() const = 0;
 
     virtual QString selfId() const = 0;
     virtual void setSelfId(const QString &id) = 0;
@@ -110,6 +107,9 @@ public:
 
     virtual QString selfPictureUrl() const = 0;
     virtual void setSelfPictureUrl(const QString &url) = 0;
+
+    virtual void setRequestQueue(RequestQueue *requestQueue) = 0;
+    virtual RequestQueue *requestQueue() = 0;
 };
 
 Q_DECLARE_INTERFACE(ISocialPlugin, "Timeframe_Library.SocialModule/1.0")

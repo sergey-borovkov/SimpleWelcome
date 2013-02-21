@@ -25,6 +25,8 @@
 #include "requestmanager.h"
 #include "oauth2authorizer.h"
 
+#include <requestqueue.h>
+
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QtCore/QSettings>
@@ -36,13 +38,13 @@
 #include <KLocalizedString>
 
 FacebookModule::FacebookModule()
+    : m_requestQueue(0)
+    , m_authorizer(new OAuth2Authorizer())
+    , m_requestManager(new RequestManager())
 {
-    m_authorizer = new OAuth2Authorizer;
-
     QSettings settings("ROSA", "facebook-timeframe-plugin");
     QString accessToken = settings.value("accessToken").toString();
 
-    m_requestManager = new RequestManager();
     m_requestManager->setAuthorizer(m_authorizer);
 
     connect(m_authorizer, SIGNAL(accessTokenChanged(QString)), SLOT(onAcessTokenChanged()));
@@ -144,6 +146,18 @@ QString FacebookModule::selfPictureUrl() const
 void FacebookModule::setSelfPictureUrl(const QString &url)
 {
     m_selfPictureUrl = url;
+}
+
+void FacebookModule::setRequestQueue(RequestQueue *requestQueue)
+{
+    m_requestQueue = requestQueue;
+    m_requestQueue->setMaximumRequestsPerSecond(maximumRequestsPerSecond());
+    m_requestManager->setRequestQueue(requestQueue);
+}
+
+RequestQueue *FacebookModule::requestQueue()
+{
+    return m_requestQueue;
 }
 
 void FacebookModule::onAcessTokenChanged()

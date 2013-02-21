@@ -59,6 +59,9 @@ public:
     QString selfPictureUrl() const;
     void setSelfPictureUrl(const QString &url);
 
+    virtual void setRequestQueue(RequestQueue *requestQueue);
+    virtual RequestQueue *requestQueue();
+
 private slots:
     void onAcessTokenChanged();
 
@@ -76,6 +79,8 @@ private:
     QString m_selfId;
     QString m_selfName;
     QString m_selfPictureUrl;
+
+    RequestQueue *m_requestQueue;
 };
 
 #endif

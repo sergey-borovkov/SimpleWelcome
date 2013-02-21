@@ -61,6 +61,8 @@ public:
 
     QString pluginName();
 
+    void setRequestQueue(RequestQueue *requestQueue);
+
 private slots:
     void feedReply(QByteArray feedReply);
     void idReply(QByteArray reply);
@@ -115,6 +117,8 @@ private:
     int m_gotMessagesCount;
 
     static const int m_requestItemCount = 100;
+
+    RequestQueue *m_requestQueue;
 };
 
 void fillCommentFromMap(CommentItem *item, const QVariantMap &map);
