@@ -119,3 +119,25 @@ add_subdirectory(src)
 install(DIRECTORY "${CMAKE_BINARY_DIR}/${_assets_install_path}/" DESTINATION "${_assets_install_path}")
 
 add_subdirectory(po)
+
+# Deb-package generation part
+set(CPACK_GENERATOR "DEB")
+set(CPACK_SET_DESTDIR "on")
+set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
+
+set(CPACK_PACKAGE_VERSION_MAJOR "2")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "1")
+
+set(CPACK_PACKAGE_DESCRIPTION "SimpleWelcome")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Pretty application launcher for KDE")
+set(CPACK_PACKAGE_CONTACT "Alexander Skakov <zoinen@gmail.com>")
+
+set(${VERSION} CPACK_DEBIAN_PACKAGE_VERSION)
+set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+set(CPACK_DEBIAN_PACKAGE_SECTION "system")
+set(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "kdebase-workspace-dev, libqjson-dev")
+
+set(CPACK_COMPONENTS_ALL Libraries ApplicationData)
+include(CPack Documentation)

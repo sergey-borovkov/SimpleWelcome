@@ -27,3 +27,7 @@ SimpleWelcome doesn't use fixed absoulute paths. You can move "build" directory 
 	$ cmake <path_to_project_root>
 	$ make   # build SW
 	$ bin/rosa-launcher  # run SW
+
+To create .deb packet in Ubuntu, run:
+	$ mkdir "build" && cd "build"  # create build directory
+	$ cmake -DCMAKE_INSTALL_PREFIX=/usr .. && cpack
